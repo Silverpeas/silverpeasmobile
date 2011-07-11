@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd"> 
+
+<taglib> 
+<tlibversion>1.0</tlibversion>
+<jspversion>1.1</jspversion>
+<shortname>silverpeas-menu</shortname>
+<uri>silverpeas-menu</uri>
+<info>Silverpeas Menu taglib</info> 
+
+<tag>
+	<name>organization</name>
+	<tagclass>com.silverpeas.tags.organization.getOrganizationTag</tagclass>
+	<teiclass>com.silverpeas.tags.organization.getOrganizationTEI</teiclass>
+	<bodycontent>empty</bodycontent>
+	<info>An Admin Organization accessor</info>
+
+	<attribute>
+		<name>name</name>
+		<required>false</required>
+	</attribute>
+
+	<attribute>
+		<name>visibilityFilter</name>
+		<required>false</required>
+	</attribute>
+	
+	<attribute>
+		<name>scope</name>
+		<required>false</required>
+	</attribute>
+
+	<attribute>
+		<name>mainSessionCtrl</name>
+		<required>false</required>
+	</attribute>
+</tag>
+
+<tag>
+	<name>pdc</name>
+	<tagclass>com.silverpeas.tags.pdc.getPdcViewTag</tagclass>
+	<teiclass>com.silverpeas.tags.pdc.getPdcViewTEI</teiclass>
+	<bodycontent>empty</bodycontent>
+	<info>A Pdc accessor to display pdc data</info>
+
+	<attribute>
+		<name>name</name>
+		<required>false</required>
+	</attribute>
+
+	<attribute>
+		<name>axisId</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+
+	<attribute>
+		<name>valueId</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+
+	<attribute>
+		<name>spaceId</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	
+	<attribute>
+		<name>componentId</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+
+	<attribute>
+		<name>skipSpaceId</name>
+		<required>false</required>
+	</attribute>
+
+	<attribute>
+		<name>depth</name>
+		<required>false</required>
+	</attribute>
+	
+	<attribute>
+		<name>scope</name>
+		<required>false</required>
+	</attribute>
+</tag>
+
+<tag>
+	<name>path</name>
+	<tagclass>com.silverpeas.tags.organization.getPathTag</tagclass>
+	<teiclass>com.silverpeas.tags.organization.getPathTEI</teiclass>
+	<bodycontent>empty</bodycontent>
+	<info>return a Collection of MenuItem which represent the path from root space to MenuItem</info>
+
+	<attribute>
+		<name>name</name>
+		<required>false</required>
+	</attribute>
+
+	<attribute>
+		<name>spaceId</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+
+	<attribute>
+		<name>componentId</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+
+	<attribute>
+		<name>objectId</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	</attribute>
+	
+	<attribute>
+		<name>scope</name>
+		<required>false</required>
+	</attribute>
+</tag>
+
+</taglib>

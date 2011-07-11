@@ -1,0 +1,140 @@
+body {
+	background-color: #FFFFFF;
+	margin-bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+}
+
+img {
+	border: 0px;
+}
+
+a {
+	text-decoration: none;
+}
+
+#header {
+	background-image: url("../img/customer/logo.jpg");
+	background-repeat: no-repeat;
+	background-position: top;
+	background-color: #FFFFFF;
+	height: 70px;
+	margin-top: 10px;
+}
+
+#main {
+	background-color: #FFFFFF;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+	margin-top: 0;
+	padding: 20px 0px 50px 0px;
+	text-align: left;
+	min-height: 300px;
+}
+
+#main, #main div, #main a, #main input, #main select, #main td, #main lu, #main li {
+	color: #446677;
+	font-family: Arial;
+	font-size: 28px;
+}
+
+#mainContent {
+	margin: 10px 10px 10px 10px;
+}
+
+#footer {
+	height: 20px;
+	background-image: url("../img/customer/footer.jpg");
+	background-repeat: repeat-x;
+}
+
+#lang {
+	position: relative;
+	float: right;
+	margin-right: 30px;
+	width: 750px;
+	text-align: right;
+}
+
+#lang img {
+	width: 20px;
+	height: 20px;
+}
+
+#lang a {
+	margin-left: 6px;
+}
+
+#login {
+	position: relative;
+	float: left;
+	width: 400px;
+}
+
+#login td {
+	white-space: nowrap;
+}
+
+#login td.validateCell {
+	padding-top: 10px;
+}
+
+#today {
+	position: relative;
+	float: right;
+	margin-right: 30px;
+	width: 750px;
+	text-align: right;
+	font-style: italic;
+}
+
+#logout {
+	position: relative;
+	float: right;
+	margin-right: 30px;
+	margin-top: 10px;
+}
+
+.rightContent {
+	width: 750px;
+	text-align: right;
+}
+
+#user {
+	position: relative;
+	float: left;
+	width: 98%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+#ibans {
+	position: relative;
+	float: left;
+	width: 98%;
+	margin-top: 10px;
+}
+
+#documents {
+	position: relative;
+	float: left;
+	width: 98%;
+	margin-top: 10px;
+}
+
+.button {
+	text-align: center;
+	width: 80px;
+	background-image: url("/silverpeasmobile/img/button/middleButton.png");
+	background-repeat: repeat-x;
+	padding-bottom: 4px;
+}
+
+#main .button a.buttonLink {
+	font-variant: small-caps;
+	margin: 0px 10px 0px 10px;
+	color: #FFFFFF;
+}
