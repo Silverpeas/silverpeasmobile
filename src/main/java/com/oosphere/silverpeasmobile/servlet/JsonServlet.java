@@ -53,13 +53,13 @@ public class JsonServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse res)
-  throws ServletException, IOException {
+      throws ServletException, IOException {
     doPost(req, res);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse res)
-  throws ServletException, IOException {
+      throws ServletException, IOException {
     String action = request.getParameter("action");
     String id = request.getParameter("id");
     String componentId = request.getParameter("componentId");
@@ -78,9 +78,9 @@ public class JsonServlet extends HttpServlet {
         Collections.sort(nodes, new NodeDetailComparator());
       } else if ("topic".equals(action)) {
         nodes = new ArrayList<NodeDetail>();
-        //nodes.add(kmeliaManager.getTopic(id));
+        // nodes.add(kmeliaManager.getTopic(id));
       } else if ("path".equals(action)) {
-        //nodes = kmeliaManager.getPath(id);
+        // nodes = kmeliaManager.getPath(id);
       }
       result = getJsonList(nodes, language, kmeliaManager);
     } catch (SilverpeasMobileException e) {
@@ -111,8 +111,9 @@ public class JsonServlet extends HttpServlet {
       jsonObject.put("date", "error");
     }
     jsonObject.put("creatorId", node.getCreatorId());
-    //jsonObject.put("creatorName", kmeliaManager.getUserDetail(node.getCreatorId()).getDisplayedName());
-    //jsonObject.put("role", kmeliaManager.getUserProfile().getProfileName());
+    // jsonObject.put("creatorName",
+    // kmeliaManager.getUserDetail(node.getCreatorId()).getDisplayedName());
+    // jsonObject.put("role", kmeliaManager.getUserProfile().getProfileName());
     jsonObject.put("nbObjects", node.getNbObjects());
     jsonObject.put("status", node.getStatus());
     jsonObject.put("level", node.getLevel());
@@ -121,15 +122,15 @@ public class JsonServlet extends HttpServlet {
   }
 
   private KmeliaManager getKmeliaManager(HttpServletRequest request)
-  throws SilverpeasMobileException {
+      throws SilverpeasMobileException {
     WebBeanFactory beanFactory = new WebBeanFactory();
     OrganizationController organizationController = new OrganizationController();
-    return new KmeliaManager(beanFactory.getAdminBm(), beanFactory.getKmeliaBm(), organizationController);
+    return new KmeliaManager(beanFactory.getAdminBm(), beanFactory.getKmeliaBm(),
+        organizationController);
   }
 
   private class NodeDetailComparator implements Comparator<NodeDetail> {
 
-    @Override
     public int compare(NodeDetail node1, NodeDetail node2) {
       return node1.getName().toLowerCase().compareTo(node2.getName().toLowerCase());
     }

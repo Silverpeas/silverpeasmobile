@@ -16,6 +16,8 @@
 <html>
 	<head>
 	<title><fmt:message key="pageTitle"/></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name = "format-detection" content = "telephone=no">
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
 	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
@@ -27,15 +29,37 @@
 			form.elements["componentId"].value = componentId;
 			form.submit();
 		}
+		
+		function goToProfile() {
+			var form = document.forms["formProfile"];
+			form.submit();
+		}
 	</script>
 </head>
 
 <body>
 
+<form name="formProfile" action="${pageContext.request.contextPath}/index.html" method="post">
+	<input type="hidden" name="action" value="profile"/>
+	<input type="hidden" name="subAction" value="profile"/>
+	<input type="hidden" name="userId" value="${userId}"/>
+</form>
+
 <div  data-role="page">
-	<div  data-role="header">Services</div>
+
+	<form name="formHome" action="${pageContext.request.contextPath}/index.html" method="post">
+		<input type="hidden" name="action" value="login"/>
+		<input type="hidden" name="subAction" value="home"/>
+		<input type="hidden" name="userId" value="${userId}"/>
+	</form>
+	<div  data-role="header" data-position="fixed">
+		<a href="#" data-icon="back" data-rel="back">Back</a>
+		<h1>Services</h1>
+		<a href="javascript:document.forms['formHome'].submit()" data-icon="home" >Home</a>
+	</div>
+	
 	<div  data-role="content">
-<nav>
+			<nav>
 
 
 				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
@@ -58,7 +82,9 @@
                 </form>
 
 	</div>
-	<div  data-role="footer">Copyright Silverpeas 1999-2011</div>
+	<div data-role="footer" data-position="fixed">
+		Copyright Silverpeas 1999-2011
+	</div>
 </div>
 
 </body>

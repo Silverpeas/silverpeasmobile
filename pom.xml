@@ -142,6 +142,13 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>pdc</artifactId>
 			<version>5.6</version>
@@ -149,9 +156,22 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.silverpeas.core</groupId>
+			<artifactId>web-core</artifactId>
+			<version>5.7-SNAPSHOT</version>
+			<!--<classifier>client</classifier>-->
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.silverpeas</groupId>
 			<artifactId>taglibs</artifactId>
-			<version>5.6</version>
+			<version>5.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.metaparadigm</groupId>
+			<artifactId>json-rpc</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>

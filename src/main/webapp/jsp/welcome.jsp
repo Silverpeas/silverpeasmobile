@@ -19,6 +19,7 @@
 <head>
 	<title><fmt:message key="pageTitle"/></title>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/mobile.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.2.6.js"></script>
 	<script type="text/javascript" src="/silverpeas/util/javaScript/jquery/jquery-1.5.min.js"></script>
 	<script type="text/javascript" src="/silverpeas/util/javaScript/jquery/jquery-ui-1.8.10.custom.min.js"></script>
@@ -34,7 +35,7 @@
 		<fmt:message key="loading"/>
 		<silverpeas:site mode="${mode}" userId="${userId}" server="${server}" port="${port}" context="${context}" fileServer="${fileServer}"/>
 		<form name="form" action="${pageContext.request.contextPath}/index.html" method="post">
-			<input type="hidden" name="action" value="kmelia"/>
+			<input type="hidden" name="action" value="login"/>
 			<input type="hidden" name="subAction" value="home"/>
 			<input type="hidden" name="userId" value="${userId}"/>
 		</form>
