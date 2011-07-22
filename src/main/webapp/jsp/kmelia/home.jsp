@@ -64,7 +64,14 @@
 
 				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
 	                        <c:forEach items="${spaces}" var="space">
-					<li data-role="list-divider">${space.name}</li>
+					<li data-role="list-divider">
+						<c:if test="${fn:startsWith(space.name, 'Personal space')==true}">
+							Personal space
+						</c:if>
+						<c:if test="${fn:startsWith(space.name, 'Personal space')==false}">
+							${space.name}
+						</c:if>
+					</li>
 					<c:forEach items="${space.components}" var="component">
                                             <li><a href="javascript:selectComponent('${space.id}', '${component.id}')">${component.name}</a></li>
                                         </c:forEach>
