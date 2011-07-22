@@ -47,7 +47,7 @@
 		</form>
 		<div  data-role="header" data-position="fixed">
 			<a href="#" data-icon="back" data-rel="back">Back</a>
-			<h1>Change Status</h1>
+			<h1>Status</h1>
 			<a href="javascript:document.forms['formHome'].submit()" data-icon="home" >Home</a>
 		</div>
 		

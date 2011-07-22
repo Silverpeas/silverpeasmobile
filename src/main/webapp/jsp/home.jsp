@@ -19,9 +19,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name = "format-detection" content = "telephone=no">
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css">
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
 	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
-
+	
 	<script type="text/javascript">
 		
 		function goTo(action, subAction) {
@@ -47,9 +48,9 @@
 
 			<div class="ui-grid-a">
 				<div class="ui-block-a"><a href="javascript:goTo('kmelia', 'home')" data-role="button" data-theme="a">Documents</a></div>
-				<div class="ui-block-b"><a href="javascript:goTo('profile', 'infoThread')" data-role="button" data-theme="a">Info Thread</a></div>
-				<div class="ui-block-a"><a href="javascript:goTo('profile', 'changeStatus')" data-role="button" data-theme="a">My Status</a></div>
-				<div class="ui-block-b"><a href="javascript:goTo('contacts', 'contacts')" data-role="button" data-theme="a">My Contacts</a></div>
+				<div class="ui-block-b"><a href="javascript:goTo('profile', 'infoThread')" data-role="button" data-theme="a">Dashboard</a></div>
+				<div class="ui-block-a"><a href="javascript:goTo('profile', 'changeStatus')" data-role="button" data-theme="a">Status</a></div>
+				<div class="ui-block-b"><a href="javascript:goTo('contact', 'contacts')" data-role="button" data-theme="a">Contacts</a></div>
 			</div>
 
 	</div>

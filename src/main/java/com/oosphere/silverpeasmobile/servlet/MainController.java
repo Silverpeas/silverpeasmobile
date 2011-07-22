@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.oosphere.silverpeasmobile.handler.ContactHandler;
 import com.oosphere.silverpeasmobile.handler.Handler;
 import com.oosphere.silverpeasmobile.handler.KmeliaHandler;
 import com.oosphere.silverpeasmobile.handler.LoginHandler;
@@ -30,6 +31,7 @@ public class MainController extends HttpServlet {
     handlers.put("login", new LoginHandler());
     handlers.put("kmelia", new KmeliaHandler());
     handlers.put("profile", new ProfileHandler());
+    handlers.put("contact", new ContactHandler());
   }
 
   public void init(ServletConfig config) throws ServletException {

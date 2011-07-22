@@ -23,6 +23,7 @@
 <head>
 	<title><fmt:message key="pageTitle"/></title>
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name = "format-detection" content = "telephone=no">
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
@@ -44,14 +45,12 @@
 			}
 			
 			$(function(){
-				$('#content').append('start');
 				var jsonStream = '<%=jsonNewsData%>';
 				
 				var html='<ul data-role="listview" data-theme="g">';
 				
 				var jsonObject = $.parseJSON(jsonStream);
 				$.each(jsonObject, function(key,map){
-					$('#content').append('each');
 					$.each(map, function(i,listSocialInfo){
 			        	
 			            if(i==0) {
@@ -155,7 +154,7 @@
 		</form>
 		<div  data-role="header" data-position="fixed">
 			<a href="#" data-icon="back" data-rel="back">Back</a>
-			<h1>Info Thread</h1>
+			<h1>Dashboard</h1>
 			<a href="javascript:document.forms['formHome'].submit()" data-icon="home" >Home</a>
 		</div>
 		
