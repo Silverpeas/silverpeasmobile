@@ -69,17 +69,6 @@
 			</form>
 		</div>
 		
-		<form name="formServices" action="${pageContext.request.contextPath}/index.html" method="post">
-			<input type="hidden" name="action" value="kmelia"/>
-			<input type="hidden" name="subAction" value="home"/>
-			<input type="hidden" name="userId" value="${userId}"/>
-		</form>
-		<form name="formProfile" action="${pageContext.request.contextPath}/index.html" method="post">
-			<input type="hidden" name="action" value="profile"/>
-			<input type="hidden" name="subAction" value="profile"/>
-			<input type="hidden" name="userId" value="${userId}"/>
-		</form>
-
 		<div data-role="footer" data-position="fixed">
 			Copyright Silverpeas 1999-2011
 		</div>

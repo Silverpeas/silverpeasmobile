@@ -117,7 +117,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/antlr/stringtemplate/3.2.1/stringtemplate-3.2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/silverpeas/taglibs/5.7-SNAPSHOT/taglibs-5.7-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/silverpeas/core/ejb-core/versioning/5.6/versioning-5.6-client.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/silverpeas/core/web-core/5.7-SNAPSHOT/web-core-5.7-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/silverpeas/core/web-core/5.7-SNAPSHOT/web-core-5.7-SNAPSHOT.jar" sourcepath="M2_REPO/com/silverpeas/core/web-core/5.7-SNAPSHOT/web-core-5.7-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

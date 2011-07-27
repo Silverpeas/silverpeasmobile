@@ -15,7 +15,7 @@
 <fmt:setBundle basename="com.oosphere.silverpeasmobile.multilang.silverpeasmobile"/>
 
 <%
-	String urlServlet = "/silverpeas/RnewsFeedJSONServlet?type=ALL&View=MyFeed&Init=true";
+	String urlServlet = "/silverpeasmobile/jsonDashboard?userId=";
 %>
 
 <!DOCTYPE html>
@@ -44,34 +44,34 @@
 				return '<%=urlServlet%>';
 			}
 			
-			$(function(){
-				var jsonStream = '<%=jsonNewsData%>';
+			$(document).ready(function() {
 				
-				var html='<ul data-role="listview" data-theme="g">';
+				var html='<ul id="dashboard" data-role="listview" data-theme="g">';
 				
-				var jsonObject = $.parseJSON(jsonStream);
-				$.each(jsonObject, function(key,map){
-					$.each(map, function(i,listSocialInfo){
-			        	
-			            if(i==0) {
-			              html += '<li data-role="list-divider">'+listSocialInfo.day+'</li>';
-			            } else {
-			              $.each(listSocialInfo, function(index,socialInfo){
-			                if(socialInfo.type=='RELATIONSHIP') {
-			               	 html += getRelationFragment(socialInfo);
-			                } else if(socialInfo.type=='STATUS') {
-			               	 html += getStatusFragment(socialInfo);
-			                } else { 
-			                    html += getFragment(socialInfo);
-			                }
-			              });
-			            }
-			          });
+				$.getJSON(getFeedURL()+${userId},  function(jsonObject){
+					$.each(jsonObject, function(key,map){
+						$.each(map, function(i,listSocialInfo){
+				        	
+				            if(i==0) {
+				              html += '<li data-role="list-divider">'+listSocialInfo.day+'</li>';
+				            } else {
+				              $.each(listSocialInfo, function(index,socialInfo){
+				                if(socialInfo.type=='RELATIONSHIP') {
+				               	 html += getRelationFragment(socialInfo);
+				                } else if(socialInfo.type=='STATUS') {
+				               	 html += getStatusFragment(socialInfo);
+				                } else { 
+				                    html += getFragment(socialInfo);
+				                }
+				              });
+				            }
+				          });
+					});
+					html += '</ul>';
+				    $('#content').append(html);
+				    $('#content').page();
 				});
-				
-				html += '</ul>';
-			    $('#content').append(html);
-			})
+			});
 			
 			function getFragment(socialInfo) {
 				var fragment = '';
@@ -133,9 +133,10 @@
 				return fragment;
 			}
 			
-			function selectPubli(pubId) {
+			function selectPubli(pubId, componentId) {
 			var form = document.forms["formPublication"];
 			form.elements["pubId"].value = pubId;
+			form.elements["componentId"].value = componentId;
 			form.submit();
 		}
 
@@ -162,33 +163,13 @@
 		
 		<div id="content" data-role="content"></div>
 	
-		<script type="text/javascript">
-			function goToServices() {
-				var form = document.forms["formServices"];
-				form.submit();
-			}
-			
-			function goToProfile() {
-				var form = document.forms["formProfile"];
-				form.submit();
-			}
-		</script>
-		<form name="formServices" action="${pageContext.request.contextPath}/index.html" method="post">
-			<input type="hidden" name="action" value="kmelia"/>
-			<input type="hidden" name="subAction" value="home"/>
-			<input type="hidden" name="userId" value="${userId}"/>
-		</form>
-		<form name="formProfile" action="${pageContext.request.contextPath}/index.html" method="post">
-			<input type="hidden" name="action" value="profile"/>
-			<input type="hidden" name="subAction" value="profile"/>
-			<input type="hidden" name="userId" value="${userId}"/>
-		</form>
+		
 		<form name="formPublication" action="${pageContext.request.contextPath}/index.html" method="post">
                         <input type="hidden" name="action" value="kmelia"/>
                         <input type="hidden" name="subAction" value="publication"/>
                         <input type="hidden" name="userId" value="${userId}"/>
                         <input type="hidden" name="spaceId" value="${spaceId}"/>
-                        <input type="hidden" name="componentId" value="${component.id}"/>
+                        <input type="hidden" name="componentId" value=""/>
                         <input type="hidden" name="pubId" value=""/>
                         <input type="hidden" name="nodeId" value=""/>
                         <input type="hidden" name="from" value="Info Thread"/>

@@ -1,6 +1,8 @@
 package com.oosphere.silverpeasmobile.handler;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +11,12 @@ import com.oosphere.silverpeasmobile.bean.WebBeanFactory;
 import com.oosphere.silverpeasmobile.exception.SilverpeasMobileException;
 import com.oosphere.silverpeasmobile.kmelia.KmeliaManager;
 import com.oosphere.silverpeasmobile.vo.PublicationVO;
+import com.silverpeas.external.filesharing.model.FileSharingService;
+import com.silverpeas.external.filesharing.model.FileSharingServiceFactory;
+import com.silverpeas.external.filesharing.model.TicketDetail;
+import com.silverpeas.util.StringUtil;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
+import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.kmelia.model.TopicDetail;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
@@ -32,6 +39,12 @@ public class KmeliaHandler extends Handler {
     } else if ("publication".equals(subAction)) {
       KmeliaManager kmeliaManager = getKmeliaManager(request);
       page = publication(request, kmeliaManager);
+    } else if ("share".equals(subAction)) {
+      KmeliaManager kmeliaManager = getKmeliaManager(request);
+      page = shareAttachment(request, kmeliaManager);
+    } else if ("documentAction".equals(subAction)) {
+      KmeliaManager kmeliaManager = getKmeliaManager(request);
+      page = documentAction(request, kmeliaManager);
     }
     return "kmelia/" + page;
   }
@@ -117,6 +130,47 @@ public class KmeliaHandler extends Handler {
 
     return "publication.jsp";
   }
+  
+  private String documentAction(HttpServletRequest request, KmeliaManager kmeliaManager)
+      throws SilverpeasMobileException {
+    String attachmentId = request.getParameter("attachmentId");
+    String componentId = request.getParameter("componentId");
+    String userId = request.getParameter("userId");
+    
+    boolean isComponentWithFileSharing = kmeliaManager.isAttachmentSharable(attachmentId);
+
+    request.setAttribute("fileSharingActive", isComponentWithFileSharing);
+    request.setAttribute("userId", userId);
+    request.setAttribute("componentId", componentId);
+    request.setAttribute("attachmentId", attachmentId);
+
+    return "documentAction.jsp";
+  }
+  
+  private String shareAttachment(HttpServletRequest request, KmeliaManager kmeliaManager)
+      throws SilverpeasMobileException {
+    
+    String componentId = request.getParameter("componentId");
+    String attachmentId = request.getParameter("attachmentId");
+    String userId = request.getParameter("userId");
+    
+    Calendar endCalendar = Calendar.getInstance();
+    endCalendar.add(Calendar.DAY_OF_MONTH, 1);
+    Date endDate = endCalendar.getTime();
+    
+    UserDetail user = getCurrentUser(request);
+    
+    TicketDetail newTicket = TicketDetail.aTicket(Integer.parseInt(attachmentId), componentId,
+        false, user, new Date(), endDate, 1);
+    FileSharingService fileSharingService = FileSharingServiceFactory.getFactory().getFileSharingService();
+    String shareKey = fileSharingService.createTicket(newTicket);
+    newTicket.setKeyFile(shareKey);
+    
+    request.setAttribute("urlAttachment", newTicket.getUrl(request));
+    
+    return "share.jsp";
+    
+  }
 
   private KmeliaManager getKmeliaManager(HttpServletRequest request)
       throws SilverpeasMobileException {
@@ -124,6 +178,18 @@ public class KmeliaHandler extends Handler {
     OrganizationController organizationController = new OrganizationController();
     return new KmeliaManager(beanFactory.getAdminBm(), beanFactory.getKmeliaBm(),
         organizationController);
+  }
+  
+  private UserDetail getCurrentUser(HttpServletRequest request) throws SilverpeasMobileException {
+    UserDetail user = null ;
+    String userId = request.getParameter("userId");
+    if(StringUtil.isDefined(userId)){
+      OrganizationController organizationController = new OrganizationController();
+      user = organizationController.getUserDetail(userId);
+    } else{
+      throw new SilverpeasMobileException(this, "getCurrentUser", "Parameter userId not present in request");
+    }
+    return user;
   }
 
 }

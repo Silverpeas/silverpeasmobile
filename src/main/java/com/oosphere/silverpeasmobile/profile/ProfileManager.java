@@ -1,6 +1,7 @@
 package com.oosphere.silverpeasmobile.profile;
 
 import com.silverpeas.admin.ejb.AdminBm;
+import com.silverpeas.socialNetwork.myProfil.control.SocialNetworkService;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 
 public class ProfileManager {
@@ -17,8 +18,14 @@ public class ProfileManager {
 
   }
 
-  public String getLastStatus(int userid) {
-    return "This Is The Current Status";
+  public String getCurrentStatus(String userId) {
+    SocialNetworkService socialNetworkService = new SocialNetworkService(userId);
+    return socialNetworkService.getLastStatusService();
+  }
+  
+  public String setNewStatus(String userId, String newStatus) {
+    SocialNetworkService socialNetworkService = new SocialNetworkService(userId);
+    return socialNetworkService.changeStatusService(newStatus);
   }
 
 }

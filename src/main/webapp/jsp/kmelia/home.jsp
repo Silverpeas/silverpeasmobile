@@ -39,12 +39,6 @@
 
 <body>
 
-<form name="formProfile" action="${pageContext.request.contextPath}/index.html" method="post">
-	<input type="hidden" name="action" value="profile"/>
-	<input type="hidden" name="subAction" value="profile"/>
-	<input type="hidden" name="userId" value="${userId}"/>
-</form>
-
 <div  data-role="page">
 
 	<form name="formHome" action="${pageContext.request.contextPath}/index.html" method="post">

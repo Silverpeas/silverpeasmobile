@@ -54,33 +54,26 @@
 			<h3>Pi&egrave;ces jointes</h3>
 			<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
 			<c:forEach items="${publication.attachments}" var="attachment">
-				<li><a class="fileTitle" href="${pageContext.request.contextPath}/svp-fs/File?componentId=${componentId}&attachmentId=${attachment.fileId}" target="_blank"><img src="${attachment.fileIcon}" class="ui-li-icon"> ${attachment.name} <span class="ui-li-count">(${attachment.fileSize})</span></a>
-
+				<!-- <li><a class="fileTitle" href="${pageContext.request.contextPath}/svp-fs/File?componentId=${componentId}&attachmentId=${attachment.fileId}" target="_blank"><img src="${attachment.fileIcon}" class="ui-li-icon"> ${attachment.name} <span class="ui-li-count">(${attachment.fileSize})</span></a>-->
+				<li><a class="fileTitle" href="javascript:documentAction(${attachment.fileId})" ><img src="${attachment.fileIcon}" class="ui-li-icon"> ${attachment.name} <span class="ui-li-count">(${attachment.fileSize})</span></a>
 				</td>
 			</c:forEach>
 		</div>
 	</div>
 	
 	<script type="text/javascript">
-		function goToServices() {
-			var form = document.forms["formServices"];
-			form.submit();
-		}
-		
-		function goToProfile() {
-			var form = document.forms["formProfile"];
+		function documentAction(attachmentId) {
+			var form = document.forms["formDocumentAction"];
+			form.attachmentId.value=attachmentId;
 			form.submit();
 		}
 	</script>
-	<form name="formServices" action="${pageContext.request.contextPath}/index.html" method="post">
+	<form name="formDocumentAction" action="${pageContext.request.contextPath}/index.html" method="post">
 		<input type="hidden" name="action" value="kmelia"/>
-		<input type="hidden" name="subAction" value="home"/>
+		<input type="hidden" name="subAction" value="documentAction"/>
 		<input type="hidden" name="userId" value="${userId}"/>
-	</form>
-	<form name="formProfile" action="${pageContext.request.contextPath}/index.html" method="post">
-		<input type="hidden" name="action" value="profile"/>
-		<input type="hidden" name="subAction" value="profile"/>
-		<input type="hidden" name="userId" value="${userId}"/>
+		<input type="hidden" name="componentId" value="${componentId}"/>
+		<input type="hidden" name="attachmentId" value=""/>
 	</form>
 	<div data-role="footer" data-position="fixed">
 		Copyright Silverpeas 1999-2011

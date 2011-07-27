@@ -16,6 +16,7 @@ import com.oosphere.silverpeasmobile.vo.ComponentVO;
 import com.oosphere.silverpeasmobile.vo.PublicationVO;
 import com.oosphere.silverpeasmobile.vo.SpaceVO;
 import com.oosphere.silverpeasmobile.vo.comparator.PublicationVOComparator;
+import com.silverpeas.admin.components.Parameter;
 import com.silverpeas.admin.ejb.AdminBm;
 import com.silverpeas.util.StringUtil;
 import com.stratelia.webactiv.beans.admin.ComponentInst;
@@ -25,9 +26,15 @@ import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.kmelia.model.TopicDetail;
 import com.stratelia.webactiv.kmelia.model.UserPublication;
+import com.stratelia.webactiv.util.attachment.control.AttachmentBm;
+import com.stratelia.webactiv.util.attachment.control.AttachmentBmImpl;
+import com.stratelia.webactiv.util.attachment.ejb.AttachmentException;
+import com.stratelia.webactiv.util.attachment.ejb.AttachmentPK;
+import com.stratelia.webactiv.util.attachment.model.AttachmentDAO;
 import com.stratelia.webactiv.util.attachment.model.AttachmentDetail;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
+import com.stratelia.webactiv.util.publication.model.CompletePublication;
 import com.stratelia.webactiv.util.publication.model.PublicationDetail;
 import com.stratelia.webactiv.util.publication.model.PublicationPK;
 
@@ -121,6 +128,31 @@ public class KmeliaManager {
     } catch (RemoteException e) {
       return null;
     }
+  }
+  
+  public boolean isAttachmentSharable(String attachmentId) throws SilverpeasMobileException {
+    try {
+      AttachmentBm attachmentBm = new AttachmentBmImpl();
+      AttachmentDetail attachment = attachmentBm.getAttachmentByPrimaryKey(new AttachmentPK(attachmentId));
+      
+      return  isComponentWithFileSharing(attachment.getInstanceId());
+    } catch (AttachmentException e) {
+      throw new SilverpeasMobileException(this, "isAttachmentSharable", "Error while retreiving attachment", e);
+    }
+  }
+  
+  public boolean isComponentWithFileSharing(String componentId) throws SilverpeasMobileException {
+    try {
+      ComponentInst component = adminBm.getComponentInst(componentId);
+      Parameter fileSharingParameter = component.getParameter("useFileSharing");
+      return isParameterActive(fileSharingParameter);
+    } catch (RemoteException e) {
+      throw new SilverpeasMobileException(this, "isComponentWithFileSharing", "Error while retreiving component", e);
+    }
+  }
+
+  private boolean isParameterActive(Parameter fileSharingParameter) {
+    return fileSharingParameter!=null && "yes".equalsIgnoreCase(fileSharingParameter.getValue());
   }
 
   public List<NodeDetail> getTopics(String id, String userId, String userProfile, String spaceId, String componentId)

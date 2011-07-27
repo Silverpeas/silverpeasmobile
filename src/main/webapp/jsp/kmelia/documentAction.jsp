@@ -1,0 +1,73 @@
+<%@ page isELIgnored="false"%>
+
+<%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
+<%@ taglib uri="/WEB-INF/fmt.tld" prefix="fmt"%>
+<%@ taglib uri="/WEB-INF/fn.tld" prefix="fn"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="sm"%>
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<%@ include file="../parameters.jsp"%>
+
+<fmt:setLocale value="${lang}"/>
+<fmt:setBundle basename="com.oosphere.silverpeasmobile.multilang.silverpeasmobile"/>
+<c:set var="zeBackLabel" value="${(empty backLabel) ? 'Document Action' : backLabel}"/>
+
+<html>
+<head>
+	<title><fmt:message key="pageTitle"/></title>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name = "format-detection" content = "telephone=no">
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
+</head>
+
+<body>
+<div  data-role="page" >
+
+	<form name="formHome" action="${pageContext.request.contextPath}/index.html" method="post">
+		<input type="hidden" name="action" value="login"/>
+		<input type="hidden" name="subAction" value="home"/>
+		<input type="hidden" name="userId" value="${userId}"/>
+	</form>
+	<div  data-role="header" data-position="fixed">
+		<a href="#" data-icon="back" data-rel="back">Back</a>
+		<h1>${publication.name}</h1>
+		<a href="javascript:document.forms['formHome'].submit()" data-icon="home" >Home</a>
+	</div>
+	
+	<div  data-role="content">
+	
+		<script type="text/javascript">
+			function share(){
+				document.forms['formShare'].submit();
+			}
+		</script>
+		<form name="formShare" action="${pageContext.request.contextPath}/index.html" method="post">
+			<input type="hidden" name="action" value="kmelia"/>
+			<input type="hidden" name="subAction" value="share"/>
+			<input type="hidden" name="userId" value="${userId}"/>
+			<input type="hidden" name="componentId" value="${componentId}"/>
+			<input type="hidden" name="attachmentId" value="${attachmentId}"/>
+		</form>
+		
+		<div>
+			<a data-role="button" data-theme="a" href="${pageContext.request.contextPath}/svp-fs/File?componentId=${componentId}&attachmentId=${attachmentId}" target="_blank">Open</a>
+			<c:if test="${fileSharingActive}">
+				<a data-role="button" data-theme="a" href="javascript:share()">Generate Share Link</a>
+			</c:if>
+		</div>
+	
+	</div>
+	
+	<div data-role="footer" data-position="fixed">
+		Copyright Silverpeas 1999-2011
+	</div>
+
+</body>
+
+
+</html>

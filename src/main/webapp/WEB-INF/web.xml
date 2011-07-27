@@ -23,6 +23,11 @@
 		<servlet-class>com.oosphere.silverpeasmobile.servlet.JsonServlet</servlet-class>
 	</servlet>
 	<servlet>
+		<display-name>JsonDashboardServlet</display-name>
+		<servlet-name>JsonDashboardServlet</servlet-name>
+		<servlet-class>com.oosphere.silverpeasmobile.servlet.JsonDashboardServlet</servlet-class>
+	</servlet>
+	<servlet>
 		<display-name>WebFileServer</display-name>
 		<servlet-name>WebFileServer</servlet-name>
 		<servlet-class>com.silverpeas.tags.servlets.WebFileServer</servlet-class>
@@ -35,6 +40,10 @@
 	<servlet-mapping>
 		<servlet-name>JsonServlet</servlet-name>
 		<url-pattern>/json</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JsonDashboardServlet</servlet-name>
+		<url-pattern>/jsonDashboard</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>WebFileServer</servlet-name>
