@@ -1,5 +1,8 @@
 package com.oosphere.silverpeasmobile.handler;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -8,7 +11,9 @@ import com.oosphere.silverpeasmobile.exception.SilverpeasMobileException;
 import com.oosphere.silverpeasmobile.login.LoginManager;
 import com.oosphere.silverpeasmobile.trace.SilverpeasMobileTrace;
 import com.oosphere.silverpeasmobile.utils.StringUtils;
+import com.silverpeas.admin.ejb.AdminBm;
 import com.stratelia.silverpeas.peasCore.MainSessionController;
+import com.stratelia.webactiv.beans.admin.Domain;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 
 public class LoginHandler extends Handler {
@@ -25,6 +30,12 @@ public class LoginHandler extends Handler {
       } else if ("home".equals(subAction)) {
         request.setAttribute("userId", request.getParameter("userId"));
         page = "home.jsp";
+      } else {
+        OrganizationController organizationController = new OrganizationController();
+        Domain[] allDomains = organizationController.getAllDomains();
+        List<Domain> allDomainsList = Arrays.asList(allDomains);
+        request.setAttribute("domains", allDomainsList);
+        
       }
     } catch (SilverpeasMobileException e) {
       SilverpeasMobileTrace.error(this, "getPage", "EX_GLOBAL_ERROR", e);

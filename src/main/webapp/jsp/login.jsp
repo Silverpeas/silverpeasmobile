@@ -43,17 +43,20 @@
 			    <label for="password"><fmt:message key="password"/></label>
 			    <input type="password" name="password" id="password" value=""  />
 			</div>
-
-			<div data-role="fieldcontain">
-				<label for="domainId" class="select">Domaine</label>
-				<select name="domainId" id="domainId">
-					<option value="5" >OEVO</option>
-					<option value="0" >domainSilverpeas</option>
-					<option value="9" >Mesureo</option>
-					<option value="8" >OOSPHERE</option>
-					<option value="7" >SILVERPEAS</option>
-				</select>
-			</div>
+			
+			<c:if test="${fn:length(domains)==1}">
+				<input type="hidden" name="domainId" value="login">
+			</c:if>
+			<c:if test="${fn:length(domains)>1}">
+				<div data-role="fieldcontain">
+					<label for="domainId" class="select">Domain</label>
+					<select name="domainId" id="domainId">
+					<c:forEach items="${domains}" var="domain">
+						<option value="${domain.id}" >${domain.name}</option>
+					</c:forEach>
+					</select>
+				</div>
+			</c:if>
 
 			<c:if test="${not empty error}">
 				<h4><fmt:message key="error.${error}"/></h4>
