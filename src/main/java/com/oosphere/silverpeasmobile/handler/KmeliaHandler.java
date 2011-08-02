@@ -11,6 +11,7 @@ import com.oosphere.silverpeasmobile.bean.WebBeanFactory;
 import com.oosphere.silverpeasmobile.exception.SilverpeasMobileException;
 import com.oosphere.silverpeasmobile.kmelia.KmeliaManager;
 import com.oosphere.silverpeasmobile.vo.PublicationVO;
+import com.silverpeas.comment.model.Comment;
 import com.silverpeas.external.filesharing.model.FileSharingService;
 import com.silverpeas.external.filesharing.model.FileSharingServiceFactory;
 import com.silverpeas.external.filesharing.model.TicketDetail;
@@ -18,6 +19,7 @@ import com.silverpeas.util.StringUtil;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.kmelia.model.TopicDetail;
+import com.stratelia.webactiv.util.attachment.model.AttachmentDetail;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
 
@@ -45,6 +47,15 @@ public class KmeliaHandler extends Handler {
     } else if ("documentAction".equals(subAction)) {
       KmeliaManager kmeliaManager = getKmeliaManager(request);
       page = documentAction(request, kmeliaManager);
+    } else if ("comments".equals(subAction)) {
+      KmeliaManager kmeliaManager = getKmeliaManager(request);
+      page = comments(request, kmeliaManager);
+    } else if ("notify".equals(subAction)) {
+      KmeliaManager kmeliaManager = getKmeliaManager(request);
+      page = notify(request, kmeliaManager);
+    } else if ("addComment".equals(subAction)) {
+      KmeliaManager kmeliaManager = getKmeliaManager(request);
+      page = addComment(request, kmeliaManager);
     }
     return "kmelia/" + page;
   }
@@ -114,19 +125,28 @@ public class KmeliaHandler extends Handler {
 
   private String publication(HttpServletRequest request, KmeliaManager kmeliaManager)
       throws SilverpeasMobileException {
-    String id = request.getParameter("pubId");
+    String publicationId = request.getParameter("pubId");
     String spaceId = request.getParameter("spaceId");
     String componentId = request.getParameter("componentId");
     String userId = request.getParameter("userId");
     String backLabel = request.getParameter("backLabel");
 
-    PublicationVO publi = kmeliaManager.getPublication(id);
-
+    PublicationVO publi = kmeliaManager.getPublication(publicationId);
     request.setAttribute("publication", publi);
+    
+    boolean isComponentWithComments = kmeliaManager.isComponentWithComments(componentId);
+    request.setAttribute("commentsActive", isComponentWithComments);
+    if(isComponentWithComments){
+      List<Comment> comments = kmeliaManager.getPublicationComments(componentId, publicationId);
+      request.setAttribute("comments", comments);
+    }
+    
+    request.setAttribute("publicationId", publicationId);
     request.setAttribute("userId", userId);
     request.setAttribute("spaceId", spaceId);
     request.setAttribute("componentId", componentId);
     request.setAttribute("backLabel", backLabel);
+    request.setAttribute("commentDataCollapsed", "true");
 
     return "publication.jsp";
   }
@@ -134,15 +154,21 @@ public class KmeliaHandler extends Handler {
   private String documentAction(HttpServletRequest request, KmeliaManager kmeliaManager)
       throws SilverpeasMobileException {
     String attachmentId = request.getParameter("attachmentId");
+    String publicationId = request.getParameter("publicationId");
     String componentId = request.getParameter("componentId");
     String userId = request.getParameter("userId");
     
     boolean isComponentWithFileSharing = kmeliaManager.isAttachmentSharable(attachmentId);
+//    boolean isComponentWithComments = kmeliaManager.isAttachmentCommentable(attachmentId);
+    boolean isComponentWithNotifications = kmeliaManager.isAttachmentNotifiable(attachmentId);
 
     request.setAttribute("fileSharingActive", isComponentWithFileSharing);
+//    request.setAttribute("commentsActive", isComponentWithComments);
+    request.setAttribute("notificationsActive", isComponentWithNotifications);
     request.setAttribute("userId", userId);
     request.setAttribute("componentId", componentId);
     request.setAttribute("attachmentId", attachmentId);
+    request.setAttribute("publicationId", publicationId);
 
     return "documentAction.jsp";
   }
@@ -154,22 +180,73 @@ public class KmeliaHandler extends Handler {
     String attachmentId = request.getParameter("attachmentId");
     String userId = request.getParameter("userId");
     
-    Calendar endCalendar = Calendar.getInstance();
-    endCalendar.add(Calendar.DAY_OF_MONTH, 1);
-    Date endDate = endCalendar.getTime();
-    
-    UserDetail user = getCurrentUser(request);
-    
-    TicketDetail newTicket = TicketDetail.aTicket(Integer.parseInt(attachmentId), componentId,
-        false, user, new Date(), endDate, 1);
-    FileSharingService fileSharingService = FileSharingServiceFactory.getFactory().getFileSharingService();
-    String shareKey = fileSharingService.createTicket(newTicket);
-    newTicket.setKeyFile(shareKey);
+    TicketDetail newTicket = kmeliaManager.generateFileSharingTicket(componentId, attachmentId, userId);
     
     request.setAttribute("urlAttachment", newTicket.getUrl(request));
+    request.setAttribute("userId", userId);
     
     return "share.jsp";
+  }
+  
+  private String comments(HttpServletRequest request, KmeliaManager kmeliaManager)
+      throws SilverpeasMobileException {
     
+    String componentId = request.getParameter("componentId");
+    String attachmentId = request.getParameter("attachmentId");
+    String publicationId = request.getParameter("publicationId");
+    String userId = request.getParameter("userId");
+    
+    List<Comment> comments = kmeliaManager.getPublicationComments(componentId, publicationId);
+    
+    request.setAttribute("comments", comments);
+    request.setAttribute("userId", userId);
+    request.setAttribute("componentId", componentId);
+    request.setAttribute("attachmentId", attachmentId);
+    request.setAttribute("publicationId", publicationId);
+    
+    return "comments.jsp";
+  }
+  
+  private String addComment(HttpServletRequest request, KmeliaManager kmeliaManager)
+      throws SilverpeasMobileException {
+    
+    String spaceId = request.getParameter("spaceId");
+    String componentId = request.getParameter("componentId");
+    String attachmentId = request.getParameter("attachmentId");
+    String publicationId = request.getParameter("publicationId");
+    String userId = request.getParameter("userId");
+    String newComment = request.getParameter("comment");
+    String backLabel = request.getParameter("backLabel");
+    
+    kmeliaManager.addPublicationComment(componentId, publicationId, newComment, userId);
+    List<Comment> comments = kmeliaManager.getPublicationComments(componentId, publicationId);
+    request.setAttribute("comments", comments);
+    
+    PublicationVO publi = kmeliaManager.getPublication(publicationId);
+    request.setAttribute("publication", publi);
+    
+    request.setAttribute("userId", userId);
+    request.setAttribute("componentId", componentId);
+    request.setAttribute("attachmentId", attachmentId);
+    request.setAttribute("publicationId", publicationId);
+    request.setAttribute("spaceId", spaceId);
+    request.setAttribute("backLabel", backLabel);
+    request.setAttribute("commentDataCollapsed", "false");
+    request.setAttribute("commentsActive", "true");
+    
+//    return "comments.jsp";
+    return "publication.jsp";
+  }
+  
+  private String notify(HttpServletRequest request, KmeliaManager kmeliaManager)
+      throws SilverpeasMobileException {
+    
+    String componentId = request.getParameter("componentId");
+    String attachmentId = request.getParameter("attachmentId");
+    String userId = request.getParameter("userId");
+    
+    
+    return "notify.jsp";
   }
 
   private KmeliaManager getKmeliaManager(HttpServletRequest request)
@@ -180,16 +257,4 @@ public class KmeliaHandler extends Handler {
         organizationController);
   }
   
-  private UserDetail getCurrentUser(HttpServletRequest request) throws SilverpeasMobileException {
-    UserDetail user = null ;
-    String userId = request.getParameter("userId");
-    if(StringUtil.isDefined(userId)){
-      OrganizationController organizationController = new OrganizationController();
-      user = organizationController.getUserDetail(userId);
-    } else{
-      throw new SilverpeasMobileException(this, "getCurrentUser", "Parameter userId not present in request");
-    }
-    return user;
-  }
-
 }

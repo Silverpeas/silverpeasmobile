@@ -94,7 +94,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/poi/poi-scratchpad/3.2-FINAL/poi-scratchpad-3.2-FINAL.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/sun/portal/portletcontainer/portlet-container/2.1/portlet-container-2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/postgresql/postgresql/9.0-801.jdbc4/postgresql-9.0-801.jdbc4.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/silverpeas/core/ejb-core/publication/5.6/publication-5.6-client.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/silverpeas/core/ejb-core/publication/5.6/publication-5.6-client.jar" sourcepath="/LIB_CORE"/>
 	<classpathentry kind="var" path="M2_REPO/org/quartz-scheduler/quartz/1.8.4/quartz-1.8.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/rome/rome/1.0/rome-1.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/silverpeas/core/ejb-core/searchengine/5.6/searchengine-5.6-client.jar"/>
@@ -121,5 +121,6 @@
 	<classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/lib-core"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

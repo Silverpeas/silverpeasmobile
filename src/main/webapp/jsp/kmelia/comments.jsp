@@ -12,7 +12,7 @@
 
 <fmt:setLocale value="${lang}"/>
 <fmt:setBundle basename="com.oosphere.silverpeasmobile.multilang.silverpeasmobile"/>
-<c:set var="zeBackLabel" value="${(empty backLabel) ? 'Document Action' : backLabel}"/>
+<c:set var="zeBackLabel" value="${(empty backLabel) ? 'Comments' : backLabel}"/>
 
 <html>
 <head>
@@ -23,6 +23,17 @@
 	<meta name = "format-detection" content = "telephone=no">
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
 	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
+	<script type='text/javascript'>
+        $(document).ready(function() {
+            $('#comment').keyup(function() {
+                var len = this.value.length;
+                if (len >= 2000) {
+                    this.value = this.value.substring(0, 2000);
+                }
+                $('#charLeft').text(2000 - len);
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -41,34 +52,32 @@
 	
 	<div  data-role="content">
 	
-		<script type="text/javascript">
-			function goTo(subAction){
-				var form = document.forms['form'];
-				form.subAction.value = subAction;
-				form.submit();
-			}
-		</script>
 		<form name="form" action="${pageContext.request.contextPath}/index.html" method="post">
+			<div data-role="fieldcontain">
+				<%--<label for="comment">Add Comment</label>--%>
+				<textarea cols="40" rows="8" name="comment" id="comment" style="width: 98%"></textarea>
+				<span style="font-size:smaller;">&nbsp;<span id="charLeft">2000</span>  Characters left</span>
+			</div>
+			
+			<input type="submit" value="Submit Comment" data-theme="a">  
+			
 			<input type="hidden" name="action" value="kmelia"/>
-			<input type="hidden" name="subAction" value=""/>
+			<input type="hidden" name="subAction" value="addComment"/>
 			<input type="hidden" name="userId" value="${userId}"/>
 			<input type="hidden" name="componentId" value="${componentId}"/>
 			<input type="hidden" name="publicationId" value="${publicationId}"/>
 			<input type="hidden" name="attachmentId" value="${attachmentId}"/>
 		</form>
 		
-		<div>
-			<a data-role="button" data-theme="a" href="${pageContext.request.contextPath}/svp-fs/File?componentId=${componentId}&attachmentId=${attachmentId}" target="_blank">Open</a>
-			<%-- 
-			<c:if test="${notificationsActive}">
-				<a data-role="button" data-theme="a" href="javascript:goTo('notify')">Notify</a>
-			</c:if>
-			--%>
-			<c:if test="${fileSharingActive}">
-				<a data-role="button" data-theme="a" href="javascript:goTo('share')">Generate Share Link</a>
-			</c:if>
-		</div>
-	
+		<ul data-role="listview" data-theme="d" data-inset="true">
+		<c:forEach items="${comments}" var="comment">
+			<li>
+				<img src="/silverpeas${comment.ownerDetail.avatar}"/> 
+				<p><b>${comment.owner}</b> - ${comment.creationDate}</p><p style="white-space: pre-line;">${comment.message}</p>
+			</li>
+		</c:forEach>
+		</ul>
+		
 	</div>
 	
 	<div data-role="footer" data-position="fixed">
