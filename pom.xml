@@ -142,7 +142,7 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
+			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.1</version>
 			<type>jar</type>
@@ -159,8 +159,6 @@
 			<groupId>com.silverpeas.core</groupId>
 			<artifactId>web-core</artifactId>
 			<version>5.7-SNAPSHOT</version>
-			<!--<classifier>client</classifier>-->
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas</groupId>
