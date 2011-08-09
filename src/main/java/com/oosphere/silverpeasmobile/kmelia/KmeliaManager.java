@@ -5,7 +5,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 import com.oosphere.silverpeasmobile.comment.comparator.CommentReverseIdComparator;
 import com.oosphere.silverpeasmobile.exception.SilverpeasMobileException;
 import com.oosphere.silverpeasmobile.trace.SilverpeasMobileTrace;
+import com.oosphere.silverpeasmobile.utils.StringUtils;
 import com.oosphere.silverpeasmobile.vo.AttachmentVO;
 import com.oosphere.silverpeasmobile.vo.ComponentVO;
 import com.oosphere.silverpeasmobile.vo.PublicationVO;
@@ -28,19 +31,22 @@ import com.silverpeas.external.filesharing.model.FileSharingService;
 import com.silverpeas.external.filesharing.model.FileSharingServiceFactory;
 import com.silverpeas.external.filesharing.model.TicketDetail;
 import com.silverpeas.util.StringUtil;
+import com.stratelia.silverpeas.notificationManager.NotificationMetaData;
+import com.stratelia.silverpeas.notificationManager.UserRecipient;
 import com.stratelia.webactiv.beans.admin.ComponentInst;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.SpaceInst;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
+import com.stratelia.webactiv.kmelia.model.KmeliaPublication;
 import com.stratelia.webactiv.kmelia.model.TopicDetail;
-import com.stratelia.webactiv.kmelia.model.UserPublication;
+//import com.stratelia.webactiv.kmelia.model.UserPublication;
 import com.stratelia.webactiv.util.WAPrimaryKey;
 import com.stratelia.webactiv.util.attachment.control.AttachmentBm;
 import com.stratelia.webactiv.util.attachment.control.AttachmentBmImpl;
 import com.stratelia.webactiv.util.attachment.ejb.AttachmentException;
 import com.stratelia.webactiv.util.attachment.ejb.AttachmentPK;
-import com.stratelia.webactiv.util.attachment.model.AttachmentDAO;
+//import com.stratelia.webactiv.util.attachment.model.AttachmentDAO;
 import com.stratelia.webactiv.util.attachment.model.AttachmentDetail;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
@@ -307,15 +313,17 @@ public class KmeliaManager {
   public List<PublicationVO> getTopicPublications(String id, String userId, String userProfile,
       String spaceId, String componentId) throws SilverpeasMobileException {
     TopicDetail topic = getTopicDetail(id, userId, userProfile, spaceId, componentId);
-    List<UserPublication> userPublications = (List<UserPublication>) topic.getPublicationDetails();
-    return getPublications(userPublications);
+//    List<UserPublication> userPublications = (List<UserPublication>) topic.getPublicationDetails();
+    Collection<KmeliaPublication> kmeliaPublications = topic.getKmeliaPublications();
+    
+    return getPublications(kmeliaPublications);
   }
 
-  public List<PublicationVO> getPublications(List<UserPublication> userPublications)
+  public List<PublicationVO> getPublications(Collection<KmeliaPublication> kmeliaPublications)
       throws SilverpeasMobileException {
     List<PublicationVO> publications = new ArrayList<PublicationVO>();
-    for (UserPublication userPublication : userPublications) {
-      PublicationVO publication = getPublication(userPublication);
+    for (KmeliaPublication kmeliaPublication : kmeliaPublications) {
+      PublicationVO publication = getPublication(kmeliaPublication);
       if (publication != null) {
         publications.add(publication);
       }
@@ -324,8 +332,8 @@ public class KmeliaManager {
     return publications;
   }
 
-  private PublicationVO getPublication(UserPublication userPublication) {
-    return getPublication(userPublication.getPublication());
+  private PublicationVO getPublication(KmeliaPublication kmeliaPublication) {
+    return getPublication(kmeliaPublication.getDetail());
   }
 
   public PublicationVO getPublication(String id) {
@@ -376,6 +384,99 @@ public class KmeliaManager {
 
   protected UserDetail getUserDetail(String userId) {
     return organizationController.getUserDetail(userId);
+  }
+  
+  public List<UserDetail> getComponentUsers(String componentId){
+    return Arrays.asList(organizationController.getAllUsers(componentId));
+  }
+ 
+  public void notifyUsers(String userId, String componentId, String[] recipients, String attachmentId, String publicationId, String message) throws SilverpeasMobileException {
+    AttachmentDetail attachment = getAttachmentDetail(attachmentId);
+    String userName = getUserName(userId);
+    String htmlMessage = "";
+    try {
+      htmlMessage = constructNotificationMessage(userId, message, attachment, recipients, componentId, publicationId);
+    } catch (RemoteException e) {
+      throw new SilverpeasMobileException(this, "notifyUsers", "Error while constructing notification message", e);
+    }
+    
+    String title = "Notification de "+userName;
+    
+    NotificationMetaData notifMetaData = new NotificationMetaData();
+    notifMetaData.setComponentId(componentId);
+    notifMetaData.setContent(htmlMessage);
+    notifMetaData.setTitle(title);
+    notifMetaData.setSender(userId);
+    notifMetaData.setDate(Calendar.getInstance().getTime());
+    
+    List<UserRecipient> userRecipients = new ArrayList<UserRecipient>();
+    for (String recipientId : recipients) {
+      UserRecipient userRecipient = new UserRecipient(recipientId);
+    }
+    notifMetaData.setUserRecipients(userRecipients);
+    
+    AttachmentBm attachmentBm = new AttachmentBmImpl();
+    try {
+      attachmentBm.notifyUser(notifMetaData, userId, componentId);
+    } catch (AttachmentException e) {
+      throw new SilverpeasMobileException(this, "notifyUsers", "Error while notifying", e);
+    }
+  }
+
+  private String constructNotificationMessage(String userId, String message,
+      AttachmentDetail attachment, String[] recipients, String componentId, String publicationId) throws RemoteException {
+    StringBuffer htmlMessage = new StringBuffer();
+    
+    String userName = getUserName(userId);
+    htmlMessage.append(userName).append(" vous informe de l&#39;existence d&#39;un document...<br><br>");
+    
+    if(StringUtils.isValued(message)){
+      htmlMessage.append("Message :<br><div style=\"background-color:#FFF9D7; border:1px solid #E2C822; padding:5px; width:390px;\">&quot; ").append(message).append("&quot;</div><br>");
+    }
+    
+    PublicationPK publicationPk = new PublicationPK(publicationId);
+    PublicationDetail publication = kmeliaBm.getPublicationDetail(publicationPk);
+    htmlMessage.append("Vous trouverez ce document attach&eacute; &agrave; la publication &quot;").append(publication.getName()).append("&quot; ici :<br>");
+    
+    ComponentInst component = adminBm.getComponentInst(componentId);
+    String spaceId = component.getDomainFatherId();
+    SpaceInst space = adminBm.getSpaceInstById(spaceId);
+    htmlMessage.append(space.getName()).append(" &gt; ");
+    htmlMessage.append(component.getLabel()).append(" &gt; ");
+    
+    TopicDetail topic = kmeliaBm.getPublicationFather(publication.getPK(), true, userId, true);
+    Collection<NodeDetail> nodes = topic.getPath();
+    boolean first = true;
+    for (NodeDetail nodeDetail : nodes) {
+      if(!first){
+        htmlMessage.append(nodeDetail.getName()).append(" &gt; ");
+      } else{
+        first = false;
+      }
+    }
+    htmlMessage.append("<br><br>");
+    
+    htmlMessage.append("Nom du fichier : ").append(attachment.getLogicalName()).append("<br>");
+    
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    htmlMessage.append("Date de cr&eacute;ation : ").append(dateFormat.format(attachment.getCreationDate())).append("<br>");
+    
+    htmlMessage.append("Taille : ").append(attachment.getAttachmentFileSize()).append("<br>");
+    
+    htmlMessage.append("Auteur : ").append(getUserName(attachment.getAuthor())).append("<br><br>");
+    
+    htmlMessage.append("URL : ").append(attachment.getAliasURL()).append("<br>");
+    
+    htmlMessage.append("Ce message a &eacute;t&eacute; envoy&eacute;<br> aux utilisateurs : ");
+    
+    for (String recipientId : recipients) {
+      htmlMessage.append(getUserName(recipientId)).append("<br>");
+    }
+    htmlMessage.append("<br><br>");
+    
+    htmlMessage.append("<a href=\"").append(attachment.getAliasURL()).append("\" target=\"_blank\">Cliquez ici</a> pour acc&eacute;der directement &agrave; ce document.");
+        
+    return htmlMessage.toString();
   }
 
   protected String getUserName(String userId) {

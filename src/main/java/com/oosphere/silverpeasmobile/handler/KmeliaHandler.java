@@ -56,6 +56,9 @@ public class KmeliaHandler extends Handler {
     } else if ("addComment".equals(subAction)) {
       KmeliaManager kmeliaManager = getKmeliaManager(request);
       page = addComment(request, kmeliaManager);
+    } else if ("doNotify".equals(subAction)) {
+      KmeliaManager kmeliaManager = getKmeliaManager(request);
+      page = doNotify(request, kmeliaManager);
     }
     return "kmelia/" + page;
   }
@@ -156,7 +159,11 @@ public class KmeliaHandler extends Handler {
     String attachmentId = request.getParameter("attachmentId");
     String publicationId = request.getParameter("publicationId");
     String componentId = request.getParameter("componentId");
+    String spaceId = request.getParameter("spaceId");
     String userId = request.getParameter("userId");
+    
+    PublicationVO publi = kmeliaManager.getPublication(publicationId);
+    request.setAttribute("publication", publi);
     
     boolean isComponentWithFileSharing = kmeliaManager.isAttachmentSharable(attachmentId);
 //    boolean isComponentWithComments = kmeliaManager.isAttachmentCommentable(attachmentId);
@@ -169,6 +176,7 @@ public class KmeliaHandler extends Handler {
     request.setAttribute("componentId", componentId);
     request.setAttribute("attachmentId", attachmentId);
     request.setAttribute("publicationId", publicationId);
+    request.setAttribute("spaceId", spaceId);
 
     return "documentAction.jsp";
   }
@@ -241,10 +249,61 @@ public class KmeliaHandler extends Handler {
   private String notify(HttpServletRequest request, KmeliaManager kmeliaManager)
       throws SilverpeasMobileException {
     
+    String spaceId = request.getParameter("spaceId");
     String componentId = request.getParameter("componentId");
     String attachmentId = request.getParameter("attachmentId");
+    String publicationId = request.getParameter("publicationId");
     String userId = request.getParameter("userId");
     
+    PublicationVO publi = kmeliaManager.getPublication(publicationId);
+    request.setAttribute("publication", publi);
+    
+    List<UserDetail> listComponentUsers = kmeliaManager.getComponentUsers(componentId);
+    request.setAttribute("listComponentUsers", listComponentUsers);
+    
+    request.setAttribute("spaceId", spaceId);
+    request.setAttribute("publicationId", publicationId);
+    request.setAttribute("userId", userId);
+    request.setAttribute("componentId", componentId);
+    request.setAttribute("attachmentId", attachmentId);
+    
+    return "notify.jsp";
+  }
+  
+  
+  private String doNotify(HttpServletRequest request, KmeliaManager kmeliaManager)
+      throws SilverpeasMobileException {
+    
+    String spaceId = request.getParameter("spaceId");
+    String componentId = request.getParameter("componentId");
+    String attachmentId = request.getParameter("attachmentId");
+    String publicationId = request.getParameter("publicationId");
+    String userId = request.getParameter("userId");
+    String message = request.getParameter("message");
+    
+    PublicationVO publi = kmeliaManager.getPublication(publicationId);
+    request.setAttribute("publication", publi);
+    
+    List<UserDetail> listComponentUsers = kmeliaManager.getComponentUsers(componentId);
+    request.setAttribute("listComponentUsers", listComponentUsers);
+    
+    List<String> selectedRecipients = new ArrayList<String>();
+    for (UserDetail userDetail : listComponentUsers) {
+      if(request.getParameter("recipient-"+userDetail.getId())!=null){
+        selectedRecipients.add(userDetail.getId());
+      }
+    }
+    
+    if(!selectedRecipients.isEmpty()){
+      String [] stringArray = new String[0];
+      kmeliaManager.notifyUsers(userId, componentId, selectedRecipients.toArray(stringArray), attachmentId, publicationId, message);
+    }
+    
+    request.setAttribute("publicationId", publicationId);
+    request.setAttribute("userId", userId);
+    request.setAttribute("componentId", componentId);
+    request.setAttribute("attachmentId", attachmentId);
+    request.setAttribute("spaceId", spaceId);
     
     return "notify.jsp";
   }

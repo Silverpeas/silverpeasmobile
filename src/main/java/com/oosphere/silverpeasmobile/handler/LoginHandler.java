@@ -31,18 +31,33 @@ public class LoginHandler extends Handler {
         request.setAttribute("userId", request.getParameter("userId"));
         page = "home.jsp";
       } else {
-        OrganizationController organizationController = new OrganizationController();
-        Domain[] allDomains = organizationController.getAllDomains();
-        List<Domain> allDomainsList = Arrays.asList(allDomains);
-        request.setAttribute("domains", allDomainsList);
+        populateDomainsInRequest(request);
         
       }
     } catch (SilverpeasMobileException e) {
       SilverpeasMobileTrace.error(this, "getPage", "EX_GLOBAL_ERROR", e);
       request.setAttribute("error", "technicalError");
+      
+      populateDomainsInRequest(request);
+      
       page = "login.jsp";
     }
     return page;
+  }
+
+  private void populateDomainsInRequest(HttpServletRequest request) {
+    List<Domain> allDomainsList = getDomains();
+    request.setAttribute("domains", allDomainsList);
+    
+    String domainIdFromUrl = request.getParameter("DomainId");
+    request.setAttribute("domainIdFromUrl", domainIdFromUrl);
+  }
+
+  private List<Domain> getDomains() {
+    OrganizationController organizationController = new OrganizationController();
+    Domain[] allDomains = organizationController.getAllDomains();
+    List<Domain> allDomainsList = Arrays.asList(allDomains);
+    return allDomainsList;
   }
 
   private String login(HttpServletRequest request, LoginManager loginManager)
@@ -52,6 +67,9 @@ public class LoginHandler extends Handler {
     if (!StringUtils.isValued(login) || !StringUtils.isValued(password)) {
       request.setAttribute("error", "invalidLogin");
       request.setAttribute("login", login);
+      
+      populateDomainsInRequest(request);
+      
       return "login.jsp";
     }
 
@@ -76,6 +94,9 @@ public class LoginHandler extends Handler {
       request.setAttribute("error",
           ("Error_1".equals(authentificationKey) ? "invalidLogin" : "technicalError"));
       request.setAttribute("login", login);
+      
+      populateDomainsInRequest(request);
+      
       return "login.jsp";
     }
   }

@@ -87,6 +87,7 @@
 					<input type="hidden" name="action" value="kmelia"/>
 					<input type="hidden" name="subAction" value="addComment"/>
 					<input type="hidden" name="userId" value="${userId}"/>
+					<input type="hidden" name="spaceId" value="${spaceId}"/>
 					<input type="hidden" name="componentId" value="${componentId}"/>
 					<input type="hidden" name="publicationId" value="${publicationId}"/>
 					<input type="hidden" name="attachmentId" value="${attachmentId}"/>
@@ -116,6 +117,7 @@
 		<input type="hidden" name="action" value="kmelia"/>
 		<input type="hidden" name="subAction" value="documentAction"/>
 		<input type="hidden" name="userId" value="${userId}"/>
+		<input type="hidden" name="spaceId" value="${spaceId}"/>
 		<input type="hidden" name="componentId" value="${componentId}"/>
 		<input type="hidden" name="publicationId" value="${publicationId}"/>
 		<input type="hidden" name="attachmentId" value=""/>

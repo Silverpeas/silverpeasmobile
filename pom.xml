@@ -58,42 +58,42 @@
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>publication</artifactId>
-			<version>5.6</version>
+			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>admin</artifactId>
-			<version>5.6</version>
+			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>formtemplate</artifactId>
-			<version>5.6</version>
+			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.components.kmelia</groupId>
 			<artifactId>kmelia-ejb</artifactId>
-			<version>5.6</version>
+			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>node</artifactId>
-			<version>5.6</version>
+			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>versioning</artifactId>
-			<version>5.6</version>
+			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
 			<exclusions>
@@ -130,7 +130,7 @@
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>searchengine</artifactId>
-			<version>5.6</version>
+			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
@@ -151,7 +151,7 @@
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>pdc</artifactId>
-			<version>5.6</version>
+			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>

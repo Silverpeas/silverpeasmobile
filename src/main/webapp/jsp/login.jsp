@@ -45,19 +45,24 @@
 			</div>
 			
 			<c:if test="${fn:length(domains)==1}">
-				<input type="hidden" name="domainId" value="login">
+				<input type="hidden" name="domainId" value="${domains[0].id}">
 			</c:if>
 			<c:if test="${fn:length(domains)>1}">
 				<div data-role="fieldcontain">
 					<label for="domainId" class="select">Domain</label>
 					<select name="domainId" id="domainId">
 					<c:forEach items="${domains}" var="domain">
-						<option value="${domain.id}" >${domain.name}</option>
+						<c:if test="${domain.id == domainIdFromUrl}">
+							<option value="${domain.id}" selected>${domain.name}</option>
+						</c:if>
+						<c:if test="${domain.id != domainIdFromUrl}">
+							<option value="${domain.id}" >${domain.name}</option>
+						</c:if>
 					</c:forEach>
 					</select>
 				</div>
 			</c:if>
-
+			
 			<c:if test="${not empty error}">
 				<h4><fmt:message key="error.${error}"/></h4>
 			</c:if>

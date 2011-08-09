@@ -52,6 +52,7 @@
 			<input type="hidden" name="action" value="kmelia"/>
 			<input type="hidden" name="subAction" value=""/>
 			<input type="hidden" name="userId" value="${userId}"/>
+			<input type="hidden" name="spaceId" value="${spaceId}"/>
 			<input type="hidden" name="componentId" value="${componentId}"/>
 			<input type="hidden" name="publicationId" value="${publicationId}"/>
 			<input type="hidden" name="attachmentId" value="${attachmentId}"/>
@@ -59,11 +60,9 @@
 		
 		<div>
 			<a data-role="button" data-theme="a" href="${pageContext.request.contextPath}/svp-fs/File?componentId=${componentId}&attachmentId=${attachmentId}" target="_blank">Open</a>
-			<%-- 
 			<c:if test="${notificationsActive}">
 				<a data-role="button" data-theme="a" href="javascript:goTo('notify')">Notify</a>
 			</c:if>
-			--%>
 			<c:if test="${fileSharingActive}">
 				<a data-role="button" data-theme="a" href="javascript:goTo('share')">Generate Share Link</a>
 			</c:if>
