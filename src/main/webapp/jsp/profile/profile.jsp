@@ -59,7 +59,7 @@
 		<div  data-role="header" data-position="fixed">Profile</div>
 		<div  data-role="content">
 			<nav>
-				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
+				<ul data-role="listview" data-inset="true" data-theme="a" data-dividertheme="b">
 				    <li><a href="javascript:changeStatus()">Change Status</a></li>
 				    <li><a href="javascript:infoThread()">Info Thread</a></li>
 				</ul>

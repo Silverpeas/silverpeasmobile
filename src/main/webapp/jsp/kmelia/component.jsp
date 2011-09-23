@@ -56,7 +56,7 @@
 		
 		<div  data-role="content">
 			<nav>
-				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
+				<ul data-role="listview" data-inset="true" data-theme="a" data-dividertheme="b">
 					<li data-role="list-divider">Dossiers</li>
 					<c:forEach items="${nodes}" var="node">
 						<c:if test='${node.id != "1" && node.id != "2"}'>

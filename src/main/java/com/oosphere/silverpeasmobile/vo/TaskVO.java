@@ -37,6 +37,7 @@ public class TaskVO {
   public static final String DUE = "due";
   public static final String STARTED = "started";
   
+  @SuppressWarnings("serial")
   public static Map<String, String> OPTION_LABELS = new HashMap<String, String>() {
     {
       put(DUE, "Overdue");
@@ -49,6 +50,7 @@ public class TaskVO {
     }
   };
   
+  @SuppressWarnings("serial")
   public static Map<String, Integer> OPTION_ORDER = new HashMap<String, Integer>() {
     {
       put(TaskVO.TODAY, 0);
@@ -59,6 +61,7 @@ public class TaskVO {
     }
   };
   
+  @SuppressWarnings("serial")
   public static Map<String, Integer> OPTION_ORDER_FOR_LIST = new HashMap<String, Integer>() {
     {
       put(TaskVO.DUE, 0);

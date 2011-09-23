@@ -63,7 +63,7 @@
 
 		<div data-role="collapsible" data-collapsed="true">
 			<h3>Attachments</h3>
-			<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
+			<ul data-role="listview" data-inset="true" data-theme="a" data-dividertheme="b">
 			<c:forEach items="${publication.attachments}" var="attachment">
 				<!-- <li><a class="fileTitle" href="${pageContext.request.contextPath}/svp-fs/File?componentId=${componentId}&attachmentId=${attachment.fileId}" target="_blank"><img src="${attachment.fileIcon}" class="ui-li-icon"> ${attachment.name} <span class="ui-li-count">(${attachment.fileSize})</span></a>-->
 				<li><a class="fileTitle" href="javascript:documentAction(${attachment.fileId})" ><img src="${attachment.fileIcon}" class="ui-li-icon"> ${attachment.name} <span class="ui-li-count">(${attachment.fileSize})</span></a>
@@ -93,7 +93,7 @@
 					<input type="hidden" name="attachmentId" value="${attachmentId}"/>
 				</form>
 				
-				<ul data-role="listview" data-theme="d" data-inset="true">
+				<ul data-role="listview" data-theme="a" data-inset="true">
 				<c:forEach items="${comments}" var="comment">
 					<li>
 						<img src="/silverpeas${comment.ownerDetail.avatar}"/> 

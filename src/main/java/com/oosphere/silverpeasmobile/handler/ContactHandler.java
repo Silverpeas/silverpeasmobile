@@ -5,11 +5,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.oosphere.silverpeasmobile.bean.WebBeanFactory;
 import com.oosphere.silverpeasmobile.contact.ContactManager;
 import com.oosphere.silverpeasmobile.exception.SilverpeasMobileException;
 import com.oosphere.silverpeasmobile.vo.ContactPropertyVO;
-import com.stratelia.webactiv.beans.admin.DomainProperty;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.beans.admin.UserFull;
@@ -73,7 +71,6 @@ public class ContactHandler extends Handler {
 
   private ContactManager getContactManager(HttpServletRequest request)
       throws SilverpeasMobileException {
-    WebBeanFactory beanFactory = new WebBeanFactory();
     OrganizationController organizationController = new OrganizationController();
     return new ContactManager(organizationController);
   }

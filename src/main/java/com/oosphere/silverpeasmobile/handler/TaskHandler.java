@@ -72,7 +72,6 @@ public class TaskHandler extends Handler {
   }
 
   private TaskVO createTaskVOFromRequest(HttpServletRequest request) {
-    String userId = request.getParameter("userId");
     String taskId = request.getParameter("taskId");
     String taskName = request.getParameter("name");
     String taskDescription = request.getParameter("description");
@@ -120,7 +119,6 @@ public class TaskHandler extends Handler {
 
   private String close(HttpServletRequest request, TaskManager taskManager)
       throws SilverpeasMobileException {
-    String userId = request.getParameter("userId");
     String taskId = request.getParameter("taskId");
 
     taskManager.closeTask(taskId);
@@ -168,9 +166,7 @@ public class TaskHandler extends Handler {
   private TaskManager getTaskManager(HttpServletRequest request)
       throws SilverpeasMobileException {
     WebBeanFactory beanFactory = new WebBeanFactory();
-    OrganizationController organizationController = new OrganizationController();
-    return new TaskManager(beanFactory.getCalendarBm(), beanFactory.getKmeliaBm(),
-        beanFactory.getProjectManagerBm(), organizationController);
+    return new TaskManager(beanFactory.getCalendarBm(), beanFactory.getKmeliaBm());
   }
 
   private KmeliaManager getKmeliaManager(HttpServletRequest request)
@@ -183,7 +179,6 @@ public class TaskHandler extends Handler {
 
   private ContactManager getContactManager(HttpServletRequest request)
       throws SilverpeasMobileException {
-    WebBeanFactory beanFactory = new WebBeanFactory();
     OrganizationController organizationController = new OrganizationController();
     return new ContactManager(organizationController);
   }

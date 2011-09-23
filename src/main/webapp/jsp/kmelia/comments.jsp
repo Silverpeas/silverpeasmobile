@@ -69,7 +69,7 @@
 			<input type="hidden" name="attachmentId" value="${attachmentId}"/>
 		</form>
 		
-		<ul data-role="listview" data-theme="d" data-inset="true">
+		<ul data-role="listview" data-theme="a" data-inset="true">
 		<c:forEach items="${comments}" var="comment">
 			<li>
 				<img src="/silverpeas${comment.ownerDetail.avatar}"/> 

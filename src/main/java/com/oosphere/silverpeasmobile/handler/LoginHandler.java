@@ -3,7 +3,6 @@ package com.oosphere.silverpeasmobile.handler;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -11,7 +10,6 @@ import com.oosphere.silverpeasmobile.CookieManager;
 import com.oosphere.silverpeasmobile.bean.WebBeanFactory;
 import com.oosphere.silverpeasmobile.exception.SilverpeasMobileException;
 import com.oosphere.silverpeasmobile.login.LoginManager;
-import com.oosphere.silverpeasmobile.servlet.MainController;
 import com.oosphere.silverpeasmobile.trace.SilverpeasMobileTrace;
 import com.oosphere.silverpeasmobile.utils.StringUtils;
 import com.stratelia.silverpeas.authentication.EncryptionFactory;

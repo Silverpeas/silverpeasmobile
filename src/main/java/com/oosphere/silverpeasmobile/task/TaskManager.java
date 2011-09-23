@@ -12,8 +12,6 @@ import com.oosphere.silverpeasmobile.utils.StringUtils;
 import com.oosphere.silverpeasmobile.vo.TaskRelatedResumeVO;
 import com.oosphere.silverpeasmobile.vo.TaskVO;
 import com.oosphere.silverpeasmobile.vo.comparator.TaskVOListSeparatorOptionComparator;
-import com.silverpeas.projectManager.control.ejb.ProjectManagerBm;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.calendar.control.CalendarBm;
 import com.stratelia.webactiv.calendar.model.Attendee;
 import com.stratelia.webactiv.calendar.model.ToDoHeader;
@@ -29,16 +27,11 @@ public class TaskManager {
   
   private TaskDateUtils taskDateUtils = new TaskDateUtils();
   private CalendarBm calendarBm;
-  private OrganizationController organizationController;
   private KmeliaBm kmeliaBm;
-  private ProjectManagerBm projectManagerBm;
 
-  public TaskManager(CalendarBm calendarBm, KmeliaBm kmeliaBm, ProjectManagerBm projectManagerBm,
-      OrganizationController organizationController) {
+  public TaskManager(CalendarBm calendarBm, KmeliaBm kmeliaBm) {
     this.calendarBm = calendarBm;
-    this.organizationController = organizationController;
     this.kmeliaBm = kmeliaBm;
-    this.projectManagerBm = projectManagerBm;
   }
 
   public List<TaskVO> getUserOpenTasks(String userId) throws SilverpeasMobileException {
@@ -369,18 +362,6 @@ public class TaskManager {
     TaskRelatedResumeVO related = getTaskRelated(todo);
     taskVO.setObjectRelated(related);
     
-    taskVO.setListSeparator(calculateListSeparator(todo));
-
     return taskVO;
   }
-
-  private String calculateListSeparator(ToDoHeader todo) {
-    String separator = "";
-    
-    Calendar today = Calendar.getInstance();
-    
-    return separator;
-  }
-  
-  
 }

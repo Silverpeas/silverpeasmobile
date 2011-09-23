@@ -46,7 +46,7 @@
 			
 			$(document).ready(function() {
 				
-				var html='<ul id="dashboard" data-role="listview" data-theme="d">';
+				var html='<ul id="dashboard" data-role="listview" data-theme="a">';
 				
 				$.getJSON(getFeedURL()+${userId},  function(jsonObject){
 					$.each(jsonObject, function(key,map){

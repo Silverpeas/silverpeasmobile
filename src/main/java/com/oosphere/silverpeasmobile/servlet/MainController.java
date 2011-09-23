@@ -1,14 +1,11 @@
 package com.oosphere.silverpeasmobile.servlet;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,11 +21,9 @@ import com.oosphere.silverpeasmobile.trace.SilverpeasMobileTrace;
 import com.oosphere.silverpeasmobile.utils.StringUtils;
 import com.silverpeas.SilverpeasServiceProvider;
 import com.silverpeas.util.StringUtil;
-import com.stratelia.silverpeas.authentication.EncryptionFactory;
 
 public class MainController extends HttpServlet {
 
-  private static final int THREE_YEARS_AS_SECONDS = 3 * 365 * 24 * 60 * 60;
 
   private static final long serialVersionUID = 6933108376306279880L;
   

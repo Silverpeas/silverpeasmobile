@@ -1,8 +1,6 @@
 package com.oosphere.silverpeasmobile.handler;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,14 +10,10 @@ import com.oosphere.silverpeasmobile.exception.SilverpeasMobileException;
 import com.oosphere.silverpeasmobile.kmelia.KmeliaManager;
 import com.oosphere.silverpeasmobile.vo.PublicationVO;
 import com.silverpeas.comment.model.Comment;
-import com.silverpeas.external.filesharing.model.FileSharingService;
-import com.silverpeas.external.filesharing.model.FileSharingServiceFactory;
 import com.silverpeas.external.filesharing.model.TicketDetail;
-import com.silverpeas.util.StringUtil;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.kmelia.model.TopicDetail;
-import com.stratelia.webactiv.util.attachment.model.AttachmentDetail;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
 

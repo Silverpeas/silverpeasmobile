@@ -56,7 +56,7 @@
 			<nav>
 
 
-				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="b">
+				<ul data-role="listview" data-inset="true" data-theme="a" data-dividertheme="b">
 	                        <c:forEach items="${spaces}" var="space">
 					<li data-role="list-divider">
 						<c:if test="${fn:startsWith(space.name, 'Personal space')==true}">

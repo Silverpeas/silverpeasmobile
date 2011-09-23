@@ -59,7 +59,7 @@
 				<input type="hidden" name="contactId" value=""/>
 			</form>
 		
-			<ul data-role="listview" data-theme="g">
+			<ul data-role="listview" data-theme="a">
 				<c:forEach items="${contacts}" var="contact">
 					<li>
 						<a href="javascript:selectContact('${contact.id}')">
