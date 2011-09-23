@@ -17,16 +17,16 @@
 <html>
 <head>
 	<title><fmt:message key="pageTitle"/></title>
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquery.mobile-1.0b1.min.css" />
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name = "format-detection" content = "telephone=no">
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.mobile-1.0b1.min.js"></script>
 </head>
 
 <body>
-<div  data-role="page" >
+<div data-role="page">
 
 	<form name="formHome" action="${pageContext.request.contextPath}/index.html" method="post">
 		<input type="hidden" name="action" value="login"/>
@@ -60,9 +60,11 @@
 		
 		<div>
 			<a data-role="button" data-theme="a" href="${pageContext.request.contextPath}/svp-fs/File?componentId=${componentId}&attachmentId=${attachmentId}" target="_blank">Open</a>
+			
 			<c:if test="${notificationsActive}">
 				<a data-role="button" data-theme="a" href="javascript:goTo('notify')">Notify</a>
 			</c:if>
+			
 			<c:if test="${fileSharingActive}">
 				<a data-role="button" data-theme="a" href="javascript:goTo('share')">Generate Share Link</a>
 			</c:if>

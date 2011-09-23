@@ -39,37 +39,57 @@
 		</form>
 		<div  data-role="header" data-position="fixed">
 			<a href="#" data-icon="back" data-rel="back">Back</a>
-			<h1>Contacts</h1>
+			<h1>Tasks</h1>
 			<a href="javascript:document.forms['formHome'].submit()" data-icon="home" >Home</a>
 		</div>
 		
 		<div id="content" data-role="content">
 		
 			<script type="text/javascript">
-				function selectContact(contactId){
-					var form = document.forms['contactForm'];
-					form.contactId.value = contactId;
+				function selectTask(taskId){
+					var form = document.forms['taskForm'];
+					form.subAction.value = 'task';
+					form.taskId.value = taskId;
+					form.submit();
+				}
+				
+				function newTask(){
+					var form = document.forms['taskForm'];
+					form.subAction.value = 'new';
 					form.submit();
 				}
 			</script>
-			<form name="contactForm" method="post">
-				<input type="hidden" name="action" value="contact"/>
-				<input type="hidden" name="subAction" value="contactDetail"/>
+			<form name="taskForm" method="post">
+				<input type="hidden" name="action" value="task"/>
+				<input type="hidden" name="subAction" value="task"/>
 				<input type="hidden" name="userId" value="${userId}"/>
-				<input type="hidden" name="contactId" value=""/>
+				<input type="hidden" name="taskId" value=""/>
 			</form>
 		
-			<ul data-role="listview" data-theme="g">
-				<c:forEach items="${contacts}" var="contact">
+			<ul data-role="listview" data-theme="a">
+				<% String label = ""; %>
+				<c:forEach items="${tasks}" var="task">
+				
+					<c:if test="${task.showListSeparator}">
+						<li data-role="list-divider">
+							<p><h1>${task.listSeparator}</h1></p>
+					</li>
+					</c:if>
+					
 					<li>
-						<a href="javascript:selectContact('${contact.id}')">
-							<img src="/silverpeas${contact.avatar}" />
-							<p><h1> ${contact.lastName} ${contact.firstName} </h1></p>
+						<a href="javascript:selectTask('${task.id}')">
+							<p><h1> ${task.name}</h1></p>
 						</a>
 					</li>
 				</c:forEach>		
 			</ul>
 			
+		</div>
+		
+		<div data-role="fieldcontain">
+				<fieldset class="ui-grid-a">
+					<a href="javascript:newTask();" data-role="button" data-theme="a">New</a>
+				</fieldset>
 		</div>
 	
 		<div data-role="footer" data-position="fixed">

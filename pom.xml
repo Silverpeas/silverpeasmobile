@@ -77,8 +77,21 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.silverpeas.core.ejb-core</groupId>
+			<artifactId>calendar</artifactId>
+			<version>5.7-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.silverpeas.components.kmelia</groupId>
 			<artifactId>kmelia-ejb</artifactId>
+			<version>5.7-SNAPSHOT</version>
+			<classifier>client</classifier>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.silverpeas.components.project-manager</groupId>
+			<artifactId>project-manager-ejb</artifactId>
 			<version>5.7-SNAPSHOT</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
@@ -158,6 +171,11 @@
 		<dependency>
 			<groupId>com.silverpeas.core</groupId>
 			<artifactId>web-core</artifactId>
+			<version>5.7-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.silverpeas.core</groupId>
+			<artifactId>lib-core</artifactId>
 			<version>5.7-SNAPSHOT</version>
 		</dependency>
 		<dependency>

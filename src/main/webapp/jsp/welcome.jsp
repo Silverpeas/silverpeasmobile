@@ -20,9 +20,7 @@
 	<title><fmt:message key="pageTitle"/></title>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/mobile.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.2.6.js"></script>
-	<script type="text/javascript" src="/silverpeas/util/javaScript/jquery/jquery-1.5.min.js"></script>
-	<script type="text/javascript" src="/silverpeas/util/javaScript/jquery/jquery-ui-1.8.10.custom.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.6.1.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			document.forms["form"].submit();
@@ -38,6 +36,7 @@
 			<input type="hidden" name="action" value="login"/>
 			<input type="hidden" name="subAction" value="home"/>
 			<input type="hidden" name="userId" value="${userId}"/>
+			<input type="hidden" name="login" value="${login}"/>
 		</form>
 	</div>
 </body>

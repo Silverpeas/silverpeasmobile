@@ -18,10 +18,10 @@
 	<title><fmt:message key="pageTitle"/></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name = "format-detection" content = "telephone=no">
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css">
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquery.mobile-1.0b1.min.css"/>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css"/>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.mobile-1.0b1.min.js"></script>
 	
 	<script type="text/javascript">
 		
@@ -29,6 +29,11 @@
 			var form = document.forms["form"];
 			form.action.value = action;
 			form.subAction.value = subAction;
+			form.submit();
+		}
+		
+		function logout(){
+			var form = document.forms["logout"];
 			form.submit();
 		}
 	</script>
@@ -42,8 +47,16 @@
 	<input type="hidden" name="userId" value="${userId}"/>
 </form>
 
+<form name="logout" action="${pageContext.request.contextPath}/index.html" method="post">
+	<input type="hidden" name="action" value="login"/>
+	<input type="hidden" name="logout" value="true"/>
+</form>
+
 <div  data-role="page">
-	<div  data-role="header" data-position="fixed"><h1>Home</h1></div>
+	<div  data-role="header" data-position="fixed">
+	<h1>Home</h1>
+	<a href="javascript:logout()">Logout</a>
+	</div>
 	<div  data-role="content">
 
 			<div class="ui-grid-a">
@@ -51,6 +64,7 @@
 				<div class="ui-block-b"><a href="javascript:goTo('profile', 'infoThread')" data-role="button" data-theme="a">Dashboard</a></div>
 				<div class="ui-block-a"><a href="javascript:goTo('profile', 'changeStatus')" data-role="button" data-theme="a">Status</a></div>
 				<div class="ui-block-b"><a href="javascript:goTo('contact', 'contacts')" data-role="button" data-theme="a">Contacts</a></div>
+				<div class="ui-block-a"><a href="javascript:goTo('task', 'tasks')" data-role="button" data-theme="a">Tasks</a></div>
 			</div>
 
 	</div>

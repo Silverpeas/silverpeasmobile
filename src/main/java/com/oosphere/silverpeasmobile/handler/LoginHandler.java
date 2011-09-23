@@ -3,15 +3,18 @@ package com.oosphere.silverpeasmobile.handler;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.oosphere.silverpeasmobile.CookieManager;
 import com.oosphere.silverpeasmobile.bean.WebBeanFactory;
 import com.oosphere.silverpeasmobile.exception.SilverpeasMobileException;
 import com.oosphere.silverpeasmobile.login.LoginManager;
+import com.oosphere.silverpeasmobile.servlet.MainController;
 import com.oosphere.silverpeasmobile.trace.SilverpeasMobileTrace;
 import com.oosphere.silverpeasmobile.utils.StringUtils;
-import com.silverpeas.admin.ejb.AdminBm;
+import com.stratelia.silverpeas.authentication.EncryptionFactory;
 import com.stratelia.silverpeas.peasCore.MainSessionController;
 import com.stratelia.webactiv.beans.admin.Domain;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
@@ -24,6 +27,12 @@ public class LoginHandler extends Handler {
     String page = "login.jsp";
     String subAction = request.getParameter("subAction");
     try {
+//      String login = request.getParameter("login");
+//      request.setAttribute("login", login);
+//      request.setAttribute("login", retreiveLogin(request));
+      
+      
+      
       if ("login".equals(subAction)) {
         LoginManager loginManager = getLoginManager(request);
         page = login(request, loginManager);
@@ -31,7 +40,27 @@ public class LoginHandler extends Handler {
         request.setAttribute("userId", request.getParameter("userId"));
         page = "home.jsp";
       } else {
-        populateDomainsInRequest(request);
+//        request.setAttribute("login", retreiveLoginFromCookie(request));
+        
+        String storedLogin = retreiveStoredLogin(request);
+        String storedPassword = retreiveEncryptedStoredPassword(request);
+        String storedDomain = retreiveStoredDomain(request);
+        boolean isLogout = StringUtils.isValued(request.getParameter("logout"));
+        if(!isLogout && StringUtils.isValued(storedLogin) && StringUtils.isValued(storedPassword) && StringUtils.isValued(storedDomain)){
+          return doLogin(request, getLoginManager(request), storedLogin, storedPassword, storedDomain, true);
+        } else {
+          if(StringUtils.isValued(storedLogin)){
+            request.setAttribute("login", storedLogin);
+          }
+          if(StringUtils.isValued(storedPassword)){
+            request.setAttribute("passwordAlreadyStored", "true");
+            request.setAttribute("passwordEncrypted", "true");
+            request.setAttribute("password", storedPassword);
+          }
+          populateDomainsInRequest(request);
+        }
+        
+        
         
       }
     } catch (SilverpeasMobileException e) {
@@ -50,6 +79,10 @@ public class LoginHandler extends Handler {
     request.setAttribute("domains", allDomainsList);
     
     String domainIdFromUrl = request.getParameter("DomainId");
+    if(!StringUtils.isValued(domainIdFromUrl)){
+      CookieManager cookieManager = new CookieManager();
+      domainIdFromUrl = cookieManager.getStoredDomain(request);
+    }
     request.setAttribute("domainIdFromUrl", domainIdFromUrl);
   }
 
@@ -62,18 +95,31 @@ public class LoginHandler extends Handler {
 
   private String login(HttpServletRequest request, LoginManager loginManager)
       throws SilverpeasMobileException {
+    
     String login = request.getParameter("login");
+    request.setAttribute("login", login);
     String password = request.getParameter("password");
+    String domainId = request.getParameter("domainId");
+    boolean isPasswordEncrypted = "true".equals(request.getParameter("passwordEncrypted"));
+    
+    return doLogin(request, loginManager, login, password, domainId, isPasswordEncrypted);
+  }
+
+  private String doLogin(HttpServletRequest request, LoginManager loginManager, String login,
+      String password, String domainId, boolean isPasswordEncrypted) throws SilverpeasMobileException {
     if (!StringUtils.isValued(login) || !StringUtils.isValued(password)) {
       request.setAttribute("error", "invalidLogin");
-      request.setAttribute("login", login);
       
       populateDomainsInRequest(request);
       
       return "login.jsp";
     }
+    
+    if(isPasswordEncrypted){
+      password = EncryptionFactory.getInstance().getEncryption().decode(password);
+    }
+    
 
-    String domainId = request.getParameter("domainId");
     String authentificationKey = loginManager.authenticate(login, password, domainId);
     if (authentificationKey != null && !authentificationKey.startsWith("Error")) {
       HttpSession session = request.getSession(true);
@@ -85,7 +131,7 @@ public class LoginHandler extends Handler {
         throw new SilverpeasMobileException(this, "login",
             "Error while constructiong MainSessionController object", e);
       }
-
+      
       String userId = loginManager.getUserId(login, domainId);
       request.setAttribute("userId", userId);
       request.setAttribute("authentificationKey", authentificationKey);
@@ -99,6 +145,33 @@ public class LoginHandler extends Handler {
       
       return "login.jsp";
     }
+  }
+
+  private String retreiveStoredLogin(HttpServletRequest request){
+    String login = "";
+    
+    CookieManager cookieManager = new CookieManager();
+    login = cookieManager.getStoredLogin(request);
+    
+    return login;
+  }
+  
+  private String retreiveEncryptedStoredPassword(HttpServletRequest request){
+    String password = "";
+    
+    CookieManager cookieManager = new CookieManager();
+    password = cookieManager.getEncryptedStoredPassword(request);
+    
+    return password;
+  }
+  
+  private String retreiveStoredDomain(HttpServletRequest request){
+    String domain = "";
+    
+    CookieManager cookieManager = new CookieManager();
+    domain = cookieManager.getStoredDomain(request);
+    
+    return domain;
   }
 
   private LoginManager getLoginManager(HttpServletRequest request)

@@ -17,9 +17,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name = "format-detection" content = "telephone=no">
 	<title><fmt:message key="pageTitle"/></title>
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquery.mobile-1.0b1.min.css" />
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.mobile-1.0b1.min.js"></script>
 </head>
 
 <body>
@@ -41,7 +41,7 @@
 
 			<div data-role="fieldcontain">
 			    <label for="password"><fmt:message key="password"/></label>
-			    <input type="password" name="password" id="password" value=""  />
+			    <input type="password" name="password" id="password" value="${password}"  />
 			</div>
 			
 			<c:if test="${fn:length(domains)==1}">
@@ -63,6 +63,14 @@
 				</div>
 			</c:if>
 			
+			<c:if test="${!passwordAlreadyStored}">
+				<label for="storePassword">Store Password</label>
+				<input type="checkbox" name="storePassword" id="storePassword" value="true" />
+			</c:if>
+			<c:if test="${passwordAlreadyStored}">
+				<input type="hidden" name="storePassword" value="true">
+			</c:if>
+			
 			<c:if test="${not empty error}">
 				<h4><fmt:message key="error.${error}"/></h4>
 			</c:if>
@@ -72,9 +80,12 @@
 			<input type="hidden" name="action" value="login">
 			<input type="hidden" name="subAction" value="login">
 			<input type="hidden" name="lang" value="${lang}">
+			<input type="hidden" name="passwordEncrypted" value="${passwordEncrypted}">
 		</form>
-</div>
-	<div  data-role="footer">Copyright Silverpeas 1999-2011</div>
+	</div>
+	<div  data-role="footer" data-position="fixed">
+		Copyright Silverpeas 1999-2011
+	</div>
 </div>
 
 </body>

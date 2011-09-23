@@ -22,12 +22,12 @@
 <html>
 <head>
 	<title><fmt:message key="pageTitle"/></title>
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.css" />
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquery.mobile-1.0b1.min.css" />
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/jquerymobileoverride.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name = "format-detection" content = "telephone=no">
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b1/jquery.mobile-1.0b1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.mobile-1.0b1.min.js"></script>
 	
 	<script type="text/javascript">
 			function goToServices() {
@@ -77,9 +77,10 @@
 				var fragment = '';
 				
 				var publicationid = getPublicationIdFromUrl(socialInfo.url);
+				var componentid = getComponentIdFromUrl(socialInfo.url);
 
 				fragment += '<li>'; 
-				fragment += '<a href=\'javascript:selectPubli('+publicationid+')\'>'; 
+				fragment += '<a href=\"javascript:selectPubli('+publicationid+',\''+componentid+'\')\">'; 
 				fragment += getAvatarFragment(socialInfo.author);
 				fragment += '<p><b>'+socialInfo.author.displayedName+'</b></p>';
 				fragment += '<p >'+socialInfo.label +'</p>';
@@ -94,6 +95,15 @@
 				var id = '';
 				if(url.indexOf('Id=')!=-1){
 					id = url.substring(url.indexOf('Id=')+3, url.length);
+				}
+				
+				return id;
+			}
+			
+			function getComponentIdFromUrl(url){
+				var id = '';
+				if(url.indexOf('Rkmelia/')!=-1 && url.indexOf('/searchResult')!=-1){
+					id = url.substring(url.indexOf('Rkmelia/')+8, url.indexOf('/searchResult'));
 				}
 				
 				return id;

@@ -296,7 +296,7 @@ public class KmeliaHandler extends Handler {
     
     if(!selectedRecipients.isEmpty()){
       String [] stringArray = new String[0];
-      kmeliaManager.notifyUsers(userId, componentId, selectedRecipients.toArray(stringArray), attachmentId, publicationId, message);
+      kmeliaManager.notifyUsers(userId, componentId, selectedRecipients.toArray(stringArray), attachmentId, publicationId, message, request);
     }
     
     request.setAttribute("publicationId", publicationId);
