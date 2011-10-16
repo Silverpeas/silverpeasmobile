@@ -45,7 +45,7 @@ public class ContactHandler extends Handler {
     String contactId = request.getParameter("contactId");
     String lang = (String)request.getAttribute("lang");
     
-    UserFull contact = contactManager.getUserDetail(contactId);
+    UserFull contact = contactManager.getUserFull(contactId);
     List<ContactPropertyVO> contactProperties = getContactProperties(contact, lang);
     
     request.setAttribute("contact", contact);

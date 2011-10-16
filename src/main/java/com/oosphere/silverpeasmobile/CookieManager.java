@@ -21,6 +21,14 @@ public class CookieManager {
   private static final int SECONDS_IN_A_YEAR = 31536000;
   public static String PASSWORD_MUST_BE_STORED = "true";
 
+  /**
+   * 
+   * 
+   * @param response 
+   * @param sStorePassword
+   * @param password
+   * @param isPasswordEncoded
+   */
   public void storePassword(HttpServletResponse response, String sStorePassword,
       String password, boolean isPasswordEncoded) {
     if (StringUtil.getBooleanValue(sStorePassword)) {

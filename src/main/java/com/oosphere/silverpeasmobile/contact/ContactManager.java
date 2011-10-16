@@ -36,7 +36,7 @@ public class ContactManager {
     return listUsersOfSameDomain;
   }
   
-  public UserFull getUserDetail(String userId){
+  public UserFull getUserFull(String userId){
     return organizationController.getUserFull(userId);
   }
 
