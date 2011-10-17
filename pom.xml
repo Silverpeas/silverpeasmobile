@@ -9,6 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<repositories>
+<!--
 		<repository>
 			<id>Silverpeas</id>
 			<layout>default</layout>
@@ -21,6 +22,7 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		-->
 		<repository>
 			<id>Silverpeas-Snapshots</id>
 			<layout>default</layout>
@@ -33,6 +35,18 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+    <repository>
+      <id>Silverpeas</id>
+      <layout>default</layout>
+      <name>Silverpeas Repository</name>
+      <url>http://www.silverpeas.org/nexus/content/repositories/silverpeas-pro</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
 	</repositories>
 
 	<dependencies>
@@ -181,7 +195,7 @@
 		<dependency>
 			<groupId>com.silverpeas</groupId>
 			<artifactId>taglibs</artifactId>
-			<version>5.7-SNAPSHOT</version>
+			<version>5.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.metaparadigm</groupId>
