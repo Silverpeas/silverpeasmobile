@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
+	
+	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
+	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
+	
+	<g:HTMLPanel>
+		<m:HeaderPanel leftButton="Back">
+			<g:Label horizontalAlignment="center">Silverpeas Mobile - Contacts</g:Label>			
+		</m:HeaderPanel>
+			
+		<m:SlidePanel rotate="true" visible="false" ui:field="slidePanel">
+			<m:Slide>
+				<m:ScrollPanel hasTextBox="false">
+					<m:ListPanel selectable="true" ui:field="aContactsList" showArrow="true"></m:ListPanel>
+				</m:ScrollPanel>
+			</m:Slide>
+			<m:Slide>
+				<m:ScrollPanel hasTextBox="false">
+					<m:ListPanel selectable="true" ui:field="bContactsList" showArrow="true"></m:ListPanel>
+				</m:ScrollPanel>
+			</m:Slide>
+		</m:SlidePanel>					
+
+		<m:HeaderPanel>
+			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2011</g:Label>			
+		</m:HeaderPanel>	
+	</g:HTMLPanel>
+</ui:UiBinder> 

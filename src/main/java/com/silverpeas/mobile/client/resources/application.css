@@ -1,0 +1,83 @@
+@sprite .contacts {
+	gwt-image: "contacts";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .documents {
+	gwt-image: "documents";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .status {
+	gwt-image: "status";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .dashboard {
+	gwt-image: "dashboard";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .gallery {
+	gwt-image: "gallery";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .agenda {
+	gwt-image: "agenda";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .bookmark {
+	gwt-image: "bookmark";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .notifications {
+	gwt-image: "notifications";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+.icon {
+	margin-left:auto; 
+ 	margin-right:auto;
+ 	width: 100%;
+ 	text-align: center;
+}
+
+@sprite .logo {
+	gwt-image: "logo";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .offline {
+	gwt-image: "offline";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}
+
+@sprite .online {
+	gwt-image: "online";
+	border: none;
+	cursor: pointer;
+	margin:auto;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon">
+	
+	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
+	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
+	
+	<g:HTMLPanel>
+		<m:HeaderPanel>
+			<g:Label horizontalAlignment="center">Silverpeas Mobile</g:Label>			
+		</m:HeaderPanel>
+		
+		<m:SlidePanel rotate="true">
+			<m:Slide>
+				<m:ScrollPanel>
+				
+				<!-- m:VerticalPanel width="100%">
+					<m:HorizontalPanel width="100%">
+						<i:Icon text="Contacts" styleName="{res.css.contacts}" ui:field="contacts"/>
+						<i:Icon text="Documents" styleName="{res.css.documents}" ui:field="documents"/>
+					</m:HorizontalPanel>
+					<m:HorizontalPanel>
+						<i:Icon text="Status" styleName="{res.css.status}" ui:field="status"/>
+						<i:Icon text="Dashboard" styleName="{res.css.dashboard}" ui:field="dashboard"/>
+					</m:HorizontalPanel>
+					<m:HorizontalPanel>
+						<i:Icon text="Images" styleName="{res.css.gallery}" ui:field="gallery"/>											
+						<i:Icon text="Agenda" styleName="{res.css.agenda}" ui:field="agenda"/>	
+					</m:HorizontalPanel>				
+				</m:VerticalPanel-->
+				<g:Grid styleName="{res.css.icon}">
+					<g:row>
+						<g:customCell>
+							<i:Icon text="Contacts" styleName="{res.css.contacts}" ui:field="contacts"/>											
+						</g:customCell>
+						<g:customCell>
+							<i:Icon text="Documents" styleName="{res.css.documents}" ui:field="documents"/>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:customCell>
+							<i:Icon text="Status" styleName="{res.css.status}" ui:field="status"/>										
+						</g:customCell>
+						<g:customCell>
+							<i:Icon text="Dashboard" styleName="{res.css.dashboard}" ui:field="dashboard"/>
+						</g:customCell>
+					</g:row>
+					<g:row>
+						<g:customCell>
+							<i:Icon text="Images" styleName="{res.css.gallery}" ui:field="gallery"/>											
+						</g:customCell>
+						<g:customCell>			
+							<i:Icon text="Agenda" styleName="{res.css.agenda}" ui:field="agenda"/>										
+						</g:customCell>
+					</g:row>
+				</g:Grid>
+				
+				</m:ScrollPanel>
+			</m:Slide>
+			<m:Slide>
+				<m:ScrollPanel>
+				<g:Grid styleName="{res.css.icon}">
+					<g:row>
+						<g:customCell>			
+							<i:Icon text="Bookmark" styleName="{res.css.bookmark}"/>									
+						</g:customCell>
+						<g:customCell>
+							<i:Icon text="Notifications" styleName="{res.css.notifications}"/>
+						</g:customCell>
+					</g:row>
+				</g:Grid>
+				</m:ScrollPanel>
+			</m:Slide>
+		</m:SlidePanel>
+			
+		<m:HeaderPanel>
+			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2011</g:Label>			
+		</m:HeaderPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 
