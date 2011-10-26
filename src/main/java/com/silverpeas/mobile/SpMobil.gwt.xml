@@ -8,4 +8,6 @@
 	
 	<extend-configuration-property name="compiler.splitpoint.initial.sequence"
     value="com.silverpeas.mobile.client.pages.connexion.ConnexionPage"/>
+    
+    <servlet path="/RSE" class="/com.silverpeas.mobile.server.services.ServiceRSEImpl" />
 </module>

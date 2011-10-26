@@ -4,6 +4,15 @@
               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
+         
+  <servlet>
+  	<servlet-name>serviceRSEImpl</servlet-name>
+  	<servlet-class>/com.silverpeas.mobile.server.services.ServiceRSEImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>serviceRSEImpl</servlet-name>
+  	<url-pattern>/spmobil/RSE</url-pattern>
+  </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
