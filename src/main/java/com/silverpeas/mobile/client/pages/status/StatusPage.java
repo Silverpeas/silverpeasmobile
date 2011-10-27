@@ -10,16 +10,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
-import com.silverpeas.mobile.shared.services.ServiceRSE;
-import com.silverpeas.mobile.shared.services.ServiceRSEAsync;
 
 public class StatusPage extends Page {
-
-	@UiField protected Button post;
 	
 	private static StatusPageUiBinder uiBinder = GWT.create(StatusPageUiBinder.class);
 	
 	private ServiceRSEAsync Service;
+	@UiField Button post;
 
 	interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
 	}
@@ -30,7 +27,7 @@ public class StatusPage extends Page {
 	}
 	
 	@UiHandler("post")
-	void post(ClickEvent e) {
+	void Post(ClickEvent e) {
 		final String text = post.getText();
 		Service.updateStatus(text, new AsyncCallback<Void>(){
 			public void onFailure(Throwable caught) {
