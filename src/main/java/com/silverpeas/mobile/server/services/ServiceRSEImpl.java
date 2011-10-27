@@ -2,15 +2,16 @@ package com.silverpeas.mobile.server.services;
 
 import java.sql.Connection;
 import java.util.Date;
+import java.sql.SQLException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.silverpeas.mobile.shared.services.ServiceRSE;
-import com.silverpeas.mobile.shared.services.Status;
-import com.silverpeas.mobile.shared.services.StatusDao;
+import com.silverpeas.mobile.client.pages.status.ServiceRSE;
+import com.silverpeas.mobile.client.pages.status.Status;
+import com.silverpeas.mobile.client.pages.status.StatusDao;
 import com.stratelia.webactiv.util.DBUtil;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.exception.UtilException;
-import com.sun.star.sdbc.SQLException;
+
 
 public class ServiceRSEImpl extends RemoteServiceServlet implements ServiceRSE {
 
@@ -18,7 +19,11 @@ public class ServiceRSEImpl extends RemoteServiceServlet implements ServiceRSE {
 	
 	private ServiceRSE ServiceRSE;
 	private StatusDao statusDao;
-	private String myID = "2";
+	private String myId;
+
+	  public ServiceRSEImpl(String myId) {
+	    this.myId = myId;
+	  }
 	
 	public void StatusService() {
 	    statusDao = new StatusDao();
@@ -31,13 +36,29 @@ public class ServiceRSEImpl extends RemoteServiceServlet implements ServiceRSE {
 	public void updateStatus(String status) {
 		// TODO Auto-generated method stub
 		
-		Status Status = new Status(Integer.parseInt(myID), new Date(), status);
+		Status Status = new Status(Integer.parseInt(myId), new Date(), status);
 		
 		Connection connection = null;
 	    int id = -1;
 	    try {
-	      connection = getConnection();
-	      id = statusDao.changeStatus(connection, Status);
+	      try {
+			connection = getConnection();
+		} catch (UtilException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	      try {
+			id = statusDao.changeStatus(connection, Status);
+		} catch (UtilException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	      if (id >= 0) {
 	        //return Status.getDescription();
 	      }
