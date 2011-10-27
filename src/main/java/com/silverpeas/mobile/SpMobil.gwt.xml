@@ -4,6 +4,7 @@
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.gwtmobile.ui.gwtmobile_ui"/>
 	<source path="client" />
+	<source path="server.services" />
 	<entry-point class="com.silverpeas.mobile.client.SpMobil" />
 	
 	<extend-configuration-property name="compiler.splitpoint.initial.sequence"
