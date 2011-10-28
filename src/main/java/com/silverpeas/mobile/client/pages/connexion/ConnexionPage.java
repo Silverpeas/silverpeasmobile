@@ -7,7 +7,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.requestfactory.shared.ServiceLocator;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.silverpeas.mobile.client.pages.main.MainPage;
@@ -34,13 +36,11 @@ public class ConnexionPage extends Page {
 
 	@UiHandler("go")
 	void connexion(ClickEvent e) {
-		GWT.runAsync(ConnexionPage.class, new RunAsyncCallback() {
-			
+		ServiceLocator.serviceConnection.authenticate(login, password, new AsyncCallback<Void>() {
 			public void onSuccess() {
 				mainPage = new MainPage();
 				goTo(mainPage);				
 			}
-			
 			public void onFailure(Throwable reason) {
 				Window.alert("Loading error");
 			}

@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
@@ -16,8 +17,6 @@ public class StatusPage extends Page {
 	
 	private static StatusPageUiBinder uiBinder = GWT.create(StatusPageUiBinder.class);
 	
-	@UiField Button post;
-
 	interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
 	}
 
@@ -25,9 +24,9 @@ public class StatusPage extends Page {
 		initWidget(uiBinder.createAndBindUi(this));	
 	}
 	
-	@UiHandler("post")
+	@UiHandler("textField")
 	void Post(ClickEvent e) {
-		final String text = post.getText();
+		final String text = textField.getText();
 		ServicesLocator.serviceRSE.updateStatus(text, new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Update status failed.");

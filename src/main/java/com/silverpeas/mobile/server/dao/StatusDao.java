@@ -29,9 +29,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.silverpeas.socialNetwork.model.SocialInformation;
+import com.silverpeas.socialNetwork.status.SocialInformationStatus;
 import com.silverpeas.socialNetwork.status.Status;
 import com.stratelia.webactiv.util.DBUtil;
 import com.stratelia.webactiv.util.exception.UtilException;
@@ -189,7 +192,7 @@ public class StatusDao {
    * @return List<SocialInformationStatus>
    * @throws SQLException
    */
-  /*public List<SocialInformation> getAllStatus(Connection connection, int userId, Date begin,
+  public List<SocialInformation> getAllStatus(Connection connection, int userId, Date begin,
       Date end) throws SQLException {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -207,7 +210,7 @@ public class StatusDao {
     } finally {
       DBUtil.close(rs, pstmt);
     }
-  }*/
+  }
 
   /**
    * when data base is PostgreSQL get SocialInformation of my conatct according to number of Item
@@ -219,7 +222,7 @@ public class StatusDao {
    * @return List<SocialInformationStatus>
    * @throws SQLException
    */
-  /*List<SocialInformation> getSocialInformationsListOfMyContacts(Connection connection,
+  List<SocialInformation> getSocialInformationsListOfMyContacts(Connection connection,
       List<String> myContactsIds, Date begin, Date end) throws SQLException {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -239,9 +242,9 @@ public class StatusDao {
     } finally {
       DBUtil.close(rs, pstmt);
     }
-  }*/
+  }
 
-  /*private List<SocialInformation> getSocialInformationsList(ResultSet rs) throws SQLException {
+  private List<SocialInformation> getSocialInformationsList(ResultSet rs) throws SQLException {
     List<SocialInformation> status_list = new ArrayList<SocialInformation>();
     while (rs.next()) {
       Status status = new Status();
@@ -252,7 +255,7 @@ public class StatusDao {
       status_list.add(new SocialInformationStatus(status));
     }
     return status_list;
-  }*/
+  }
 
   /**
    * convert list of contact ids to string for using in the query SQL

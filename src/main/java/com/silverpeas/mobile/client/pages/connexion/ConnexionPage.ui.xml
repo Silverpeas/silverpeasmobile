@@ -34,8 +34,8 @@
 		
 		<m:ScrollPanel hasTextBox="true">
 			<m:ListPanel selectable="false" styleName="ListPanel {style.flex}" >
-				<m:ListItem><g:Label>Login:</g:Label><m:TextBox focus="true"/></m:ListItem>
-				<m:ListItem><g:Label>Password:</g:Label><m:PasswordTextBox/></m:ListItem>
+				<m:ListItem><g:Label>Login:</g:Label><m:TextBox ui:field="loginField" focus="true"/></m:ListItem>
+				<m:ListItem><g:Label>Password:</g:Label><m:PasswordTextBox ui:field="passwordField"/></m:ListItem>
 				<m:ListItem>	
 					<g:Label>Domain:</g:Label>
 					<m:DropDownList>
