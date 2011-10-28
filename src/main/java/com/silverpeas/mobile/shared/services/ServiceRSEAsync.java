@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.client.pages.status;
+package com.silverpeas.mobile.shared.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

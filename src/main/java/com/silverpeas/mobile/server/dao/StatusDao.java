@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.client.pages.status;
+package com.silverpeas.mobile.server.dao;
 
 /**
  * Copyright (C) 2000 - 2011 Silverpeas
@@ -32,6 +32,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import com.silverpeas.socialNetwork.status.Status;
 import com.stratelia.webactiv.util.DBUtil;
 import com.stratelia.webactiv.util.exception.UtilException;
 

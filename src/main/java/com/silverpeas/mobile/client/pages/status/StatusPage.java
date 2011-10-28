@@ -10,26 +10,25 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
+import com.silverpeas.mobile.client.common.ServicesLocator;
 
 public class StatusPage extends Page {
 	
 	private static StatusPageUiBinder uiBinder = GWT.create(StatusPageUiBinder.class);
 	
-	private ServiceRSEAsync Service;
 	@UiField Button post;
 
 	interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
 	}
 
 	public StatusPage() {
-		initWidget(uiBinder.createAndBindUi(this));
-		Service = ServiceRSE.App.getInstance();
+		initWidget(uiBinder.createAndBindUi(this));	
 	}
 	
 	@UiHandler("post")
 	void Post(ClickEvent e) {
 		final String text = post.getText();
-		Service.updateStatus(text, new AsyncCallback<Void>(){
+		ServicesLocator.serviceRSE.updateStatus(text, new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Update status failed.");
             }

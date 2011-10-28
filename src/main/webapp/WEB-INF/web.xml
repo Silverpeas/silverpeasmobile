@@ -7,7 +7,7 @@
          
   <servlet>
   	<servlet-name>serviceRSEImpl</servlet-name>
-  	<servlet-class>/com.silverpeas.mobile.server.services.ServiceRSEImpl</servlet-class>
+  	<servlet-class>com.silverpeas.mobile.server.services.ServiceRSEImpl</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>serviceRSEImpl</servlet-name>

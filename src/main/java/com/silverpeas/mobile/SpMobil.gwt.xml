@@ -4,11 +4,10 @@
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.gwtmobile.ui.gwtmobile_ui"/>
 	<source path="client" />
-	<source path="server.services" />
+	<source path="shared" />
 	<entry-point class="com.silverpeas.mobile.client.SpMobil" />
 	
 	<extend-configuration-property name="compiler.splitpoint.initial.sequence"
     value="com.silverpeas.mobile.client.pages.connexion.ConnexionPage"/>
-    
-    <servlet path="/RSE" class="/com.silverpeas.mobile.server.services.ServiceRSEImpl" />
+
 </module>
