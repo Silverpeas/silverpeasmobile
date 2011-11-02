@@ -1,15 +1,16 @@
 package com.silverpeas.mobile.client.pages.connexion;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.requestfactory.shared.ServiceLocator;
+import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.silverpeas.mobile.client.pages.main.MainPage;
@@ -23,6 +24,8 @@ public class ConnexionPage extends Page {
 	@UiField(provided = true) protected ApplicationMessages msg = null;
 	@UiField(provided = true) protected ApplicationResources res = null;
 	@UiField Button go;
+	@UiField TextBox loginField;
+	@UiField PasswordTextBox passwordField;
 
 	interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {
 	}
@@ -36,13 +39,16 @@ public class ConnexionPage extends Page {
 
 	@UiHandler("go")
 	void connexion(ClickEvent e) {
-		ServiceLocator.serviceConnection.authenticate(login, password, new AsyncCallback<Void>() {
-			public void onSuccess() {
-				mainPage = new MainPage();
-				goTo(mainPage);				
-			}
+		String login = loginField.getText();
+		String password = passwordField.getText();
+
+		ServicesLocator.serviceConnection.connection(login, password, new AsyncCallback<Void>() {
 			public void onFailure(Throwable reason) {
 				Window.alert("Loading error");
+			}
+			public void onSuccess(Void result) {
+				mainPage = new MainPage();
+				goTo(mainPage);				
 			}
 		});
 	}

@@ -2,9 +2,6 @@ package com.silverpeas.mobile.server.services;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -18,14 +15,14 @@ public class ServiceRSEImpl extends RemoteServiceServlet implements ServiceRSE {
 	private static final long serialVersionUID = 1L;
 
 	private StatusDao statusDao = new StatusDao();
-	private String myId;
+	private Object login;
 
 	private Connection getConnection() throws UtilException, SQLException {
 		return DBUtil.makeConnection(JNDINames.DATABASE_DATASOURCE);
 	}
 
 	public void updateStatus(String status) throws AuthenticationException {
-		getThreadLocalRequest().getSession().setAttribute(0, login);
+		login = getThreadLocalRequest().getSession().getAttribute("login");
 		
 		/*Connection connection = null;
 	    int id = -1;

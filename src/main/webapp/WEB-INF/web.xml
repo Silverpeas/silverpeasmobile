@@ -23,6 +23,24 @@
   	<url-pattern>/spmobil/Connection</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>serviceContactImpl</servlet-name>
+  	<servlet-class>com.silverpeas.mobile.server.services.ServiceContactImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>serviceContactImpl</servlet-name>
+  	<url-pattern>/spmobile/Contact</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>serviceAgendaImpl</servlet-name>
+  	<servlet-class>com.silverpeas.mobile.server.services.ServiceAgendaImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>serviceAgendaImpl</servlet-name>
+  	<url-pattern>/spomobil/Agenda</url-pattern>
+  </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>spmobil.html</welcome-file>

@@ -3,6 +3,8 @@ package com.silverpeas.mobile.client.pages.contacts;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -10,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.gwtmobile.ui.client.widgets.SlidePanel;
+import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 
@@ -26,7 +29,7 @@ public class ContactsPage extends Page {
 	}
 
 	public ContactsPage() {	
-		res = GWT.create(ApplicationResources.class);		
+		/*res = GWT.create(ApplicationResources.class);		
 		res.css().ensureInjected();
 		msg = GWT.create(ApplicationMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
@@ -47,6 +50,17 @@ public class ContactsPage extends Page {
 			contact.add(new Image(res.offline()));
 			bContactsList.add(contact);			
 		}
-		slidePanel.setVisible(true);
+		slidePanel.setVisible(true);*/
+		String id = new String("");
+		ServicesLocator.serviceContact.ContactList(id, new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {
+				Window.alert("Update status failed.");
+            }
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+				Window.alert("Update status done.");
+				goBack(null);
+			}
+		});
 	}
 }
