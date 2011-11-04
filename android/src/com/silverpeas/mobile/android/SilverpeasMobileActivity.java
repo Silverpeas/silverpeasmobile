@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SilverpeasMobileAndroidActivity extends DroidGap {
+public class SilverpeasMobileActivity extends DroidGap {
 	
 	public static final String PREFS_NAME = "URLPrefsFile";
 	
@@ -40,7 +40,7 @@ public class SilverpeasMobileAndroidActivity extends DroidGap {
     				prefsEditor.commit();
     				
     				String URLenr = new String("URL Enregistrée.");	
-    				Toast.makeText(SilverpeasMobileAndroidActivity.this, URLenr, Toast.LENGTH_SHORT).show();
+    				Toast.makeText(SilverpeasMobileActivity.this, URLenr, Toast.LENGTH_SHORT).show();
     			}
     		});
             
