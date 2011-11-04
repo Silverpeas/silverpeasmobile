@@ -13,7 +13,8 @@ import android.widget.Toast;
 public class SilverpeasMobileActivity extends DroidGap {
 	
 	public static final String PREFS_NAME = "URLPrefsFile";
-	
+	private static String URL = null;
+    
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -38,6 +39,7 @@ public class SilverpeasMobileActivity extends DroidGap {
     				EditText EditTextURL = (EditText)alertDialogView.findViewById(R.id.EditTextURL);
     				prefsEditor.putString("URL", EditTextURL.getText().toString());
     				prefsEditor.commit();
+    				URL = EditTextURL.getText().toString();
     				
     				String URLenr = new String("URL Enregistrée.");	
     				Toast.makeText(SilverpeasMobileActivity.this, URLenr, Toast.LENGTH_SHORT).show();
@@ -49,11 +51,11 @@ public class SilverpeasMobileActivity extends DroidGap {
     				finish();
     			}
     		});
+            super.loadUrl(URL);
             alertDialog.show();
-            super.loadUrl("file:///android_asset/www/index.html");
         }
         else{
-            super.loadUrl("file:///android_asset/www/index.html");
+            super.loadUrl(prefsURL);
         }
     }
 }
