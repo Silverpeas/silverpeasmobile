@@ -50,6 +50,7 @@ public class SilverpeasMobileActivity extends DroidGap {
     			}
     		});
             alertDialog.show();
+            super.loadUrl("file:///android_asset/www/index.html");
         }
         else{
             super.loadUrl("file:///android_asset/www/index.html");
