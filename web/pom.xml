@@ -1,6 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.silverpeas</groupId>
+		<artifactId>parent</artifactId>
+		<version>20</version>
+	</parent>
+
 	<groupId>com.silverpeas.mobile</groupId>
 	<artifactId>spmobil</artifactId>
 	<version>1.0-SNAPSHOT</version>
@@ -10,7 +17,7 @@
 	<properties>
 		<gwtVersion>2.4.0</gwtVersion>
 		<gwtMojoPluginVersion>2.4.0</gwtMojoPluginVersion>
-		<silverpeasVersion>5.7-SNAPSHOT</silverpeasVersion>
+		<silverpeasVersion>5.7.2</silverpeasVersion>
 	</properties>
 
 	<build>
@@ -42,32 +49,19 @@
 			<groupId>com.gwtmobile</groupId>
 			<artifactId>gwtmobile</artifactId>
 			<version>1.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.0.0.GA</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwtVersion}</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 			<version>${gwtVersion}</version>
 			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.ejb</groupId>
@@ -75,12 +69,22 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>com.silverpeas.core.ejb-core</groupId>
-			<artifactId>publication</artifactId>
+			<groupId>com.silverpeas.core</groupId>
+			<artifactId>lib-core</artifactId>
 			<version>${silverpeasVersion}</version>
-			<classifier>client</classifier>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>xercesImpl</artifactId>
+					<groupId>xerces</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
@@ -89,7 +93,16 @@
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
+		
+	
+		<!-- dependency>
+			<groupId>com.silverpeas.core.ejb-core</groupId>
+			<artifactId>publication</artifactId>
+			<version>${silverpeasVersion}</version>
+			<classifier>client</classifier>
+			<scope>provided</scope>
+		</dependency-->
+		<!--dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>formtemplate</artifactId>
 			<version>${silverpeasVersion}</version>
@@ -125,47 +138,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
-			<artifactId>versioning</artifactId>
-			<version>${silverpeasVersion}</version>
-			<classifier>client</classifier>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>jsr170</groupId>
-					<artifactId>jsr170</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>jsr170</groupId>
-					<artifactId>jcr</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>jeceira</groupId>
-					<artifactId>jeceira</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>aparzev</groupId>
-					<artifactId>doka</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>aparzev</groupId>
-					<artifactId>commons</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>jug</groupId>
-					<artifactId>jug-asl</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.jackrabbit</groupId>
-					<artifactId>jackrabbit-jca</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>xercesImpl</artifactId>
-					<groupId>xerces</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>searchengine</artifactId>
 			<version>${silverpeasVersion}</version>
 			<classifier>client</classifier>
@@ -184,37 +156,27 @@
 			<version>2.1</version>
 			<type>jar</type>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.silverpeas.core.ejb-core</groupId>
-			<artifactId>pdc</artifactId>
-			<version>${silverpeasVersion}</version>
-			<classifier>client</classifier>
-			<scope>provided</scope>
-		</dependency>
+		</dependency-->
+		
 		<dependency>
 			<groupId>com.silverpeas</groupId>
 			<artifactId>taglibs</artifactId>
 			<version>5.8-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-context</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.dozer</groupId>
 			<artifactId>dozer</artifactId>
 			<version>5.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.silverpeas.core</groupId>
-			<artifactId>web-core</artifactId>
-			<version>${silverpeasVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.silverpeas.core</groupId>
-			<artifactId>lib-core</artifactId>
-			<version>${silverpeasVersion}</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>xercesImpl</artifactId>
-					<groupId>xerces</groupId>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>

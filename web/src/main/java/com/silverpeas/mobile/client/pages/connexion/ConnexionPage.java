@@ -67,7 +67,7 @@ public class ConnexionPage extends Page {
 		String login = loginField.getText();
 		String password = passwordField.getText();
 
-		ServicesLocator.serviceConnection.login(login, password, "1",new AsyncCallback<Void>() {
+		ServicesLocator.serviceConnection.login(login, password, domains.getSelectedValue(),new AsyncCallback<Void>() {
 			public void onFailure(Throwable reason) {
 				Window.alert("Loading error");
 			}

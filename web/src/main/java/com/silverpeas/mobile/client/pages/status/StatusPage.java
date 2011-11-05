@@ -1,17 +1,12 @@
 package com.silverpeas.mobile.client.pages.status;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.TextBox;
-import com.silverpeas.mobile.client.common.ServicesLocator;
 
 public class StatusPage extends Page {
 	
@@ -27,7 +22,7 @@ public class StatusPage extends Page {
 		initWidget(uiBinder.createAndBindUi(this));	
 	}
 	
-	@UiHandler("post")
+	/*@UiHandler("post")
 	void Post(ClickEvent e) {
 		final String text = textField.getText();
 		ServicesLocator.serviceRSE.updateStatus(text, new AsyncCallback<Void>() {
@@ -40,5 +35,5 @@ public class StatusPage extends Page {
 				goBack(null);
 			}
 		});
-	}
+	}*/
 }
