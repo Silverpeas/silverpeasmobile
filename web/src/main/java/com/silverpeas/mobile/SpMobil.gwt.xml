@@ -6,8 +6,5 @@
 	<source path="client" />
 	<source path="shared" />
 	<entry-point class="com.silverpeas.mobile.client.SpMobil" />
-	
-	<extend-configuration-property name="compiler.splitpoint.initial.sequence"
-    value="com.silverpeas.mobile.client.pages.connexion.ConnexionPage"/>
 
 </module>

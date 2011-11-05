@@ -193,6 +193,16 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.silverpeas</groupId>
+			<artifactId>taglibs</artifactId>
+			<version>5.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.dozer</groupId>
+			<artifactId>dozer</artifactId>
+			<version>5.3.1</version>
+		</dependency>
+		<dependency>
 			<groupId>com.silverpeas.core</groupId>
 			<artifactId>web-core</artifactId>
 			<version>${silverpeasVersion}</version>

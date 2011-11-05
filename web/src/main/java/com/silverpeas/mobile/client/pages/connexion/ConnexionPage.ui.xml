@@ -38,7 +38,7 @@
 				<m:ListItem><g:Label>Password:</g:Label><m:PasswordTextBox ui:field="passwordField"/></m:ListItem>
 				<m:ListItem>	
 					<g:Label>Domain:</g:Label>
-					<m:DropDownList>
+					<m:DropDownList ui:field="domains">
 						<m:DropDownItem>Silverpeas</m:DropDownItem>
 						<m:DropDownItem>Oevo</m:DropDownItem>
 					</m:DropDownList>

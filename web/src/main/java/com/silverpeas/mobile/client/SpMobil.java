@@ -23,8 +23,6 @@ public class SpMobil implements EntryPoint{
 					this.cancel();
 				}
 			}
-		}.scheduleRepeating(50);
-		
+		}.scheduleRepeating(50);		
 	}
-
 }

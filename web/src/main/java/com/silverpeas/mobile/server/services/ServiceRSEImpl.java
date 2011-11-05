@@ -1,43 +1,33 @@
 package com.silverpeas.mobile.server.services;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.Calendar;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
+import com.silverpeas.mobile.shared.exceptions.RSEexception;
 import com.silverpeas.mobile.shared.services.ServiceRSE;
-import com.stratelia.webactiv.util.DBUtil;
-import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.exception.UtilException;
+import com.silverpeas.socialNetwork.status.Status;
+import com.stratelia.webactiv.beans.admin.UserDetail;
 
 public class ServiceRSEImpl extends RemoteServiceServlet implements ServiceRSE {
 
 	private static final long serialVersionUID = 1L;
 
-	private StatusDao statusDao = new StatusDao();
-	private Object login;
+	// TODO : injecter avec Spring
+	private StatusDao statusDao = new StatusDao();	
 
-	private Connection getConnection() throws UtilException, SQLException {
-		return DBUtil.makeConnection(JNDINames.DATABASE_DATASOURCE);
-	}
-
-	public void updateStatus(String status) throws AuthenticationException {
-		login = getThreadLocalRequest().getSession().getAttribute("login");
+	public void updateStatus(String status) throws AuthenticationException, RSEexception {
+		//TODO : rendre générique
+		UserDetail user = (UserDetail) getThreadLocalRequest().getSession().getAttribute("user");
+		if (user == null) throw new AuthenticationException(AuthenticationError.NotAuthenticate);
 		
-		/*Connection connection = null;
-	    int id = -1;
-	    try {
-	      connection = getConnection();
-	      id = statusDao.changeStatus(connection, status);
-	      if (id >= 0) {
-	        return status.getDescription();
-	      }
-	    } catch (Exception ex) {
-	      SilverTrace
-	          .error("Silverpeas.Bus.SocialNetwork.Status", "StatusService.changeStatus", "", ex);
-	    } finally {
-	      DBUtil.close(connection);
-	    }*/
-		System.out.println("updated");
+		Status stat = new Status(Integer.parseInt(user.getId()), Calendar.getInstance().getTime(), status);
+		try {
+			statusDao.changeStatus(stat);
+		} catch (Exception e) {
+			throw new RSEexception(e.getMessage());
+		} 
 	}
 }
