@@ -8,6 +8,10 @@ public class AuthenticationException extends Exception {
 	public enum AuthenticationError {
 		BadCredential, Host, PwdNotAvailable, NotAuthenticate;
 	}
+	
+	public AuthenticationException() {
+		super();
+	}
 
 	public AuthenticationException(AuthenticationError error) {
 		super();
