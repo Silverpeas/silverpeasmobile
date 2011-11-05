@@ -8,9 +8,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
+import com.gwtmobile.phonegap.client.Notification;
+import com.gwtmobile.phonegap.client.Notification.Callback;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.DropDownItem;
@@ -44,21 +45,28 @@ public class ConnexionPage extends Page {
 		
 		ServicesLocator.serviceConnection.getDomains(new AsyncCallback<List<DomainDTO>>() {
 			public void onFailure(Throwable caught) {
-				// TODO : comment afficher l'erreur ?
+				//TODO : extract label
+				Notification.alert("Erreur système", new Callback() {					
+					public void onComplete() {	}
+				}, "Erreur", "OK");
 			}
 
 			public void onSuccess(List<DomainDTO> result) {
-				Iterator<DomainDTO> iDomains = result.iterator();
-				while (iDomains.hasNext()) {
-					DomainDTO domain = iDomains.next();
-					DropDownItem item = new DropDownItem();
-					item.setValue(domain.getId());
-					item.setText(domain.getName());					
-					domains.add(item);
-				}				
+				if (result == null) {
+					mainPage = new MainPage();
+					goTo(mainPage);	
+				} else {			
+					Iterator<DomainDTO> iDomains = result.iterator();
+					while (iDomains.hasNext()) {
+						DomainDTO domain = iDomains.next();
+						DropDownItem item = new DropDownItem();
+						item.setValue(domain.getId());
+						item.setText(domain.getName());
+						domains.add(item);
+					}
+				}
 			}
-		});
-				
+		});				
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
@@ -66,10 +74,15 @@ public class ConnexionPage extends Page {
 	void connexion(ClickEvent e) {
 		String login = loginField.getText();
 		String password = passwordField.getText();
-
 		ServicesLocator.serviceConnection.login(login, password, domains.getSelectedValue(),new AsyncCallback<Void>() {
 			public void onFailure(Throwable reason) {
-				Window.alert("Loading error");
+				//TODO : extract label
+				//TODO : afficher le bon message d'erreur
+				Notification.alert("Mot de passe incorrect", new Callback() {					
+					public void onComplete() {						
+						passwordField.setText("");
+					}
+				}, "Erreur", "OK");				
 			}
 			public void onSuccess(Void result) {
 				mainPage = new MainPage();

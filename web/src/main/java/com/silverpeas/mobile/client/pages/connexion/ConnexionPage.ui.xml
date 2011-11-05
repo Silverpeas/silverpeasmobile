@@ -40,7 +40,7 @@
 					<g:Label>Domain:</g:Label>
 					<m:DropDownList ui:field="domains"/>
 				</m:ListItem>
-				<m:ListItem>	
+				<m:ListItem>
 					<m:Button ui:field="go" horizontalAlignment="center">Go</m:Button>
 				</m:ListItem>	
 			</m:ListPanel>
