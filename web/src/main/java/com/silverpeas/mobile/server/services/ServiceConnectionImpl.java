@@ -52,18 +52,13 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 	}
 	
 	public List<DomainDTO> getDomains() {
-		UserDetail user = getUserInSession();
-		if (user == null) {
-			Domain[] allDomains = organizationController.getAllDomains();
-			ArrayList<DomainDTO> domains = new ArrayList<DomainDTO>();
-			Mapper mapper = new DozerBeanMapper();
-			for (int i = 0; i < allDomains.length; i++) {
-				domains.add(mapper.map(allDomains[i], DomainDTO.class)); 
-			}
-			return domains;
-		} else {
-			return null;
+		Domain[] allDomains = organizationController.getAllDomains();
+		ArrayList<DomainDTO> domains = new ArrayList<DomainDTO>();
+		Mapper mapper = new DozerBeanMapper();
+		for (int i = 0; i < allDomains.length; i++) {
+			domains.add(mapper.map(allDomains[i], DomainDTO.class)); 
 		}
+		return domains;
 	}	
 
 	private String getUserId(String login, String domainId) throws Exception {
