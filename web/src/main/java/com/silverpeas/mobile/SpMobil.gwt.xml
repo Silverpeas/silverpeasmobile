@@ -5,6 +5,7 @@
 	<inherits name='com.google.gwt.json.JSON'/>
 	<inherits name="com.gwtmobile.ui.gwtmobile_ui"/>
 	<inherits name="com.gwtmobile.phonegap.gwtmobile_phonegap"/>
+	<inherits name="com.gwtmobile.persistence.gwtmobile_persistence"/>
 	<source path="client" />
 	<source path="shared" />
 	<entry-point class="com.silverpeas.mobile.client.SpMobil" />
