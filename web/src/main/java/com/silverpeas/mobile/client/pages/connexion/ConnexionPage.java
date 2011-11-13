@@ -14,8 +14,6 @@ import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
-import com.gwtmobile.phonegap.client.Notification;
-import com.gwtmobile.phonegap.client.Notification.Callback;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.DropDownItem;
@@ -24,7 +22,9 @@ import com.gwtmobile.ui.client.widgets.PasswordTextBox;
 import com.gwtmobile.ui.client.widgets.TextBox;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.Database;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
+import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.pages.main.MainPage;
 import com.silverpeas.mobile.client.persist.UserIds;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -74,14 +74,8 @@ public class ConnexionPage extends Page {
 		try {
 			final String encryptedPassword = encryptPassword(password);
 			ServicesLocator.serviceConnection.login(login, encryptedPassword, domainId, new AsyncCallback<Void>() {
-				public void onFailure(Throwable reason) {
-					//TODO : extract label
-					//TODO : afficher le bon message d'erreur
-					Notification.alert("Mot de passe incorrect", new Callback() {					
-						public void onComplete() {						
-							passwordField.setText("");
-						}
-					}, "Erreur", "OK");				
+				public void onFailure(Throwable caught) {
+					EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 				}
 				public void onSuccess(Void result) {
 					storeIds(encryptedPassword);
@@ -90,10 +84,7 @@ public class ConnexionPage extends Page {
 				}
 			});
 		} catch (InvalidCipherTextException e) {
-			Notification.alert("Erreur système", new Callback() {					
-				public void onComplete() {
-				}
-			}, "Erreur", "OK");	
+			EventBus.getInstance().fireEvent(new ErrorEvent(e));
 		}		
 	}
 
@@ -131,10 +122,7 @@ public class ConnexionPage extends Page {
 	private void loadDomains() {
 		ServicesLocator.serviceConnection.getDomains(new AsyncCallback<List<DomainDTO>>() {
 			public void onFailure(Throwable caught) {
-				//TODO : extract label
-				Notification.alert("Erreur système", new Callback() {					
-					public void onComplete() {	}
-				}, "Erreur", "OK");
+				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 			}
 
 			public void onSuccess(List<DomainDTO> result) {						

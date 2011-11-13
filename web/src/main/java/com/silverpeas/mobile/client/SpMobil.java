@@ -9,15 +9,22 @@ import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
-import com.gwtmobile.phonegap.client.Notification;
-import com.gwtmobile.phonegap.client.Notification.Callback;
 import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.common.Database;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
+import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.MainPage;
 import com.silverpeas.mobile.client.persist.UserIds;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
+
+
+//TODO : Spring service dispatcher & spring injection server side
+//TODO : Gin injection client side
+//TODO : MVP
+//TODO : internationalisation globale
+//TODO : generic ConfigurationProvider
 
 public class SpMobil implements EntryPoint{
 	
@@ -110,10 +117,7 @@ public class SpMobil implements EntryPoint{
 		try {
 			plainPassword = cipher.decrypt(passwordEncrysted);
 		} catch (Exception e) {
-			Notification.alert("Erreur système", new Callback() {					
-				public void onComplete() {
-				}
-			}, "Erreur", "OK");
+			EventBus.getInstance().fireEvent(new ErrorEvent(e));
 		}
 		return plainPassword;
 	}
