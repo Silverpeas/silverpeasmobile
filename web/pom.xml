@@ -19,6 +19,13 @@
 		<gwtMojoPluginVersion>2.4.0</gwtMojoPluginVersion>
 		<silverpeasVersion>5.7.2</silverpeasVersion>
 	</properties>
+	
+	<repositories>
+    	<repository>
+        	<id>gwt-crypto repo</id>
+        	<url>http://gwt-crypto.googlecode.com/svn/trunk/repo/</url>
+     	</repository>
+	</repositories>
 
 	<build>
 		<finalName>spmobile</finalName>
@@ -46,6 +53,11 @@
 
 	<dependencies>
 		<dependency>
+	        <groupId>com.googlecode.gwt.crypto</groupId>
+	        <artifactId>gwt-crypto</artifactId>
+	        <version>1.0.3</version>
+	    </dependency>
+		<dependency>
 			<groupId>com.gwtmobile</groupId>
 			<artifactId>gwtmobile</artifactId>
 			<version>1.1</version>
@@ -54,6 +66,12 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
+			<version>${gwtVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
 			<version>${gwtVersion}</version>
 			<scope>provided</scope>
 		</dependency>

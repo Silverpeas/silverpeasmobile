@@ -4,34 +4,31 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
+import com.gwtmobile.phonegap.client.Notification;
+import com.gwtmobile.phonegap.client.Notification.Callback;
 import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.MainPage;
 import com.silverpeas.mobile.client.persist.UserIds;
+import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 
 public class SpMobil implements EntryPoint{
 	
 	private static boolean noUserIdsStore = true;
+	public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
 	
 	/**
 	 * Point de lancement.
 	 */
-	public void onModuleLoad() {
-		Database.open();
-		final Entity<UserIds> userIdsEntity = GWT.create(UserIds.class);
-		final Collection<UserIds> usersIds = userIdsEntity.all().limit(1);		
-		usersIds.one(new ScalarCallback<UserIds>() {
-			public void onSuccess(UserIds result) {
-				noUserIdsStore = false;
-				login(result.getLogin(), result.getPassword(), result.getDomainId(), true);
-			}
-		});
+	public void onModuleLoad() {		
+		loadIds();
 		
 		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {			
 			public boolean execute() {
@@ -81,6 +78,44 @@ public class SpMobil implements EntryPoint{
 				});
 			}
 		});
+	}
+	
+	/**
+	 * Chargement des ids mémorisés en SQL Web Storage.
+	 */
+	private void loadIds() {
+		Database.open();
+		final Entity<UserIds> userIdsEntity = GWT.create(UserIds.class);
+		final Collection<UserIds> usersIds = userIdsEntity.all().limit(1);		
+		usersIds.one(new ScalarCallback<UserIds>() {
+			public void onSuccess(UserIds result) {
+				noUserIdsStore = false;	
+				String password = decryptPassword(result.getPassword());
+				if (password != null) {
+					login(result.getLogin(), password, result.getDomainId(), true);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Decrypte le mot de passe mémorisés en SQL Web Storage.
+	 * @param passwordEncrysted
+	 * @return
+	 */
+	private String decryptPassword(String passwordEncrysted) {
+		TripleDesCipher cipher = new TripleDesCipher();
+		cipher.setKey(configuration.getDESKey().getBytes());
+		String plainPassword = null;
+		try {
+			plainPassword = cipher.decrypt(passwordEncrysted);
+		} catch (Exception e) {
+			Notification.alert("Erreur système", new Callback() {					
+				public void onComplete() {
+				}
+			}, "Erreur", "OK");
+		}
+		return plainPassword;
 	}
 	
 }

@@ -10,6 +10,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
+import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.phonegap.client.Notification;
@@ -20,6 +22,7 @@ import com.gwtmobile.ui.client.widgets.DropDownItem;
 import com.gwtmobile.ui.client.widgets.DropDownList;
 import com.gwtmobile.ui.client.widgets.PasswordTextBox;
 import com.gwtmobile.ui.client.widgets.TextBox;
+import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.pages.main.MainPage;
@@ -67,40 +70,55 @@ public class ConnexionPage extends Page {
 	 * @param password
 	 * @param domainId
 	 */
-	private void login(String login, String password, String domainId) {
-		ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<Void>() {
-			public void onFailure(Throwable reason) {
-				//TODO : extract label
-				//TODO : afficher le bon message d'erreur
-				Notification.alert("Mot de passe incorrect", new Callback() {					
-					public void onComplete() {						
-						passwordField.setText("");
-					}
-				}, "Erreur", "OK");				
-			}
-			public void onSuccess(Void result) {
-				storeIds();
-				mainPage = new MainPage();
-				goTo(mainPage);				
-			}
-		});
+	private void login(String login, String password, String domainId) {		
+		try {
+			final String encryptedPassword = encryptPassword(password);
+			ServicesLocator.serviceConnection.login(login, encryptedPassword, domainId, new AsyncCallback<Void>() {
+				public void onFailure(Throwable reason) {
+					//TODO : extract label
+					//TODO : afficher le bon message d'erreur
+					Notification.alert("Mot de passe incorrect", new Callback() {					
+						public void onComplete() {						
+							passwordField.setText("");
+						}
+					}, "Erreur", "OK");				
+				}
+				public void onSuccess(Void result) {
+					storeIds(encryptedPassword);
+					mainPage = new MainPage();
+					goTo(mainPage);				
+				}
+			});
+		} catch (InvalidCipherTextException e) {
+			Notification.alert("Erreur système", new Callback() {					
+				public void onComplete() {
+				}
+			}, "Erreur", "OK");	
+		}		
+	}
+
+	private String encryptPassword(String password) throws InvalidCipherTextException {
+		TripleDesCipher cipher = new TripleDesCipher();
+		cipher.setKey(SpMobil.configuration.getDESKey().getBytes());
+		String encryptedPassword = cipher.encrypt(passwordField.getText());
+		return encryptedPassword;
 	}
 	
 	/**
 	 * Mémorisation des identifiants de l'utilisateur.
 	 */
-	private void storeIds() {		
+	private void storeIds(final String encryptedPassword) {		
 		Database.open();		
 		final Entity<UserIds> userIdsEntity = GWT.create(UserIds.class);
 		Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
 			public void onSuccess() {
 				userIdsEntity.all().destroyAll(new com.gwtmobile.persistence.client.Callback() {					
-					public void onSuccess() {
+					public void onSuccess() {	
 						final UserIds userIds = userIdsEntity.newInstance();
 						userIds.setLogin(loginField.getText());
-						userIds.setPassword(passwordField.getText());
+						userIds.setPassword(encryptedPassword);
 						userIds.setDomainId(domains.getSelectedValue());						
-						Persistence.flush();						
+						Persistence.flush();										
 					}
 				});								
 			}

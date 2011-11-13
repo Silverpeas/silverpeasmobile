@@ -28,7 +28,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 
 	public void login(String login, String password, String domainId)
 			throws AuthenticationException {
-
+		
 		// vérification
 		String code = lpAuth.authenticate(login, password, domainId, null);
 		if (code.equals("Error_1")) {
