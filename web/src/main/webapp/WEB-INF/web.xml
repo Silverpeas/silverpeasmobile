@@ -29,7 +29,7 @@
   </servlet>
   <servlet-mapping>
   	<servlet-name>serviceContactImpl</servlet-name>
-  	<url-pattern>/spmobile/Contact</url-pattern>
+  	<url-pattern>/spmobil/Contact</url-pattern>
   </servlet-mapping>
   
   <servlet>
@@ -38,7 +38,7 @@
   </servlet>
   <servlet-mapping>
   	<servlet-name>serviceAgendaImpl</servlet-name>
-  	<url-pattern>/spomobil/Agenda</url-pattern>
+  	<url-pattern>/spmobil/Agenda</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

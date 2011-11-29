@@ -14,12 +14,7 @@
 		<m:SlidePanel rotate="true" visible="false" ui:field="slidePanel">
 			<m:Slide>
 				<m:ScrollPanel hasTextBox="false">
-					<m:ListPanel selectable="true" ui:field="aContactsList" showArrow="true"></m:ListPanel>
-				</m:ScrollPanel>
-			</m:Slide>
-			<m:Slide>
-				<m:ScrollPanel hasTextBox="false">
-					<m:ListPanel selectable="true" ui:field="bContactsList" showArrow="true"></m:ListPanel>
+					<m:ListPanel selectable="true" ui:field="ContactsList" showArrow="true"></m:ListPanel>
 				</m:ScrollPanel>
 			</m:Slide>
 		</m:SlidePanel>					
