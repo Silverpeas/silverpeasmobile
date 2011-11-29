@@ -70,22 +70,24 @@ public class ConnexionPage extends Page {
 	 * @param password
 	 * @param domainId
 	 */
-	private void login(String login, String password, String domainId) {		
-		try {
-			final String encryptedPassword = encryptPassword(password);
-			ServicesLocator.serviceConnection.login(login, encryptedPassword, domainId, new AsyncCallback<Void>() {
-				public void onFailure(Throwable caught) {
-					EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+	private void login(String login, final String password, String domainId) {		
+		ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+			}
+			public void onSuccess(Void result) {
+				String encryptedPassword = null;
+				try {
+					encryptedPassword = encryptPassword(password);
+				} catch (InvalidCipherTextException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				public void onSuccess(Void result) {
-					storeIds(encryptedPassword);
-					mainPage = new MainPage();
-					goTo(mainPage);				
-				}
-			});
-		} catch (InvalidCipherTextException e) {
-			EventBus.getInstance().fireEvent(new ErrorEvent(e));
-		}		
+				storeIds(encryptedPassword);
+				mainPage = new MainPage();
+				goTo(mainPage);				
+			}
+		});		
 	}
 
 	private String encryptPassword(String password) throws InvalidCipherTextException {
