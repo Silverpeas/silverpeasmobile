@@ -8,6 +8,7 @@ import java.util.List;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 
+import com.google.gwt.regexp.shared.RegExp;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.exceptions.ContactException;
 import com.silverpeas.mobile.shared.services.ServiceContact;
@@ -21,8 +22,10 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
 	 */
 	private static final long serialVersionUID = 1L;
 	private OrganizationController organizationController = new OrganizationController();
+	private ArrayList<DetailUserDTO> listuserDTO = new ArrayList<DetailUserDTO>();
+	private ArrayList<DetailUserDTO> listreg = new ArrayList<DetailUserDTO>();
 	
-	public List<DetailUserDTO> getAllContact() throws ContactException{
+	public void getAllContact() throws ContactException{
 		List<UserDetail> userDetail = getAll();
 		ArrayList<DetailUserDTO> users = new ArrayList<DetailUserDTO>();
 		Mapper mapper = new DozerBeanMapper();
@@ -31,7 +34,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
 			UserDetail us = i.next();
 			users.add(mapper.map(us, DetailUserDTO.class)); 
 		}
-		return users;
+		listuserDTO = users;
 	}	
 	
 	public List<UserDetail> getAll()throws ContactException{
@@ -52,5 +55,17 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
 	      }
 	    }
 	    return listUsersOfSameDomain;
+	}
+	
+	public List<DetailUserDTO> getContactsByLetter(String letter) throws ContactException{
+		Iterator<DetailUserDTO> i = listuserDTO.iterator();
+		while(i.hasNext()){
+			DetailUserDTO dudto = i.next();
+			RegExp regexp = RegExp.compile(letter);
+			if(regexp.test(dudto.getLastName())){
+				listreg.add(dudto);
+			}
+		}
+		return listreg;
 	}
 }

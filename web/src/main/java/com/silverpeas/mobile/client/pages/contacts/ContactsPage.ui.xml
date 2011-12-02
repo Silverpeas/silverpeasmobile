@@ -1,26 +1,114 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
-	
-	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
-	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
-	
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:="urn:import:org.apache.ecs.html">
+
+	<ui:with field='msg'
+		type='com.silverpeas.mobile.client.resources.ApplicationMessages' />
+	<ui:with field='res'
+		type='com.silverpeas.mobile.client.resources.ApplicationResources' />
+
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Silverpeas Mobile - Contacts</g:Label>			
+			<g:Label horizontalAlignment="center">Silverpeas
+				Mobile - Contacts</g:Label>
 		</m:HeaderPanel>
-			
-		<m:SlidePanel rotate="true" visible="false" ui:field="slidePanel">
-			<m:Slide>
-				<m:ScrollPanel hasTextBox="false">
-					<m:ListPanel selectable="true" ui:field="ContactsList" showArrow="true"></m:ListPanel>
+		<g:LayoutPanel>
+			<g:layer left='1%' right='5%' top='20px' height='35em'>
+				<m:ScrollPanel hasTextBox="false" ui:field="scrollPanelContact">
+					<m:ListPanel selectable="true" ui:field="ContactsList"
+						showArrow="true"></m:ListPanel>
 				</m:ScrollPanel>
-			</m:Slide>
-		</m:SlidePanel>					
-
+			</g:layer>
+			<g:layer left='95%' right='1%' top='20px' height='60em'>
+				<m:PanelBase ui:field="panelAlphabet">
+					<m:ListPanel selectable="true" ui:field="AlphabetList"
+						showArrow="true">
+						<m:HorizontalPanel>
+							<g:Label ui:field="A">A</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="B">B</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="C">C</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="D">D</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="E">E</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="F">F</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="G">G</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="H">H</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="I">I</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="J">J</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="K">K</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="L">L</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="M">M</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="N">N</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="O">O</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="P">P</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="Q">Q</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="R">R</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="S">S</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="T">T</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="U">U</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="V">V</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="W">W</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="X">X</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="Y">Y</g:Label>
+						</m:HorizontalPanel>
+						<m:HorizontalPanel>
+							<g:Label ui:field="Z">Z</g:Label>
+						</m:HorizontalPanel>
+					</m:ListPanel>
+				</m:PanelBase>
+			</g:layer>
+		</g:LayoutPanel>
 		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2011</g:Label>			
-		</m:HeaderPanel>	
+			<g:Label horizontalAlignment="center" wordWrap="true">Copyright
+				Silverpeas 1999-2011</g:Label>
+		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

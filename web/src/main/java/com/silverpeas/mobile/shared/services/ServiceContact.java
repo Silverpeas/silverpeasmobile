@@ -9,5 +9,6 @@ import com.silverpeas.mobile.shared.exceptions.ContactException;
 
 @RemoteServiceRelativePath("Contact")
 public interface ServiceContact extends RemoteService{
-	List<DetailUserDTO> getAllContact() throws ContactException;
+	void getAllContact() throws ContactException;
+	List<DetailUserDTO> getContactsByLetter(String letter) throws ContactException;
 }
