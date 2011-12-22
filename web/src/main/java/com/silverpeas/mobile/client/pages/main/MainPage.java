@@ -19,7 +19,7 @@ public class MainPage extends Page {
 
 	private static MainPageUiBinder uiBinder = GWT.create(MainPageUiBinder.class);
 	
-	private StatusPage statusPage = new StatusPage();
+	private StatusPage statusPage;
 	private ContactsPage contactsPage;
 	private AgendaPage agendaPage = new AgendaPage();
 	
@@ -39,6 +39,7 @@ public class MainPage extends Page {
 	
 	@UiHandler("status")
 	void status(ClickEvent e) {
+		statusPage = new StatusPage();
 		goTo(statusPage, Transition.FLIP);
 	}
 	
