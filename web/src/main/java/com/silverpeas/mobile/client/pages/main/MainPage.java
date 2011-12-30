@@ -51,6 +51,6 @@ public class MainPage extends Page {
 	
 	@UiHandler("agenda")
 	void agenda(ClickEvent e) {
-		goTo(agendaPage, Transition.SLIDE);
+		goTo(agendaPage, Transition.POP);
 	}
 }
