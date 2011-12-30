@@ -40,13 +40,13 @@ public class MainPage extends Page {
 	@UiHandler("status")
 	void status(ClickEvent e) {
 		statusPage = new StatusPage();
-		goTo(statusPage, Transition.FLIP);
+		goTo(statusPage, Transition.SLIDEUP);
 	}
 	
 	@UiHandler("contacts")
 	void contacts(ClickEvent e) {
 		contactsPage = new ContactsPage();
-		goTo(contactsPage, Transition.SLIDEUP);
+		goTo(contactsPage, Transition.SLIDE);
 	}
 	
 	@UiHandler("agenda")
