@@ -19,11 +19,17 @@ public class SilverpeasMobileActivity extends DroidGap {
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.main);
-        
-        final SharedPreferences URLPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        super.setBooleanProperty("loadInWebView", true);
+        CheckPreferences();
+    }
+    
+    public void CheckPreferences(){
+    	final SharedPreferences URLPrefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String prefsURL = URLPrefs.getString("URL", "null");
+        URL = new String();
+        URL = prefsURL;
         
-        if(prefsURL=="null"){
+        if(URL=="null"){
         	LayoutInflater factory = LayoutInflater.from(this);
             final View alertDialogView = factory.inflate(R.layout.alertdialogurl, null);
             
@@ -43,19 +49,24 @@ public class SilverpeasMobileActivity extends DroidGap {
     				
     				String URLenr = new String("URL Enregistree.");	
     				Toast.makeText(SilverpeasMobileActivity.this, URLenr, Toast.LENGTH_SHORT).show();
+    				LoadURL();
     			}
     		});
             
             alertDialog.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {		
     			public void onClick(DialogInterface dialog, int which) {
-    				finish();
+    				dialog.cancel();
     			}
     		});
             alertDialog.show();
-            super.loadUrl("\""+URL+"\"");
         }
-        else{
-            super.loadUrl("\""+prefsURL+"\"");
+        else
+        {
+        	super.loadUrl(URL);
         }
+    }
+    
+    public void LoadURL(){
+    	super.loadUrl(URL);
     }
 }

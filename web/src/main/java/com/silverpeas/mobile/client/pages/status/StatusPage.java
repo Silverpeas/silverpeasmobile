@@ -32,8 +32,9 @@ public class StatusPage extends Page {
 	@UiField Button post;
 	@UiField Label labelStatus;
 	@UiField ListPanel panelStatus;
-	private ArrayList<String> stringA = new ArrayList<String>();
-	private ArrayList<Date> stringD = new ArrayList<Date>();
+	@UiField Button more;
+	private ArrayList<String> listDescription;
+	private ArrayList<Date> listDate;
 	private DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
 	
 	interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
@@ -42,7 +43,7 @@ public class StatusPage extends Page {
 	public StatusPage() {
 		initWidget(uiBinder.createAndBindUi(this));	
 		getLastStatus();
-		getAllStatus();
+		getStatus(0);
 	}
 	
 	@UiHandler("post")
@@ -55,10 +56,15 @@ public class StatusPage extends Page {
 	            }
 				public void onSuccess(String result) {
 						labelStatus.setText(result);
+						Date date = new Date();
+						ListItem li = new ListItem();
+						Label la = new Label("Le "+ fmt.format(date) + " : " + result);
+					    li.add(la);
+					    panelStatus.insert(li, 3);
 				}
 			});
 		}
-		textField.setText("");
+		textField.setText("");	
 	}
 	
 	public void getLastStatus(){
@@ -72,28 +78,30 @@ public class StatusPage extends Page {
 		});
 	}
 	
-	public void getAllStatus(){
-		ServicesLocator.serviceRSE.getAllStatus(new AsyncCallback<Map<Date, String>>(){
+	@UiHandler("more")
+	void MoreButton(ClickEvent e){
+		getStatus(1);
+	}
+	
+	public void getStatus(int indicator){
+		ServicesLocator.serviceRSE.getStatus(indicator, new AsyncCallback<Map<Date, String>>(){
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 				Window.alert(caught.toString());
 			}
-			public void onSuccess(Map<Date, String> result) {
+			public void onSuccess(Map<Date, String> result){
+				listDescription = new ArrayList<String>();
+				listDate = new ArrayList<Date>();
 				for (Iterator<Date> i = result.keySet().iterator() ; i.hasNext() ; ){
-				    Date date = (Date)i.next();
+					Date date = (Date)i.next();
 				    String description = result.get(date);
 				    
-				    ListItem li = new ListItem();
-				    Label la = new Label("Le "+ fmt.format(date) + " : " + description);
-				    li.add(la);
-					panelStatus.add(li);
-					
-				    /*stringA.add(description);
-				    stringD.add(date);*/
+				    listDate.add(date);
+				    listDescription.add(description);
 				}
-				for(int i=stringA.size();i>=0;i--){
+				for(int i=listDate.size()-1;i>=0;i--){
 					ListItem li = new ListItem();
-				    Label la = new Label("Le "+ fmt.format(stringD.get(i)) + " : " + stringA.get(i));
+				    Label la = new Label("Le "+ fmt.format(listDate.get(i)) + " : " + listDescription.get(i));
 				    li.add(la);
 					panelStatus.add(li);
 				}

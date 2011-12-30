@@ -12,5 +12,5 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 public interface ServiceRSE extends RemoteService {		
 	public String updateStatus(String status) throws RSEexception;
 	public String getLastStatusService() throws RSEexception, AuthenticationException;
-	public Map<Date, String> getAllStatus() throws RSEexception;
+	public Map<Date, String> getStatus(int indicator) throws RSEexception;
 }
