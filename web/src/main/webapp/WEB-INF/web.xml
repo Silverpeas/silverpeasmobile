@@ -41,6 +41,15 @@
   	<url-pattern>/spmobil/Agenda</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+  	<servlet-name>serviceDashboardImpl</servlet-name>
+  	<servlet-class>com.silverpeas.mobile.server.services.ServiceDashboardImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>serviceDashboardImpl</servlet-name>
+  	<url-pattern>/spmobil/Dashboard</url-pattern>
+  </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>spmobil.html</welcome-file>
