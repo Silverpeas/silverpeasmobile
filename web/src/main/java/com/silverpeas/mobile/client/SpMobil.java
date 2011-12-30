@@ -11,9 +11,11 @@ import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
 import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.common.Database;
+import com.silverpeas.mobile.client.common.ErrorManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.MainPage;
 import com.silverpeas.mobile.client.persist.UserIds;
@@ -34,7 +36,10 @@ public class SpMobil implements EntryPoint{
 	/**
 	 * Point de lancement.
 	 */
-	public void onModuleLoad() {		
+	public void onModuleLoad() {
+		
+		EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());		
+		
 		loadIds();
 		
 		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {			
