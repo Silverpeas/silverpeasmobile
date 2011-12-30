@@ -13,7 +13,7 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
-import com.silverpeas.mobile.server.Configurator;
+import com.silverpeas.mobile.server.config.Configurator;
 
 
 /**

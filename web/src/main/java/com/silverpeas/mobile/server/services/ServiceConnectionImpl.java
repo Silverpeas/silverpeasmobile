@@ -18,6 +18,10 @@ import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.util.JNDINames;
 
+/**
+ * Service de gestion des connexions.
+ * @author svuillet
+ */
 public class ServiceConnectionImpl extends AbstractAuthenticateService implements	ServiceConnection {
 
 	private static final long serialVersionUID = 1L;

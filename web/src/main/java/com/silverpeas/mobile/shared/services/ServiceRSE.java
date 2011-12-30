@@ -1,16 +1,16 @@
 package com.silverpeas.mobile.shared.services;
 
-import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.silverpeas.mobile.shared.exceptions.RSEexception;
+import com.silverpeas.mobile.shared.dto.StatusDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import com.silverpeas.mobile.shared.exceptions.RSEexception;
 
 @RemoteServiceRelativePath("RSE")
 public interface ServiceRSE extends RemoteService {		
-	public String updateStatus(String status) throws RSEexception;
+	public String updateStatus(String status) throws RSEexception, AuthenticationException;
 	public String getLastStatusService() throws RSEexception, AuthenticationException;
-	public Map<Date, String> getStatus(int indicator) throws RSEexception;
+	public List<StatusDTO> getStatus(int step) throws RSEexception, AuthenticationException;
 }

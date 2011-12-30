@@ -1,9 +1,8 @@
 package com.silverpeas.mobile.client.pages.status;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -11,7 +10,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,6 +21,7 @@ import com.gwtmobile.ui.client.widgets.TextBox;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.shared.dto.StatusDTO;
 
 public class StatusPage extends Page {
 	
@@ -32,10 +31,9 @@ public class StatusPage extends Page {
 	@UiField Button post;
 	@UiField Label labelStatus;
 	@UiField ListPanel panelStatus;
-	@UiField Button more;
-	private ArrayList<String> listDescription;
-	private ArrayList<Date> listDate;
+	@UiField Button more;	
 	private DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
+	private int currentPage = 1;
 	
 	interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
 	}
@@ -43,7 +41,7 @@ public class StatusPage extends Page {
 	public StatusPage() {
 		initWidget(uiBinder.createAndBindUi(this));	
 		getLastStatus();
-		getStatus(0);
+		getStatus(currentPage);
 	}
 	
 	@UiHandler("post")
@@ -60,7 +58,7 @@ public class StatusPage extends Page {
 						ListItem li = new ListItem();
 						Label la = new Label("Le "+ fmt.format(date) + " : " + result);
 					    li.add(la);
-					    panelStatus.insert(li, 3);
+					    panelStatus.insert(li, 3);					    
 				}
 			});
 		}
@@ -80,32 +78,40 @@ public class StatusPage extends Page {
 	
 	@UiHandler("more")
 	void MoreButton(ClickEvent e){
-		getStatus(1);
+		currentPage++;
+		getStatus(currentPage);
 	}
 	
-	public void getStatus(int indicator){
-		ServicesLocator.serviceRSE.getStatus(indicator, new AsyncCallback<Map<Date, String>>(){
+	public void getStatus(int step){
+		ServicesLocator.serviceRSE.getStatus(step, new AsyncCallback<List<StatusDTO>>(){
 			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-				Window.alert(caught.toString());
+				EventBus.getInstance().fireEvent(new ErrorEvent(caught));				
 			}
-			public void onSuccess(Map<Date, String> result){
-				listDescription = new ArrayList<String>();
-				listDate = new ArrayList<Date>();
-				for (Iterator<Date> i = result.keySet().iterator() ; i.hasNext() ; ){
-					Date date = (Date)i.next();
-				    String description = result.get(date);
-				    
-				    listDate.add(date);
-				    listDescription.add(description);
-				}
-				for(int i=listDate.size()-1;i>=0;i--){
-					ListItem li = new ListItem();
-				    Label la = new Label("Le "+ fmt.format(listDate.get(i)) + " : " + listDescription.get(i));
-				    li.add(la);
-					panelStatus.add(li);
-				}
+			public void onSuccess(List<StatusDTO> result) {				
+				Iterator<StatusDTO> iResult = result.iterator();
+				while (iResult.hasNext()) {
+					StatusDTO statusDTO = (StatusDTO) iResult.next();					
+					if (isStatusNotDisplay(statusDTO.getId())) {
+						// ajout les status non affichés (cas du post ajouté, puis navigation dans les précédents)
+						ListItem li = new ListItem();
+						Label la = new Label("Le "+ fmt.format(statusDTO.getCreationDate()) + " : " + statusDTO.getDescription());
+						li.getElement().setId(String.valueOf(statusDTO.getId()));
+						li.add(la);
+						panelStatus.add(li);
+					}					
+				}			
 			}
 		});
+	}
+	
+	private boolean isStatusNotDisplay(int id) {		
+		Iterator<Widget> it = panelStatus.iterator();
+		while (it.hasNext()) {
+			Widget widget = (Widget) it.next();
+			if (widget.getElement().getId().equals(String.valueOf(id))) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

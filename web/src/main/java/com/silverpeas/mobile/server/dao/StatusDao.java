@@ -6,27 +6,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
-import com.silverpeas.socialNetwork.model.SocialInformation;
-import com.silverpeas.socialNetwork.status.SocialInformationStatus;
-import com.silverpeas.socialNetwork.status.Status;
+import com.silverpeas.mobile.server.config.Configurator;
+import com.silverpeas.mobile.shared.dto.StatusDTO;
 import com.stratelia.webactiv.util.DBUtil;
+import com.stratelia.webactiv.util.JNDINames;
+import com.stratelia.webactiv.util.exception.UtilException;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 public class StatusDao {
 	
-	public List<Status> list_statut;
-	
-	public StatusDao(){
-		list_statut = new ArrayList<Status>();
-	}
-	
-	public Map<Date, String> getAllStatus(Connection connection, int userId, int indicator) throws SQLException {
-		    PreparedStatement pstmt = null;
+	public List<StatusDTO> getAllStatus(int userId, int step) throws SQLException {
+		Connection connection = getConnection();  
+		PreparedStatement pstmt = null;
 		    ResultSet rs = null;
 		    try {
 		      String query =
@@ -35,54 +29,32 @@ public class StatusDao {
 		      pstmt.setInt(1, userId);
 		      rs = pstmt.executeQuery();
 
-		      return getSocialInformationsList(rs, indicator);
+		      return getSocialInformationsList(rs, step);
 		    } finally {
 		      DBUtil.close(rs, pstmt);
+		      DBUtil.close(connection);
 		    }
 	}
 	
-	private Map<Date, String> getSocialInformationsList(ResultSet rs, int indicator) throws SQLException {
-		if(indicator==0){
-			list_statut = new ArrayList<Status>();
+	private List<StatusDTO> getSocialInformationsList(ResultSet rs, int step) throws SQLException {
+		ArrayList<StatusDTO> statusList = new ArrayList<StatusDTO>();		
+		int index = 0;
+		while (rs.next() && index < step * Configurator.getConfigIntValue("mystatus.pagesize")) {
+			StatusDTO status = new StatusDTO();
+    		status.setId(rs.getInt(1));
+    		status.setUserId(rs.getInt(2));
+    		status.setCreationDate(new Date(rs.getTimestamp(3).getTime()));
+    	    status.setDescription(rs.getString(4));
+    	    if (index >= (step-1) * Configurator.getConfigIntValue("mystatus.pagesize") || step == 1) {
+    	    	statusList.add(status);	
+    	    }
+    	    index++;    	    
 		}
-		Map<Date, String> status_list = new HashMap<Date, String>();
-		Iterator<Status> i = list_statut.iterator();
-		ArrayList<Status> list_statut_temp = new ArrayList<Status>();
-	    int j = 0;
-	    while (rs.next() && j<5) {
-	    	if(i.hasNext()){
-	    		Status s = i.next();
-	    		if(rs.getInt(1)!=s.getId() && j < 5){
-		    		Status status = new Status();
-		    		status.setId(rs.getInt(1));
-		    		status.setUserId(rs.getInt(2));
-		    		status.setCreationDate(new Date(rs.getTimestamp(3).getTime()));
-		    	    status.setDescription(rs.getString(4));
-		    		SocialInformation si = new SocialInformationStatus(status);
-		    		status_list.put(si.getDate(), si.getDescription());
-		    		list_statut_temp.add(status);
-		    		j++;
-		    	}
-	    	}
-	    	else if(j < 5){
-	    		Status status = new Status();
-    		    status.setId(rs.getInt(1));
-    		    status.setUserId(rs.getInt(2));
-    		    status.setCreationDate(new Date(rs.getTimestamp(3).getTime()));
-	    	    status.setDescription(rs.getString(4));
-    		    SocialInformation si = new SocialInformationStatus(status);
-    		    status_list.put(si.getDate(), si.getDescription());
-    		    list_statut_temp.add(status);
-    		    j++;
-	    	}
-	    }
-	    list_statut.addAll(list_statut_temp);
-	    TreeMap<Date, String> final_list = new TreeMap<Date, String>(status_list);
-	    return final_list;
+		Collections.sort(statusList);
+		return statusList;
 	}
 	
-	public void addLastStatus(Status status, int id){
-		status.setId(id);
-		list_statut.add(0, status);
+	private Connection getConnection() throws UtilException, SQLException {
+	    return DBUtil.makeConnection(JNDINames.DATABASE_DATASOURCE);
 	}
 }
