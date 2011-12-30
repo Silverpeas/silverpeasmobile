@@ -29,17 +29,19 @@ public class ServiceDashboardImpl extends AbstractAuthenticateService implements
 	private GregorianCalendar begin = new GregorianCalendar();
 	private GregorianCalendar end = new GregorianCalendar();
 
-	@Override
-	public Map<Date, List<SocialInformation>> getALL() throws DashboardException, AuthenticationException, SilverpeasException {
+	public Map<Date, List<SocialInformation>> getALL() throws DashboardException, AuthenticationException {
 		begin.add(Calendar.MONTH, -1);
 		com.silverpeas.calendar.Date dBegin = new com.silverpeas.calendar.Date(begin.getTime());
 	    com.silverpeas.calendar.Date dEnd = new com.silverpeas.calendar.Date(end.getTime());
 	        
 	    List<String> myContactIds = getMyContactsIds();
 	    
-	    List<com.silverpeas.socialNetwork.model.SocialInformation> socialInformationsFull =
-	        getSwitchInterface().getSocialInformationsListOfMyContacts(SocialInformationType.ALL, myId,
-	            myContactIds, dEnd, dBegin);
+	    List<com.silverpeas.socialNetwork.model.SocialInformation> socialInformationsFull = null;
+	    try {
+	    	socialInformationsFull = getSwitchInterface().getSocialInformationsListOfMyContacts(SocialInformationType.ALL, myId, myContactIds, dEnd, dBegin);
+	    } catch(SilverpeasException ex) {
+	    	throw new DashboardException(ex);
+	    }	    
 	    
 	    if (SocialInformationType.ALL.equals(SocialInformationType.ALL)) {
 	      Collections.sort(socialInformationsFull);
