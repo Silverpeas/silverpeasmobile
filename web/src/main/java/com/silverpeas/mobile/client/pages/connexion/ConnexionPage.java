@@ -80,8 +80,7 @@ public class ConnexionPage extends Page {
 				try {
 					encryptedPassword = encryptPassword(password);
 				} catch (InvalidCipherTextException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					EventBus.getInstance().fireEvent(new ErrorEvent(e));
 				}
 				storeIds(encryptedPassword);
 				mainPage = new MainPage();

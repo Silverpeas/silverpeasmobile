@@ -11,6 +11,7 @@ import com.gwtmobile.ui.client.page.Transition;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.pages.agenda.AgendaPage;
 import com.silverpeas.mobile.client.pages.contacts.ContactsPage;
+import com.silverpeas.mobile.client.pages.gallery.GalleryPage;
 import com.silverpeas.mobile.client.pages.status.StatusPage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
@@ -22,6 +23,7 @@ public class MainPage extends Page {
 	private StatusPage statusPage;
 	private ContactsPage contactsPage;
 	private AgendaPage agendaPage = new AgendaPage();
+	private GalleryPage galleryPage = new GalleryPage();
 	
 	@UiField(provided = true) protected ApplicationMessages msg = null;
 	@UiField(provided = true) protected ApplicationResources res = null;
@@ -52,5 +54,10 @@ public class MainPage extends Page {
 	@UiHandler("agenda")
 	void agenda(ClickEvent e) {
 		goTo(agendaPage, Transition.POP);
+	}
+	
+	@UiHandler("gallery")
+	void gallery(ClickEvent e) {
+		goTo(galleryPage, Transition.POP);
 	}
 }
