@@ -15,6 +15,15 @@
   </servlet-mapping>
   
   <servlet>
+  	<servlet-name>serviceGalleryImpl</servlet-name>
+  	<servlet-class>com.silverpeas.mobile.server.services.ServiceGalleryImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>serviceGalleryImpl</servlet-name>
+  	<url-pattern>/spmobil/Gallery</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
   	<servlet-name>serviceConnectionImpl</servlet-name>
   	<servlet-class>com.silverpeas.mobile.server.services.ServiceConnectionImpl</servlet-class>
   </servlet>

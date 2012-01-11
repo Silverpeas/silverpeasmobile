@@ -29,6 +29,7 @@
 		<m:Button ui:field="takePicture" horizontalAlignment="center">Take picture</m:Button>
 		<m:Button ui:field="local" horizontalAlignment="center">Local pictures</m:Button>
 		<m:Button ui:field="sync" horizontalAlignment="center">Sync pictures</m:Button>
+		<m:Button ui:field="setup" horizontalAlignment="center">Settings</m:Button>
 		<m:HeaderPanel>
 			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2011</g:Label>			
 		</m:HeaderPanel>	
