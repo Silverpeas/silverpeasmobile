@@ -3,10 +3,8 @@ package com.silverpeas.mobile.server.dao;
 import java.rmi.RemoteException;
 
 import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.model.GalleryRuntimeException;
 import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
-import com.silverpeas.gallery.servlets.GalleryRequestRouter;
 import com.silverpeas.tags.util.EJBDynaProxy;
 import com.stratelia.webactiv.util.JNDINames;
 

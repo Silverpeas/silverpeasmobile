@@ -18,18 +18,18 @@ import com.gwtmobile.phonegap.client.Camera;
 import com.gwtmobile.phonegap.client.Notification;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
-import com.gwtmobile.ui.client.widgets.Button;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.pages.gallery.browser.PicturePage;
 import com.silverpeas.mobile.client.persist.Picture;
 
 public class GalleryPage extends Page {
 
 	private static GalleryPageUiBinder uiBinder = GWT.create(GalleryPageUiBinder.class);
-	@UiField Button takePicture, local, sync, setup;	
+	@UiField protected Icon takePicture, local, sync, setup;	
 	
 	private static int nbPictures;
 	private static int ratioPicture;
