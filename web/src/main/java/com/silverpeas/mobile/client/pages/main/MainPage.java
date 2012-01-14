@@ -48,16 +48,16 @@ public class MainPage extends Page {
 	@UiHandler("contacts")
 	void contacts(ClickEvent e) {
 		contactsPage = new ContactsPage();
-		goTo(contactsPage, Transition.SLIDE);
+		goTo(contactsPage, Transition.SLIDEUP);
 	}
 	
 	@UiHandler("agenda")
 	void agenda(ClickEvent e) {
-		goTo(agendaPage, Transition.POP);
+		goTo(agendaPage, Transition.SLIDEUP);
 	}
 	
 	@UiHandler("gallery")
 	void gallery(ClickEvent e) {
-		goTo(galleryPage, Transition.POP);
+		goTo(galleryPage, Transition.SLIDEUP);
 	}
 }

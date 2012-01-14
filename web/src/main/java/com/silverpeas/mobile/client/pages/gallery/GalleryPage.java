@@ -16,8 +16,11 @@ import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
 import com.gwtmobile.phonegap.client.Camera;
 import com.gwtmobile.phonegap.client.Notification;
+import com.gwtmobile.phonegap.client.Camera.DestinationType;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
+import com.gwtmobile.ui.client.widgets.HeaderPanel;
+import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
@@ -29,7 +32,9 @@ import com.silverpeas.mobile.client.persist.Picture;
 public class GalleryPage extends Page {
 
 	private static GalleryPageUiBinder uiBinder = GWT.create(GalleryPageUiBinder.class);
-	@UiField protected Icon takePicture, local, sync, setup;	
+	@UiField protected Icon takePicture, local, sync, setup;
+	@UiField protected HeaderPanel footer, header;
+	@UiField protected HorizontalPanel content;
 	
 	private static int nbPictures;
 	private static int ratioPicture;
@@ -47,10 +52,11 @@ public class GalleryPage extends Page {
 	@UiHandler("takePicture")
 	void takePicture(ClickEvent e){
 		Camera.Options options = new Camera.Options();
-		options.quality(50);	
+		options.quality(50);
 		
 		Camera.getPicture(new Camera.Callback() {			
 			public void onSuccess(final String imageData) {				
+				Notification.activityStart();
 				Database.open();		
 				final Entity<Picture> pictureEntity = GWT.create(Picture.class);				
 				Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
@@ -58,12 +64,14 @@ public class GalleryPage extends Page {
 						final Picture pic = pictureEntity.newInstance();
 						pic.setData(imageData);
 						Persistence.flush();
+						Notification.activityStop();
 					}
 				});
 			}
 
 			public void onError(String message) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));			
+				Notification.activityStop();
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));	
 			}
 		}, options);
 	}
@@ -79,22 +87,26 @@ public class GalleryPage extends Page {
 					
 			@Override
 			public void onSuccess(final Integer count) {
-				Notification.activityStart();
-				nbPictures = 0;
-				
-				pictures.forEach(new ScalarCallback<Picture>() {			
-					@Override
-					public void onSuccess(Picture result) {
-						Image picture = new Image("data:image/jpg;base64,"+result.getData());
-						picture.setSize("100%", "100%");
-						picturePage.addPicture(picture);
-						nbPictures++;
-						if (count == nbPictures) {
-							Notification.activityStop();
-							goTo(picturePage, Transition.SLIDE);
-						}						
-					}
-				});				
+				if (count == 0) {
+					Notification.alert("No locals pictures", null, "Information", "OK");
+				} else {
+					Notification.activityStart();
+					nbPictures = 0;
+					//TODO : revoir les performances
+					pictures.forEach(new ScalarCallback<Picture>() {			
+						@Override
+						public void onSuccess(Picture result) {
+							Image picture = new Image("data:image/jpg;base64,"+result.getData());
+							picture.setSize("100%", "100%");
+							picturePage.addPicture(picture);
+							nbPictures++;
+							if (count == nbPictures) {
+								Notification.activityStop();
+								goTo(picturePage, Transition.SLIDE);
+							}						
+						}
+					});	
+				}							
 			}
 		});		
 	}

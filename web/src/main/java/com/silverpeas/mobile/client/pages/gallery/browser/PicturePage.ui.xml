@@ -24,12 +24,12 @@
 	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Silverpeas Mobile - Gallery</g:Label>			
+			<g:Label horizontalAlignment="center">Locals pictures</g:Label>			
 		</m:HeaderPanel>
 		<m:SlidePanel height="100%" width="100%" ui:field="content" rotate="true">
 		</m:SlidePanel>
 		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2011</g:Label>			
+			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2012</g:Label>			
 		</m:HeaderPanel>	
 	</g:HTMLPanel>
 </ui:UiBinder> 

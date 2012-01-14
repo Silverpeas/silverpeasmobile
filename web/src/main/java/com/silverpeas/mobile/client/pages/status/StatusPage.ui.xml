@@ -23,7 +23,7 @@
 	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Silverpeas Mobile - Status</g:Label>			
+			<g:Label horizontalAlignment="center">Status</g:Label>			
 		</m:HeaderPanel>
 		<m:ScrollPanel>
 			<m:ListPanel selectable="false" styleName="ListPanel {style.flex}" ui:field="panelStatus" >
@@ -36,7 +36,7 @@
 		</m:ScrollPanel>
 		<m:Button ui:field="more" horizontalAlignment="center">More status</m:Button>
 		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2011</g:Label>			
+			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2012</g:Label>			
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 	

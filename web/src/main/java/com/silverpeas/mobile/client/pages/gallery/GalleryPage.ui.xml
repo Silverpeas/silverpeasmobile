@@ -6,56 +6,45 @@
 	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
 	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
 
-	<ui:style>
-		.flex>div {
-			display: table;
+	<ui:style>		
+
+		.contentH {
+			-webkit-box-pack: center;
+			-webkit-box-align: center;
 			width: 100%;
+			height: 100%;
 		}
 		
-		.flex>div>* {
-			vertical-align: middle;
-			display: table-cell;
-		}
-		
-		.flex>div>*:first-child {
-			text-align: left;
-			padding-right: 1em;
-			width: 30%;
-		}
-		
-		.flex>div>*:last-child {
-			width: 90%;
-		}
+		.contentV {
+			-webkit-box-pack: center;
+			-webkit-box-align: center;
+			height: 100%;
+			width: 50%; /* Deux colonnes */
+		}		
 	</ui:style>
 
 	<g:HTMLPanel>
-		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Silverpeas Mobile - Gallery</g:Label>
+		<m:HeaderPanel leftButton="Back" ui:field="header">
+			<g:Label horizontalAlignment="center">Gallery</g:Label>
 		</m:HeaderPanel>
+		<m:SlidePanel rotate="true">
+			<m:Slide>
+				<m:HorizontalPanel ui:field="content" secondaryStyle="{style.contentH}">
+					<m:VerticalPanel secondaryStyle="{style.contentV}">
+						<i:Icon text="Take picture" styleName="{res.css.camera}" ui:field="takePicture" height="50%"/>
+						<i:Icon text="Sync pictures" styleName="{res.css.sync}" ui:field="sync" height="50%"/>
+					</m:VerticalPanel>
+					<m:VerticalPanel secondaryStyle="{style.contentV}">
+						<i:Icon text="Locals pictures" styleName="{res.css.localstorage}" ui:field="local" height="50%"/>				
+						<i:Icon text="Settings" styleName="{res.css.settings}" ui:field="setup" height="50%"/>
+					</m:VerticalPanel>
+				</m:HorizontalPanel>			
+			</m:Slide>
+		</m:SlidePanel>
 
-		<g:Grid styleName="{res.css.icon}">
-			<g:row>
-				<g:customCell>
-					<i:Icon text="Take picture" styleName="{res.css.camera}" ui:field="takePicture" />
-				</g:customCell>
-				<g:customCell>
-					<i:Icon text="Locals pictures" styleName="{res.css.localstorage}" ui:field="local" />
-				</g:customCell>
-			</g:row>
-			<g:row>
-				<g:customCell>
-					<i:Icon text="Sync pictures" styleName="{res.css.sync}" ui:field="sync" />
-				</g:customCell>
-				<g:customCell>
-					<i:Icon text="Settings" styleName="{res.css.settings}" ui:field="setup" />
-				</g:customCell>
-			</g:row>
-		</g:Grid>
-
-
-		<m:HeaderPanel>
+		<m:HeaderPanel ui:field="footer">
 			<g:Label horizontalAlignment="center" wordWrap="true">Copyright
-				Silverpeas 1999-2011</g:Label>
+				Silverpeas 1999-2012</g:Label>
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

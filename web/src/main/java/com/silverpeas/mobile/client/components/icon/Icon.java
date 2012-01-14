@@ -6,15 +6,15 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.gwtmobile.ui.client.widgets.VerticalPanel;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 
 public class Icon extends Composite implements HasText, HasClickHandlers, ClickHandler {
 
-	private Grid grid = new Grid(2,1);
+	private VerticalPanel grid = new VerticalPanel();
 	private SimplePanel image = new SimplePanel();
 	private Label label = new Label();
 	private ClickHandler handler = null;
@@ -22,16 +22,12 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 	private ApplicationResources res =  GWT.create(ApplicationResources.class);
 
 	public Icon() {
-		grid.setStyleName(res.css().icon());
-		grid.addClickHandler(this);
-		grid.setWidget(0, 0, image);
-		grid.setWidget(1, 0, label);		
+		label.setHorizontalAlignment(Label.ALIGN_CENTER);
+		grid.setSecondaryStyle(res.css().icon());
+		grid.addDomHandler(this, ClickEvent.getType());
+		grid.add(image);
+		grid.add(label);
 		initWidget(grid);
-		
-		/*VerticalPanel p = new VerticalPanel();
-		p.add(image);
-		p.add(label);
-		initWidget(p);*/
 	}
 
 	public String getText() {
@@ -40,6 +36,10 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 
 	public void setText(String text) {
 		label.setText(text);
+	}
+	
+	public void setHeight(String height) {
+		grid.setHeight(height);
 	}
 
 	@Override

@@ -7,76 +7,58 @@
 	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
 	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
 	
+	<ui:style>		
+
+		.contentH {
+			-webkit-box-pack: center;
+			-webkit-box-align: center;
+			width: 100%;
+			height: 100%;
+		}
+		
+		.contentV {
+			-webkit-box-pack: center;
+			-webkit-box-align: center;
+			height: 100%;
+			width: 50%; /* Deux colonnes */
+		}		
+	</ui:style>
+	
 	<g:HTMLPanel>
 		<m:HeaderPanel>
 			<g:Label horizontalAlignment="center">Silverpeas Mobile</g:Label>			
 		</m:HeaderPanel>
 		
 		<m:SlidePanel rotate="true">
-			<m:Slide>
-				<m:ScrollPanel>
-				
-				<!-- m:VerticalPanel width="100%">
-					<m:HorizontalPanel width="100%">
-						<i:Icon text="Contacts" styleName="{res.css.contacts}" ui:field="contacts"/>
-						<i:Icon text="Documents" styleName="{res.css.documents}" ui:field="documents"/>
-					</m:HorizontalPanel>
-					<m:HorizontalPanel>
-						<i:Icon text="Status" styleName="{res.css.status}" ui:field="status"/>
-						<i:Icon text="Dashboard" styleName="{res.css.dashboard}" ui:field="dashboard"/>
-					</m:HorizontalPanel>
-					<m:HorizontalPanel>
-						<i:Icon text="Images" styleName="{res.css.gallery}" ui:field="gallery"/>											
-						<i:Icon text="Agenda" styleName="{res.css.agenda}" ui:field="agenda"/>	
-					</m:HorizontalPanel>				
-				</m:VerticalPanel-->
-				<g:Grid styleName="{res.css.icon}">
-					<g:row>
-						<g:customCell>
-							<i:Icon text="Contacts" styleName="{res.css.contacts}" ui:field="contacts"/>											
-						</g:customCell>
-						<g:customCell>
-							<i:Icon text="Documents" styleName="{res.css.documents}" ui:field="documents"/>
-						</g:customCell>
-					</g:row>
-					<g:row>
-						<g:customCell>
-							<i:Icon text="Status" styleName="{res.css.status}" ui:field="status"/>										
-						</g:customCell>
-						<g:customCell>
-							<i:Icon text="Dashboard" styleName="{res.css.dashboard}" ui:field="dashboard"/>
-						</g:customCell>
-					</g:row>
-					<g:row>
-						<g:customCell>
-							<i:Icon text="Images" styleName="{res.css.gallery}" ui:field="gallery"/>											
-						</g:customCell>
-						<g:customCell>			
-							<i:Icon text="Agenda" styleName="{res.css.agenda}" ui:field="agenda"/>										
-						</g:customCell>
-					</g:row>
-				</g:Grid>
-				
-				</m:ScrollPanel>
+			<m:Slide>				
+				<m:HorizontalPanel secondaryStyle="{style.contentH}">
+					<m:VerticalPanel secondaryStyle="{style.contentV}">
+						<i:Icon text="Contacts" styleName="{res.css.contacts}" ui:field="contacts" height="33%"/>
+						<i:Icon text="Documents" styleName="{res.css.documents}" ui:field="documents" height="33%"/>
+						<i:Icon text="Status" styleName="{res.css.status}" ui:field="status" height="33%"/>
+					</m:VerticalPanel>
+					<m:VerticalPanel secondaryStyle="{style.contentV}">
+					<i:Icon text="Dashboard" styleName="{res.css.dashboard}" ui:field="dashboard" height="33%"/>
+						<i:Icon text="Images" styleName="{res.css.gallery}" ui:field="gallery" height="33%"/>
+						<i:Icon text="Agenda" styleName="{res.css.agenda}" ui:field="agenda" height="33%"/>
+					</m:VerticalPanel>
+				</m:HorizontalPanel>				
 			</m:Slide>
 			<m:Slide>
-				<m:ScrollPanel>
-				<g:Grid styleName="{res.css.icon}">
-					<g:row>
-						<g:customCell>			
-							<i:Icon text="Bookmark" styleName="{res.css.bookmark}"/>									
-						</g:customCell>
-						<g:customCell>
-							<i:Icon text="Notifications" styleName="{res.css.notifications}"/>
-						</g:customCell>
-					</g:row>
-				</g:Grid>
-				</m:ScrollPanel>
+				<m:HorizontalPanel secondaryStyle="{style.contentH}">
+					<m:VerticalPanel secondaryStyle="{style.contentV}">
+						<i:Icon text="Bookmark" styleName="{res.css.bookmark}" height="50%"/>
+						<i:Icon text="Notifications" styleName="{res.css.notifications}" height="50%"/>
+					</m:VerticalPanel>
+					<m:VerticalPanel secondaryStyle="{style.contentV}">
+						<i:Icon text="Settings" styleName="{res.css.settings}" ui:field="setup" height="50%"/>
+					</m:VerticalPanel>
+				</m:HorizontalPanel>
 			</m:Slide>
 		</m:SlidePanel>
 			
 		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2011</g:Label>			
+			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
