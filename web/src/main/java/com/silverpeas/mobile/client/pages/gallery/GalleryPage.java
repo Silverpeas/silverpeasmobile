@@ -7,7 +7,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.CollectionCallback;
@@ -16,7 +15,6 @@ import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
 import com.gwtmobile.phonegap.client.Camera;
 import com.gwtmobile.phonegap.client.Notification;
-import com.gwtmobile.phonegap.client.Camera.DestinationType;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
 import com.gwtmobile.ui.client.widgets.HeaderPanel;
@@ -39,8 +37,6 @@ public class GalleryPage extends Page {
 	private static int nbPictures;
 	private static int ratioPicture;
 	private static boolean uploading, stopScheduler;
-	
-	private PicturePage picturePage = new PicturePage();
 	
 	interface GalleryPageUiBinder extends UiBinder<Widget, GalleryPage> {
 	}
@@ -82,31 +78,25 @@ public class GalleryPage extends Page {
 		Database.open();
 		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
 		final Collection<Picture> pictures = pictureEntity.all();
-		picturePage.clear();
-		pictures.count(new ScalarCallback<Integer>() {
-					
+		pictures.count(new ScalarCallback<Integer>() {					
 			@Override
 			public void onSuccess(final Integer count) {
 				if (count == 0) {
 					Notification.alert("No locals pictures", null, "Information", "OK");
 				} else {
 					Notification.activityStart();
-					nbPictures = 0;
-					//TODO : revoir les performances
-					pictures.forEach(new ScalarCallback<Picture>() {			
+					pictures.list((new CollectionCallback<Picture>(){
+
 						@Override
-						public void onSuccess(Picture result) {
-							Image picture = new Image("data:image/jpg;base64,"+result.getData());
-							picture.setSize("100%", "100%");
-							picturePage.addPicture(picture);
-							nbPictures++;
-							if (count == nbPictures) {
-								Notification.activityStop();
-								goTo(picturePage, Transition.SLIDE);
-							}						
+						public void onSuccess(Picture[] pictures) {
+							final PicturePage picturePage = new PicturePage();
+							picturePage.setPictures(pictures);
+							Notification.activityStop();
+							goTo(picturePage, Transition.SLIDE);
 						}
-					});	
-				}							
+						
+					}));				
+				}
 			}
 		});		
 	}

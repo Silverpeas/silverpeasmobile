@@ -3,28 +3,10 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
 	
-	<ui:style>
-		.flex > div {
-			display: table;
-			width: 100%;
-		}
-		.flex > div > * {
-			vertical-align: middle;
-			display: table-cell;
-		}
-		.flex > div > *:first-child {
-			text-align: left;
-			padding-right: 1em;
-			width: 30%;
-		}
-		.flex > div > *:last-child {
-			width: 90%;
-		}
-	</ui:style>
-	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Locals pictures</g:Label>			
+			<g:Label horizontalAlignment="center">Locals pictures</g:Label>
+			<g:InlineHTML ui:field="number"/>			
 		</m:HeaderPanel>
 		<m:SlidePanel height="100%" width="100%" ui:field="content" rotate="true">
 		</m:SlidePanel>
