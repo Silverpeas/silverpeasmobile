@@ -27,6 +27,10 @@ import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.pages.gallery.browser.PicturePage;
 import com.silverpeas.mobile.client.persist.Picture;
 
+/**
+ * Pictures gallery mobile application.
+ * @author svuillet
+ */
 public class GalleryPage extends Page {
 
 	private static GalleryPageUiBinder uiBinder = GWT.create(GalleryPageUiBinder.class);
@@ -43,8 +47,12 @@ public class GalleryPage extends Page {
 
 	public GalleryPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-	}
+	}	
 	
+	/**
+	 * Take a picture and store it in local database.
+	 * @param e
+	 */
 	@UiHandler("takePicture")
 	void takePicture(ClickEvent e){
 		Camera.Options options = new Camera.Options();
@@ -66,13 +74,17 @@ public class GalleryPage extends Page {
 			}
 
 			public void onError(String message) {
+				// TODO : manage cancel photo taking
 				Notification.activityStop();
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));	
 			}
 		}, options);
 	}
 	
-	
+	/**
+	 * Browser local pictures.
+	 * @param e
+	 */
 	@UiHandler("local")
 	void localPictures(ClickEvent e){
 		Database.open();
@@ -101,6 +113,10 @@ public class GalleryPage extends Page {
 		});		
 	}
 	
+	/**
+	 * Send local pictures to server
+	 * @param e
+	 */
 	@UiHandler("sync")
 	void syncPictures(ClickEvent e){
 		Database.open();

@@ -19,4 +19,5 @@ public interface ApplicationCSS extends CssResource {
 	String sync();
 	String settings();
 	String localstorage();
+	String selected();
 }

@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.components.icon;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -17,14 +18,13 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 	private VerticalPanel grid = new VerticalPanel();
 	private SimplePanel image = new SimplePanel();
 	private Label label = new Label();
-	private ClickHandler handler = null;
-	
+	private ClickHandler handler = null;	
 	private ApplicationResources res =  GWT.create(ApplicationResources.class);
 
 	public Icon() {
 		label.setHorizontalAlignment(Label.ALIGN_CENTER);
 		grid.setSecondaryStyle(res.css().icon());
-		grid.addDomHandler(this, ClickEvent.getType());
+		grid.addDomHandler(this, ClickEvent.getType());		
 		grid.add(image);
 		grid.add(label);
 		initWidget(grid);
@@ -69,8 +69,16 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 		}
 	}
 
-	public void onClick(ClickEvent event) {
-		if (handler != null) handler.onClick(event);		
-	}
-	
+	public void onClick(ClickEvent event) {		
+		image.addStyleName(res.css().selected());
+		if (handler != null) handler.onClick(event);
+		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+
+			@Override
+			public boolean execute() {
+				image.removeStyleName(res.css().selected());
+				return false;
+			}}, 300);
+		
+	}	
 }

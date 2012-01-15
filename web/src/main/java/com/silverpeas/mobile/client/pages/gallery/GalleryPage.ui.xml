@@ -20,7 +20,8 @@
 			-webkit-box-align: center;
 			height: 100%;
 			width: 50%; /* Deux colonnes */
-		}		
+		}
+		
 	</ui:style>
 
 	<g:HTMLPanel>
@@ -43,8 +44,7 @@
 		</m:SlidePanel>
 
 		<m:HeaderPanel ui:field="footer">
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright
-				Silverpeas 1999-2012</g:Label>
+			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

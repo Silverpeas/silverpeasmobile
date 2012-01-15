@@ -11,7 +11,7 @@
 		<m:SlidePanel height="100%" width="100%" ui:field="content" rotate="true">
 		</m:SlidePanel>
 		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2012</g:Label>			
+			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			
 		</m:HeaderPanel>	
 	</g:HTMLPanel>
 </ui:UiBinder> 
