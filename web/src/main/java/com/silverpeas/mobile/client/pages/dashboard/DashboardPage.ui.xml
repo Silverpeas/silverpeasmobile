@@ -22,7 +22,7 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Silverpeas Mobile - Dashboard</g:Label>			
+			<g:Label horizontalAlignment="center">Dashboard</g:Label>			
 		</m:HeaderPanel>
 		<m:TabPanel ui:field="navBar">
 			<m:Tab>
@@ -94,7 +94,7 @@
 		</m:TabPanel>
 		<m:Button ui:field="more" horizontalAlignment="center">More</m:Button>
 		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2011</g:Label>			
+			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
