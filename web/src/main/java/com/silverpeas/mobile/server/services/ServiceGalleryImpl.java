@@ -3,7 +3,6 @@ package com.silverpeas.mobile.server.services;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import com.silverpeas.mobile.server.dao.GalleryDao;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.GalleryException;
 import com.silverpeas.mobile.shared.services.ServiceGallery;
@@ -15,7 +14,6 @@ import com.silverpeas.mobile.shared.services.ServiceGallery;
 public class ServiceGalleryImpl extends AbstractAuthenticateService implements ServiceGallery {
 
 	private static final long serialVersionUID = 1L;
-	private GalleryDao galleryDao = new GalleryDao();
 	
 	public void uploadPicture(String name, String data) throws GalleryException, AuthenticationException {
 		checkUserInSession();

@@ -10,7 +10,6 @@ import com.silverpeas.mobile.shared.exceptions.RSEexception;
 import com.silverpeas.mobile.shared.services.ServiceRSE;
 import com.silverpeas.socialNetwork.status.Status;
 import com.silverpeas.socialNetwork.status.StatusService;
-import com.silverpeas.util.StringUtil;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 
@@ -31,23 +30,13 @@ public class ServiceRSEImpl extends AbstractAuthenticateService implements Servi
 		return statusService.changeStatusService(status);
 	}
 
-	public String getLastStatusService() throws RSEexception, AuthenticationException {
-		checkUserInSession();
-		UserDetail user = getUserInSession();
-		Status status = new StatusService().getLastStatusService(Integer.parseInt(user.getId()));
-		if (StringUtil.isDefined(status.getDescription())) {
-			return status.getDescription();
-		}
-		return " ";
-	}
-
 	public List<StatusDTO> getStatus(int step) throws RSEexception, AuthenticationException {
 		checkUserInSession();
 		UserDetail user = getUserInSession();
 		try {			
 		    return statusDao.getAllStatus(Integer.parseInt(user.getId()), step);
 		} catch (Exception ex) {
-		    SilverTrace.error("Silverpeas.Bus.SocialNetwork.Status", "StatusService.getAllStatus", "", ex);
+		    SilverTrace.error("com.silverpeas.mobile.server.services", "ServiceRSEImpl.getAllStatus", "", ex);
 		    throw new RSEexception(ex);
 		}	
 	}

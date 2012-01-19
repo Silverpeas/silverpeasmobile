@@ -34,13 +34,14 @@ public class StatusPage extends Page {
 	@UiField Button more;	
 	private DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
 	private int currentPage = 1;
+	private int lastStatusInd = 0;
 	
 	interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
 	}
 
 	public StatusPage() {
 		initWidget(uiBinder.createAndBindUi(this));	
-		getLastStatus();
+		lastStatusInd = 0;
 		getStatus(currentPage);
 	}
 	
@@ -65,17 +66,6 @@ public class StatusPage extends Page {
 		textField.setText("");	
 	}
 	
-	public void getLastStatus(){
-		ServicesLocator.serviceRSE.getLastStatusService(new AsyncCallback<String>(){
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-			}
-			public void onSuccess(String result) {
-				labelStatus.setText(result);
-			}
-		});
-	}
-	
 	@UiHandler("more")
 	void MoreButton(ClickEvent e){
 		currentPage++;
@@ -92,6 +82,10 @@ public class StatusPage extends Page {
 				while (iResult.hasNext()) {
 					StatusDTO statusDTO = (StatusDTO) iResult.next();					
 					if (isStatusNotDisplay(statusDTO.getId())) {
+						if(currentPage==1 && lastStatusInd==0){
+							labelStatus.setText(statusDTO.getDescription());
+							lastStatusInd = 1;
+						}
 						// ajout les status non affichés (cas du post ajouté, puis navigation dans les précédents)
 						ListItem li = new ListItem();
 						Label la = new Label("Le "+ fmt.format(statusDTO.getCreationDate()) + " : " + statusDTO.getDescription());

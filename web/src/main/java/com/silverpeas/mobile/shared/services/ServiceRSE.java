@@ -11,6 +11,5 @@ import com.silverpeas.mobile.shared.exceptions.RSEexception;
 @RemoteServiceRelativePath("RSE")
 public interface ServiceRSE extends RemoteService {		
 	public String updateStatus(String status) throws RSEexception, AuthenticationException;
-	public String getLastStatusService() throws RSEexception, AuthenticationException;
 	public List<StatusDTO> getStatus(int step) throws RSEexception, AuthenticationException;
 }
