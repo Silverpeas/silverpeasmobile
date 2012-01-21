@@ -15,28 +15,6 @@
 			<g:Label horizontalAlignment="center">Remotes pictures</g:Label>				
 		</m:HeaderPanel>
 		
-		<g:Grid width="100%">
-			<g:row>
-				<g:customCell><g:InlineLabel>Galleries&nbsp;</g:InlineLabel></g:customCell>
-				<g:customCell>
-					<m:DropDownList ui:field="galleries">
-						<m:DropDownItem>Gallery 1</m:DropDownItem>
-						<m:DropDownItem>Gallery 2</m:DropDownItem>
-						<m:DropDownItem>Gallery 3</m:DropDownItem>
-					</m:DropDownList>
-				</g:customCell>		
-			</g:row>
-			<g:row>
-				<g:customCell><g:Label>Albums&nbsp;</g:Label></g:customCell>
-				<g:customCell>
-					<m:DropDownList ui:field="albums">
-						<m:DropDownItem>Album 1</m:DropDownItem>
-						<m:DropDownItem>Album 2</m:DropDownItem>
-					</m:DropDownList>
-				</g:customCell>
-			</g:row>			
-		</g:Grid>
-		
 		<m:SlidePanel height="100%" width="100%" ui:field="content" rotate="true">
 		</m:SlidePanel>
 		<m:HeaderPanel>

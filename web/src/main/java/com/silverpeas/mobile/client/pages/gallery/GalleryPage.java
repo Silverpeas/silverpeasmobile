@@ -2,11 +2,14 @@ package com.silverpeas.mobile.client.pages.gallery;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.CollectionCallback;
@@ -17,6 +20,7 @@ import com.gwtmobile.phonegap.client.Camera;
 import com.gwtmobile.phonegap.client.Notification;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
+import com.gwtmobile.ui.client.widgets.DropDownList;
 import com.gwtmobile.ui.client.widgets.HeaderPanel;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.silverpeas.mobile.client.common.Database;
@@ -39,6 +43,9 @@ public class GalleryPage extends Page {
 	@UiField protected HeaderPanel footer, header;
 	@UiField protected HorizontalPanel content;
 	
+	@UiField protected DropDownList galleries, albums;
+	@UiField protected Label footerTitle;
+	
 	private static int nbPictures;
 	private static int ratioPicture;
 	private static boolean uploading, stopScheduler;
@@ -48,6 +55,11 @@ public class GalleryPage extends Page {
 
 	public GalleryPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+		
+		galleries.getElement().getElementsByTagName("select").getItem(0).getStyle().setDisplay(Display.BLOCK);
+		galleries.getElement().getElementsByTagName("select").getItem(0).getStyle().setWidth(100, Unit.PCT);
+		albums.getElement().getElementsByTagName("select").getItem(0).getStyle().setDisplay(Display.BLOCK);
+		albums.getElement().getElementsByTagName("select").getItem(0).getStyle().setWidth(100, Unit.PCT);
 	}	
 	
 	/**

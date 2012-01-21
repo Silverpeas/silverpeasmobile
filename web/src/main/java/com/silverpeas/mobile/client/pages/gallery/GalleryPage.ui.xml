@@ -26,8 +26,32 @@
 
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back" ui:field="header">
-			<g:Label horizontalAlignment="center">Gallery</g:Label>
+			<g:Label horizontalAlignment="center">Gallery</g:Label>			
 		</m:HeaderPanel>
+		<m:HeaderPanel>
+			<g:Grid width="100%">
+				<g:row>
+					<g:customCell><g:InlineLabel>Galleries&nbsp;</g:InlineLabel></g:customCell>
+					<g:customCell>
+						<m:DropDownList ui:field="galleries">
+							<m:DropDownItem>Gallery 1</m:DropDownItem>
+							<m:DropDownItem>Gallery 2</m:DropDownItem>
+							<m:DropDownItem>Gallery 3</m:DropDownItem>
+						</m:DropDownList>
+					</g:customCell>		
+				</g:row>
+				<g:row>
+					<g:customCell><g:InlineLabel>Albums&nbsp;</g:InlineLabel></g:customCell>
+					<g:customCell>
+						<m:DropDownList ui:field="albums">
+							<m:DropDownItem>Album 1</m:DropDownItem>
+							<m:DropDownItem>Album 2</m:DropDownItem>
+						</m:DropDownList>
+					</g:customCell>
+				</g:row>					
+			</g:Grid>	
+		</m:HeaderPanel>
+		
 		<m:SlidePanel rotate="true">
 			<m:Slide>
 				<m:HorizontalPanel ui:field="content" secondaryStyle="{style.contentH}">
@@ -36,15 +60,15 @@
 						<i:Icon text="Sync pictures" styleName="{res.css.sync}" ui:field="sync" height="50%"/>
 					</m:VerticalPanel>
 					<m:VerticalPanel secondaryStyle="{style.contentV}">
-						<i:Icon text="Locals pictures" styleName="{res.css.localstorage}" ui:field="local" height="50%"/>				
-						<i:Icon text="Settings" styleName="{res.css.settings}" ui:field="remote" height="50%"/>
+						<i:Icon text="Local pictures" styleName="{res.css.localstorage}" ui:field="local" height="50%"/>				
+						<i:Icon text="Remote pictures" styleName="{res.css.settings}" ui:field="remote" height="50%"/>
 					</m:VerticalPanel>
 				</m:HorizontalPanel>			
 			</m:Slide>
 		</m:SlidePanel>
 
 		<m:HeaderPanel ui:field="footer">
-			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>
+			<g:Label horizontalAlignment="center" wordWrap="true" ui:field="footerTitle">Silverpeas&copy; 1999-2012</g:Label>
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
