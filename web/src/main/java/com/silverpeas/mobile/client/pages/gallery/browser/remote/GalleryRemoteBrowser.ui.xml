@@ -1,0 +1,46 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
+	
+	<ui:style>
+		.selection {
+			
+			-webkit-box-pack: center;
+		}
+	</ui:style>
+	
+	<g:HTMLPanel>
+		<m:HeaderPanel leftButton="Back">
+			<g:Label horizontalAlignment="center">Remotes pictures</g:Label>				
+		</m:HeaderPanel>
+		
+		<g:Grid width="100%">
+			<g:row>
+				<g:customCell><g:InlineLabel>Galleries&nbsp;</g:InlineLabel></g:customCell>
+				<g:customCell>
+					<m:DropDownList ui:field="galleries">
+						<m:DropDownItem>Gallery 1</m:DropDownItem>
+						<m:DropDownItem>Gallery 2</m:DropDownItem>
+						<m:DropDownItem>Gallery 3</m:DropDownItem>
+					</m:DropDownList>
+				</g:customCell>		
+			</g:row>
+			<g:row>
+				<g:customCell><g:Label>Albums&nbsp;</g:Label></g:customCell>
+				<g:customCell>
+					<m:DropDownList ui:field="albums">
+						<m:DropDownItem>Album 1</m:DropDownItem>
+						<m:DropDownItem>Album 2</m:DropDownItem>
+					</m:DropDownList>
+				</g:customCell>
+			</g:row>			
+		</g:Grid>
+		
+		<m:SlidePanel height="100%" width="100%" ui:field="content" rotate="true">
+		</m:SlidePanel>
+		<m:HeaderPanel>
+			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			
+		</m:HeaderPanel>	
+	</g:HTMLPanel>
+</ui:UiBinder> 

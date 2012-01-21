@@ -25,6 +25,7 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.pages.gallery.browser.PicturePage;
+import com.silverpeas.mobile.client.pages.gallery.browser.remote.GalleryRemoteBrowser;
 import com.silverpeas.mobile.client.persist.Picture;
 
 /**
@@ -34,7 +35,7 @@ import com.silverpeas.mobile.client.persist.Picture;
 public class GalleryPage extends Page {
 
 	private static GalleryPageUiBinder uiBinder = GWT.create(GalleryPageUiBinder.class);
-	@UiField protected Icon takePicture, local, sync, setup;
+	@UiField protected Icon takePicture, local, sync, remote;
 	@UiField protected HeaderPanel footer, header;
 	@UiField protected HorizontalPanel content;
 	
@@ -196,5 +197,15 @@ public class GalleryPage extends Page {
 				return stopScheduler;
 			}
 		}, 300);
+	}
+	
+	/**
+	 * Browse remote galleries.
+	 * @param e
+	 */
+	@UiHandler("remote")
+	void remotePictures(ClickEvent e) {
+		final GalleryRemoteBrowser remoteBrowser = new GalleryRemoteBrowser();
+		goTo(remoteBrowser, Transition.SLIDE);
 	}
 }

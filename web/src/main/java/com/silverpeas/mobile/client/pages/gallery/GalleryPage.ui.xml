@@ -37,7 +37,7 @@
 					</m:VerticalPanel>
 					<m:VerticalPanel secondaryStyle="{style.contentV}">
 						<i:Icon text="Locals pictures" styleName="{res.css.localstorage}" ui:field="local" height="50%"/>				
-						<i:Icon text="Settings" styleName="{res.css.settings}" ui:field="setup" height="50%"/>
+						<i:Icon text="Settings" styleName="{res.css.settings}" ui:field="remote" height="50%"/>
 					</m:VerticalPanel>
 				</m:HorizontalPanel>			
 			</m:Slide>
