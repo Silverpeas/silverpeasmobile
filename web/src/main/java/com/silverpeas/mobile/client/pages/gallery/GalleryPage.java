@@ -1,10 +1,14 @@
 package com.silverpeas.mobile.client.pages.gallery;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -20,6 +24,7 @@ import com.gwtmobile.phonegap.client.Camera;
 import com.gwtmobile.phonegap.client.Notification;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
+import com.gwtmobile.ui.client.widgets.DropDownItem;
 import com.gwtmobile.ui.client.widgets.DropDownList;
 import com.gwtmobile.ui.client.widgets.HeaderPanel;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
@@ -31,6 +36,8 @@ import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.pages.gallery.browser.PicturePage;
 import com.silverpeas.mobile.client.pages.gallery.browser.remote.GalleryRemoteBrowser;
 import com.silverpeas.mobile.client.persist.Picture;
+import com.silverpeas.mobile.shared.dto.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.ApplicationInstanceDTO;
 
 /**
  * Pictures gallery mobile application.
@@ -42,7 +49,6 @@ public class GalleryPage extends Page {
 	@UiField protected Icon takePicture, local, sync, remote;
 	@UiField protected HeaderPanel footer, header;
 	@UiField protected HorizontalPanel content;
-	
 	@UiField protected DropDownList galleries, albums;
 	@UiField protected Label footerTitle;
 	
@@ -56,18 +62,77 @@ public class GalleryPage extends Page {
 	public GalleryPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 		
-		galleries.getElement().getElementsByTagName("select").getItem(0).getStyle().setDisplay(Display.BLOCK);
-		galleries.getElement().getElementsByTagName("select").getItem(0).getStyle().setWidth(100, Unit.PCT);
-		albums.getElement().getElementsByTagName("select").getItem(0).getStyle().setDisplay(Display.BLOCK);
-		albums.getElement().getElementsByTagName("select").getItem(0).getStyle().setWidth(100, Unit.PCT);
-	}	
+		Element select = galleries.getElement().getElementsByTagName("select").getItem(0);
+		select.getStyle().setDisplay(Display.BLOCK);
+		select.getStyle().setWidth(100, Unit.PCT);
+		select.getStyle().setHeight(44, Unit.PX);
+		select.getNextSiblingElement().getStyle().setHeight(44, Unit.PX);
+		select = albums.getElement().getElementsByTagName("select").getItem(0);		
+		select.getStyle().setDisplay(Display.BLOCK);
+		select.getStyle().setWidth(100, Unit.PCT);
+		select.getStyle().setHeight(44, Unit.PX);
+		select.getNextSiblingElement().getStyle().setHeight(44, Unit.PX);
+	}
+	
+	/**
+	 * List galleries instances.
+	 */
+	@Override
+	protected void onNavigateTo() {
+		
+		galleries.getListBox().clear();
+		
+		ServicesLocator.serviceGallery.getAllGalleries(new AsyncCallback<List<ApplicationInstanceDTO>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Afficher une erreur non générique
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+			}
+
+			@Override
+			public void onSuccess(List<ApplicationInstanceDTO> result) {
+				for (ApplicationInstanceDTO gallery : result) {
+					DropDownItem d = new DropDownItem();
+					d.setText(gallery.getLabel());
+					d.setValue(gallery.getId());
+					galleries.add(d);
+				}
+			}
+			
+		});
+		super.onNavigateTo();
+	}
+	
+	@UiHandler("galleries")
+	void onGalleryChange(ValueChangeEvent<String> e) {
+		ServicesLocator.serviceGallery.getAllAlbums(e.getValue(), new AsyncCallback<List<AlbumDTO>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Afficher une erreur non générique
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
+			}
+
+			@Override
+			public void onSuccess(List<AlbumDTO> result) {
+				albums.getListBox().clear();
+				for (AlbumDTO album : result) {
+					DropDownItem a = new DropDownItem();
+					a.setText(album.getName());
+					a.setValue(album.getId());
+					albums.add(a);
+				}			
+			}
+		});
+	}
 	
 	/**
 	 * Take a picture and store it in local database.
 	 * @param e
 	 */
 	@UiHandler("takePicture")
-	void takePicture(ClickEvent e){
+	void takePicture(ClickEvent e) {
 		Camera.Options options = new Camera.Options();
 		options.quality(50);
 		

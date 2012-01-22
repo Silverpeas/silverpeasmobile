@@ -32,22 +32,11 @@
 			<g:Grid width="100%">
 				<g:row>
 					<g:customCell><g:InlineLabel>Galleries&nbsp;</g:InlineLabel></g:customCell>
-					<g:customCell>
-						<m:DropDownList ui:field="galleries">
-							<m:DropDownItem>Gallery 1</m:DropDownItem>
-							<m:DropDownItem>Gallery 2</m:DropDownItem>
-							<m:DropDownItem>Gallery 3</m:DropDownItem>
-						</m:DropDownList>
-					</g:customCell>		
+					<g:customCell><m:DropDownList ui:field="galleries" height="44px"></m:DropDownList></g:customCell>		
 				</g:row>
 				<g:row>
 					<g:customCell><g:InlineLabel>Albums&nbsp;</g:InlineLabel></g:customCell>
-					<g:customCell>
-						<m:DropDownList ui:field="albums">
-							<m:DropDownItem>Album 1</m:DropDownItem>
-							<m:DropDownItem>Album 2</m:DropDownItem>
-						</m:DropDownList>
-					</g:customCell>
+					<g:customCell><m:DropDownList ui:field="albums" height="44px"></m:DropDownList></g:customCell>
 				</g:row>					
 			</g:Grid>	
 		</m:HeaderPanel>
