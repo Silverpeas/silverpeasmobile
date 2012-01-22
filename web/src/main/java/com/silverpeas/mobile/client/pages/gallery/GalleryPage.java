@@ -35,6 +35,10 @@ import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.pages.gallery.browser.PicturePage;
 import com.silverpeas.mobile.client.pages.gallery.browser.remote.GalleryRemoteBrowser;
+import com.silverpeas.mobile.client.pages.gallery.controler.GalleryControler;
+import com.silverpeas.mobile.client.pages.gallery.controler.event.AbstractGalleryEvent;
+import com.silverpeas.mobile.client.pages.gallery.controler.event.GalleryEventHandler;
+import com.silverpeas.mobile.client.pages.gallery.controler.event.GalleryLoadedSettingsEvent;
 import com.silverpeas.mobile.client.persist.Picture;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.ApplicationInstanceDTO;
@@ -43,9 +47,11 @@ import com.silverpeas.mobile.shared.dto.ApplicationInstanceDTO;
  * Pictures gallery mobile application.
  * @author svuillet
  */
-public class GalleryPage extends Page {
+public class GalleryPage extends Page implements GalleryEventHandler {
 
 	private static GalleryPageUiBinder uiBinder = GWT.create(GalleryPageUiBinder.class);
+	private GalleryControler controler = new GalleryControler();
+	
 	@UiField protected Icon takePicture, local, sync, remote;
 	@UiField protected HeaderPanel footer, header;
 	@UiField protected HorizontalPanel content;
@@ -61,6 +67,7 @@ public class GalleryPage extends Page {
 
 	public GalleryPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+		EventBus.getInstance().addHandler(AbstractGalleryEvent.TYPE, this);
 		
 		Element select = galleries.getElement().getElementsByTagName("select").getItem(0);
 		select.getStyle().setDisplay(Display.BLOCK);
@@ -75,7 +82,7 @@ public class GalleryPage extends Page {
 	}
 	
 	/**
-	 * List galleries instances.
+	 * Get all galleries instances.
 	 */
 	@Override
 	protected void onNavigateTo() {
@@ -86,14 +93,16 @@ public class GalleryPage extends Page {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Afficher une erreur non générique
+				// TODO display specific error instead of generic
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
 			}
 
 			@Override
 			public void onSuccess(List<ApplicationInstanceDTO> result) {
+				DropDownItem d = new DropDownItem();
+				galleries.add(d);				
 				for (ApplicationInstanceDTO gallery : result) {
-					DropDownItem d = new DropDownItem();
+					d = new DropDownItem();
 					d.setText(gallery.getLabel());
 					d.setValue(gallery.getId());
 					galleries.add(d);
@@ -101,31 +110,64 @@ public class GalleryPage extends Page {
 			}
 			
 		});
+	
+		controler.getSettings();
+		
 		super.onNavigateTo();
 	}
 	
+	/**
+	 * Get all albums on new gallery selection.
+	 * @param e
+	 */
 	@UiHandler("galleries")
 	void onGalleryChange(ValueChangeEvent<String> e) {
-		ServicesLocator.serviceGallery.getAllAlbums(e.getValue(), new AsyncCallback<List<AlbumDTO>>() {
+		getAlbums(e.getValue(), null);
+	}
+	
+	private void getAlbums(final String galleryId, final String selectedGalleryId) {
+		ServicesLocator.serviceGallery.getAllAlbums(galleryId, new AsyncCallback<List<AlbumDTO>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Afficher une erreur non générique
+				// TODO display specific error instead of generic
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
 			}
 
 			@Override
 			public void onSuccess(List<AlbumDTO> result) {
+				int i = 0;
+				int index = -1;
 				albums.getListBox().clear();
+				DropDownItem emptyA = new DropDownItem();
+				albums.add(emptyA);
 				for (AlbumDTO album : result) {
 					DropDownItem a = new DropDownItem();
 					a.setText(album.getName());
 					a.setValue(album.getId());
 					albums.add(a);
-				}			
+					if (selectedGalleryId != null) {
+						if (selectedGalleryId.equals(album.getId())) {
+							index = i;
+						}
+					}
+					i++;
+				}
+				if (index != -1) albums.getListBox().setSelectedIndex(index+1);
 			}
 		});
 	}
+	
+	/**
+	 * Store in html5 database album selected.
+	 * @param e
+	 */
+	@UiHandler("albums")
+	void onAlbumChange(ValueChangeEvent<String> e) {
+		if (!e.getValue().isEmpty()) {
+			controler.saveOrUpdateSettings(galleries.getSelectedValue(), albums.getSelectedValue());			
+		}
+	}	
 	
 	/**
 	 * Take a picture and store it in local database.
@@ -285,4 +327,16 @@ public class GalleryPage extends Page {
 		final GalleryRemoteBrowser remoteBrowser = new GalleryRemoteBrowser();
 		goTo(remoteBrowser, Transition.SLIDE);
 	}
+
+	@Override
+	public void onLoadedSettings(GalleryLoadedSettingsEvent event) {
+		String galleryId = event.getSettings().getSelectedGalleryId();		
+		for (int i = 0; i < galleries.getListBox().getItemCount(); i++) {
+			if (galleries.getListBox().getValue(i).equals(galleryId)) {
+				galleries.getListBox().setSelectedIndex(i);
+				break;
+			}		
+		}
+		getAlbums(galleryId, event.getSettings().getSelectedAlbumId());
+	}	
 }

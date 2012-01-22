@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.silverpeas.admin.ejb.AdminBm;
@@ -28,6 +29,9 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	private AdminBm adminBm;
 	private GalleryBm galleryBm;
 	
+	/**
+	 * Importation d'une image dans un album.
+	 */
 	public void uploadPicture(String name, String data) throws GalleryException, AuthenticationException {
 		checkUserInSession();
 		
@@ -42,7 +46,9 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		}	
 	}
 	
-	
+	/**
+	 * Retourne la listes des galleries accessibles.
+	 */
 	public List<ApplicationInstanceDTO> getAllGalleries() throws GalleryException, AuthenticationException {
 		
 		ArrayList<ApplicationInstanceDTO> results = new ArrayList<ApplicationInstanceDTO>();
@@ -65,18 +71,24 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 			e.printStackTrace();
 		}
 		
+		Collections.sort(results);		
 		return results;		
 	}
 	
+	/**
+	 * Retourne la liste des albums d'une gallerie.
+	 */
 	public List<AlbumDTO> getAllAlbums(String instanceId) throws GalleryException, AuthenticationException {
 		ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
 		try {			
 			Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
 			for (AlbumDetail albumDetail : albums) {
-				AlbumDTO album = new AlbumDTO();
-				album.setId(String.valueOf(albumDetail.getId()));
-				album.setName(albumDetail.getName());				
-				results.add(album);
+				if (albumDetail.getLevel() != 1) {
+					AlbumDTO album = new AlbumDTO();
+					album.setId(String.valueOf(albumDetail.getId()));
+					album.setName(albumDetail.getName());				
+					results.add(album);
+				}				
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

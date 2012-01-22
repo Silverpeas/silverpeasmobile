@@ -2,7 +2,7 @@ package com.silverpeas.mobile.shared.dto;
 
 import java.io.Serializable;
 
-public class AlbumDTO implements Serializable {
+public class AlbumDTO implements Serializable, Comparable<AlbumDTO> {
 
 	private static final long serialVersionUID = 1L;
 	private String id;
@@ -19,6 +19,10 @@ public class AlbumDTO implements Serializable {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	@Override
+	public int compareTo(AlbumDTO o) {
+		return name.compareTo(o.getName());
 	}
 
 }

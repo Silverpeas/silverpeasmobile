@@ -3,7 +3,7 @@ package com.silverpeas.mobile.shared.dto;
 import java.io.Serializable;
 
 
-public class ApplicationInstanceDTO implements Serializable {
+public class ApplicationInstanceDTO implements Serializable, Comparable<ApplicationInstanceDTO> {
 
 	private static final long serialVersionUID = 1L;
 	private String id;
@@ -20,5 +20,9 @@ public class ApplicationInstanceDTO implements Serializable {
 	}
 	public void setLabel(String label) {
 		this.label = label;
+	}
+	@Override
+	public int compareTo(ApplicationInstanceDTO o) {
+		return label.compareTo(o.getLabel());
 	}
 }
