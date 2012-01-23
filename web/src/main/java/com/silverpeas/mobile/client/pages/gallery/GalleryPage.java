@@ -85,14 +85,14 @@ public class GalleryPage extends Page implements GalleryEventHandler {
 	 * Get all galleries instances.
 	 */
 	@Override
-	protected void onNavigateTo() {
-		
-		galleries.getListBox().clear();
-		
+	protected void onNavigateTo() {		
+		Notification.activityStart();
+		galleries.getListBox().clear();		
 		ServicesLocator.serviceGallery.getAllGalleries(new AsyncCallback<List<ApplicationInstanceDTO>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
+				Notification.activityStop();
 				// TODO display specific error instead of generic
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
 			}
@@ -107,11 +107,11 @@ public class GalleryPage extends Page implements GalleryEventHandler {
 					d.setValue(gallery.getId());
 					galleries.add(d);
 				}
+				controler.getSettings();
+				Notification.activityStop();
 			}
 			
 		});
-	
-		controler.getSettings();
 		
 		super.onNavigateTo();
 	}
@@ -177,6 +177,7 @@ public class GalleryPage extends Page implements GalleryEventHandler {
 	void takePicture(ClickEvent e) {
 		Camera.Options options = new Camera.Options();
 		options.quality(50);
+		//options.destinationType(DestinationType.FILE_URI); // for optimal performances
 		
 		Camera.getPicture(new Camera.Callback() {			
 			public void onSuccess(final String imageData) {				
@@ -271,6 +272,14 @@ public class GalleryPage extends Page implements GalleryEventHandler {
 	 * @param count
 	 */
 	private void uploadPicture(final Integer count, final Picture[] results, final Collection<Picture> pictures) {
+		
+		/*
+		// For optimal performances
+		FileReader reader = File.newReaderInstance();
+		reader.readAsDataURL("");
+		reader.onLoadEnd(callback);
+		*/		
+		
 		uploading = false;
 		stopScheduler = false;
 		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {								
