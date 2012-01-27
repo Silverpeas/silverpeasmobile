@@ -24,8 +24,8 @@ public class MainPage extends Page {
 	private StatusPage statusPage;
 	private ContactsPage contactsPage;
 	private DashboardPage dashboardPage;
-	private AgendaPage agendaPage = new AgendaPage();
-	private GalleryPage galleryPage = new GalleryPage();
+	private AgendaPage agendaPage;
+	private GalleryPage galleryPage;
 	
 	@UiField(provided = true) protected ApplicationMessages msg = null;
 	@UiField(provided = true) protected ApplicationResources res = null;
@@ -55,11 +55,13 @@ public class MainPage extends Page {
 	
 	@UiHandler("agenda")
 	void agenda(ClickEvent e) {
+		agendaPage = new AgendaPage();
 		goTo(agendaPage, Transition.SLIDEUP);
 	}
 	
 	@UiHandler("gallery")
 	void gallery(ClickEvent e) {
+		galleryPage = new GalleryPage();
 		goTo(galleryPage, Transition.SLIDEUP);
 	}
 	

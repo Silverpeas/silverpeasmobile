@@ -24,7 +24,7 @@
 		
 	</ui:style>
 
-	<g:HTMLPanel>
+	<g:HTMLPanel ui:field="htmlPanel">
 		<m:HeaderPanel leftButton="Back" ui:field="header">
 			<g:Label horizontalAlignment="center">Gallery</g:Label>			
 		</m:HeaderPanel>
@@ -32,7 +32,8 @@
 			<g:Grid width="100%">
 				<g:row>
 					<g:customCell><g:InlineLabel>Galleries&nbsp;</g:InlineLabel></g:customCell>
-					<g:customCell><m:DropDownList ui:field="galleries" height="44px"></m:DropDownList></g:customCell>		
+					<g:customCell><m:DropDownList ui:field="galleries" height="44px"></m:DropDownList></g:customCell>
+					<g:customCell><m:Button ui:field="navButton">N</m:Button></g:customCell>		
 				</g:row>
 				<g:row>
 					<g:customCell><g:InlineLabel>Albums&nbsp;</g:InlineLabel></g:customCell>

@@ -47,35 +47,40 @@ public class DashboardPage extends Page {
 	public DashboardPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 		reinitialisationPage = 0;
-		getAll();
 		
 		navBar.addSelectionHandler(new SelectionHandler<Integer>() {
             public void onSelection(SelectionEvent<Integer> event) {
-                    if(event.getSelectedItem()==0){
-                    	socialInformationType = "ALL";
-                    	reinitialisationPage = 0;
-                    	getAll();
-                    }
-                    if(event.getSelectedItem()==1){
-                    	socialInformationType = "STATUS";
-                    	getAll();
-                    }
-                    if(event.getSelectedItem()==2){
-                    	socialInformationType = "RELATIONSHIP";
-                    	getAll();
-                    }
-                    if(event.getSelectedItem()==3){
-                    	socialInformationType = "PUBLICATION";
-                    	getAll();
-                    }
-                    if(event.getSelectedItem()==4){
-                    	socialInformationType = "PHOTO";
-                    	getAll();
-                    }
-                    if(event.getSelectedItem()==5){
-                    	socialInformationType = "EVENT";
-                    	getAll();
-                    }
+            	reinitialisationPage = 0;
+            	panelAll.clear();
+            	panelStatus.clear();
+            	panelRelationShip.clear();
+            	panelPublication.clear();
+            	panelPhoto.clear();
+            	panelEvent.clear();
+                if(event.getSelectedItem()==0){
+                	socialInformationType = "ALL";
+                    getAll();
+                }
+                if(event.getSelectedItem()==1){
+                    socialInformationType = "STATUS";
+                    getAll();
+                }
+                if(event.getSelectedItem()==2){
+                    socialInformationType = "RELATIONSHIP";
+                    getAll();
+                }
+                if(event.getSelectedItem()==3){
+                    socialInformationType = "PUBLICATION";
+                    getAll();
+                }
+                if(event.getSelectedItem()==4){
+                    socialInformationType = "PHOTO";
+                    getAll();
+                }
+                if(event.getSelectedItem()==5){
+                    socialInformationType = "EVENT";
+                    getAll();
+                }
             }
 		});
 	}
@@ -105,7 +110,9 @@ public class DashboardPage extends Page {
 		ListItem li = new ListItem();
 		Label la = new Label("Le " + fmt.format(socialInformationDTO.getDate()) + " : " + socialInformationDTO.getType() + " : " + socialInformationDTO.getAuteur() + " : " + socialInformationDTO.getDescription());
 		li.add(la);
-		panelAll.add(li);
+		if(socialInformationType=="ALL"){
+			panelAll.add(li);
+		}
 		if(socialInformationType=="STATUS"){
 			panelStatus.add(li);
 		}

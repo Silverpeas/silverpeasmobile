@@ -8,6 +8,7 @@ public class ApplicationInstanceDTO implements Serializable, Comparable<Applicat
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private String label;
+	private String type;
 	
 	public String getId() {
 		return id;
@@ -20,6 +21,12 @@ public class ApplicationInstanceDTO implements Serializable, Comparable<Applicat
 	}
 	public void setLabel(String label) {
 		this.label = label;
+	}
+	public String getType(){
+		return type;
+	}
+	public void setType(String type){
+		this.type = type;
 	}
 	@Override
 	public int compareTo(ApplicationInstanceDTO o) {

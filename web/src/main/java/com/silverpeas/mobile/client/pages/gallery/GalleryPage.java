@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.persistence.client.Collection;
@@ -24,6 +25,7 @@ import com.gwtmobile.phonegap.client.Camera;
 import com.gwtmobile.phonegap.client.Notification;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
+import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.DropDownItem;
 import com.gwtmobile.ui.client.widgets.DropDownList;
 import com.gwtmobile.ui.client.widgets.HeaderPanel;
@@ -42,6 +44,7 @@ import com.silverpeas.mobile.client.pages.gallery.controler.event.GalleryLoadedS
 import com.silverpeas.mobile.client.persist.Picture;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.ApplicationInstanceDTO;
+import com.silverpeas.mobile.client.components.Navigation;
 
 /**
  * Pictures gallery mobile application.
@@ -57,6 +60,8 @@ public class GalleryPage extends Page implements GalleryEventHandler {
 	@UiField protected HorizontalPanel content;
 	@UiField protected DropDownList galleries, albums;
 	@UiField protected Label footerTitle;
+	@UiField protected Button navButton;
+	@UiField protected HTMLPanel htmlPanel;
 	
 	private static int nbPictures;
 	private static int ratioPicture;
@@ -348,4 +353,11 @@ public class GalleryPage extends Page implements GalleryEventHandler {
 		}
 		getAlbums(galleryId, event.getSettings().getSelectedAlbumId());
 	}	
+	
+	@UiHandler("navButton")
+	void Navigation(ClickEvent e){
+		Navigation navigation = new Navigation("gallery", 0);
+		htmlPanel.clear();
+		htmlPanel.add(navigation);
+	}
 }

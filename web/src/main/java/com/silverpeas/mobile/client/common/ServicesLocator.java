@@ -1,6 +1,8 @@
 package com.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.GWT;
+import com.silverpeas.mobile.shared.services.ServiceAdmin;
+import com.silverpeas.mobile.shared.services.ServiceAdminAsync;
 import com.silverpeas.mobile.shared.services.ServiceAgenda;
 import com.silverpeas.mobile.shared.services.ServiceAgendaAsync;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
@@ -21,4 +23,5 @@ public class ServicesLocator {
 	public static ServiceAgendaAsync serviceAgenda = (ServiceAgendaAsync) GWT.create(ServiceAgenda.class);
 	public static ServiceDashboardAsync serviceDashboard = (ServiceDashboardAsync) GWT.create(ServiceDashboard.class);	
 	public static ServiceGalleryAsync serviceGallery = (ServiceGalleryAsync) GWT.create(ServiceGallery.class);
+	public static ServiceAdminAsync serviceAdmin = (ServiceAdminAsync) GWT.create(ServiceAdmin.class);
 }

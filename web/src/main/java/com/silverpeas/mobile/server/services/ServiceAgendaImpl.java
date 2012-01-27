@@ -12,6 +12,7 @@ public class ServiceAgendaImpl extends RemoteServiceServlet implements ServiceAg
 	private static final long serialVersionUID = 1L;
 
 	public void viewAgenda() throws AuthenticationException{
-		
-	}	
+
+	}
+
 }

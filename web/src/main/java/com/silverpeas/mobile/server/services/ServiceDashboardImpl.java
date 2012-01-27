@@ -100,7 +100,7 @@ public class ServiceDashboardImpl extends AbstractAuthenticateService implements
 		    	Iterator<SocialInformationDTO> j = hashtable.get(key).iterator();
 		    	while(j.hasNext()){
 		    		SocialInformationDTO siDTO = j.next();
-		    		if(socialInformationType.equals(siDTO.getType())){
+		    		if(socialInformationType.equals(siDTO.getType()) || socialInformationType.equals("ALL")){
 		    			listSocialInformationDTO.add(siDTO);
 			    		currentDate = key;
 		    		}
