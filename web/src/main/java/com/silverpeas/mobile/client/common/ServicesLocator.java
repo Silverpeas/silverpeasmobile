@@ -15,6 +15,8 @@ import com.silverpeas.mobile.shared.services.ServiceGallery;
 import com.silverpeas.mobile.shared.services.ServiceGalleryAsync;
 import com.silverpeas.mobile.shared.services.ServiceRSE;
 import com.silverpeas.mobile.shared.services.ServiceRSEAsync;
+import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
+import com.silverpeas.mobile.shared.services.navigation.ServiceNavigationAsync;
 
 public class ServicesLocator {
 	public static ServiceRSEAsync serviceRSE = (ServiceRSEAsync) GWT.create(ServiceRSE.class);
@@ -24,4 +26,5 @@ public class ServicesLocator {
 	public static ServiceDashboardAsync serviceDashboard = (ServiceDashboardAsync) GWT.create(ServiceDashboard.class);	
 	public static ServiceGalleryAsync serviceGallery = (ServiceGalleryAsync) GWT.create(ServiceGallery.class);
 	public static ServiceAdminAsync serviceAdmin = (ServiceAdminAsync) GWT.create(ServiceAdmin.class);
+	public static ServiceNavigationAsync serviceNavigation = (ServiceNavigationAsync) GWT.create(ServiceNavigation.class);
 }

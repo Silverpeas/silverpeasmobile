@@ -15,12 +15,12 @@
   </servlet-mapping>
   
   <servlet>
-  	<servlet-name>serviceAdminImpl</servlet-name>
-  	<servlet-class>com.silverpeas.mobile.server.services.ServiceAdminImpl</servlet-class>
+  	<servlet-name>serviceNavigationImpl</servlet-name>
+  	<servlet-class>com.silverpeas.mobile.server.services.ServiceNavigationImpl</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>serviceAdminImpl</servlet-name>
-  	<url-pattern>/spmobil/Admin</url-pattern>
+  	<servlet-name>serviceNavigationImpl</servlet-name>
+  	<url-pattern>/spmobil/Navigation</url-pattern>
   </servlet-mapping>
   
   <servlet>

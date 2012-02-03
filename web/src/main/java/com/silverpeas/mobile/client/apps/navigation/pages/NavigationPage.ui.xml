@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
+	
+	<g:HTMLPanel>
+		<m:HeaderPanel leftButton="Back" ui:field="header">
+			<g:Label horizontalAlignment="center">Gallery apps browser</g:Label>
+		</m:HeaderPanel>
+		
+		<m:ScrollPanel>
+			<m:ListPanel selectable="true" ui:field="listPanel"></m:ListPanel>
+		</m:ScrollPanel>
+		<m:HeaderPanel ui:field="footer">
+			<g:Label horizontalAlignment="center" wordWrap="true" ui:field="footerTitle">Silverpeas&copy; 1999-2012</g:Label>
+		</m:HeaderPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

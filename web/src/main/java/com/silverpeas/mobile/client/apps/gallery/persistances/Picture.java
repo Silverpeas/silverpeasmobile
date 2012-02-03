@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.client.persist;
+package com.silverpeas.mobile.client.apps.gallery.persistances;
 
 import com.gwtmobile.persistence.client.Persistable;
 

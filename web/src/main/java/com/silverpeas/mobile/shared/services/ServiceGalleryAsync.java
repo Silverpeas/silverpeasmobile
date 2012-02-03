@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
-import com.silverpeas.mobile.shared.dto.ApplicationInstanceDTO;
+import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public interface ServiceGalleryAsync {
 

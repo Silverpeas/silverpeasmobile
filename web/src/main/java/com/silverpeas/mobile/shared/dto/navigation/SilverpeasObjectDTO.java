@@ -1,14 +1,12 @@
-package com.silverpeas.mobile.shared.dto;
+package com.silverpeas.mobile.shared.dto.navigation;
 
 import java.io.Serializable;
 
-
-public class ApplicationInstanceDTO implements Serializable, Comparable<ApplicationInstanceDTO> {
+public abstract class SilverpeasObjectDTO implements Serializable, Comparable<SilverpeasObjectDTO> {
 
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private String label;
-	private String type;
 	
 	public String getId() {
 		return id;
@@ -22,14 +20,8 @@ public class ApplicationInstanceDTO implements Serializable, Comparable<Applicat
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	public String getType(){
-		return type;
-	}
-	public void setType(String type){
-		this.type = type;
-	}
 	@Override
-	public int compareTo(ApplicationInstanceDTO o) {
+	public int compareTo(SilverpeasObjectDTO o) {
 		return label.compareTo(o.getLabel());
 	}
 }

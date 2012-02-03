@@ -1,7 +1,5 @@
 package com.silverpeas.mobile.client.common;
 
-import com.gwtmobile.phonegap.client.Notification;
-import com.gwtmobile.phonegap.client.Notification.Callback;
 import com.silverpeas.mobile.client.common.event.ErrorEventHandler;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -15,10 +13,11 @@ public class ErrorManager implements ErrorEventHandler {
 			message = "Mot de passe incorrect";			
 		} 
 		
+		Notification.activityStop();
+		Notification.progressStop();
+		
 		// Affichage du message
-		Notification.alert(message, new Callback() {					
-			public void onComplete() {}
-		}, "Erreur", "OK");
+		Notification.alert(message, null, "Erreur", "OK");
 	}
 
 }

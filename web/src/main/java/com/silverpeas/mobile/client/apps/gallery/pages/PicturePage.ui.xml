@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
+	
+	<g:HTMLPanel>
+		<m:HeaderPanel leftButton="Back">
+			<g:Label horizontalAlignment="center">Locals pictures</g:Label>
+			<g:InlineHTML ui:field="number"/>			
+		</m:HeaderPanel>
+		<m:SlidePanel height="100%" width="100%" ui:field="content" rotate="true">
+		</m:SlidePanel>
+		<m:HeaderPanel>
+			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			
+		</m:HeaderPanel>	
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -8,11 +8,12 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
+import com.silverpeas.mobile.client.apps.gallery.GalleryApp;
+import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.pages.agenda.AgendaPage;
 import com.silverpeas.mobile.client.pages.contacts.ContactsPage;
 import com.silverpeas.mobile.client.pages.dashboard.DashboardPage;
-import com.silverpeas.mobile.client.pages.gallery.GalleryPage;
 import com.silverpeas.mobile.client.pages.status.StatusPage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
@@ -25,7 +26,6 @@ public class MainPage extends Page {
 	private ContactsPage contactsPage;
 	private DashboardPage dashboardPage;
 	private AgendaPage agendaPage;
-	private GalleryPage galleryPage;
 	
 	@UiField(provided = true) protected ApplicationMessages msg = null;
 	@UiField(provided = true) protected ApplicationResources res = null;
@@ -61,8 +61,8 @@ public class MainPage extends Page {
 	
 	@UiHandler("gallery")
 	void gallery(ClickEvent e) {
-		galleryPage = new GalleryPage();
-		goTo(galleryPage, Transition.SLIDEUP);
+		App app = new GalleryApp();
+		app.start(this);
 	}
 	
 	@UiHandler("dashboard")

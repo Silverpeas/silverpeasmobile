@@ -11,7 +11,7 @@ import com.silverpeas.admin.ejb.AdminBm;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
 import com.silverpeas.gallery.model.AlbumDetail;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
-import com.silverpeas.mobile.shared.dto.ApplicationInstanceDTO;
+import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.GalleryException;
 import com.silverpeas.mobile.shared.services.ServiceGallery;
