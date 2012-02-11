@@ -288,6 +288,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 	@Override
 	public void onNewGalleryInstanceLoaded(GalleryNewInstanceLoadedEvent event) {
 		displayPlace(event.getAlbums(), event.getInstance(), "");
+		Notification.activityStop();
 	}
 	
 	/**

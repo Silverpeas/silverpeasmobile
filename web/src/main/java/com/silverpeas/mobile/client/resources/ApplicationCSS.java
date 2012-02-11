@@ -15,7 +15,6 @@ public interface ApplicationCSS extends CssResource {
 	String logo();
 	String online();
 	String offline();
-	String camera();
 	String sync();
 	String settings();
 	String localstorage();

@@ -95,13 +95,6 @@
 	margin:auto;
 }
 
-@sprite .camera {
-	gwt-image: "camera";
-	border: none;
-	cursor: pointer;
-	margin:auto;
-}
-
 @sprite .localstorage {
 	gwt-image: "localstorage";
 	border: none;

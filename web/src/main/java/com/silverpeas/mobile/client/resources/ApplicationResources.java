@@ -41,9 +41,6 @@ public interface ApplicationResources extends ClientBundle {
 	@Source("offline.png")
 	ImageResource offline();
 	
-	@Source("camera.png")
-	ImageResource camera();
-	
 	@Source("sync.png")
 	ImageResource sync();
 	

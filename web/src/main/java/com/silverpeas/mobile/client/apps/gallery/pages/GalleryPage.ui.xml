@@ -4,7 +4,6 @@
 	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon">
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages'/>
-	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
 	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources'/>
 
 	<ui:style>		
@@ -43,7 +42,10 @@
 				</m:HorizontalPanel>
 			</m:ListItem>
 			<m:ListItem showArrow="false">
-				<m:DropDownList ui:field="albums"></m:DropDownList>
+				<m:HorizontalPanel>
+					<g:Label styleName="{ressources.css.albums}"></g:Label>
+					<m:DropDownList ui:field="albums"></m:DropDownList>
+				</m:HorizontalPanel>
 			</m:ListItem>
 		</m:ListPanel>		
 		
@@ -51,12 +53,12 @@
 			<m:Slide>
 				<m:HorizontalPanel ui:field="content" secondaryStyle="{style.contentH}">
 					<m:VerticalPanel secondaryStyle="{style.contentV}">
-						<i:Icon text="Take picture" styleName="{res.css.camera}" ui:field="takePicture" height="50%"/>
-						<i:Icon text="Sync pictures" styleName="{res.css.sync}" ui:field="sync" height="50%"/>
+						<i:Icon text="Take picture" styleName="{ressources.css.camera}" ui:field="takePicture" height="50%"/>
+						<i:Icon text="Sync pictures" styleName="{ressources.css.synchro}" ui:field="sync" height="50%"/>
 					</m:VerticalPanel>
 					<m:VerticalPanel secondaryStyle="{style.contentV}">
-						<i:Icon text="Local pictures" styleName="{res.css.localstorage}" ui:field="local" height="50%"/>				
-						<i:Icon text="Remote pictures" styleName="{res.css.settings}" ui:field="remote" height="50%"/>
+						<i:Icon text="Local pictures" styleName="{ressources.css.lPictures}" ui:field="local" height="50%"/>				
+						<i:Icon text="Remote pictures" styleName="{ressources.css.rPictures}" ui:field="remote" height="50%"/>
 					</m:VerticalPanel>
 				</m:HorizontalPanel>			
 			</m:Slide>

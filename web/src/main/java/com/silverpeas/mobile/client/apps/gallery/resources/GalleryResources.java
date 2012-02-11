@@ -10,4 +10,19 @@ public interface GalleryResources extends ClientBundle {
 	
 	@Source("galleries.png")
 	ImageResource galleries();
+	
+	@Source("albums.png")
+	ImageResource albums();
+	
+	@Source("rPictures.png")
+	ImageResource rPictures();
+	
+	@Source("lPictures.png")
+	ImageResource lPictures();
+	
+	@Source("synchro.png")
+	ImageResource synchro();
+	
+	@Source("camera.png")
+	ImageResource camera();
 }
