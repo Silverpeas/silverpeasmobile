@@ -8,13 +8,13 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
+import com.silverpeas.mobile.client.apps.contacts.pages.ContactsPage;
+import com.silverpeas.mobile.client.apps.dashboard.pages.DashboardPage;
 import com.silverpeas.mobile.client.apps.gallery.GalleryApp;
+import com.silverpeas.mobile.client.apps.status.pages.StatusPage;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.pages.agenda.AgendaPage;
-import com.silverpeas.mobile.client.pages.contacts.ContactsPage;
-import com.silverpeas.mobile.client.pages.dashboard.DashboardPage;
-import com.silverpeas.mobile.client.pages.status.StatusPage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 

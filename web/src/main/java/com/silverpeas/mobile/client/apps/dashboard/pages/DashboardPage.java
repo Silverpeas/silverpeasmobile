@@ -1,7 +1,6 @@
-package com.silverpeas.mobile.client.pages.dashboard;
+package com.silverpeas.mobile.client.apps.dashboard.pages;
 
 import java.util.Iterator;
-import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -11,7 +10,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
@@ -19,12 +17,15 @@ import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.gwtmobile.ui.client.widgets.TabPanel;
+import com.silverpeas.mobile.client.apps.dashboard.events.controller.DashboardLoadEvent;
+import com.silverpeas.mobile.client.apps.dashboard.events.pages.AbstractDashboardPagesEvent;
+import com.silverpeas.mobile.client.apps.dashboard.events.pages.DashboardLoadedEvent;
+import com.silverpeas.mobile.client.apps.dashboard.events.pages.DashboardPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.ServicesLocator;
-import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.SocialInformationDTO;
 
-public class DashboardPage extends Page {
+public class DashboardPage extends Page implements DashboardPagesEventHandler, View{
 
 	private static DashboardPageUiBinder uiBinder = GWT.create(DashboardPageUiBinder.class);
 	
@@ -47,6 +48,7 @@ public class DashboardPage extends Page {
 	public DashboardPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 		reinitialisationPage = 0;
+		EventBus.getInstance().addHandler(AbstractDashboardPagesEvent.TYPE, this);
 		
 		navBar.addSelectionHandler(new SelectionHandler<Integer>() {
             public void onSelection(SelectionEvent<Integer> event) {
@@ -59,51 +61,36 @@ public class DashboardPage extends Page {
             	panelEvent.clear();
                 if(event.getSelectedItem()==0){
                 	socialInformationType = "ALL";
-                    getAll();
+                	EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
                 }
                 if(event.getSelectedItem()==1){
                     socialInformationType = "STATUS";
-                    getAll();
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
                 }
                 if(event.getSelectedItem()==2){
                     socialInformationType = "RELATIONSHIP";
-                    getAll();
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
                 }
                 if(event.getSelectedItem()==3){
                     socialInformationType = "PUBLICATION";
-                    getAll();
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
                 }
                 if(event.getSelectedItem()==4){
                     socialInformationType = "PHOTO";
-                    getAll();
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
                 }
                 if(event.getSelectedItem()==5){
                     socialInformationType = "EVENT";
-                    getAll();
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
                 }
             }
-		});
-	}
-	
-	public void getAll(){
-		ServicesLocator.serviceDashboard.getAll(reinitialisationPage, socialInformationType, new AsyncCallback<List<SocialInformationDTO>>(){
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-			}
-			public void onSuccess(List<SocialInformationDTO> result) {
-				Iterator<SocialInformationDTO> i = result.iterator();
-				while(i.hasNext()){
-					SocialInformationDTO socialInformationDTO = i.next();
-					AffichagePanel(socialInformationDTO);
-				}
-			}
 		});
 	}
 	
 	@UiHandler("more")
 	void MoreButton(ClickEvent e){
 		reinitialisationPage = 1;
-		getAll();
+		EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
 	}
 	
 	public void AffichagePanel(SocialInformationDTO socialInformationDTO){
@@ -127,6 +114,20 @@ public class DashboardPage extends Page {
 		}
 		if(socialInformationType=="EVENT"){
 			panelEvent.add(li);
+		}
+	}
+
+	@Override
+	public void stop() {
+		EventBus.getInstance().removeHandler(AbstractDashboardPagesEvent.TYPE, this);
+	}
+
+	@Override
+	public void onDashboardLoaded(DashboardLoadedEvent event) {
+		Iterator<SocialInformationDTO> i = event.getListSocialInformations().iterator();
+		while(i.hasNext()){
+			SocialInformationDTO socialInformationDTO = i.next();
+			AffichagePanel(socialInformationDTO);
 		}
 	}
 }

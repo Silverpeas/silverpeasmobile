@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.client.pages.contacts;
+package com.silverpeas.mobile.client.apps.contacts.pages;
 
 import java.util.Iterator;
 import java.util.List;

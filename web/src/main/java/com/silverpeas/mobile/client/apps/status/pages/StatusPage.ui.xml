@@ -28,10 +28,7 @@
 		<m:ScrollPanel>
 			<m:ListPanel selectable="false" styleName="ListPanel {style.flex}" ui:field="panelStatus" >
 				<m:ListItem><g:Label>Status actuel :</g:Label><g:Label ui:field="labelStatus"></g:Label></m:ListItem>
-				<m:ListItem><g:Label>Modifier le status :</g:Label><m:TextBox ui:field="textField"/></m:ListItem>
-				<m:ListItem>	
-					<m:Button ui:field="post" horizontalAlignment="center">Post</m:Button>
-				</m:ListItem>	
+				<m:ListItem ui:field="modifierItem"><g:Label>Modifier le status :</g:Label></m:ListItem>
 			</m:ListPanel>
 		</m:ScrollPanel>
 		<m:Button ui:field="more" horizontalAlignment="center">More status</m:Button>
