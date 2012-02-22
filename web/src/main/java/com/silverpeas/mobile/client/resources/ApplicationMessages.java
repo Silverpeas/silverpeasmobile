@@ -10,4 +10,7 @@ public interface ApplicationMessages extends Messages {
 	String cancelBtnLabel();
 	@DefaultMessage("Corriger")
 	String correctBtnLabel();
+	
+	@DefaultMessage("Silverpeas&copy; 1999-2012")
+	String copyright();
 }

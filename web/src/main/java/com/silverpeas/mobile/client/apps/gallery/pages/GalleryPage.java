@@ -45,6 +45,7 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.components.icon.Icon;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
@@ -56,12 +57,13 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 
 	private static GalleryPageUiBinder uiBinder = GWT.create(GalleryPageUiBinder.class);
 	@UiField(provided = true) protected GalleryMessages msg = null;
+	@UiField(provided = true) protected ApplicationMessages globalMsg = null;
 	@UiField(provided = true) protected GalleryResources ressources = null;
 	@UiField protected Icon takePicture, local, sync, remote;
-	@UiField protected HeaderPanel footer, header;
+	@UiField protected HeaderPanel header;
 	@UiField protected HorizontalPanel content;
 	@UiField protected DropDownList albums;
-	@UiField protected Label footerTitle, gallery;
+	@UiField protected Label gallery;
 	@UiField protected HTMLPanel htmlPanel;
 	@UiField protected ListPanel place;
 	
@@ -77,6 +79,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 		ressources = GWT.create(GalleryResources.class);		
 		ressources.css().ensureInjected();
 		msg = GWT.create(GalleryMessages.class);
+		globalMsg = GWT.create(ApplicationMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractGalleryPagesEvent.TYPE, this);
 		

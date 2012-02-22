@@ -19,4 +19,6 @@ public interface ApplicationCSS extends CssResource {
 	String settings();
 	String localstorage();
 	String selected();
+	
+	String footer();
 }
