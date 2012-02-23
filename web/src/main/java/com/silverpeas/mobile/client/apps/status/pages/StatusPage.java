@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -30,7 +31,7 @@ public class StatusPage extends Page implements StatusPagesEventHandler, View{
 	@UiField Label labelStatus;
 	@UiField ListPanel panelStatus;
 	@UiField Button more;	
-	@UiField ListItem modifierItem;
+	@UiField Label modifierItem;
 	private DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
 	private int currentPage = 1;
 	private int lastStatusInd = 0;
@@ -43,18 +44,18 @@ public class StatusPage extends Page implements StatusPagesEventHandler, View{
 		lastStatusInd = 0;
 		EventBus.getInstance().addHandler(AbstractStatusPagesEvent.TYPE, this);
 		EventBus.getInstance().fireEvent(new StatusLoadEvent(currentPage));
+		modifierItem.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				PostPage postPage = new PostPage();
+				goTo(postPage);
+			}
+		});
 	}
 	
 	@UiHandler("more")
 	void MoreButton(ClickEvent e){
 		currentPage++;
 		EventBus.getInstance().fireEvent(new StatusLoadEvent(currentPage));
-	}
-	
-	@UiHandler("modifierItem")
-	void LoadPostPage(ClickEvent e){
-		PostPage postPage = new PostPage();
-		goTo(postPage);
 	}
 	
 	@Override

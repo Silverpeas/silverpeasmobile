@@ -24,14 +24,12 @@
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center">Modifier le statut</g:Label>			
-		</m:HeaderPanel>
-		<m:ScrollPanel>
-			<m:TextBox ui:field="textField"/>
-		</m:ScrollPanel>
+		</m:HeaderPanel>		
+		<m:TextArea ui:field="textField"/>
 		<m:Button ui:field="post" horizontalAlignment="center">Post</m:Button>
 		<m:HeaderPanel>
 			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2012</g:Label>			
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 	
-</ui:UiBinder> <?xml version="1.0" encoding="UTF-8"?>
+</ui:UiBinder>

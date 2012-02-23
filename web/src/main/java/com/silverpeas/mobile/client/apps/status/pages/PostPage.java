@@ -8,7 +8,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
-import com.gwtmobile.ui.client.widgets.TextBox;
+import com.gwtmobile.ui.client.widgets.TextArea;
 import com.silverpeas.mobile.client.apps.status.events.pages.AbstractStatusPostPagesEvent;
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostEvent;
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostPagesEventHandler;
@@ -19,7 +19,7 @@ public class PostPage extends Page implements StatusPostPagesEventHandler, View{
 
 	private static PostPageUiBinder uiBinder = GWT.create(PostPageUiBinder.class);
 	
-	@UiField TextBox textField;
+	@UiField TextArea textField;
 	@UiField Button post;
 	
 	interface PostPageUiBinder extends UiBinder<Widget, PostPage> {
@@ -37,7 +37,8 @@ public class PostPage extends Page implements StatusPostPagesEventHandler, View{
 	}
 	
 	public void onStatusPost(StatusPostEvent event) {
-		//goBack();
+		stop();
+		goBack(null);
 	}
 	
 	@Override

@@ -1,41 +1,61 @@
 package com.silverpeas.mobile.client.apps.contacts.pages;
 
 import java.util.Iterator;
-import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
+import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
-import com.gwtmobile.ui.client.widgets.PanelBase;
 import com.gwtmobile.ui.client.widgets.ScrollPanel;
+import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadByLetterEvent;
+import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
+import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
+import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsByLetterLoadedEvent;
+import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
+import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.ServicesLocator;
-import com.silverpeas.mobile.client.common.event.ErrorEvent;
-import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.client.resources.ApplicationResources;
+import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
-public class ContactsPage extends Page {
+public class ContactsPage extends Page implements ContactsPagesEventHandler, View{
 
 	private static ContactsPageUiBinder uiBinder = GWT.create(ContactsPageUiBinder.class);
-	@UiField(provided = true) protected ApplicationMessages msg = null;
-	@UiField(provided = true) protected ApplicationResources res = null;
-	@UiField DockLayoutPanel dockLayout;
-	ListPanel ContactsList = new ListPanel();
-	ScrollPanel scrollPanelContact = new ScrollPanel();
-	PanelBase panelAlphabet = new PanelBase();
-	ListPanel AlphabetList = new ListPanel();
-	@UiField HTMLPanel HTMLPanel;
+	/*@UiField ListPanel listPanelContacts;
+	@UiField ListPanel listPanelAlphabet;
+	@UiField Label A;
+	@UiField Label B;
+	@UiField Label C;
+	@UiField Label D;
+	@UiField Label E;
+	@UiField Label F;
+	@UiField Label G;
+	@UiField Label H;
+	@UiField Label I;
+	@UiField Label J;
+	@UiField Label K;
+	@UiField Label L;
+	@UiField Label M;
+	@UiField Label N;
+	@UiField Label O;
+	@UiField Label P;
+	@UiField Label Q;
+	@UiField Label R;
+	@UiField Label S;
+	@UiField Label T;
+	@UiField Label U;
+	@UiField Label V;
+	@UiField Label W;
+	@UiField Label X;
+	@UiField Label Y;
+	@UiField Label Z;*/
+	@UiField DockLayoutPanel dockLayoutPanel;
 	Label A = new Label("A");
 	Label B = new Label("B");
 	Label C = new Label("C");
@@ -62,216 +82,182 @@ public class ContactsPage extends Page {
 	Label X = new Label("X");
 	Label Y = new Label("Y");
 	Label Z = new Label("Z");
+	ListPanel listPanelContacts = new ListPanel();
+	ScrollPanel scrollPanelContacts = new ScrollPanel();
+	ListPanel listPanelAlphabet = new ListPanel();
 	
-	int alphabetListHeight = getScreenHeight();
+	
+	String alphabetListHeight = String.valueOf(getScreenHeight());
+	int alphabetListWidth = getScreenWidth();
 	
 	interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
 	}
 
 	public ContactsPage() {	
-		res = GWT.create(ApplicationResources.class);		
-		res.css().ensureInjected();
-		msg = GWT.create(ApplicationMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
-
-		AlphabetList.add(A);
-		AlphabetList.add(B);
-		AlphabetList.add(C);
-		AlphabetList.add(D);
-		AlphabetList.add(E);
-		AlphabetList.add(F);
-		AlphabetList.add(G);
-		AlphabetList.add(H);
-		AlphabetList.add(I);
-		AlphabetList.add(J);
-		AlphabetList.add(K);
-		AlphabetList.add(L);
-		AlphabetList.add(M);
-		AlphabetList.add(N);
-		AlphabetList.add(O);
-		AlphabetList.add(P);
-		AlphabetList.add(Q);
-		AlphabetList.add(R);
-		AlphabetList.add(S);
-		AlphabetList.add(T);
-		AlphabetList.add(U);
-		AlphabetList.add(V);
-		AlphabetList.add(W);
-		AlphabetList.add(X);
-		AlphabetList.add(Y);
-		AlphabetList.add(Z);
-		AlphabetList.setHeight(String.valueOf(alphabetListHeight));
-		panelAlphabet.add(AlphabetList);
-		scrollPanelContact.add(ContactsList);
-		dockLayout.addEast(panelAlphabet,10);
-		dockLayout.add(scrollPanelContact);
-		
-		AlphabetList.setVisible(true);
+		scrollPanelContacts.add(listPanelContacts);
+		dockLayoutPanel.addWest(scrollPanelContacts, 10);
+		listPanelAlphabet.add(A);
+		listPanelAlphabet.add(B);
+		listPanelAlphabet.add(C);
+		listPanelAlphabet.add(D);
+		listPanelAlphabet.add(E);
+		listPanelAlphabet.add(F);
+		listPanelAlphabet.add(G);
+		listPanelAlphabet.add(H);
+		listPanelAlphabet.add(I);
+		listPanelAlphabet.add(J);
+		listPanelAlphabet.add(K);
+		listPanelAlphabet.add(L);
+		listPanelAlphabet.add(M);
+		listPanelAlphabet.add(N);
+		listPanelAlphabet.add(O);
+		listPanelAlphabet.add(P);
+		listPanelAlphabet.add(Q);
+		listPanelAlphabet.add(R);
+		listPanelAlphabet.add(S);
+		listPanelAlphabet.add(T);
+		listPanelAlphabet.add(U);
+		listPanelAlphabet.add(V);
+		listPanelAlphabet.add(W);
+		listPanelAlphabet.add(X);
+		listPanelAlphabet.add(Y);
+		listPanelAlphabet.add(Z);
+		dockLayoutPanel.add(listPanelAlphabet);
 		
 		A.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[a|A].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[a|A].*"));
 			}
 		});
 		B.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[b|B].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[b|B].*"));
 			}
 		});
 		C.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[c|C].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[c|C].*"));
 			}
 		});
 		D.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[d|D].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[d|D].*"));
 			}
 		});
 		E.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[e|E].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[e|E].*"));
 			}
 		});
 		F.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[f|F].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[f|F].*"));
 			}
 		});
 		G.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[g|G].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[g|G].*"));
 			}
 		});
 		H.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[h|H].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[h|H].*"));
 			}
 		});
 		I.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[i|I].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[i|I].*"));
 			}
 		});
 		J.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[j|J].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[j|J].*"));
 			}
 		});
 		K.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[k|K].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[k|K].*"));
 			}
 		});
 		L.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[l|L].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[l|L].*"));
 			}
 		});
 		M.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[m|M].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[m|M].*"));
 			}
 		});
 		N.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[n|N].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[n|N].*"));
 			}
 		});
 		O.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[o|O].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[o|O].*"));
 			}
 		});
 		P.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[p|P].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[p|P].*"));
 			}
 		});
 		Q.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[q|Q].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[q|Q].*"));
 			}
 		});
 		R.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[r|R].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[r|R].*"));
 			}
 		});
 		S.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[s|S].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[s|S].*"));
 			}
 		});
 		T.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[t|T].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[t|T].*"));
 			}
 		});
 		U.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[u|U].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[u|U].*"));
 			}
 		});
 		V.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[v|V].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[v|V].*"));
 			}
 		});
 		W.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[w|W].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[w|W].*"));
 			}
 		});
 		X.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[x|X].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[x|X].*"));
 			}
 		});
 		Y.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[y|Y].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[y|Y].*"));
 			}
 		});
 		Z.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				loadContactsByLetter("^[z|Z].*");
+				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[z|Z].*"));
 			}
 		});
 		
-		loadContacts();
-	}
-	
-	public void loadContacts(){
-		ServicesLocator.serviceContact.getAllContact(new AsyncCallback<Void>() {
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-			}
-			public void onSuccess(Void result) {
-				
-			}
-		});
-		scrollPanelContact.setVisible(true);
-		panelAlphabet.setVisible(true);
-	}
-	
-	public void loadContactsByLetter(String letter){
-		ServicesLocator.serviceContact.getContactsByLetter(letter, new AsyncCallback<List<DetailUserDTO>>(){
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-			}
-			public void onSuccess(List<DetailUserDTO> result) {
-				Iterator<DetailUserDTO> i = result.iterator();
-				while(i.hasNext()){
-					DetailUserDTO dudto = i.next();
-					HorizontalPanel contact = new HorizontalPanel();
-					contact.add(new Label(dudto.getLastName()));
-					ContactsList.add(contact);
-				}
-				scrollPanelContact.setVisible(true);
-				scrollPanelContact.add(ContactsList);
-			}
-		});
+		EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
+		EventBus.getInstance().fireEvent(new ContactsLoadEvent());
 	}
 
 	//Résolution de l'écran
@@ -282,4 +268,25 @@ public class ContactsPage extends Page {
 	private native int getScreenHeight()/*-{
 		return screen.height;
 	}-*/;
+
+	@Override
+	public void stop() {
+		EventBus.getInstance().removeHandler(AbstractContactsPagesEvent.TYPE, this);	
+	}
+
+	@Override
+	public void onContactsLoaded(ContactsLoadedEvent event) {
+
+	}
+
+	@Override
+	public void onContactsByLetterLoaded(ContactsByLetterLoadedEvent event) {
+		Iterator<DetailUserDTO> i = event.getDetailUserDTO().iterator();
+		while(i.hasNext()){
+			DetailUserDTO dudto = i.next();
+			ListItem contact = new ListItem();
+			contact.add(new Label(dudto.getLastName()));
+			listPanelContacts.add(contact);
+		}
+	}
 }
