@@ -7,13 +7,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
-import com.gwtmobile.ui.client.widgets.ScrollPanel;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadByLetterEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
@@ -87,7 +85,6 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler, Vie
 		listPanelAlphabet.add(X);
 		listPanelAlphabet.add(Y);
 		listPanelAlphabet.add(Z);
-		dockLayoutPanel.add(listPanelAlphabet);
 		
 		A.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
