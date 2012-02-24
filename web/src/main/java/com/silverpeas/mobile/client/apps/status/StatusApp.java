@@ -15,7 +15,7 @@ public class StatusApp extends App implements StatusEventHandler{
 		EventBus.getInstance().addHandler(AbstractStatusEvent.TYPE, this);
 	}
 	
-	public void Start(Page lauchingPage){
+	public void start(Page lauchingPage){
 		setController(new StatusController());
 		setMainPage(new StatusPage());
 		super.start(lauchingPage);

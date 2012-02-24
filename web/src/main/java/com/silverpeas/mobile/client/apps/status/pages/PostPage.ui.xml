@@ -1,7 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
+	
+	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.status.resources.StatusMessages'/>
+	
 	<ui:style>
 		.flex > div {
 			display: table;
@@ -23,13 +27,11 @@
 	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Modifier le statut</g:Label>			
+			<g:Label horizontalAlignment="center" text="{msg.titlePost}"></g:Label>			
 		</m:HeaderPanel>		
 		<m:TextArea ui:field="textField"/>
-		<m:Button ui:field="post" horizontalAlignment="center">Post</m:Button>
-		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright Silverpeas 1999-2012</g:Label>			
-		</m:HeaderPanel>
+		<m:Button ui:field="post" horizontalAlignment="center" text="{msg.post}">Post</m:Button>
+		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>
 	
 </ui:UiBinder>

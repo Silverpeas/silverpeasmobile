@@ -1,7 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
+	
+	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.dashboard.resources.DashboardMessages'/>
+	
 	<ui:style>
 		.flex > div {
 			display: table;
@@ -22,12 +26,12 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Dashboard</g:Label>			
+			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>			
 		</m:HeaderPanel>
 		<m:TabPanel ui:field="navBar">
 			<m:Tab>
 				<m:TabHeader>
-					<g:Label>All</g:Label>
+					<g:Label text="{msg.all}"></g:Label>
 				</m:TabHeader>
 				<m:TabContent>
 					<m:ScrollPanel>
@@ -38,7 +42,7 @@
 			</m:Tab>
 			<m:Tab>
 				<m:TabHeader>
-					<g:Label>Status</g:Label>
+					<g:Label text="{msg.status}"></g:Label>
 				</m:TabHeader>
 				<m:TabContent>
 					<m:ScrollPanel>
@@ -49,7 +53,7 @@
 			</m:Tab>
 			<m:Tab>
 				<m:TabHeader>
-					<g:Label>RelationShip</g:Label>
+					<g:Label text="{msg.relationShip}"></g:Label>
 				</m:TabHeader>
 				<m:TabContent>
 					<m:ScrollPanel>
@@ -60,7 +64,7 @@
 			</m:Tab>
 			<m:Tab>
 				<m:TabHeader>
-					<g:Label>Publication</g:Label>
+					<g:Label text="{msg.publication}"></g:Label>
 				</m:TabHeader>
 				<m:TabContent>
 					<m:ScrollPanel>
@@ -71,7 +75,7 @@
 			</m:Tab>
 			<m:Tab>
 				<m:TabHeader>
-					<g:Label>Photo</g:Label>
+					<g:Label text="{msg.photo}"></g:Label>
 				</m:TabHeader>
 				<m:TabContent>
 					<m:ScrollPanel>
@@ -82,7 +86,7 @@
 			</m:Tab>
 			<m:Tab>
 				<m:TabHeader>
-					<g:Label>Event</g:Label>
+					<g:Label text="{msg.event}"></g:Label>
 				</m:TabHeader>
 				<m:TabContent>
 					<m:ScrollPanel>
@@ -92,9 +96,7 @@
 				</m:TabContent>
 			</m:Tab>
 		</m:TabPanel>
-		<m:Button ui:field="more" horizontalAlignment="center">More</m:Button>
-		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			
-		</m:HeaderPanel>
+		<m:Button ui:field="more" horizontalAlignment="center" text="{msg.more}"></m:Button>
+		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

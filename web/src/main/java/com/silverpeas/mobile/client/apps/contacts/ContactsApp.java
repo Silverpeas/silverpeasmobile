@@ -15,7 +15,7 @@ public class ContactsApp extends App implements ContactsEventHandler{
 		EventBus.getInstance().addHandler(AbstractContactEvent.TYPE, this);
 	}
 	
-	public void Start(Page lauchingPage){
+	public void start(Page lauchingPage){
 		setController(new ContactsController());
 		setMainPage(new ContactsPage());
 		super.start(lauchingPage);

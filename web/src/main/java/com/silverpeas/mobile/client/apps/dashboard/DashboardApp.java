@@ -15,7 +15,7 @@ public class DashboardApp extends App implements DashboardEventHandler{
 		EventBus.getInstance().addHandler(AbstractDashboardEvent.TYPE, this);
 	}
 	
-	public void Start(Page lauchingPage){
+	public void start(Page lauchingPage){
 		setController(new DashboardController());
 		setMainPage(new DashboardPage());
 		super.start(lauchingPage);

@@ -7,25 +7,18 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
-import com.gwtmobile.ui.client.page.Transition;
-import com.silverpeas.mobile.client.apps.contacts.pages.ContactsPage;
-import com.silverpeas.mobile.client.apps.dashboard.pages.DashboardPage;
+import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
+import com.silverpeas.mobile.client.apps.dashboard.DashboardApp;
 import com.silverpeas.mobile.client.apps.gallery.GalleryApp;
-import com.silverpeas.mobile.client.apps.status.pages.StatusPage;
+import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.components.icon.Icon;
-import com.silverpeas.mobile.client.pages.agenda.AgendaPage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 
 public class MainPage extends Page {
 
 	private static MainPageUiBinder uiBinder = GWT.create(MainPageUiBinder.class);
-	
-	private StatusPage statusPage;
-	private ContactsPage contactsPage;
-	private DashboardPage dashboardPage;
-	private AgendaPage agendaPage;
 	
 	@UiField(provided = true) protected ApplicationMessages msg = null;
 	@UiField(provided = true) protected ApplicationResources res = null;
@@ -43,20 +36,19 @@ public class MainPage extends Page {
 	
 	@UiHandler("status")
 	void status(ClickEvent e) {
-		statusPage = new StatusPage();
-		goTo(statusPage, Transition.SLIDEUP);
+		App app = new StatusApp();
+		app.start(this);
 	}
 	
 	@UiHandler("contacts")
 	void contacts(ClickEvent e) {
-		contactsPage = new ContactsPage();
-		goTo(contactsPage, Transition.SLIDEUP);
+		App app = new ContactsApp();
+		app.start(this);
 	}
 	
 	@UiHandler("agenda")
 	void agenda(ClickEvent e) {
-		agendaPage = new AgendaPage();
-		goTo(agendaPage, Transition.SLIDEUP);
+		
 	}
 	
 	@UiHandler("gallery")
@@ -67,7 +59,7 @@ public class MainPage extends Page {
 	
 	@UiHandler("dashboard")
 	void dashboard(ClickEvent e){
-		dashboardPage = new DashboardPage();
-		goTo(dashboardPage, Transition.SLIDEUP);
+		App app = new DashboardApp();
+		app.start(this);
 	}
 }

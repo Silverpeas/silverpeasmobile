@@ -1,8 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
-
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
+	
+	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages'/>
+	
 	<ui:style>
 		.flex > div {
 			display: table;
@@ -24,7 +27,7 @@
 		
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Silverpeas Mobile - Contacts</g:Label>
+			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
 		</m:HeaderPanel>
 		<g:DockLayoutPanel unit='EM' ui:field="dockLayoutPanel">
 		</g:DockLayoutPanel>
@@ -113,10 +116,6 @@
 					</m:ListItem>
 				</m:ListPanel>
 		</g:LayoutPanel-->
-		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Copyright
-				Silverpeas 1999-2011</g:Label>
-		</m:HeaderPanel>
+		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>
-	
 </ui:UiBinder> 
