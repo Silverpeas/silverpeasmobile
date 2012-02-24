@@ -246,8 +246,14 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler, Vie
 		while(i.hasNext()){
 			DetailUserDTO dudto = i.next();
 			ListItem contact = new ListItem();
-			contact.add(new Label(dudto.getLastName()));
+			Label labelContact = new Label(dudto.getLastName());
+			contact.add(labelContact);
 			listPanelContacts.add(contact);
+			labelContact.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[x|X].*"));
+				}
+			});
 		}
 	}
 }

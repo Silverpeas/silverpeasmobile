@@ -28,25 +28,24 @@ public class StatusPage extends Page implements StatusPagesEventHandler, View{
 	
 	private static StatusPageUiBinder uiBinder = GWT.create(StatusPageUiBinder.class);
 	
-	@UiField Label labelStatus;
 	@UiField ListPanel panelStatus;
 	@UiField Button more;	
 	@UiField Label modifierItem;
 	private DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
 	private int currentPage = 1;
-	private int lastStatusInd = 0;
 	
 	interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
 	}
 
 	public StatusPage() {
 		initWidget(uiBinder.createAndBindUi(this));	
-		lastStatusInd = 0;
 		EventBus.getInstance().addHandler(AbstractStatusPagesEvent.TYPE, this);
 		EventBus.getInstance().fireEvent(new StatusLoadEvent(currentPage));
 		modifierItem.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				PostPage postPage = new PostPage();
+				currentPage = 1;
+				panelStatus.clear();
 				goTo(postPage);
 			}
 		});
@@ -64,10 +63,6 @@ public class StatusPage extends Page implements StatusPagesEventHandler, View{
 		while (iResult.hasNext()) {
 			StatusDTO statusDTO = (StatusDTO) iResult.next();					
 			if (isStatusNotDisplay(statusDTO.getId())) {
-				if(currentPage==1 && lastStatusInd==0){
-					labelStatus.setText(statusDTO.getDescription());
-					lastStatusInd = 1;
-				}
 				// ajout les status non affichés (cas du post ajouté, puis navigation dans les précédents)
 				ListItem li = new ListItem();
 				Label la = new Label("Le "+ fmt.format(statusDTO.getCreationDate()) + " : " + statusDTO.getDescription());

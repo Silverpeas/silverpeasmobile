@@ -6,8 +6,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.status.events.controller.AbstractStatusControllerEvent;
 import com.silverpeas.mobile.client.apps.status.events.controller.StatusControllerEventHandler;
 import com.silverpeas.mobile.client.apps.status.events.controller.StatusLoadEvent;
+import com.silverpeas.mobile.client.apps.status.events.controller.StatusPostEvent;
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusLoadedEvent;
-import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostEvent;
+import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
@@ -41,13 +42,13 @@ public class StatusController implements Controller, StatusControllerEventHandle
 
 	@Override
 	public void postStatus(StatusPostEvent event) {
-		if(event.getNewStatus() != null && event.getNewStatus().length()>0){
-			ServicesLocator.serviceRSE.updateStatus(event.getNewStatus(), new AsyncCallback<String>() {
+		if(event.getPostStatus() != null && event.getPostStatus().length()>0){
+			ServicesLocator.serviceRSE.updateStatus(event.getPostStatus(), new AsyncCallback<String>() {
 				public void onFailure(Throwable caught) {
 					EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 	            }
 				public void onSuccess(String result) {
-					EventBus.getInstance().fireEvent(new StatusPostEvent(result));
+					EventBus.getInstance().fireEvent(new StatusPostedEvent(result));
 				}
 			});
 		}

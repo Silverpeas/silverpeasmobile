@@ -1,10 +1,10 @@
 package com.silverpeas.mobile.client.apps.status.events.pages;
 
-public class StatusPostEvent extends AbstractStatusPostPagesEvent{
+public class StatusPostedEvent extends AbstractStatusPostPagesEvent{
 
 	private String newStatus;
 	
-	public StatusPostEvent(String newStatus){
+	public StatusPostedEvent(String newStatus){
 		super();
 		this.newStatus = newStatus;
 	}
