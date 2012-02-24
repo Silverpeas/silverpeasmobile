@@ -27,35 +27,8 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 public class ContactsPage extends Page implements ContactsPagesEventHandler, View{
 
 	private static ContactsPageUiBinder uiBinder = GWT.create(ContactsPageUiBinder.class);
-	/*@UiField ListPanel listPanelContacts;
+	@UiField ListPanel listPanelContacts;
 	@UiField ListPanel listPanelAlphabet;
-	@UiField Label A;
-	@UiField Label B;
-	@UiField Label C;
-	@UiField Label D;
-	@UiField Label E;
-	@UiField Label F;
-	@UiField Label G;
-	@UiField Label H;
-	@UiField Label I;
-	@UiField Label J;
-	@UiField Label K;
-	@UiField Label L;
-	@UiField Label M;
-	@UiField Label N;
-	@UiField Label O;
-	@UiField Label P;
-	@UiField Label Q;
-	@UiField Label R;
-	@UiField Label S;
-	@UiField Label T;
-	@UiField Label U;
-	@UiField Label V;
-	@UiField Label W;
-	@UiField Label X;
-	@UiField Label Y;
-	@UiField Label Z;*/
-	@UiField DockLayoutPanel dockLayoutPanel;
 	Label A = new Label("A");
 	Label B = new Label("B");
 	Label C = new Label("C");
@@ -82,21 +55,12 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler, Vie
 	Label X = new Label("X");
 	Label Y = new Label("Y");
 	Label Z = new Label("Z");
-	ListPanel listPanelContacts = new ListPanel();
-	ScrollPanel scrollPanelContacts = new ScrollPanel();
-	ListPanel listPanelAlphabet = new ListPanel();
-	
-	
-	String alphabetListHeight = String.valueOf(getScreenHeight());
-	int alphabetListWidth = getScreenWidth();
 	
 	interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
 	}
 
 	public ContactsPage() {	
 		initWidget(uiBinder.createAndBindUi(this));
-		scrollPanelContacts.add(listPanelContacts);
-		dockLayoutPanel.addWest(scrollPanelContacts, 10);
 		listPanelAlphabet.add(A);
 		listPanelAlphabet.add(B);
 		listPanelAlphabet.add(C);

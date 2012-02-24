@@ -29,93 +29,11 @@
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
 		</m:HeaderPanel>
-		<g:DockLayoutPanel unit='EM' ui:field="dockLayoutPanel">
-		</g:DockLayoutPanel>
-		<!--g:LayoutPanel>
-				<m:ScrollPanel>
-					<m:ListPanel ui:field="listPanelContacts"></m:ListPanel>
-				</m:ScrollPanel>
-				<m:ListPanel ui:field="listPanelAlphabet">
-					<m:ListItem>
-						<g:Label ui:field="A">A</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="B">B</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="C">C</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="D">D</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="E">E</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="F">F</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="G">G</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="H">H</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="I">I</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="J">J</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="K">K</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="L">L</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="M">M</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="N">N</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="O">O</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="P">P</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="Q">Q</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="R">R</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="S">S</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="T">T</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="U">U</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="V">V</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="W">W</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="X">X</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="Y">Y</g:Label>
-					</m:ListItem>
-					<m:ListItem>
-						<g:Label ui:field="Z">Z</g:Label>
-					</m:ListItem>
-				</m:ListPanel>
-		</g:LayoutPanel-->
+		<m:ScrollPanel>
+			<m:ListPanel ui:field="listPanelContacts"></m:ListPanel>
+		</m:ScrollPanel>
+		<m:ListPanel ui:field="listPanelAlphabet">
+		</m:ListPanel>
 		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

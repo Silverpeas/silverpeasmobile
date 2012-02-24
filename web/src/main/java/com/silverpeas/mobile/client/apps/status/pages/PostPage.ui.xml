@@ -23,13 +23,18 @@
 		.flex > div > *:last-child {
 			width: 90%;
 		}
+		.TextArea {
+			width : 100%;
+			min-height : 50%;
+			resize : none;
+		}
 	</ui:style>
 	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.titlePost}"></g:Label>			
 		</m:HeaderPanel>		
-		<m:TextArea ui:field="textField"/>
+		<m:TextArea ui:field="textField" styleName="{style.TextArea}"/>
 		<m:Button ui:field="post" horizontalAlignment="center" text="{msg.post}">Post</m:Button>
 		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>
