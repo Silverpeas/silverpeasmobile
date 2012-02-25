@@ -4,4 +4,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface StatusPagesEventHandler extends EventHandler{
 	void onStatusLoaded(StatusLoadedEvent event);
+	void onStatusPost(StatusPostedEvent event);
 }

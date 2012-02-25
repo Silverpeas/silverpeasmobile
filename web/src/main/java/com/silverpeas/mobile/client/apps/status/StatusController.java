@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.client.apps.status;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,8 +37,7 @@ public class StatusController implements Controller, StatusControllerEventHandle
 			public void onSuccess(List<StatusDTO> result) {				
 				EventBus.getInstance().fireEvent(new StatusLoadedEvent(result));
 			}
-		});
-		
+		});	
 	}
 
 	@Override
@@ -48,7 +48,10 @@ public class StatusController implements Controller, StatusControllerEventHandle
 					EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 	            }
 				public void onSuccess(String result) {
-					EventBus.getInstance().fireEvent(new StatusPostedEvent(result));
+					StatusDTO status  = new StatusDTO();
+					status.setCreationDate(new Date());
+					status.setDescription(result);
+					EventBus.getInstance().fireEvent(new StatusPostedEvent(status));
 				}
 			});
 		}

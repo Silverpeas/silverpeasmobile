@@ -9,4 +9,7 @@ public interface StatusMessages extends Messages{
 	String changeStatus();
 	String moreStatus();
 	String post();
+	String dateFormat();
+	String prefixDate();
+	String postfixDate();
 }

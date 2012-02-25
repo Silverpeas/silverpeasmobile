@@ -1,20 +1,22 @@
 package com.silverpeas.mobile.client.apps.status.events.pages;
 
-public class StatusPostedEvent extends AbstractStatusPostPagesEvent{
+import com.silverpeas.mobile.shared.dto.StatusDTO;
 
-	private String newStatus;
+public class StatusPostedEvent extends AbstractStatusPagesEvent {
+
+	private StatusDTO newStatus;
 	
-	public StatusPostedEvent(String newStatus){
+	public StatusPostedEvent(StatusDTO newStatus){
 		super();
 		this.newStatus = newStatus;
 	}
 	
 	@Override
-	protected void dispatch(StatusPostPagesEventHandler handler) {
+	protected void dispatch(StatusPagesEventHandler handler) {
 		handler.onStatusPost(this);
 	}
 	
-	public String getNewStatus(){
+	public StatusDTO getNewStatus(){
 		return newStatus;
 	}
 }

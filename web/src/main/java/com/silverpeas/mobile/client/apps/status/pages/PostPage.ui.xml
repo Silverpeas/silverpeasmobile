@@ -7,35 +7,17 @@
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.status.resources.StatusMessages'/>
 	
 	<ui:style>
-		.flex > div {
-			display: table;
-			width: 100%;
-		}
-		.flex > div > * {
-			vertical-align: middle;
-			display: table-cell;
-		}
-		.flex > div > *:first-child {
-			text-align: left;
-			padding-right: 1em;
-			width: 30%;
-		}
-		.flex > div > *:last-child {
-			width: 90%;
-		}
 		.TextArea {
 			width : 100%;
-			min-height : 50%;
 			resize : none;
 		}
 	</ui:style>
 	
 	<g:HTMLPanel>
-		<m:HeaderPanel leftButton="Back">
+		<m:HeaderPanel ui:field="header" leftButton="Back" rightButton="{msg.post}">
 			<g:Label horizontalAlignment="center" text="{msg.titlePost}"></g:Label>			
 		</m:HeaderPanel>		
 		<m:TextArea ui:field="textField" styleName="{style.TextArea}"/>
-		<m:Button ui:field="post" horizontalAlignment="center" text="{msg.post}">Post</m:Button>
 		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>
 	

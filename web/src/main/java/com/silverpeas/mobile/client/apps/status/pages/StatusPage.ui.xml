@@ -6,32 +6,13 @@
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.status.resources.StatusMessages'/>
 	
-	<ui:style>
-		.flex > div {
-			display: table;
-			width: 100%;
-		}
-		.flex > div > * {
-			vertical-align: middle;
-			display: table-cell;
-		}
-		.flex > div > *:first-child {
-			text-align: left;
-			padding-right: 1em;
-			width: 30%;
-		}
-		.flex > div > *:last-child {
-			width: 90%;
-		}
-	</ui:style>
-	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>			
 		</m:HeaderPanel>
 		<m:ScrollPanel>
-			<m:ListPanel selectable="false" styleName="ListPanel {style.flex}" ui:field="panelStatus" >
-				<m:ListItem showArrow="true"><g:Label ui:field="modifierItem" text="{msg.changeStatus}"></g:Label></m:ListItem>
+			<m:ListPanel selectable="true" ui:field="panelStatus" >
+				<m:ListItem showArrow="true"><g:Label text="{msg.changeStatus}"></g:Label></m:ListItem>
 			</m:ListPanel>
 		</m:ScrollPanel>
 		<m:Button ui:field="more" horizontalAlignment="center" text="{msg.moreStatus}"></m:Button>
