@@ -36,3 +36,8 @@
 	cursor: pointer;
 	margin:auto;
 }
+
+.localPicture {	
+	-webkit-box-pack: center; 
+	-webkit-box-align: center;
+}

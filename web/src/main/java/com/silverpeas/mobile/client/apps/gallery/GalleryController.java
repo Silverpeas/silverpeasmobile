@@ -5,16 +5,20 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtmobile.persistence.client.Collection;
+import com.gwtmobile.persistence.client.CollectionCallback;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.AbstractGalleryControllerEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.DeleteLocalPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryControllerEventHandler;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryNewInstanceLoadedEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.local.DeletedLocalPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.persistances.GallerySettings;
+import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
@@ -115,5 +119,26 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	@Override
 	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {		
 		loadAlbums(event.getInstance());		
+	}
+
+	@Override
+	public void deleteLocalPicture(final DeleteLocalPictureEvent event) {
+		Database.open();
+		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
+		final Collection<Picture> pics = pictureEntity.all();
+		pics.list(new CollectionCallback<Picture>() {
+
+			@Override
+			public void onSuccess(Picture[] results) {					
+				for (int i = 0; i < results.length; i++) {
+					Picture picture = results[i];					
+					if (picture.getId().equals(event.getId())) {
+						pics.remove(picture);
+						EventBus.getInstance().fireEvent(new DeletedLocalPictureEvent(results.length==1));						
+						break;
+					}									
+				}								
+			}							
+		});		
 	}
 }

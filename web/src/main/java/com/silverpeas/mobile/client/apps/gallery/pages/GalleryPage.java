@@ -161,7 +161,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 					}));				
 				}
 			}
-		});		
+		});
 	}
 	
 	/**

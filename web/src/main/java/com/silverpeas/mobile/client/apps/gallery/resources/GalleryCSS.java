@@ -9,4 +9,5 @@ public interface GalleryCSS extends CssResource {
 	String lPictures();
 	String synchro();
 	String camera();
+	String localPicture();
 }

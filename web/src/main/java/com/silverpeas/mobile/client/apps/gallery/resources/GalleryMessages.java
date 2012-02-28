@@ -9,4 +9,8 @@ public interface GalleryMessages extends Messages {
 	String synchroPictures();
 	String browseRemotePictures();
 	String browseLocalPictures();
+	
+	String localPicture_delete();
+	String localPicture_title();
+	String localPicture_deleteConfirmation();
 }
