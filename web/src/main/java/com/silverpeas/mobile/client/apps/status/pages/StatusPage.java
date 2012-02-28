@@ -23,6 +23,7 @@ import com.silverpeas.mobile.client.apps.status.events.pages.StatusPagesEventHan
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
 import com.silverpeas.mobile.client.apps.status.resources.StatusMessages;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
 
@@ -74,7 +75,7 @@ public class StatusPage extends Page implements StatusPagesEventHandler, View {
 				ListItem li = createItem(statusDTO);
 				panelStatus.add(li);
 			}					
-		}			
+		}
 	}
 
 	private ListItem createItem(StatusDTO statusDTO) {

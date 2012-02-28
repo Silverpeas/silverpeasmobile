@@ -11,6 +11,7 @@ import com.silverpeas.mobile.client.apps.status.events.controller.StatusPostEven
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusLoadedEvent;
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
@@ -30,12 +31,14 @@ public class StatusController implements Controller, StatusControllerEventHandle
 
 	@Override
 	public void loadStatus(final StatusLoadEvent event) {
+		Notification.activityStart();
 		ServicesLocator.serviceRSE.getStatus(event.getCurrentPage(), new AsyncCallback<List<StatusDTO>>(){
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(caught));				
 			}
 			public void onSuccess(List<StatusDTO> result) {				
 				EventBus.getInstance().fireEvent(new StatusLoadedEvent(result));
+				Notification.activityStop();
 			}
 		});	
 	}
