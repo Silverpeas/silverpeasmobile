@@ -2,6 +2,8 @@ package com.silverpeas.mobile.client.apps.gallery.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -23,7 +25,11 @@ import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 
-public class PicturePage extends Page implements View, LocalPicturesPageEventHandler {
+/**
+ * Local pictures browser on device.
+ * @author svuillet
+ */
+public class PicturePage extends Page implements View, LocalPicturesPageEventHandler, ValueChangeHandler<Boolean> {
 
 	private static PicturePageUiBinder uiBinder = GWT.create(PicturePageUiBinder.class);
 	private static int nbPictures = 0;
@@ -36,6 +42,9 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 	interface PicturePageUiBinder extends UiBinder<Widget, PicturePage> {
 	}
 
+	/**
+	 * Construct page.
+	 */
 	public PicturePage() {
 		ressources = GWT.create(GalleryResources.class);		
 		ressources.css().ensureInjected();
@@ -44,8 +53,13 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 		int size = delButton.getText().length();
 		delButton.setWidth(size + "em");
 		EventBus.getInstance().addHandler(AbstractLocalPicturesPageEvent.TYPE, this);
+		content.addValueChangeHandler(this);
 	}
 	
+	/**
+	 * Set pictures to browse.
+	 * @param pictures
+	 */
 	public void setPictures(Picture[] pictures) {
 		nbPictures = pictures.length;
 		for (int i = 0; i < pictures.length; i++) {
@@ -54,24 +68,25 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 			image.setWidth("100%");			
 			Slide s = new Slide();
 			s.addStyleName(ressources.css().localPicture());			
-			s.getElement().setId(picture.getId());			
+			s.getElement().setId(picture.getId());
 			s.add(image);		
 			content.add(s);						
-		}
-		
+		}		
 		displayPicturesNumber();			
 	}
 
 	private void displayPicturesNumber() {
-		number.setHTML("&nbsp;("+nbPictures+")");
-		
+		int index = content.getCurrentSlideIndex() + 1;
+		number.setHTML("&nbsp;"+index+"/"+nbPictures);		
 	}
 	
+	/**
+	 * Invoke delete order. 
+	 */
 	private void deletePicture() {
 		Notification.confirm(msg.localPicture_deleteConfirmation(), new Notification.ConfirmCallback() {		
 			public void onComplete(int selection) {
-				if (selection == 1) {
-					
+				if (selection == 1) {					
 					int index = content.getCurrentSlideIndex();
 					Slide currentSlide = content.getSlide(index);
 					EventBus.getInstance().fireEvent(new DeleteLocalPictureEvent(currentSlide.getElement().getId()));
@@ -95,6 +110,9 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 		content.next();	
 	}
 
+	/**
+	 * Picture has been deleted.
+	 */
 	@Override
 	public void onDeletedLocalPicture(DeletedLocalPictureEvent event) {
 		int index = content.getCurrentSlideIndex();
@@ -119,5 +137,13 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 	public void goBack(Object returnValue) {
 		stop();				
 		super.goBack(returnValue);
+	}
+
+	/**
+	 * Refresh current picture position on picture change.
+	 */
+	@Override
+	public void onValueChange(ValueChangeEvent<Boolean> event) {
+		displayPicturesNumber();		
 	}
 }
