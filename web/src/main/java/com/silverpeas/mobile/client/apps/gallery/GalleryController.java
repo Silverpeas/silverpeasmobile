@@ -1,14 +1,17 @@
 package com.silverpeas.mobile.client.apps.gallery;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.CollectionCallback;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
+import com.gwtmobile.phonegap.client.Camera;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.AbstractGalleryControllerEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.DeleteLocalPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryControllerEventHandler;
@@ -16,6 +19,7 @@ import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSe
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.SyncPicturesEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.TakePictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryEndUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLocalPicturesLoadedEvent;
@@ -39,7 +43,7 @@ import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class GalleryController implements Controller, GalleryControllerEventHandler, NavigationEventHandler {
 	
-	// Data for synch
+	// Temporary data for synch
 	private transient static Collection<Picture> localsPicturesList;
 	private transient static Picture[] localsPictures;
 	private transient static int indexNextPictureToUpload;
@@ -242,5 +246,37 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 				}
 			}
 		});	
+	}
+
+	@Override
+	public void takePicture(TakePictureEvent takePictureEvent) {
+		// TODO Auto-generated method stub
+		Camera.Options options = new Camera.Options();
+		options.quality(50);
+		//options.destinationType(DestinationType.FILE_URI); // for optimal performances		
+		
+		Camera.getPicture(new Camera.Callback() {			
+			public void onSuccess(final String imageData) {				
+				Notification.activityStart();
+				Database.open();		
+				final Entity<Picture> pictureEntity = GWT.create(Picture.class);				
+				Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
+					public void onSuccess() {
+						final Picture pic = pictureEntity.newInstance();
+						DateTimeFormat fmt = DateTimeFormat.getFormat("dd-MM-yyyy_HH:mm:ss");
+						pic.setName("mobil_" + fmt.format(new Date()));
+						pic.setData(imageData);
+						Persistence.flush();
+						Notification.activityStop();
+					}
+				});
+			}
+
+			public void onError(String message) {
+				// TODO : manage cancel photo taking
+				Notification.activityStop();
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));	
+			}
+		}, options);
 	}
 }

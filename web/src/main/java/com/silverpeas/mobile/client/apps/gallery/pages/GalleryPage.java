@@ -11,9 +11,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.persistence.client.Entity;
-import com.gwtmobile.persistence.client.Persistence;
-import com.gwtmobile.phonegap.client.Camera;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
@@ -27,6 +24,7 @@ import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSe
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.SyncPicturesEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.TakePictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.AbstractGalleryPagesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryEndUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLoadedSettingsEvent;
@@ -35,15 +33,12 @@ import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryNewInstance
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPagesEventHandler;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPictureUploadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryStartingUploadEvent;
-import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
-import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
@@ -106,31 +101,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 	 */
 	@UiHandler("takePicture")
 	void takePicture(ClickEvent e) {
-		Camera.Options options = new Camera.Options();
-		options.quality(50);
-		//options.destinationType(DestinationType.FILE_URI); // for optimal performances		
-		
-		Camera.getPicture(new Camera.Callback() {			
-			public void onSuccess(final String imageData) {				
-				Notification.activityStart();
-				Database.open();		
-				final Entity<Picture> pictureEntity = GWT.create(Picture.class);				
-				Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
-					public void onSuccess() {
-						final Picture pic = pictureEntity.newInstance();
-						pic.setData(imageData);
-						Persistence.flush();
-						Notification.activityStop();
-					}
-				});
-			}
-
-			public void onError(String message) {
-				// TODO : manage cancel photo taking
-				Notification.activityStop();
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));	
-			}
-		}, options);
+		EventBus.getInstance().fireEvent(new TakePictureEvent());
 	}
 	
 	/**
