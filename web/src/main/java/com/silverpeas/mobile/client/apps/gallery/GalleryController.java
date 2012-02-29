@@ -121,6 +121,9 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		loadAlbums(event.getInstance());		
 	}
 
+	/**
+	 * Delete a local picture.
+	 */
 	@Override
 	public void deleteLocalPicture(final DeleteLocalPictureEvent event) {
 		Database.open();

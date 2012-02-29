@@ -23,7 +23,9 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.GalleryException;
 import com.silverpeas.mobile.shared.services.ServiceGallery;
 import com.silverpeas.tags.util.EJBDynaProxy;
+import com.silverpeas.util.StringUtil;
 import com.stratelia.webactiv.beans.admin.ComponentInstLight;
+import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.util.JNDINames;
 
 /**
@@ -45,19 +47,34 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		
 		byte [] dataDecoded = org.apache.commons.codec.binary.Base64.decodeBase64(data.getBytes());
 				
-		try {
-			String filename = "/tmp/" + name + ".jpg";
+		try {			
+			// stockage temporaire de la photo upload
+			String tempDir = System.getProperty("java.io.tmpdir");		
+			String filename = tempDir + File.separator + name + ".jpg";
 			OutputStream outputStream = new FileOutputStream(filename);
 			outputStream.write(dataDecoded);
 			outputStream.close();			
-			File file = new File(filename);			
+			File file = new File(filename);
 			
-			//TODO : récupérer conf de la gallery (pour les booleens)
-			createPhoto(name, getUserInSession().getId(), idGallery, idAlbum, file, false, "", "", false);
-			file.delete();		
+			// récupération de la configuration de la gallery			
+			OrganizationController orga = new OrganizationController();
+		    boolean watermark = "yes".equalsIgnoreCase(orga.getComponentParameterValue(idGallery, "watermark"));
+		    boolean download = !"no".equalsIgnoreCase(orga.getComponentParameterValue(idGallery, "download"));
+		    String watermarkHD = orga.getComponentParameterValue(idGallery, "WatermarkHD");
+		    if(!StringUtil.isInteger(watermarkHD))  {
+		      watermarkHD = "";
+		    }
+		    String watermarkOther = orga.getComponentParameterValue(idGallery, "WatermarkOther");
+		     if(!StringUtil.isInteger(watermarkOther))  {
+		      watermarkOther = "";
+		    }			
+			
+		    // creation de la photo dans l'albums
+			createPhoto(name, getUserInSession().getId(), idGallery, idAlbum, file, watermark, watermarkHD, watermarkOther, download);
+			file.delete();
 			
 		} catch (Exception e) {
-			LOGGER.error("uploadPicture", e);			
+			LOGGER.error("uploadPicture", e);
 		}	
 	}
 	
