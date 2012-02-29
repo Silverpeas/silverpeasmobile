@@ -3,21 +3,16 @@ package com.silverpeas.mobile.client.apps.gallery.pages;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.persistence.client.Collection;
-import com.gwtmobile.persistence.client.CollectionCallback;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
-import com.gwtmobile.persistence.client.ScalarCallback;
 import com.gwtmobile.phonegap.client.Camera;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
@@ -31,11 +26,15 @@ import com.silverpeas.mobile.client.apps.gallery.events.app.internal.GalleryStop
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.SyncPicturesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.AbstractGalleryPagesEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryEndUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLocalPicturesLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryNewInstanceLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPagesEventHandler;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPictureUploadedEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryStartingUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
@@ -43,7 +42,6 @@ import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.components.icon.Icon;
@@ -69,9 +67,10 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 	@UiField protected HTMLPanel htmlPanel;
 	@UiField protected ListPanel place;
 	
+	// Data for upload
 	private static int nbPictures;
 	private static int ratioPicture;
-	private static boolean uploading, stopScheduler;
+	
 	private ApplicationInstanceDTO currentInstance;
 	
 	interface GalleryPageUiBinder extends UiBinder<Widget, GalleryPage> {
@@ -109,7 +108,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 	void takePicture(ClickEvent e) {
 		Camera.Options options = new Camera.Options();
 		options.quality(50);
-		//options.destinationType(DestinationType.FILE_URI); // for optimal performances
+		//options.destinationType(DestinationType.FILE_URI); // for optimal performances		
 		
 		Camera.getPicture(new Camera.Callback() {			
 			public void onSuccess(final String imageData) {				
@@ -164,90 +163,31 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 	 * @param e
 	 */
 	@UiHandler("sync")
-	void syncPictures(ClickEvent e){
-		Database.open();
-		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
-		final Collection<Picture> pictures = pictureEntity.all();
-		pictures.count(new ScalarCallback<Integer>() {
-			
-			@Override
-			public void onSuccess(final Integer count) {
-				
-				if (count > 0) {
-					Notification.progressStart("Uploading", count + " pictures");
-					nbPictures = 0;	
-					ratioPicture = 100 / count;
-					pictures.list(new CollectionCallback<Picture>() {
-						@Override
-						public void onSuccess(Picture[] results) {
-							uploadPicture(count, results, pictures);					
-						}					
-					});
-				} else {
-					Notification.alert("Nothing to upload", null, globalMsg.infoTitle(), globalMsg.ok());
-				}					
-			}
-		});	
+	void syncPictures(ClickEvent e) {
+		EventBus.getInstance().fireEvent(new SyncPicturesEvent(currentInstance.getId(), albums.getSelectedValue()));
 	}
 	
-	/**
-	 * Upload one picture to gallery.
-	 * @param count
-	 */
-	private void uploadPicture(final Integer count, final Picture[] results, final Collection<Picture> pictures) {
-		
-		/*
-		// For optimal performances
-		FileReader reader = File.newReaderInstance();
-		reader.readAsDataURL("");
-		reader.onLoadEnd(callback);
-		*/		
-		
-		uploading = false;
-		stopScheduler = false;
-		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {								
-			@Override
-			public boolean execute() {					
-				
-				if (uploading == false) {					
-					for (int i = 0; i < results.length; i++) {
-						final Picture picture = results[i];				
-					
-						String name = picture.getName();
-						if (picture.getName() == null || picture.getName().isEmpty()) {
-							name = picture.getId();
-						}
-						
-						uploading = true;						
-						ServicesLocator.serviceGallery.uploadPicture(name, picture.getData(), currentInstance.getId(), albums.getSelectedValue(), new AsyncCallback<Void>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
-								stopScheduler = true;
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								// remove picture from html5 bdd
-								pictures.remove(picture);
-								
-								// compute job progress
-								nbPictures++;
-								Notification.progressValue(nbPictures*ratioPicture);								
-								if (count > nbPictures) {
-									uploading = false;
-								} else {
-									Notification.progressStop();
-									stopScheduler = true;
-								}								
-							}
-						});						
-					}										
-				}				
-				return stopScheduler;
-			}
-		}, 300);
+	@Override
+	public void onStartingUpload(GalleryStartingUploadEvent event) {
+		if (event.getPicturesNumber() > 0) {
+			Notification.progressStart(msg.localPicture_uploading(), event.getPicturesNumber() + " " + msg.localPicture());
+			nbPictures = 0;	
+			ratioPicture = 100 / event.getPicturesNumber();
+		} else {
+			Notification.alert(msg.localPicture_empty(), null, globalMsg.infoTitle(), globalMsg.ok());
+		}		
+	}
+	
+	@Override
+	public void onEndUpload(GalleryEndUploadEvent event) {
+		Notification.progressStop();		
+	}
+	
+	@Override
+	public void onPictureUploaded(GalleryPictureUploadedEvent event) {
+		// compute job progress
+		nbPictures++;
+		Notification.progressValue(nbPictures*ratioPicture);
 	}
 	
 	@UiHandler("place")

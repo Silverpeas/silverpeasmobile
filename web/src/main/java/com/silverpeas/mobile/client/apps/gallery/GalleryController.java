@@ -15,9 +15,13 @@ import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryContro
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.SyncPicturesEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryEndUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLocalPicturesLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryNewInstanceLoadedEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPictureUploadedEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryStartingUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.local.DeletedLocalPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.persistances.GallerySettings;
 import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
@@ -34,6 +38,11 @@ import com.silverpeas.mobile.shared.dto.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class GalleryController implements Controller, GalleryControllerEventHandler, NavigationEventHandler {
+	
+	// Data for synch
+	private transient static Collection<Picture> localsPicturesList;
+	private transient static Picture[] localsPictures;
+	private transient static int indexNextPictureToUpload;
 	
 	public GalleryController() {
 		super();
@@ -173,5 +182,65 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 				}
 			}
 		});		
+	}
+	
+	private void uploadPicture(Picture picture, final String idGallery, final String idAlbum) {
+		ServicesLocator.serviceGallery.uploadPicture(picture.getName(), picture.getData(), idGallery, idAlbum, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				localsPicturesList.remove(localsPictures[indexNextPictureToUpload]);
+				indexNextPictureToUpload++;
+				
+				EventBus.getInstance().fireEvent(new GalleryPictureUploadedEvent());
+				
+				if (localsPictures.length > indexNextPictureToUpload) {
+					uploadPicture(localsPictures[indexNextPictureToUpload], idGallery, idAlbum);	
+				} else {
+					// send message "end upload"
+					EventBus.getInstance().fireEvent(new GalleryEndUploadEvent());
+				}				
+			}
+		});
+	}
+
+	/**
+	 * Send local pictures to remote album.
+	 */
+	@Override
+	public void syncPictures(final SyncPicturesEvent event) {
+		
+		/*
+		// For optimal performances
+		FileReader reader = File.newReaderInstance();
+		reader.readAsDataURL("");
+		reader.onLoadEnd(callback);
+		*/	
+		
+		indexNextPictureToUpload = 0;
+		Database.open();
+		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
+		localsPicturesList = pictureEntity.all();
+		localsPicturesList.count(new ScalarCallback<Integer>() {
+			
+			@Override
+			public void onSuccess(final Integer count) {
+				EventBus.getInstance().fireEvent(new GalleryStartingUploadEvent(count));
+				if (count > 0) {				
+					localsPicturesList.list(new CollectionCallback<Picture>() {
+						@Override
+						public void onSuccess(Picture[] results) {
+							localsPictures = results;
+							uploadPicture(localsPictures[indexNextPictureToUpload], event.getIdGallery(), event.getIdAlbum());							
+						}					
+					});
+				}
+			}
+		});	
 	}
 }
