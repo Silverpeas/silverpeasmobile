@@ -1,15 +1,22 @@
 package com.silverpeas.mobile.server.services;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.silverpeas.admin.ejb.AdminBm;
+import com.silverpeas.gallery.ImageHelper;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
 import com.silverpeas.gallery.model.AlbumDetail;
+import com.silverpeas.gallery.model.PhotoDetail;
+import com.silverpeas.gallery.model.PhotoPK;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -25,6 +32,7 @@ import com.stratelia.webactiv.util.JNDINames;
  */
 public class ServiceGalleryImpl extends AbstractAuthenticateService implements ServiceGallery {
 
+	private final static Logger LOGGER = Logger.getLogger(ServiceGalleryImpl.class);
 	private static final long serialVersionUID = 1L;
 	private AdminBm adminBm;
 	private GalleryBm galleryBm;
@@ -32,24 +40,57 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	/**
 	 * Importation d'une image dans un album.
 	 */
-	public void uploadPicture(String name, String data) throws GalleryException, AuthenticationException {
+	public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws GalleryException, AuthenticationException {
 		checkUserInSession();
 		
 		byte [] dataDecoded = org.apache.commons.codec.binary.Base64.decodeBase64(data.getBytes());
 				
 		try {
-			OutputStream outputStream = new FileOutputStream("/home/svuillet/" + name + ".jpg");
+			String filename = "/tmp/" + name + ".jpg";
+			OutputStream outputStream = new FileOutputStream(filename);
 			outputStream.write(dataDecoded);
-			outputStream.close();
+			outputStream.close();			
+			File file = new File(filename);			
+			
+			//TODO : récupérer conf de la gallery (pour les booleens)
+			createPhoto(name, getUserInSession().getId(), idGallery, idAlbum, file, false, "", "", false);
+			file.delete();		
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("uploadPicture", e);			
 		}	
 	}
+	
+	private String createPhoto(String name, String userId, String componentId,
+		      String albumId, File file, boolean watermark, String watermarkHD,
+		      String watermarkOther, boolean download)
+		      throws Exception {
+
+		    // création de la photo
+		    PhotoDetail newPhoto = new PhotoDetail(name, null, new Date(), null, null, null, download, false);
+		    newPhoto.setAlbumId(albumId);
+		    newPhoto.setCreatorId(userId);
+		    PhotoPK pk = new PhotoPK("unknown", componentId);
+		    newPhoto.setPhotoPK(pk);
+
+		    String photoId = getGalleryBm().createPhoto(newPhoto, albumId);
+		    newPhoto.getPhotoPK().setId(photoId);
+
+		    // Création de la preview et des vignettes sur disque
+		    ImageHelper.processImage(newPhoto, file, watermark, watermarkHD, watermarkOther);
+		    ImageHelper.setMetaData(newPhoto, "fr");		    
+		      
+		    // Modification de la photo pour mise à jour dimension
+		    getGalleryBm().updatePhoto(newPhoto);
+		    return photoId;
+		  }
+	
 	
 	/**
 	 * Retourne la listes des galleries accessibles.
 	 */
 	public List<ApplicationInstanceDTO> getAllGalleries() throws GalleryException, AuthenticationException {
+		checkUserInSession();
 		
 		ArrayList<ApplicationInstanceDTO> results = new ArrayList<ApplicationInstanceDTO>();
 		try {
@@ -67,8 +108,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 				}				
 			}			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("getAllGalleries", e);
 		}
 		
 		Collections.sort(results);		
@@ -79,6 +119,8 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	 * Retourne la liste des albums d'une gallerie.
 	 */
 	public List<AlbumDTO> getAllAlbums(String instanceId) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
 		ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
 		try {			
 			Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
@@ -91,8 +133,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 				}				
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("getAllAlbums", e);
 		}
 		return results;
 	}

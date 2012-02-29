@@ -223,8 +223,8 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 							name = picture.getId();
 						}
 						
-						uploading = true;
-						ServicesLocator.serviceGallery.uploadPicture(name, picture.getData(), new AsyncCallback<Void>() {
+						uploading = true;						
+						ServicesLocator.serviceGallery.uploadPicture(name, picture.getData(), currentInstance.getId(), albums.getSelectedValue(), new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {

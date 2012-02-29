@@ -11,7 +11,7 @@ import com.silverpeas.mobile.shared.exceptions.GalleryException;
 
 @RemoteServiceRelativePath("Gallery")
 public interface ServiceGallery extends RemoteService {		
-	public void uploadPicture(String name, String data) throws GalleryException, AuthenticationException;
+	public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws GalleryException, AuthenticationException;
 	public List<ApplicationInstanceDTO> getAllGalleries() throws GalleryException, AuthenticationException;
 	public List<AlbumDTO> getAllAlbums(String instanceId) throws GalleryException, AuthenticationException;
 }

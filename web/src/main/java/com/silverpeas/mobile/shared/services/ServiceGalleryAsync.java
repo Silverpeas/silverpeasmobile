@@ -8,7 +8,7 @@ import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public interface ServiceGalleryAsync {
 
-	void uploadPicture(String name, String data, AsyncCallback<Void> callback);
+	void uploadPicture(String name, String data, String idGallery, String idAlbum, AsyncCallback<Void> callback);
 
 	void getAllGalleries(AsyncCallback<List<ApplicationInstanceDTO>> callback);
 
