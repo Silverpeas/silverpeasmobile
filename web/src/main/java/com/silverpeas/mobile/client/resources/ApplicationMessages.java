@@ -13,4 +13,9 @@ public interface ApplicationMessages extends Messages {
 	
 	@DefaultMessage("Silverpeas&copy; 1999-2012")
 	String copyright();
+	
+	@DefaultMessage("Information")
+	String infoTitle();
+	@DefaultMessage("OK")
+	String ok();
 }

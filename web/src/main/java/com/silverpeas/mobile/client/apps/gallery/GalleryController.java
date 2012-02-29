@@ -14,7 +14,9 @@ import com.silverpeas.mobile.client.apps.gallery.events.controller.DeleteLocalPi
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryControllerEventHandler;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLoadedSettingsEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLocalPicturesLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryNewInstanceLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.local.DeletedLocalPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.persistances.GallerySettings;
@@ -24,6 +26,7 @@ import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInst
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
@@ -142,6 +145,33 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 					}									
 				}								
 			}							
+		});		
+	}
+
+	/**
+	 * Load local pictures on device.
+	 */
+	@Override
+	public void loadLocalPictures(LoadLocalPicturesEvent event) {
+		Database.open();
+		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
+		final Collection<Picture> pictures = pictureEntity.all();
+		pictures.count(new ScalarCallback<Integer>() {					
+			@Override
+			public void onSuccess(final Integer count) {
+				if (count == 0) {					
+					EventBus.getInstance().fireEvent(new GalleryLocalPicturesLoadedEvent(null));
+				} else {
+					Notification.activityStart();
+					pictures.list((new CollectionCallback<Picture>(){
+	
+						@Override
+						public void onSuccess(Picture[] pictures) {
+							EventBus.getInstance().fireEvent(new GalleryLocalPicturesLoadedEvent(pictures));							
+						}						
+					}));				
+				}
+			}
 		});		
 	}
 }

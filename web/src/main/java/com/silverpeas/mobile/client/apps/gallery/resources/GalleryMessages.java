@@ -10,6 +10,7 @@ public interface GalleryMessages extends Messages {
 	String browseRemotePictures();
 	String browseLocalPictures();
 	
+	String localPicture_empty();
 	String localPicture_delete();
 	String localPicture_title();
 	String localPicture_deleteConfirmation();

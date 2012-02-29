@@ -6,4 +6,5 @@ public interface GalleryControllerEventHandler extends EventHandler {
 	void loadSettings(GalleryLoadSettingsEvent event);
 	void saveSettings(GallerySaveSettingsEvent event);
 	void deleteLocalPicture(DeleteLocalPictureEvent event);
+	void loadLocalPictures(LoadLocalPicturesEvent event);
 }

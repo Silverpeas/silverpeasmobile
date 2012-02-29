@@ -30,8 +30,10 @@ import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.silverpeas.mobile.client.apps.gallery.events.app.internal.GalleryStopEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.AbstractGalleryPagesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLoadedSettingsEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLocalPicturesLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryNewInstanceLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPagesEventHandler;
 import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
@@ -133,35 +135,28 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 	}
 	
 	/**
-	 * Browser local pictures.
+	 * Load local pictures.
 	 * @param e
 	 */
 	@UiHandler("local")
 	void localPictures(ClickEvent e){
-		Database.open();
-		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
-		final Collection<Picture> pictures = pictureEntity.all();
-		pictures.count(new ScalarCallback<Integer>() {					
-			@Override
-			public void onSuccess(final Integer count) {
-				if (count == 0) {
-					Notification.alert("No locals pictures", null, "Information", "OK");
-				} else {
-					Notification.activityStart();
-					pictures.list((new CollectionCallback<Picture>(){
-
-						@Override
-						public void onSuccess(Picture[] pictures) {
-							final PicturePage picturePage = new PicturePage();
-							picturePage.setPictures(pictures);
-							Notification.activityStop();
-							goTo(picturePage, Transition.SLIDE);
-						}
-						
-					}));				
-				}
-			}
-		});
+		EventBus.getInstance().fireEvent(new LoadLocalPicturesEvent());
+	}
+	
+	/**
+	 * Browser local pictures.
+	 * @param e
+	 */
+	@Override
+	public void onLocalPicturesLoaded(GalleryLocalPicturesLoadedEvent event) {
+		if (event.getPictures() == null) {
+			Notification.alert(msg.localPicture_empty(), null, globalMsg.infoTitle(), globalMsg.ok());
+		} else {
+			final PicturePage picturePage = new PicturePage();
+			picturePage.setPictures(event.getPictures());
+			Notification.activityStop();
+			goTo(picturePage, Transition.SLIDE);
+		}
 	}
 	
 	/**
@@ -189,7 +184,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 						}					
 					});
 				} else {
-					Notification.alert("Nothing to upload", null, "Information", "OK");
+					Notification.alert("Nothing to upload", null, globalMsg.infoTitle(), globalMsg.ok());
 				}					
 			}
 		});	
