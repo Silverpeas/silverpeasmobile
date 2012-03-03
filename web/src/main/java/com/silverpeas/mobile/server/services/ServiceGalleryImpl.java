@@ -78,7 +78,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 			String filename = tempDir + File.separator + name + "." + extension;
 			OutputStream outputStream = new FileOutputStream(filename);
 			
-			// TODO : preserve Exif metadata 
+			// TODO : When Silverpeas support extended exif metadata : preserve Exif metadata (rotate remove exif metadata)
 			
 			ImageIO.write(bir, extension, outputStream);	
 			outputStream.close();
