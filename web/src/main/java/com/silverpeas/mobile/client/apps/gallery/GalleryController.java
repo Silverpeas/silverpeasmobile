@@ -173,7 +173,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 						FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {			
 							@Override
 							public void onSuccess(final FileSystem fs) {			
-								FileManagerAddOn.resolveLocalFileSystemURI(picture.getData(), new EntryCallback() {			
+								FileManagerAddOn.resolveLocalFileSystemURI(picture.getURI(), new EntryCallback() {			
 
 								@Override
 									public void onSuccess(Entry entry) {
@@ -247,12 +247,12 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	 */
 	private void uploadPicture(final Picture picture, final String idGallery, final String idAlbum) {		
 		
-		sendAndRemovePicture(picture, picture.getData(), null, idGallery, idAlbum);
+		sendAndRemovePicture(picture, picture.getURI(), null, idGallery, idAlbum);
 		
 		FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {			
 			@Override
 			public void onSuccess(final FileSystem fs) {			
-				FileManagerAddOn.resolveLocalFileSystemURI(picture.getData(), new EntryCallback() {			
+				FileManagerAddOn.resolveLocalFileSystemURI(picture.getURI(), new EntryCallback() {			
 
 					@Override
 					public void onSuccess(Entry entry) {
@@ -383,7 +383,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 						final Picture pic = pictureEntity.newInstance();
 						DateTimeFormat fmt = DateTimeFormat.getFormat("ddMMyyyy-HHmmss");
 						pic.setName("mobil_" + fmt.format(new Date()));
-						pic.setData(imageData);
+						pic.setURI(imageData);
 						Persistence.flush();
 						Notification.activityStop();
 					}
