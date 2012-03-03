@@ -1,7 +1,11 @@
 package com.silverpeas.mobile.server.services;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,15 +13,21 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.apache.sanselan.formats.jpeg.exifRewrite.ExifRewriter;
+import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifDirectory;
 import com.silverpeas.admin.ejb.AdminBm;
 import com.silverpeas.gallery.ImageHelper;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
 import com.silverpeas.gallery.model.AlbumDetail;
 import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
+import com.silverpeas.mobile.server.helpers.RotationSupport;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -39,36 +49,42 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	private static final long serialVersionUID = 1L;
 	private AdminBm adminBm;
 	private GalleryBm galleryBm;
-	
+		
 	/**
 	 * Importation d'une image dans un album.
 	 */
 	public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws GalleryException, AuthenticationException {
 		checkUserInSession();
 		
-			
-		String extension = ".jpg";
+		String extension = "jpg";
 		if (data.indexOf("data:image/jpeg;base64,") != -1) {
 			data = data.substring("data:image/jpeg;base64,".length());
-			extension = ".jpg";
+			extension = "jpg";		
 		}
 		
 		byte [] dataDecoded = org.apache.commons.codec.binary.Base64.decodeBase64(data.getBytes());
 				
-		try {			
+		try {
+			// rotation de l'image si nécessaire
+			Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(dataDecoded)));
+			Directory directory = metadata.getDirectory(ExifDirectory.class);
+			int existingOrientation = directory.getInt(ExifDirectory.TAG_ORIENTATION);			
+			InputStream in = new ByteArrayInputStream(dataDecoded);
+			BufferedImage bi = ImageIO.read(in);
+			BufferedImage bir = RotationSupport.adjustOrientation(bi, existingOrientation);
+			
 			// stockage temporaire de la photo upload
-			String tempDir = System.getProperty("java.io.tmpdir");		
-			String filename = tempDir + File.separator + name + extension;
+			String tempDir = System.getProperty("java.io.tmpdir");
+			String filename = tempDir + File.separator + name + "." + extension;
 			OutputStream outputStream = new FileOutputStream(filename);
 			
-			// Remove metadata otherwise image upload in gallery crash (sanselan api too old, don't parse actual exif)
-			ExifRewriter ER = new ExifRewriter();
-			ER.removeExifMetadata(dataDecoded, outputStream); 
-			//TODO : before remove metadata get orientation for make rotation if necessary
+			// TODO : preserve Exif metadata 
 			
+			ImageIO.write(bir, extension, outputStream);	
 			outputStream.close();
 						
 			File file = new File(filename);
+			RotationSupport.setOrientation(RotationSupport.NOT_ROTATED, file);
 			
 			// récupération de la configuration de la gallery			
 			OrganizationController orga = new OrganizationController();
@@ -97,24 +113,24 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		      String watermarkOther, boolean download)
 		      throws Exception {
 
-		    // création de la photo
-		    PhotoDetail newPhoto = new PhotoDetail(name, null, new Date(), null, null, null, download, false);
-		    newPhoto.setAlbumId(albumId);
-		    newPhoto.setCreatorId(userId);
-		    PhotoPK pk = new PhotoPK("unknown", componentId);
-		    newPhoto.setPhotoPK(pk);
+	    // création de la photo
+	    PhotoDetail newPhoto = new PhotoDetail(name, null, new Date(), null, null, null, download, false);
+	    newPhoto.setAlbumId(albumId);
+	    newPhoto.setCreatorId(userId);
+	    PhotoPK pk = new PhotoPK("unknown", componentId);
+	    newPhoto.setPhotoPK(pk);
 
-		    String photoId = getGalleryBm().createPhoto(newPhoto, albumId);
-		    newPhoto.getPhotoPK().setId(photoId);
+	    String photoId = getGalleryBm().createPhoto(newPhoto, albumId);
+	    newPhoto.getPhotoPK().setId(photoId);
 
-		    // Création de la preview et des vignettes sur disque
-		    ImageHelper.processImage(newPhoto, file, watermark, watermarkHD, watermarkOther);
-		    ImageHelper.setMetaData(newPhoto, "fr");		    
-		      
-		    // Modification de la photo pour mise à jour dimension
-		    getGalleryBm().updatePhoto(newPhoto);
-		    return photoId;
-		  }
+	    // Création de la preview et des vignettes sur disque
+	    ImageHelper.processImage(newPhoto, file, watermark, watermarkHD, watermarkOther);
+	    ImageHelper.setMetaData(newPhoto, "fr");		    
+	      
+	    // Modification de la photo pour mise à jour dimension
+	    getGalleryBm().updatePhoto(newPhoto);
+	    return photoId;
+	}
 	
 	
 	/**
