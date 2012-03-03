@@ -54,6 +54,7 @@ import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.phonegap.FileManagerAddOn;
 import com.silverpeas.mobile.shared.dto.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
@@ -172,9 +173,9 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 						FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {			
 							@Override
 							public void onSuccess(final FileSystem fs) {			
-								resolveLocalFileSystemURI(picture.getData(), new EntryCallback() {			
+								FileManagerAddOn.resolveLocalFileSystemURI(picture.getData(), new EntryCallback() {			
 
-									@Override
+								@Override
 									public void onSuccess(Entry entry) {
 										entry.remove(new FileMgrCallback() {
 											
@@ -238,15 +239,12 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		});		
 	}
 	
-	// TODO : move to another class
-	private static native void resolveLocalFileSystemURI(String uri, EntryCallback callback) /*-{
-		$wnd.resolveLocalFileSystemURI(uri, function(success){
-			callback.@com.gwtmobile.phonegap.client.FileMgr.EntryCallback::onSuccess(Lcom/gwtmobile/phonegap/client/FileMgr$Entry;)(success);
-		}, function(error){
-			callback.@com.gwtmobile.phonegap.client.FileMgr.FileSystemCallback::onError(Lcom/gwtmobile/phonegap/client/FileMgr$FileError;)(error);
-		});
-	}-*/;
-	
+	/**
+	 * Read file picture before upload.
+	 * @param picture
+	 * @param idGallery
+	 * @param idAlbum
+	 */
 	private void uploadPicture(final Picture picture, final String idGallery, final String idAlbum) {		
 		
 		sendAndRemovePicture(picture, picture.getData(), null, idGallery, idAlbum);
@@ -254,7 +252,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {			
 			@Override
 			public void onSuccess(final FileSystem fs) {			
-				resolveLocalFileSystemURI(picture.getData(), new EntryCallback() {			
+				FileManagerAddOn.resolveLocalFileSystemURI(picture.getData(), new EntryCallback() {			
 
 					@Override
 					public void onSuccess(Entry entry) {
@@ -293,6 +291,14 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		});
 	}
 	
+	/**
+	 * Effective upload and remove file picture on success upload.
+	 * @param picture
+	 * @param data
+	 * @param file
+	 * @param idGallery
+	 * @param idAlbum
+	 */
 	private void sendAndRemovePicture(final Picture picture, String data, final FileEntry file, final String idGallery, final String idAlbum) {
 		ServicesLocator.serviceGallery.uploadPicture(picture.getName(), data, idGallery, idAlbum, new AsyncCallback<Void>() {
 
@@ -357,6 +363,9 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		});	
 	}
 
+	/**
+	 * Take a picture from camera device.
+	 */
 	@Override
 	public void takePicture(TakePictureEvent takePictureEvent) {
 		Camera.Options options = new Camera.Options();
