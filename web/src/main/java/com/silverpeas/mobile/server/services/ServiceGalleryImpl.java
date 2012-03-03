@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.sanselan.formats.jpeg.exifRewrite.ExifRewriter;
 
 import com.silverpeas.admin.ejb.AdminBm;
 import com.silverpeas.gallery.ImageHelper;
@@ -45,15 +46,28 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws GalleryException, AuthenticationException {
 		checkUserInSession();
 		
+			
+		String extension = ".jpg";
+		if (data.indexOf("data:image/jpeg;base64,") != -1) {
+			data = data.substring("data:image/jpeg;base64,".length());
+			extension = ".jpg";
+		}
+		
 		byte [] dataDecoded = org.apache.commons.codec.binary.Base64.decodeBase64(data.getBytes());
 				
 		try {			
 			// stockage temporaire de la photo upload
 			String tempDir = System.getProperty("java.io.tmpdir");		
-			String filename = tempDir + File.separator + name + ".jpg";
+			String filename = tempDir + File.separator + name + extension;
 			OutputStream outputStream = new FileOutputStream(filename);
-			outputStream.write(dataDecoded);
-			outputStream.close();			
+			
+			// Remove metadata otherwise image upload in gallery crash (sanselan api too old, don't parse actual exif)
+			ExifRewriter ER = new ExifRewriter();
+			ER.removeExifMetadata(dataDecoded, outputStream); 
+			//TODO : before remove metadata get orientation for make rotation if necessary
+			
+			outputStream.close();
+						
 			File file = new File(filename);
 			
 			// récupération de la configuration de la gallery			

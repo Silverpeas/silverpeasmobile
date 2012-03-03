@@ -52,6 +52,12 @@
 	</build>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>org.apache.sanselan</groupId>
+			<artifactId>sanselan</artifactId>
+			<version>0.97-incubator</version>
+		</dependency>	
 		<dependency>
 	        <groupId>com.googlecode.gwt.crypto</groupId>
 	        <artifactId>gwt-crypto</artifactId>

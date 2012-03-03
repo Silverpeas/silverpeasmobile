@@ -12,6 +12,22 @@ import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
 import com.gwtmobile.phonegap.client.Camera;
+import com.gwtmobile.phonegap.client.Camera.DestinationType;
+import com.gwtmobile.phonegap.client.Camera.SourceType;
+import com.gwtmobile.phonegap.client.FileMgr;
+import com.gwtmobile.phonegap.client.FileMgr.Entry;
+import com.gwtmobile.phonegap.client.FileMgr.EntryCallback;
+import com.gwtmobile.phonegap.client.FileMgr.Event;
+import com.gwtmobile.phonegap.client.FileMgr.EventCallback;
+import com.gwtmobile.phonegap.client.FileMgr.File;
+import com.gwtmobile.phonegap.client.FileMgr.FileCallback;
+import com.gwtmobile.phonegap.client.FileMgr.FileEntry;
+import com.gwtmobile.phonegap.client.FileMgr.FileError;
+import com.gwtmobile.phonegap.client.FileMgr.FileMgrCallback;
+import com.gwtmobile.phonegap.client.FileMgr.FileReader;
+import com.gwtmobile.phonegap.client.FileMgr.FileSystem;
+import com.gwtmobile.phonegap.client.FileMgr.FileSystemCallback;
+import com.gwtmobile.phonegap.client.FileMgr.LocalFileSystem;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.AbstractGalleryControllerEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.DeleteLocalPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryControllerEventHandler;
@@ -148,12 +164,46 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		pics.list(new CollectionCallback<Picture>() {
 
 			@Override
-			public void onSuccess(Picture[] results) {					
+			public void onSuccess(final Picture[] results) {					
 				for (int i = 0; i < results.length; i++) {
-					Picture picture = results[i];					
+					final Picture picture = results[i];					
 					if (picture.getId().equals(event.getId())) {
+						// remove file						
+						FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {			
+							@Override
+							public void onSuccess(final FileSystem fs) {			
+								resolveLocalFileSystemURI(picture.getData(), new EntryCallback() {			
+
+									@Override
+									public void onSuccess(Entry entry) {
+										entry.remove(new FileMgrCallback() {
+											
+											@Override
+											public void onSuccess(boolean success) {
+												
+											}
+											
+											@Override
+											public void onError(FileError error) {
+												EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));												
+											}
+										});													
+									}
+									
+									@Override
+									public void onError(FileError error) {
+										EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));				
+									}
+								});					
+							}			
+							@Override
+							public void onError(FileError error) {
+								EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));	
+							}
+						});
+						// remove reference in html5 database
 						pics.remove(picture);
-						EventBus.getInstance().fireEvent(new DeletedLocalPictureEvent(results.length==1));						
+						EventBus.getInstance().fireEvent(new DeletedLocalPictureEvent(results.length==1));
 						break;
 					}									
 				}								
@@ -188,8 +238,63 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		});		
 	}
 	
-	private void uploadPicture(Picture picture, final String idGallery, final String idAlbum) {
-		ServicesLocator.serviceGallery.uploadPicture(picture.getName(), picture.getData(), idGallery, idAlbum, new AsyncCallback<Void>() {
+	// TODO : move to another class
+	private static native void resolveLocalFileSystemURI(String uri, EntryCallback callback) /*-{
+		$wnd.resolveLocalFileSystemURI(uri, function(success){
+			callback.@com.gwtmobile.phonegap.client.FileMgr.EntryCallback::onSuccess(Lcom/gwtmobile/phonegap/client/FileMgr$Entry;)(success);
+		}, function(error){
+			callback.@com.gwtmobile.phonegap.client.FileMgr.FileSystemCallback::onError(Lcom/gwtmobile/phonegap/client/FileMgr$FileError;)(error);
+		});
+	}-*/;
+	
+	private void uploadPicture(final Picture picture, final String idGallery, final String idAlbum) {		
+		
+		sendAndRemovePicture(picture, picture.getData(), null, idGallery, idAlbum);
+		
+		FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {			
+			@Override
+			public void onSuccess(final FileSystem fs) {			
+				resolveLocalFileSystemURI(picture.getData(), new EntryCallback() {			
+
+					@Override
+					public void onSuccess(Entry entry) {
+						
+						final FileEntry file = (FileEntry) entry;
+						file.file(new FileCallback() {
+							@Override
+							public void onSuccess(File f) {								
+								EventCallback callback = new EventCallback() {			
+									@Override
+									public void onEvent(Event evt) {
+										sendAndRemovePicture(picture, evt.getTarget().getResult(), file, idGallery, idAlbum);
+									}
+								};								
+								FileReader reader = FileMgr.newFileReader();								
+								reader.onLoadEnd(callback);								
+								reader.readAsDataURL(f);
+							}
+							@Override
+							public void onError(FileError error) {
+								EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));
+							}							
+						});					
+					}
+					
+					@Override
+					public void onError(FileError error) {
+						EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));				
+					}
+				});					
+			}			
+			@Override
+			public void onError(FileError error) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));	
+			}
+		});
+	}
+	
+	private void sendAndRemovePicture(final Picture picture, String data, final FileEntry file, final String idGallery, final String idAlbum) {
+		ServicesLocator.serviceGallery.uploadPicture(picture.getName(), data, idGallery, idAlbum, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -198,17 +303,29 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 
 			@Override
 			public void onSuccess(Void result) {
-				localsPicturesList.remove(localsPictures[indexNextPictureToUpload]);
-				indexNextPictureToUpload++;
-				
-				EventBus.getInstance().fireEvent(new GalleryPictureUploadedEvent());
-				
-				if (localsPictures.length > indexNextPictureToUpload) {
-					uploadPicture(localsPictures[indexNextPictureToUpload], idGallery, idAlbum);	
-				} else {
-					// send message "end upload"
-					EventBus.getInstance().fireEvent(new GalleryEndUploadEvent());
-				}				
+				file.remove(new FileMgrCallback() {
+
+					@Override
+					public void onSuccess(boolean success) {
+						localsPicturesList.remove(localsPictures[indexNextPictureToUpload]);
+						indexNextPictureToUpload++;
+						
+						EventBus.getInstance().fireEvent(new GalleryPictureUploadedEvent());
+						
+						if (localsPictures.length > indexNextPictureToUpload) {
+							uploadPicture(localsPictures[indexNextPictureToUpload], idGallery, idAlbum);	
+						} else {
+							// send message "end upload"
+							EventBus.getInstance().fireEvent(new GalleryEndUploadEvent());
+						}						
+					}
+
+					@Override
+					public void onError(FileError error) {						
+						EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));					
+					}							
+				});
+								
 			}
 		});
 	}
@@ -217,15 +334,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	 * Send local pictures to remote album.
 	 */
 	@Override
-	public void syncPictures(final SyncPicturesEvent event) {
-		
-		/*
-		// For optimal performances
-		FileReader reader = File.newReaderInstance();
-		reader.readAsDataURL("");
-		reader.onLoadEnd(callback);
-		*/	
-		
+	public void syncPictures(final SyncPicturesEvent event) {		
 		indexNextPictureToUpload = 0;
 		Database.open();
 		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
@@ -250,10 +359,10 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 
 	@Override
 	public void takePicture(TakePictureEvent takePictureEvent) {
-		// TODO Auto-generated method stub
 		Camera.Options options = new Camera.Options();
 		options.quality(50);
-		//options.destinationType(DestinationType.FILE_URI); // for optimal performances		
+		options.sourceType(SourceType.CAMERA);
+		options.destinationType(DestinationType.FILE_URI);
 		
 		Camera.getPicture(new Camera.Callback() {			
 			public void onSuccess(final String imageData) {				
@@ -263,7 +372,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 				Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
 					public void onSuccess() {
 						final Picture pic = pictureEntity.newInstance();
-						DateTimeFormat fmt = DateTimeFormat.getFormat("dd-MM-yyyy_HH:mm:ss");
+						DateTimeFormat fmt = DateTimeFormat.getFormat("ddMMyyyy-HHmmss");
 						pic.setName("mobil_" + fmt.format(new Date()));
 						pic.setData(imageData);
 						Persistence.flush();
