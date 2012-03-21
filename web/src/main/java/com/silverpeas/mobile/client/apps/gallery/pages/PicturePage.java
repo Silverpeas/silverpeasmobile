@@ -2,15 +2,17 @@ package com.silverpeas.mobile.client.apps.gallery.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.phonegap.client.Notification;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.Slide;
@@ -24,6 +26,7 @@ import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.mobil.Orientation;
 
 /**
  * Local pictures browser on device.
@@ -33,6 +36,7 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 
 	private static PicturePageUiBinder uiBinder = GWT.create(PicturePageUiBinder.class);
 	private static int nbPictures = 0;
+	private PageResizeHandler pageResizeHandler = new PageResizeHandler();
 	@UiField SlidePanel content;
 	@UiField InlineHTML number;
 	@UiField Button prevButton, nextButton, delButton;
@@ -40,6 +44,18 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 	@UiField(provided = true) protected GalleryResources ressources = null;
 
 	interface PicturePageUiBinder extends UiBinder<Widget, PicturePage> {
+	}
+	
+	private class PageResizeHandler implements ResizeHandler {
+		@Override
+		public void onResize(ResizeEvent event) {
+			Image img = (Image) content.getSlide(content.getCurrentSlideIndex()).iterator().next();
+			if (getOrientation().equals(Orientation.Landscape)) {
+				img.setSize("auto", "100%");	
+			} else {
+				img.setSize("100%", "auto");
+			}
+		}		
 	}
 
 	/**
@@ -54,6 +70,7 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 		delButton.setWidth(size + "em");
 		EventBus.getInstance().addHandler(AbstractLocalPicturesPageEvent.TYPE, this);
 		content.addValueChangeHandler(this);
+		Window.addResizeHandler(pageResizeHandler);
 	}
 	
 	/**
@@ -64,16 +81,23 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 		nbPictures = pictures.length;
 		for (int i = 0; i < pictures.length; i++) {
 			Picture picture = pictures[i];
-			//Image image = new Image("data:image/jpg;base64,"+picture.getData());
 			Image image = new Image(picture.getURI());
-			image.setWidth("100%");	
+			image.setWidth("100%");
 			Slide s = new Slide();
 			s.addStyleName(ressources.css().localPicture());			
 			s.getElement().setId(picture.getId());
-			s.add(image);		
-			content.add(s);						
+			s.add(image);
+			content.add(s);		
 		}		
 		displayPicturesNumber();			
+	}
+	
+	public static Orientation getOrientation() {
+		if (Window.getClientHeight() > Window.getClientWidth()) {
+			return Orientation.Portrait;
+		} else {
+			return Orientation.Landscape;
+		}
 	}
 
 	private void displayPicturesNumber() {
@@ -85,7 +109,7 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 	 * Invoke delete order. 
 	 */
 	private void deletePicture() {
-		Notification.confirm(msg.localPicture_deleteConfirmation(), new Notification.ConfirmCallback() {		
+		com.gwtmobile.phonegap.client.Notification.confirm(msg.localPicture_deleteConfirmation(), new com.gwtmobile.phonegap.client.Notification.ConfirmCallback() {		
 			public void onComplete(int selection) {
 				if (selection == 1) {					
 					int index = content.getCurrentSlideIndex();
@@ -131,7 +155,7 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 	
 	@Override
 	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractLocalPicturesPageEvent.TYPE, this);		
+		EventBus.getInstance().removeHandler(AbstractLocalPicturesPageEvent.TYPE, this);
 	}
 	
 	@Override
@@ -145,6 +169,7 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 	 */
 	@Override
 	public void onValueChange(ValueChangeEvent<Boolean> event) {
-		displayPicturesNumber();		
+		displayPicturesNumber();
+		pageResizeHandler.onResize(null);
 	}
 }
