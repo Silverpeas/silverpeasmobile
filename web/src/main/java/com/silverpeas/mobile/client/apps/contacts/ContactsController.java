@@ -5,9 +5,8 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AbstractContactsControllerEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsControllerEventHandler;
-import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadByLetterEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
-import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsByLetterLoadedEvent;
+import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
@@ -28,24 +27,12 @@ public class ContactsController implements Controller, ContactsControllerEventHa
 
 	@Override
 	public void loadContacts(ContactsLoadEvent event) {
-		ServicesLocator.serviceContact.getAllContact(new AsyncCallback<Void>() {
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-			}
-			public void onSuccess(Void result) {
-				
-			}
-		});
-	}
-
-	@Override
-	public void loadContactsByLetter(ContactsLoadByLetterEvent event) {
-		ServicesLocator.serviceContact.getContactsByLetter(event.getFiltre(), new AsyncCallback<List<DetailUserDTO>>(){
+		ServicesLocator.serviceContact.getAllContact(new AsyncCallback<List<DetailUserDTO>>() {
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 			}
 			public void onSuccess(List<DetailUserDTO> result) {
-				EventBus.getInstance().fireEvent(new ContactsByLetterLoadedEvent(result));
+				EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
 			}
 		});
 	}

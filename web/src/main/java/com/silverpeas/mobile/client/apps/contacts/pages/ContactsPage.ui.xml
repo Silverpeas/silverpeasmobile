@@ -1,39 +1,53 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
 	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
-	
-	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages'/>
-	
+
+	<ui:with field='msg'
+		type='com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages' />
+
 	<ui:style>
-		.flex > div {
+		.flex>div {
 			display: table;
 			width: 100%;
 		}
-		.flex > div > * {
+		
+		.flex>div>* {
 			vertical-align: middle;
 			display: table-cell;
 		}
-		.flex > div > *:first-child {
+		
+		.flex>div>*:first-child {
 			text-align: left;
 			padding-right: 1em;
 			width: 30%;
 		}
-		.flex > div > *:last-child {
-			width: 90%;
+		
+		.flex>div>*:last-child {
+			width: 80%;
+		}
+		
+		.ListPanel>div {
+			width: 1,5EM;
+			display : static;
+			margin-left: 0,5EM;
+			margin-right: 0,5EM
 		}
 	</ui:style>
-		
+
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
 		</m:HeaderPanel>
-		<m:ScrollPanel>
-			<m:ListPanel ui:field="listPanelContacts"></m:ListPanel>
-		</m:ScrollPanel>
-		<m:ListPanel ui:field="listPanelAlphabet">
-		</m:ListPanel>
-		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
+		<m:HorizontalPanel>
+			<m:ScrollPanel ui:field="scrollPanel">
+				<m:ListPanel ui:field="listPanelContacts"></m:ListPanel>
+			</m:ScrollPanel>
+			<m:ListPanel ui:field="listPanelAlphabet" styleName="{style.ListPanel}">
+			</m:ListPanel>
+		</m:HorizontalPanel>
+		<m:HeaderPanel>
+			<f:FooterBar />
+		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

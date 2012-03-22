@@ -9,6 +9,10 @@ import com.silverpeas.mobile.client.common.app.View;
 
 public class ContactDetail extends Page implements ContactDetailPagesEventHandler, View{
 
+	public ContactDetail(String id){
+		
+	}
+	
 	@Override
 	public void stop() {
 		EventBus.getInstance().removeHandler(AbstractContactsDetailPagesEvent.TYPE, this);

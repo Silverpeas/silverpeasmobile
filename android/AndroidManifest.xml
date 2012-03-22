@@ -52,6 +52,7 @@
             android:configChanges="orientation|keyboardHidden"> 
             <intent-filter> </intent-filter> 
         </activity>
+        <activity android:name=".NoConnectionPage"></activity>
     </application>
 
 </manifest>

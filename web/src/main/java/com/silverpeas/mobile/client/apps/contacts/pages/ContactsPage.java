@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.client.apps.contacts.pages;
 
+
 import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
@@ -12,10 +13,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
-import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadByLetterEvent;
+import com.gwtmobile.ui.client.widgets.ScrollPanel;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
-import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsByLetterLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -27,6 +27,9 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler, Vie
 	private static ContactsPageUiBinder uiBinder = GWT.create(ContactsPageUiBinder.class);
 	@UiField ListPanel listPanelContacts;
 	@UiField ListPanel listPanelAlphabet;
+	@UiField ScrollPanel scrollPanel;
+	private int tab[] = new int[26];
+	private String id;
 	Label A = new Label("A");
 	Label B = new Label("B");
 	Label C = new Label("C");
@@ -88,147 +91,190 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler, Vie
 		
 		A.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[a|A].*"));
+				if(tab[0]!=0){
+					scrollPanel.setScrollPosition(0);
+				}
 			}
 		});
 		B.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[b|B].*"));
+				if(tab[1]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(1));
+				}
 			}
 		});
 		C.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[c|C].*"));
+				if(tab[2]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(2));
+				}
 			}
 		});
 		D.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[d|D].*"));
+				if(tab[3]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(3));
+				}
 			}
 		});
 		E.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[e|E].*"));
+				if(tab[4]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(4));
+				}
 			}
 		});
 		F.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[f|F].*"));
+				if(tab[5]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(5));
+				}
 			}
 		});
 		G.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[g|G].*"));
+				if(tab[6]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(6));
+				}
 			}
 		});
 		H.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[h|H].*"));
+				if(tab[7]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(7));
+				}
 			}
 		});
 		I.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[i|I].*"));
+				if(tab[8]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(8));
+				}
 			}
 		});
 		J.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[j|J].*"));
+				if(tab[9]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(9));
+				}
 			}
 		});
 		K.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[k|K].*"));
+				if(tab[10]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(10));
+				}
 			}
 		});
 		L.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[l|L].*"));
+				if(tab[11]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(11));
+				}
 			}
 		});
 		M.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[m|M].*"));
+				if(tab[12]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(12));
+				}
 			}
 		});
 		N.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[n|N].*"));
+				if(tab[13]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(13));
+				}
 			}
 		});
 		O.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[o|O].*"));
+				if(tab[14]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(14));
+				}
 			}
 		});
 		P.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[p|P].*"));
+				if(tab[15]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(15));
+				}
 			}
 		});
 		Q.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[q|Q].*"));
+				if(tab[16]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(16));
+				}
 			}
 		});
 		R.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[r|R].*"));
+				if(tab[17]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(17));
+				}
 			}
 		});
 		S.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[s|S].*"));
+				if(tab[18]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(18));
+				}
 			}
 		});
 		T.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[t|T].*"));
+				if(tab[19]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(19));
+				}
 			}
 		});
 		U.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[u|U].*"));
+				if(tab[20]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(20));
+				}
 			}
 		});
 		V.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[v|V].*"));
+				if(tab[21]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(21));
+				}
 			}
 		});
 		W.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[w|W].*"));
+				if(tab[22]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(22));
+				}
 			}
 		});
 		X.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[x|X].*"));
+				if(tab[23]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(23));
+				}
 			}
 		});
 		Y.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[y|Y].*"));
+				if(tab[24]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(24));
+				}
 			}
 		});
 		Z.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[z|Z].*"));
+				if(tab[25]!=0){
+					scrollPanel.setScrollPosition(getIndexOfItem(25));
+				}
 			}
 		});
 		
 		EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
 		EventBus.getInstance().fireEvent(new ContactsLoadEvent());
 	}
-
-	//Résolution de l'écran
-	private native int getScreenWidth()/*-{
-		return screen.width;
-	}-*/;
-	
-	private native int getScreenHeight()/*-{
-		return screen.height;
-	}-*/;
 
 	@Override
 	public void stop() {
@@ -237,23 +283,113 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler, Vie
 
 	@Override
 	public void onContactsLoaded(ContactsLoadedEvent event) {
-
-	}
-
-	@Override
-	public void onContactsByLetterLoaded(ContactsByLetterLoadedEvent event) {
-		Iterator<DetailUserDTO> i = event.getDetailUserDTO().iterator();
+		Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
+		for(int k=0;k<26;k++){
+			tab[k]=0;
+		}
 		while(i.hasNext()){
 			DetailUserDTO dudto = i.next();
 			ListItem contact = new ListItem();
-			Label labelContact = new Label(dudto.getLastName());
+			String contactName = dudto.getLastName();
+			id = dudto.getId();
+			Label labelContact = new Label(contactName);
+			String lettre = (String) contactName.subSequence(0, 1);
 			contact.add(labelContact);
 			listPanelContacts.add(contact);
+			if(lettre.equals("A")||lettre.equals("a")){
+				tab[0]++;
+			}
+			if(lettre.equals("B")||lettre.equals("b")){
+				tab[1]++;
+			}
+			if(lettre.equals("C")||lettre.equals("c")){
+				tab[2]++;
+			}
+			if(lettre.equals("D")||lettre.equals("d")){
+				tab[3]++;
+			}
+			if(lettre.equals("E")||lettre.equals("e")){
+				tab[4]++;
+			}
+			if(lettre.equals("F")||lettre.equals("f")){
+				tab[5]++;
+			}
+			if(lettre.equals("G")||lettre.equals("g")){
+				tab[6]++;
+			}
+			if(lettre.equals("H")||lettre.equals("h")){
+				tab[7]++;
+			}
+			if(lettre.equals("I")||lettre.equals("i")){
+				tab[8]++;
+			}
+			if(lettre.equals("J")||lettre.equals("j")){
+				tab[9]++;
+			}
+			if(lettre.equals("K")||lettre.equals("k")){
+				tab[10]++;
+			}
+			if(lettre.equals("L")||lettre.equals("l")){
+				tab[11]++;
+			}
+			if(lettre.equals("M")||lettre.equals("m")){
+				tab[12]++;
+			}
+			if(lettre.equals("N")||lettre.equals("n")){
+				tab[13]++;
+			}
+			if(lettre.equals("O")||lettre.equals("o")){
+				tab[14]++;
+			}
+			if(lettre.equals("P")||lettre.equals("p")){
+				tab[15]++;
+			}
+			if(lettre.equals("Q")||lettre.equals("q")){
+				tab[16]++;
+			}
+			if(lettre.equals("R")||lettre.equals("r")){
+				tab[17]++;
+			}
+			if(lettre.equals("S")||lettre.equals("s")){
+				tab[18]++;
+			}
+			if(lettre.equals("T")||lettre.equals("t")){
+				tab[19]++;
+			}
+			if(lettre.equals("U")||lettre.equals("u")){
+				tab[20]++;
+			}
+			if(lettre.equals("V")||lettre.equals("v")){
+				tab[21]++;
+			}
+			if(lettre.equals("W")||lettre.equals("w")){
+				tab[22]++;
+			}
+			if(lettre.equals("X")||lettre.equals("x")){
+				tab[23]++;
+			}
+			if(lettre.equals("Y")||lettre.equals("y")){
+				tab[24]++;
+			}
+			if(lettre.equals("Z")||lettre.equals("z")){
+				tab[25]++;
+			}
 			labelContact.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					EventBus.getInstance().fireEvent(new ContactsLoadByLetterEvent("^[x|X].*"));
+					ContactDetail contactDetail = new ContactDetail(id);
+					goTo(contactDetail);
 				}
 			});
 		}
+	}
+	
+	public int getIndexOfItem(int placeTab){
+		int index = 0;
+		if(placeTab!=0){
+			for(int i = 0;i < placeTab; i++ ){
+				index = index + tab[i];
+			}
+		}
+		return index;
 	}
 }

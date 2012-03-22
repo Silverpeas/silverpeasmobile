@@ -4,5 +4,4 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ContactsControllerEventHandler extends EventHandler{
 	void loadContacts(ContactsLoadEvent event);
-	void loadContactsByLetter(ContactsLoadByLetterEvent event);
 }
