@@ -17,7 +17,7 @@
 	<properties>
 		<gwtVersion>2.4.0</gwtVersion>
 		<gwtMojoPluginVersion>2.4.0</gwtMojoPluginVersion>
-		<silverpeasVersion>5.7.2</silverpeasVersion>
+		<silverpeasVersion>5.8.1</silverpeasVersion>
 	</properties>
 	
 	<repositories>
@@ -197,7 +197,7 @@
 		<dependency>
 			<groupId>com.silverpeas</groupId>
 			<artifactId>taglibs</artifactId>
-			<version>5.8-SNAPSHOT</version>
+			<version>5.8</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>spring-context</artifactId>
