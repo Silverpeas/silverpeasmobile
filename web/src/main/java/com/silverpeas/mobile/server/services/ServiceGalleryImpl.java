@@ -185,6 +185,25 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		return results;
 	}
 	
+	
+	//TODO return pictures
+	public void getAllPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		try {			
+			Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
+			for (AlbumDetail albumDetail : albums) {
+				if (albumDetail.getId() == Integer.parseInt(albumId)) {
+					Collection<PhotoDetail> photos = getGalleryBm().getAllPhoto(albumDetail.getNodePK(), true);
+					
+					
+					return;
+				}				
+			}
+		} catch (Exception e) {
+			LOGGER.error("getAllPictures", e);
+		}
+	}
+	
 	private AdminBm getAdminBm() throws Exception {
 		if (adminBm == null) {
 			adminBm = (AdminBm) EJBDynaProxy.createProxy(JNDINames.ADMINBM_EJBHOME, AdminBm.class);
