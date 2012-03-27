@@ -369,7 +369,6 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	@Override
 	public void takePicture(TakePictureEvent takePictureEvent) {
 		Camera.Options options = new Camera.Options();
-		options.quality(50);
 		options.sourceType(SourceType.CAMERA);
 		options.destinationType(DestinationType.FILE_URI);
 		
