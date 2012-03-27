@@ -27,19 +27,27 @@
 			width: 80%;
 		}
 		
-		.ListPanel>div {
-			width: 1,5EM;
-			display : static;
-			margin-left: 0,5EM;
-			margin-right: 0,5EM
+		.ListPanel {
+			padding-left: 0.5em;
+			padding-right: 0.5em;
+			padding-top: 0.5em;
+			position: relative;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-box-align: start;
 		}
+		.horizontalPanel {
+			display: -webkit-box;
+			-webkit-box-align: start;
+			-webkit-box-orient: horizontal;
+		}	
 	</ui:style>
 
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
 		</m:HeaderPanel>
-		<m:HorizontalPanel>
+		<m:HorizontalPanel styleName="{style.horizontalPanel}">
 			<m:ScrollPanel ui:field="scrollPanel">
 				<m:ListPanel ui:field="listPanelContacts"></m:ListPanel>
 			</m:ScrollPanel>
