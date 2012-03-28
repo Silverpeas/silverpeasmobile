@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.shared.dto;
+package com.silverpeas.mobile.shared.dto.gallery;
 
 import java.io.Serializable;
 

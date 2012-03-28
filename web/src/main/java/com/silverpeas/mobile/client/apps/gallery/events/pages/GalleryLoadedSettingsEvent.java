@@ -3,7 +3,7 @@ package com.silverpeas.mobile.client.apps.gallery.events.pages;
 import java.util.List;
 
 import com.silverpeas.mobile.client.apps.gallery.persistances.GallerySettings;
-import com.silverpeas.mobile.shared.dto.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
 
 public class GalleryLoadedSettingsEvent extends AbstractGalleryPagesEvent {
 

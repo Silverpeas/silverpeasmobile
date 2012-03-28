@@ -34,6 +34,7 @@ import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryContro
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.RemotePicturesLoadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.SyncPicturesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.TakePictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryEndUploadEvent;
@@ -55,7 +56,8 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.phonegap.FileManagerAddOn;
-import com.silverpeas.mobile.shared.dto.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class GalleryController implements Controller, GalleryControllerEventHandler, NavigationEventHandler {
@@ -91,7 +93,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 						EventBus.getInstance().fireEvent(new GalleryLoadedSettingsEvent(settings, albums));
 					}			
 				});
-				//TODO : gestion suppression instance ou album
+				//TODO :type filter text gestion suppression instance ou album
 			}
 		});		
 	}
@@ -350,7 +352,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 			@Override
 			public void onSuccess(final Integer count) {
 				EventBus.getInstance().fireEvent(new GalleryStartingUploadEvent(count));
-				if (count > 0) {				
+				if (count > 0) {
 					localsPicturesList.list(new CollectionCallback<Picture>() {
 						@Override
 						public void onSuccess(Picture[] results) {
@@ -395,5 +397,24 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));	
 			}
 		}, options);
+	}
+
+	/**
+	 * Load remote album pictures.
+	 */
+	@Override
+	public void loadRemotePictures(RemotePicturesLoadEvent event) {		
+		ServicesLocator.serviceGallery.getAllPictures(event.getGalleryId(), event.getAlbumId(), new AsyncCallback<List<PhotoDTO>>() {			
+			@Override
+			public void onSuccess(List<PhotoDTO> result) {
+				// TODO Auto-generated method stub
+				Notification.alert(result.get(0).getPermalink(), null, "debug", "ok");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
+			}
+		});		
 	}
 }

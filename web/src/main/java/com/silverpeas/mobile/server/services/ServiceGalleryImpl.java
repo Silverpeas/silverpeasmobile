@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -28,7 +29,8 @@ import com.silverpeas.gallery.model.AlbumDetail;
 import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
-import com.silverpeas.mobile.shared.dto.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.GalleryException;
@@ -163,7 +165,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	}
 	
 	/**
-	 * Retourne la liste des albums d'une gallerie.
+	 * Retourne la liste des albums d'une galerie.
 	 */
 	public List<AlbumDTO> getAllAlbums(String instanceId) throws GalleryException, AuthenticationException {
 		checkUserInSession();
@@ -186,22 +188,35 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	}
 	
 	
-	//TODO return pictures
-	public void getAllPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException {
+	/**
+	 * Returne les photos d'un album.
+	 */
+	public List<PhotoDTO> getAllPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException {
 		checkUserInSession();
+		
+		ArrayList<PhotoDTO> results = new ArrayList<PhotoDTO>();
 		try {			
 			Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
 			for (AlbumDetail albumDetail : albums) {
 				if (albumDetail.getId() == Integer.parseInt(albumId)) {
-					Collection<PhotoDetail> photos = getGalleryBm().getAllPhoto(albumDetail.getNodePK(), true);
-					
-					
-					return;
+					Collection<PhotoDetail> photos = getGalleryBm().getAllPhoto(albumDetail.getNodePK(), false);
+					Iterator<PhotoDetail> iPhotos = photos.iterator();
+					while (iPhotos.hasNext()) {
+						PhotoDetail photoDetail = (PhotoDetail) iPhotos.next();						
+						PhotoDTO photo = new PhotoDTO();
+						photo.setId(photoDetail.getId());
+						photo.setDownload(photoDetail.isDownload());
+						photo.setPermalink(photoDetail.getPermalink());
+						results.add(photo);
+					}					
+					return results;
 				}				
 			}
 		} catch (Exception e) {
 			LOGGER.error("getAllPictures", e);
 		}
+		
+		return results;
 	}
 	
 	private AdminBm getAdminBm() throws Exception {

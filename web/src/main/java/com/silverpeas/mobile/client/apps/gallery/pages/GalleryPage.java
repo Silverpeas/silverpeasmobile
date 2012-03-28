@@ -41,7 +41,7 @@ import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.shared.dto.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 /**
@@ -177,6 +177,9 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 	@UiHandler("remote")
 	void remotePictures(ClickEvent e) {
 		final GalleryRemoteBrowser remoteBrowser = new GalleryRemoteBrowser();
+		remoteBrowser.setGalleryId(currentInstance.getId());
+		remoteBrowser.setAlbumId(albums.getSelectedValue());
+		remoteBrowser.init();
 		goTo(remoteBrowser, Transition.SLIDE);
 	}
 

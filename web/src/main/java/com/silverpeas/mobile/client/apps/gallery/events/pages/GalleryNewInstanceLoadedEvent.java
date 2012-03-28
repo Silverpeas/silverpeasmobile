@@ -2,7 +2,7 @@ package com.silverpeas.mobile.client.apps.gallery.events.pages;
 
 import java.util.List;
 
-import com.silverpeas.mobile.shared.dto.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class GalleryNewInstanceLoadedEvent extends AbstractGalleryPagesEvent {
