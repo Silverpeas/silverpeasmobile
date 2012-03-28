@@ -3,57 +3,32 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
 	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
 
-	<ui:with field='msg'
-		type='com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages' />
+	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages' />
 
 	<ui:style>
-		.flex>div {
-			display: table;
-			width: 100%;
-		}
-		
-		.flex>div>* {
-			vertical-align: middle;
-			display: table-cell;
-		}
-		
-		.flex>div>*:first-child {
-			text-align: left;
-			padding-right: 1em;
-			width: 30%;
-		}
-		
-		.flex>div>*:last-child {
-			width: 80%;
-		}
 		
 		.ListPanel {
 			padding-left: 0.5em;
 			padding-right: 0.5em;
 			padding-top: 0.5em;
-			position: relative;
-			display: -webkit-box;
-			-webkit-box-orient: vertical;
-			-webkit-box-align: start;
+			position: fixed;
+			top: 3em;
+			right: 0em;
+			/*font-size: 0.9em;*/ 
+			direction: rtl;
+			font-family: monospace;
 		}
-		.horizontalPanel {
-			display: -webkit-box;
-			-webkit-box-align: start;
-			-webkit-box-orient: horizontal;
-		}	
+		
 	</ui:style>
 
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
-		</m:HeaderPanel>
-		<m:HorizontalPanel styleName="{style.horizontalPanel}">
+		</m:HeaderPanel>		
 			<m:ScrollPanel ui:field="scrollPanel">
-				<m:ListPanel ui:field="listPanelContacts"></m:ListPanel>
+				<m:ListPanel ui:field="listPanelContacts" ></m:ListPanel>				
 			</m:ScrollPanel>
-			<m:ListPanel ui:field="listPanelAlphabet" styleName="{style.ListPanel}">
-			</m:ListPanel>
-		</m:HorizontalPanel>
+			<m:ListPanel ui:field="listPanelAlphabet" styleName="{style.ListPanel}"></m:ListPanel>		
 		<m:HeaderPanel>
 			<f:FooterBar />
 		</m:HeaderPanel>
