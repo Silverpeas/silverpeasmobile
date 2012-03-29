@@ -7,9 +7,8 @@ public class PhotoDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private boolean download;
-	private String dataPhotoTiny;
-	private String dataPhotoPreview;
-	private String dataPhotoOriginal;
+	private String dataPhoto;
+	private String format;
 	private String title;
 	
 	public String getId() {
@@ -30,22 +29,16 @@ public class PhotoDTO implements Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getDataPhotoTiny() {
-		return dataPhotoTiny;
+	public String getDataPhoto() {
+		return dataPhoto;
 	}
-	public void setDataPhotoTiny(String dataPhotoTiny) {
-		this.dataPhotoTiny = dataPhotoTiny;
+	public void setDataPhoto(String dataPhoto) {
+		this.dataPhoto = dataPhoto;
 	}
-	public String getDataPhotoOriginal() {
-		return dataPhotoOriginal;
+	public String getFormat() {
+		return format;
 	}
-	public void setDataPhotoOriginal(String dataPhotoOriginal) {
-		this.dataPhotoOriginal = dataPhotoOriginal;
-	}
-	public String getDataPhotoPreview() {
-		return dataPhotoPreview;
-	}
-	public void setDataPhotoPreview(String dataPhotoPreview) {
-		this.dataPhotoPreview = dataPhotoPreview;
+	public void setFormat(String format) {
+		this.format = format;
 	}
 }

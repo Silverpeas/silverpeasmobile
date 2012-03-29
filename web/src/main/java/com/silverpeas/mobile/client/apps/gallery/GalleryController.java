@@ -34,6 +34,7 @@ import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryContro
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadRemotePreviewPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.RemotePicturesLoadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.SyncPicturesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.TakePictureEvent;
@@ -45,6 +46,7 @@ import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPictureUplo
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryStartingUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.local.DeletedLocalPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.RemotePictureLoadedEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.viewer.PictureViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.persistances.GallerySettings;
 import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
@@ -416,5 +418,27 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
 			}
 		});		
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public void loadRemotePreviewPicture(LoadRemotePreviewPictureEvent event) {
+		Notification.activityStart();
+		ServicesLocator.serviceGallery.getOriginalPicture(event.getGalleryId(), event.getPhotoId(), new AsyncCallback<PhotoDTO>() {
+			@Override
+			public void onSuccess(PhotoDTO result) {
+				EventBus.getInstance().fireEvent(new PictureViewLoadedEvent(result));
+				Notification.activityStop();
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+				Notification.activityStop();
+			}
+		});
+		
 	}
 }

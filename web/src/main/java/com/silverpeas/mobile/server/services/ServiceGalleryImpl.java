@@ -210,12 +210,8 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 					Collection<PhotoDetail> photos = getGalleryBm().getAllPhoto(albumDetail.getNodePK(), false);
 					Iterator<PhotoDetail> iPhotos = photos.iterator();
 					while (iPhotos.hasNext()) {
-						PhotoDetail photoDetail = (PhotoDetail) iPhotos.next();						
-						PhotoDTO photo = new PhotoDTO();
-						photo.setId(photoDetail.getId());
-						photo.setDownload(photoDetail.isDownload());						
-						photo.setDataPhotoTiny(getBase64ImageData(instanceId, photoDetail, PhotoSize.SMALL));
-						photo.setTitle(photoDetail.getTitle());						
+						PhotoDetail photoDetail = (PhotoDetail) iPhotos.next();					
+						PhotoDTO photo = getPicture(instanceId, photoDetail.getId(), PhotoSize.SMALL);				
 						results.add(photo);
 					}					
 					return results;
@@ -263,7 +259,8 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		picture = new PhotoDTO();
 		picture.setId(photoDetail.getId());
 		picture.setDownload(photoDetail.isDownload());						
-		picture.setDataPhotoOriginal(getBase64ImageData(instanceId, photoDetail, size));
+		picture.setDataPhoto(getBase64ImageData(instanceId, photoDetail, size));
+		picture.setFormat(size.name());
 		picture.setTitle(photoDetail.getTitle());
 		return picture;
 	}

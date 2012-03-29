@@ -10,4 +10,5 @@ public interface GalleryControllerEventHandler extends EventHandler {
 	void syncPictures(SyncPicturesEvent event);
 	void takePicture(TakePictureEvent event);
 	void loadRemotePictures(RemotePicturesLoadEvent event);
+	void loadRemotePreviewPicture(LoadRemotePreviewPictureEvent event);
 }

@@ -8,9 +8,9 @@
 			<g:Label horizontalAlignment="center" ui:field="title"></g:Label>				
 		</m:HeaderPanel>
 		
-		<g:HTMLPanel ui:field="content">
-		
-		</g:HTMLPanel>
+		<m:ScrollPanel ui:field="content">
+			
+		</m:ScrollPanel>
 		
 		<m:HeaderPanel>
 			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			

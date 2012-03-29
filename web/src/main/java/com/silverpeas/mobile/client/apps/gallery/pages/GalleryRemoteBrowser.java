@@ -66,7 +66,7 @@ public class GalleryRemoteBrowser extends Page implements View, RemotePicturesPa
 		} else {			
 			int index = 0;
 			for (PhotoDTO photo : photos) {								
-				Image photoW = new Image(photo.getDataPhotoTiny());
+				Image photoW = new Image(photo.getDataPhoto());
 				photoW.getElement().setId(photo.getId());
 				photoW.addClickHandler(new ClickHandler() {
 					@Override
