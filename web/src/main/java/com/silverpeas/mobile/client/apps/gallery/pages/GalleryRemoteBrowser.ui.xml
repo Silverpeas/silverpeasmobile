@@ -3,20 +3,17 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
 	
-	<ui:style>
-		.selection {
-			
-			-webkit-box-pack: center;
-		}
-	</ui:style>
+	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources'/>
 	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center">Remotes pictures</g:Label>				
 		</m:HeaderPanel>
 		
-		<m:SlidePanel height="100%" width="100%" ui:field="content" rotate="true">
-		</m:SlidePanel>
+		<m:ScrollPanel>
+			<m:ListPanel ui:field="content"></m:ListPanel>
+		</m:ScrollPanel>
+		
 		<m:HeaderPanel>
 			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			
 		</m:HeaderPanel>	

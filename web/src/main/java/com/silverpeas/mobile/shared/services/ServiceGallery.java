@@ -16,4 +16,6 @@ public interface ServiceGallery extends RemoteService {
 	public List<ApplicationInstanceDTO> getAllGalleries() throws GalleryException, AuthenticationException;
 	public List<AlbumDTO> getAllAlbums(String instanceId) throws GalleryException, AuthenticationException;
 	public List<PhotoDTO> getAllPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException;
+	public PhotoDTO getOriginalPicture(String instanceId, String pictureId) throws GalleryException, AuthenticationException;
+	public PhotoDTO getPreviewPicture(String instanceId, String pictureId) throws GalleryException, AuthenticationException;
 }

@@ -44,6 +44,7 @@ import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryNewInstance
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPictureUploadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryStartingUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.local.DeletedLocalPictureEvent;
+import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.RemotePictureLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.persistances.GallerySettings;
 import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
@@ -407,8 +408,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		ServicesLocator.serviceGallery.getAllPictures(event.getGalleryId(), event.getAlbumId(), new AsyncCallback<List<PhotoDTO>>() {			
 			@Override
 			public void onSuccess(List<PhotoDTO> result) {
-				// TODO Auto-generated method stub
-				Notification.alert(result.get(0).getPermalink(), null, "debug", "ok");
+				EventBus.getInstance().fireEvent(new RemotePictureLoadedEvent(result));
 			}
 			
 			@Override

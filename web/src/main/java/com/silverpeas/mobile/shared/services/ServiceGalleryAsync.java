@@ -17,4 +17,8 @@ public interface ServiceGalleryAsync {
 
 	void getAllPictures(String instanceId, String albumId, AsyncCallback<List<PhotoDTO>> callback);
 
+	void getOriginalPicture(String instanceId, String pictureId, AsyncCallback<PhotoDTO> callback);
+
+	void getPreviewPicture(String instanceId, String pictureId, AsyncCallback<PhotoDTO> callback);
+
 }

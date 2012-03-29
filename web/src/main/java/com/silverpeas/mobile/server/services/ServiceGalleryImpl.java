@@ -4,9 +4,13 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,6 +20,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
 import com.drew.imaging.ImageMetadataReader;
@@ -28,6 +33,7 @@ import com.silverpeas.gallery.control.ejb.GalleryBm;
 import com.silverpeas.gallery.model.AlbumDetail;
 import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
+import com.silverpeas.gallery.model.PhotoSize;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
 import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
@@ -39,7 +45,9 @@ import com.silverpeas.tags.util.EJBDynaProxy;
 import com.silverpeas.util.StringUtil;
 import com.stratelia.webactiv.beans.admin.ComponentInstLight;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
+import com.stratelia.webactiv.util.FileRepositoryManager;
 import com.stratelia.webactiv.util.JNDINames;
+import com.stratelia.webactiv.util.ResourceLocator;
 
 /**
  * Service de gestion des galleries d'images.
@@ -189,7 +197,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	
 	
 	/**
-	 * Returne les photos d'un album.
+	 * Retourne les photos miniatures d'un album.
 	 */
 	public List<PhotoDTO> getAllPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException {
 		checkUserInSession();
@@ -205,8 +213,9 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 						PhotoDetail photoDetail = (PhotoDetail) iPhotos.next();						
 						PhotoDTO photo = new PhotoDTO();
 						photo.setId(photoDetail.getId());
-						photo.setDownload(photoDetail.isDownload());
-						photo.setPermalink(photoDetail.getPermalink());
+						photo.setDownload(photoDetail.isDownload());						
+						photo.setDataPhotoTiny(getBase64ImageData(instanceId, photoDetail, PhotoSize.TINY));
+						photo.setTitle(photoDetail.getTitle());						
 						results.add(photo);
 					}					
 					return results;
@@ -215,8 +224,69 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		} catch (Exception e) {
 			LOGGER.error("getAllPictures", e);
 		}
-		
 		return results;
+	}
+	
+	/**
+	 * Retourne la photo originale.
+	 */
+	public PhotoDTO getOriginalPicture(String instanceId, String pictureId) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
+		PhotoDTO picture = null;
+		try {		
+			picture = getPicture(instanceId, pictureId, PhotoSize.ORIGINAL);	
+		} catch (Exception e) {
+			LOGGER.error("getOriginalPicture", e);
+		}
+		return picture;
+	}
+	
+	/**
+	 * Retourne la photo preview.
+	 */
+	public PhotoDTO getPreviewPicture(String instanceId, String pictureId) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
+		PhotoDTO picture = null;
+		try {		
+			picture = getPicture(instanceId, pictureId, PhotoSize.PREVIEW);
+		} catch (Exception e) {
+			LOGGER.error("getPreviewPicture", e);
+		}
+		return picture;
+	}	
+	
+	private PhotoDTO getPicture(String instanceId, String pictureId, PhotoSize size) throws RemoteException, Exception, FileNotFoundException, IOException {
+		PhotoDTO picture;
+		PhotoDetail photoDetail = getGalleryBm().getPhoto(new PhotoPK(pictureId));
+		picture = new PhotoDTO();
+		picture.setId(photoDetail.getId());
+		picture.setDownload(photoDetail.isDownload());						
+		picture.setDataPhotoOriginal(getBase64ImageData(instanceId, photoDetail, size));
+		picture.setTitle(photoDetail.getTitle());
+		return picture;
+	}
+
+	private String getBase64ImageData(String instanceId, PhotoDetail photoDetail, PhotoSize size) throws FileNotFoundException, IOException {
+		ResourceLocator gallerySettings = new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
+		String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getPhotoPK().getId();
+		String[] rep = {nomRep};
+		String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
+		File f;
+		if (size.equals(PhotoSize.ORIGINAL)) {
+			f = new File(path+ photoDetail.getImageName());
+		} else {
+			f = new File(path+ photoDetail.getPhotoPK().getId() + size.getPrefix());
+		}	
+		
+		FileInputStream is = new FileInputStream(f);
+		byte[] binaryData = new byte[(int) f.length()];
+		is.read(binaryData);
+		is.close();
+		String data = "data:" + photoDetail.getImageMimeType() + ";base64," + new String(Base64.encodeBase64(binaryData));
+		
+		return data;
 	}
 	
 	private AdminBm getAdminBm() throws Exception {
