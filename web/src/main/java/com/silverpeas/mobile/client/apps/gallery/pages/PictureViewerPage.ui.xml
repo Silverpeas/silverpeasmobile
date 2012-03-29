@@ -3,22 +3,14 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
 	
-	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources'/>
-	
-	<ui:style>
-		.photo td {
-			padding-top: 3em;
-		}
-	</ui:style>
-	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
-			<g:Label horizontalAlignment="center">Remotes pictures</g:Label>				
+			<g:Label horizontalAlignment="center" ui:field="title"></g:Label>				
 		</m:HeaderPanel>
 		
-		<m:ScrollPanel>
-			<g:FlexTable ui:field="content" width="100%" styleName="{style.photo}"></g:FlexTable>
-		</m:ScrollPanel>
+		<g:HTMLPanel ui:field="content">
+		
+		</g:HTMLPanel>
 		
 		<m:HeaderPanel>
 			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			

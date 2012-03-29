@@ -214,7 +214,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 						PhotoDTO photo = new PhotoDTO();
 						photo.setId(photoDetail.getId());
 						photo.setDownload(photoDetail.isDownload());						
-						photo.setDataPhotoTiny(getBase64ImageData(instanceId, photoDetail, PhotoSize.TINY));
+						photo.setDataPhotoTiny(getBase64ImageData(instanceId, photoDetail, PhotoSize.SMALL));
 						photo.setTitle(photoDetail.getTitle());						
 						results.add(photo);
 					}					
