@@ -26,6 +26,7 @@ import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.common.mobil.Orientation;
 
 /**
@@ -50,7 +51,7 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 		@Override
 		public void onResize(ResizeEvent event) {
 			Image img = (Image) content.getSlide(content.getCurrentSlideIndex()).iterator().next();
-			if (getOrientation().equals(Orientation.Landscape)) {
+			if (MobilUtils.getOrientation().equals(Orientation.Landscape)) {
 				img.setSize("auto", "100%");	
 			} else {
 				img.setSize("100%", "auto");
@@ -90,14 +91,6 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 			content.add(s);		
 		}		
 		displayPicturesNumber();			
-	}
-	
-	public static Orientation getOrientation() {
-		if (Window.getClientHeight() > Window.getClientWidth()) {
-			return Orientation.Portrait;
-		} else {
-			return Orientation.Landscape;
-		}
 	}
 
 	private void displayPicturesNumber() {

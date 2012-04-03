@@ -12,12 +12,17 @@ import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadRemotePre
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.viewer.AbstractPictureViewerPageEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.viewer.PictureViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.viewer.PicturesViewerPageEventHandler;
+import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
+import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 
 public class PictureViewerPage extends Page implements View, PicturesViewerPageEventHandler {
 
-	@UiField protected ScrollPanel content;
+	@UiField(provided = true) protected GalleryMessages msg = null;
+	@UiField(provided = true) protected GalleryResources ressources = null;
+	@UiField ScrollPanel container;
+	@UiField protected Image content;
 	@UiField protected Label title;
 	
 	private String photoId;
@@ -29,6 +34,9 @@ public class PictureViewerPage extends Page implements View, PicturesViewerPageE
 	}
 
 	public PictureViewerPage() {
+		ressources = GWT.create(GalleryResources.class);		
+		ressources.css().ensureInjected();
+		msg = GWT.create(GalleryMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractPictureViewerPageEvent.TYPE, this);
 	}
@@ -51,10 +59,9 @@ public class PictureViewerPage extends Page implements View, PicturesViewerPageE
 	}
 
 	@Override
-	public void onPictureLoaded(PictureViewLoadedEvent event) {
-		Image image = new Image(event.getPhoto().getDataPhoto());
-		content.add(image);
+	public void onPictureLoaded(PictureViewLoadedEvent event) {		
+		content.setUrl(event.getPhoto().getDataPhoto());
 		title.setText(event.getPhoto().getTitle());
-		image.getElement().setAttribute("style", "min-width:100%;max-width:100%;");
+		container.addStyleName(ressources.css().localPicture());
 	}
 }
