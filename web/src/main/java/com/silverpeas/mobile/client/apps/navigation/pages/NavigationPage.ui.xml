@@ -5,7 +5,7 @@
 	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back" ui:field="header">
-			<g:Label horizontalAlignment="center">Gallery apps browser</g:Label>
+			<g:Label horizontalAlignment="center" ui:field="title"></g:Label>
 		</m:HeaderPanel>
 		
 		<m:ScrollPanel>

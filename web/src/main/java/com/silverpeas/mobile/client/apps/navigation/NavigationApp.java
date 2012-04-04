@@ -12,7 +12,7 @@ import com.silverpeas.mobile.client.common.app.App;
 
 public class NavigationApp extends App implements NavigationEventHandler, com.silverpeas.mobile.client.apps.navigation.events.app.internal.NavigationEventHandler {
 
-	private String type;
+	private String type, title;
 	
 	public NavigationApp() {
 		super();
@@ -25,6 +25,7 @@ public class NavigationApp extends App implements NavigationEventHandler, com.si
 	public void start(Page lauchingPage) {
 		setController(new NavigationController(type));
 		NavigationPage mainPage = new NavigationPage();
+		mainPage.setTitle(title);
 		mainPage.setRootSpaceId(null);
 		setMainPage(mainPage);		
 		super.start(lauchingPage);
@@ -39,6 +40,10 @@ public class NavigationApp extends App implements NavigationEventHandler, com.si
 	
 	public void setTypeApp(String type) {
 		this.type = type;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@Override

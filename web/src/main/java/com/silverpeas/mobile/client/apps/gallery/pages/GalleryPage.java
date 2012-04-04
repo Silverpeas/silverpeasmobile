@@ -166,6 +166,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 		if (event.getSelection() == 0) {
 			NavigationApp app = new NavigationApp();
 			app.setTypeApp("gallery");
+			app.setTitle("Gallery app browser"); //TODO : i18n
 			app.start(this);
 		}
 	}

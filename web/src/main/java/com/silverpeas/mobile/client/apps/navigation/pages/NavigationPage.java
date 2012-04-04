@@ -36,18 +36,20 @@ public class NavigationPage extends Page implements NavigationPagesEventHandler,
 	private HashMap<String, SilverpeasObjectDTO> model = new HashMap<String, SilverpeasObjectDTO>();
 	
 	@UiField ListPanel listPanel;
+	@UiField Label title;
 
 	interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {
 	}
 
 	public NavigationPage() {
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(uiBinder.createAndBindUi(this));		
 		EventBus.getInstance().addHandler(AbstractNavigationPagesEvent.TYPE, this);
 		Notification.activityStart();
 	}
 
 	@Override
 	public void spacesAndAppsLoaded(SpacesAndAppsLoadedEvent event) {
+		title.setText(this.getTitle());
 		if (dataCached == false) {
 			List<SilverpeasObjectDTO> objectsList = event.getObjectsList();
 			for (SilverpeasObjectDTO silverpeasObjectDTO : objectsList) {

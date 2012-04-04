@@ -1,0 +1,10 @@
+@sprite .instances {
+	gwt-image: "instances";
+	border: none;
+}
+
+@sprite .topics {
+	gwt-image: "topics";
+	border: none;
+	margin-right: 0.5em;
+}

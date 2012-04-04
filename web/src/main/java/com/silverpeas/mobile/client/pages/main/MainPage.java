@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.dashboard.DashboardApp;
+import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.gallery.GalleryApp;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.common.app.App;
@@ -54,6 +55,12 @@ public class MainPage extends Page {
 	@UiHandler("gallery")
 	void gallery(ClickEvent e) {
 		App app = new GalleryApp();
+		app.start(this);
+	}
+	
+	@UiHandler("documents")
+	void documents(ClickEvent e) {
+		App app = new DocumentsApp();
 		app.start(this);
 	}
 	
