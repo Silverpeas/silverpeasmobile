@@ -36,12 +36,16 @@ public class Notification {
     public static void progressStart(String title, String message) {
     	if (MobilUtils.isPhoneGap()) {
     		com.gwtmobile.phonegap.client.Notification.progressStart(title, message);
+    	} else {
+    		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "progress");
     	}
     }
     
     public static void progressStop() {
     	if (MobilUtils.isPhoneGap()) {
     		com.gwtmobile.phonegap.client.Notification.progressStop();
+    	} else {
+    		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
     	}
     }
     
