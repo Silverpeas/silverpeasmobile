@@ -33,9 +33,9 @@ import com.silverpeas.mobile.client.common.mobil.Orientation;
  * Local pictures browser on device.
  * @author svuillet
  */
-public class PicturePage extends Page implements View, LocalPicturesPageEventHandler, ValueChangeHandler<Boolean> {
+public class LocalPictureViewerPage extends Page implements View, LocalPicturesPageEventHandler, ValueChangeHandler<Boolean> {
 
-	private static PicturePageUiBinder uiBinder = GWT.create(PicturePageUiBinder.class);
+	private static LocalPictureViewerPageUiBinder uiBinder = GWT.create(LocalPictureViewerPageUiBinder.class);
 	private static int nbPictures = 0;
 	private PageResizeHandler pageResizeHandler = new PageResizeHandler();
 	@UiField SlidePanel content;
@@ -44,7 +44,7 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 	@UiField(provided = true) protected GalleryMessages msg = null;
 	@UiField(provided = true) protected GalleryResources ressources = null;
 
-	interface PicturePageUiBinder extends UiBinder<Widget, PicturePage> {
+	interface LocalPictureViewerPageUiBinder extends UiBinder<Widget, LocalPictureViewerPage> {
 	}
 	
 	private class PageResizeHandler implements ResizeHandler {
@@ -62,7 +62,7 @@ public class PicturePage extends Page implements View, LocalPicturesPageEventHan
 	/**
 	 * Construct page.
 	 */
-	public PicturePage() {
+	public LocalPictureViewerPage() {
 		ressources = GWT.create(GalleryResources.class);		
 		ressources.css().ensureInjected();
 		msg = GWT.create(GalleryMessages.class);

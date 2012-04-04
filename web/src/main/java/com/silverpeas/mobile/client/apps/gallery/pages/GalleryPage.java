@@ -122,7 +122,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 		if (event.getPictures() == null) {
 			Notification.alert(msg.localPicture_empty(), null, globalMsg.infoTitle(), globalMsg.ok());
 		} else {
-			final PicturePage picturePage = new PicturePage();
+			final LocalPictureViewerPage picturePage = new LocalPictureViewerPage();
 			picturePage.setPictures(event.getPictures());
 			Notification.activityStop();
 			goTo(picturePage, Transition.SLIDE);
