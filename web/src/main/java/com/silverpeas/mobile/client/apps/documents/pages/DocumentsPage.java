@@ -9,32 +9,41 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.apps.documents.events.app.internal.DocumentsStopEvent;
+import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadSettingsEvent;
+import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsSaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.AbstractDocumentsPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.events.pages.NewInstanceLoadedEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.AbstractTopicsNavigationPagesEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicSelectedEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsLoadedEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsNavigationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 /**
  * Documents mobile application.
  * @author svuillet
  */
-public class DocumentsPage extends Page implements View, DocumentsPagesEventHandler {
+public class DocumentsPage extends Page implements View, DocumentsPagesEventHandler, TopicsNavigationPagesEventHandler {
 
 	private static DocumentsPageUiBinder uiBinder = GWT.create(DocumentsPageUiBinder.class);
 	@UiField(provided = true) protected DocumentsMessages msg = null;
 	@UiField(provided = true) protected ApplicationMessages globalMsg = null;
 	@UiField(provided = true) protected DocumentsResources ressources = null;
 	
-	@UiField Label instance;
+	@UiField Label instance, topic;
 	
-	private ApplicationInstanceDTO currentInstance;
+	private ApplicationInstanceDTO currentInstance = null;
+	private TopicDTO currentTopic = null;
 	
 	interface DocumentsPageUiBinder extends UiBinder<Widget, DocumentsPage> {
 	}
@@ -46,11 +55,16 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 		globalMsg = GWT.create(ApplicationMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractDocumentsPagesEvent.TYPE, this);
+		EventBus.getInstance().addHandler(AbstractTopicsNavigationPagesEvent.TYPE, this);
+		
+		// load previous instance and topic selection
+		EventBus.getInstance().fireEvent(new DocumentsLoadSettingsEvent());
 	}
 
 	@Override
 	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractDocumentsPagesEvent.TYPE, this);			
+		EventBus.getInstance().removeHandler(AbstractDocumentsPagesEvent.TYPE, this);
+		EventBus.getInstance().removeHandler(AbstractTopicsNavigationPagesEvent.TYPE, this);		
 	}
 	
 	@Override
@@ -65,24 +79,44 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 		if (event.getSelection() == 0) {
 			NavigationApp app = new NavigationApp();
 			app.setTypeApp("kmelia");
-			app.setTitle("ECM app browser"); // TODO : i18n
+			app.setTitle(msg.titleECMBrowser());
 			app.start(this);
 		} else if (event.getSelection() == 1) {
-			
+			TopicNavigationPage topicNav = new TopicNavigationPage();
+			topicNav.setTopicId(null);
+			goTo(topicNav);
 		}
 	}
 
 	@Override
 	public void onLoadedSettings(DocumentsLoadedSettingsEvent event) {
-		// TODO Auto-generated method stub
+		instance.setText(event.getSettings().getSelectedInstanceLabel());
+		topic.setText(event.getSettings().getSelectedTopicLabel());
+		//TODO : load current instance and topic
 		
+		//TODO : load topics and publication at root
 	}
 
 	@Override
 	public void onNewInstanceLoaded(NewInstanceLoadedEvent event) {
-		instance.setText(event.getInstance().getLabel());
-		
+		instance.setText(event.getInstance().getLabel());		
 		// store instance document
-		this.currentInstance = event.getInstance();
+		this.currentInstance = event.getInstance();		
+		// Send message to controller for save settings.
+		EventBus.getInstance().fireEvent(new DocumentsSaveSettingsEvent(currentInstance, currentTopic));	
+	}
+
+	@Override
+	public void onLoadedTopics(TopicsLoadedEvent event) { /* Nothing to do in this page */ }
+
+	@Override
+	public void onTopicSelected(TopicSelectedEvent event) {
+		currentTopic = event.getTopic();
+		topic.setText(currentTopic.getName());
+		
+		// Send message to controller for save settings.
+		EventBus.getInstance().fireEvent(new DocumentsSaveSettingsEvent(currentInstance, currentTopic));	
+		
+		//TODO : get publications
 	}
 }

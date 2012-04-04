@@ -9,4 +9,6 @@ public interface DocumentsSettings extends Persistable {
 	public void setSelectedInstanceId(String instanceId);
 	public String getSelectedInstanceLabel();
 	public void setSelectedInstanceLabel(String instanceLabel);
+	public String getSelectedTopicLabel();
+	public void setSelectedTopicLabel(String topicLabel);
 }

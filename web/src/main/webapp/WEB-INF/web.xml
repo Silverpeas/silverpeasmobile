@@ -33,6 +33,15 @@
   </servlet-mapping>
   
   <servlet>
+  	<servlet-name>serviceDocumentsImpl</servlet-name>
+  	<servlet-class>com.silverpeas.mobile.server.services.ServiceDocumentsImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>serviceDocumentsImpl</servlet-name>
+  	<url-pattern>/spmobil/Documents</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
   	<servlet-name>serviceConnectionImpl</servlet-name>
   	<servlet-class>com.silverpeas.mobile.server.services.ServiceConnectionImpl</servlet-class>
   </servlet>

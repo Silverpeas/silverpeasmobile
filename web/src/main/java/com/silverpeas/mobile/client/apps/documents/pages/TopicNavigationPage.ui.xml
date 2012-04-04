@@ -5,6 +5,10 @@
 	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon"
 	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
 	
+	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages'/>
+	<ui:with field='globalMsg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
+	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources'/>
+	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back" ui:field="header">
 			<g:Label horizontalAlignment="center" ui:field="title"></g:Label>

@@ -36,7 +36,11 @@
 				</m:HorizontalPanel>
 			</m:ListItem>
 		</m:ListPanel>		
-		
+		<m:ScrollPanel>
+			<m:ListPanel selectable="true" ui:field="pubs">
+				
+			</m:ListPanel>		
+		</m:ScrollPanel>
 		
 		<m:HeaderPanel>	<f:FooterBar/> </m:HeaderPanel>
 		

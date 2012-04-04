@@ -10,7 +10,7 @@ public interface DocumentsResources extends ClientBundle {
 	
 	@Source("instances.png")
 	ImageResource instances();
-	
+
 	@Source("topics.png")
 	ImageResource topics();
 }
