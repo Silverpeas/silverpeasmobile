@@ -23,7 +23,6 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -81,7 +80,7 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 			app.setTypeApp("kmelia");
 			app.setTitle(msg.titleECMBrowser());
 			app.start(this);
-		} else if (event.getSelection() == 1) {
+		} else if (event.getSelection() == 1 && currentInstance != null) {
 			TopicNavigationPage topicNav = new TopicNavigationPage();
 			topicNav.setTopicId(null);
 			goTo(topicNav);
@@ -103,7 +102,7 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 		// store instance document
 		this.currentInstance = event.getInstance();		
 		// Send message to controller for save settings.
-		EventBus.getInstance().fireEvent(new DocumentsSaveSettingsEvent(currentInstance, currentTopic));	
+		EventBus.getInstance().fireEvent(new DocumentsSaveSettingsEvent(currentInstance, currentTopic));		
 	}
 
 	@Override

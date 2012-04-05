@@ -82,7 +82,6 @@ public class NavigationPage extends Page implements NavigationPagesEventHandler,
 			goTo(subPage);
 		} else {			
 			EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)model.get(item.getElement().getId())));
-			Notification.activityStart();
 			// remove navigation pages from history
 			Page lastPage = null;
 			while (true) {
