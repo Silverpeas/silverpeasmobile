@@ -7,15 +7,16 @@ import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 
 import com.silverpeas.admin.ejb.AdminBm;
+import com.silverpeas.admin.ejb.AdminBmHome;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
-import com.silverpeas.tags.util.EJBDynaProxy;
 import com.stratelia.silverpeas.authentication.LoginPasswordAuthentication;
 import com.stratelia.webactiv.beans.admin.Domain;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
+import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
 
 /**
@@ -59,7 +60,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 		Domain[] allDomains = organizationController.getAllDomains();
 		ArrayList<DomainDTO> domains = new ArrayList<DomainDTO>();
 		Mapper mapper = new DozerBeanMapper();
-		for (int i = 0; i < allDomains.length; i++) {
+		for (int i = 0; i < allDomains.length; i++) {			
 			domains.add(mapper.map(allDomains[i], DomainDTO.class)); 
 		}
 		return domains;
@@ -74,8 +75,9 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 	}
 
 	private AdminBm getAdminBm() throws Exception {
-		if (adminBm == null) {
-			adminBm = (AdminBm) EJBDynaProxy.createProxy(JNDINames.ADMINBM_EJBHOME, AdminBm.class);
+		if (adminBm == null) {			 
+			AdminBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBmHome.class);
+			adminBm = home.create();
 		}
 		return adminBm;
 	}

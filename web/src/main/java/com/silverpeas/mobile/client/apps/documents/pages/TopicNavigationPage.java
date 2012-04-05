@@ -40,7 +40,7 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 	@UiField Label title;
 	
 	private boolean stopped = false;
-	private String rootTopicId;
+	private String rootTopicId, instanceId;
 	private List<TopicDTO> topicsList = null;
 	
 	private SelectionHandler selectionHandler = new SelectionHandler();
@@ -98,7 +98,11 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 	public void setTopicId(String rootTopicId) {
 		Notification.activityStart();
 		this.rootTopicId = rootTopicId;
-		EventBus.getInstance().fireEvent(new DocumentsLoadTopicsEvent(rootTopicId));
+		EventBus.getInstance().fireEvent(new DocumentsLoadTopicsEvent(instanceId, rootTopicId));
+	}
+	
+	public void setInstanceId(String instanceId) {
+		this.instanceId = instanceId;
 	}
 
 	@Override

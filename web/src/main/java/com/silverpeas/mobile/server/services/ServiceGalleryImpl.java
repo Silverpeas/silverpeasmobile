@@ -26,10 +26,12 @@ import org.apache.log4j.Logger;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifDirectory;
+import com.drew.metadata.exif.ExifIFD0Directory;
 import com.silverpeas.admin.ejb.AdminBm;
+import com.silverpeas.admin.ejb.AdminBmHome;
 import com.silverpeas.gallery.ImageHelper;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
+import com.silverpeas.gallery.control.ejb.GalleryBmHome;
 import com.silverpeas.gallery.model.AlbumDetail;
 import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
@@ -41,10 +43,10 @@ import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.GalleryException;
 import com.silverpeas.mobile.shared.services.ServiceGallery;
-import com.silverpeas.tags.util.EJBDynaProxy;
 import com.silverpeas.util.StringUtil;
 import com.stratelia.webactiv.beans.admin.ComponentInstLight;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
+import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.FileRepositoryManager;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.ResourceLocator;
@@ -76,9 +78,9 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 				
 		try {
 			// rotation de l'image si nécessaire
-			Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(dataDecoded)));
-			Directory directory = metadata.getDirectory(ExifDirectory.class);
-			int existingOrientation = directory.getInt(ExifDirectory.TAG_ORIENTATION);			
+			Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(dataDecoded)), true);
+			Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
+			int existingOrientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);			
 			InputStream in = new ByteArrayInputStream(dataDecoded);
 			BufferedImage bi = ImageIO.read(in);
 			BufferedImage bir = RotationSupport.adjustOrientation(bi, existingOrientation);
@@ -288,14 +290,16 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	
 	private AdminBm getAdminBm() throws Exception {
 		if (adminBm == null) {
-			adminBm = (AdminBm) EJBDynaProxy.createProxy(JNDINames.ADMINBM_EJBHOME, AdminBm.class);
+			AdminBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBmHome.class);
+			adminBm = home.create();
 		}
 		return adminBm;
 	}
 	
 	private GalleryBm getGalleryBm() throws Exception {
 		if (galleryBm == null) {
-			galleryBm = (GalleryBm) EJBDynaProxy.createProxy(JNDINames.GALLERYBM_EJBHOME, GalleryBm.class);
+			GalleryBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBmHome.class);
+			galleryBm = home.create(); 
 		}
 		return galleryBm;
 	}

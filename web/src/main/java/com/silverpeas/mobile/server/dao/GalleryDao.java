@@ -3,9 +3,10 @@ package com.silverpeas.mobile.server.dao;
 import java.rmi.RemoteException;
 
 import com.silverpeas.gallery.control.ejb.GalleryBm;
+import com.silverpeas.gallery.control.ejb.GalleryBmHome;
 import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
-import com.silverpeas.tags.util.EJBDynaProxy;
+import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
 
 public class GalleryDao {
@@ -16,7 +17,8 @@ public class GalleryDao {
 	{
 		if (galleryBm == null) {
 			try {
-				galleryBm = (GalleryBm)EJBDynaProxy.createProxy(JNDINames.GALLERYBM_EJBHOME , GalleryBm.class);
+				GalleryBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME , GalleryBmHome.class);
+				galleryBm = home.create();
 			}
 			catch (Exception e)	{
 				//TODO : fixer me!

@@ -1,9 +1,9 @@
 package com.silverpeas.mobile.client.apps.documents;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
@@ -23,7 +23,9 @@ import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInst
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
+import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
@@ -100,20 +102,24 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 		});
 	}
 
+	/**
+	 * Get subtopics.
+	 */
 	@Override
 	public void loadTopics(DocumentsLoadTopicsEvent event) {		
 		
-		//TODO : call remote service
-		List<TopicDTO> topics = new ArrayList<TopicDTO>();
 		
-		for (int i = 0; i < 5; i++) {
-			TopicDTO topic = new TopicDTO();
-			topic.setId("1");
-			topic.setName("test"+i);
-			topics.add(topic);
-		}				
-		
-		EventBus.getInstance().fireEvent(new TopicsLoadedEvent(topics));
-		
+		ServicesLocator.serviceDocuments.getTopics(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<TopicDTO>>() {
+			
+			@Override
+			public void onSuccess(List<TopicDTO> result) {
+				EventBus.getInstance().fireEvent(new TopicsLoadedEvent(result));				
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
+			}
+		});		
 	}
 }

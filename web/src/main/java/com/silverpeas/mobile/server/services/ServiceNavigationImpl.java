@@ -6,15 +6,16 @@ import java.util.Collections;
 import java.util.List;
 
 import com.silverpeas.admin.ejb.AdminBm;
+import com.silverpeas.admin.ejb.AdminBmHome;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
-import com.silverpeas.tags.util.EJBDynaProxy;
 import com.stratelia.webactiv.beans.admin.ComponentInstLight;
 import com.stratelia.webactiv.beans.admin.SpaceInstLight;
+import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
 
 /**
@@ -97,8 +98,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 	}
 	
 	private AdminBm getAdminBm() throws Exception {
-		if (adminBm == null) {
-			adminBm = (AdminBm) EJBDynaProxy.createProxy(JNDINames.ADMINBM_EJBHOME, AdminBm.class);
+		if (adminBm == null) {			 
+			AdminBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBmHome.class);
+			adminBm = home.create();
 		}
 		return adminBm;
 	}

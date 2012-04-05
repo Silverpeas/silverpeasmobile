@@ -75,7 +75,7 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 	}
 	
 	@UiHandler("place")
-	void browseAllAvailableGallerie(SelectionChangedEvent event) {
+	void browseAllAvailableECM(SelectionChangedEvent event) {
 		if (event.getSelection() == 0) {
 			NavigationApp app = new NavigationApp();
 			app.setTypeApp(Apps.kmelia.name());
@@ -84,6 +84,7 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 		} else if (event.getSelection() == 1 && currentInstance != null) {
 			TopicNavigationPage topicNav = new TopicNavigationPage();
 			topicNav.setTopicId(null);
+			topicNav.setInstanceId(currentInstance.getId());
 			goTo(topicNav);
 		}
 	}

@@ -17,7 +17,7 @@ import com.drew.imaging.jpeg.JpegSegmentReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
-import com.drew.metadata.exif.ExifDirectory;
+import com.drew.metadata.exif.ExifIFD0Directory;
 
 public class RotationSupport {
 	public static final int LEFT_ROTATED = 6;
@@ -90,10 +90,10 @@ public class RotationSupport {
 		}
 
 		try {
-			if (meta.containsDirectory(ExifDirectory.class)) {
-				Directory exif = meta.getDirectory(ExifDirectory.class);
+			if (meta.containsDirectory(ExifIFD0Directory.class)) {
+				Directory exif = meta.getDirectory(ExifIFD0Directory.class);
 				int existingOrientation = exif
-						.getInt(ExifDirectory.TAG_ORIENTATION);
+						.getInt(ExifIFD0Directory.TAG_ORIENTATION);
 
 				return adjustOrientation(bi, existingOrientation);
 			}
@@ -113,10 +113,10 @@ public class RotationSupport {
 
 	public static int getOrientation(Metadata meta) {
 		try {
-			if (meta.containsDirectory(ExifDirectory.class)) {
-				Directory exif = meta.getDirectory(ExifDirectory.class);
+			if (meta.containsDirectory(ExifIFD0Directory.class)) {
+				Directory exif = meta.getDirectory(ExifIFD0Directory.class);
 
-				return exif.getInt(ExifDirectory.TAG_ORIENTATION);
+				return exif.getInt(ExifIFD0Directory.TAG_ORIENTATION);
 			}
 		} catch (MetadataException ex) {
 		}
@@ -158,7 +158,7 @@ public class RotationSupport {
 					for (int i = 0; i < app1.getEntryCount(); i++) {
 						APP1Segment.Entry ifd = app1.getEntry(i);
 
-						if (ifd.getTagNr() == ExifDirectory.TAG_ORIENTATION) {
+						if (ifd.getTagNr() == ExifIFD0Directory.TAG_ORIENTATION) {
 							return ifd.getValue();
 						}
 					}
@@ -200,7 +200,7 @@ public class RotationSupport {
 					for (int i = 0; i < app1.getEntryCount(); i++) {
 						APP1Segment.Entry ifd = app1.getEntry(i);
 
-						if (ifd.getTagNr() == ExifDirectory.TAG_ORIENTATION) {
+						if (ifd.getTagNr() == ExifIFD0Directory.TAG_ORIENTATION) {
 
 							ifd.setValue(orientation);
 

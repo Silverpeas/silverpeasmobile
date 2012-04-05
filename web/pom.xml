@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.silverpeas</groupId>
 		<artifactId>parent</artifactId>
-		<version>20</version>
+		<version>21</version>
 	</parent>
 
 	<groupId>com.silverpeas.mobile</groupId>
@@ -194,17 +194,6 @@
 			<scope>provided</scope>
 		</dependency-->
 		
-		<dependency>
-			<groupId>com.silverpeas</groupId>
-			<artifactId>taglibs</artifactId>
-			<version>5.8</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring-context</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>net.sf.dozer</groupId>
 			<artifactId>dozer</artifactId>
