@@ -101,14 +101,23 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 	public void onNewInstanceLoaded(NewInstanceLoadedEvent event) {		
 		// store instance document
 		this.currentInstance = event.getInstance();
+		this.currentTopic = null;
 		displayPlace();
 		// Send message to controller for save settings.
 		EventBus.getInstance().fireEvent(new DocumentsSaveSettingsEvent(currentInstance, currentTopic));		
 	}
 	
 	private void displayPlace() {
-		instance.setText(currentInstance.getLabel());
-		topic.setText(currentTopic.getName());
+		if (currentInstance != null) {
+			instance.setText(currentInstance.getLabel());	
+		} else {
+			instance.setText("-");
+		}
+		if (currentTopic != null) {
+			topic.setText(currentTopic.getName());
+		} else {
+			topic.setText("-");
+		}		
 	}
 
 	@Override

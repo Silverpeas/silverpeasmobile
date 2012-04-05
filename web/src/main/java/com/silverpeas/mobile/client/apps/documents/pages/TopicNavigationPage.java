@@ -43,9 +43,25 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 	private String rootTopicId;
 	private List<TopicDTO> topicsList = null;
 	
+	private SelectionHandler selectionHandler = new SelectionHandler();
+	
 	private static TopicNavigationPageUiBinder uiBinder = GWT.create(TopicNavigationPageUiBinder.class);
 
 	interface TopicNavigationPageUiBinder extends UiBinder<Widget, TopicNavigationPage> {
+	}
+	
+	public class SelectionHandler implements ClickHandler {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			String id = ((Widget)event.getSource()).getElement().getId();
+			for (TopicDTO topic : topicsList) {
+				if (topic.getId().equals(id)) {
+					EventBus.getInstance().fireEvent(new TopicSelectedEvent(topic));		
+					break;
+				}
+			}		
+		}		
 	}
 
 	public TopicNavigationPage() {
@@ -90,23 +106,18 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 		
 		if (topicsList == null) {
 			topicsList = event.getTopics();
-			for (final TopicDTO topic : topicsList) {
+			for (TopicDTO topic : topicsList) {
 				// add to ihm list
 				ListItem item = new ListItem();
 				HorizontalPanel panel = new HorizontalPanel();
 				
 				Button view = new Button();
-				view.setText(msg.viewTopic());
+				view.setText(msg.viewTopic());			
+				view.getElement().setId(topic.getId());				
 				panel.add(view);
-				view.addClickHandler(new ClickHandler() {					
-					@Override
-					public void onClick(ClickEvent event) {
-						EventBus.getInstance().fireEvent(new TopicSelectedEvent(topic));					
-					}
-				});
+				view.addClickHandler(selectionHandler);
 				
-				Label la = new Label(topic.getName());
-				item.getElement().setId(topic.getId());
+				Label la = new Label(topic.getName());				
 			    panel.add(la);
 			    la.addStyleName(ressources.css().topicLabel());
 			    

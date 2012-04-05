@@ -11,6 +11,7 @@ public class DocumentsSaveSettingsEvent extends AbstractDocumentsControllerEvent
 	public DocumentsSaveSettingsEvent(ApplicationInstanceDTO instance, TopicDTO topic) {
 		super();
 		this.instance = instance;
+		this.topic = topic;
 	}
 
 	@Override
