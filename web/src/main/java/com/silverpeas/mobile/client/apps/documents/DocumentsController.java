@@ -17,6 +17,7 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsLoadedS
 import com.silverpeas.mobile.client.apps.documents.events.pages.NewInstanceLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.persistances.DocumentsSettings;
+import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
@@ -24,6 +25,7 @@ import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class DocumentsController implements Controller, DocumentsControllerEventHandler, NavigationEventHandler{
 
@@ -50,8 +52,17 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 		final Entity<DocumentsSettings> settingsEntity = GWT.create(DocumentsSettings.class);
 		final Collection<DocumentsSettings> settings = settingsEntity.all().limit(1);			
 		settings.one(new ScalarCallback<DocumentsSettings>() {
-			public void onSuccess(final DocumentsSettings settings) {				
-				EventBus.getInstance().fireEvent(new DocumentsLoadedSettingsEvent(settings));
+			public void onSuccess(final DocumentsSettings settings) {
+				ApplicationInstanceDTO instance = new ApplicationInstanceDTO();
+				instance.setId(settings.getSelectedInstanceId());
+				instance.setLabel(settings.getSelectedInstanceLabel());
+				instance.setType(Apps.kmelia.name());
+				
+				TopicDTO topic = new TopicDTO();
+				topic.setId(settings.getSelectedTopicId());
+				topic.setName(settings.getSelectedTopicLabel());
+								
+				EventBus.getInstance().fireEvent(new DocumentsLoadedSettingsEvent(instance, topic));
 			}
 		});		
 	}

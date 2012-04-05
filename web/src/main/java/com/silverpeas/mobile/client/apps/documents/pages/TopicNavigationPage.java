@@ -79,7 +79,7 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 		super.goBack(returnValue);
 	}
 	
-	public void setTopicId(String rootSpaceId) {
+	public void setTopicId(String rootTopicId) {
 		Notification.activityStart();
 		this.rootTopicId = rootTopicId;
 		EventBus.getInstance().fireEvent(new DocumentsLoadTopicsEvent(rootTopicId));
@@ -131,8 +131,8 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 					PageHistory.Instance.add(lastPage);
 					break;
 				}				
-			}			
-			goBack(null);
+			}
+			goBack(null);		
 		}		
 	}
 }

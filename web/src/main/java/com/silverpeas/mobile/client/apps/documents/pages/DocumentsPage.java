@@ -21,6 +21,7 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.Topic
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsNavigationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
+import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
@@ -77,7 +78,7 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 	void browseAllAvailableGallerie(SelectionChangedEvent event) {
 		if (event.getSelection() == 0) {
 			NavigationApp app = new NavigationApp();
-			app.setTypeApp("kmelia");
+			app.setTypeApp(Apps.kmelia.name());
 			app.setTitle(msg.titleECMBrowser());
 			app.start(this);
 		} else if (event.getSelection() == 1 && currentInstance != null) {
@@ -89,20 +90,25 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 
 	@Override
 	public void onLoadedSettings(DocumentsLoadedSettingsEvent event) {
-		instance.setText(event.getSettings().getSelectedInstanceLabel());
-		topic.setText(event.getSettings().getSelectedTopicLabel());
-		//TODO : load current instance and topic
+		currentInstance = event.getInstance();
+		currentTopic = event.getTopic();			
+		displayPlace();
 		
-		//TODO : load topics and publication at root
+		//TODO : load publications at root
 	}
 
 	@Override
-	public void onNewInstanceLoaded(NewInstanceLoadedEvent event) {
-		instance.setText(event.getInstance().getLabel());		
+	public void onNewInstanceLoaded(NewInstanceLoadedEvent event) {		
 		// store instance document
-		this.currentInstance = event.getInstance();		
+		this.currentInstance = event.getInstance();
+		displayPlace();
 		// Send message to controller for save settings.
 		EventBus.getInstance().fireEvent(new DocumentsSaveSettingsEvent(currentInstance, currentTopic));		
+	}
+	
+	private void displayPlace() {
+		instance.setText(currentInstance.getLabel());
+		topic.setText(currentTopic.getName());
 	}
 
 	@Override
@@ -111,11 +117,11 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 	@Override
 	public void onTopicSelected(TopicSelectedEvent event) {
 		currentTopic = event.getTopic();
-		topic.setText(currentTopic.getName());
+		displayPlace();
 		
 		// Send message to controller for save settings.
 		EventBus.getInstance().fireEvent(new DocumentsSaveSettingsEvent(currentInstance, currentTopic));	
 		
-		//TODO : get publications
+		//TODO : get topic publications
 	}
 }

@@ -9,6 +9,8 @@ import com.silverpeas.mobile.shared.services.ServiceContact;
 import com.silverpeas.mobile.shared.services.ServiceContactAsync;
 import com.silverpeas.mobile.shared.services.ServiceDashboard;
 import com.silverpeas.mobile.shared.services.ServiceDashboardAsync;
+import com.silverpeas.mobile.shared.services.ServiceDocuments;
+import com.silverpeas.mobile.shared.services.ServiceDocumentsAsync;
 import com.silverpeas.mobile.shared.services.ServiceGallery;
 import com.silverpeas.mobile.shared.services.ServiceGalleryAsync;
 import com.silverpeas.mobile.shared.services.ServiceRSE;
@@ -24,4 +26,5 @@ public class ServicesLocator {
 	public static ServiceDashboardAsync serviceDashboard = (ServiceDashboardAsync) GWT.create(ServiceDashboard.class);	
 	public static ServiceGalleryAsync serviceGallery = (ServiceGalleryAsync) GWT.create(ServiceGallery.class);
 	public static ServiceNavigationAsync serviceNavigation = (ServiceNavigationAsync) GWT.create(ServiceNavigation.class);
+	public static ServiceDocumentsAsync serviceDocuments = (ServiceDocumentsAsync) GWT.create(ServiceDocuments.class); 
 }

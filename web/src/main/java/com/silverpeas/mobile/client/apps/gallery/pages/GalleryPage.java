@@ -35,6 +35,7 @@ import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryPictureUplo
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryStartingUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
+import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -189,7 +190,7 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 		ApplicationInstanceDTO app = new ApplicationInstanceDTO();
 		app.setId(event.getSettings().getSelectedGalleryId());
 		app.setLabel(event.getSettings().getSelectedGalleryLabel());
-		app.setType("gallery");		
+		app.setType(Apps.gallery.name());		
 		displayPlace(event.getAlbums(), app, event.getSettings().getSelectedAlbumId());
 	}
 

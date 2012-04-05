@@ -1,14 +1,17 @@
 package com.silverpeas.mobile.client.apps.documents.events.pages;
 
-import com.silverpeas.mobile.client.apps.documents.persistances.DocumentsSettings;
+import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class DocumentsLoadedSettingsEvent extends AbstractDocumentsPagesEvent {
 
-	private DocumentsSettings settings;
+	private ApplicationInstanceDTO instance;
+	private TopicDTO topic;
 	
-	public DocumentsLoadedSettingsEvent(DocumentsSettings settings) {
+	public DocumentsLoadedSettingsEvent(ApplicationInstanceDTO instance, TopicDTO topic) {
 		super();
-		this.settings = settings;
+		this.instance = instance;
+		this.topic = topic;
 	}
 
 	@Override
@@ -16,7 +19,11 @@ public class DocumentsLoadedSettingsEvent extends AbstractDocumentsPagesEvent {
 		handler.onLoadedSettings(this);
 	}
 
-	public DocumentsSettings getSettings() {
-		return settings;
+	public ApplicationInstanceDTO getInstance() {
+		return instance;
 	}
+
+	public TopicDTO getTopic() {
+		return topic;
+	}	
 }
