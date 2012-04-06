@@ -8,13 +8,17 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
+import com.gwtmobile.ui.client.widgets.ListItem;
+import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.silverpeas.mobile.client.apps.documents.events.app.internal.DocumentsStopEvent;
+import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsSaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.AbstractDocumentsPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.events.pages.NewInstanceLoadedEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.PublicationsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.AbstractTopicsNavigationPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicSelectedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsLoadedEvent;
@@ -26,6 +30,7 @@ import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
@@ -41,6 +46,7 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 	@UiField(provided = true) protected DocumentsResources ressources = null;
 	
 	@UiField Label instance, topic;
+	@UiField ListPanel pubs;
 	
 	private ApplicationInstanceDTO currentInstance = null;
 	private TopicDTO currentTopic = null;
@@ -83,8 +89,8 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 			app.start(this);
 		} else if (event.getSelection() == 1 && currentInstance != null) {
 			TopicNavigationPage topicNav = new TopicNavigationPage();
-			topicNav.setTopicId(null);
 			topicNav.setInstanceId(currentInstance.getId());
+			topicNav.setTopicId(null);			
 			goTo(topicNav);
 		}
 	}
@@ -95,7 +101,8 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 		currentTopic = event.getTopic();			
 		displayPlace();
 		
-		//TODO : load publications at root
+		// Send message to controller for retreive publications at root.
+		EventBus.getInstance().fireEvent(new DocumentsLoadPublicationsEvent(currentInstance.getId(), currentTopic.getId()));
 	}
 
 	@Override
@@ -132,6 +139,18 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 		// Send message to controller for save settings.
 		EventBus.getInstance().fireEvent(new DocumentsSaveSettingsEvent(currentInstance, currentTopic));	
 		
-		//TODO : get topic publications
+		// Send message to controller for retreive publications.
+		EventBus.getInstance().fireEvent(new DocumentsLoadPublicationsEvent(currentInstance.getId(), currentTopic.getId()));
+	}
+
+	@Override
+	public void onLoadedPublications(PublicationsLoadedEvent event) {
+		
+		for (PublicationDTO pub : event.getPublications()) {
+			ListItem item = new ListItem();
+			Label label = new Label(pub.getName());
+			item.add(label);	
+			pubs.add(item);
+		}		
 	}
 }

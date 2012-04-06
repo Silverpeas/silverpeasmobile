@@ -10,11 +10,13 @@ import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
 import com.silverpeas.mobile.client.apps.documents.events.controller.AbstractDocumentsControllerEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsControllerEventHandler;
+import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadTopicsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsSaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.NewInstanceLoadedEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.PublicationsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.persistances.DocumentsSettings;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
@@ -26,6 +28,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
@@ -107,19 +110,33 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 	 */
 	@Override
 	public void loadTopics(DocumentsLoadTopicsEvent event) {		
-		
-		
-		ServicesLocator.serviceDocuments.getTopics(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<TopicDTO>>() {
-			
+		ServicesLocator.serviceDocuments.getTopics(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<TopicDTO>>() {			
 			@Override
 			public void onSuccess(List<TopicDTO> result) {
 				EventBus.getInstance().fireEvent(new TopicsLoadedEvent(result));				
-			}
-			
+			}			
 			@Override
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
 			}
 		});		
+	}
+
+	/**
+	 * Get publications.
+	 */
+	@Override
+	public void loadPublications(DocumentsLoadPublicationsEvent event) {
+		ServicesLocator.serviceDocuments.getPublications(event.getInstanceId(), event.getTopicId(), new AsyncCallback<List<PublicationDTO>>() {			
+			@Override
+			public void onSuccess(List<PublicationDTO> result) {
+				EventBus.getInstance().fireEvent(new PublicationsLoadedEvent(result));				
+			}			
+			@Override
+			public void onFailure(Throwable caught) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
+			}
+		});	
+		
 	}
 }

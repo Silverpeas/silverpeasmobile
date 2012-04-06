@@ -137,14 +137,21 @@
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.silverpeas.components.kmelia</groupId>
+			<artifactId>kmelia-ejb</artifactId>
+			<version>${silverpeasVersion}</version>
+			<classifier>client</classifier>
+			<scope>provided</scope>
+		</dependency>
 	
-		<!-- dependency>
+		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>publication</artifactId>
 			<version>${silverpeasVersion}</version>
 			<classifier>client</classifier>
 			<scope>provided</scope>
-		</dependency-->
+		</dependency>
 		<!--dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>formtemplate</artifactId>
@@ -158,13 +165,7 @@
 			<version>${silverpeasVersion}</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.silverpeas.components.kmelia</groupId>
-			<artifactId>kmelia-ejb</artifactId>
-			<version>${silverpeasVersion}</version>
-			<classifier>client</classifier>
-			<scope>provided</scope>
-		</dependency>
+		
 		<dependency>
 			<groupId>com.silverpeas.components.project-manager</groupId>
 			<artifactId>project-manager-ejb</artifactId>

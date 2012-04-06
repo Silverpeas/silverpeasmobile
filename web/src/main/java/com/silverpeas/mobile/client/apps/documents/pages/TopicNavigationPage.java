@@ -54,7 +54,7 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 
 		@Override
 		public void onClick(ClickEvent event) {
-			String id = ((Widget)event.getSource()).getElement().getId();
+			String id = ((Widget)event.getSource()).getElement().getParentElement().getId();
 			for (TopicDTO topic : topicsList) {
 				if (topic.getId().equals(id)) {
 					EventBus.getInstance().fireEvent(new TopicSelectedEvent(topic));		
@@ -77,6 +77,7 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 	void onSelectionChanged(SelectionChangedEvent event) {
 		ListItem item = listPanel.getItem(event.getSelection());
 		TopicNavigationPage topicNav = new TopicNavigationPage();
+		topicNav.setInstanceId(instanceId);
 		topicNav.setTopicId(item.getElement().getId());
 		goTo(topicNav);
 	}
@@ -112,12 +113,12 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 			topicsList = event.getTopics();
 			for (TopicDTO topic : topicsList) {
 				// add to ihm list
-				ListItem item = new ListItem();
+				ListItem item = new ListItem();				
 				HorizontalPanel panel = new HorizontalPanel();
+				panel.getElement().setId(topic.getId());
 				
 				Button view = new Button();
-				view.setText(msg.viewTopic());			
-				view.getElement().setId(topic.getId());				
+				view.setText(msg.viewTopic());								
 				panel.add(view);
 				view.addClickHandler(selectionHandler);
 				

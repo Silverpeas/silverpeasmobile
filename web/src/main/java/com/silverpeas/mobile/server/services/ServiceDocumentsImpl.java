@@ -10,12 +10,18 @@ import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
+import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
+import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBmHome;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.node.control.NodeBm;
 import com.stratelia.webactiv.util.node.control.NodeBmHome;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
+import com.stratelia.webactiv.util.publication.control.PublicationBm;
+import com.stratelia.webactiv.util.publication.control.PublicationBmHome;
+import com.stratelia.webactiv.util.publication.model.PublicationDetail;
+import com.stratelia.webactiv.util.publication.model.PublicationPK;
 
 /**
  * Service de gestion des GED.
@@ -25,8 +31,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
 	private final static Logger LOGGER = Logger.getLogger(ServiceDocumentsImpl.class);
 	private static final long serialVersionUID = 1L;
-	//private KmeliaBm kmeliaBm;
-	//private PublicationBm pubBm;
+	private KmeliaBm kmeliaBm;
+	private PublicationBm pubBm;
 	private NodeBm nodeBm;
 	
 	
@@ -53,37 +59,56 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			}			
 		} catch (Exception e) {
 			LOGGER.error("getTopics", e);
+			throw new DocumentsException(e.getMessage());
 		}
 		return topicsList;
 	}
 	
 	/**
-	 * 
+	 * Retourne les publications d'un topic (au niveau 1).
 	 */
 	@Override
 	public List<PublicationDTO> getPublications(String instanceId, String topicId) throws DocumentsException, AuthenticationException {
 		checkUserInSession();
+		ArrayList<PublicationDTO> pubs = new ArrayList<PublicationDTO>();
+	
+        try {
+        	NodePK nodePK = new NodePK(topicId, instanceId);
+        	PublicationPK pubPK = new PublicationPK("useless", instanceId);
+    		String status = "Valid";
+    		ArrayList<String> nodeIds = new ArrayList<String>();
+    		nodeIds.add(nodePK.getId());   		
+			List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIdsAndStatus(nodeIds, pubPK, "pubname", status);			
+			for (PublicationDetail publicationDetail : publications) {
+				PublicationDTO dto = new PublicationDTO();
+				dto.setId(publicationDetail.getId());
+				dto.setName(publicationDetail.getName());
+				pubs.add(dto);				
+			}
+			
+		} catch (Exception e) {
+			LOGGER.error("getPublications", e);
+			throw new DocumentsException(e.getMessage());
+		}
 		
-		
-		
-		// TODO Auto-generated method stub
-		return null;
+		return pubs;
 	}
 	
-	
-	/*private KmeliaBm getKmeliaBm() throws Exception {
+	private KmeliaBm getKmeliaBm() throws Exception {
 		if (kmeliaBm == null) {
-			kmeliaBm = (KmeliaBm) EJBUtilitaire.getEJBObjectRef(JNDINames.KMELIABM_EJBHOME, KmeliaBm.class);
+			KmeliaBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.KMELIABM_EJBHOME, KmeliaBmHome.class);
+			kmeliaBm  = home.create();		
 		}
 		return kmeliaBm;
 	}
 	
 	private PublicationBm getPubBm() throws Exception {
-		if (pubBm == null) {
-			pubBm = (PublicationBm) EJBUtilitaire.getEJBObjectRef(JNDINames.PUBLICATIONBM_EJBHOME, PublicationBm.class);
+		if (pubBm == null) {			 
+			PublicationBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.PUBLICATIONBM_EJBHOME, PublicationBmHome.class);
+			pubBm = home.create();
 		}
 		return pubBm;
-	}*/
+	}
 	
 	private NodeBm getNodeBm() throws Exception {
 		if (nodeBm == null) {

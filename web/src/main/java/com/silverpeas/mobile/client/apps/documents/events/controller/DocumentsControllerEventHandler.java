@@ -6,4 +6,5 @@ public interface DocumentsControllerEventHandler extends EventHandler {
 	void loadSettings(DocumentsLoadSettingsEvent event);
 	void saveSettings(DocumentsSaveSettingsEvent event);
 	void loadTopics(DocumentsLoadTopicsEvent event);
+	void loadPublications(DocumentsLoadPublicationsEvent event);
 }
