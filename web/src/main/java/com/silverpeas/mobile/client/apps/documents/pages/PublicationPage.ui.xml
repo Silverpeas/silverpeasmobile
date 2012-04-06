@@ -1,0 +1,40 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon"
+	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
+	
+	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages'/>
+	<ui:with field='globalMsg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
+	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources'/>
+
+	<g:HTMLPanel>
+		<m:HeaderPanel leftButton="Back" ui:field="header">
+			<g:Label horizontalAlignment="center" ui:field="title"></g:Label>			
+		</m:HeaderPanel>		
+		<m:ScrollPanel>
+			<m:AccordionPanel>
+				<m:AccordionStack>
+					<m:AccordionHeader><g:Label>Entête</g:Label></m:AccordionHeader>
+					<m:AccordionContent>
+						<g:Label>Description</g:Label>
+						<g:Label>Auteur</g:Label>
+						<g:Label>Version</g:Label>
+						<g:Label>Vignette</g:Label>
+						<g:Label>Consultable</g:Label>
+						<g:Label>Classement</g:Label>
+					</m:AccordionContent>
+				</m:AccordionStack>
+				<m:AccordionStack ui:field="attachements">
+					<m:AccordionHeader><g:Label>Pièces jointes</g:Label></m:AccordionHeader>
+					<m:AccordionContent>
+						<g:Label>PJ</g:Label>						
+					</m:AccordionContent>
+				</m:AccordionStack>						
+			</m:AccordionPanel>
+		</m:ScrollPanel>	
+		<m:HeaderPanel>	<f:FooterBar/> </m:HeaderPanel>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

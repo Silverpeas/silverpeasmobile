@@ -10,6 +10,7 @@ import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
 import com.silverpeas.mobile.client.apps.documents.events.controller.AbstractDocumentsControllerEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsControllerEventHandler;
+import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadTopicsEvent;
@@ -18,6 +19,7 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsLoadedS
 import com.silverpeas.mobile.client.apps.documents.events.pages.NewInstanceLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.PublicationsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsLoadedEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.persistances.DocumentsSettings;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
@@ -138,5 +140,22 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 			}
 		});	
 		
+	}
+
+	/**
+	 * Get publication infos.
+	 */
+	@Override
+	public void loadPublication(DocumentsLoadPublicationEvent event) {
+		ServicesLocator.serviceDocuments.getPublication(event.getPubId(), new AsyncCallback<PublicationDTO>() {			
+			@Override
+			public void onSuccess(PublicationDTO result) {
+				EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result));				
+			}			
+			@Override
+			public void onFailure(Throwable caught) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
+			}
+		});			
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -14,6 +15,7 @@ import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBmHome;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
+import com.stratelia.webactiv.util.attachment.model.AttachmentDetail;
 import com.stratelia.webactiv.util.node.control.NodeBm;
 import com.stratelia.webactiv.util.node.control.NodeBmHome;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
@@ -116,5 +118,35 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			nodeBm = home.create(); 
 		}
 		return nodeBm;
+	}
+
+	@Override
+	public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException {
+		checkUserInSession();				
+		try {
+			PublicationDetail pub = getPubBm().getDetail(new PublicationPK(pubId));
+			PublicationDTO dto = new PublicationDTO();
+			dto.setId(pub.getId());
+			dto.setName(pub.getName());
+						
+			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
+			for (AttachmentDetail attachment : pub.getAttachments()) {
+				AttachmentDTO attach = new AttachmentDTO();
+				attach.setTitle(attachment.getTitle());
+				attach.setUrl(attachment.getAttachmentURL());
+				attach.setType(attachment.getType());
+				attachments.add(attach);
+				attach.setAuthor(attachment.getAuthor());
+				attach.setOrderNum(attachment.getOrderNum());
+				attach.setSize(attachment.getSize());
+				attach.setCreationDate(attachment.getCreationDate());
+			}
+			dto.setAttachments(attachments);		
+			
+			return dto;
+		} catch (Exception e) {
+			LOGGER.error("getPublication", e);
+			throw new DocumentsException(e.getMessage());
+		}	
 	}
 }

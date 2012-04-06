@@ -94,6 +94,14 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 			goTo(topicNav);
 		}
 	}
+	
+	@UiHandler("pubs")
+	void viewPublication(SelectionChangedEvent event) {
+		PublicationPage view = new PublicationPage();		
+		ListItem item = pubs.getItem(event.getSelection());		
+		view.setPublicationId(item.getElement().getId());
+		goTo(view);
+	}
 
 	@Override
 	public void onLoadedSettings(DocumentsLoadedSettingsEvent event) {
@@ -149,7 +157,8 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 		for (PublicationDTO pub : event.getPublications()) {
 			ListItem item = new ListItem();
 			Label label = new Label(pub.getName());
-			item.add(label);	
+			item.add(label);
+			item.getElement().setId(pub.getId());
 			pubs.add(item);
 		}		
 	}
