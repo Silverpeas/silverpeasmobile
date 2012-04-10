@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon"
+	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
+
+	<ui:with field='msg'
+		type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages' />
+	<ui:with field='globalMsg'
+		type='com.silverpeas.mobile.client.resources.ApplicationMessages' />
+	<ui:with field='ressources'
+		type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources' />
+
+
+<g:FocusPanel ui:field="item">
+
+	<m:HorizontalPanel>
+		<g:Label ui:field="icon"></g:Label>
+		<m:VerticalPanel>
+			<g:Label ui:field="title"></g:Label>
+			<m:HorizontalPanel>
+				<g:Label ui:field="size"></g:Label>
+				<g:InlineHTML>&nbsp;-&nbsp;</g:InlineHTML>
+				<g:Label ui:field="date"></g:Label>
+			</m:HorizontalPanel>
+		</m:VerticalPanel>
+	</m:HorizontalPanel>
+
+</g:FocusPanel>
+
+</ui:UiBinder> 

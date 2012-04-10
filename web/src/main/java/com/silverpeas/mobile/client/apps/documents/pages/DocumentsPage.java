@@ -153,7 +153,7 @@ public class DocumentsPage extends Page implements View, DocumentsPagesEventHand
 
 	@Override
 	public void onLoadedPublications(PublicationsLoadedEvent event) {
-		
+		pubs.clear();
 		for (PublicationDTO pub : event.getPublications()) {
 			ListItem item = new ListItem();
 			Label label = new Label(pub.getName());

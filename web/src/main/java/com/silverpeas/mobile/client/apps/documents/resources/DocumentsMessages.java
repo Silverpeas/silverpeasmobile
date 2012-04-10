@@ -7,4 +7,13 @@ public interface DocumentsMessages extends Messages {
 	String currentInstance();
 	String viewTopic();
 	String titleECMBrowser();
+	
+	
+	// Publication page
+	String header();
+	String attachments();
+	String description();
+	String version();
+	String author();
+	String downloadError();
 }

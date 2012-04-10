@@ -11,7 +11,9 @@ public class ErrorManager implements ErrorEventHandler {
 		if (event.getException() instanceof AuthenticationException) {
 			//TODO : afficher le bon message d'erreur
 			message = "Mot de passe incorrect";			
-		} 
+		} else {
+			message = event.getException().getMessage();
+		}	
 		
 		Notification.activityStop();
 		Notification.progressStop();

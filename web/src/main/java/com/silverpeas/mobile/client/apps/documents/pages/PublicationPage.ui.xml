@@ -16,21 +16,30 @@
 		<m:ScrollPanel>
 			<m:AccordionPanel>
 				<m:AccordionStack>
-					<m:AccordionHeader><g:Label>Entête</g:Label></m:AccordionHeader>
+					<m:AccordionHeader><g:Label text="{msg.header}"></g:Label></m:AccordionHeader>
 					<m:AccordionContent>
-						<g:Label>Description</g:Label>
-						<g:Label>Auteur</g:Label>
-						<g:Label>Version</g:Label>
-						<g:Label>Vignette</g:Label>
-						<g:Label>Consultable</g:Label>
-						<g:Label>Classement</g:Label>
+						<m:VerticalPanel>
+							<m:HorizontalPanel>
+								<g:Label text="{msg.description}"></g:Label>
+								<g:InlineHTML>&nbsp;</g:InlineHTML>
+								<g:Label ui:field="description"></g:Label>	
+							</m:HorizontalPanel>
+							<m:HorizontalPanel>
+								<g:Label text="{msg.author}"></g:Label>
+								<g:InlineHTML>&nbsp;</g:InlineHTML>
+								<g:Label ui:field="auteur"></g:Label>
+							</m:HorizontalPanel>
+							<m:HorizontalPanel>
+								<g:Label text="{msg.version}"></g:Label>
+								<g:InlineHTML>&nbsp;</g:InlineHTML>
+								<g:Label ui:field="version"></g:Label>
+							</m:HorizontalPanel>						
+						</m:VerticalPanel>				
 					</m:AccordionContent>
 				</m:AccordionStack>
-				<m:AccordionStack ui:field="attachements">
-					<m:AccordionHeader><g:Label>Pièces jointes</g:Label></m:AccordionHeader>
-					<m:AccordionContent>
-						<g:Label>PJ</g:Label>						
-					</m:AccordionContent>
+				<m:AccordionStack ui:field="attachementsStack">
+					<m:AccordionHeader><g:Label text="{msg.attachments}"></g:Label></m:AccordionHeader>
+					<m:AccordionContent ui:field="attachements"></m:AccordionContent>
 				</m:AccordionStack>						
 			</m:AccordionPanel>
 		</m:ScrollPanel>	

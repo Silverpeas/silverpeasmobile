@@ -6,4 +6,6 @@ public interface DocumentsCSS extends CssResource {
 	String instances();
 	String topics();
 	String topicLabel();
+	String msword();
+	String msexcel();
 }

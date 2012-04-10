@@ -12,3 +12,15 @@
 .topicLabel {
 	margin-left: 1em;
 }
+
+@sprite .msword {
+	gwt-image: "msword";
+	border: none;
+	margin-right: 1em;
+}
+
+@sprite .msexcel {
+	gwt-image: "msexcel";
+	border: none;
+	margin-right: 1em;
+}

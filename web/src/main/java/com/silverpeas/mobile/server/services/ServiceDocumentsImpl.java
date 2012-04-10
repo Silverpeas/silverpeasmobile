@@ -128,12 +128,15 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			PublicationDTO dto = new PublicationDTO();
 			dto.setId(pub.getId());
 			dto.setName(pub.getName());
+			dto.setAuteur(pub.getAuthor());
+			dto.setVersion(pub.getVersion());
+			dto.setDescription(pub.getDescription());
 						
 			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
 			for (AttachmentDetail attachment : pub.getAttachments()) {
 				AttachmentDTO attach = new AttachmentDTO();
 				attach.setTitle(attachment.getTitle());
-				attach.setUrl(attachment.getAttachmentURL());
+				attach.setUrl(attachment.getOnlineURL());
 				attach.setType(attachment.getType());
 				attachments.add(attach);
 				attach.setAuthor(attachment.getAuthor());

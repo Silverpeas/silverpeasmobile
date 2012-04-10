@@ -9,6 +9,9 @@ public class PublicationDTO implements Serializable, Comparable<PublicationDTO> 
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private String name;
+	private String description;
+	private String version;
+	private String auteur;
 	private ArrayList<AttachmentDTO> attachments = null;
 		
 	public String getId() {
@@ -32,5 +35,23 @@ public class PublicationDTO implements Serializable, Comparable<PublicationDTO> 
 	}
 	public void setAttachments(ArrayList<AttachmentDTO> attachments) {
 		this.attachments = attachments;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	public String getAuteur() {
+		return auteur;
+	}
+	public void setAuteur(String auteur) {
+		this.auteur = auteur;
 	}
 }
