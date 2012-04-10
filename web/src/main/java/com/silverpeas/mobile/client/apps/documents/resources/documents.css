@@ -24,3 +24,15 @@
 	border: none;
 	margin-right: 1em;
 }
+
+@sprite .pdf {
+	gwt-image: "pdf";
+	border: none;
+	margin-right: 1em;
+}
+
+@sprite .unknown {
+	gwt-image: "unknown";
+	border: none;
+	margin-right: 1em;
+}

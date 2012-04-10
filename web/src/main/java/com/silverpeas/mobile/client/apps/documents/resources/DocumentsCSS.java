@@ -8,4 +8,6 @@ public interface DocumentsCSS extends CssResource {
 	String topicLabel();
 	String msword();
 	String msexcel();
+	String pdf();
+	String unknown();
 }

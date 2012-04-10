@@ -134,8 +134,11 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 						
 			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
 			for (AttachmentDetail attachment : pub.getAttachments()) {
-				AttachmentDTO attach = new AttachmentDTO();
+				AttachmentDTO attach = new AttachmentDTO();						
 				attach.setTitle(attachment.getTitle());
+				if (attachment.getTitle().isEmpty()) {
+					attach.setTitle(attachment.getLogicalName());
+				}			
 				attach.setUrl(attachment.getOnlineURL());
 				attach.setType(attachment.getType());
 				attachments.add(attach);

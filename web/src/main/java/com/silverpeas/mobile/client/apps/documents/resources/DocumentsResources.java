@@ -17,6 +17,12 @@ public interface DocumentsResources extends ClientBundle {
 	@Source("msword.png")
 	ImageResource msword();
 	
-	@Source("msexcel.png")
+	@Source("msexcel.png")	
 	ImageResource msexcel();
+	
+	@Source("pdf.png")
+	ImageResource pdf();
+	
+	@Source("unknown.png")
+	ImageResource unknown();
 }

@@ -51,13 +51,22 @@ public class AttachmentWidget extends Composite {
 
 	private void render() {
 		DateTimeFormat fmt = DateTimeFormat.getFormat("dd MMMM yyyy");		
-		title.setText(attachement.getTitle());	
-		size.setText(attachement.getSize()/1024 + " Ko");
+		title.setText(attachement.getTitle());
+		
+		if (attachement.getSize() < 1024*1024) {
+			size.setText(attachement.getSize()/1024 + " Ko");	
+		} else {
+			size.setText(attachement.getSize()/(1024*1024) + " Mo");
+		}		
 		date.setText(fmt.format(attachement.getCreationDate()));		
 		if (attachement.getType().contains("msword")) {
 			icon.setStylePrimaryName(ressources.css().msword());
 		} else if (attachement.getType().contains("sheet")) {
 			icon.setStylePrimaryName(ressources.css().msexcel());
+		} else if (attachement.getType().contains("pdf")) {
+			icon.setStylePrimaryName(ressources.css().pdf());
+		} else {
+			icon.setStylePrimaryName(ressources.css().unknown());
 		}
 		
 	}
