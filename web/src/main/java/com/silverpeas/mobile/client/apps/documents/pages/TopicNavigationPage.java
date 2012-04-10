@@ -54,7 +54,7 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 
 		@Override
 		public void onClick(ClickEvent event) {
-			String id = ((Widget)event.getSource()).getElement().getParentElement().getId();
+			String id = ((Widget)event.getSource()).getElement().getParentElement().getId();		
 			for (TopicDTO topic : topicsList) {
 				if (topic.getId().equals(id)) {
 					EventBus.getInstance().fireEvent(new TopicSelectedEvent(topic));		
@@ -75,11 +75,13 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 	
 	@UiHandler("listPanel")
 	void onSelectionChanged(SelectionChangedEvent event) {
-		ListItem item = listPanel.getItem(event.getSelection());
-		TopicNavigationPage topicNav = new TopicNavigationPage();
-		topicNav.setInstanceId(instanceId);
-		topicNav.setTopicId(item.getElement().getId());
-		goTo(topicNav);
+		TopicDTO topic = topicsList.get(event.getSelection());
+		if (!topic.isTerminal()) {
+			TopicNavigationPage topicNav = new TopicNavigationPage();
+			topicNav.setInstanceId(instanceId);
+			topicNav.setTopicId(topic.getId());
+			goTo(topicNav);
+		}		
 	}
 
 	@Override
@@ -116,7 +118,6 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 				ListItem item = new ListItem();				
 				HorizontalPanel panel = new HorizontalPanel();
 				panel.getElement().setId(topic.getId());
-				
 				Button view = new Button();
 				view.setText(msg.viewTopic());								
 				panel.add(view);
@@ -127,7 +128,7 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 			    la.addStyleName(ressources.css().topicLabel());
 			    
 			    item.add(panel);
-			    item.setShowArrow(!topic.isTerminal());		    
+			    item.setShowArrow(!topic.isTerminal());			    
 				listPanel.add(item);
 			}
 			Notification.activityStop();

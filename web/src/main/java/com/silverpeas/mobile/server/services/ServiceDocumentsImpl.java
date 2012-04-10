@@ -47,17 +47,22 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 		List<TopicDTO> topicsList = new ArrayList<TopicDTO>();
 		
 		try {
-			if (rootTopicId == null) {
+			if (rootTopicId == null || rootTopicId.isEmpty()) {
 				rootTopicId = "0";			
 			}
 			NodePK pk = new NodePK(rootTopicId, instanceId);
 			NodeDetail rootNode = getNodeBm().getDetail(pk);			
 			ArrayList<NodeDetail> nodes = getNodeBm().getSubTreeByLevel(pk, rootNode.getLevel() + 1);
 			for (NodeDetail nodeDetail : nodes) {
-				TopicDTO topic = new TopicDTO();
-				topic.setId(String.valueOf(nodeDetail.getId()));
-				topic.setName(nodeDetail.getName());
-				topicsList.add(topic);
+				
+				if (rootTopicId.equals(nodeDetail.getFatherPK().getId())) {				
+					TopicDTO topic = new TopicDTO();
+					topic.setId(String.valueOf(nodeDetail.getId()));
+					topic.setName(nodeDetail.getName());				
+					int childrenNumber = getNodeBm().getChildrenNumber(new NodePK(String.valueOf(nodeDetail.getId()), instanceId));
+					topic.setTerminal(childrenNumber == 0);
+					topicsList.add(topic);
+				}
 			}			
 		} catch (Exception e) {
 			LOGGER.error("getTopics", e);
@@ -75,6 +80,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 		ArrayList<PublicationDTO> pubs = new ArrayList<PublicationDTO>();
 	
         try {
+        	if (topicId == null || topicId.isEmpty()) {
+        		topicId = "0";			
+			}
         	NodePK nodePK = new NodePK(topicId, instanceId);
         	PublicationPK pubPK = new PublicationPK("useless", instanceId);
     		String status = "Valid";
