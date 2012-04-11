@@ -42,6 +42,7 @@ public class AttachmentWidget extends Composite {
 	@UiHandler("item")
 	void download(ClickEvent event) {
 		Window.open(attachement.getUrl(), "_blank", "");
+		//TODO : use downloader phonegap plugin
 	}
 
 	public void setAttachment(AttachmentDTO attachmentDTO) {
