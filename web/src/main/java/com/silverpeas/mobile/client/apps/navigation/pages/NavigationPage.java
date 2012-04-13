@@ -1,3 +1,27 @@
+/**
+ * Copyright (C) 2000 - 2011 Silverpeas
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://www.silverpeas.com/legal/licensing"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.silverpeas.mobile.client.apps.navigation.pages;
 
 import java.util.HashMap;
@@ -29,95 +53,99 @@ import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class NavigationPage extends Page implements NavigationPagesEventHandler, View {
 
-	private static NavigationPageUiBinder uiBinder = GWT.create(NavigationPageUiBinder.class);
-	private String rootSpaceId;
-	private boolean dataCached = false;
-	private boolean stopped = false;
-	private HashMap<String, SilverpeasObjectDTO> model = new HashMap<String, SilverpeasObjectDTO>();
-	
-	@UiField ListPanel listPanel;
-	@UiField Label title;
+  private static NavigationPageUiBinder uiBinder = GWT.create(NavigationPageUiBinder.class);
+  private String rootSpaceId;
+  private boolean dataCached = false;
+  private boolean stopped = false;
+  private HashMap<String, SilverpeasObjectDTO> model = new HashMap<String, SilverpeasObjectDTO>();
 
-	interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {
-	}
+  @UiField
+  ListPanel listPanel;
+  @UiField
+  Label title;
 
-	public NavigationPage() {
-		initWidget(uiBinder.createAndBindUi(this));		
-		EventBus.getInstance().addHandler(AbstractNavigationPagesEvent.TYPE, this);
-		Notification.activityStart();
-	}
+  interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {
+  }
 
-	@Override
-	public void spacesAndAppsLoaded(SpacesAndAppsLoadedEvent event) {
-		title.setText(this.getTitle());
-		if (dataCached == false) {
-			List<SilverpeasObjectDTO> objectsList = event.getObjectsList();
-			for (SilverpeasObjectDTO silverpeasObjectDTO : objectsList) {
-				// add to model
-				model.put(silverpeasObjectDTO.getId(), silverpeasObjectDTO);
-				// add to ihm list
-				ListItem item = new ListItem();
-				Label la = new Label(silverpeasObjectDTO.getLabel());
-				item.getElement().setId(silverpeasObjectDTO.getId());
-			    item.add(la);				
-				if (silverpeasObjectDTO instanceof SpaceDTO) {
-					item.setShowArrow(true);
-					item.getElement().setAttribute("space", "true");
-				} else {
-					item.getElement().setAttribute("space", "false");
-				}				
-				listPanel.add(item);
-			}
-			dataCached = true;
-		}
-		Notification.activityStop();
-	}
+  public NavigationPage() {
+    initWidget(uiBinder.createAndBindUi(this));
+    EventBus.getInstance().addHandler(AbstractNavigationPagesEvent.TYPE, this);
+    Notification.activityStart();
+  }
 
-	@UiHandler("listPanel")
-	void onSelectionChanged(SelectionChangedEvent event) {
-		ListItem item = listPanel.getItem(event.getSelection());
-		if (item.getElement().getAttribute("space").equals("true")) {
-			NavigationPage subPage = new NavigationPage();
-			subPage.setRootSpaceId(item.getElement().getId());
-			goTo(subPage);
-		} else {			
-			EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)model.get(item.getElement().getId())));
-			// remove navigation pages from history
-			Page lastPage = null;
-			while (true) {
-				if (PageHistory.Instance.current() instanceof NavigationPage) {
-					lastPage = PageHistory.Instance.back();
-					((View) lastPage).stop();
-				} else {
-					PageHistory.Instance.add(lastPage);
-					break;
-				}		
-			}
-			// return to initial launching page
-			goBack(null);			
-		}		
-	}
-	
-	public void setRootSpaceId(String rootSpaceId) {
-		this.rootSpaceId = rootSpaceId;
-		EventBus.getInstance().fireEvent(new LoadSpacesAndAppsEvent(rootSpaceId));
-	}
-	
-	@Override
-	public void goBack(Object returnValue) {
-		stop();
-		if (rootSpaceId == null) {
-			// stop app if first page
-			EventBus.getInstance().fireEvent(new NavigationStopEvent());
-		}
-		super.goBack(returnValue);
-	}
+  @Override
+  public void spacesAndAppsLoaded(SpacesAndAppsLoadedEvent event) {
+    title.setText(this.getTitle());
+    if (dataCached == false) {
+      List<SilverpeasObjectDTO> objectsList = event.getObjectsList();
+      for (SilverpeasObjectDTO silverpeasObjectDTO : objectsList) {
+        // add to model
+        model.put(silverpeasObjectDTO.getId(), silverpeasObjectDTO);
+        // add to ihm list
+        ListItem item = new ListItem();
+        Label la = new Label(silverpeasObjectDTO.getLabel());
+        item.getElement().setId(silverpeasObjectDTO.getId());
+        item.add(la);
+        if (silverpeasObjectDTO instanceof SpaceDTO) {
+          item.setShowArrow(true);
+          item.getElement().setAttribute("space", "true");
+        } else {
+          item.getElement().setAttribute("space", "false");
+        }
+        listPanel.add(item);
+      }
+      dataCached = true;
+    }
+    Notification.activityStop();
+  }
 
-	@Override
-	public void stop() {
-		if (!stopped) {
-			EventBus.getInstance().removeHandler(AbstractNavigationPagesEvent.TYPE, this);
-			stopped = true;
-		}		
-	}
+  @UiHandler("listPanel")
+  void onSelectionChanged(SelectionChangedEvent event) {
+    ListItem item = listPanel.getItem(event.getSelection());
+    if (item.getElement().getAttribute("space").equals("true")) {
+      NavigationPage subPage = new NavigationPage();
+      subPage.setRootSpaceId(item.getElement().getId());
+      goTo(subPage);
+    } else {
+      EventBus.getInstance().fireEvent(
+          new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO) model.get(item
+              .getElement().getId())));
+      // remove navigation pages from history
+      Page lastPage = null;
+      while (true) {
+        if (PageHistory.Instance.current() instanceof NavigationPage) {
+          lastPage = PageHistory.Instance.back();
+          ((View) lastPage).stop();
+        } else {
+          PageHistory.Instance.add(lastPage);
+          break;
+        }
+      }
+      // return to initial launching page
+      goBack(null);
+    }
+  }
+
+  public void setRootSpaceId(String rootSpaceId) {
+    this.rootSpaceId = rootSpaceId;
+    EventBus.getInstance().fireEvent(new LoadSpacesAndAppsEvent(rootSpaceId));
+  }
+
+  @Override
+  public void goBack(Object returnValue) {
+    stop();
+    if (rootSpaceId == null) {
+      // stop app if first page
+      EventBus.getInstance().fireEvent(new NavigationStopEvent());
+    }
+    super.goBack(returnValue);
+  }
+
+  @Override
+  public void stop() {
+    if (!stopped) {
+      EventBus.getInstance().removeHandler(AbstractNavigationPagesEvent.TYPE, this);
+      stopped = true;
+    }
+  }
 }
