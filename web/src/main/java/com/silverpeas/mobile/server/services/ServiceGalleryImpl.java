@@ -1,27 +1,3 @@
-/**
- * Copyright (C) 2000 - 2011 Silverpeas
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * As a special exception to the terms and conditions of version 3.0 of
- * the GPL, you may redistribute this Program in connection with Free/Libre
- * Open Source Software ("FLOSS") applications as described in Silverpeas's
- * FLOSS exception.  You should have received a copy of the text describing
- * the FLOSS exception, and it is also available here:
- * "http://www.silverpeas.com/legal/licensing"
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.silverpeas.mobile.server.services;
 
 import java.awt.image.BufferedImage;
@@ -81,271 +57,250 @@ import com.stratelia.webactiv.util.ResourceLocator;
  */
 public class ServiceGalleryImpl extends AbstractAuthenticateService implements ServiceGallery {
 
-  private final static Logger LOGGER = Logger.getLogger(ServiceGalleryImpl.class);
-  private static final long serialVersionUID = 1L;
-  private AdminBm adminBm;
-  private GalleryBm galleryBm;
+	private final static Logger LOGGER = Logger.getLogger(ServiceGalleryImpl.class);
+	private static final long serialVersionUID = 1L;
+	private AdminBm adminBm;
+	private GalleryBm galleryBm;
+		
+	/**
+	 * Importation d'une image dans un album.
+	 */
+	public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
+		String extension = "jpg";
+		if (data.indexOf("data:image/jpeg;base64,") != -1) {
+			data = data.substring("data:image/jpeg;base64,".length());
+			extension = "jpg";		
+		}
+		
+		byte [] dataDecoded = org.apache.commons.codec.binary.Base64.decodeBase64(data.getBytes());
+				
+		try {
+			// rotation de l'image si nécessaire
+			Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(dataDecoded)), true);
+			Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
+			int existingOrientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);			
+			InputStream in = new ByteArrayInputStream(dataDecoded);
+			BufferedImage bi = ImageIO.read(in);
+			BufferedImage bir = RotationSupport.adjustOrientation(bi, existingOrientation);
+			
+			// stockage temporaire de la photo upload
+			String tempDir = System.getProperty("java.io.tmpdir");
+			String filename = tempDir + File.separator + name + "." + extension;
+			OutputStream outputStream = new FileOutputStream(filename);
+			
+			// TODO : When Silverpeas support extended exif metadata : preserve Exif metadata (rotate remove exif metadata)
+			
+			ImageIO.write(bir, extension, outputStream);	
+			outputStream.close();
+						
+			File file = new File(filename);
+			RotationSupport.setOrientation(RotationSupport.NOT_ROTATED, file);
+			
+			// récupération de la configuration de la gallery			
+			OrganizationController orga = new OrganizationController();
+		    boolean watermark = "yes".equalsIgnoreCase(orga.getComponentParameterValue(idGallery, "watermark"));
+		    boolean download = !"no".equalsIgnoreCase(orga.getComponentParameterValue(idGallery, "download"));
+		    String watermarkHD = orga.getComponentParameterValue(idGallery, "WatermarkHD");
+		    if(!StringUtil.isInteger(watermarkHD))  {
+		      watermarkHD = "";
+		    }
+		    String watermarkOther = orga.getComponentParameterValue(idGallery, "WatermarkOther");
+		     if(!StringUtil.isInteger(watermarkOther))  {
+		      watermarkOther = "";
+		    }			
+			
+		    // creation de la photo dans l'albums
+			createPhoto(name, getUserInSession().getId(), idGallery, idAlbum, file, watermark, watermarkHD, watermarkOther, download);
+			file.delete();
+			
+		} catch (Exception e) {
+			LOGGER.error("uploadPicture", e);
+		}	
+	}
+	
+	private String createPhoto(String name, String userId, String componentId,
+		      String albumId, File file, boolean watermark, String watermarkHD,
+		      String watermarkOther, boolean download)
+		      throws Exception {
 
-  /**
-   * Importation d'une image dans un album.
-   */
-  public void uploadPicture(String name, String data, String idGallery, String idAlbum)
-      throws GalleryException, AuthenticationException {
-    checkUserInSession();
+	    // création de la photo
+	    PhotoDetail newPhoto = new PhotoDetail(name, null, new Date(), null, null, null, download, false);
+	    newPhoto.setAlbumId(albumId);
+	    newPhoto.setCreatorId(userId);
+	    PhotoPK pk = new PhotoPK("unknown", componentId);
+	    newPhoto.setPhotoPK(pk);
 
-    String extension = "jpg";
-    if (data.indexOf("data:image/jpeg;base64,") != -1) {
-      data = data.substring("data:image/jpeg;base64,".length());
-      extension = "jpg";
-    }
+	    String photoId = getGalleryBm().createPhoto(newPhoto, albumId);
+	    newPhoto.getPhotoPK().setId(photoId);
 
-    byte[] dataDecoded = org.apache.commons.codec.binary.Base64.decodeBase64(data.getBytes());
+	    // Création de la preview et des vignettes sur disque
+	    ImageHelper.processImage(newPhoto, file, watermark, watermarkHD, watermarkOther);
+	    ImageHelper.setMetaData(newPhoto, "fr");		    
+	      
+	    // Modification de la photo pour mise à jour dimension
+	    getGalleryBm().updatePhoto(newPhoto);
+	    return photoId;
+	}
+	
+	
+	/**
+	 * Retourne la listes des galleries accessibles.
+	 */
+	public List<ApplicationInstanceDTO> getAllGalleries() throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
+		ArrayList<ApplicationInstanceDTO> results = new ArrayList<ApplicationInstanceDTO>();
+		try {
+			List<String> rootSpaceIds = getAdminBm().getAllRootSpaceIds();
+			for (String rootSpaceId : rootSpaceIds) {
+				List<String> componentIds = getAdminBm().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
+				for (String componentId : componentIds) {
+					ComponentInstLight instance = getAdminBm().getComponentInstLight(componentId);
+					if (instance.getName().equals("gallery")) {
+						ApplicationInstanceDTO i = new ApplicationInstanceDTO();
+						i.setId(instance.getId());
+						i.setLabel(instance.getLabel());
+						results.add(i);
+					}
+				}				
+			}			
+		} catch (Exception e) {
+			LOGGER.error("getAllGalleries", e);
+		}
+		
+		Collections.sort(results);		
+		return results;		
+	}
+	
+	/**
+	 * Retourne la liste des albums d'une galerie.
+	 */
+	public List<AlbumDTO> getAllAlbums(String instanceId) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
+		ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
+		try {			
+			Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
+			for (AlbumDetail albumDetail : albums) {
+				if (albumDetail.getLevel() != 1) {
+					AlbumDTO album = new AlbumDTO();
+					album.setId(String.valueOf(albumDetail.getId()));
+					album.setName(albumDetail.getName());				
+					results.add(album);
+				}				
+			}
+		} catch (Exception e) {
+			LOGGER.error("getAllAlbums", e);
+		}
+		return results;
+	}
+	
+	
+	/**
+	 * Retourne les photos miniatures d'un album.
+	 */
+	public List<PhotoDTO> getAllPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
+		ArrayList<PhotoDTO> results = new ArrayList<PhotoDTO>();
+		try {			
+			Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
+			for (AlbumDetail albumDetail : albums) {
+				if (albumDetail.getId() == Integer.parseInt(albumId)) {
+					Collection<PhotoDetail> photos = getGalleryBm().getAllPhoto(albumDetail.getNodePK(), false);
+					Iterator<PhotoDetail> iPhotos = photos.iterator();
+					while (iPhotos.hasNext()) {
+						PhotoDetail photoDetail = (PhotoDetail) iPhotos.next();					
+						PhotoDTO photo = getPicture(instanceId, photoDetail.getId(), PhotoSize.SMALL);				
+						results.add(photo);
+					}					
+					return results;
+				}				
+			}
+		} catch (Exception e) {
+			LOGGER.error("getAllPictures", e);
+		}
+		return results;
+	}
+	
+	/**
+	 * Retourne la photo originale.
+	 */
+	public PhotoDTO getOriginalPicture(String instanceId, String pictureId) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
+		PhotoDTO picture = null;
+		try {		
+			picture = getPicture(instanceId, pictureId, PhotoSize.ORIGINAL);	
+		} catch (Exception e) {
+			LOGGER.error("getOriginalPicture", e);
+		}
+		return picture;
+	}
+	
+	/**
+	 * Retourne la photo preview.
+	 */
+	public PhotoDTO getPreviewPicture(String instanceId, String pictureId) throws GalleryException, AuthenticationException {
+		checkUserInSession();
+		
+		PhotoDTO picture = null;
+		try {		
+			picture = getPicture(instanceId, pictureId, PhotoSize.PREVIEW);
+		} catch (Exception e) {
+			LOGGER.error("getPreviewPicture", e);
+		}
+		return picture;
+	}	
+	
+	private PhotoDTO getPicture(String instanceId, String pictureId, PhotoSize size) throws RemoteException, Exception, FileNotFoundException, IOException {
+		PhotoDTO picture;
+		PhotoDetail photoDetail = getGalleryBm().getPhoto(new PhotoPK(pictureId));
+		picture = new PhotoDTO();
+		picture.setId(photoDetail.getId());
+		picture.setDownload(photoDetail.isDownload());						
+		picture.setDataPhoto(getBase64ImageData(instanceId, photoDetail, size));
+		picture.setFormat(size.name());
+		picture.setTitle(photoDetail.getTitle());
+		return picture;
+	}
 
-    try {
-      // rotation de l'image si nécessaire
-      Metadata metadata =
-          ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(
-              dataDecoded)), true);
-      Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
-      int existingOrientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
-      InputStream in = new ByteArrayInputStream(dataDecoded);
-      BufferedImage bi = ImageIO.read(in);
-      BufferedImage bir = RotationSupport.adjustOrientation(bi, existingOrientation);
-
-      // stockage temporaire de la photo upload
-      String tempDir = System.getProperty("java.io.tmpdir");
-      String filename = tempDir + File.separator + name + "." + extension;
-      OutputStream outputStream = new FileOutputStream(filename);
-
-      // TODO : When Silverpeas support extended exif metadata : preserve Exif metadata (rotate
-      // remove exif metadata)
-
-      ImageIO.write(bir, extension, outputStream);
-      outputStream.close();
-
-      File file = new File(filename);
-      RotationSupport.setOrientation(RotationSupport.NOT_ROTATED, file);
-
-      // récupération de la configuration de la gallery
-      OrganizationController orga = new OrganizationController();
-      boolean watermark =
-          "yes".equalsIgnoreCase(orga.getComponentParameterValue(idGallery, "watermark"));
-      boolean download =
-          !"no".equalsIgnoreCase(orga.getComponentParameterValue(idGallery, "download"));
-      String watermarkHD = orga.getComponentParameterValue(idGallery, "WatermarkHD");
-      if (!StringUtil.isInteger(watermarkHD)) {
-        watermarkHD = "";
-      }
-      String watermarkOther = orga.getComponentParameterValue(idGallery, "WatermarkOther");
-      if (!StringUtil.isInteger(watermarkOther)) {
-        watermarkOther = "";
-      }
-
-      // creation de la photo dans l'albums
-      createPhoto(name, getUserInSession().getId(), idGallery, idAlbum, file, watermark,
-          watermarkHD, watermarkOther, download);
-      file.delete();
-
-    } catch (Exception e) {
-      LOGGER.error("uploadPicture", e);
-    }
-  }
-
-  private String createPhoto(String name, String userId, String componentId,
-      String albumId, File file, boolean watermark, String watermarkHD,
-      String watermarkOther, boolean download)
-      throws Exception {
-
-    // création de la photo
-    PhotoDetail newPhoto =
-        new PhotoDetail(name, null, new Date(), null, null, null, download, false);
-    newPhoto.setAlbumId(albumId);
-    newPhoto.setCreatorId(userId);
-    PhotoPK pk = new PhotoPK("unknown", componentId);
-    newPhoto.setPhotoPK(pk);
-
-    String photoId = getGalleryBm().createPhoto(newPhoto, albumId);
-    newPhoto.getPhotoPK().setId(photoId);
-
-    // Création de la preview et des vignettes sur disque
-    ImageHelper.processImage(newPhoto, file, watermark, watermarkHD, watermarkOther);
-    ImageHelper.setMetaData(newPhoto, "fr");
-
-    // Modification de la photo pour mise à jour dimension
-    getGalleryBm().updatePhoto(newPhoto);
-    return photoId;
-  }
-
-  /**
-   * Retourne la listes des galleries accessibles.
-   */
-  public List<ApplicationInstanceDTO> getAllGalleries() throws GalleryException,
-      AuthenticationException {
-    checkUserInSession();
-
-    ArrayList<ApplicationInstanceDTO> results = new ArrayList<ApplicationInstanceDTO>();
-    try {
-      List<String> rootSpaceIds = getAdminBm().getAllRootSpaceIds();
-      for (String rootSpaceId : rootSpaceIds) {
-        List<String> componentIds =
-            getAdminBm().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
-        for (String componentId : componentIds) {
-          ComponentInstLight instance = getAdminBm().getComponentInstLight(componentId);
-          if (instance.getName().equals("gallery")) {
-            ApplicationInstanceDTO i = new ApplicationInstanceDTO();
-            i.setId(instance.getId());
-            i.setLabel(instance.getLabel());
-            results.add(i);
-          }
-        }
-      }
-    } catch (Exception e) {
-      LOGGER.error("getAllGalleries", e);
-    }
-
-    Collections.sort(results);
-    return results;
-  }
-
-  /**
-   * Retourne la liste des albums d'une galerie.
-   */
-  public List<AlbumDTO> getAllAlbums(String instanceId) throws GalleryException,
-      AuthenticationException {
-    checkUserInSession();
-
-    ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
-    try {
-      Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
-      for (AlbumDetail albumDetail : albums) {
-        if (albumDetail.getLevel() != 1) {
-          AlbumDTO album = new AlbumDTO();
-          album.setId(String.valueOf(albumDetail.getId()));
-          album.setName(albumDetail.getName());
-          results.add(album);
-        }
-      }
-    } catch (Exception e) {
-      LOGGER.error("getAllAlbums", e);
-    }
-    return results;
-  }
-
-  /**
-   * Retourne les photos miniatures d'un album.
-   */
-  public List<PhotoDTO> getAllPictures(String instanceId, String albumId) throws GalleryException,
-      AuthenticationException {
-    checkUserInSession();
-
-    ArrayList<PhotoDTO> results = new ArrayList<PhotoDTO>();
-    try {
-      Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
-      for (AlbumDetail albumDetail : albums) {
-        if (albumDetail.getId() == Integer.parseInt(albumId)) {
-          Collection<PhotoDetail> photos =
-              getGalleryBm().getAllPhoto(albumDetail.getNodePK(), false);
-          Iterator<PhotoDetail> iPhotos = photos.iterator();
-          while (iPhotos.hasNext()) {
-            PhotoDetail photoDetail = (PhotoDetail) iPhotos.next();
-            PhotoDTO photo = getPicture(instanceId, photoDetail.getId(), PhotoSize.SMALL);
-            results.add(photo);
-          }
-          return results;
-        }
-      }
-    } catch (Exception e) {
-      LOGGER.error("getAllPictures", e);
-    }
-    return results;
-  }
-
-  /**
-   * Retourne la photo originale.
-   */
-  public PhotoDTO getOriginalPicture(String instanceId, String pictureId) throws GalleryException,
-      AuthenticationException {
-    checkUserInSession();
-
-    PhotoDTO picture = null;
-    try {
-      picture = getPicture(instanceId, pictureId, PhotoSize.ORIGINAL);
-    } catch (Exception e) {
-      LOGGER.error("getOriginalPicture", e);
-    }
-    return picture;
-  }
-
-  /**
-   * Retourne la photo preview.
-   */
-  public PhotoDTO getPreviewPicture(String instanceId, String pictureId) throws GalleryException,
-      AuthenticationException {
-    checkUserInSession();
-
-    PhotoDTO picture = null;
-    try {
-      picture = getPicture(instanceId, pictureId, PhotoSize.PREVIEW);
-    } catch (Exception e) {
-      LOGGER.error("getPreviewPicture", e);
-    }
-    return picture;
-  }
-
-  private PhotoDTO getPicture(String instanceId, String pictureId, PhotoSize size)
-      throws RemoteException, Exception, FileNotFoundException, IOException {
-    PhotoDTO picture;
-    PhotoDetail photoDetail = getGalleryBm().getPhoto(new PhotoPK(pictureId));
-    picture = new PhotoDTO();
-    picture.setId(photoDetail.getId());
-    picture.setDownload(photoDetail.isDownload());
-    picture.setDataPhoto(getBase64ImageData(instanceId, photoDetail, size));
-    picture.setFormat(size.name());
-    picture.setTitle(photoDetail.getTitle());
-    return picture;
-  }
-
-  private String getBase64ImageData(String instanceId, PhotoDetail photoDetail, PhotoSize size)
-      throws FileNotFoundException, IOException {
-    ResourceLocator gallerySettings =
-        new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
-    String nomRep =
-        gallerySettings.getString("imagesSubDirectory") + photoDetail.getPhotoPK().getId();
-    String[] rep = { nomRep };
-    String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-    File f;
-    if (size.equals(PhotoSize.ORIGINAL)) {
-      f = new File(path + photoDetail.getImageName());
-    } else {
-      f = new File(path + photoDetail.getPhotoPK().getId() + size.getPrefix());
-    }
-
-    FileInputStream is = new FileInputStream(f);
-    byte[] binaryData = new byte[(int) f.length()];
-    is.read(binaryData);
-    is.close();
-    String data =
-        "data:" + photoDetail.getImageMimeType() + ";base64," +
-            new String(Base64.encodeBase64(binaryData));
-
-    return data;
-  }
-
-  private AdminBm getAdminBm() throws Exception {
-    if (adminBm == null) {
-      AdminBmHome home =
-          EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBmHome.class);
-      adminBm = home.create();
-    }
-    return adminBm;
-  }
-
-  private GalleryBm getGalleryBm() throws Exception {
-    if (galleryBm == null) {
-      GalleryBmHome home =
-          EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBmHome.class);
-      galleryBm = home.create();
-    }
-    return galleryBm;
-  }
+	private String getBase64ImageData(String instanceId, PhotoDetail photoDetail, PhotoSize size) throws FileNotFoundException, IOException {
+		ResourceLocator gallerySettings = new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
+		String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getPhotoPK().getId();
+		String[] rep = {nomRep};
+		String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
+		File f;
+		if (size.equals(PhotoSize.ORIGINAL)) {
+			f = new File(path+ photoDetail.getImageName());
+		} else {
+			f = new File(path+ photoDetail.getPhotoPK().getId() + size.getPrefix());
+		}	
+		
+		FileInputStream is = new FileInputStream(f);
+		byte[] binaryData = new byte[(int) f.length()];
+		is.read(binaryData);
+		is.close();
+		String data = "data:" + photoDetail.getImageMimeType() + ";base64," + new String(Base64.encodeBase64(binaryData));
+		
+		return data;
+	}
+	
+	private AdminBm getAdminBm() throws Exception {
+		if (adminBm == null) {
+			AdminBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBmHome.class);
+			adminBm = home.create();
+		}
+		return adminBm;
+	}
+	
+	private GalleryBm getGalleryBm() throws Exception {
+		if (galleryBm == null) {
+			GalleryBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBmHome.class);
+			galleryBm = home.create(); 
+		}
+		return galleryBm;
+	}
 }

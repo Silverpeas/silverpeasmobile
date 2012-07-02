@@ -1,27 +1,3 @@
-/**
- * Copyright (C) 2000 - 2012 Silverpeas
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * As a special exception to the terms and conditions of version 3.0 of
- * the GPL, you may redistribute this Program in connection with Free/Libre
- * Open Source Software ("FLOSS") applications as described in Silverpeas's
- * FLOSS exception.  You should have received a copy of the text describing
- * the FLOSS exception, and it is also available here:
- * "http://www.silverpeas.com/legal/licensing"
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.silverpeas.mobile.client.apps.gallery;
 
 import java.util.Date;
@@ -30,7 +6,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtmobile.persistence.client.Callback;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.CollectionCallback;
 import com.gwtmobile.persistence.client.Entity;
@@ -88,17 +63,13 @@ import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
-/**
- * Main controller for gallery app.
- * @author svuillet
- */
 public class GalleryController implements Controller, GalleryControllerEventHandler, NavigationEventHandler {
-
+	
 	// Temporary data for synch
 	private transient static Collection<Picture> localsPicturesList;
 	private transient static Picture[] localsPictures;
 	private transient static int indexNextPictureToUpload;
-
+	
 	public GalleryController() {
 		super();
 		EventBus.getInstance().addHandler(AbstractGalleryControllerEvent.TYPE, this);
@@ -110,30 +81,28 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	 */
 	@Override
 	public void loadSettings(GalleryLoadSettingsEvent event) {
-		Database.open();
+		Database.open();		
 		final Entity<GallerySettings> settingsEntity = GWT.create(GallerySettings.class);
-		final Collection<GallerySettings> settings = settingsEntity.all().limit(1);
+		final Collection<GallerySettings> settings = settingsEntity.all().limit(1);			
 		settings.one(new ScalarCallback<GallerySettings>() {
-			public void onSuccess(final GallerySettings settings) {
+			public void onSuccess(final GallerySettings settings) {				
 				ServicesLocator.serviceGallery.getAllAlbums(settings.getSelectedGalleryId(), new AsyncCallback<List<AlbumDTO>>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
 					}
-
 					@Override
 					public void onSuccess(List<AlbumDTO> albums) {
 						EventBus.getInstance().fireEvent(new GalleryLoadedSettingsEvent(settings, albums));
-					}
+					}			
 				});
-				// TODO :type filter text gestion suppression instance ou album
+				//TODO :type filter text gestion suppression instance ou album
 			}
-		});
+		});		
 	}
-
+	
 	/**
 	 * Load albums for a gallery instance.
-	 * 
 	 * @param instanceId
 	 */
 	public void loadAlbums(final ApplicationInstanceDTO instance) {
@@ -142,11 +111,10 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
 			}
-
 			@Override
 			public void onSuccess(List<AlbumDTO> result) {
-				EventBus.getInstance().fireEvent(new GalleryNewInstanceLoadedEvent(instance, result));
-			}
+				EventBus.getInstance().fireEvent(new GalleryNewInstanceLoadedEvent(instance, result));				
+			}			
 		});
 	}
 
@@ -155,17 +123,17 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	 */
 	@Override
 	public void saveSettings(final GallerySaveSettingsEvent event) {
-		Database.open();
+		Database.open();		
 		final Entity<GallerySettings> settingsEntity = GWT.create(GallerySettings.class);
-		final Collection<GallerySettings> settings = settingsEntity.all();
+		final Collection<GallerySettings> settings = settingsEntity.all();		
 		Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {
 			@Override
 			public void onSuccess() {
 				settings.destroyAll(new com.gwtmobile.persistence.client.Callback() {
-					public void onSuccess() {
+					public void onSuccess() {						
 						Persistence.flush();
-						final Entity<GallerySettings> settingsEntity = GWT.create(GallerySettings.class);
-						Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {
+						final Entity<GallerySettings> settingsEntity = GWT.create(GallerySettings.class);				
+						Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
 							public void onSuccess() {
 								final GallerySettings settings = settingsEntity.newInstance();
 								settings.setSelectedGalleryId(event.getGallery().getId());
@@ -173,10 +141,10 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 								settings.setSelectedGalleryLabel(event.getGallery().getLabel());
 								Persistence.flush();
 							}
-						});
+						});				
 					}
-				});
-			}
+				});				
+			}		
 		});
 	}
 
@@ -187,8 +155,8 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	}
 
 	@Override
-	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-		loadAlbums(event.getInstance());
+	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {		
+		loadAlbums(event.getInstance());		
 	}
 
 	/**
@@ -200,57 +168,53 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
 		final Collection<Picture> pics = pictureEntity.all();
 		pics.list(new CollectionCallback<Picture>() {
+
 			@Override
-			public void onSuccess(final Picture[] results) {
+			public void onSuccess(final Picture[] results) {					
 				for (int i = 0; i < results.length; i++) {
-					final Picture picture = results[i];
+					final Picture picture = results[i];					
 					if (picture.getId().equals(event.getId())) {
-						// remove file
-						FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {
+						// remove file						
+						FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {			
 							@Override
-							public void onSuccess(final FileSystem fs) {
-								FileManagerAddOn.resolveLocalFileSystemURI(picture.getURI(), new EntryCallback() {
-									@Override
+							public void onSuccess(final FileSystem fs) {			
+								FileManagerAddOn.resolveLocalFileSystemURI(picture.getURI(), new EntryCallback() {			
+
+								@Override
 									public void onSuccess(Entry entry) {
 										entry.remove(new FileMgrCallback() {
+											
 											@Override
 											public void onSuccess(boolean success) {
-												// file is removed, now remove file reference in html5 database
-												pics.remove(picture);
-												Persistence.flush(new Callback() {
-													@Override
-													public void onSuccess() {
-														// file reference is removed, now send message to view
-														EventBus.getInstance().fireEvent(new DeletedLocalPictureEvent(results.length == 1));														
-													}
-												});											
+												
 											}
-
+											
 											@Override
 											public void onError(FileError error) {
-												EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));
+												EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));												
 											}
-										});
+										});													
 									}
-
+									
 									@Override
 									public void onError(FileError error) {
-										EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));
+										EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));				
 									}
-
-								});
-							}
-
+								});					
+							}			
 							@Override
 							public void onError(FileError error) {
-								EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));
+								EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));	
 							}
-
 						});
-					}
-				}
-			}
-		});
+						// remove reference in html5 database
+						pics.remove(picture);
+						EventBus.getInstance().fireEvent(new DeletedLocalPictureEvent(results.length==1));
+						break;
+					}									
+				}								
+			}							
+		});		
 	}
 
 	/**
@@ -261,83 +225,79 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		Database.open();
 		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
 		final Collection<Picture> pictures = pictureEntity.all();
-		pictures.count(new ScalarCallback<Integer>() {
+		pictures.count(new ScalarCallback<Integer>() {					
 			@Override
 			public void onSuccess(final Integer count) {
-				if (count == 0) {
+				if (count == 0) {					
 					EventBus.getInstance().fireEvent(new GalleryLocalPicturesLoadedEvent(null));
 				} else {
 					Notification.activityStart();
-					pictures.list((new CollectionCallback<Picture>() {
-
+					pictures.list((new CollectionCallback<Picture>(){
+	
 						@Override
 						public void onSuccess(Picture[] pictures) {
-							EventBus.getInstance().fireEvent(new GalleryLocalPicturesLoadedEvent(pictures));
-						}
-					}));
+							EventBus.getInstance().fireEvent(new GalleryLocalPicturesLoadedEvent(pictures));							
+						}						
+					}));				
 				}
 			}
-		});
+		});		
 	}
-
+	
 	/**
 	 * Read file picture before upload.
-	 * 
 	 * @param picture
 	 * @param idGallery
 	 * @param idAlbum
 	 */
-	private void uploadPicture(final Picture picture, final String idGallery, final String idAlbum) {
-
+	private void uploadPicture(final Picture picture, final String idGallery, final String idAlbum) {		
+		
 		sendAndRemovePicture(picture, picture.getURI(), null, idGallery, idAlbum);
-
-		FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {
+		
+		FileMgr.requestFileSystem(LocalFileSystem.TEMPORARY, new FileSystemCallback() {			
 			@Override
-			public void onSuccess(final FileSystem fs) {
-				FileManagerAddOn.resolveLocalFileSystemURI(picture.getURI(), new EntryCallback() {
+			public void onSuccess(final FileSystem fs) {			
+				FileManagerAddOn.resolveLocalFileSystemURI(picture.getURI(), new EntryCallback() {			
 
 					@Override
 					public void onSuccess(Entry entry) {
-
+						
 						final FileEntry file = (FileEntry) entry;
 						file.file(new FileCallback() {
 							@Override
-							public void onSuccess(File f) {
-								EventCallback callback = new EventCallback() {
+							public void onSuccess(File f) {								
+								EventCallback callback = new EventCallback() {			
 									@Override
 									public void onEvent(Event evt) {
 										sendAndRemovePicture(picture, evt.getTarget().getResult(), file, idGallery, idAlbum);
 									}
-								};
-								FileReader reader = FileMgr.newFileReader();
-								reader.onLoadEnd(callback);
+								};								
+								FileReader reader = FileMgr.newFileReader();								
+								reader.onLoadEnd(callback);								
 								reader.readAsDataURL(f);
 							}
-
 							@Override
 							public void onError(FileError error) {
 								EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));
-							}
-						});
+							}							
+						});					
 					}
-
+					
 					@Override
 					public void onError(FileError error) {
-						EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));
+						EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));				
 					}
-				});
-			}
-
+				});					
+			}			
 			@Override
 			public void onError(FileError error) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));	
 			}
 		});
 	}
-
+	
 	/**
 	 * Effective upload and remove file picture on success upload.
-	 * 
 	 * @param picture
 	 * @param data
 	 * @param file
@@ -360,23 +320,23 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 					public void onSuccess(boolean success) {
 						localsPicturesList.remove(localsPictures[indexNextPictureToUpload]);
 						indexNextPictureToUpload++;
-
+						
 						EventBus.getInstance().fireEvent(new GalleryPictureUploadedEvent());
-
+						
 						if (localsPictures.length > indexNextPictureToUpload) {
-							uploadPicture(localsPictures[indexNextPictureToUpload], idGallery, idAlbum);
+							uploadPicture(localsPictures[indexNextPictureToUpload], idGallery, idAlbum);	
 						} else {
 							// send message "end upload"
 							EventBus.getInstance().fireEvent(new GalleryEndUploadEvent());
-						}
+						}						
 					}
 
 					@Override
-					public void onError(FileError error) {
-						EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));
-					}
+					public void onError(FileError error) {						
+						EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(error.toString())));					
+					}							
 				});
-
+								
 			}
 		});
 	}
@@ -385,13 +345,13 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	 * Send local pictures to remote album.
 	 */
 	@Override
-	public void syncPictures(final SyncPicturesEvent event) {
+	public void syncPictures(final SyncPicturesEvent event) {		
 		indexNextPictureToUpload = 0;
 		Database.open();
 		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
 		localsPicturesList = pictureEntity.all();
 		localsPicturesList.count(new ScalarCallback<Integer>() {
-
+			
 			@Override
 			public void onSuccess(final Integer count) {
 				EventBus.getInstance().fireEvent(new GalleryStartingUploadEvent(count));
@@ -400,12 +360,12 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 						@Override
 						public void onSuccess(Picture[] results) {
 							localsPictures = results;
-							uploadPicture(localsPictures[indexNextPictureToUpload], event.getIdGallery(), event.getIdAlbum());
-						}
+							uploadPicture(localsPictures[indexNextPictureToUpload], event.getIdGallery(), event.getIdAlbum());							
+						}					
 					});
 				}
 			}
-		});
+		});	
 	}
 
 	/**
@@ -416,13 +376,13 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		Camera.Options options = new Camera.Options();
 		options.sourceType(SourceType.CAMERA);
 		options.destinationType(DestinationType.FILE_URI);
-
-		Camera.getPicture(new Camera.Callback() {
-			public void onSuccess(final String imageData) {
+		
+		Camera.getPicture(new Camera.Callback() {			
+			public void onSuccess(final String imageData) {				
 				Notification.activityStart();
-				Database.open();
-				final Entity<Picture> pictureEntity = GWT.create(Picture.class);
-				Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {
+				Database.open();		
+				final Entity<Picture> pictureEntity = GWT.create(Picture.class);				
+				Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
 					public void onSuccess() {
 						final Picture pic = pictureEntity.newInstance();
 						DateTimeFormat fmt = DateTimeFormat.getFormat("ddMMyyyy-HHmmss");
@@ -437,7 +397,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 			public void onError(String message) {
 				// TODO : manage cancel photo taking
 				Notification.activityStop();
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));	
 			}
 		}, options);
 	}
@@ -446,18 +406,18 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	 * Load remote album pictures.
 	 */
 	@Override
-	public void loadRemotePictures(RemotePicturesLoadEvent event) {
-		ServicesLocator.serviceGallery.getAllPictures(event.getGalleryId(), event.getAlbumId(), new AsyncCallback<List<PhotoDTO>>() {
+	public void loadRemotePictures(RemotePicturesLoadEvent event) {		
+		ServicesLocator.serviceGallery.getAllPictures(event.getGalleryId(), event.getAlbumId(), new AsyncCallback<List<PhotoDTO>>() {			
 			@Override
 			public void onSuccess(List<PhotoDTO> result) {
 				EventBus.getInstance().fireEvent(new RemotePictureLoadedEvent(result));
 			}
-
+			
 			@Override
 			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
 			}
-		});
+		});		
 	}
 
 	/**
@@ -472,13 +432,13 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 				EventBus.getInstance().fireEvent(new PictureViewLoadedEvent(result));
 				Notification.activityStop();
 			}
-
+			
 			@Override
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
 				Notification.activityStop();
 			}
 		});
-
+		
 	}
 }
