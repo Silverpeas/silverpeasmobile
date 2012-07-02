@@ -2,4 +2,5 @@
 /web/.settings/
 *.project
 *.classpath
+/.svn
 
