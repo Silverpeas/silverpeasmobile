@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.silverpeas</groupId>
 		<artifactId>parent</artifactId>
-		<version>22</version>
+		<version>21</version>
 	</parent>
 
 	<groupId>com.silverpeas.mobile</groupId>
@@ -17,7 +17,7 @@
 	<properties>
 		<gwtVersion>2.4.0</gwtVersion>
 		<gwtMojoPluginVersion>2.4.0</gwtMojoPluginVersion>
-		<silverpeasVersion>5.9</silverpeasVersion>
+		<silverpeasVersion>5.8.1</silverpeasVersion>
 	</properties>
 	
 	<repositories>
@@ -62,12 +62,13 @@
 		<dependency>
 			<groupId>org.apache.sanselan</groupId>
 			<artifactId>sanselan</artifactId>
+			<version>0.97-incubator</version>
 		</dependency>	
 		<dependency>
-      <groupId>com.googlecode.gwt.crypto</groupId>
-      <artifactId>gwt-crypto</artifactId>
-      <version>1.0.3</version>
-    </dependency>
+	        <groupId>com.googlecode.gwt.crypto</groupId>
+	        <artifactId>gwt-crypto</artifactId>
+	        <version>1.0.3</version>
+	    </dependency>
 		<dependency>
 			<groupId>com.gwtmobile</groupId>
 			<artifactId>gwtmobile</artifactId>
@@ -85,7 +86,7 @@
 			<artifactId>gwt-dev</artifactId>
 			<version>${gwtVersion}</version>
 			<scope>provided</scope>
-    </dependency>
+		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
@@ -95,6 +96,7 @@
 		<dependency>
 			<groupId>javax.ejb</groupId>
 			<artifactId>ejb-api</artifactId>
+			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -164,45 +166,45 @@
 			<scope>provided</scope>
 		</dependency>
 		
-  		<dependency>
-   			<groupId>com.silverpeas.components.project-manager</groupId>
-   			<artifactId>project-manager-ejb</artifactId>
-   			<version>${silverpeasVersion}</version>
-   			<classifier>client</classifier>
-   			<scope>provided</scope>
-  		</dependency>
-  		<dependency>
-   			<groupId>com.silverpeas.core.ejb-core</groupId>
-   			<artifactId>searchengine</artifactId>
-   			<version>${silverpeasVersion}</version>
-   			<classifier>client</classifier>
-   			<scope>provided</scope>
-  		</dependency>
-  		<dependency>
-   			<groupId>javax.servlet</groupId>
-   			<artifactId>servlet-api</artifactId>
-   			<version>2.5</version>
-   			<type>jar</type>
-   			<scope>provided</scope>
-  		</dependency>
-  		<dependency>
-   			<groupId>javax.servlet.jsp</groupId>
-   			<artifactId>jsp-api</artifactId>
-   			<version>2.1</version>
-   			<type>jar</type>
-   			<scope>provided</scope>
-  		</dependency-->
+		<dependency>
+			<groupId>com.silverpeas.components.project-manager</groupId>
+			<artifactId>project-manager-ejb</artifactId>
+			<version>${silverpeasVersion}</version>
+			<classifier>client</classifier>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.silverpeas.core.ejb-core</groupId>
+			<artifactId>searchengine</artifactId>
+			<version>${silverpeasVersion}</version>
+			<classifier>client</classifier>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency-->
 		
-    <dependency>
-      <groupId>net.sf.dozer</groupId>
-      <artifactId>dozer</artifactId>
-      <version>5.3.1</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-  </dependencies>
+		<dependency>
+			<groupId>net.sf.dozer</groupId>
+			<artifactId>dozer</artifactId>
+			<version>5.3.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
 </project>

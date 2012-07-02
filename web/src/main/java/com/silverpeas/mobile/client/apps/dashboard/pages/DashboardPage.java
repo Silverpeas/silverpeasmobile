@@ -1,27 +1,3 @@
-/**
- * Copyright (C) 2000 - 2011 Silverpeas
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * As a special exception to the terms and conditions of version 3.0 of
- * the GPL, you may redistribute this Program in connection with Free/Libre
- * Open Source Software ("FLOSS") applications as described in Silverpeas's
- * FLOSS exception.  You should have received a copy of the text describing
- * the FLOSS exception, and it is also available here:
- * "http://www.silverpeas.com/legal/licensing"
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.silverpeas.mobile.client.apps.dashboard.pages;
 
 import java.util.Iterator;
@@ -49,127 +25,109 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.SocialInformationDTO;
 
-public class DashboardPage extends Page implements DashboardPagesEventHandler, View {
+public class DashboardPage extends Page implements DashboardPagesEventHandler, View{
 
-  private static DashboardPageUiBinder uiBinder = GWT.create(DashboardPageUiBinder.class);
+	private static DashboardPageUiBinder uiBinder = GWT.create(DashboardPageUiBinder.class);
+	
+	@UiField ListPanel panelAll;
+	@UiField Button more;
+	@UiField TabPanel navBar;
+	@UiField ListPanel panelStatus;
+	@UiField ListPanel panelRelationShip;
+	@UiField ListPanel panelPublication;
+	@UiField ListPanel panelPhoto;
+	@UiField ListPanel panelEvent;
+	
+	private DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
+	private int reinitialisationPage = 1;
+	private String socialInformationType = "ALL";
 
-  @UiField
-  ListPanel panelAll;
-  @UiField
-  Button more;
-  @UiField
-  TabPanel navBar;
-  @UiField
-  ListPanel panelStatus;
-  @UiField
-  ListPanel panelRelationShip;
-  @UiField
-  ListPanel panelPublication;
-  @UiField
-  ListPanel panelPhoto;
-  @UiField
-  ListPanel panelEvent;
+	interface DashboardPageUiBinder extends UiBinder<Widget, DashboardPage> {
+	}
 
-  private DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm");
-  private int reinitialisationPage = 1;
-  private String socialInformationType = "ALL";
+	public DashboardPage() {
+		initWidget(uiBinder.createAndBindUi(this));
+		reinitialisationPage = 0;
+		EventBus.getInstance().addHandler(AbstractDashboardPagesEvent.TYPE, this);
+		
+		navBar.addSelectionHandler(new SelectionHandler<Integer>() {
+            public void onSelection(SelectionEvent<Integer> event) {
+            	reinitialisationPage = 0;
+            	panelAll.clear();
+            	panelStatus.clear();
+            	panelRelationShip.clear();
+            	panelPublication.clear();
+            	panelPhoto.clear();
+            	panelEvent.clear();
+                if(event.getSelectedItem()==0){
+                	socialInformationType = "ALL";
+                	EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
+                }
+                if(event.getSelectedItem()==1){
+                    socialInformationType = "STATUS";
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
+                }
+                if(event.getSelectedItem()==2){
+                    socialInformationType = "RELATIONSHIP";
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
+                }
+                if(event.getSelectedItem()==3){
+                    socialInformationType = "PUBLICATION";
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
+                }
+                if(event.getSelectedItem()==4){
+                    socialInformationType = "PHOTO";
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
+                }
+                if(event.getSelectedItem()==5){
+                    socialInformationType = "EVENT";
+                    EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
+                }
+            }
+		});
+	}
+	
+	@UiHandler("more")
+	void MoreButton(ClickEvent e){
+		reinitialisationPage = 1;
+		EventBus.getInstance().fireEvent(new DashboardLoadEvent(reinitialisationPage, socialInformationType));
+	}
+	
+	public void AffichagePanel(SocialInformationDTO socialInformationDTO){
+		ListItem li = new ListItem();
+		Label la = new Label("Le " + fmt.format(socialInformationDTO.getDate()) + " : " + socialInformationDTO.getType() + " : " + socialInformationDTO.getAuteur() + " : " + socialInformationDTO.getDescription());
+		li.add(la);
+		if(socialInformationType=="ALL"){
+			panelAll.add(li);
+		}
+		if(socialInformationType=="STATUS"){
+			panelStatus.add(li);
+		}
+		if(socialInformationType=="RELATIONSHIP"){
+			panelRelationShip.add(li);
+		}
+		if(socialInformationType=="PUBLICATION"){
+			panelPublication.add(li);
+		}
+		if(socialInformationType=="PHOTO"){
+			panelPhoto.add(li);
+		}
+		if(socialInformationType=="EVENT"){
+			panelEvent.add(li);
+		}
+	}
 
-  interface DashboardPageUiBinder extends UiBinder<Widget, DashboardPage> {
-  }
+	@Override
+	public void stop() {
+		EventBus.getInstance().removeHandler(AbstractDashboardPagesEvent.TYPE, this);
+	}
 
-  public DashboardPage() {
-    initWidget(uiBinder.createAndBindUi(this));
-    reinitialisationPage = 0;
-    EventBus.getInstance().addHandler(AbstractDashboardPagesEvent.TYPE, this);
-
-    navBar.addSelectionHandler(new SelectionHandler<Integer>() {
-      public void onSelection(SelectionEvent<Integer> event) {
-        reinitialisationPage = 0;
-        panelAll.clear();
-        panelStatus.clear();
-        panelRelationShip.clear();
-        panelPublication.clear();
-        panelPhoto.clear();
-        panelEvent.clear();
-        if (event.getSelectedItem() == 0) {
-          socialInformationType = "ALL";
-          EventBus.getInstance().fireEvent(
-              new DashboardLoadEvent(reinitialisationPage, socialInformationType));
-        }
-        if (event.getSelectedItem() == 1) {
-          socialInformationType = "STATUS";
-          EventBus.getInstance().fireEvent(
-              new DashboardLoadEvent(reinitialisationPage, socialInformationType));
-        }
-        if (event.getSelectedItem() == 2) {
-          socialInformationType = "RELATIONSHIP";
-          EventBus.getInstance().fireEvent(
-              new DashboardLoadEvent(reinitialisationPage, socialInformationType));
-        }
-        if (event.getSelectedItem() == 3) {
-          socialInformationType = "PUBLICATION";
-          EventBus.getInstance().fireEvent(
-              new DashboardLoadEvent(reinitialisationPage, socialInformationType));
-        }
-        if (event.getSelectedItem() == 4) {
-          socialInformationType = "PHOTO";
-          EventBus.getInstance().fireEvent(
-              new DashboardLoadEvent(reinitialisationPage, socialInformationType));
-        }
-        if (event.getSelectedItem() == 5) {
-          socialInformationType = "EVENT";
-          EventBus.getInstance().fireEvent(
-              new DashboardLoadEvent(reinitialisationPage, socialInformationType));
-        }
-      }
-    });
-  }
-
-  @UiHandler("more")
-  void MoreButton(ClickEvent e) {
-    reinitialisationPage = 1;
-    EventBus.getInstance().fireEvent(
-        new DashboardLoadEvent(reinitialisationPage, socialInformationType));
-  }
-
-  public void AffichagePanel(SocialInformationDTO socialInformationDTO) {
-    ListItem li = new ListItem();
-    Label la =
-        new Label("Le " + fmt.format(socialInformationDTO.getDate()) + " : " +
-            socialInformationDTO.getType() + " : " + socialInformationDTO.getAuteur() + " : " +
-            socialInformationDTO.getDescription());
-    li.add(la);
-    if (socialInformationType == "ALL") {
-      panelAll.add(li);
-    }
-    if (socialInformationType == "STATUS") {
-      panelStatus.add(li);
-    }
-    if (socialInformationType == "RELATIONSHIP") {
-      panelRelationShip.add(li);
-    }
-    if (socialInformationType == "PUBLICATION") {
-      panelPublication.add(li);
-    }
-    if (socialInformationType == "PHOTO") {
-      panelPhoto.add(li);
-    }
-    if (socialInformationType == "EVENT") {
-      panelEvent.add(li);
-    }
-  }
-
-  @Override
-  public void stop() {
-    EventBus.getInstance().removeHandler(AbstractDashboardPagesEvent.TYPE, this);
-  }
-
-  @Override
-  public void onDashboardLoaded(DashboardLoadedEvent event) {
-    Iterator<SocialInformationDTO> i = event.getListSocialInformations().iterator();
-    while (i.hasNext()) {
-      SocialInformationDTO socialInformationDTO = i.next();
-      AffichagePanel(socialInformationDTO);
-    }
-  }
+	@Override
+	public void onDashboardLoaded(DashboardLoadedEvent event) {
+		Iterator<SocialInformationDTO> i = event.getListSocialInformations().iterator();
+		while(i.hasNext()){
+			SocialInformationDTO socialInformationDTO = i.next();
+			AffichagePanel(socialInformationDTO);
+		}
+	}
 }
