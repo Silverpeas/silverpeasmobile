@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SilverpeasMobile</string>
+    <string name="noconnection">Veuillez vous connecter à Internet.</string>
+    <string name="quit">Quitter.</string>
+    <string name="options">Options</string>
+    <string name="URLSilverpeas">URL Silverpeas</string>
+    <string name="deconnection">Déconnexion.</string>
+    <string name="EnterURL">Veuillez entrer l\'URL de votre serveur Silverpeas :</string>
+    <string name="i">i</string>
+    <string name="informationsContent">\@Copyright.... etc</string>
+</resources>
