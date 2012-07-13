@@ -116,7 +116,7 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 	public void onKeyPress(KeyPressEvent keyPress){
 		List<ListItem> finalListItem = new ArrayList<ListItem>();
 		if(textBox.getText().isEmpty()){
-			finalListItem = getFirstItemStartingWith();
+			finalListItem = getFirstItemStartingWith(keyPress.toString());
 		}
 		else{
 			finalListItem = getFirstItemStartingWith(textBox.getText());

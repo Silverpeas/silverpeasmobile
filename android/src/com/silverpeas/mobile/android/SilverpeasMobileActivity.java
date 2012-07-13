@@ -1,9 +1,13 @@
 package com.silverpeas.mobile.android;
 
+import org.apache.cordova.DroidGap;
+
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.phonegap.*;
 
 public class SilverpeasMobileActivity extends DroidGap {
 
@@ -21,6 +24,9 @@ public class SilverpeasMobileActivity extends DroidGap {
 
 	@Override
 	public void onCreate(Bundle state) {
+		if(isOnline()==false){
+			Deconnexion();
+		}
 		super.onCreate(state);
 		setContentView(R.layout.main);
 		super.setBooleanProperty("loadInWebView", true);
@@ -51,8 +57,11 @@ public class SilverpeasMobileActivity extends DroidGap {
 		case R.id.URL:
 			ChangeURL();
 			return true;
+		case R.id.deconnexion:
+			CheckPreferences();
+			return true;
 		case R.id.quitter:
-			test();
+			finish();
 			return true;
 		}
 		return false;
@@ -97,8 +106,21 @@ public class SilverpeasMobileActivity extends DroidGap {
 		alertDialog.show();
 	}
 
-	public void test() {
-		Intent myIntent = new Intent(this.appView.getContext(), NoConnectionPage.class);
-		startActivityForResult(myIntent, 0);
+	public void Deconnexion() {
+		Intent myIntent = new Intent(SilverpeasMobileActivity.this,
+				NoConnectionPage.class);
+		startActivity(myIntent);
+		finish();
+	}
+
+	private boolean isOnline() {
+		ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (conMgr.getActiveNetworkInfo() != null
+				&& conMgr.getActiveNetworkInfo().isAvailable()
+				&& conMgr.getActiveNetworkInfo().isConnected()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

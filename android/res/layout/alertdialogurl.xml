@@ -9,7 +9,7 @@
 		android:id="@+id/TextViewURL"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Entrez l'URL de votre serveur silverpeas :"
+		android:text="@string/EnterURL"
 		android:paddingBottom="10dip"/>
 	
 	<EditText
