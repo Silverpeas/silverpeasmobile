@@ -36,4 +36,5 @@
     <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
     <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
     <plugin name="OrientationExifPlugin" value="com.silverpeas.mobile.android.OrientationExifPlugin"/>
+    <plugin name="PieceJointePlugin" value="com.silverpeas.mobile.android.PieceJointePlugin"/>
 </plugins>

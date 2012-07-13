@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.android;
+package com.silverpeas.mobile.android.plugins;
 
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
