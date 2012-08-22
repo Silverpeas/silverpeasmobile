@@ -8,7 +8,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -54,8 +53,13 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 					finalListItem = getFirstItemStartingWith(textBox.getText());
 					refresh(finalListItem);
 		        }
-				else if(textBox.getText().isEmpty() && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE){
+				else if((textBox.getText().isEmpty() && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) || textBox.getText().isEmpty()){
 					refresh(contactsList);
+				}
+				else{
+					List<ListItem> finalListItem = new ArrayList<ListItem>();
+					finalListItem = getFirstItemStartingWith(textBox.getText());
+					refresh(finalListItem);
 				}
 			}
 		});
@@ -69,6 +73,7 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 
 	@Override
 	public void onContactsLoaded(ContactsLoadedEvent event) {
+		listPanelContacts.clear();
 		contactsList = new ArrayList<ListItem>();
 		Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
 		listPanelContacts.setSelectable(true);
@@ -79,22 +84,14 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 			Label labelContact = new Label(dudto.getLastName());
 			contact.add(labelContact);
 
-			if(contactsList.size()==0){
-				contactsList.add(contact);
-			}
-			else{
-				if(!(contactsList.contains(contact))){
-						contactsList.add(contact);
-				}
-			}
-			
+			contactsList.add(contact);
+
 			listPanelContacts.add(contact);
 			
 			labelContact.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					// TODO : afficher fiche contact
-					// ContactDetail contactDetail = new ContactDetail(id);
-					// goTo(contactDetail);
+					ContactDetail contactDetail = new ContactDetail(id);
+					goTo(contactDetail);
 				}
 			});
 		}
@@ -110,18 +107,6 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 			}
 		}
 		return listItemStartingWith;
-	}
-	
-	@UiHandler("textBox")
-	public void onKeyPress(KeyPressEvent keyPress){
-		List<ListItem> finalListItem = new ArrayList<ListItem>();
-		if(textBox.getText().isEmpty()){
-			finalListItem = getFirstItemStartingWith();
-		}
-		else{
-			finalListItem = getFirstItemStartingWith(textBox.getText());
-		}
-		refresh(finalListItem);
 	}
 	
 	@UiHandler("textBox")

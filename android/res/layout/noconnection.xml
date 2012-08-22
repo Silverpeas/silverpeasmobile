@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/noconnection" 
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@drawable/test">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="Quitter"
+        android:text="@string/quit" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
     
-    <TextView android:text="@string/noconnection"/>
-</LinearLayout>
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="Informations"
+        android:text="@string/i"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
+        
+</RelativeLayout>

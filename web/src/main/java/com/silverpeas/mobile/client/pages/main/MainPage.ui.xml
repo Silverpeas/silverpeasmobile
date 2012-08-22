@@ -40,7 +40,7 @@
 					<m:VerticalPanel secondaryStyle="{style.contentV}">
 					<i:Icon text="Dashboard" styleName="{res.css.dashboard}" ui:field="dashboard" height="33%"/>
 						<i:Icon text="Images" styleName="{res.css.gallery}" ui:field="gallery" height="33%"/>
-						<i:Icon text="Agenda" styleName="{res.css.agenda}" ui:field="agenda" height="33%"/>
+						<i:Icon text="Almanach" styleName="{res.css.agenda}" ui:field="almanach" height="33%"/>
 					</m:VerticalPanel>
 				</m:HorizontalPanel>				
 			</m:Slide>
