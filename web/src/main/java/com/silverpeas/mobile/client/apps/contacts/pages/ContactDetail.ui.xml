@@ -6,11 +6,38 @@
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages'/>
 	
+	<ui:style>
+		
+		.ListPanel {
+			padding-left: 0.5em;
+			padding-right: 0.5em;
+			padding-top: 0.5em;
+			position: fixed;
+			top: 3em;
+			right: 0em;
+			/*font-size: 0.9em;*/ 
+			direction: rtl;
+			font-family: monospace;
+		}
+		
+	</ui:style>
+	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
 		</m:HeaderPanel>
-		
+		<m:HorizontalPanel ui:field="avatarPanel">
+		</m:HorizontalPanel>
+		<g:Label ui:field="lastName"></g:Label>
+		<m:HorizontalPanel>
+		    <g:Label ui:field="firstName"></g:Label>
+		</m:HorizontalPanel>
+		<g:Label ui:field="eMail"></g:Label>
+		<m:HorizontalPanel>
+		    <g:Label ui:field="phoneNumber"></g:Label>
+		</m:HorizontalPanel>
+		<m:Button ui:field="callButton" text="{msg.callContactButton}"></m:Button>
+		<m:Button ui:field="addButton" text="{msg.addContactButton}"></m:Button>
 		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>
 

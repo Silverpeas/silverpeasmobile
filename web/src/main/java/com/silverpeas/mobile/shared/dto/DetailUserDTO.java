@@ -11,6 +11,9 @@ public class DetailUserDTO implements Serializable {
 	private String id;
 	private String lastName;
 	private String eMail;
+	private String firstName;
+	private String avatar;
+	private String phoneNumber;
 	
 	public String getId() {
 		return id;
@@ -34,5 +37,29 @@ public class DetailUserDTO implements Serializable {
 
 	public String geteMail() {
 	    return eMail;
+	}
+	
+	public String getFirstName(){
+		return firstName;
+	}
+	
+	public void setFirstName(String firstName){
+		this.firstName = firstName;
+	}
+	
+	public String getAvatar(){
+		return avatar;
+	}
+	
+	public void setAvatar(String avatar){
+		this.avatar = avatar;
+	}
+	
+	public String getPhoneNumber(){
+		return phoneNumber;
+	}
+	
+	public void setPhoneNumber(String phoneNumber){
+		this.phoneNumber = phoneNumber;
 	}
 }

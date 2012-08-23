@@ -17,7 +17,7 @@
 	<properties>
 		<gwtVersion>2.4.0</gwtVersion>
 		<gwtMojoPluginVersion>2.4.0</gwtMojoPluginVersion>
-		<silverpeasVersion>5.8.1</silverpeasVersion>
+		<silverpeasVersion>5.9</silverpeasVersion>
 	</properties>
 	
 	<repositories>
@@ -25,6 +25,10 @@
         	<id>gwt-crypto repo</id>
         	<url>http://gwt-crypto.googlecode.com/svn/trunk/repo/</url>
      	</repository>
+     	<repository>
+        <id>gwtchismes</id>
+        <url>http://gwtchismes.googlecode.com/svn/mavenrepo/</url>
+      </repository>
 	</repositories>
 
 	<build>
@@ -131,6 +135,13 @@
 			<scope>provided</scope>	
 		</dependency>
 		<dependency>
+			<groupId>com.silverpeas.components.almanach</groupId>
+  			<artifactId>almanach-ejb</artifactId>
+  			<version>${silverpeasVersion}</version>
+			<classifier>client</classifier>
+			<scope>provided</scope>	
+		</dependency>
+		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>node</artifactId>
 			<version>${silverpeasVersion}</version>
@@ -206,5 +217,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+        <groupId>gwtchismes</groupId>
+        <artifactId>gwtchismes</artifactId>
+        <version>0.9.4</version>
+        <scope>provided</scope>
+      </dependency>
 	</dependencies>
 </project>

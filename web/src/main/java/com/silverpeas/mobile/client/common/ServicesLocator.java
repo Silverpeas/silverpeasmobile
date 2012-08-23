@@ -1,8 +1,8 @@
 package com.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.GWT;
-import com.silverpeas.mobile.shared.services.ServiceAgenda;
-import com.silverpeas.mobile.shared.services.ServiceAgendaAsync;
+import com.silverpeas.mobile.shared.services.ServiceAlmanach;
+import com.silverpeas.mobile.shared.services.ServiceAlmanachAsync;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
 import com.silverpeas.mobile.shared.services.ServiceConnectionAsync;
 import com.silverpeas.mobile.shared.services.ServiceContact;
@@ -22,9 +22,9 @@ public class ServicesLocator {
 	public static ServiceRSEAsync serviceRSE = (ServiceRSEAsync) GWT.create(ServiceRSE.class);
 	public static ServiceConnectionAsync serviceConnection = (ServiceConnectionAsync) GWT.create(ServiceConnection.class);
 	public static ServiceContactAsync serviceContact = (ServiceContactAsync) GWT.create(ServiceContact.class);
-	public static ServiceAgendaAsync serviceAgenda = (ServiceAgendaAsync) GWT.create(ServiceAgenda.class);
 	public static ServiceDashboardAsync serviceDashboard = (ServiceDashboardAsync) GWT.create(ServiceDashboard.class);	
 	public static ServiceGalleryAsync serviceGallery = (ServiceGalleryAsync) GWT.create(ServiceGallery.class);
 	public static ServiceNavigationAsync serviceNavigation = (ServiceNavigationAsync) GWT.create(ServiceNavigation.class);
 	public static ServiceDocumentsAsync serviceDocuments = (ServiceDocumentsAsync) GWT.create(ServiceDocuments.class); 
+	public static ServiceAlmanachAsync serviceAlmanach = (ServiceAlmanachAsync) GWT.create(ServiceAlmanach.class);
 }

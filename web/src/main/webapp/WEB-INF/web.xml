@@ -60,21 +60,21 @@
   </servlet-mapping>
   
   <servlet>
-  	<servlet-name>serviceAgendaImpl</servlet-name>
-  	<servlet-class>com.silverpeas.mobile.server.services.ServiceAgendaImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  	<servlet-name>serviceAgendaImpl</servlet-name>
-  	<url-pattern>/spmobil/Agenda</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
   	<servlet-name>serviceDashboardImpl</servlet-name>
   	<servlet-class>com.silverpeas.mobile.server.services.ServiceDashboardImpl</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>serviceDashboardImpl</servlet-name>
   	<url-pattern>/spmobil/Dashboard</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>serviceAlmanachImpl</servlet-name>
+  	<servlet-class>com.silverpeas.mobile.server.services.ServiceAlmanachImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>serviceAlmanachImpl</servlet-name>
+  	<url-pattern>/spmobil/Almanach</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

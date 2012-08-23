@@ -1,12 +1,14 @@
 package com.silverpeas.mobile.client.apps.contacts.events.pages;
 
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
+
 public class ContactDetailLoadedEvent extends AbstractContactsDetailPagesEvent{
 
-	String id;
+	DetailUserDTO detailUserDTO;
 	
-	public ContactDetailLoadedEvent(String id){
+	public ContactDetailLoadedEvent(DetailUserDTO result){
 		super();
-		this.id = id;
+		this.detailUserDTO = result;
 	}
 	
 	@Override
@@ -14,7 +16,7 @@ public class ContactDetailLoadedEvent extends AbstractContactsDetailPagesEvent{
 		handler.onContactDetailLoaded(this);
 	}
 	
-	public String getId(){
-		return id;
+	public DetailUserDTO getUserDetailDTO(){
+		return detailUserDTO;
 	}
 }

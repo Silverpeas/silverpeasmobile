@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
+import com.silverpeas.mobile.client.apps.almanach.AlmanachApp;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.dashboard.DashboardApp;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
@@ -47,9 +48,10 @@ public class MainPage extends Page {
 		app.start(this);
 	}
 	
-	@UiHandler("agenda")
-	void agenda(ClickEvent e) {
-		
+	@UiHandler("almanach")
+	void Almanach(ClickEvent e) {
+		App app = new AlmanachApp();
+		app.start(this);
 	}
 	
 	@UiHandler("gallery")
