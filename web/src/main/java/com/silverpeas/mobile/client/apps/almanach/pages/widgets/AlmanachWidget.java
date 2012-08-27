@@ -14,12 +14,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.silverpeas.mobile.client.apps.almanach.pages.EventDetailDTOPage;
-import com.silverpeas.mobile.client.apps.almanach.pages.EventView;
+import com.silverpeas.mobile.client.apps.almanach.events.pages.LoadEventDetailDTOEvent;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 
 @SuppressWarnings("deprecation")
-public class AlmanachWidget extends Composite implements EventView {
+public class AlmanachWidget extends Composite{
 
 	private static final String StyleCCellEmpty = "cellEmpty";
 	private static final String StyleCCellDays = "cellDays";
@@ -60,7 +60,6 @@ public class AlmanachWidget extends Composite implements EventView {
 	public String[] WEEK_DAYS = dateTimeConstants.shortWeekdays();
 
 	private final FlexTable calendarGrid = new FlexTable();
-	private Launcher launcher;
 
 	protected AlmanachWidget() {
 	}
@@ -86,8 +85,7 @@ public class AlmanachWidget extends Composite implements EventView {
 							cellHTML.addClickHandler(new ClickHandler(){  
 								  @Override  
 								  public void onClick(ClickEvent event) {  
-									  EventDetailDTOPage eventDetailDTOPage = new EventDetailDTOPage(cellHTML.getListEventDetailDTO());
-									  launcher.goTo(eventDetailDTOPage);
+									  EventBus.getInstance().fireEvent(new LoadEventDetailDTOEvent(cellHTML.getListEventDetailDTO()));
 								  }  
 							});    
 						}
@@ -399,10 +397,5 @@ public class AlmanachWidget extends Composite implements EventView {
 
 	public boolean belongsToMonth(Date d) {
 		return monthNumber == getMonthNumber(d);
-	}
-
-	@Override
-	public void setLauncher(Launcher launcher) {
-		this.launcher = launcher;
 	}
 }

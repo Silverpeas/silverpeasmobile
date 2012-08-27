@@ -9,5 +9,5 @@ import com.silverpeas.mobile.shared.exceptions.AlmanachException;
 
 @RemoteServiceRelativePath("Almanach")
 public interface ServiceAlmanach extends RemoteService{
-	Collection<EventDetailDTO> getAllRDV(int month) throws AlmanachException;
+	Collection<EventDetailDTO> getAlmanach(String instanceId) throws AlmanachException;
 }

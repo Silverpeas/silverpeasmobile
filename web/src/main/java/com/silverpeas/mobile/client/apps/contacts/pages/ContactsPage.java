@@ -7,13 +7,10 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
@@ -48,12 +45,7 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 		textBox.addKeyUpHandler(new KeyUpHandler() {		
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE && !textBox.getText().isEmpty()) {
-					List<ListItem> finalListItem = new ArrayList<ListItem>();
-					finalListItem = getFirstItemStartingWith(textBox.getText());
-					refresh(finalListItem);
-		        }
-				else if((textBox.getText().isEmpty() && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE) || textBox.getText().isEmpty()){
+				if(textBox.getText().isEmpty()){
 					refresh(contactsList);
 				}
 				else{
@@ -99,8 +91,8 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 
 	public List<ListItem> getFirstItemStartingWith(String search) {
 		List<ListItem> listItemStartingWith = new ArrayList<ListItem>();
-		for (int i = 0; i < listPanelContacts.getWidgetCount(); i++) {
-			ListItem item = listPanelContacts.getItem(i);
+		for (int i = 0; i < contactsList.size(); i++) {
+			ListItem item = contactsList.get(i);
 			String label = ((Label) item.getWidget(0)).getText().toUpperCase();
 			if (label.startsWith(search.toUpperCase())) {
 				listItemStartingWith.add(item);
@@ -109,10 +101,10 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 		return listItemStartingWith;
 	}
 	
-	@UiHandler("textBox")
+	/*@UiHandler("textBox")
 	public void onValueChange(ValueChangeEvent<String> event){
 		textBox.setText("");
-	}
+	}*/
 	
 	public void refresh(List<ListItem> listItem){
 		listPanelContacts.clear();

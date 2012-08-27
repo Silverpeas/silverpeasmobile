@@ -5,5 +5,5 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 
 public interface ServiceAlmanachAsync {
-	void getAllRDV(int month, AsyncCallback<Collection<EventDetailDTO>> callback);
+	void getAlmanach(String instanceId, AsyncCallback<Collection<EventDetailDTO>> callback);
 }
