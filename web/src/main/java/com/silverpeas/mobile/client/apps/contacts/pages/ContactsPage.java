@@ -7,14 +7,10 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
@@ -49,13 +45,13 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 		textBox.addKeyUpHandler(new KeyUpHandler() {		
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE && !textBox.getText().isEmpty()) {
+				if(textBox.getText().isEmpty()){
+					refresh(contactsList);
+				}
+				else{
 					List<ListItem> finalListItem = new ArrayList<ListItem>();
 					finalListItem = getFirstItemStartingWith(textBox.getText());
 					refresh(finalListItem);
-		        }
-				else if(textBox.getText().isEmpty() && event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE){
-					refresh(contactsList);
 				}
 			}
 		});
@@ -69,6 +65,7 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 
 	@Override
 	public void onContactsLoaded(ContactsLoadedEvent event) {
+		listPanelContacts.clear();
 		contactsList = new ArrayList<ListItem>();
 		Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
 		listPanelContacts.setSelectable(true);
@@ -79,22 +76,14 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 			Label labelContact = new Label(dudto.getLastName());
 			contact.add(labelContact);
 
-			if(contactsList.size()==0){
-				contactsList.add(contact);
-			}
-			else{
-				if(!(contactsList.contains(contact))){
-						contactsList.add(contact);
-				}
-			}
-			
+			contactsList.add(contact);
+
 			listPanelContacts.add(contact);
 			
 			labelContact.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					// TODO : afficher fiche contact
-					// ContactDetail contactDetail = new ContactDetail(id);
-					// goTo(contactDetail);
+					ContactDetail contactDetail = new ContactDetail(id);
+					goTo(contactDetail);
 				}
 			});
 		}
@@ -102,8 +91,8 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 
 	public List<ListItem> getFirstItemStartingWith(String search) {
 		List<ListItem> listItemStartingWith = new ArrayList<ListItem>();
-		for (int i = 0; i < listPanelContacts.getWidgetCount(); i++) {
-			ListItem item = listPanelContacts.getItem(i);
+		for (int i = 0; i < contactsList.size(); i++) {
+			ListItem item = contactsList.get(i);
 			String label = ((Label) item.getWidget(0)).getText().toUpperCase();
 			if (label.startsWith(search.toUpperCase())) {
 				listItemStartingWith.add(item);
@@ -112,22 +101,10 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 		return listItemStartingWith;
 	}
 	
-	@UiHandler("textBox")
-	public void onKeyPress(KeyPressEvent keyPress){
-		List<ListItem> finalListItem = new ArrayList<ListItem>();
-		if(textBox.getText().isEmpty()){
-			finalListItem = getFirstItemStartingWith(keyPress.toString());
-		}
-		else{
-			finalListItem = getFirstItemStartingWith(textBox.getText());
-		}
-		refresh(finalListItem);
-	}
-	
-	@UiHandler("textBox")
+	/*@UiHandler("textBox")
 	public void onValueChange(ValueChangeEvent<String> event){
 		textBox.setText("");
-	}
+	}*/
 	
 	public void refresh(List<ListItem> listItem){
 		listPanelContacts.clear();

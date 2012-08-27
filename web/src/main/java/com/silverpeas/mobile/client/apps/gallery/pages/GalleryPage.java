@@ -79,7 +79,6 @@ public class GalleryPage extends Page implements GalleryPagesEventHandler, View 
 		globalMsg = GWT.create(ApplicationMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractGalleryPagesEvent.TYPE, this);
-		
 		// load previous gallery and album selection
 		EventBus.getInstance().fireEvent(new GalleryLoadSettingsEvent());
 	}
