@@ -4,6 +4,7 @@
 	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
 
     <ui:with field='msg' type='com.silverpeas.mobile.client.apps.almanach.resources.AlmanachMessages'/>
+<<<<<<< HEAD
     <ui:with field='ressources' type='com.silverpeas.mobile.client.apps.almanach.resources.AlmanachResources'/>
     
     <ui:style>
@@ -12,11 +13,14 @@
 			margin-right: 0.5em;
 		}
 	</ui:style>
+=======
+>>>>>>> 09b477a4f719202ea331d7ac57a295f981f9520f
     
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
 		</m:HeaderPanel>
+<<<<<<< HEAD
 		<m:ListPanel selectable="true" ui:field="place">
 			<m:ListItem showArrow="true">				
 				<m:HorizontalPanel>
@@ -30,6 +34,9 @@
 		    <g:Label horizontalAlignment="left" ui:field="monthLabel"></g:Label>
 		</g:HorizontalPanel>
 		<g:HorizontalPanel ui:field="panelAlmanachWidget"></g:HorizontalPanel>
+=======
+		<g:HorizontalPanel ui:field="l"></g:HorizontalPanel>
+>>>>>>> 09b477a4f719202ea331d7ac57a295f981f9520f
 		<m:HeaderPanel>
 			<f:FooterBar />
 		</m:HeaderPanel>

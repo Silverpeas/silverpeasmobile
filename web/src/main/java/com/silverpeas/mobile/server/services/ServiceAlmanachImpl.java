@@ -30,6 +30,7 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
 	private Collection<EventDetailDTO> listEventDetailDTO;
 	
 	@SuppressWarnings("deprecation")
+<<<<<<< HEAD
 	public Collection<EventDetailDTO> getAlmanach(String instanceId) throws AlmanachException{
 		listEventDetailDTO = new ArrayList<EventDetailDTO>();
 		listEventDetail = new ArrayList<EventDetail>();
@@ -37,6 +38,15 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
 		EventPK eventPK = new EventPK("");
 		eventPK.setComponentName(instanceId);
 		Date date = new Date();
+=======
+	public Collection<EventDetailDTO> getAllRDV(int month) throws AlmanachException{
+		listEventDetailDTO = new ArrayList<EventDetailDTO>();
+		listEventDetail = new ArrayList<EventDetail>();
+		currentAlmanachBm = getAlmanachBm();
+		Date date = new Date();
+		date.setMonth(month);
+		EventPK eventPK = new EventPK("0");
+>>>>>>> 09b477a4f719202ea331d7ac57a295f981f9520f
 		try {
 			listEventDetail = currentAlmanachBm.getMonthEvents(eventPK, date);
 		} catch (RemoteException e) {
@@ -50,6 +60,25 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
 				listEventDetailDTO.add(mapper.map(eventDetail, EventDetailDTO.class));
 			}
 		}
+<<<<<<< HEAD
+=======
+		
+		EventDetailDTO test = new EventDetailDTO();
+		String name = new String("test name");
+		Date startDate = new Date();
+		Date endDate = new Date();
+		String startHour = new String("test startHour");
+		String endHour = new String("test endHour");
+		String place = new String("test place");
+		test.set_name(name);
+		test.set_startDate(startDate);
+		test.set_endDate(endDate);
+		test.setStartHour(startHour);
+		test.setEndHour(endHour);
+		test.setPlace(place);
+		listEventDetailDTO.add(test);
+		
+>>>>>>> 09b477a4f719202ea331d7ac57a295f981f9520f
 		return listEventDetailDTO;
 	}
 	

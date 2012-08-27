@@ -14,12 +14,21 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+<<<<<<< HEAD
 import com.silverpeas.mobile.client.apps.almanach.events.pages.LoadEventDetailDTOEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 
 @SuppressWarnings("deprecation")
 public class AlmanachWidget extends Composite{
+=======
+import com.silverpeas.mobile.client.apps.almanach.pages.EventDetailDTOPage;
+import com.silverpeas.mobile.client.apps.almanach.pages.EventView;
+import com.silverpeas.mobile.shared.dto.EventDetailDTO;
+
+@SuppressWarnings("deprecation")
+public class AlmanachWidget extends Composite implements EventView {
+>>>>>>> 09b477a4f719202ea331d7ac57a295f981f9520f
 
 	private static final String StyleCCellEmpty = "cellEmpty";
 	private static final String StyleCCellDays = "cellDays";
@@ -60,6 +69,10 @@ public class AlmanachWidget extends Composite{
 	public String[] WEEK_DAYS = dateTimeConstants.shortWeekdays();
 
 	private final FlexTable calendarGrid = new FlexTable();
+<<<<<<< HEAD
+=======
+	private Launcher launcher;
+>>>>>>> 09b477a4f719202ea331d7ac57a295f981f9520f
 
 	protected AlmanachWidget() {
 	}
@@ -85,7 +98,12 @@ public class AlmanachWidget extends Composite{
 							cellHTML.addClickHandler(new ClickHandler(){  
 								  @Override  
 								  public void onClick(ClickEvent event) {  
+<<<<<<< HEAD
 									  EventBus.getInstance().fireEvent(new LoadEventDetailDTOEvent(cellHTML.getListEventDetailDTO()));
+=======
+									  EventDetailDTOPage eventDetailDTOPage = new EventDetailDTOPage(cellHTML.getListEventDetailDTO());
+									  launcher.goTo(eventDetailDTOPage);
+>>>>>>> 09b477a4f719202ea331d7ac57a295f981f9520f
 								  }  
 							});    
 						}
@@ -398,4 +416,12 @@ public class AlmanachWidget extends Composite{
 	public boolean belongsToMonth(Date d) {
 		return monthNumber == getMonthNumber(d);
 	}
+<<<<<<< HEAD
+=======
+
+	@Override
+	public void setLauncher(Launcher launcher) {
+		this.launcher = launcher;
+	}
+>>>>>>> 09b477a4f719202ea331d7ac57a295f981f9520f
 }
