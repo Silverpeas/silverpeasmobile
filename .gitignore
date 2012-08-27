@@ -505,4 +505,5 @@
 *.project
 *.classpath
 /.svn
+/android/bin
 
