@@ -1,0 +1,10 @@
+@sprite .almanachs {
+	gwt-image: "almanachs";
+	border: none;
+}
+
+@sprite .cal {
+	gwt-image: "cal";
+	border: none;
+	margin-right: 0.5em;
+}

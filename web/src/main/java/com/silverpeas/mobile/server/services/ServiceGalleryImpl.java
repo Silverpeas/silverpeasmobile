@@ -267,6 +267,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		return picture;
 	}
 
+	@SuppressWarnings("deprecation")
 	private String getBase64ImageData(String instanceId, PhotoDetail photoDetail, PhotoSize size) throws FileNotFoundException, IOException {
 		ResourceLocator gallerySettings = new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
 		String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getPhotoPK().getId();
