@@ -50,6 +50,7 @@ public class ContactDetail extends Page implements ContactDetailPagesEventHandle
 
 	@Override
 	public void onContactDetailLoaded(ContactDetailLoadedEvent event) {
+		avatarPanel.clear();
 		detailUserDTO = event.getUserDetailDTO();
 		image = new Image(detailUserDTO.getAvatar());
 		avatarPanel.add(image);

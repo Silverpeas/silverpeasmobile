@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.apps.almanach.pages;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -73,10 +74,10 @@ public class AlmanachPage extends Page implements AlmanachPagesEventHandler, Vie
 		app.start(this);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void displayPlace(ApplicationInstanceDTO appDTO){
 		instance.setText(appDTO.getLabel());
 		Date date = new Date();
-		monthLabel.setText(String.valueOf(date.getMonth()));
+		DateTimeFormat dtf = DateTimeFormat.getFormat("MMMM yyyy");
+		monthLabel.setText(dtf.format(date));
 	}
 }

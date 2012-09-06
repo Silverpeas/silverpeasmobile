@@ -8,8 +8,8 @@ import com.silverpeas.mobile.shared.dto.StatusDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.RSEexception;
 import com.silverpeas.mobile.shared.services.ServiceRSE;
-import com.silverpeas.socialNetwork.status.Status;
-import com.silverpeas.socialNetwork.status.StatusService;
+import com.silverpeas.socialnetwork.status.Status;
+import com.silverpeas.socialnetwork.status.StatusService;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 

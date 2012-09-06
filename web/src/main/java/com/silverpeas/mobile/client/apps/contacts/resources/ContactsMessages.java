@@ -6,4 +6,6 @@ public interface ContactsMessages extends Messages{
 	String title();
 	String callContactButton();
 	String addContactButton();
+	String allContacts();
+	String myContacts();
 }

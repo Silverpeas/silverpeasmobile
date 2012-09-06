@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.gwtmobile.phonegap.client.Contacts;
 import com.gwtmobile.phonegap.client.Contacts.Callback;
 import com.gwtmobile.phonegap.client.Contacts.ContactError;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AbstractContactsControllerEvent;
@@ -35,7 +36,7 @@ public class ContactsController implements Controller, ContactsControllerEventHa
 
 	@Override
 	public void loadContacts(ContactsLoadEvent event) {
-		ServicesLocator.serviceContact.getAllMyContacts(new AsyncCallback<List<DetailUserDTO>>() {
+		ServicesLocator.serviceContact.getContacts(event.getCheckBox(), new AsyncCallback<List<DetailUserDTO>>() {
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 			}
@@ -65,7 +66,7 @@ public class ContactsController implements Controller, ContactsControllerEventHa
 	@Override
 	public void addContact(AddContactEvent event) {
 		DetailUserDTO detailUserDTO = event.getUserDetailDTO();
-		final PhoneContact contact = new PhoneContact();
+		final PhoneContact contact = (PhoneContact) Contacts.newInstance();
 		contact.setDisplayName(detailUserDTO.getLastName());
 		contact.setPhonenUmber(detailUserDTO.getPhoneNumber());
 		contact.save(new Callback() {			

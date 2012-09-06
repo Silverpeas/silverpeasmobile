@@ -12,7 +12,7 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.ContactException;
 import com.silverpeas.mobile.shared.services.ServiceContact;
-import com.silverpeas.socialNetwork.relationShip.RelationShipService;
+import com.silverpeas.socialnetwork.relationShip.RelationShipService;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
@@ -32,9 +32,18 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
 	 * @return list of UserDetailDTO
 	 * @throws ContactException
 	 */
-	public List<DetailUserDTO> getAllMyContacts() throws ContactException{
+	public List<DetailUserDTO> getContacts(String checkBox) throws ContactException{
 		listuserDTO = new ArrayList<DetailUserDTO>();
-		List<UserDetail> userDetail = getAllMyUserDetailContacts();
+		List<UserDetail> userDetail = new ArrayList<UserDetail>();
+		if(checkBox.equals("ALL")){
+			UserDetail[] tabUserDetail = organizationController.getAllUsers();
+			for(int i=0;i<tabUserDetail.length;i++){
+				userDetail.add(tabUserDetail[i]);
+			}
+		}
+		else if(checkBox.equals("MY")){
+			userDetail = getAllMyUserDetailContacts();
+		}
 		ArrayList<DetailUserDTO> users = new ArrayList<DetailUserDTO>();
 		Mapper mapper = new DozerBeanMapper();
 		Iterator<UserDetail> i = userDetail.iterator();
@@ -86,12 +95,6 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
 	    return new ArrayList<String>();
 	}
 	
-	/**
-	 * Return Contact Detail
-	 * @param id
-	 * @return DetailUserDTO
-	 * @throws ContactException
-	 */
 	public DetailUserDTO getContactDetail(String id) throws ContactException{
 		UserDetail userDetail = getUserDetail(id);
 		UserFull userFull = UserFull.getById(id);

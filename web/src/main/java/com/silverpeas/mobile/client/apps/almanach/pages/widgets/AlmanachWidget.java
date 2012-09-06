@@ -333,7 +333,6 @@ public class AlmanachWidget extends Composite{
 				CellHTML weekHtml = (CellHTML) calendarGrid.getWidget(i, 0);
 				if (weekHtml == null) {
 					weekHtml = new CellHTML();
-					// weekHtml.addClickHandler(this);
 				}
 				weekHtml.setEnabled(true);
 				weekHtml.setDay(week);
