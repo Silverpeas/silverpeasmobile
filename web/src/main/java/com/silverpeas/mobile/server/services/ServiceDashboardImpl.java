@@ -14,9 +14,9 @@ import com.silverpeas.mobile.shared.dto.SocialInformationDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DashboardException;
 import com.silverpeas.mobile.shared.services.ServiceDashboard;
-import com.silverpeas.socialNetwork.model.SocialInformation;
-import com.silverpeas.socialNetwork.model.SocialInformationType;
-import com.silverpeas.socialNetwork.relationShip.RelationShipService;
+import com.silverpeas.socialnetwork.model.SocialInformation;
+import com.silverpeas.socialnetwork.model.SocialInformationType;
+import com.silverpeas.socialnetwork.relationShip.RelationShipService;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.util.DateUtil;
@@ -37,11 +37,11 @@ public class ServiceDashboardImpl extends AbstractAuthenticateService implements
 		
 	    List<String> myContactIds = getMyContactsIds();
 	    
-	    List<com.silverpeas.socialNetwork.model.SocialInformation> socialInformationsFull = null;
+	    List<SocialInformation> socialInformationsFull = null;
 	    socialInformationsFull = new ProviderService().getSocialInformationsListOfMyContact(SocialInformationType.ALL, myId,
 		        myContactIds, dBegin, dEnd);	    
 	    
-	    if (SocialInformationType.ALL.equals(SocialInformationType.ALL)) {
+	    if (SocialInformationType.ALL.equals(socialInformationType)) {
 	      Collections.sort(socialInformationsFull);
 	    }
 	    
@@ -60,7 +60,7 @@ public class ServiceDashboardImpl extends AbstractAuthenticateService implements
 	    return new ArrayList<String>();
 	}
 	
-	public List<SocialInformationDTO> processResults(List<com.silverpeas.socialNetwork.model.SocialInformation> socialInformationsFull, int reinitialisationPage, String socialInformationType){
+	public List<SocialInformationDTO> processResults(List<SocialInformation> socialInformationsFull, int reinitialisationPage, String socialInformationType){
 		String date = null;
 	    LinkedHashMap<Date, List<SocialInformationDTO>> hashtable =
 	        new LinkedHashMap<Date, List<SocialInformationDTO>>();

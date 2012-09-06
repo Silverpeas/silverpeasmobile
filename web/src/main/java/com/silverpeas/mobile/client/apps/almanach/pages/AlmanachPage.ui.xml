@@ -27,10 +27,9 @@
 			</m:ListItem>
 		</m:ListPanel>	
 		<g:HorizontalPanel>
-		    <g:Label horizontalAlignment="left" ui:field="monthLabel"></g:Label>
+		    <g:Label horizontalAlignment="center" ui:field="monthLabel"></g:Label>
 		</g:HorizontalPanel>
 		<g:HorizontalPanel ui:field="panelAlmanachWidget"></g:HorizontalPanel>
-		<g:HorizontalPanel ui:field="l"></g:HorizontalPanel>
 		<m:HeaderPanel>
 			<f:FooterBar />
 		</m:HeaderPanel>

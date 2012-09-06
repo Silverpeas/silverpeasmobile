@@ -2,11 +2,8 @@ package com.silverpeas.mobile.shared.dto;
 
 import java.io.Serializable;
 
-public class DetailUserDTO implements Serializable {
+public class DetailUserDTO implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5388415881024885835L;
 	private String id;
 	private String lastName;

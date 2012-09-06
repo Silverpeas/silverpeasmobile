@@ -11,11 +11,15 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
+import com.gwtmobile.ui.client.widgets.RadioButton;
+import com.gwtmobile.ui.client.widgets.RadioButtonGroup;
 import com.gwtmobile.ui.client.widgets.ScrollPanel;
 import com.gwtmobile.ui.client.widgets.TextBox;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
@@ -34,14 +38,19 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 	@UiField ListPanel listPanelContacts;
 	@UiField ScrollPanel scrollPanel;
 	@UiField TextBox textBox;
+	@UiField RadioButtonGroup group;
+	@UiField RadioButton all, my;
 
 	interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
 	}
 
+	@SuppressWarnings("deprecation")
 	public ContactsPage() {	
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
-		EventBus.getInstance().fireEvent(new ContactsLoadEvent());
+		EventBus.getInstance().fireEvent(new ContactsLoadEvent("MY"));
+		my.setChecked(true);
+		all.setChecked(false);
 		textBox.addKeyUpHandler(new KeyUpHandler() {		
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
@@ -67,19 +76,16 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 	public void onContactsLoaded(ContactsLoadedEvent event) {
 		listPanelContacts.clear();
 		contactsList = new ArrayList<ListItem>();
-		Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
 		listPanelContacts.setSelectable(true);
+		Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
 		while (i.hasNext()) {
 			DetailUserDTO dudto = i.next();
 			ListItem contact = new ListItem();
 			final String id = dudto.getId();
 			Label labelContact = new Label(dudto.getLastName());
 			contact.add(labelContact);
-
 			contactsList.add(contact);
-
 			listPanelContacts.add(contact);
-			
 			labelContact.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					ContactDetail contactDetail = new ContactDetail(id);
@@ -100,11 +106,17 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 		}
 		return listItemStartingWith;
 	}
-	
-	/*@UiHandler("textBox")
-	public void onValueChange(ValueChangeEvent<String> event){
-		textBox.setText("");
-	}*/
+
+	@UiHandler("group")
+    void onRadioGroupSelectionChanged(SelectionChangedEvent e) {
+    	RadioButton radio = (RadioButton) group.getWidget(e.getSelection());
+    	if(radio.getText().equals("All Contacts")){
+    		EventBus.getInstance().fireEvent(new ContactsLoadEvent("ALL"));
+    	}
+    	else{
+    		EventBus.getInstance().fireEvent(new ContactsLoadEvent("MY"));
+    	}
+    }
 	
 	public void refresh(List<ListItem> listItem){
 		listPanelContacts.clear();

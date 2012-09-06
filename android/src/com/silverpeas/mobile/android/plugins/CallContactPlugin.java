@@ -11,7 +11,6 @@ import android.net.Uri;
 public class CallContactPlugin extends Plugin {
 
 	public static final String ACTION = "phone";
-	private int code = 0;
 
 	@Override
 	public PluginResult execute(String arg0, JSONArray arg1, String arg2) {
@@ -34,7 +33,7 @@ public class CallContactPlugin extends Plugin {
 	public void Call(String phoneNumber) {
 		Intent callIntent = new Intent(Intent.ACTION_CALL);
 		callIntent.setData(Uri.parse("tel:"+phoneNumber));
-		this.cordova.startActivityForResult((Plugin) this, callIntent, code);
+		this.cordova.getActivity().startActivity(callIntent);
 	}
 
 }
