@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.silverpeas.calendar.Date;
 import com.silverpeas.jcrutil.BasicDaoFactory;
-import com.silverpeas.socialNetwork.model.SocialInformation;
-import com.silverpeas.socialNetwork.model.SocialInformationType;
-import com.silverpeas.socialNetwork.provider.ProviderSwitchInterface;
+import com.silverpeas.socialnetwork.model.SocialInformation;
+import com.silverpeas.socialnetwork.model.SocialInformationType;
+import com.silverpeas.socialnetwork.provider.ProviderSwitchInterface;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 
 public class ProviderService {
