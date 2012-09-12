@@ -44,7 +44,7 @@
 					</m:VerticalPanel>
 				</m:HorizontalPanel>				
 			</m:Slide>
-			<m:Slide>
+			<!-- m:Slide>
 				<m:HorizontalPanel secondaryStyle="{style.contentH}">
 					<m:VerticalPanel secondaryStyle="{style.contentV}">
 						<i:Icon text="Bookmark" styleName="{res.css.bookmark}" height="50%"/>
@@ -54,7 +54,7 @@
 						<i:Icon text="Settings" styleName="{res.css.settings}" ui:field="setup" height="50%"/>
 					</m:VerticalPanel>
 				</m:HorizontalPanel>
-			</m:Slide>
+			</m:Slide-->
 		</m:SlidePanel>
 			
 		<m:HeaderPanel>
