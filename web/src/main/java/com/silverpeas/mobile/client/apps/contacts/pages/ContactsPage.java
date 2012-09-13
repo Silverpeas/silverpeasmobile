@@ -44,13 +44,12 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 	interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
 	}
 
-	@SuppressWarnings("deprecation")
 	public ContactsPage() {	
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
 		EventBus.getInstance().fireEvent(new ContactsLoadEvent("MY"));
-		my.setChecked(true);
-		all.setChecked(false);
+		my.setValue(true);
+		all.setValue(false);
 		textBox.addKeyUpHandler(new KeyUpHandler() {		
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
