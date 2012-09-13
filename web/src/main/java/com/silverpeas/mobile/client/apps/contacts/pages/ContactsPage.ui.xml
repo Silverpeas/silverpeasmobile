@@ -22,24 +22,31 @@
 			-webkit-box-orient: vertical !important;
 			-webkit-box-align: start !important;		
 		}
+		
+		.filter {
+			width: 100%;
+			height: 35px;
+			display: -webkit-box;
+			
+		}		
 	</ui:style>
 	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
 		</m:HeaderPanel>
-		<m:HorizontalPanel>
-		    <m:TextBox ui:field="textBox"></m:TextBox>	
+		<m:VerticalPanel>
+		    	
 			<m:ListPanel selectable="false">
+				<m:TextBox ui:field="textBox" styleName="{style.filter}"></m:TextBox>
 				<m:ListItem styleName="{style.modify}">
-					<g:Label>Choose a filter</g:Label>
 					<m:RadioButtonGroup name="contactChoice" vertical="false" ui:field="group">
 						<m:RadioButton ui:field="my" text="{msg.myContacts}"></m:RadioButton>
 						<m:RadioButton ui:field="all" text="{msg.allContacts}"></m:RadioButton>
 					</m:RadioButtonGroup>
 				</m:ListItem>
 			</m:ListPanel>			
-		</m:HorizontalPanel>
+		</m:VerticalPanel>
 		<m:ScrollPanel ui:field="scrollPanel">
 			<m:ListPanel ui:field="listPanelContacts" ></m:ListPanel>				
 		</m:ScrollPanel>
