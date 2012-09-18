@@ -9,6 +9,7 @@ import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
+import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.ContactException;
 import com.silverpeas.mobile.shared.services.ServiceContact;
@@ -32,16 +33,16 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
 	 * @return list of UserDetailDTO
 	 * @throws ContactException
 	 */
-	public List<DetailUserDTO> getContacts(String checkBox) throws ContactException{
+	public List<DetailUserDTO> getContacts(ContactFilters filter) throws ContactException {
 		listuserDTO = new ArrayList<DetailUserDTO>();
 		List<UserDetail> userDetail = new ArrayList<UserDetail>();
-		if(checkBox.equals("ALL")){
+		if(filter.equals(ContactFilters.ALL)){
 			UserDetail[] tabUserDetail = organizationController.getAllUsers();
 			for(int i=0;i<tabUserDetail.length;i++){
 				userDetail.add(tabUserDetail[i]);
 			}
 		}
-		else if(checkBox.equals("MY")){
+		else if(filter.equals(ContactFilters.MY)){
 			userDetail = getAllMyUserDetailContacts();
 		}
 		ArrayList<DetailUserDTO> users = new ArrayList<DetailUserDTO>();

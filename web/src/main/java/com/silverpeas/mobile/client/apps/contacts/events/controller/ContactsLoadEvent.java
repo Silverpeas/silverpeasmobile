@@ -1,12 +1,14 @@
 package com.silverpeas.mobile.client.apps.contacts.events.controller;
 
+import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
+
 public class ContactsLoadEvent extends AbstractContactsControllerEvent{
 	
-	private String checkBox;
+	private ContactFilters filter;
 	
-	public ContactsLoadEvent(String checkBox){
+	public ContactsLoadEvent(ContactFilters filter){
 		super();
-		this.checkBox = checkBox;
+		this.filter = filter;
 	}
 
 	@Override
@@ -14,7 +16,7 @@ public class ContactsLoadEvent extends AbstractContactsControllerEvent{
 		handler.loadContacts(this);
 	}
 	
-	public String getCheckBox(){
-		return checkBox;
+	public ContactFilters getFilter(){
+		return filter;
 	}
 }

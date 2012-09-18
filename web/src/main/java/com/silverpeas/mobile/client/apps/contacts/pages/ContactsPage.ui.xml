@@ -41,8 +41,8 @@
 				<m:TextBox ui:field="textBox" styleName="{style.filter}"></m:TextBox>
 				<m:ListItem styleName="{style.modify}">
 					<m:RadioButtonGroup name="contactChoice" vertical="false" ui:field="group">
-						<m:RadioButton ui:field="my" text="{msg.myContacts}"></m:RadioButton>
-						<m:RadioButton ui:field="all" text="{msg.allContacts}"></m:RadioButton>
+						<m:RadioButton ui:field="my" text="{msg.myContacts}" name="my"></m:RadioButton>
+						<m:RadioButton ui:field="all" text="{msg.allContacts}" name="all"></m:RadioButton>
 					</m:RadioButtonGroup>
 				</m:ListItem>
 			</m:ListPanel>			

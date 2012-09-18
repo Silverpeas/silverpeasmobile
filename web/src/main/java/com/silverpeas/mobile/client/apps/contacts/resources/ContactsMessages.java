@@ -8,4 +8,8 @@ public interface ContactsMessages extends Messages{
 	String addContactButton();
 	String allContacts();
 	String myContacts();
+	String phoneNumber();
+	String eMail();
+	String firstName();
+	String lastName();
 }

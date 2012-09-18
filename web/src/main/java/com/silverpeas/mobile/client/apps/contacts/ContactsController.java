@@ -5,11 +5,11 @@ import java.util.List;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtmobile.phonegap.client.Contacts;
+import com.gwtmobile.phonegap.client.Notification;
 import com.gwtmobile.phonegap.client.Contacts.Callback;
 import com.gwtmobile.phonegap.client.Contacts.ContactError;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AbstractContactsControllerEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AddContactEvent;
-import com.silverpeas.mobile.client.apps.contacts.events.controller.CallContactEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactDetailLoadEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsControllerEventHandler;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
@@ -36,31 +36,30 @@ public class ContactsController implements Controller, ContactsControllerEventHa
 
 	@Override
 	public void loadContacts(ContactsLoadEvent event) {
-		ServicesLocator.serviceContact.getContacts(event.getCheckBox(), new AsyncCallback<List<DetailUserDTO>>() {
+		Notification.activityStart();
+		ServicesLocator.serviceContact.getContacts(event.getFilter(), new AsyncCallback<List<DetailUserDTO>>() {
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 			}
 			public void onSuccess(List<DetailUserDTO> result) {
 				EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
+				Notification.activityStop();
 			}
 		});
 	}
 
 	@Override
 	public void loadContactDetail(ContactDetailLoadEvent event) {
+		Notification.activityStart();
 		ServicesLocator.serviceContact.getContactDetail(event.getId(), new AsyncCallback<DetailUserDTO>(){
-			public void onFailure(Throwable caught) {
+			public void onFailure(Throwable caught) {				
 				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 			}
-			public void onSuccess(DetailUserDTO result) {
+			public void onSuccess(DetailUserDTO result) {				
 				EventBus.getInstance().fireEvent(new ContactDetailLoadedEvent(result));
+				Notification.activityStop();
 			}
 		});
-	}
-
-	@Override
-	public void callContact(CallContactEvent event) {
-		Window.alert("Call contact.");
 	}
 
 	@Override
@@ -71,11 +70,13 @@ public class ContactsController implements Controller, ContactsControllerEventHa
 		contact.setPhonenUmber(detailUserDTO.getPhoneNumber());
 		contact.save(new Callback() {			
 			@Override
-			public void onSuccess() {
+			public void onSuccess() {				
+				//TODO : send event to page for display message
 				Window.alert("Contact successfully added.");
 			}			
 			@Override
 			public void onError(ContactError error) {
+				//TODO : send event to page for display message
 				Window.alert("Contact creation failed.");
 			}
 		});

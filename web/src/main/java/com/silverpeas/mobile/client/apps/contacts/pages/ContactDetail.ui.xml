@@ -28,15 +28,14 @@
 		</m:HeaderPanel>
 		<m:HorizontalPanel ui:field="avatarPanel">
 		</m:HorizontalPanel>
-		<g:Label ui:field="lastName"></g:Label>
+		<g:Label text="{msg.lastName}"></g:Label><g:Label ui:field="lastName"></g:Label>
 		<m:HorizontalPanel>
-		    <g:Label ui:field="firstName"></g:Label>
+		    <g:Label text="{msg.firstName}"></g:Label><g:Label ui:field="firstName"></g:Label>
 		</m:HorizontalPanel>
-		<g:Label ui:field="eMail"></g:Label>
+		<g:Label text="{msg.eMail}"></g:Label><g:Anchor ui:field="eMail"></g:Anchor>
 		<m:HorizontalPanel>
-		    <g:Label ui:field="phoneNumber"></g:Label>
-		</m:HorizontalPanel>
-		<m:Button ui:field="callButton" text="{msg.callContactButton}"></m:Button>
+			<g:Label text="{msg.phoneNumber}"></g:Label><g:Anchor ui:field="phoneNumber"></g:Anchor>
+		</m:HorizontalPanel>		
 		<m:Button ui:field="addButton" text="{msg.addContactButton}"></m:Button>
 		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>

@@ -29,6 +29,7 @@ import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEven
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
+import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
 public class ContactsPage extends Page implements ContactsPagesEventHandler,
 		View {
@@ -47,7 +48,7 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 	public ContactsPage() {	
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
-		EventBus.getInstance().fireEvent(new ContactsLoadEvent("MY"));
+		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));
 		my.setValue(true);
 		all.setValue(false);
 		textBox.addKeyUpHandler(new KeyUpHandler() {		
@@ -82,6 +83,7 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 			ListItem contact = new ListItem();
 			final String id = dudto.getId();
 			Label labelContact = new Label(dudto.getLastName());
+			labelContact.setWidth("100%");
 			contact.add(labelContact);
 			contactsList.add(contact);
 			listPanelContacts.add(contact);
@@ -109,11 +111,11 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 	@UiHandler("group")
     void onRadioGroupSelectionChanged(SelectionChangedEvent e) {
     	RadioButton radio = (RadioButton) group.getWidget(e.getSelection());
-    	if(radio.getText().equals("All Contacts")){
-    		EventBus.getInstance().fireEvent(new ContactsLoadEvent("ALL"));
+    	if(radio.getName().equals("all")){
+    		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.ALL));
     	}
     	else{
-    		EventBus.getInstance().fireEvent(new ContactsLoadEvent("MY"));
+    		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));
     	}
     }
 	
