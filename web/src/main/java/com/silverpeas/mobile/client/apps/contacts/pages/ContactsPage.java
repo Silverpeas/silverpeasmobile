@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
@@ -110,8 +111,8 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 
 	@UiHandler("group")
     void onRadioGroupSelectionChanged(SelectionChangedEvent e) {
-    	RadioButton radio = (RadioButton) group.getWidget(e.getSelection());
-    	if(radio.getName().equals("all")){
+		
+    	if(e.getSelection() == 1){
     		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.ALL));
     	}
     	else{

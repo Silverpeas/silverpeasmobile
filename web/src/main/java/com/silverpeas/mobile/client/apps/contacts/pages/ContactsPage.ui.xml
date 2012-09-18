@@ -35,8 +35,7 @@
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
 		</m:HeaderPanel>
-		<m:VerticalPanel>
-		    	
+		<m:VerticalPanel>	    	
 			<m:ListPanel selectable="false">
 				<m:TextBox ui:field="textBox" styleName="{style.filter}"></m:TextBox>
 				<m:ListItem styleName="{style.modify}">

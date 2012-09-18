@@ -1,12 +1,11 @@
 package com.silverpeas.mobile.client.apps.contacts.events.controller;
 
-import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
 public class ContactsLoadEvent extends AbstractContactsControllerEvent{
 	
-	private ContactFilters filter;
+	private String filter;
 	
-	public ContactsLoadEvent(ContactFilters filter){
+	public ContactsLoadEvent(String filter){
 		super();
 		this.filter = filter;
 	}
@@ -16,7 +15,7 @@ public class ContactsLoadEvent extends AbstractContactsControllerEvent{
 		handler.loadContacts(this);
 	}
 	
-	public ContactFilters getFilter(){
+	public String getFilter(){
 		return filter;
 	}
 }

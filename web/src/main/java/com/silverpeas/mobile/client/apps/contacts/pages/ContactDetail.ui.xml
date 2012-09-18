@@ -25,19 +25,25 @@
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
 			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
-		</m:HeaderPanel>
+		</m:HeaderPanel>		
+		
 		<m:HorizontalPanel ui:field="avatarPanel">
 		</m:HorizontalPanel>
-		<g:Label text="{msg.lastName}"></g:Label><g:Label ui:field="lastName"></g:Label>
 		<m:HorizontalPanel>
-		    <g:Label text="{msg.firstName}"></g:Label><g:Label ui:field="firstName"></g:Label>
+			<g:Label text="{msg.lastName}"></g:Label><g:HTML>&nbsp;</g:HTML><g:Label ui:field="lastName"></g:Label>
 		</m:HorizontalPanel>
-		<g:Label text="{msg.eMail}"></g:Label><g:Anchor ui:field="eMail"></g:Anchor>
 		<m:HorizontalPanel>
-			<g:Label text="{msg.phoneNumber}"></g:Label><g:Anchor ui:field="phoneNumber"></g:Anchor>
+		    <g:Label text="{msg.firstName}"></g:Label><g:HTML>&nbsp;</g:HTML><g:Label ui:field="firstName"></g:Label>
+		</m:HorizontalPanel>
+		<m:HorizontalPanel>
+			<g:Label text="{msg.eMail}"></g:Label><g:HTML>&nbsp;</g:HTML><g:Anchor ui:field="eMail"></g:Anchor>
+		</m:HorizontalPanel>
+		<m:HorizontalPanel>
+			<g:Label text="{msg.phoneNumber}"></g:Label><g:HTML>&nbsp;</g:HTML><g:Anchor ui:field="phoneNumber"></g:Anchor>
 		</m:HorizontalPanel>		
 		<m:Button ui:field="addButton" text="{msg.addContactButton}"></m:Button>
-		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
+			
+		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>		
 	</g:HTMLPanel>
 
 </ui:UiBinder> 

@@ -33,7 +33,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
 	 * @return list of UserDetailDTO
 	 * @throws ContactException
 	 */
-	public List<DetailUserDTO> getContacts(ContactFilters filter) throws ContactException {
+	public List<DetailUserDTO> getContacts(String filter) throws ContactException {
 		listuserDTO = new ArrayList<DetailUserDTO>();
 		List<UserDetail> userDetail = new ArrayList<UserDetail>();
 		if(filter.equals(ContactFilters.ALL)){

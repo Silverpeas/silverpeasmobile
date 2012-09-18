@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtmobile.phonegap.client.Contacts;
-import com.gwtmobile.phonegap.client.Notification;
 import com.gwtmobile.phonegap.client.Contacts.Callback;
 import com.gwtmobile.phonegap.client.Contacts.ContactError;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AbstractContactsControllerEvent;
@@ -16,6 +15,7 @@ import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoad
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactDetailLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
