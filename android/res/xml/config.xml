@@ -50,10 +50,11 @@
     <plugin name="Capture" value="org.apache.cordova.Capture"/>
     <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
     <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
-    <plugin name="OrientationExifPlugin" value="com.silverpeas.mobile.android.OrientationExifPlugin"/>
-    <plugin name="PieceJointePlugin" value="com.silverpeas.mobile.android.PieceJointePlugin"/>
-    <plugin name="EmailPlugin" value="com.silverpeas.mobile.android.EmailPlugin"/>
-    <plugin name="CallContactPlugin" value="com.silverpeas.mobile.android.CallContactPlugin"/>
+    <plugin name="OrientationExifPlugin" value="com.silverpeas.mobile.android.plugins.OrientationExifPlugin"/>
+    <plugin name="PieceJointePlugin" value="com.silverpeas.mobile.android.plugins.PieceJointePlugin"/>
+    <plugin name="EmailPlugin" value="com.silverpeas.mobile.android.plugins.EmailPlugin"/>
+    <plugin name="CallContactPlugin" value="com.silverpeas.mobile.android.plugins.CallContactPlugin"/>
+    <plugin name="ChildBrowser" value="com.phonegap.plugins.childBrowser.ChildBrowser"/>
 </plugins>
 </cordova>
 
