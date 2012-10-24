@@ -15,6 +15,7 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.phonegap.ChildBrowser;
+import com.silverpeas.mobile.client.common.phonegap.Downloader;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 
@@ -45,8 +46,10 @@ public class AttachmentWidget extends Composite {
 	@UiHandler("item")
 	void download(ClickEvent event) {	
 		try {
-			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + attachement.getUrl();			
-			ChildBrowser.openExternal(url, false);		
+			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + attachement.getUrl();		
+			ChildBrowser.openExternal(url, false);
+			//TODO : use Downloader
+			//Downloader.downloadFile(url);
 		} catch(JavaScriptException e) {
 			Notification.alert(e.getMessage(), null, "error", "ok");
 		}
