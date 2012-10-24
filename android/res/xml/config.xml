@@ -55,6 +55,7 @@
     <plugin name="EmailPlugin" value="com.silverpeas.mobile.android.plugins.EmailPlugin"/>
     <plugin name="CallContactPlugin" value="com.silverpeas.mobile.android.plugins.CallContactPlugin"/>
     <plugin name="ChildBrowser" value="com.phonegap.plugins.childBrowser.ChildBrowser"/>
+    <plugin name="Downloader" value="com.phonegap.plugins.downloader.Downloader"/>
 </plugins>
 </cordova>
 
