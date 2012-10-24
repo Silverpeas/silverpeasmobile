@@ -153,7 +153,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 				attach.setAuthor(attachment.getAuthor());
 				attach.setOrderNum(attachment.getOrderNum());
 				attach.setSize(attachment.getSize());
-				attach.setCreationDate(attachment.getCreationDate());
+				attach.setCreationDate(attachment.getCreationDate());		
 			}
 			dto.setAttachments(attachments);		
 			

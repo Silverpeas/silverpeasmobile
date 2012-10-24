@@ -56,5 +56,5 @@ public class AttachmentDTO implements Serializable {
 	}
 	public void setUrl(String url) {
 		this.url = url;
-	}	
+	}
 }

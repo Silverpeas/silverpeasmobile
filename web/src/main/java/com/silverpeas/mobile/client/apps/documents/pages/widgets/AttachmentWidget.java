@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.documents.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -12,6 +13,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
+import com.silverpeas.mobile.client.common.Notification;
+import com.silverpeas.mobile.client.common.phonegap.ChildBrowser;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 
@@ -24,7 +27,7 @@ public class AttachmentWidget extends Composite {
 	@UiField(provided = true) protected ApplicationMessages globalMsg = null;
 	@UiField(provided = true) protected DocumentsResources ressources = null;
 	
-	@UiField Label title, size, date, icon;	
+	@UiField Label title, size, date, icon;
 
 	
 	
@@ -40,9 +43,13 @@ public class AttachmentWidget extends Composite {
 	}
 	
 	@UiHandler("item")
-	void download(ClickEvent event) {
-		Window.open(attachement.getUrl(), "_blank", "");
-		
+	void download(ClickEvent event) {	
+		try {
+			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + attachement.getUrl();			
+			ChildBrowser.openExternal(url, false);		
+		} catch(JavaScriptException e) {
+			Notification.alert(e.getMessage(), null, "error", "ok");
+		}
 	}
 
 	public void setAttachment(AttachmentDTO attachmentDTO) {
