@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.silverpeas</groupId>
 		<artifactId>parent</artifactId>
-		<version>23</version>
+		<version>24</version>
 	</parent>
 
 	<groupId>com.silverpeas.mobile</groupId>
@@ -15,20 +15,20 @@
 	<name>Silverpeas Mobile</name>
 
 	<properties>
-		<gwtVersion>2.4.0</gwtVersion>
-		<gwtMojoPluginVersion>2.4.0</gwtMojoPluginVersion>
-		<silverpeasVersion>5.10.1</silverpeasVersion>
+		<gwtVersion>2.5.0</gwtVersion>
+		<gwtMojoPluginVersion>2.5.0</gwtMojoPluginVersion>
+		<silverpeasVersion>5.11</silverpeasVersion>
 	</properties>
-	
+
 	<repositories>
-    	<repository>
-        	<id>gwt-crypto repo</id>
-        	<url>http://gwt-crypto.googlecode.com/svn/trunk/repo/</url>
-     	</repository>
-     	<repository>
-        <id>gwtchismes</id>
-        <url>http://gwtchismes.googlecode.com/svn/mavenrepo/</url>
-      </repository>
+		<repository>
+			<id>gwt-crypto repo</id>
+			<url>http://gwt-crypto.googlecode.com/svn/trunk/repo/</url>
+		</repository>
+		<repository>
+			<id>gwtchismes</id>
+			<url>http://gwtchismes.googlecode.com/svn/mavenrepo/</url>
+		</repository>
 	</repositories>
 
 	<build>
@@ -56,23 +56,23 @@
 	</build>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>jmagick</groupId>
 			<artifactId>jmagick</artifactId>
 			<version>6.2.4</version>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.apache.sanselan</groupId>
 			<artifactId>sanselan</artifactId>
 			<version>0.97-incubator</version>
-		</dependency>	
+		</dependency>
 		<dependency>
-	        <groupId>com.googlecode.gwt.crypto</groupId>
-	        <artifactId>gwt-crypto</artifactId>
-	        <version>1.0.3</version>
-	    </dependency>
+			<groupId>com.googlecode.gwt.crypto</groupId>
+			<artifactId>gwt-crypto</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 		<dependency>
 			<groupId>com.gwtmobile</groupId>
 			<artifactId>gwtmobile</artifactId>
@@ -129,17 +129,17 @@
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.components.gallery</groupId>
-  			<artifactId>gallery-ejb</artifactId>
-  			<version>${silverpeasVersion}</version>
+			<artifactId>gallery-ejb</artifactId>
+			<version>${silverpeasVersion}</version>
 			<classifier>client</classifier>
-			<scope>provided</scope>	
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.components.almanach</groupId>
-  			<artifactId>almanach-ejb</artifactId>
-  			<version>${silverpeasVersion}</version>
+			<artifactId>almanach-ejb</artifactId>
+			<version>${silverpeasVersion}</version>
 			<classifier>client</classifier>
-			<scope>provided</scope>	
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
@@ -155,7 +155,7 @@
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>com.silverpeas.core.ejb-core</groupId>
 			<artifactId>publication</artifactId>
@@ -163,49 +163,20 @@
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
-		<!--dependency>
-			<groupId>com.silverpeas.core.ejb-core</groupId>
-			<artifactId>formtemplate</artifactId>
-			<version>${silverpeasVersion}</version>
-			<classifier>client</classifier>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.silverpeas.core.ejb-core</groupId>
-			<artifactId>calendar</artifactId>
-			<version>${silverpeasVersion}</version>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.silverpeas.components.project-manager</groupId>
-			<artifactId>project-manager-ejb</artifactId>
-			<version>${silverpeasVersion}</version>
-			<classifier>client</classifier>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.silverpeas.core.ejb-core</groupId>
-			<artifactId>searchengine</artifactId>
-			<version>${silverpeasVersion}</version>
-			<classifier>client</classifier>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.1</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency-->
-		
+		<!--dependency> <groupId>com.silverpeas.core.ejb-core</groupId> <artifactId>formtemplate</artifactId> 
+			<version>${silverpeasVersion}</version> <classifier>client</classifier> <scope>provided</scope> 
+			</dependency> <dependency> <groupId>com.silverpeas.core.ejb-core</groupId> 
+			<artifactId>calendar</artifactId> <version>${silverpeasVersion}</version> 
+			<scope>provided</scope> </dependency> <dependency> <groupId>com.silverpeas.components.project-manager</groupId> 
+			<artifactId>project-manager-ejb</artifactId> <version>${silverpeasVersion}</version> 
+			<classifier>client</classifier> <scope>provided</scope> </dependency> <dependency> 
+			<groupId>com.silverpeas.core.ejb-core</groupId> <artifactId>searchengine</artifactId> 
+			<version>${silverpeasVersion}</version> <classifier>client</classifier> <scope>provided</scope> 
+			</dependency> <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
+			<version>2.5</version> <type>jar</type> <scope>provided</scope> </dependency> 
+			<dependency> <groupId>javax.servlet.jsp</groupId> <artifactId>jsp-api</artifactId> 
+			<version>2.1</version> <type>jar</type> <scope>provided</scope> </dependency -->
+
 		<dependency>
 			<groupId>net.sf.dozer</groupId>
 			<artifactId>dozer</artifactId>
@@ -218,10 +189,15 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-        <groupId>gwtchismes</groupId>
-        <artifactId>gwtchismes</artifactId>
-        <version>0.9.4</version>
-        <scope>provided</scope>
-      </dependency>
+			<groupId>gwtchismes</groupId>
+			<artifactId>gwtchismes</artifactId>
+			<version>0.9.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.mgwt</groupId>
+			<artifactId>mgwt</artifactId>
+			<version>1.1.2</version>
+		</dependency>
 	</dependencies>
 </project>

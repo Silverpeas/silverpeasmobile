@@ -254,22 +254,10 @@ public class RotationSupport {
 		if (existingOrientation == LEFT_ROTATED) {
 			return rotateRight(bi);
 		} else if (existingOrientation == RIGHT_ROTATED) {
-			return rotateLeft(bi);
+			return rotateLeft(bi);			
 		}
 
 		return bi;
-	}
-
-	// TESTING
-	public static void main(String[] args) throws Exception {
-		// File file = new File("C:/Documents and Settings/David
-		// Ekholm/Skrivbord/Rotationstest/IMG_0123.JPG");
-		File file = new File(
-				"C:/Documents and Settings/David Ekholm/Skrivbord/Rotationstest/DSC08646.JPG");
-		setOrientation(4, file);
-
-		Metadata imageInfo = JpegMetadataReader.readMetadata(file);
-		System.out.println(getOrientation(imageInfo));
 	}
 }
 

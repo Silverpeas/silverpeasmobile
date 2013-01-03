@@ -82,7 +82,7 @@ public class LocalPictureViewerPage extends Page implements View, LocalPicturesP
 		nbPictures = pictures.length;
 		for (int i = 0; i < pictures.length; i++) {
 			Picture picture = pictures[i];
-			Image image = new Image(picture.getURI());
+			Image image = new Image(picture.getURI());			
 			image.setWidth("100%");
 			Slide s = new Slide();
 			s.addStyleName(ressources.css().localPicture());			

@@ -225,6 +225,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 		Database.open();
 		final Entity<Picture> pictureEntity = GWT.create(Picture.class);
 		final Collection<Picture> pictures = pictureEntity.all();
+		
 		pictures.count(new ScalarCallback<Integer>() {					
 			@Override
 			public void onSuccess(final Integer count) {
@@ -241,7 +242,7 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 					}));				
 				}
 			}
-		});		
+		});	
 	}
 	
 	/**

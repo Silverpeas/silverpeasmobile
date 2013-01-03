@@ -21,6 +21,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.log4j.Logger;
 
 import com.drew.imaging.ImageMetadataReader;
@@ -29,13 +30,14 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.silverpeas.admin.ejb.AdminBm;
 import com.silverpeas.admin.ejb.AdminBmHome;
-import com.silverpeas.gallery.ImageHelper;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
 import com.silverpeas.gallery.control.ejb.GalleryBmHome;
+import com.silverpeas.gallery.delegate.PhotoDataCreateDelegate;
 import com.silverpeas.gallery.model.AlbumDetail;
 import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
 import com.silverpeas.gallery.model.PhotoSize;
+import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
 import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
@@ -132,16 +134,15 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	    PhotoPK pk = new PhotoPK("unknown", componentId);
 	    newPhoto.setPhotoPK(pk);
 
-	    String photoId = getGalleryBm().createPhoto(newPhoto, albumId);
-	    newPhoto.getPhotoPK().setId(photoId);
-
-	    // Création de la preview et des vignettes sur disque
-	    ImageHelper.processImage(newPhoto, file, watermark, watermarkHD, watermarkOther);
-	    ImageHelper.setMetaData(newPhoto, "fr");		    
-	      
-	    // Modification de la photo pour mise à jour dimension
-	    getGalleryBm().updatePhoto(newPhoto);
-	    return photoId;
+	    List<FileItem> parameters = new ArrayList<FileItem>();    
+	    LocalDiskFileItem item = new LocalDiskFileItem(file);
+	    parameters.add(item);    
+	    
+	    PhotoDataCreateDelegate delegate = new PhotoDataCreateDelegate("fr", albumId, parameters);
+	    
+	    getGalleryBm().createPhoto(getUserInSession(), componentId, newPhoto, watermark, watermarkHD, watermarkOther, delegate);
+	    
+	    return newPhoto.getId();
 	}
 	
 	

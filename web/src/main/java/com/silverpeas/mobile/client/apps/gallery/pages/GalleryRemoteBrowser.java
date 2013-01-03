@@ -62,7 +62,7 @@ public class GalleryRemoteBrowser extends Page implements View, RemotePicturesPa
 	public void onPicturesLoaded(RemotePictureLoadedEvent event) {
 		this.photos = event.getPhotos();
 		if (photos.isEmpty()) {
-			content.add(new Label("no pictures"));
+			content.setWidget(0,0,new Label("no pictures"));
 		} else {			
 			int index = 0;
 			for (PhotoDTO photo : photos) {								

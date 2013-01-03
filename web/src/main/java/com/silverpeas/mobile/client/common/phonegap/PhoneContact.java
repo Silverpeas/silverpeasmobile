@@ -4,7 +4,7 @@ import com.gwtmobile.phonegap.client.Contacts.Contact;
 
 public class PhoneContact extends Contact {
 	
-	public PhoneContact(){
+	protected PhoneContact(){
 		super();
 	}
 	
