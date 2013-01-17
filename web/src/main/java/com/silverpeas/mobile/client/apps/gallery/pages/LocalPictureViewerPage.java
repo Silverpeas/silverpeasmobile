@@ -9,11 +9,11 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.Slide;
 import com.gwtmobile.ui.client.widgets.SlidePanel;
@@ -25,6 +25,7 @@ import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.common.mobil.Orientation;
@@ -33,7 +34,7 @@ import com.silverpeas.mobile.client.common.mobil.Orientation;
  * Local pictures browser on device.
  * @author svuillet
  */
-public class LocalPictureViewerPage extends Page implements View, LocalPicturesPageEventHandler, ValueChangeHandler<Boolean> {
+public class LocalPictureViewerPage extends PageView implements View, LocalPicturesPageEventHandler, ValueChangeHandler<Boolean> {
 
 	private static LocalPictureViewerPageUiBinder uiBinder = GWT.create(LocalPictureViewerPageUiBinder.class);
 	private static int nbPictures = 0;
@@ -42,7 +43,7 @@ public class LocalPictureViewerPage extends Page implements View, LocalPicturesP
 	@UiField InlineHTML number;
 	@UiField Button prevButton, nextButton, delButton;
 	@UiField(provided = true) protected GalleryMessages msg = null;
-	@UiField(provided = true) protected GalleryResources ressources = null;
+	@UiField(provided = true) protected GalleryResources ressources = null;	
 
 	interface LocalPictureViewerPageUiBinder extends UiBinder<Widget, LocalPictureViewerPage> {
 	}
@@ -113,20 +114,34 @@ public class LocalPictureViewerPage extends Page implements View, LocalPicturesP
 		}, "Confirm", "OK,Cancel");
 	}
 	
-	@UiHandler("delButton")
-	void delPicture(ClickEvent e){
-		deletePicture();
+	@UiHandler("delButton")	
+	void delPicture(ClickEvent e) {		
+		clickGesture(new Command() {			
+			@Override
+			public void execute() {
+				deletePicture();				
+			}
+		});		
 	}
 	
 	@UiHandler("prevButton")
 	void previousPicture(ClickEvent e){
-		content.previous();	
+		clickGesture(new Command() {			
+			@Override
+			public void execute() {
+				content.previous();			
+			}
+		});		
 	}
 	
 	@UiHandler("nextButton")
 	void nextPicture(ClickEvent e){
-		content.next();	
-	}
+		clickGesture(new Command() {			
+			@Override
+			public void execute() {
+				content.next();			
+			}
+		});	}
 
 	/**
 	 * Picture has been deleted.

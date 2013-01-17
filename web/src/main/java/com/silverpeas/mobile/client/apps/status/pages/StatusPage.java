@@ -8,10 +8,10 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
@@ -23,10 +23,11 @@ import com.silverpeas.mobile.client.apps.status.events.pages.StatusPagesEventHan
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
 import com.silverpeas.mobile.client.apps.status.resources.StatusMessages;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
 
-public class StatusPage extends Page implements StatusPagesEventHandler, View {
+public class StatusPage extends PageView implements StatusPagesEventHandler, View {
 	
 	private static StatusPageUiBinder uiBinder = GWT.create(StatusPageUiBinder.class);
 	
@@ -60,8 +61,13 @@ public class StatusPage extends Page implements StatusPagesEventHandler, View {
 	
 	@UiHandler("more")
 	void MoreButton(ClickEvent e){
-		currentPage++;
-		EventBus.getInstance().fireEvent(new StatusLoadEvent(currentPage));
+		clickGesture(new Command() {			
+			@Override
+			public void execute() {
+				currentPage++;
+				EventBus.getInstance().fireEvent(new StatusLoadEvent(currentPage));				
+			}
+		});		
 	}
 	
 	@Override

@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
 import com.gwtmobile.ui.client.widgets.DropDownItem;
 import com.gwtmobile.ui.client.widgets.DropDownList;
@@ -39,6 +38,7 @@ import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -49,7 +49,7 @@ import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
  * Pictures gallery mobile application.
  * @author svuillet
  */
-public class GalleryPage extends Page implements GalleryPagesEventHandler, View {
+public class GalleryPage extends PageView implements GalleryPagesEventHandler, View {
 
 	private static GalleryPageUiBinder uiBinder = GWT.create(GalleryPageUiBinder.class);
 	@UiField(provided = true) protected GalleryMessages msg = null;

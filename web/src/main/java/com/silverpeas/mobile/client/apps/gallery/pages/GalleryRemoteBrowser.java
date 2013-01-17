@@ -7,13 +7,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.Transition;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.RemotePicturesLoadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.AbstractRemotePicturesPageEvent;
@@ -21,10 +21,11 @@ import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.RemotePictu
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.RemotePicturesPageEventHandler;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
 
-public class GalleryRemoteBrowser extends Page implements View, RemotePicturesPageEventHandler {
+public class GalleryRemoteBrowser extends PageView implements View, RemotePicturesPageEventHandler {
 
 	private static GalleryRemoteBrowserUiBinder uiBinder = GWT.create(GalleryRemoteBrowserUiBinder.class);
 	private String galleryId;
@@ -70,10 +71,15 @@ public class GalleryRemoteBrowser extends Page implements View, RemotePicturesPa
 				photoW.getElement().setId(photo.getId());
 				photoW.addClickHandler(new ClickHandler() {
 					@Override
-					public void onClick(ClickEvent event) {
-						PictureViewerPage viewer = new PictureViewerPage();
-						viewer.init(galleryId, ((Image)event.getSource()).getElement().getId());
-						goTo(viewer, Transition.SLIDE);
+					public void onClick(final ClickEvent event) {
+						clickGesture(new Command() {							
+							@Override
+							public void execute() {
+								PictureViewerPage viewer = new PictureViewerPage();
+								viewer.init(galleryId, ((Image)event.getSource()).getElement().getId());
+								goTo(viewer, Transition.SLIDE);
+							}
+						});
 					}
 				});
 				

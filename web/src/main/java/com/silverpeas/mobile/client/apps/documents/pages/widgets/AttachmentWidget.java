@@ -103,7 +103,7 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 				public boolean execute() {
 					clicked = false;
 					return false;
-				}}, 300);
+				}}, 400);
 		}		
 	}
 

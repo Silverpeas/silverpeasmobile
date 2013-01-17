@@ -82,7 +82,7 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 					clicked = false;
 					image.removeStyleName(res.css().selected());
 					return false;
-				}}, 300);			
+				}}, 400);			
 		} 
 	}	
 }

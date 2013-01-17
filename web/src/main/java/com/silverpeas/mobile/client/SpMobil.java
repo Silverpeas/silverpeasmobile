@@ -3,12 +3,14 @@ package com.silverpeas.mobile.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
+import com.gwtmobile.phonegap.client.Device;
 import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.ErrorManager;
@@ -37,7 +39,7 @@ public class SpMobil implements EntryPoint{
 	 * Point de lancement.
 	 */
 	public void onModuleLoad() {
-		
+				
 		EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());		
 		
 		loadIds();

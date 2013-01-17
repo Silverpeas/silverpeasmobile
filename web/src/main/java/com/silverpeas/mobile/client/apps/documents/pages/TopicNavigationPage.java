@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
@@ -26,11 +27,12 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 
-public class TopicNavigationPage extends Page implements View, TopicsNavigationPagesEventHandler {
+public class TopicNavigationPage extends PageView implements View, TopicsNavigationPagesEventHandler {
 
 	@UiField(provided = true) protected DocumentsMessages msg = null;
 	@UiField(provided = true) protected ApplicationMessages globalMsg = null;
@@ -53,14 +55,20 @@ public class TopicNavigationPage extends Page implements View, TopicsNavigationP
 	public class SelectionHandler implements ClickHandler {
 
 		@Override
-		public void onClick(ClickEvent event) {
-			String id = ((Widget)event.getSource()).getElement().getParentElement().getId();		
-			for (TopicDTO topic : topicsList) {
-				if (topic.getId().equals(id)) {
-					EventBus.getInstance().fireEvent(new TopicSelectedEvent(topic));		
-					break;
+		public void onClick(final ClickEvent event) {
+			clickGesture(new Command() {
+				
+				@Override
+				public void execute() {
+					String id = ((Widget)event.getSource()).getElement().getParentElement().getId();		
+					for (TopicDTO topic : topicsList) {
+						if (topic.getId().equals(id)) {
+							EventBus.getInstance().fireEvent(new TopicSelectedEvent(topic));		
+							break;
+						}
+					}					
 				}
-			}		
+			});					
 		}		
 	}
 

@@ -8,13 +8,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.DropDownItem;
 import com.gwtmobile.ui.client.widgets.DropDownList;
@@ -24,6 +24,7 @@ import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.pages.main.MainPage;
 import com.silverpeas.mobile.client.persist.UserIds;
@@ -31,7 +32,7 @@ import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 
-public class ConnexionPage extends Page {
+public class ConnexionPage extends PageView {
 
 	private static ConnexionPageUiBinder uiBinder = GWT.create(ConnexionPageUiBinder.class);
 	private MainPage mainPage;
@@ -59,9 +60,14 @@ public class ConnexionPage extends Page {
 	 */
 	@UiHandler("go")
 	void connexion(ClickEvent e) {
-		String login = loginField.getText();
-		String password = passwordField.getText();
-		login(login, password, domains.getSelectedValue());
+		clickGesture(new Command() {			
+			@Override
+			public void execute() {
+				String login = loginField.getText();
+				String password = passwordField.getText();
+				login(login, password, domains.getSelectedValue());
+			}
+		});
 	}
 
 	/**

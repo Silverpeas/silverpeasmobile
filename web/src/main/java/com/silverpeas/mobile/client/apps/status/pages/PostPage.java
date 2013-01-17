@@ -5,16 +5,17 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.HeaderPanel;
 import com.gwtmobile.ui.client.widgets.TextArea;
 import com.silverpeas.mobile.client.apps.status.events.controller.StatusPostEvent;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 
-public class PostPage extends Page implements View {
+public class PostPage extends PageView implements View {
 
 	private static PostPageUiBinder uiBinder = GWT.create(PostPageUiBinder.class);
 	
@@ -30,9 +31,15 @@ public class PostPage extends Page implements View {
 		header.setRightButtonClickHandler(new ClickHandler() {			
 			@Override
 			public void onClick(ClickEvent event) {
-				final String text = textField.getText();
-				EventBus.getInstance().fireEvent(new StatusPostEvent(text));
-				goBack(null);
+				clickGesture(new Command() {					
+					@Override
+					public void execute() {
+						final String text = textField.getText();
+						EventBus.getInstance().fireEvent(new StatusPostEvent(text));
+						goBack(null);
+						
+					}
+				});						
 			}
 		});
 	}

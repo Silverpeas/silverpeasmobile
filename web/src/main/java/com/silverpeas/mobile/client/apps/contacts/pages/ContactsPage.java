@@ -12,11 +12,10 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.gwtmobile.ui.client.widgets.RadioButton;
@@ -28,11 +27,12 @@ import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsP
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
-public class ContactsPage extends Page implements ContactsPagesEventHandler,
+public class ContactsPage extends PageView implements ContactsPagesEventHandler,
 		View {
 
 	private static ContactsPageUiBinder uiBinder = GWT.create(ContactsPageUiBinder.class);
@@ -90,8 +90,13 @@ public class ContactsPage extends Page implements ContactsPagesEventHandler,
 			listPanelContacts.add(contact);
 			labelContact.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
-					ContactDetail contactDetail = new ContactDetail(id);
-					goTo(contactDetail);
+					clickGesture(new Command() {						
+						@Override
+						public void execute() {
+							ContactDetail contactDetail = new ContactDetail(id);
+							goTo(contactDetail);							
+						}
+					});
 				}
 			});
 		}
