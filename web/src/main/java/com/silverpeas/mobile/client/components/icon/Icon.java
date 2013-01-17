@@ -20,6 +20,7 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 	private Label label = new Label();
 	private ClickHandler handler = null;	
 	private ApplicationResources res =  GWT.create(ApplicationResources.class);
+	private boolean clicked = false;
 
 	public Icon() {
 		label.setHorizontalAlignment(Label.ALIGN_CENTER);
@@ -70,15 +71,18 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 	}
 
 	public void onClick(ClickEvent event) {		
-		image.addStyleName(res.css().selected());
-		if (handler != null) handler.onClick(event);
-		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+		if (!clicked) {
+			clicked = true;
+			image.addStyleName(res.css().selected());
+			if (handler != null) handler.onClick(event);
+			Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
 
-			@Override
-			public boolean execute() {
-				image.removeStyleName(res.css().selected());
-				return false;
-			}}, 300);
-		
+				@Override
+				public boolean execute() {
+					clicked = false;
+					image.removeStyleName(res.css().selected());
+					return false;
+				}}, 300);			
+		} 
 	}	
 }
