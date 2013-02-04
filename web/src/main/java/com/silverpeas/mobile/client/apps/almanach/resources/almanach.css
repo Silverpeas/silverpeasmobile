@@ -8,3 +8,23 @@
 	border: none;
 	margin-right: 0.5em;
 }
+
+.calendar {
+	width: 100%;	
+}
+
+.dayName {
+	text-align: center;
+	padding-bottom: 15px;	
+	padding-top: 15px;
+}
+
+.cellDays {
+	text-align: center;
+	background-color: grey;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.weekHeader {	
+}

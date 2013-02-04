@@ -11,6 +11,23 @@
 			margin-left: 0.5em;
 			margin-right: 0.5em;
 		}
+		
+		.header {
+			padding-top : 10px;
+			padding-bottom : 10px;
+		}
+						
+		.left {
+			position: absolute;
+			left : 1em;
+		}
+		.right {
+			position: absolute;
+			right : 1em;
+		}
+		.center {
+			margin: auto;
+		}	
 	</ui:style>
 	
 	<g:HTMLPanel>
@@ -25,13 +42,19 @@
 					<g:Label ui:field="instance">-</g:Label>
 				</m:HorizontalPanel>
 			</m:ListItem>
-		</m:ListPanel>	
-		<g:HorizontalPanel>
-		    <g:Label horizontalAlignment="center" ui:field="monthLabel"></g:Label>
-		</g:HorizontalPanel>
-		<g:HorizontalPanel ui:field="panelAlmanachWidget"></g:HorizontalPanel>
-		<m:HeaderPanel>
-			<f:FooterBar />
+		</m:ListPanel>
+		
+		<m:HorizontalPanel secondaryStyle="{style.header}" visible="false" ui:field="header">
+			<m:Button ui:field="prevButton" secondaryStyle="{style.left}">&nbsp;&lt;&nbsp;</m:Button>
+			<g:Label horizontalAlignment="center" ui:field="monthLabel" stylePrimaryName="{style.center}"></g:Label>
+			<m:Button ui:field="nextButton"  secondaryStyle="{style.right}">&nbsp;&gt;&nbsp;</m:Button>
+		</m:HorizontalPanel>
+				
+		<m:ScrollPanel ui:field="panelAlmanachWidget"></m:ScrollPanel>	
+		
+		<m:HeaderPanel> 
+			<f:FooterBar/>			
 		</m:HeaderPanel>
+		
 	</g:HTMLPanel>
 </ui:UiBinder> 

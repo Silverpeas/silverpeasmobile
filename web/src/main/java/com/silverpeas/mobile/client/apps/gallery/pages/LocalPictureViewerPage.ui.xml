@@ -27,8 +27,8 @@
 			<g:Label horizontalAlignment="center" text="{msg.localPicture_title}"></g:Label>
 			<g:InlineHTML ui:field="number"/>			
 		</m:HeaderPanel>
-		<m:SlidePanel ui:field="content" rotate="true">
-		</m:SlidePanel>
+		
+		<m:SlidePanel ui:field="content" rotate="true"></m:SlidePanel>
 		
 		<m:HeaderPanel> 
 			<m:VerticalPanel>

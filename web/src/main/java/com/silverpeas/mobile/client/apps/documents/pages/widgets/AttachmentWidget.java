@@ -114,7 +114,8 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 				ChildBrowser.openExternal(url, false);				
 			} else {				
 				Window.open(url, "_blank", "");
-			}			
+			}		
+			
 			//TODO : use Downloader
 			//Downloader.downloadFile(url);
 		} catch(JavaScriptException e) {

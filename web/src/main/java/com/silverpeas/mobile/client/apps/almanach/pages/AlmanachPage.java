@@ -7,11 +7,12 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
+import com.gwtmobile.ui.client.widgets.HorizontalPanel;
+import com.gwtmobile.ui.client.widgets.ScrollPanel;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AbstractAlmanachPagesEvent;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AlmanachLoadedEvent;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AlmanachPagesEventHandler;
@@ -30,11 +31,12 @@ public class AlmanachPage extends Page implements AlmanachPagesEventHandler, Vie
 	private static AlmanachPageUiBinder uiBinder = GWT
 			.create(AlmanachPageUiBinder.class);
 	@UiField
-	HorizontalPanel panelAlmanachWidget;
+	ScrollPanel panelAlmanachWidget;
 	
 	@UiField(provided = true) protected AlmanachMessages msg = null;
 	@UiField(provided = true) protected AlmanachResources ressources = null;
 	@UiField Label instance, monthLabel;
+	@UiField HorizontalPanel header;
 	
 	interface AlmanachPageUiBinder extends UiBinder<Widget, AlmanachPage> {
 	}
@@ -61,7 +63,7 @@ public class AlmanachPage extends Page implements AlmanachPagesEventHandler, Vie
 	}
 
 	@Override
-	public void onLoadEventDetailDTOLoaded(LoadEventDetailDTOEvent event) {
+	public void onLoadEventDetailDTOLoaded(LoadEventDetailDTOEvent event) {		
 		EventDetailDTOPage eventDetailDTOPage = new EventDetailDTOPage(event.getListEventDetailDTO());
 		goTo(eventDetailDTOPage);
 	}
@@ -79,5 +81,6 @@ public class AlmanachPage extends Page implements AlmanachPagesEventHandler, Vie
 		Date date = new Date();
 		DateTimeFormat dtf = DateTimeFormat.getFormat("MMMM yyyy");
 		monthLabel.setText(dtf.format(date));
+		header.setVisible(true);
 	}
 }

@@ -27,8 +27,6 @@ import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
-import com.silverpeas.mobile.client.common.mobil.Orientation;
 
 /**
  * Local pictures browser on device.
@@ -51,12 +49,12 @@ public class LocalPictureViewerPage extends PageView implements View, LocalPictu
 	private class PageResizeHandler implements ResizeHandler {
 		@Override
 		public void onResize(ResizeEvent event) {
-			Image img = (Image) content.getSlide(content.getCurrentSlideIndex()).iterator().next();
+			/*Image img = (Image) content.getSlide(content.getCurrentSlideIndex()).iterator().next();
 			if (MobilUtils.getOrientation().equals(Orientation.Landscape)) {
 				img.setSize("auto", "100%");	
 			} else {
 				img.setSize("100%", "auto");
-			}
+			}*/
 		}		
 	}
 
@@ -81,16 +79,16 @@ public class LocalPictureViewerPage extends PageView implements View, LocalPictu
 	 */
 	public void setPictures(Picture[] pictures) {
 		nbPictures = pictures.length;
-		for (int i = 0; i < pictures.length; i++) {
+		for (int i = 0; i < pictures.length; i++) {			
 			Picture picture = pictures[i];
-			Image image = new Image(picture.getURI());			
+			Image image = new Image(picture.getURI());		
 			image.setWidth("100%");
 			Slide s = new Slide();
 			s.addStyleName(ressources.css().localPicture());			
 			s.getElement().setId(picture.getId());
 			s.add(image);
-			content.add(s);		
-		}		
+			content.add(s);			
+		}	
 		displayPicturesNumber();			
 	}
 

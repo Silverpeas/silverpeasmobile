@@ -6,23 +6,28 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.constants.DateTimeConstants;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.LoadEventDetailDTOEvent;
+import com.silverpeas.mobile.client.apps.almanach.resources.AlmanachResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 
 @SuppressWarnings("deprecation")
 public class AlmanachWidget extends Composite{
 
+	protected AlmanachResources ressources = null;
+	
 	private static final String StyleCCellEmpty = "cellEmpty";
-	private static final String StyleCCellDays = "cellDays";
 	private static final String StyleCInvalidDay = "invalidDay";
 	private static final String StyleCValidDay = "validDay";
 	private static final String StyleCToday = "today";
@@ -48,9 +53,6 @@ public class AlmanachWidget extends Composite{
 	private static final int CONST_WEEKS = 3;
 	private static final int CONST_DAYS = 4;
 
-	private static final String StyleCGrid = "panelDays";
-	private static final String StyleCWeekHeader = "weekHeader";
-	private static final String StyleCCellDayNames = "cellDayNames";
 	private static final String StyleCCellWeekNumber = "cellWeekNumbers";
 
 	public static final DateTimeConstants dateTimeConstants = LocaleInfo
@@ -66,7 +68,10 @@ public class AlmanachWidget extends Composite{
 
 	public AlmanachWidget(boolean create, Collection<EventDetailDTO> listEventDetailDTO) {
 		if (create) {
-			initWidget(calendarGrid);
+			ressources = GWT.create(AlmanachResources.class);		
+			ressources.css().ensureInjected();
+			
+			initWidget(calendarGrid);			
 		}
 		refresh();
 		Iterator<EventDetailDTO> m = listEventDetailDTO.iterator();
@@ -102,19 +107,19 @@ public class AlmanachWidget extends Composite{
 
 		if (!initialized) {
 			initialized = true;
-			calendarGrid.clear();
-			calendarGrid.setStyleName(StyleCGrid);
+			calendarGrid.clear();			
+			calendarGrid.setStylePrimaryName(ressources.css().calendar());
 			calendarGrid.setCellSpacing(0);
-			calendarGrid.getRowFormatter().setStyleName(0, StyleCWeekHeader);
+			calendarGrid.getRowFormatter().setStyleName(0, ressources.css().weekHeader());
 			int l = 0;
 			for (int i = weekStart; i < 7; i++) {
 				calendarGrid.getCellFormatter().setStyleName(0,
-						showWeekNumbers + l, StyleCCellDayNames);
+						showWeekNumbers + l, ressources.css().dayName());
 				calendarGrid.setText(0, showWeekNumbers + l++, WEEK_DAYS[i]);
 			}
 			while (l < 7) {
 				calendarGrid.getCellFormatter().setStyleName(0,
-						showWeekNumbers + l, StyleCCellDayNames);
+						showWeekNumbers + l, ressources.css().dayName());
 				calendarGrid.setText(0, showWeekNumbers + l++, WEEK_DAYS[0]);
 			}
 			for (int i = 1; i < 7; i++) {
@@ -189,7 +194,7 @@ public class AlmanachWidget extends Composite{
 					if (k == sunday || k == saturday) {
 						styles += " " + StyleCWeekend;
 					}
-					styles += " " + StyleCCellDays;
+					styles += " " + ressources.css().cellDays();
 				}
 
 				CellHTML html = (CellHTML) calendarGrid.getWidget(i,
@@ -197,7 +202,12 @@ public class AlmanachWidget extends Composite{
 				html.setEnabled(enabled);
 				html.setDay(displayNum);
 				html.setStyleName(styles);
-
+				
+				int w = Window.getClientWidth() / 7;
+				html.setHeight(w+"px");
+				html.setWidth(w+"px");
+				html.getElement().getStyle().setFontSize(w/3, Unit.PX);
+								
 			}
 		}
 	}
