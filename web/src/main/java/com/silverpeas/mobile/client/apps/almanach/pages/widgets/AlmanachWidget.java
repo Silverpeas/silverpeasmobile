@@ -1,13 +1,13 @@
 package com.silverpeas.mobile.client.apps.almanach.pages.widgets;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -16,7 +16,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.constants.DateTimeConstants;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -39,6 +38,8 @@ public class AlmanachWidget extends Composite{
 	private static final String StyleCSelected = "selectedDay";
 	private static final String StyleCAfterSelected = "afterSelected";
 	private static final String StyleCBeforeSelected = "beforeSelected";
+	
+	private boolean clicked = false;
 
 	protected boolean needsRedraw = true;
 	private boolean initialized = false;
@@ -102,7 +103,16 @@ public class AlmanachWidget extends Composite{
 							cellHTML.addClickHandler(new ClickHandler(){  
 								  @Override  
 								  public void onClick(ClickEvent event) {  
-									  EventBus.getInstance().fireEvent(new LoadEventDetailDTOEvent(cellHTML.getListEventDetailDTO()));
+									  if (!clicked) {
+											clicked = true;
+											EventBus.getInstance().fireEvent(new LoadEventDetailDTOEvent(cellHTML.getListEventDetailDTO()));
+											Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+												@Override
+												public boolean execute() {
+													clicked = false;
+													return false;
+												}}, 400);
+										}
 								  }  
 							});    
 						}

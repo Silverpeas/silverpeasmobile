@@ -1,22 +1,20 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui"
-    xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
-    xmlns:f="urn:import:com.silverpeas.mobile.client.components" >
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
 
-    <ui:with
-        field="msg"
-        type="com.silverpeas.mobile.client.apps.almanach.resources.EventDetailDTOMessages" />
+	<ui:with field="msg" type="com.silverpeas.mobile.client.apps.almanach.resources.EventDetailDTOMessages" />
 
-    <g:HTMLPanel>
-        <m:HeaderPanel leftButton="Back" >
-            <g:Label horizontalAlignment="center" text="{msg.title}" ></g:Label>
-        </m:HeaderPanel>
-        <m:AccordionPanel ui:field="accordionPanel" >
-        </m:AccordionPanel>
-        <m:HeaderPanel>
-            <f:FooterBar />
-        </m:HeaderPanel>
-    </g:HTMLPanel>
+	<g:HTMLPanel>
+		<m:HeaderPanel leftButton="Back">
+			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>
+		</m:HeaderPanel>
+		<m:ScrollPanel>
+			<m:AccordionPanel ui:field="accordionPanel"></m:AccordionPanel>
+		</m:ScrollPanel>
+		<m:HeaderPanel>
+			<f:FooterBar />
+		</m:HeaderPanel>
+	</g:HTMLPanel>
 
 </ui:UiBinder>

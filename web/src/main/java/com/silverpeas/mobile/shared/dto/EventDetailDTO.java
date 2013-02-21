@@ -19,7 +19,7 @@ public class EventDetailDTO implements Serializable {
 	private String place;
 	private String eventUrl;
 	
-	public String get_name() {
+	public String getName() {
 		return _name;
 	}
 	public void set_name(String _name) {
@@ -46,7 +46,7 @@ public class EventDetailDTO implements Serializable {
 	public String getTitle() {
 		return _title;
 	}
-	public void seTitle(String _title) {
+	public void setTitle(String _title) {
 		this._title = _title;
 	}
 	public String getStartHour() {

@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.page.Page;
@@ -14,6 +15,7 @@ import com.gwtmobile.ui.client.widgets.AccordionContent;
 import com.gwtmobile.ui.client.widgets.AccordionHeader;
 import com.gwtmobile.ui.client.widgets.AccordionPanel;
 import com.gwtmobile.ui.client.widgets.AccordionStack;
+import com.gwtmobile.ui.client.widgets.HeaderPanel;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AbstractEventDetailDTOPagesEvent;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.EventDetailDTOPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -32,8 +34,7 @@ public class EventDetailDTOPage extends Page implements EventDetailDTOPagesEvent
 	public EventDetailDTOPage(List<EventDetailDTO> listEventDetailDTO){
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractEventDetailDTOPagesEvent.TYPE, this);
-		accordionPanel = new AccordionPanel();
-		int count = 0;
+		
 		Iterator<EventDetailDTO> i = listEventDetailDTO.iterator();
 
 		while(i.hasNext()){
@@ -41,21 +42,17 @@ public class EventDetailDTOPage extends Page implements EventDetailDTOPagesEvent
 			AccordionStack accordionStack = new AccordionStack();
 			AccordionHeader accordionHeader = new AccordionHeader();
 			AccordionContent accordionContent = new AccordionContent();
-			Label nameEvent = new Label("Name : "+eventDetailDTO.get_name());
+			Label nameEvent = new Label("Title : "+ eventDetailDTO.getTitle());
 			accordionHeader.add(nameEvent);
 			accordionStack.add(accordionHeader);
-			Label startDateEvent = new Label("Date : "+date.format(eventDetailDTO.getStartDate(), null)+" "+eventDetailDTO.getStartHour());
-			Label endDateEvent = new Label("Date : "+date.format(eventDetailDTO.getEndDate(), null)+" "+eventDetailDTO.getEndHour());
-			Label placeEvent = new Label("Place : "+eventDetailDTO.getPlace());
+			Label startDateEvent = new Label("Start : " + date.format(eventDetailDTO.getStartDate(), null) + " " + eventDetailDTO.getStartHour());
+			Label endDateEvent = new Label("End : " + date.format(eventDetailDTO.getEndDate(), null) + " " + eventDetailDTO.getEndHour());
+			Label placeEvent = new Label("Place : " + eventDetailDTO.getPlace());
 			accordionContent.add(startDateEvent);
 			accordionContent.add(endDateEvent);
 			accordionContent.add(placeEvent);
 			accordionStack.add(accordionContent);
 			accordionPanel.add(accordionStack);
-			if(count==0){
-				accordionStack.expand();
-			}
-			count++;
 		}
 	}
 	
