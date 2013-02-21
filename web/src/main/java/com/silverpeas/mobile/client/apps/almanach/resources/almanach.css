@@ -26,5 +26,9 @@
 	vertical-align: middle;
 }
 
+.cellDayWithEvent {
+	border: 1px solid #FF0000;
+}
+
 .weekHeader {	
 }

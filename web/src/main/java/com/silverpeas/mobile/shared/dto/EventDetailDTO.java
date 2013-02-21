@@ -25,28 +25,28 @@ public class EventDetailDTO implements Serializable {
 	public void set_name(String _name) {
 		this._name = _name;
 	}
-	public Date get_startDate() {
+	public Date getStartDate() {
 		return _startDate;
 	}
-	public void set_startDate(Date _startDate) {
+	public void setStartDate(Date _startDate) {
 		this._startDate = _startDate;
 	}
-	public Date get_endDate() {
+	public Date getEndDate() {
 		return _endDate;
 	}
-	public void set_endDate(Date _endDate) {
+	public void setEndDate(Date _endDate) {
 		this._endDate = _endDate;
 	}
-	public int get_priority() {
+	public int getPriority() {
 		return _priority;
 	}
-	public void set_priority(int _priority) {
+	public void setPriority(int _priority) {
 		this._priority = _priority;
 	}
-	public String get_title() {
+	public String getTitle() {
 		return _title;
 	}
-	public void set_title(String _title) {
+	public void seTitle(String _title) {
 		this._title = _title;
 	}
 	public String getStartHour() {

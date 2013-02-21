@@ -44,8 +44,8 @@ public class EventDetailDTOPage extends Page implements EventDetailDTOPagesEvent
 			Label nameEvent = new Label("Name : "+eventDetailDTO.get_name());
 			accordionHeader.add(nameEvent);
 			accordionStack.add(accordionHeader);
-			Label startDateEvent = new Label("Date : "+date.format(eventDetailDTO.get_startDate(), null)+" "+eventDetailDTO.getStartHour());
-			Label endDateEvent = new Label("Date : "+date.format(eventDetailDTO.get_endDate(), null)+" "+eventDetailDTO.getEndHour());
+			Label startDateEvent = new Label("Date : "+date.format(eventDetailDTO.getStartDate(), null)+" "+eventDetailDTO.getStartHour());
+			Label endDateEvent = new Label("Date : "+date.format(eventDetailDTO.getEndDate(), null)+" "+eventDetailDTO.getEndHour());
 			Label placeEvent = new Label("Place : "+eventDetailDTO.getPlace());
 			accordionContent.add(startDateEvent);
 			accordionContent.add(endDateEvent);

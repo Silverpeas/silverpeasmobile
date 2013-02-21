@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.almanach.pages.widgets;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -10,6 +11,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.constants.DateTimeConstants;
 import com.google.gwt.user.client.DOM;
@@ -70,23 +74,31 @@ public class AlmanachWidget extends Composite{
 		if (create) {
 			ressources = GWT.create(AlmanachResources.class);		
 			ressources.css().ensureInjected();
-			
+			Window.addResizeHandler(new ResizeHandler() {				
+				@Override
+				public void onResize(ResizeEvent event) {
+					if (initialized){
+						needsRedraw = true;
+						refresh();
+					}					
+				}
+			});
 			initWidget(calendarGrid);			
 		}
 		refresh();
 		Iterator<EventDetailDTO> m = listEventDetailDTO.iterator();
 		while (m.hasNext()) {
 			EventDetailDTO eventDetailDTO = m.next();
-			Date date = eventDetailDTO.get_startDate();
+			Date date = eventDetailDTO.getStartDate();
 			Date monthDate = getFirstDayOfMonth(date);
 			long monthNumberEvent = getMonthNumber(monthDate);
 			if (monthNumberEvent == monthNumber) {
 				for (int i = 1; i < 7; i++) {
 					for (int k = 0; k < 7; k++) {
 						final CellHTML cellHTML = (CellHTML) calendarGrid.getWidget(i, showWeekNumbers + k);
-						if (date.getDay() == cellHTML.getDay()) {
+						if (getDayOfMonth(date) == cellHTML.getDay()) {
 							cellHTML.getListEventDetailDTO().add(eventDetailDTO);
-							DOM.setStyleAttribute(calendarGrid.getCellFormatter().getElement(i, showWeekNumbers + k), "border","1px solid #FF0000");
+							calendarGrid.getCellFormatter().getElement(i, showWeekNumbers + k).addClassName(ressources.css().cellDayWithEvent());
 							cellHTML.addClickHandler(new ClickHandler(){  
 								  @Override  
 								  public void onClick(ClickEvent event) {  
@@ -98,6 +110,11 @@ public class AlmanachWidget extends Composite{
 				}
 			}
 		}
+	}
+	
+	public static int getDayOfMonth(Date aDate) {
+	    DateTimeFormat df = DateTimeFormat.getFormat("dd");
+		return Integer.parseInt(df.format(aDate));
 	}
 
 	public void refresh() {
