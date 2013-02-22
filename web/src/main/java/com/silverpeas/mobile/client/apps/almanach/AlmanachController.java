@@ -1,6 +1,6 @@
 package com.silverpeas.mobile.client.apps.almanach;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.almanach.events.controller.AbstractAlmanachControllerEvent;
@@ -31,11 +31,11 @@ public class AlmanachController implements Controller, AlmanachControllerEventHa
 	}
 
 	public void loadAlmanach(final ApplicationInstanceDTO instance) {
-		ServicesLocator.serviceAlmanach.getAlmanach(instance.getId(), new AsyncCallback<Collection<EventDetailDTO>>() {
+		ServicesLocator.serviceAlmanach.getAlmanach(instance.getId(), new AsyncCallback<List<EventDetailDTO>>() {
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 			}
-			public void onSuccess(Collection<EventDetailDTO> result) {
+			public void onSuccess(List<EventDetailDTO> result) {
 				EventBus.getInstance().fireEvent(new AlmanachLoadedEvent(instance, result));
 			}
 		});

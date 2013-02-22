@@ -1,16 +1,16 @@
 package com.silverpeas.mobile.client.apps.almanach.events.pages;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class AlmanachLoadedEvent extends AbstractAlmanachPagesEvent {
 
-	Collection<EventDetailDTO> listEventDetailDTO;
-	ApplicationInstanceDTO instance;
+	private List<EventDetailDTO> listEventDetailDTO;
+	private ApplicationInstanceDTO instance;
 	
-	public AlmanachLoadedEvent(ApplicationInstanceDTO instance, Collection<EventDetailDTO> listEventDetailDTO){
+	public AlmanachLoadedEvent(ApplicationInstanceDTO instance, List<EventDetailDTO> listEventDetailDTO){
 		super();
 		this.listEventDetailDTO = listEventDetailDTO;
 		this.instance = instance;
@@ -21,7 +21,7 @@ public class AlmanachLoadedEvent extends AbstractAlmanachPagesEvent {
 		handler.onAlmanachLoaded(this);
 	}
 
-	public Collection<EventDetailDTO> getListEventDetailDTO(){
+	public List<EventDetailDTO> getListEventDetailDTO(){
 		return listEventDetailDTO;
 	}
 	

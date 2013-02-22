@@ -3,6 +3,7 @@ package com.silverpeas.mobile.server.services;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dozer.DozerBeanMapper;
@@ -10,6 +11,7 @@ import org.dozer.Mapper;
 
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 import com.silverpeas.mobile.shared.exceptions.AlmanachException;
+import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.services.ServiceAlmanach;
 import com.stratelia.webactiv.almanach.control.ejb.AlmanachBm;
 import com.stratelia.webactiv.almanach.control.ejb.AlmanachBmHome;
@@ -24,14 +26,14 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
 	private AlmanachBm currentAlmanachBm;
 	private final static Logger LOGGER = Logger.getLogger(ServiceAlmanachImpl.class);
 
-	public Collection<EventDetailDTO> getAlmanach(String instanceId) throws AlmanachException {
-		Collection<EventDetail> listEventDetail = new ArrayList<EventDetail>();
-		Collection<EventDetailDTO> listEventDetailDTO = new ArrayList<EventDetailDTO>();
+	public List<EventDetailDTO> getAlmanach(String instanceId) throws AlmanachException, AuthenticationException {
+		checkUserInSession();		
+		List<EventDetailDTO> listEventDetailDTO = new ArrayList<EventDetailDTO>();
 
 		try {
 			EventPK eventPK = new EventPK("");
 			eventPK.setComponentName(instanceId);
-			listEventDetail = getAlmanachBm().getAllEvents(eventPK);
+			Collection<EventDetail> listEventDetail = getAlmanachBm().getAllEvents(eventPK);
 			Mapper mapper = new DozerBeanMapper();
 			if (!listEventDetail.isEmpty()) {
 				Iterator<EventDetail> i = listEventDetail.iterator();

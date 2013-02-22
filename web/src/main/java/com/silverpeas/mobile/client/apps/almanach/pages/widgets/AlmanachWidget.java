@@ -45,13 +45,13 @@ public class AlmanachWidget extends Composite{
 	private boolean initialized = false;
 	private boolean clickOnWeekNumbers = false;
 	private int showWeekNumbers = 0;
-	private Date cursorDate = getFirstDayOfMonth(new Date());
-	private Date firstMonthDay = getFirstDayOfMonth(cursorDate);
-	private long monthNumber = getMonthNumber(cursorDate);
+	private Date cursorDate;
+	private Date firstMonthDay;
+	private long monthNumber;
 
-	private Date minimalDate = setHourToZero(new Date());
+	private Date minimalDate;
 	private Date selectedDate = setHourToZero(new Date());
-	private Date maximalDate = AlmanachWidget.increaseDate(new Date(), 365);
+	private Date maximalDate;
 
 	private static final int CONST_YEARS = 1;
 	private static final int CONST_MONTHS = 2;
@@ -71,7 +71,14 @@ public class AlmanachWidget extends Composite{
 	protected AlmanachWidget() {
 	}
 
-	public AlmanachWidget(boolean create, Collection<EventDetailDTO> listEventDetailDTO) {
+	public AlmanachWidget(boolean create, Collection<EventDetailDTO> listEventDetailDTO, Date startDate) {
+		cursorDate = getFirstDayOfMonth(startDate);
+		firstMonthDay = getFirstDayOfMonth(cursorDate);
+		monthNumber = getMonthNumber(cursorDate);
+		
+		minimalDate = setHourToZero(startDate);		
+		maximalDate = AlmanachWidget.increaseDate(startDate, 365);		
+		
 		if (create) {
 			ressources = GWT.create(AlmanachResources.class);		
 			ressources.css().ensureInjected();
