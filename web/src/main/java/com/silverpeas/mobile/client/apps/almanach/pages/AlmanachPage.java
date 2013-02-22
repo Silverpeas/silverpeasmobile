@@ -13,11 +13,13 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.gwtmobile.ui.client.widgets.ScrollPanel;
+import com.silverpeas.mobile.client.apps.almanach.events.controller.AlmanachLoadEventsEvent;
+import com.silverpeas.mobile.client.apps.almanach.events.controller.AlmanachLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AbstractAlmanachPagesEvent;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AlmanachLoadedEvent;
+import com.silverpeas.mobile.client.apps.almanach.events.pages.AlmanachLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AlmanachPagesEventHandler;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.LoadEventDetailDTOEvent;
 import com.silverpeas.mobile.client.apps.almanach.pages.widgets.AlmanachWidget;
@@ -45,6 +47,8 @@ public class AlmanachPage extends PageView implements AlmanachPagesEventHandler,
 	@UiField
 	protected HorizontalPanel header;
 	
+	private ApplicationInstanceDTO currentInstance = null;
+	
 	private AlmanachLoadedEvent model;
 	private Date currentDate = new Date();
 
@@ -58,6 +62,9 @@ public class AlmanachPage extends PageView implements AlmanachPagesEventHandler,
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractAlmanachPagesEvent.TYPE, this);
 		monthLabel.setWidth(Window.getClientWidth() / 2 + "px");
+		
+		// load previous instance selection
+		EventBus.getInstance().fireEvent(new AlmanachLoadSettingsEvent());
 	}
 
 	@Override
@@ -67,6 +74,7 @@ public class AlmanachPage extends PageView implements AlmanachPagesEventHandler,
 
 	public void onAlmanachLoaded(AlmanachLoadedEvent event) {		
 		this.model = event;
+		this.currentInstance = event.getInstance();
 		this.currentDate = new Date();
 		displayAlmanach();
 	}
@@ -131,5 +139,14 @@ public class AlmanachPage extends PageView implements AlmanachPagesEventHandler,
 		DateTimeFormat dtf = DateTimeFormat.getFormat("MMMM yyyy");
 		monthLabel.setText(dtf.format(currentDate));
 		header.setVisible(true);
+	}
+
+	@Override
+	public void onLoadedSettings(AlmanachLoadedSettingsEvent event) {
+		currentInstance = event.getInstance();					
+		displayPlace(currentInstance);
+		
+		// Send message to controller for retreive event
+		EventBus.getInstance().fireEvent(new AlmanachLoadEventsEvent(currentInstance));		
 	}
 }

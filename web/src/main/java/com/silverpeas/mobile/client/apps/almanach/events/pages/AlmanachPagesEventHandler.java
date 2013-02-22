@@ -5,4 +5,5 @@ import com.google.gwt.event.shared.EventHandler;
 public interface AlmanachPagesEventHandler extends EventHandler{
 	public void onLoadEventDetailDTOLoaded(LoadEventDetailDTOEvent event);
 	public void onAlmanachLoaded(AlmanachLoadedEvent event);
+	public void onLoadedSettings(AlmanachLoadedSettingsEvent event);
 }

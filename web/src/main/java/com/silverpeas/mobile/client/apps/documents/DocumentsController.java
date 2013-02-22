@@ -27,7 +27,6 @@ import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInst
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
