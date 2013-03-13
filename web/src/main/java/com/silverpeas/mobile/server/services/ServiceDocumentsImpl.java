@@ -144,7 +144,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			for (AttachmentDetail attachment : pub.getAttachments()) {
 				AttachmentDTO attach = new AttachmentDTO();						
 				attach.setTitle(attachment.getTitle());
-				if (attachment.getTitle().isEmpty()) {
+				if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
 					attach.setTitle(attachment.getLogicalName());
 				}			
 				attach.setUrl(attachment.getOnlineURL());
