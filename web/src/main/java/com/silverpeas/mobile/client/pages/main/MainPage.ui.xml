@@ -2,7 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
-	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon">
+	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon"
+	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
 	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
@@ -58,7 +59,7 @@
 		</m:SlidePanel>
 			
 		<m:HeaderPanel>
-			<g:Label horizontalAlignment="center" wordWrap="true">Silverpeas&copy; 1999-2012</g:Label>			
+			<f:FooterBar />			
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
