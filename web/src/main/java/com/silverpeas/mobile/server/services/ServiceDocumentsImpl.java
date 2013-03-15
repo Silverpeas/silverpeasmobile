@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.server.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
+import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBmHome;
 import com.stratelia.webactiv.util.EJBUtilitaire;
@@ -33,6 +35,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
 	private final static Logger LOGGER = Logger.getLogger(ServiceDocumentsImpl.class);
 	private static final long serialVersionUID = 1L;
+	private OrganizationController organizationController = new OrganizationController();
 	private KmeliaBm kmeliaBm;
 	private PublicationBm pubBm;
 	private NodeBm nodeBm;
@@ -132,13 +135,17 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 	public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException {
 		checkUserInSession();				
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			
 			PublicationDetail pub = getPubBm().getDetail(new PublicationPK(pubId));
 			PublicationDTO dto = new PublicationDTO();
 			dto.setId(pub.getId());
 			dto.setName(pub.getName());
-			dto.setAuteur(pub.getAuthor());
+			dto.setCreator(pub.getCreator().getDisplayedName() + " " + sdf.format(pub.getCreationDate()));
+			dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName() + " " + sdf.format(pub.getUpdateDate()));		
 			dto.setVersion(pub.getVersion());
 			dto.setDescription(pub.getDescription());
+			dto.setWysiwyg(pub.getWysiwyg());
 						
 			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
 			for (AttachmentDetail attachment : pub.getAttachments()) {

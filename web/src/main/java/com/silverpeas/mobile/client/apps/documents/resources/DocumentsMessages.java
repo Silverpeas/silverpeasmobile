@@ -14,6 +14,7 @@ public interface DocumentsMessages extends Messages {
 	String attachments();
 	String description();
 	String version();
-	String author();
+	String creator();
+	String updater();
 	String downloadError();
 }

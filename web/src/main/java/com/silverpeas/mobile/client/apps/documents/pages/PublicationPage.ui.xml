@@ -25,9 +25,14 @@
 								<g:Label ui:field="description"></g:Label>	
 							</m:HorizontalPanel>
 							<m:HorizontalPanel>
-								<g:Label text="{msg.author}"></g:Label>
+								<g:Label text="{msg.creator}"></g:Label>
 								<g:InlineHTML>&nbsp;</g:InlineHTML>
-								<g:Label ui:field="auteur"></g:Label>
+								<g:Label ui:field="creator"></g:Label>
+							</m:HorizontalPanel>
+							<m:HorizontalPanel>
+								<g:Label text="{msg.updater}"></g:Label>
+								<g:InlineHTML>&nbsp;</g:InlineHTML>
+								<g:Label ui:field="updater"></g:Label>
 							</m:HorizontalPanel>
 							<m:HorizontalPanel>
 								<g:Label text="{msg.version}"></g:Label>

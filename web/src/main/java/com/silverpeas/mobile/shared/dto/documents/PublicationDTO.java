@@ -11,7 +11,9 @@ public class PublicationDTO implements Serializable, Comparable<PublicationDTO> 
 	private String name;
 	private String description;
 	private String version;
-	private String auteur;
+	private String creator;
+	private String updater;
+	private String wysiwyg;
 	private ArrayList<AttachmentDTO> attachments = null;
 		
 	public String getId() {
@@ -48,10 +50,22 @@ public class PublicationDTO implements Serializable, Comparable<PublicationDTO> 
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	public String getAuteur() {
-		return auteur;
+	public String getCreator() {
+		return creator;
 	}
-	public void setAuteur(String auteur) {
-		this.auteur = auteur;
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+	public String getUpdater() {
+		return updater;
+	}
+	public void setUpdater(String updater) {
+		this.updater = updater;
+	}
+	public String getWysiwyg() {
+		return wysiwyg;
+	}
+	public void setWysiwyg(String wysiwyg) {
+		this.wysiwyg = wysiwyg;
 	}
 }

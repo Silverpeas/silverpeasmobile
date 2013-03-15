@@ -28,7 +28,7 @@ public class PublicationPage extends Page implements View, PublicationNavigation
 
 	private PublicationDTO publication;
 	
-	@UiField Label title, description, auteur, version;
+	@UiField Label title, description, creator, updater, version;
 	@UiField AccordionContent attachements;
 	@UiField AccordionStack attachementsStack;
 	
@@ -79,7 +79,8 @@ public class PublicationPage extends Page implements View, PublicationNavigation
 		title.setText(publication.getName());
 		description.setText(publication.getDescription());
 		version.setText(publication.getVersion());
-		auteur.setText(publication.getAuteur());
+		creator.setText(publication.getCreator());
+		updater.setText(publication.getUpdater());
 		
 		attachements.clear();
 		for (AttachmentDTO attachmentDTO : publication.getAttachments()) {
