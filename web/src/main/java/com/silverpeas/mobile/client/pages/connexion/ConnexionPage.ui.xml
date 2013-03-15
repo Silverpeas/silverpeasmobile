@@ -29,7 +29,6 @@
 		<m:HeaderPanel>
 			<m:VerticalPanel>
 				<g:SimplePanel styleName="{res.css.logo}"/>
-				<g:Label horizontalAlignment="center">Silverpeas Mobile</g:Label>
 			</m:VerticalPanel>						
 		</m:HeaderPanel>
 		

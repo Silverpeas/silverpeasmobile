@@ -32,7 +32,7 @@ public interface ApplicationResources extends ClientBundle {
 	@Source("notifications.png")
 	ImageResource notifications();
 	
-	@Source("logo.gif")
+	@Source("logo.png")
 	ImageResource logo();
 	
 	@Source("online.png")
