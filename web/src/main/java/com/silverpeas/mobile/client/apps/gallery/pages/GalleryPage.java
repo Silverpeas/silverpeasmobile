@@ -40,6 +40,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
@@ -81,6 +82,12 @@ public class GalleryPage extends PageView implements GalleryPagesEventHandler, V
 		EventBus.getInstance().addHandler(AbstractGalleryPagesEvent.TYPE, this);
 		// load previous gallery and album selection
 		EventBus.getInstance().fireEvent(new GalleryLoadSettingsEvent());
+				
+		if (MobilUtils.isPhoneGap() == false) {
+			takePicture.setInactive(true);
+			local.setInactive(true);
+			sync.setInactive(true);
+		}
 	}
 	
 	/**

@@ -21,6 +21,7 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 	private ClickHandler handler = null;	
 	private ApplicationResources res =  GWT.create(ApplicationResources.class);
 	private boolean clicked = false;
+	private boolean inactive = false;
 
 	public Icon() {
 		label.setHorizontalAlignment(Label.ALIGN_CENTER);
@@ -47,6 +48,11 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 	public void setStyleName(String style) {
 		image.setStyleName(style);
 	}
+	
+	public void setInactive(boolean inactive) {
+		this.inactive = inactive;
+		this.addStyleName(res.css().inactive());
+	}
 
 	/**
 	 * Permet de s'abonner au clique sur l'icone.
@@ -71,7 +77,7 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 	}
 
 	public void onClick(ClickEvent event) {		
-		if (!clicked) {
+		if (!inactive && !clicked) {
 			clicked = true;
 			image.addStyleName(res.css().selected());
 			if (handler != null) handler.onClick(event);

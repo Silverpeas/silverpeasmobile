@@ -110,7 +110,7 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 	private void clickAction() {
 		try {
 			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + attachement.getUrl();			
-			if (MobilUtils.isMobil()) {
+			if (MobilUtils.isPhoneGap()) {
 				ChildBrowser.openExternal(url, false);				
 			} else {				
 				Window.open(url, "_blank", "");

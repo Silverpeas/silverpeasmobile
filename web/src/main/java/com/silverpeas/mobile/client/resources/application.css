@@ -111,3 +111,7 @@
 .footer {
 	font-weight: bold;
 }
+
+.inactive {
+	opacity:0.4;	
+}

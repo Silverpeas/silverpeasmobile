@@ -21,4 +21,6 @@ public interface ApplicationCSS extends CssResource {
 	String selected();
 	
 	String footer();
+	
+	String inactive(); 
 }
