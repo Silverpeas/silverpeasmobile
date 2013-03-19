@@ -12,7 +12,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
@@ -22,10 +21,11 @@ import com.silverpeas.mobile.client.apps.dashboard.events.pages.AbstractDashboar
 import com.silverpeas.mobile.client.apps.dashboard.events.pages.DashboardLoadedEvent;
 import com.silverpeas.mobile.client.apps.dashboard.events.pages.DashboardPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.SocialInformationDTO;
 
-public class DashboardPage extends Page implements DashboardPagesEventHandler, View{
+public class DashboardPage extends PageView implements DashboardPagesEventHandler, View{
 
 	private static DashboardPageUiBinder uiBinder = GWT.create(DashboardPageUiBinder.class);
 	

@@ -6,7 +6,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.ScrollPanel;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadRemotePreviewPictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.viewer.AbstractPictureViewerPageEvent;
@@ -15,9 +14,10 @@ import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.viewer.Pict
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 
-public class PictureViewerPage extends Page implements View, PicturesViewerPageEventHandler {
+public class PictureViewerPage extends PageView implements View, PicturesViewerPageEventHandler {
 
 	@UiField(provided = true) protected GalleryMessages msg = null;
 	@UiField(provided = true) protected GalleryResources ressources = null;

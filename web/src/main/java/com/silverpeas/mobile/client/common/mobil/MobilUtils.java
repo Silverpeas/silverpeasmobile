@@ -21,8 +21,26 @@ public class MobilUtils {
 			return false;
 		}
     }
+	
+	public static boolean isIOS() {
+    	return Window.Navigator.getUserAgent().contains("iPhone") || 
+    			Window.Navigator.getUserAgent().contains("iPod") ||
+    			Window.Navigator.getUserAgent().contains("iPad");
+    }
+	
+	public static boolean isRetina() {
+		if (isIOS()) {
+			return getDevicePixelRatio();
+		}		
+		return false; 
+	}
+	
+	public static final native boolean getDevicePixelRatio() /*-{
+    	return ($wnd.devicePixelRatio > 1);
+  	}-*/;  
+	
     
     public static boolean isMobil() {
-    	return Utils.isAndroid() || Utils.isIOS();
+    	return Utils.isAndroid() || isIOS();
     }
 }

@@ -6,7 +6,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.apps.almanach.AlmanachApp;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.dashboard.DashboardApp;
@@ -14,11 +13,12 @@ import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.gallery.GalleryApp;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.common.app.App;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 
-public class MainPage extends Page {
+public class MainPage extends PageView {
 
 	private static MainPageUiBinder uiBinder = GWT.create(MainPageUiBinder.class);
 	

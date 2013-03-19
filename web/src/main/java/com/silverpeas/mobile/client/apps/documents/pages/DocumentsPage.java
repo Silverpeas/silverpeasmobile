@@ -7,7 +7,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.silverpeas.mobile.client.apps.documents.events.app.internal.DocumentsStopEvent;
@@ -28,6 +27,7 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -38,7 +38,7 @@ import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
  * Documents mobile application.
  * @author svuillet
  */
-public class DocumentsPage extends Page implements View, DocumentsPagesEventHandler, TopicsNavigationPagesEventHandler {
+public class DocumentsPage extends PageView implements View, DocumentsPagesEventHandler, TopicsNavigationPagesEventHandler {
 
 	private static DocumentsPageUiBinder uiBinder = GWT.create(DocumentsPageUiBinder.class);
 	@UiField(provided = true) protected DocumentsMessages msg = null;

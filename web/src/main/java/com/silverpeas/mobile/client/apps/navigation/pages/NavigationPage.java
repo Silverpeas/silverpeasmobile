@@ -22,12 +22,13 @@ import com.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPages
 import com.silverpeas.mobile.client.apps.navigation.events.pages.SpacesAndAppsLoadedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
-public class NavigationPage extends Page implements NavigationPagesEventHandler, View {
+public class NavigationPage extends PageView implements NavigationPagesEventHandler, View {
 
 	private static NavigationPageUiBinder uiBinder = GWT.create(NavigationPageUiBinder.class);
 	private String rootSpaceId;

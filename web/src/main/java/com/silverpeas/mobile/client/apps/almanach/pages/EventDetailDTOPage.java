@@ -7,22 +7,20 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.AccordionContent;
 import com.gwtmobile.ui.client.widgets.AccordionHeader;
 import com.gwtmobile.ui.client.widgets.AccordionPanel;
 import com.gwtmobile.ui.client.widgets.AccordionStack;
-import com.gwtmobile.ui.client.widgets.HeaderPanel;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AbstractEventDetailDTOPagesEvent;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.EventDetailDTOPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 
-public class EventDetailDTOPage extends Page implements EventDetailDTOPagesEventHandler, View{
+public class EventDetailDTOPage extends PageView implements EventDetailDTOPagesEventHandler, View{
 	
 	private static EventDetailDTOPageUiBinder uiBinder = GWT.create(EventDetailDTOPageUiBinder.class);
 	@UiField AccordionPanel accordionPanel;

@@ -5,7 +5,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.widgets.AccordionContent;
 import com.gwtmobile.ui.client.widgets.AccordionStack;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationEvent;
@@ -17,12 +16,13 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
+import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
-public class PublicationPage extends Page implements View, PublicationNavigationPagesEventHandler {
+public class PublicationPage extends PageView implements View, PublicationNavigationPagesEventHandler {
 
 	private static PublicationPageUiBinder uiBinder = GWT.create(PublicationPageUiBinder.class);
 
