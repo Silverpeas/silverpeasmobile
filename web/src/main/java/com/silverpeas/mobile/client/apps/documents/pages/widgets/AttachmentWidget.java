@@ -7,9 +7,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.gwtmobile.ui.client.widgets.VerticalPanel;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
@@ -32,13 +34,19 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 	private VerticalPanel internalGrid = new VerticalPanel();
 	private HorizontalPanel internalRow = new HorizontalPanel();	
 	private Label icon = new Label();
-	private Label title = new Label();
+	private Widget title;
 	private Label size = new Label();
 	private Label date = new Label();
 	
 	private boolean clicked = false;
 
 	public AttachmentWidget() {
+		
+		if (MobilUtils.isIOS() && MobilUtils.isPhoneGap() == false && MobilUtils.isStandalone()) {
+			title = new Anchor();	
+		} else {
+			title = new Label();
+		}	
 		
 		ressources = GWT.create(DocumentsResources.class);		
 		ressources.css().ensureInjected();
@@ -57,14 +65,20 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 	}
 
 	public String getTitle() {
-		return title.getText();
+		if (title instanceof Anchor) {
+			return ((Anchor)title).getText();
+		} else {
+			return ((Label)title).getText();
+		}
 	}
 
 	public void setTitle(String text) {
-		title.setText(text);
-	}
-
-	
+		if (title instanceof Anchor) {
+			((Anchor)title).setText(text);
+		} else {
+			((Label)title).setText(text);
+		}
+	}	
 	
 	public void setAttachment(AttachmentDTO attachmentDTO) {
 		this.attachement = attachmentDTO;
@@ -73,7 +87,7 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 
 	private void render() {
 		DateTimeFormat fmt = DateTimeFormat.getFormat("dd MMMM yyyy");		
-		title.setText(attachement.getTitle());
+		setTitle(attachement.getTitle());
 		
 		if (attachement.getSize() < 1024*1024) {
 			size.setText(attachement.getSize()/1024 + " Ko");	
@@ -112,8 +126,14 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + attachement.getUrl();			
 			if (MobilUtils.isPhoneGap()) {
 				ChildBrowser.openExternal(url, false);				
-			} else {				
-				Window.open(url, "_blank", "");
+			} else {
+				if (title instanceof Anchor) {
+					((Anchor)title).setHref(url);
+					((Anchor)title).setTarget("_blank");
+					((Anchor)title).fireEvent(new ClickEvent() {});	
+				} else {
+					Window.open(url, "_blank", "");	
+				}
 			}		
 			
 			//TODO : use Downloader

@@ -37,9 +37,12 @@ public class MobilUtils {
 	
 	public static final native boolean getDevicePixelRatio() /*-{
     	return ($wnd.devicePixelRatio > 1);
-  	}-*/;  
+  	}-*/;
 	
-    
+	public static final native boolean isStandalone() /*-{
+		return $wnd.navigator.standalone;
+	}-*/;
+		
     public static boolean isMobil() {
     	return Utils.isAndroid() || isIOS();
     }
