@@ -51,7 +51,11 @@ public class Icon extends Composite implements HasText, HasClickHandlers, ClickH
 	
 	public void setInactive(boolean inactive) {
 		this.inactive = inactive;
-		this.addStyleName(res.css().inactive());
+		if (inactive) {
+			this.addStyleName(res.css().inactive());	
+		} else {
+			this.removeStyleName(res.css().inactive());
+		}		
 	}
 
 	/**

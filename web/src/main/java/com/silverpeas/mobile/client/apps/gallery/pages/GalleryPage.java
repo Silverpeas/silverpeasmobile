@@ -86,8 +86,9 @@ public class GalleryPage extends PageView implements GalleryPagesEventHandler, V
 		if (MobilUtils.isPhoneGap() == false) {
 			takePicture.setInactive(true);
 			local.setInactive(true);
-			sync.setInactive(true);
+			sync.setInactive(true);			
 		}
+		remote.setInactive(true);
 	}
 	
 	/**
@@ -239,6 +240,7 @@ public class GalleryPage extends PageView implements GalleryPagesEventHandler, V
 		albums.getListBox().setSelectedIndex(indexSelected);
 		// store instance gallery
 		this.currentInstance = appDTO;
+		remote.setInactive(false);
 	}
 	
 	@Override

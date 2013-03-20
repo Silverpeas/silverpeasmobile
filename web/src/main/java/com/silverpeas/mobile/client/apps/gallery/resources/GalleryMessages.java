@@ -16,4 +16,5 @@ public interface GalleryMessages extends Messages {
 	String localPicture_deleteConfirmation();
 	String localPicture_uploading();
 	String localPicture();
+	String fullScreen();
 }

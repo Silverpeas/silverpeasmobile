@@ -1,8 +1,11 @@
 package com.silverpeas.mobile.client.apps.gallery.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -16,6 +19,8 @@ import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.common.phonegap.ChildBrowser;
 
 public class PictureViewerPage extends PageView implements View, PicturesViewerPageEventHandler {
 
@@ -63,5 +68,14 @@ public class PictureViewerPage extends PageView implements View, PicturesViewerP
 		content.setUrl(event.getPhoto().getDataPhoto());
 		title.setText(event.getPhoto().getTitle());
 		container.addStyleName(ressources.css().localPicture());
+	}
+	
+	@UiHandler("fullScreen")
+	void openImage(ClickEvent e) {
+		if (MobilUtils.isPhoneGap()) {
+			ChildBrowser.openExternal(content.getUrl(), false);				
+		} else {
+			Window.open(content.getUrl(), "_blank", "");	
+		}
 	}
 }
