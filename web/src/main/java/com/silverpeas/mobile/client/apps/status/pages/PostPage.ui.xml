@@ -18,6 +18,7 @@
 			<g:Label horizontalAlignment="center" text="{msg.titlePost}"></g:Label>			
 		</m:HeaderPanel>		
 		<m:TextArea ui:field="textField" styleName="{style.TextArea}"/>
+		<m:ScrollPanel></m:ScrollPanel>		
 		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
 	</g:HTMLPanel>
 	
