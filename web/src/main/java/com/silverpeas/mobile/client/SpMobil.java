@@ -3,14 +3,13 @@ package com.silverpeas.mobile.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
-import com.gwtmobile.phonegap.client.Device;
 import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.ErrorManager;
@@ -18,6 +17,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.MainPage;
 import com.silverpeas.mobile.client.persist.UserIds;
@@ -43,6 +43,12 @@ public class SpMobil implements EntryPoint{
 		EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());		
 		
 		loadIds();
+						
+		if (MobilUtils.isRetina() && MobilUtils.isPhoneGap() == false) {
+			RootLayoutPanel.get().addStyleName("webappIosRetina");
+		} else if (MobilUtils.isIOS() && MobilUtils.isPhoneGap() == false) {			
+			RootLayoutPanel.get().addStyleName("webappIos");
+		}
 		
 		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {			
 			public boolean execute() {
