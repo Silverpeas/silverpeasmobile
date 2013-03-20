@@ -147,8 +147,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			dto.setDescription(pub.getDescription());
 			dto.setWysiwyg(pub.getWysiwyg());
 						
-			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
-			for (AttachmentDetail attachment : pub.getAttachments()) {
+			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();						
+			
+			for (AttachmentDetail attachment : getKmeliaBm().getAttachments(pub.getPK())) {
 				AttachmentDTO attach = new AttachmentDTO();						
 				attach.setTitle(attachment.getTitle());
 				if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {

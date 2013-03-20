@@ -45,9 +45,9 @@ public class SpMobil implements EntryPoint{
 		loadIds();
 						
 		if (MobilUtils.isRetina() && MobilUtils.isPhoneGap() == false) {
-			RootLayoutPanel.get().addStyleName("webappIosRetina");
+			RootLayoutPanel.get().addStyleName("webappIosRetina");			
 		} else if (MobilUtils.isIOS() && MobilUtils.isPhoneGap() == false) {			
-			RootLayoutPanel.get().addStyleName("webappIos");
+			RootLayoutPanel.get().addStyleName("webappIos");			
 		}
 		
 		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {			
