@@ -17,4 +17,5 @@ public interface DocumentsMessages extends Messages {
 	String creator();
 	String updater();
 	String downloadError();
+	String content();
 }

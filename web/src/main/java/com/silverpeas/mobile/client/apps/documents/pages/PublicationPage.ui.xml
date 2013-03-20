@@ -42,6 +42,10 @@
 						</m:VerticalPanel>				
 					</m:AccordionContent>
 				</m:AccordionStack>
+				<m:AccordionStack ui:field="contentStack">
+					<m:AccordionHeader><g:Label text="{msg.content}"></g:Label></m:AccordionHeader>
+					<m:AccordionContent ui:field="content"></m:AccordionContent>
+				</m:AccordionStack>	
 				<m:AccordionStack ui:field="attachementsStack">
 					<m:AccordionHeader><g:Label text="{msg.attachments}"></g:Label></m:AccordionHeader>
 					<m:AccordionContent ui:field="attachements"></m:AccordionContent>

@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.apps.documents.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.widgets.AccordionContent;
@@ -29,7 +30,7 @@ public class PublicationPage extends PageView implements View, PublicationNaviga
 	private PublicationDTO publication;
 	
 	@UiField Label title, description, creator, updater, version;
-	@UiField AccordionContent attachements;
+	@UiField AccordionContent attachements, content;
 	@UiField AccordionStack attachementsStack;
 	
 	@UiField(provided = true) protected DocumentsMessages msg = null;
@@ -81,6 +82,10 @@ public class PublicationPage extends PageView implements View, PublicationNaviga
 		version.setText(publication.getVersion());
 		creator.setText(publication.getCreator());
 		updater.setText(publication.getUpdater());
+		
+		content.clear();
+		HTML html = new HTML(publication.getWysiwyg());
+		content.add(html);
 		
 		attachements.clear();
 		for (AttachmentDTO attachmentDTO : publication.getAttachments()) {
