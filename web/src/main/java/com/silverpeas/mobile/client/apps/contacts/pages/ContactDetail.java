@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.gwtmobile.ui.client.widgets.AccordionStack;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AddContactEvent;
@@ -34,6 +35,7 @@ public class ContactDetail extends PageView implements ContactDetailPagesEventHa
 	@UiField Anchor phoneNumber;
 	@UiField Button addButton;
 	@UiField HorizontalPanel avatarPanel;
+	@UiField AccordionStack detail;
 	
 	interface ContactDetailUiBinder extends UiBinder<Widget, ContactDetail> {
 	}
@@ -57,13 +59,14 @@ public class ContactDetail extends PageView implements ContactDetailPagesEventHa
 		avatarPanel.clear();
 		detailUserDTO = event.getUserDetailDTO();
 		image = new Image(detailUserDTO.getAvatar());
-		avatarPanel.add(image);
+		avatarPanel.add(image);		
 		lastName.setText(detailUserDTO.getLastName());
 		firstName.setText(detailUserDTO.getFirstName());
 		eMail.setText(detailUserDTO.geteMail());
 		eMail.setHref("mailto:"+detailUserDTO.geteMail());
 		phoneNumber.setText(detailUserDTO.getPhoneNumber());
 		phoneNumber.setHref("tel:"+detailUserDTO.getPhoneNumber());
+		detail.expand();
 	}
 	
 	@UiHandler("addButton")

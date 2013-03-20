@@ -12,4 +12,5 @@ public interface ContactsMessages extends Messages{
 	String eMail();
 	String firstName();
 	String lastName();
+	String identity();
 }
