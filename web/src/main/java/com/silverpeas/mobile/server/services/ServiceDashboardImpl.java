@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.SocialInformationDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DashboardException;
@@ -55,7 +56,7 @@ public class ServiceDashboardImpl extends AbstractAuthenticateService implements
 			myId = user.getId();
 	      return new RelationShipService().getMyContactsIds(Integer.parseInt(myId));
 	    } catch (SQLException ex) {
-	      SilverTrace.error("com.silverpeas.mobile.server.services", "ServiceDashboardImpl.getMyContactsIds", "", ex);
+	    	SilverTrace.error(SpMobileLogModule.getName(), "ServiceDashboardImpl.getMyContactsIds", "root.EX_NO_MESSAGE", ex);	    	
 	    }
 	    return new ArrayList<String>();
 	}

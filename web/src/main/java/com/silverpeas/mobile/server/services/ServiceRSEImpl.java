@@ -3,6 +3,7 @@ package com.silverpeas.mobile.server.services;
 import java.util.Date;
 import java.util.List;
 
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -36,7 +37,7 @@ public class ServiceRSEImpl extends AbstractAuthenticateService implements Servi
 		try {			
 		    return statusDao.getAllStatus(Integer.parseInt(user.getId()), step);
 		} catch (Exception ex) {
-		    SilverTrace.error("com.silverpeas.mobile.server.services", "ServiceRSEImpl.getAllStatus", "", ex);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceRSEImpl.getAllStatus", "root.EX_NO_MESSAGE", ex);		    
 		    throw new RSEexception(ex);
 		}	
 	}

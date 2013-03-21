@@ -22,7 +22,6 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.log4j.Logger;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
@@ -38,6 +37,7 @@ import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
 import com.silverpeas.gallery.model.PhotoSize;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
 import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
@@ -46,6 +46,7 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.GalleryException;
 import com.silverpeas.mobile.shared.services.ServiceGallery;
 import com.silverpeas.util.StringUtil;
+import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.ComponentInstLight;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.util.EJBUtilitaire;
@@ -58,8 +59,7 @@ import com.stratelia.webactiv.util.ResourceLocator;
  * @author svuillet
  */
 public class ServiceGalleryImpl extends AbstractAuthenticateService implements ServiceGallery {
-
-	private final static Logger LOGGER = Logger.getLogger(ServiceGalleryImpl.class);
+	
 	private static final long serialVersionUID = 1L;
 	private AdminBm adminBm;
 	private GalleryBm galleryBm;
@@ -118,7 +118,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 			file.delete();
 			
 		} catch (Exception e) {
-			LOGGER.error("uploadPicture", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.uploadPicture", "root.EX_NO_MESSAGE", e);			
 		}	
 	}
 	
@@ -168,7 +168,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 				}				
 			}			
 		} catch (Exception e) {
-			LOGGER.error("getAllGalleries", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getAllGalleries", "root.EX_NO_MESSAGE", e);			
 		}
 		
 		Collections.sort(results);		
@@ -193,7 +193,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 				}				
 			}
 		} catch (Exception e) {
-			LOGGER.error("getAllAlbums", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getAllAlbums", "root.EX_NO_MESSAGE", e);			
 		}
 		return results;
 	}
@@ -221,7 +221,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 				}				
 			}
 		} catch (Exception e) {
-			LOGGER.error("getAllPictures", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getAllPictures", "root.EX_NO_MESSAGE", e);			
 		}
 		return results;
 	}
@@ -236,7 +236,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		try {		
 			picture = getPicture(instanceId, pictureId, PhotoSize.ORIGINAL);	
 		} catch (Exception e) {
-			LOGGER.error("getOriginalPicture", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getOriginalPicture", "root.EX_NO_MESSAGE", e);			
 		}
 		return picture;
 	}
@@ -251,7 +251,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		try {		
 			picture = getPicture(instanceId, pictureId, PhotoSize.PREVIEW);
 		} catch (Exception e) {
-			LOGGER.error("getPreviewPicture", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getPreviewPicture", "root.EX_NO_MESSAGE", e);			
 		}
 		return picture;
 	}	

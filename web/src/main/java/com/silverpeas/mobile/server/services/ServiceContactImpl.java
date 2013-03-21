@@ -8,6 +8,7 @@ import java.util.List;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -91,7 +92,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
 			myId = user.getId();
 	      return new RelationShipService().getMyContactsIds(Integer.parseInt(myId));
 	    } catch (SQLException ex) {
-	      SilverTrace.error("com.silverpeas.mobile.server.services", "ServiceDashboardImpl.getMyContactsIds", "", ex);
+	    	SilverTrace.error(SpMobileLogModule.getName(), "ServiceContactImpl.getMyContactsIds", "root.EX_NO_MESSAGE", ex);	    	
 	    }
 	    return new ArrayList<String>();
 	}

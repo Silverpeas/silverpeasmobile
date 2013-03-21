@@ -7,12 +7,14 @@ import java.util.List;
 
 import com.silverpeas.admin.ejb.AdminBm;
 import com.silverpeas.admin.ejb.AdminBmHome;
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
+import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.ComponentInstLight;
 import com.stratelia.webactiv.beans.admin.SpaceInstLight;
 import com.stratelia.webactiv.util.EJBUtilitaire;
@@ -67,7 +69,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 			}			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceNavigationImpl.getSpacesAndApps", "root.EX_NO_MESSAGE", e);
 		}
 		return results;
 	}

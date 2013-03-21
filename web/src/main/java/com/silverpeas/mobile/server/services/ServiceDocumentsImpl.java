@@ -2,16 +2,17 @@ package com.silverpeas.mobile.server.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
+import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBmHome;
@@ -32,8 +33,7 @@ import com.stratelia.webactiv.util.publication.model.PublicationPK;
  * @author svuillet
  */
 public class ServiceDocumentsImpl extends AbstractAuthenticateService implements ServiceDocuments {
-
-	private final static Logger LOGGER = Logger.getLogger(ServiceDocumentsImpl.class);
+	
 	private static final long serialVersionUID = 1L;
 	private OrganizationController organizationController = new OrganizationController();
 	private KmeliaBm kmeliaBm;
@@ -68,7 +68,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 				}
 			}			
 		} catch (Exception e) {
-			LOGGER.error("getTopics", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);			
 			throw new DocumentsException(e.getMessage());
 		}
 		return topicsList;
@@ -100,7 +100,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			}
 			
 		} catch (Exception e) {
-			LOGGER.error("getPublications", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);			
 			throw new DocumentsException(e.getMessage());
 		}
 		
@@ -132,7 +132,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 	}
 
 	@Override
-	public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException {
+	public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException {		
+		SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "getPublication for id");
 		checkUserInSession();				
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -148,8 +149,11 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			dto.setWysiwyg(pub.getWysiwyg());
 						
 			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();						
+			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");			
+			Collection<AttachmentDetail> pubAttachments = getKmeliaBm().getAttachments(pub.getPK());
+			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 			
-			for (AttachmentDetail attachment : getKmeliaBm().getAttachments(pub.getPK())) {
+			for (AttachmentDetail attachment : pubAttachments) {
 				AttachmentDTO attach = new AttachmentDTO();						
 				attach.setTitle(attachment.getTitle());
 				if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
@@ -166,8 +170,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			dto.setAttachments(attachments);		
 			
 			return dto;
-		} catch (Exception e) {
-			LOGGER.error("getPublication", e);
+		} catch (Throwable e) {
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);			
 			throw new DocumentsException(e.getMessage());
 		}	
 	}

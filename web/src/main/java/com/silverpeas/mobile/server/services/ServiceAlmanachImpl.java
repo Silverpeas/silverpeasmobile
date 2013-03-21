@@ -5,14 +5,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 import com.silverpeas.mobile.shared.exceptions.AlmanachException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.services.ServiceAlmanach;
+import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.almanach.control.ejb.AlmanachBm;
 import com.stratelia.webactiv.almanach.control.ejb.AlmanachBmHome;
 import com.stratelia.webactiv.almanach.model.EventDetail;
@@ -23,8 +24,7 @@ import com.stratelia.webactiv.util.JNDINames;
 public class ServiceAlmanachImpl extends AbstractAuthenticateService implements ServiceAlmanach {
 
 	private static final long serialVersionUID = 1L;
-	private AlmanachBm currentAlmanachBm;
-	private final static Logger LOGGER = Logger.getLogger(ServiceAlmanachImpl.class);
+	private AlmanachBm currentAlmanachBm;	
 
 	public List<EventDetailDTO> getAlmanach(String instanceId) throws AlmanachException, AuthenticationException {
 		checkUserInSession();		
@@ -43,7 +43,7 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("getAlmanach", e);
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceAlmanachImpl.getAlmanach", "root.EX_NO_MESSAGE", e);			
 			throw new AlmanachException(e.getMessage());
 		}
 		return listEventDetailDTO;
