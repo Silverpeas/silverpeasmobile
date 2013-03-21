@@ -17,8 +17,8 @@
 			<g:Label horizontalAlignment="center">Remotes pictures</g:Label>				
 		</m:HeaderPanel>
 		
-		<m:ScrollPanel>
-			<g:FlexTable ui:field="content" width="100%" styleName="{style.photo}"></g:FlexTable>
+		<m:ScrollPanel>			
+			<g:AbsolutePanel ui:field="content" styleName="{style.photo}"></g:AbsolutePanel>
 		</m:ScrollPanel>
 		
 		<m:HeaderPanel>	<c:FooterBar/> </m:HeaderPanel>	
