@@ -133,7 +133,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
 	@Override
 	public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException {		
-		SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "getPublication for id");
+		SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
 		checkUserInSession();				
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

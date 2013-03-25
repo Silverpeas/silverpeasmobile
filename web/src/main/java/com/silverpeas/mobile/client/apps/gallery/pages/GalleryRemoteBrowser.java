@@ -176,28 +176,28 @@ public class GalleryRemoteBrowser extends PageView implements View, RemotePictur
 			// resize pictures to use entire screen
 			/*int lastGrowHeight = 0;
 			int r = 0;
-			for (ArrayList<Image> row : grid) {
+			for (ArrayList<Image> row : grid) {				
 				int spaceWidth = 0;
 				for(Image img : row) {
 					spaceWidth = spaceWidth + img.getWidth();
 				}
-				int growWidth = spaceWidth / row.size();
+				int growWidth = (Window.getClientWidth() - spaceWidth) / row.size();
 				int c = 0;
 				for(Image img : row) {
 					int growHeight = (img.getWidth() / img.getHeight()) * growWidth;					
-					img.setWidth(img.getWidth() + growWidth + "px");					
-					img.setHeight(img.getHeight() + growHeight + "px");
+					//img.setWidth(img.getWidth() + growWidth + "px");					
+					//img.setHeight(img.getHeight() + growHeight + "px");
 					if (c > 0) {
-						img.getElement().getStyle().setLeft(Integer.parseInt(img.getElement().getStyle().getLeft()) + growWidth, Unit.PX);						
+						//img.getElement().getStyle().setLeft(Integer.parseInt(img.getElement().getStyle().getLeft().replace("px", "")) + growWidth * c, Unit.PX);						
 					}
 					if (r > 0) {
-						img.getElement().getStyle().setTop(Integer.parseInt(img.getElement().getStyle().getTop()) + lastGrowHeight, Unit.PX);
-					}					
+						//img.getElement().getStyle().setTop(Integer.parseInt(img.getElement().getStyle().getTop().replace("px", "")) + lastGrowHeight, Unit.PX);
+					}			
 					c++;
 					lastGrowHeight = growHeight;
 				}
 				r++;
-			}*/			
+			}	*/		
 			
 			content.setVisible(true);
 		}
