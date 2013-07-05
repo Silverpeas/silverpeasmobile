@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.silverpeas.attachment.AttachmentServiceFactory;
+import org.silverpeas.attachment.SimpleDocumentService;
+import org.silverpeas.attachment.model.DocumentType;
+import org.silverpeas.attachment.model.SimpleDocument;
+import org.silverpeas.importExport.attachment.AttachmentDetail;
+
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -15,16 +21,12 @@ import com.silverpeas.mobile.shared.services.ServiceDocuments;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
-import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBmHome;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.attachment.model.AttachmentDetail;
 import com.stratelia.webactiv.util.node.control.NodeBm;
-import com.stratelia.webactiv.util.node.control.NodeBmHome;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
 import com.stratelia.webactiv.util.publication.control.PublicationBm;
-import com.stratelia.webactiv.util.publication.control.PublicationBmHome;
 import com.stratelia.webactiv.util.publication.model.PublicationDetail;
 import com.stratelia.webactiv.util.publication.model.PublicationPK;
 
@@ -109,24 +111,21 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 	
 	private KmeliaBm getKmeliaBm() throws Exception {
 		if (kmeliaBm == null) {
-			KmeliaBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.KMELIABM_EJBHOME, KmeliaBmHome.class);
-			kmeliaBm  = home.create();		
+			kmeliaBm = EJBUtilitaire.getEJBObjectRef(JNDINames.KMELIABM_EJBHOME, KmeliaBm.class);		
 		}
 		return kmeliaBm;
 	}
 	
 	private PublicationBm getPubBm() throws Exception {
 		if (pubBm == null) {			 
-			PublicationBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.PUBLICATIONBM_EJBHOME, PublicationBmHome.class);
-			pubBm = home.create();
+			pubBm = EJBUtilitaire.getEJBObjectRef(JNDINames.PUBLICATIONBM_EJBHOME, PublicationBm.class);			 
 		}
 		return pubBm;
 	}
 	
 	private NodeBm getNodeBm() throws Exception {
 		if (nodeBm == null) {
-			NodeBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.NODEBM_EJBHOME, NodeBmHome.class);
-			nodeBm = home.create(); 
+			nodeBm = EJBUtilitaire.getEJBObjectRef(JNDINames.NODEBM_EJBHOME, NodeBm.class);			 
 		}
 		return nodeBm;
 	}
@@ -146,26 +145,32 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName() + " " + sdf.format(pub.getUpdateDate()));		
 			dto.setVersion(pub.getVersion());
 			dto.setDescription(pub.getDescription());
-			dto.setWysiwyg(pub.getWysiwyg());
+			String content = pub.getWysiwyg();
+			//TODO : convert img url to data uri
+			// use jsoup
+			
+			dto.setWysiwyg(content);
 						
 			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();						
 			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");			
-			Collection<AttachmentDetail> pubAttachments = getKmeliaBm().getAttachments(pub.getPK());
+			
+			List<SimpleDocument> pubAttachments = AttachmentServiceFactory.getAttachmentService(). listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, "fr"); // TODO manager langue
+						
 			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 			
-			for (AttachmentDetail attachment : pubAttachments) {
+			for (SimpleDocument attachment : pubAttachments) {
 				AttachmentDTO attach = new AttachmentDTO();						
 				attach.setTitle(attachment.getTitle());
 				if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
-					attach.setTitle(attachment.getLogicalName());
+					attach.setTitle(attachment.getFilename());
 				}			
-				attach.setUrl(attachment.getOnlineURL());
-				attach.setType(attachment.getType());
+				attach.setUrl("/silverpeas/"+attachment.getAttachmentURL());
+				attach.setType(attachment.getContentType());
 				attachments.add(attach);
-				attach.setAuthor(attachment.getAuthor());
-				attach.setOrderNum(attachment.getOrderNum());
+				attach.setAuthor(attachment.getCreatedBy());
+				attach.setOrderNum(attachment.getOrder());
 				attach.setSize(attachment.getSize());
-				attach.setCreationDate(attachment.getCreationDate());		
+				attach.setCreationDate(attachment.getCreated());		
 			}
 			dto.setAttachments(attachments);		
 			

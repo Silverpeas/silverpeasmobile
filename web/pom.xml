@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.silverpeas</groupId>
 		<artifactId>parent</artifactId>
-		<version>24</version>
+		<version>25</version>
 	</parent>
 
 	<groupId>com.silverpeas.mobile</groupId>
@@ -17,7 +17,7 @@
 	<properties>
 		<gwtVersion>2.5.0</gwtVersion>
 		<gwtMojoPluginVersion>2.5.0</gwtMojoPluginVersion>
-		<silverpeasVersion>5.11</silverpeasVersion>
+		<silverpeasVersion>5.12</silverpeasVersion>
 	</properties>
 
 	<repositories>
@@ -163,19 +163,12 @@
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
-		<!--dependency> <groupId>com.silverpeas.core.ejb-core</groupId> <artifactId>formtemplate</artifactId> 
-			<version>${silverpeasVersion}</version> <classifier>client</classifier> <scope>provided</scope> 
-			</dependency> <dependency> <groupId>com.silverpeas.core.ejb-core</groupId> 
-			<artifactId>calendar</artifactId> <version>${silverpeasVersion}</version> 
-			<scope>provided</scope> </dependency> <dependency> <groupId>com.silverpeas.components.project-manager</groupId> 
-			<artifactId>project-manager-ejb</artifactId> <version>${silverpeasVersion}</version> 
-			<classifier>client</classifier> <scope>provided</scope> </dependency> <dependency> 
-			<groupId>com.silverpeas.core.ejb-core</groupId> <artifactId>searchengine</artifactId> 
-			<version>${silverpeasVersion}</version> <classifier>client</classifier> <scope>provided</scope> 
-			</dependency> <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
-			<version>2.5</version> <type>jar</type> <scope>provided</scope> </dependency> 
-			<dependency> <groupId>javax.servlet.jsp</groupId> <artifactId>jsp-api</artifactId> 
-			<version>2.1</version> <type>jar</type> <scope>provided</scope> </dependency -->
+		<dependency>
+			<groupId>com.silverpeas.core.ejb-core</groupId>
+			<artifactId>authentication</artifactId>
+			<version>${silverpeasVersion}</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>net.sf.dozer</groupId>

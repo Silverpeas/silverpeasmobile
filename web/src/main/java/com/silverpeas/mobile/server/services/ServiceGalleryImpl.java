@@ -27,10 +27,8 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
-import com.silverpeas.admin.ejb.AdminBm;
-import com.silverpeas.admin.ejb.AdminBmHome;
+import com.silverpeas.admin.ejb.AdminBusiness;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.control.ejb.GalleryBmHome;
 import com.silverpeas.gallery.delegate.PhotoDataCreateDelegate;
 import com.silverpeas.gallery.model.AlbumDetail;
 import com.silverpeas.gallery.model.PhotoDetail;
@@ -61,7 +59,7 @@ import com.stratelia.webactiv.util.ResourceLocator;
 public class ServiceGalleryImpl extends AbstractAuthenticateService implements ServiceGallery {
 	
 	private static final long serialVersionUID = 1L;
-	private AdminBm adminBm;
+	private AdminBusiness adminBm;
 	private GalleryBm galleryBm;
 		
 	/**
@@ -290,18 +288,16 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		return data;
 	}
 	
-	private AdminBm getAdminBm() throws Exception {
+	private AdminBusiness getAdminBm() throws Exception {
 		if (adminBm == null) {
-			AdminBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBmHome.class);
-			adminBm = home.create();
+			adminBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBusiness.class);			
 		}
 		return adminBm;
 	}
 	
 	private GalleryBm getGalleryBm() throws Exception {
 		if (galleryBm == null) {
-			GalleryBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBmHome.class);
-			galleryBm = home.create(); 
+			galleryBm = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBm.class);			  
 		}
 		return galleryBm;
 	}

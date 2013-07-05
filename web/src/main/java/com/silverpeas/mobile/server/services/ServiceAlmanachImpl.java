@@ -15,7 +15,6 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.services.ServiceAlmanach;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.almanach.control.ejb.AlmanachBm;
-import com.stratelia.webactiv.almanach.control.ejb.AlmanachBmHome;
 import com.stratelia.webactiv.almanach.model.EventDetail;
 import com.stratelia.webactiv.almanach.model.EventPK;
 import com.stratelia.webactiv.util.EJBUtilitaire;
@@ -51,7 +50,7 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
 
 	private AlmanachBm getAlmanachBm() throws Exception {
 		if (currentAlmanachBm == null) {
-			currentAlmanachBm = ((AlmanachBmHome) EJBUtilitaire.getEJBObjectRef(JNDINames.ALMANACHBM_EJBHOME, AlmanachBmHome.class)).create();			
+			currentAlmanachBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ALMANACHBM_EJBHOME, AlmanachBm.class);			
 		}
 		return currentAlmanachBm;
 	}

@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.silverpeas.admin.ejb.AdminBm;
-import com.silverpeas.admin.ejb.AdminBmHome;
+import com.silverpeas.admin.ejb.AdminBusiness;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
@@ -27,7 +26,7 @@ import com.stratelia.webactiv.util.JNDINames;
 public class ServiceNavigationImpl extends AbstractAuthenticateService implements ServiceNavigation {
 
 	private static final long serialVersionUID = 1L;
-	private AdminBm adminBm;
+	private AdminBusiness adminBm;
 	
 	@Override
 	public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId, String appType) throws NavigationException, AuthenticationException {
@@ -99,10 +98,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 		return dto;
 	}
 	
-	private AdminBm getAdminBm() throws Exception {
+	private AdminBusiness getAdminBm() throws Exception {
 		if (adminBm == null) {			 
-			AdminBmHome home = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBmHome.class);
-			adminBm = home.create();
+			adminBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBusiness.class);			 
 		}
 		return adminBm;
 	}
