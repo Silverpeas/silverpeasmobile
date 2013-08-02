@@ -13,7 +13,12 @@ public class AttachmentDTO implements Serializable {
 	private String author = null;
 	private String title = null;
 	private int orderNum;
-	private String url;
+	private String id;
+	private String instanceId;
+	private String lang;
+	private String userId;
+	
+	
 	
 	public String getType() {
 		return type;
@@ -51,10 +56,28 @@ public class AttachmentDTO implements Serializable {
 	public void setOrderNum(int orderNum) {
 		this.orderNum = orderNum;
 	}
-	public String getUrl() {
-		return url;
+	public String getUserId() {
+		return userId;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getInstanceId() {
+		return instanceId;
+	}
+	public void setInstanceId(String instanceId) {
+		this.instanceId = instanceId;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 }

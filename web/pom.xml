@@ -163,9 +163,10 @@
 			<classifier>client</classifier>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>com.silverpeas.core.ejb-core</groupId>
-			<artifactId>authentication</artifactId>
+			<groupId>com.silverpeas.core</groupId>
+			<artifactId>web-core</artifactId>
 			<version>${silverpeasVersion}</version>
 			<scope>provided</scope>
 		</dependency>

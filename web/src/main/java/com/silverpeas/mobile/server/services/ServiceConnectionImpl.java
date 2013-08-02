@@ -8,12 +8,19 @@ import org.dozer.Mapper;
 import org.silverpeas.authentication.AuthenticationCredential;
 import org.silverpeas.authentication.AuthenticationService;
 
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 import com.silverpeas.admin.ejb.AdminBusiness;
-import com.silverpeas.authentication.ejb.AuthenticationBm;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
+import com.silverpeas.session.SessionManagementFactory;
+import com.stratelia.silverpeas.peasCore.SessionManager;
 import com.stratelia.webactiv.beans.admin.Domain;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
@@ -29,7 +36,6 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 	private static final long serialVersionUID = 1L;
 
 	private AdminBusiness adminBm;
-	private AuthenticationBm authentication;
 	private OrganizationController organizationController = new OrganizationController();
 
 	public void login(String login, String password, String domainId)
@@ -42,8 +48,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 			AuthenticationService authenticator = new AuthenticationService();
 		    AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(login)
 		        .withAsPassword(password).withAsDomainId(domainId);
-		    String key = authenticator.authenticate(credential);
-			
+		    String key = authenticator.authenticate(credential);			
 			if (key == null || key.startsWith("Error_")) {								
 				if (key.equals("Error_1")) {
 					throw new AuthenticationException(AuthenticationError.BadCredential);
@@ -53,7 +58,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 					throw new AuthenticationException(
 							AuthenticationError.PwdNotAvailable);
 				}				
-			}			
+			}
 		} catch (Exception e) {
 			throw new AuthenticationException();
 		}
@@ -93,12 +98,4 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 		}
 		return adminBm;
 	}
-	
-	private AuthenticationBm getAuthenticationBm() throws Exception {
-	    if (authentication == null) {	      
-	        authentication = EJBUtilitaire.getEJBObjectRef(JNDINames.AUTHENTICATIONBM_EJBHOME, AuthenticationBm.class);
-	      
-	    }
-	    return authentication;
-	  }
 }

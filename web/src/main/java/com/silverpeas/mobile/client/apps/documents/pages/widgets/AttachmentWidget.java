@@ -123,7 +123,8 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 
 	private void clickAction() {
 		try {
-			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + attachement.getUrl();			
+			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/spmobile/spmobil/Attachment";					
+			url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
 			if (MobilUtils.isPhoneGap()) {
 				ChildBrowser.openExternal(url, false);				
 			} else {

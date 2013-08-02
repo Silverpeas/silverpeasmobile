@@ -2,14 +2,11 @@ package com.silverpeas.mobile.server.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.silverpeas.attachment.AttachmentServiceFactory;
-import org.silverpeas.attachment.SimpleDocumentService;
 import org.silverpeas.attachment.model.DocumentType;
 import org.silverpeas.attachment.model.SimpleDocument;
-import org.silverpeas.importExport.attachment.AttachmentDetail;
 
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
@@ -164,7 +161,13 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 				if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
 					attach.setTitle(attachment.getFilename());
 				}			
-				attach.setUrl("/silverpeas/"+attachment.getAttachmentURL());
+				attach.setInstanceId(attachment.getInstanceId());
+				attach.setId(attachment.getId());
+				attach.setLang(attachment.getLanguage());
+				
+				
+				
+				attach.setUserId(getUserInSession().getId());
 				attach.setType(attachment.getContentType());
 				attachments.add(attach);
 				attach.setAuthor(attachment.getCreatedBy());
