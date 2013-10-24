@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.silverpeas</groupId>
 		<artifactId>parent</artifactId>
-		<version>25</version>
+		<version>26</version>
 	</parent>
 
 	<groupId>com.silverpeas.mobile</groupId>
@@ -17,7 +17,7 @@
 	<properties>
 		<gwtVersion>2.5.0</gwtVersion>
 		<gwtMojoPluginVersion>2.5.0</gwtMojoPluginVersion>
-		<silverpeasVersion>5.12</silverpeasVersion>
+		<silverpeasVersion>5.13</silverpeasVersion>
 	</properties>
 
 	<repositories>
