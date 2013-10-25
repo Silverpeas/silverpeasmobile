@@ -24,11 +24,14 @@ public class AttachmentServlet extends HttpServlet {
 		String id = request.getParameter("id");
 		String instanceId = request.getParameter("instanceId");
 		String lang = request.getParameter("lang");
-		String userId = request.getParameter("userId");
+		String userId = request.getParameter("userId");		
 		UserFull userF = organizationController.getUserFull(userId);
-
+		
+		
+		
 		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/silverpeas/services/documents/" + instanceId + "/document/" + id + "/content/" + lang;
 		getFile(url, response, userF.getToken());
+		
 		response.getOutputStream().flush();
 	}
 
@@ -51,12 +54,15 @@ public class AttachmentServlet extends HttpServlet {
 			client.executeMethod(method);
 
 			input = method.getResponseBodyAsStream();
+			response.setContentType(method.getResponseHeader("Content-Type").getValue());
+			response.setHeader("content-disposition", method.getResponseHeader("content-disposition").getValue());
 
 			byte[] buffer = new byte[1024];
 			int read;
 			while ((read = input.read(buffer)) > 0) {
 				response.getOutputStream().write(buffer, 0, read);
 			}
+			response.setContentLength(Integer.parseInt(method.getResponseHeader("Content-Length").getValue()));
 		} catch (IOException e) {
 			System.out.println("Error while trying to download the file.");
 			e.printStackTrace();

@@ -42,10 +42,10 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 
 	public AttachmentWidget() {
 		
-		if (MobilUtils.isIOS() && MobilUtils.isPhoneGap() == false && MobilUtils.isStandalone()) {
-			title = new Anchor();	
-		} else {
+		if (MobilUtils.isPhoneGap()) {
 			title = new Label();
+		} else {
+			title = new Anchor();			
 		}	
 		
 		ressources = GWT.create(DocumentsResources.class);		
@@ -130,7 +130,7 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 			} else {
 				if (title instanceof Anchor) {
 					((Anchor)title).setHref(url);
-					((Anchor)title).setTarget("_blank");
+					((Anchor)title).setTarget("_self");
 					((Anchor)title).fireEvent(new ClickEvent() {});	
 				} else {
 					Window.open(url, "_blank", "");	
