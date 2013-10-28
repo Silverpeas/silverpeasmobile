@@ -11,9 +11,6 @@ import com.gwtmobile.persistence.client.CollectionCallback;
 import com.gwtmobile.persistence.client.Entity;
 import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
-import com.gwtmobile.phonegap.client.Camera;
-import com.gwtmobile.phonegap.client.Camera.DestinationType;
-import com.gwtmobile.phonegap.client.Camera.SourceType;
 import com.gwtmobile.phonegap.client.FileMgr;
 import com.gwtmobile.phonegap.client.FileMgr.Entry;
 import com.gwtmobile.phonegap.client.FileMgr.EntryCallback;
@@ -373,34 +370,21 @@ public class GalleryController implements Controller, GalleryControllerEventHand
 	 * Take a picture from camera device.
 	 */
 	@Override
-	public void takePicture(TakePictureEvent takePictureEvent) {
-		Camera.Options options = new Camera.Options();
-		options.sourceType(SourceType.CAMERA);
-		options.destinationType(DestinationType.FILE_URI);
-		
-		Camera.getPicture(new Camera.Callback() {			
-			public void onSuccess(final String imageData) {				
-				Notification.activityStart();
-				Database.open();		
-				final Entity<Picture> pictureEntity = GWT.create(Picture.class);				
-				Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
-					public void onSuccess() {
-						final Picture pic = pictureEntity.newInstance();
-						DateTimeFormat fmt = DateTimeFormat.getFormat("ddMMyyyy-HHmmss");
-						pic.setName("mobil_" + fmt.format(new Date()));
-						pic.setURI(imageData);
-						Persistence.flush();
-						Notification.activityStop();
-					}
-				});
-			}
-
-			public void onError(String message) {
-				// TODO : manage cancel photo taking
-				Notification.activityStop();
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(message)));	
-			}
-		}, options);
+	public void takePicture(final TakePictureEvent takePictureEvent) {	
+				
+			Notification.activityStart();
+			Database.open();		
+			final Entity<Picture> pictureEntity = GWT.create(Picture.class);				
+			Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
+				public void onSuccess() {
+					final Picture pic = pictureEntity.newInstance();
+					DateTimeFormat fmt = DateTimeFormat.getFormat("ddMMyyyy-HHmmss");
+					pic.setName("mobil_" + fmt.format(new Date()));
+					pic.setURI(takePictureEvent.getImageData());
+					Persistence.flush();
+					Notification.activityStop();
+				}
+			});
 	}
 
 	/**

@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.apps.gallery.pages;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -23,7 +24,6 @@ import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSe
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.SyncPicturesEvent;
-import com.silverpeas.mobile.client.apps.gallery.events.controller.TakePictureEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.AbstractGalleryPagesEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryEndUploadEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.pages.GalleryLoadedSettingsEvent;
@@ -40,8 +40,8 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.components.icon.Icon;
+import com.silverpeas.mobile.client.components.upload.TakePicture;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -56,7 +56,8 @@ public class GalleryPage extends PageView implements GalleryPagesEventHandler, V
 	@UiField(provided = true) protected GalleryMessages msg = null;
 	@UiField(provided = true) protected ApplicationMessages globalMsg = null;
 	@UiField(provided = true) protected GalleryResources ressources = null;
-	@UiField protected Icon takePicture, local, sync, remote;
+	@UiField protected Icon local, sync, remote;
+	@UiField protected TakePicture takePicture;
 	@UiField protected HeaderPanel header;
 	@UiField protected HorizontalPanel content;
 	@UiField protected DropDownList albums;
@@ -81,14 +82,18 @@ public class GalleryPage extends PageView implements GalleryPagesEventHandler, V
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractGalleryPagesEvent.TYPE, this);
 		// load previous gallery and album selection
-		EventBus.getInstance().fireEvent(new GalleryLoadSettingsEvent());
-				
-		if (MobilUtils.isPhoneGap() == false) {
-			takePicture.setInactive(true);
-			local.setInactive(true);
-			sync.setInactive(true);			
-		}
+		EventBus.getInstance().fireEvent(new GalleryLoadSettingsEvent());		
 		remote.setInactive(true);
+	
+	}	
+	
+	/**
+	 * Take a picture and store it in local database.
+	 * @param e
+	 */
+	@UiHandler("takePicture")
+	void onPicture(ChangeEvent e) {
+		takePicture.getImageData();
 	}
 	
 	/**
@@ -102,15 +107,6 @@ public class GalleryPage extends PageView implements GalleryPagesEventHandler, V
 			EventBus.getInstance().fireEvent(new GallerySaveSettingsEvent(currentInstance, albums.getSelectedValue()));	
 		}
 	}	
-	
-	/**
-	 * Take a picture and store it in local database.
-	 * @param e
-	 */
-	@UiHandler("takePicture")
-	void takePicture(ClickEvent e) {
-		EventBus.getInstance().fireEvent(new TakePictureEvent());
-	}
 	
 	/**
 	 * Load local pictures.

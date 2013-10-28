@@ -3,12 +3,19 @@ package com.silverpeas.mobile.client.apps.gallery.events.controller;
 
 public class TakePictureEvent extends AbstractGalleryControllerEvent {
 	
-	public TakePictureEvent() {
+	private String imageData;
+	
+	public TakePictureEvent(String imageData) {
 		super();	
+		this.imageData = imageData;
 	}
 
 	@Override
 	protected void dispatch(GalleryControllerEventHandler handler) {
 		handler.takePicture(this);
+	}
+
+	public String getImageData() {
+		return imageData;
 	}
 }

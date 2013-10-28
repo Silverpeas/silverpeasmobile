@@ -3,7 +3,8 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
 	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon"
-	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
+	xmlns:f="urn:import:com.silverpeas.mobile.client.components"
+	xmlns:u="urn:import:com.silverpeas.mobile.client.components.upload">
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages'/>
 	<ui:with field='globalMsg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
@@ -56,7 +57,10 @@
 			<m:Slide>
 				<m:HorizontalPanel ui:field="content" secondaryStyle="{style.contentH}">
 					<m:VerticalPanel secondaryStyle="{style.contentV}">
-						<i:Icon text="{msg.takePicture}" styleName="{ressources.css.camera}" ui:field="takePicture" height="50%"/>
+						
+						
+						<u:TakePicture text="{msg.takePicture}" icon="{ressources.camera}" ui:field="takePicture" height="50%"/>
+						
 						<i:Icon text="{msg.synchroPictures}" styleName="{ressources.css.synchro}" ui:field="sync" height="50%"/>
 					</m:VerticalPanel>
 					<m:VerticalPanel secondaryStyle="{style.contentV}">
