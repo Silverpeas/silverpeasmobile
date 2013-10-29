@@ -115,3 +115,11 @@
 .inactive {
 	opacity:0.4;	
 }
+
+
+.popup {
+	background-color: white;
+	color : black;
+	text-align: center;
+	-webkit-border-radius: 5px;
+}

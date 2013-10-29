@@ -22,5 +22,8 @@ public interface ApplicationCSS extends CssResource {
 	
 	String footer();
 	
-	String inactive(); 
+	String inactive();
+	
+	String popup();
 }
+
