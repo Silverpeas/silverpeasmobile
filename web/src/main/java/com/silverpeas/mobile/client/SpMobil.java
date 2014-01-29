@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.gwtmobile.persistence.client.Collection;
 import com.gwtmobile.persistence.client.Entity;
-import com.gwtmobile.persistence.client.Persistence;
 import com.gwtmobile.persistence.client.ScalarCallback;
 import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.common.Database;
@@ -87,18 +86,6 @@ public class SpMobil implements EntryPoint{
 	 * Suppression des ids mémorisés en SQL Web Storage.
 	 */
 	public void clearIds() {
-		
-		/*Database.open();
-		final Entity<UserIds> userIdsEntity = GWT.create(UserIds.class);
-		Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
-			public void onSuccess() {				
-				userIdsEntity.all().destroyAll(new com.gwtmobile.persistence.client.Callback() {
-					public void onSuccess() {						
-						Persistence.flush();						
-					}
-				});
-			}
-		});*/
 		Database.destroy();
 	}
 	
