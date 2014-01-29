@@ -86,18 +86,20 @@ public class SpMobil implements EntryPoint{
 	/**
 	 * Suppression des ids mémorisés en SQL Web Storage.
 	 */
-	private void clearIds() {
-		Database.open();
+	public void clearIds() {
+		
+		/*Database.open();
 		final Entity<UserIds> userIdsEntity = GWT.create(UserIds.class);
 		Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
-			public void onSuccess() {
+			public void onSuccess() {				
 				userIdsEntity.all().destroyAll(new com.gwtmobile.persistence.client.Callback() {
 					public void onSuccess() {						
 						Persistence.flush();						
 					}
 				});
 			}
-		});
+		});*/
+		Database.destroy();
 	}
 	
 	/**

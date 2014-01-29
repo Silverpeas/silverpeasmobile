@@ -12,4 +12,8 @@ public class Database {
 		Persistence.setAutoAdd(true);
 	}
 	
+	public static void destroy() {
+		Persistence.reset();
+	}
+	
 }
