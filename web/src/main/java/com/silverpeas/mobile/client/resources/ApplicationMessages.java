@@ -11,7 +11,7 @@ public interface ApplicationMessages extends Messages {
 	@DefaultMessage("Corriger")
 	String correctBtnLabel();
 	
-	@DefaultMessage("Silverpeas&copy; 1999-2013")
+	@DefaultMessage("Silverpeas&copy; 1999-2014")
 	String copyright();
 	
 	@DefaultMessage("Information")

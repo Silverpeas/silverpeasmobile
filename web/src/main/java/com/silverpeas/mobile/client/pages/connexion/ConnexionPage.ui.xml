@@ -20,6 +20,23 @@
 		.flex > div > *:last-child {
 			width: 90%;
 		}
+		
+		.footer {
+			position: fixed;
+			bottom : 0px;
+			width: 100%
+		}
+		
+		.go {
+			margin-top: 20px;
+			width: 90%;
+		}
+		
+		.fields {
+			width: 90%;
+			
+		}
+		
 	</ui:style>
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
@@ -31,21 +48,14 @@
 				<g:SimplePanel styleName="{res.css.logo}"/>
 			</m:VerticalPanel>						
 		</m:HeaderPanel>
-		
-		<m:ScrollPanel hasTextBox="true">
-			<m:ListPanel selectable="false" styleName="ListPanel {style.flex}" >
-				<m:ListItem><g:Label>Login:</g:Label><m:TextBox ui:field="loginField" focus="true"/></m:ListItem>
-				<m:ListItem><g:Label>Password:</g:Label><m:PasswordTextBox ui:field="passwordField"/></m:ListItem>
-				<m:ListItem>	
-					<g:Label>Domain:</g:Label>
-					<m:DropDownList ui:field="domains"/>
-				</m:ListItem>
-				<m:ListItem>
-					<m:Button ui:field="go" horizontalAlignment="center">Go</m:Button>
-				</m:ListItem>	
-			</m:ListPanel>
-		</m:ScrollPanel>		
-		<m:HeaderPanel>
+			<div style="margin-left: 5%; margin-top: 20px;">
+			<g:Label>Login:</g:Label><m:TextBox ui:field="loginField" focus="true" secondaryStyle="{style.fields}"/>
+			<g:Label>Password:</g:Label><m:PasswordTextBox ui:field="passwordField" secondaryStyle="{style.fields}"/>
+			<g:Label>Domain:</g:Label><m:DropDownList ui:field="domains"/>
+			<m:Button ui:field="go" horizontalAlignment="center" secondaryStyle="{style.go}">Go</m:Button>
+			</div>
+						
+		<m:HeaderPanel secondaryStyle="{style.footer}">
 			<f:FooterBar />			
 		</m:HeaderPanel>		
 	</g:HTMLPanel>
