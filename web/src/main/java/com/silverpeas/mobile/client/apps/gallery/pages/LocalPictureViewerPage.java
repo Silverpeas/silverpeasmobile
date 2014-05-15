@@ -1,5 +1,7 @@
 package com.silverpeas.mobile.client.apps.gallery.pages;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -77,11 +79,11 @@ public class LocalPictureViewerPage extends PageView implements View, LocalPictu
 	 * Set pictures to browse.
 	 * @param pictures
 	 */
-	public void setPictures(Picture[] pictures) {
-		nbPictures = pictures.length;
-		for (int i = 0; i < pictures.length; i++) {			
-			Picture picture = pictures[i];
-			Image image = new Image(picture.getURI());		
+	public void setPictures(List<Picture> pictures) {
+		nbPictures = pictures.size();
+		for (int i = 0; i < pictures.size(); i++) {			
+			Picture picture = pictures.get(i);
+			Image image = new Image(picture.getUri());		
 			image.setWidth("100%");
 			Slide s = new Slide();
 			s.addStyleName(ressources.css().localPicture());			
@@ -103,11 +105,11 @@ public class LocalPictureViewerPage extends PageView implements View, LocalPictu
 	private void deletePicture() {
 		com.gwtmobile.phonegap.client.Notification.confirm(msg.localPicture_deleteConfirmation(), new com.gwtmobile.phonegap.client.Notification.ConfirmCallback() {		
 			public void onComplete(int selection) {
-				if (selection == 1) {					
+				if (selection == 1) {				
 					int index = content.getCurrentSlideIndex();
 					Slide currentSlide = content.getSlide(index);
 					EventBus.getInstance().fireEvent(new DeleteLocalPictureEvent(currentSlide.getElement().getId()));
-				}				
+				}
 			}
 		}, "Confirm", "OK,Cancel");
 	}

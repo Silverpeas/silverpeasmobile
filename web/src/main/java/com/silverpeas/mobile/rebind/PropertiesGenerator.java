@@ -31,8 +31,7 @@ public class PropertiesGenerator extends Generator {
 	 * @param typeName class name to substitute
 	 * @return created class name
 	 * @throws UnableToCompleteException
-	 */
-	@SuppressWarnings("deprecation")
+	 */	
 	@Override
 	public String generate(TreeLogger logger, GeneratorContext context, String typeName) throws UnableToCompleteException {
 		ClassSourceFileComposerFactory composer = null;
@@ -48,7 +47,7 @@ public class PropertiesGenerator extends Generator {
 			JClassType type = oracle.getType(typeName);
 			PropertyOracle propertyOracle = context.getPropertyOracle();
 			String packageName = type.getPackage().getName();
-			String simpleName = type.getSimpleSourceName() + "_Generated_" + propertyOracle.getPropertyValue(logger, "user.agent") + "_" + Calendar.getInstance().getTimeInMillis();			
+			String simpleName = type.getSimpleSourceName() + "_Generated_" + propertyOracle.getSelectionProperty(logger, "user.agent").getCurrentValue() + "_" + Calendar.getInstance().getTimeInMillis();			
 			composer = new ClassSourceFileComposerFactory(packageName, simpleName);
 			// Define imports
 			composer.addImport("java.util.*");

@@ -80,11 +80,12 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 			// rotation de l'image si nécessaire
 			Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(dataDecoded)), true);
 			Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
-			int existingOrientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);			
 			InputStream in = new ByteArrayInputStream(dataDecoded);
 			BufferedImage bi = ImageIO.read(in);
-			BufferedImage bir = RotationSupport.adjustOrientation(bi, existingOrientation);
-			
+			if (directory != null) {
+				int existingOrientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+				bi = RotationSupport.adjustOrientation(bi, existingOrientation);
+			}
 			// stockage temporaire de la photo upload
 			String tempDir = System.getProperty("java.io.tmpdir");
 			String filename = tempDir + File.separator + name + "." + extension;
@@ -92,7 +93,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 			
 			// TODO : When Silverpeas support extended exif metadata : preserve Exif metadata (rotate remove exif metadata)
 			
-			ImageIO.write(bir, extension, outputStream);	
+			ImageIO.write(bi, extension, outputStream);	
 			outputStream.close();
 						
 			File file = new File(filename);

@@ -3,14 +3,11 @@ package com.silverpeas.mobile.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
-import com.gwtmobile.persistence.client.Collection;
-import com.gwtmobile.persistence.client.Entity;
-import com.gwtmobile.persistence.client.ScalarCallback;
 import com.gwtmobile.ui.client.page.Page;
-import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.ErrorManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
@@ -19,13 +16,12 @@ import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.MainPage;
-import com.silverpeas.mobile.client.persist.UserIds;
+import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 
 
-//TODO : Spring service dispatcher & spring injection server side
+//TODO : Call REST services
 //TODO : Gin injection client side
-//TODO : MVP
 //TODO : internationalisation globale
 //TODO : generic ConfigurationProvider
 
@@ -86,25 +82,30 @@ public class SpMobil implements EntryPoint{
 	 * Suppression des ids mémorisés en SQL Web Storage.
 	 */
 	public void clearIds() {
-		Database.destroy();
+		Storage storage = Storage.getLocalStorageIfSupported();
+		if (storage != null) {					
+			storage.clear();
+		}		
 	}
 	
 	/**
 	 * Chargement des ids mémorisés en SQL Web Storage.
 	 */
-	private void loadIds() {
-		Database.open();
-		final Entity<UserIds> userIdsEntity = GWT.create(UserIds.class);
-		final Collection<UserIds> usersIds = userIdsEntity.all().limit(1);		
-		usersIds.one(new ScalarCallback<UserIds>() {
-			public void onSuccess(UserIds result) {
+	private void loadIds() {		
+		Storage storage = Storage.getLocalStorageIfSupported();
+		if (storage != null) {						
+			String dataItem = storage.getItem("userConnected");			
+			if (dataItem != null) {
+				User user = User.getInstance(dataItem);
 				noUserIdsStore = false;	
-				String password = decryptPassword(result.getPassword());
+				String password = decryptPassword(user.getPassword());
 				if (password != null) {
-					login(result.getLogin(), password, result.getDomainId(), true);
+					login(user.getLogin(), password, user.getDomainId(), true);
 				}
-			}
-		});
+			}			
+			
+			
+		}
 	}
 	
 	/**

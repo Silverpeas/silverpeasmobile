@@ -1,12 +1,14 @@
 package com.silverpeas.mobile.client.apps.gallery.events.pages;
 
+import java.util.List;
+
 import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
 
 public class GalleryLocalPicturesLoadedEvent extends AbstractGalleryPagesEvent {
 
-	private Picture[] pictures;
+	private List<Picture> pictures;
 	
-	public GalleryLocalPicturesLoadedEvent(Picture[] pictures) {
+	public GalleryLocalPicturesLoadedEvent(List<Picture> pictures) {
 		super();
 		this.pictures = pictures;		
 	}
@@ -16,7 +18,7 @@ public class GalleryLocalPicturesLoadedEvent extends AbstractGalleryPagesEvent {
 		handler.onLocalPicturesLoaded(this);
 	}
 
-	public Picture[] getPictures() {
+	public List<Picture> getPictures() {
 		return pictures;
 	}
 }

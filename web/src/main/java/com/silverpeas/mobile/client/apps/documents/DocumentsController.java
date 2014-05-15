@@ -2,12 +2,8 @@ package com.silverpeas.mobile.client.apps.documents;
 
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtmobile.persistence.client.Collection;
-import com.gwtmobile.persistence.client.Entity;
-import com.gwtmobile.persistence.client.Persistence;
-import com.gwtmobile.persistence.client.ScalarCallback;
 import com.silverpeas.mobile.client.apps.documents.events.controller.AbstractDocumentsControllerEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsControllerEventHandler;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationEvent;
@@ -25,7 +21,6 @@ import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
-import com.silverpeas.mobile.client.common.Database;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
@@ -55,11 +50,12 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 
 	@Override
 	public void loadSettings(DocumentsLoadSettingsEvent event) {
-		Database.open();		
-		final Entity<DocumentsSettings> settingsEntity = GWT.create(DocumentsSettings.class);
-		final Collection<DocumentsSettings> settings = settingsEntity.all().limit(1);			
-		settings.one(new ScalarCallback<DocumentsSettings>() {
-			public void onSuccess(final DocumentsSettings settings) {
+		Storage storage = Storage.getLocalStorageIfSupported();
+		if (storage != null) {
+			String dataItem = storage.getItem("documentsSettings");			
+			if (dataItem != null) {
+				DocumentsSettings settings = DocumentsSettings.getInstance(dataItem);				
+				
 				ApplicationInstanceDTO instance = new ApplicationInstanceDTO();
 				instance.setId(settings.getSelectedInstanceId());
 				instance.setLabel(settings.getSelectedInstanceLabel());
@@ -71,7 +67,7 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 								
 				EventBus.getInstance().fireEvent(new DocumentsLoadedSettingsEvent(instance, topic));
 			}
-		});		
+		}
 	}
 	
 	/**
@@ -79,32 +75,15 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 	 */
 	@Override
 	public void saveSettings(final DocumentsSaveSettingsEvent event) {
-		Database.open();		
-		final Entity<DocumentsSettings> settingsEntity = GWT.create(DocumentsSettings.class);
-		final Collection<DocumentsSettings> settings = settingsEntity.all();		
-		Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {
-			@Override
-			public void onSuccess() {
-				settings.destroyAll(new com.gwtmobile.persistence.client.Callback() {
-					public void onSuccess() {						
-						Persistence.flush();
-						final Entity<DocumentsSettings> settingsEntity = GWT.create(DocumentsSettings.class);				
-						Persistence.schemaSync(new com.gwtmobile.persistence.client.Callback() {			
-							public void onSuccess() {
-								final DocumentsSettings settings = settingsEntity.newInstance();
-								settings.setSelectedInstanceId(event.getInstance().getId());
-								settings.setSelectedInstanceLabel(event.getInstance().getLabel());
-								if (event.getTopic() != null) {
-									settings.setSelectedTopicId(event.getTopic().getId());
-									settings.setSelectedTopicLabel(event.getTopic().getName());
-								}
-								Persistence.flush();
-							}
-						});				
-					}
-				});				
-			}		
-		});
+		Storage storage = Storage.getLocalStorageIfSupported();
+		if (storage != null) {
+			DocumentsSettings settings = new DocumentsSettings(event.getInstance().getId(), event.getInstance().getLabel());						
+			if (event.getTopic() != null) {
+				settings.setSelectedTopicId(event.getTopic().getId());
+				settings.setSelectedTopicLabel(event.getTopic().getName());
+			}						
+			storage.setItem("documentsSettings", settings.toJson());			
+		}
 	}
 
 	/**

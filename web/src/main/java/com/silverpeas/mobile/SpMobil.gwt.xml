@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.4.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.4.0/distro-source/core/src/gwt-module.dtd">
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
 <module rename-to="spmobil">
+	
+	
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.json.JSON"/>
 	<inherits name="com.gwtmobile.ui.gwtmobile_ui"/>
-	<inherits name="com.gwtmobile.phonegap.gwtmobile_phonegap"/>
-	<inherits name="com.gwtmobile.persistence.gwtmobile_persistence"/>
+	<inherits name="com.gwtmobile.phonegap.gwtmobile_phonegap"/>	
 	<inherits name="com.googlecode.gwt.crypto.Crypto"/>
+	<inherits name="org.fusesource.restygwt.RestyGWT"/>
 	<source path="client" />
 	<source path="shared" />
 	<entry-point class="com.silverpeas.mobile.client.SpMobil" />
+	
 	
 	<generate-with class="com.silverpeas.mobile.rebind.PropertiesGenerator">
 		<when-type-assignable class="com.silverpeas.mobile.client.rebind.ConfigurationProvider"/>
@@ -18,5 +21,9 @@
 	<set-property name="compiler.emulatedStack" value="true" />
 	<set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true"/>
 	<set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true"/>
+		
+	<add-linker name="xsiframe" />
+	<set-configuration-property name="devModeRedirectEnabled" value="true" />
+	<set-property name="compiler.useSourceMaps" value="true" />
 	
 </module>
