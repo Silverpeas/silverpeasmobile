@@ -19,8 +19,6 @@ import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
-import com.silverpeas.mobile.client.common.phonegap.ChildBrowser;
 
 public class PictureViewerPage extends PageView implements View, PicturesViewerPageEventHandler {
 
@@ -72,10 +70,6 @@ public class PictureViewerPage extends PageView implements View, PicturesViewerP
 	
 	@UiHandler("fullScreen")
 	void openImage(ClickEvent e) {
-		if (MobilUtils.isPhoneGap()) {
-			ChildBrowser.openExternal(content.getUrl(), false);				
-		} else {
-			Window.open(content.getUrl(), "_blank", "");	
-		}
+		Window.open(content.getUrl(), "_blank", "");
 	}
 }

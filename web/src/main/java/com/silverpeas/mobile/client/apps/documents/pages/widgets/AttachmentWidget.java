@@ -11,14 +11,11 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.gwtmobile.ui.client.widgets.VerticalPanel;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
-import com.silverpeas.mobile.client.common.phonegap.ChildBrowser;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 
@@ -34,7 +31,7 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 	private VerticalPanel internalGrid = new VerticalPanel();
 	private HorizontalPanel internalRow = new HorizontalPanel();	
 	private Label icon = new Label();
-	private Widget title;
+	private Anchor title;
 	private Label size = new Label();
 	private Label date = new Label();
 	
@@ -42,11 +39,7 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 
 	public AttachmentWidget() {
 		
-		if (MobilUtils.isPhoneGap()) {
-			title = new Label();
-		} else {
-			title = new Anchor();			
-		}	
+		title = new Anchor();			
 		
 		ressources = GWT.create(DocumentsResources.class);		
 		ressources.css().ensureInjected();
@@ -65,19 +58,11 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 	}
 
 	public String getTitle() {
-		if (title instanceof Anchor) {
-			return ((Anchor)title).getText();
-		} else {
-			return ((Label)title).getText();
-		}
+		return title.getText();
 	}
 
 	public void setTitle(String text) {
-		if (title instanceof Anchor) {
-			((Anchor)title).setText(text);
-		} else {
-			((Label)title).setText(text);
-		}
+			title.setText(text);
 	}	
 	
 	public void setAttachment(AttachmentDTO attachmentDTO) {
@@ -125,20 +110,15 @@ public class AttachmentWidget extends Composite implements ClickHandler {
 		try {
 			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/spmobile/spmobil/Attachment";					
 			url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
-			if (MobilUtils.isPhoneGap()) {
-				ChildBrowser.openExternal(url, false);				
-			} else {
-				if (title instanceof Anchor) {
-					((Anchor)title).setHref(url);
-					((Anchor)title).setTarget("_self");
-					((Anchor)title).fireEvent(new ClickEvent() {});	
-				} else {
-					Window.open(url, "_blank", "");	
-				}
-			}		
 			
-			//TODO : use Downloader
-			//Downloader.downloadFile(url);
+			if (title instanceof Anchor) {
+				((Anchor)title).setHref(url);
+				((Anchor)title).setTarget("_self");
+				((Anchor)title).fireEvent(new ClickEvent() {});	
+			} else {
+				Window.open(url, "_blank", "");	
+			}
+
 		} catch(JavaScriptException e) {
 			Notification.alert(e.getMessage(), null, "error", "ok");
 		}

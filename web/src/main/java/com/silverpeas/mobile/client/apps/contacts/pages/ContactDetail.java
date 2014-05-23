@@ -21,7 +21,6 @@ import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactDetailPage
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class ContactDetail extends PageView implements ContactDetailPagesEventHandler, View{
@@ -44,9 +43,7 @@ public class ContactDetail extends PageView implements ContactDetailPagesEventHa
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractContactsDetailPagesEvent.TYPE, this);
 		EventBus.getInstance().fireEvent(new ContactDetailLoadEvent(id));		
-		if (MobilUtils.isPhoneGap() == false) {
-			addButton.setDisabled(true);
-		}
+		addButton.setDisabled(true);
 	}
 	
 	@Override

@@ -14,13 +14,11 @@ import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.gwtmobile.phonegap.client.FileMgr;
-import com.gwtmobile.phonegap.client.FileMgr.EventCallback;
-import com.gwtmobile.phonegap.client.FileMgr.File;
-import com.gwtmobile.phonegap.client.FileMgr.FileReader;
 import com.gwtmobile.ui.client.widgets.VerticalPanel;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.TakePictureEvent;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.file.FileMgr;
+import com.silverpeas.mobile.client.common.file.FileMgr.*;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 
 public class TakePicture extends Composite implements HasText, HasChangeHandlers, ChangeHandler {	
@@ -98,11 +96,10 @@ public class TakePicture extends Composite implements HasText, HasChangeHandlers
 		FileReader f = FileMgr.newFileReader();		
 		f.onLoad(new EventCallback() {			
 			@Override
-			public void onEvent(com.gwtmobile.phonegap.client.FileMgr.Event evt) {				
+			public void onEvent(com.silverpeas.mobile.client.common.file.FileMgr.Event evt) {				
 				// send message to controller to store picture in local database
 				EventBus.getInstance().fireEvent(new TakePictureEvent(evt.getTarget().getResult()));				
-			}
-			
+			}			
 		});
 		f.readAsDataURL((File)getImageFile());		
 	}
@@ -113,6 +110,7 @@ public class TakePicture extends Composite implements HasText, HasChangeHandlers
 		if (files && files.length > 0) {
         	file = files[0];
     	}
+    	
 		return file;
 	}-*/;
 }

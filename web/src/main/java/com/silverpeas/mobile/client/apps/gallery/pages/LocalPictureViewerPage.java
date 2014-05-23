@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.apps.gallery.pages;
 
 import java.util.List;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -27,6 +28,7 @@ import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
 
@@ -103,15 +105,22 @@ public class LocalPictureViewerPage extends PageView implements View, LocalPictu
 	 * Invoke delete order. 
 	 */
 	private void deletePicture() {
-		com.gwtmobile.phonegap.client.Notification.confirm(msg.localPicture_deleteConfirmation(), new com.gwtmobile.phonegap.client.Notification.ConfirmCallback() {		
-			public void onComplete(int selection) {
-				if (selection == 1) {				
-					int index = content.getCurrentSlideIndex();
-					Slide currentSlide = content.getSlide(index);
-					EventBus.getInstance().fireEvent(new DeleteLocalPictureEvent(currentSlide.getElement().getId()));
-				}
+		Notification.confirm(msg.localPicture_deleteConfirmation(), new Callback<Boolean, Boolean>() {
+
+			@Override
+			public void onFailure(Boolean reason) {
+				
 			}
-		}, "Confirm", "OK,Cancel");
+
+			@Override
+			public void onSuccess(Boolean result) {
+				int index = content.getCurrentSlideIndex();
+				Slide currentSlide = content.getSlide(index);
+				EventBus.getInstance().fireEvent(new DeleteLocalPictureEvent(currentSlide.getElement().getId()));
+			}
+			
+			
+		}, "Ok,Cancel");
 	}
 	
 	@UiHandler("delButton")	

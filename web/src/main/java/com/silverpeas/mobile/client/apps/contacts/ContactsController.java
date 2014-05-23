@@ -2,11 +2,7 @@ package com.silverpeas.mobile.client.apps.contacts;
 
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtmobile.phonegap.client.Contacts;
-import com.gwtmobile.phonegap.client.Contacts.Callback;
-import com.gwtmobile.phonegap.client.Contacts.ContactError;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AbstractContactsControllerEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AddContactEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactDetailLoadEvent;
@@ -19,7 +15,6 @@ import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
-import com.silverpeas.mobile.client.common.phonegap.PhoneContact;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class ContactsController implements Controller, ContactsControllerEventHandler{
@@ -64,21 +59,6 @@ public class ContactsController implements Controller, ContactsControllerEventHa
 
 	@Override
 	public void addContact(AddContactEvent event) {
-		DetailUserDTO detailUserDTO = event.getUserDetailDTO();
-		final PhoneContact contact = (PhoneContact) Contacts.newInstance();
-		contact.setDisplayName(detailUserDTO.getLastName());
-		contact.setPhonenUmber(detailUserDTO.getPhoneNumber());
-		contact.save(new Callback() {			
-			@Override
-			public void onSuccess() {				
-				//TODO : send event to page for display message
-				Window.alert("Contact successfully added.");
-			}			
-			@Override
-			public void onError(ContactError error) {
-				//TODO : send event to page for display message
-				Window.alert("Contact creation failed.");
-			}
-		});
+		// TODO : remove this feature or use html5
 	}
 }
