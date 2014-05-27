@@ -18,6 +18,7 @@ import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
+import com.gwtmobile.ui.client.widgets.ListItem.ShowArrow;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadTopicsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.AbstractTopicsNavigationPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicSelectedEvent;
@@ -135,8 +136,12 @@ public class TopicNavigationPage extends PageView implements View, TopicsNavigat
 			    panel.add(la);
 			    la.addStyleName(ressources.css().topicLabel());
 			    
-			    item.add(panel);
-			    item.setShowArrow(!topic.isTerminal());			    
+			    item.add(panel);	    
+			    if (topic.isTerminal()) {
+			    	item.setDisplayArrow(ShowArrow.Visible);
+			    } else {
+			    	item.setDisplayArrow(ShowArrow.Hidden);			    	
+			    }
 				listPanel.add(item);
 			}
 			Notification.activityStop();
@@ -150,10 +155,11 @@ public class TopicNavigationPage extends PageView implements View, TopicsNavigat
 			Page lastPage = null;
 			while (true) {
 				if (PageHistory.Instance.current() instanceof TopicNavigationPage) {
-					lastPage = PageHistory.Instance.back();
+					PageHistory.Instance.goBack(lastPage);
 					((View) lastPage).stop();
 				} else {
-					PageHistory.Instance.add(lastPage);
+					//PageHistory.Instance.add(lastPage);
+					//TODO
 					break;
 				}				
 			}

@@ -5,6 +5,7 @@
 	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.status.resources.StatusMessages'/>
+	<ui:import field='com.gwtmobile.ui.client.widgets.ListItem.ShowArrow.*' />
 	
 	<g:HTMLPanel>
 		<m:HeaderPanel leftButton="Back">
@@ -12,7 +13,7 @@
 		</m:HeaderPanel>
 		<m:ScrollPanel>
 			<m:ListPanel selectable="true" ui:field="panelStatus" >
-				<m:ListItem showArrow="true"><g:Label text="{msg.changeStatus}"></g:Label></m:ListItem>
+				<m:ListItem  displayArrow="{Visible}"><g:Label text="{msg.changeStatus}"></g:Label></m:ListItem>
 			</m:ListPanel>
 		</m:ScrollPanel>
 		<m:Button ui:field="more" horizontalAlignment="center" text="{msg.moreStatus}"></m:Button>

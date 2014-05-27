@@ -8,6 +8,7 @@
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages'/>
 	<ui:with field='globalMsg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
 	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources'/>
+	<ui:import field='com.gwtmobile.ui.client.widgets.ListItem.ShowArrow.*' />
 
 	<ui:style>		
 		.instance {
@@ -22,14 +23,14 @@
 		</m:HeaderPanel>		
 		
 		<m:ListPanel selectable="true" ui:field="place">
-			<m:ListItem showArrow="true">				
+			<m:ListItem displayArrow="{Visible}">				
 				<m:HorizontalPanel>
 					<g:Label styleName="{ressources.css.instances}"></g:Label>
 					<g:Label styleName="{style.instance}" text='{msg.currentInstance}'></g:Label>
 					<g:Label ui:field="instance">-</g:Label>
 				</m:HorizontalPanel>
 			</m:ListItem>
-			<m:ListItem showArrow="true">
+			<m:ListItem displayArrow="{Visible}">
 				<m:HorizontalPanel>
 					<g:Label styleName="{ressources.css.topics}"></g:Label>
 					<g:Label ui:field="topic">-</g:Label>

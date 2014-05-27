@@ -12,7 +12,6 @@ import com.gwtmobile.ui.client.widgets.HeaderPanel;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.almanach.AlmanachApp;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
-import com.silverpeas.mobile.client.apps.dashboard.DashboardApp;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.gallery.GalleryApp;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
@@ -83,7 +82,6 @@ public class MainPage extends PageView {
 	
 	@UiHandler("dashboard")
 	void dashboard(ClickEvent e){
-		App app = new DashboardApp();
-		app.start(this);
+
 	}
 }

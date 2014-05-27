@@ -9,6 +9,7 @@
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages'/>
 	<ui:with field='globalMsg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
 	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources'/>
+	<ui:import field='com.gwtmobile.ui.client.widgets.ListItem.ShowArrow.*' />
 
 	<ui:style>		
 
@@ -38,14 +39,14 @@
 		</m:HeaderPanel>		
 		
 		<m:ListPanel selectable="true" ui:field="place">
-			<m:ListItem showArrow="true">				
+			<m:ListItem displayArrow="{Visible}">				
 				<m:HorizontalPanel>
 					<g:Label styleName="{ressources.css.galleries}"></g:Label>
 					<g:Label styleName="{style.gallery}" text='{msg.currentGallery}'></g:Label>
 					<g:Label ui:field="gallery">-</g:Label>
 				</m:HorizontalPanel>
 			</m:ListItem>
-			<m:ListItem showArrow="false">
+			<m:ListItem displayArrow="{Hidden}">
 				<m:HorizontalPanel>
 					<g:Label styleName="{ressources.css.albums}"></g:Label>
 					<m:DropDownList ui:field="albums"></m:DropDownList>

@@ -13,6 +13,7 @@ import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
 import com.gwtmobile.ui.client.page.PageHistory;
 import com.gwtmobile.ui.client.widgets.ListItem;
+import com.gwtmobile.ui.client.widgets.ListItem.ShowArrow;
 import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.internal.NavigationStopEvent;
@@ -62,7 +63,7 @@ public class NavigationPage extends PageView implements NavigationPagesEventHand
 				item.getElement().setId(silverpeasObjectDTO.getId());
 			    item.add(la);				
 				if (silverpeasObjectDTO instanceof SpaceDTO) {
-					item.setShowArrow(true);
+					item.setDisplayArrow(ShowArrow.Visible);
 					item.getElement().setAttribute("space", "true");
 				} else {
 					item.getElement().setAttribute("space", "false");
@@ -87,10 +88,11 @@ public class NavigationPage extends PageView implements NavigationPagesEventHand
 			Page lastPage = null;
 			while (true) {
 				if (PageHistory.Instance.current() instanceof NavigationPage) {
-					lastPage = PageHistory.Instance.back();
+					PageHistory.Instance.goBack(lastPage);
 					((View) lastPage).stop();
 				} else {
-					PageHistory.Instance.add(lastPage);
+					//PageHistory.Instance. add(lastPage);
+					//TODO : 
 					break;
 				}		
 			}
