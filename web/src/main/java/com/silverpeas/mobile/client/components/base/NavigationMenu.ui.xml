@@ -1,0 +1,14 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="ui-panel-navigation">			
+		<div class="ui-panel-inner"><div id="user"><img src="aurore.allibe.jpg.png"/>ALLIBE Aurore</div>				
+			<ul id="navmenu-panel">
+				<li id="menu-home"><a href="home.html" class="ui-link">Home</a></li>
+				<li id="menu-logout"><a href="home.html" class="ui-link">Déconnexion</a></li>
+			</ul>
+		</div>	
+	</g:HTMLPanel>
+</ui:UiBinder> 

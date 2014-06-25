@@ -27,12 +27,12 @@ import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsP
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
-public class ContactsPage extends PageView implements ContactsPagesEventHandler,
+public class ContactsPage extends PageContent implements ContactsPagesEventHandler,
 		View {
 
 	private static ContactsPageUiBinder uiBinder = GWT.create(ContactsPageUiBinder.class);

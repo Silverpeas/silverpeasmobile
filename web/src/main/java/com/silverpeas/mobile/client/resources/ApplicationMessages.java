@@ -4,6 +4,13 @@ import com.google.gwt.i18n.client.Messages;
 
 
 public interface ApplicationMessages extends Messages {
+	@DefaultMessage("Login")
+	String loginLabel();
+	@DefaultMessage("Password")
+	String passwordLabel();
+	@DefaultMessage("Domain")
+	String domainLabel();
+	
 	@DefaultMessage("Confirmer")
 	String confirmBtnLabel();
 	@DefaultMessage("Annuler")

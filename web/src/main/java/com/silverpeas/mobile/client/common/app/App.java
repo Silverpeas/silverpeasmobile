@@ -1,39 +1,37 @@
 package com.silverpeas.mobile.client.common.app;
 
-import com.gwtmobile.ui.client.page.Page;
-import com.gwtmobile.ui.client.page.Transition;
+import com.silverpeas.mobile.client.components.base.PageContent;
 
 public abstract class App {
-	
-	private Page mainPage;
-	private Page lauchingPage;
-	private Controller controller;
-	protected Transition transition = Transition.SLIDEDOWN;
 
-	public void start(Page lauchingPage) {		
+	private PageContent mainPage;
+	private PageContent lauchingPage;
+	private Controller controller;
+
+	public void start(PageContent lauchingPage) {		
 		this.lauchingPage = lauchingPage;
-		lauchingPage.goTo(mainPage, transition);
+		lauchingPage.goTo(mainPage);
 	}
-	
+
 	public void stop() {
 		setMainPage(null);		
 		getController().stop();
 		setController(null);
 	}
-	
-	protected Page getMainPage() {
+
+	protected PageContent getMainPage() {
 		return mainPage;
 	}	
-	
-	protected void setMainPage(Page mainPage) {
+
+	protected void setMainPage(PageContent mainPage) {
 		this.mainPage = mainPage;
 	}
 
-	public Page getLauchingPage() {
+	public PageContent getLauchingPage() {
 		return lauchingPage;
 	}
 
-	public void setLauchingPage(Page lauchingPage) {
+	public void setLauchingPage(PageContent lauchingPage) {
 		this.lauchingPage = lauchingPage;
 	}
 

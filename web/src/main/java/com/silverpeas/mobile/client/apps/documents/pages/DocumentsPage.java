@@ -27,8 +27,8 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -38,7 +38,7 @@ import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
  * Documents mobile application.
  * @author svuillet
  */
-public class DocumentsPage extends PageView implements View, DocumentsPagesEventHandler, TopicsNavigationPagesEventHandler {
+public class DocumentsPage extends PageContent implements View, DocumentsPagesEventHandler, TopicsNavigationPagesEventHandler {
 
 	private static DocumentsPageUiBinder uiBinder = GWT.create(DocumentsPageUiBinder.class);
 	@UiField(provided = true) protected DocumentsMessages msg = null;

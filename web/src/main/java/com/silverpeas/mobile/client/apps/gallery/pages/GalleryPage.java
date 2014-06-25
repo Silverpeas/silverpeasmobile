@@ -38,8 +38,8 @@ import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.components.upload.TakePicture;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -50,7 +50,7 @@ import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
  * Pictures gallery mobile application.
  * @author svuillet
  */
-public class GalleryPage extends PageView implements GalleryPagesEventHandler, View {
+public class GalleryPage extends PageContent implements GalleryPagesEventHandler, View {
 
 	private static GalleryPageUiBinder uiBinder = GWT.create(GalleryPageUiBinder.class);
 	@UiField(provided = true) protected GalleryMessages msg = null;
@@ -129,7 +129,7 @@ public class GalleryPage extends PageView implements GalleryPagesEventHandler, V
 			final LocalPictureViewerPage picturePage = new LocalPictureViewerPage();
 			picturePage.setPictures(event.getPictures());
 			Notification.activityStop();
-			goTo(picturePage, Transition.SLIDE);
+			goTo(picturePage);
 		}
 	}
 	
@@ -185,7 +185,7 @@ public class GalleryPage extends PageView implements GalleryPagesEventHandler, V
 		remoteBrowser.setGalleryId(currentInstance.getId());
 		remoteBrowser.setAlbumId(albums.getSelectedValue());
 		remoteBrowser.init();
-		goTo(remoteBrowser, Transition.SLIDE);
+		goTo(remoteBrowser);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.silverpeas.mobile.client.apps.navigation;
 
-import com.gwtmobile.ui.client.page.Page;
-import com.gwtmobile.ui.client.page.Transition;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
@@ -9,20 +7,20 @@ import com.silverpeas.mobile.client.apps.navigation.events.app.internal.Navigati
 import com.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
+import com.silverpeas.mobile.client.components.base.PageContent;
 
 public class NavigationApp extends App implements NavigationEventHandler, com.silverpeas.mobile.client.apps.navigation.events.app.internal.NavigationEventHandler {
 
 	private String type, title;
 	
 	public NavigationApp() {
-		super();
-		transition = Transition.SLIDEDOWN;
+		super();		
 		EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
 		EventBus.getInstance().addHandler(com.silverpeas.mobile.client.apps.navigation.events.app.internal.AbstractNavigationEvent.TYPE, this);
 	}
 
 	@Override
-	public void start(Page lauchingPage) {
+	public void start(PageContent lauchingPage) {
 		setController(new NavigationController(type));
 		NavigationPage mainPage = new NavigationPage();
 		mainPage.setTitle(title);

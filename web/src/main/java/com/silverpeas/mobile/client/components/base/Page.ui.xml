@@ -1,0 +1,22 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+ xmlns:b="urn:import:com.silverpeas.mobile.client.components.base">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="ui-page">
+
+		<!-- Menu -->
+		<b:NavigationMenu/>
+		
+		<div class="ui-page-content">
+			
+			<!-- Header -->
+			<b:PageHeader/>
+						
+			<!-- Content -->
+			<g:SimplePanel ui:field="contentPlace"/>
+									
+		</div>	
+	</g:HTMLPanel>
+</ui:UiBinder> 

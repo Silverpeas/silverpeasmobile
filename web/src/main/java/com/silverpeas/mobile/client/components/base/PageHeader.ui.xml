@@ -1,0 +1,11 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="ui-header">		
+		<g:Anchor ui:field="menu" styleName="silverpeas-navmenu-link"></g:Anchor>		
+		<h1 class="ui-title">Silverpeas</h1>
+		<g:Anchor ui:field="back" styleName="ui-back">Back</g:Anchor>
+	</g:HTMLPanel>
+</ui:UiBinder> 

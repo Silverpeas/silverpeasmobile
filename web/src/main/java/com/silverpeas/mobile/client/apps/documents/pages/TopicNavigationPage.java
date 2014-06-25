@@ -13,12 +13,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
-import com.gwtmobile.ui.client.page.PageHistory;
 import com.gwtmobile.ui.client.widgets.Button;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.gwtmobile.ui.client.widgets.ListItem;
-import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.gwtmobile.ui.client.widgets.ListItem.ShowArrow;
+import com.gwtmobile.ui.client.widgets.ListPanel;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadTopicsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.AbstractTopicsNavigationPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicSelectedEvent;
@@ -28,12 +27,13 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 
-public class TopicNavigationPage extends PageView implements View, TopicsNavigationPagesEventHandler {
+public class TopicNavigationPage extends PageContent implements View, TopicsNavigationPagesEventHandler {
 
 	@UiField(provided = true) protected DocumentsMessages msg = null;
 	@UiField(provided = true) protected ApplicationMessages globalMsg = null;
@@ -150,12 +150,12 @@ public class TopicNavigationPage extends PageView implements View, TopicsNavigat
 
 	@Override
 	public void onTopicSelected(TopicSelectedEvent event) {
-		if (PageHistory.Instance.current().equals(this)) {
+		if (PageHistory.getInstance().getCurrent().equals(this)) {
 			// remove navigation pages from history
-			Page lastPage = null;
+			PageContent lastPage = null;
 			while (true) {
-				if (PageHistory.Instance.current() instanceof TopicNavigationPage) {
-					PageHistory.Instance.goBack(lastPage);
+				if (PageHistory.getInstance().getCurrent() instanceof TopicNavigationPage) {
+					PageHistory.getInstance().goBack(lastPage);
 					((View) lastPage).stop();
 				} else {
 					//PageHistory.Instance.add(lastPage);

@@ -12,10 +12,10 @@ import com.gwtmobile.ui.client.widgets.HeaderPanel;
 import com.gwtmobile.ui.client.widgets.TextArea;
 import com.silverpeas.mobile.client.apps.status.events.controller.StatusPostEvent;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.base.PageContent;
 
-public class PostPage extends PageView implements View {
+public class PostPage extends PageContent implements View {
 
 	private static PostPageUiBinder uiBinder = GWT.create(PostPageUiBinder.class);
 	

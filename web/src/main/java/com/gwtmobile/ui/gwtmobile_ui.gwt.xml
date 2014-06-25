@@ -3,7 +3,7 @@
   <inherits name='com.google.gwt.user.User'/>
     <source path='client'/>
 	
-	<stylesheet src="master.css"/>
+	<!--stylesheet src="master.css"/-->
 	
     <!-- Add the mobile.user.agent property -->
     <define-property name="mobile.user.agent" values="mobilesafari, none"/>

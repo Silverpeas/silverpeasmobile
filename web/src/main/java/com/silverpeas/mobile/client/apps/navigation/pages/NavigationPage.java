@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.page.Page;
-import com.gwtmobile.ui.client.page.PageHistory;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListItem.ShowArrow;
 import com.gwtmobile.ui.client.widgets.ListPanel;
@@ -23,13 +22,14 @@ import com.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPages
 import com.silverpeas.mobile.client.apps.navigation.events.pages.SpacesAndAppsLoadedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
-public class NavigationPage extends PageView implements NavigationPagesEventHandler, View {
+public class NavigationPage extends PageContent implements NavigationPagesEventHandler, View {
 
 	private static NavigationPageUiBinder uiBinder = GWT.create(NavigationPageUiBinder.class);
 	private String rootSpaceId;
@@ -85,10 +85,10 @@ public class NavigationPage extends PageView implements NavigationPagesEventHand
 		} else {			
 			EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)model.get(item.getElement().getId())));
 			// remove navigation pages from history
-			Page lastPage = null;
+			PageContent lastPage = null;
 			while (true) {
-				if (PageHistory.Instance.current() instanceof NavigationPage) {
-					PageHistory.Instance.goBack(lastPage);
+				if (PageHistory.getInstance().getCurrent() instanceof NavigationPage) {
+					PageHistory.getInstance().goBack(lastPage);
 					((View) lastPage).stop();
 				} else {
 					//PageHistory.Instance. add(lastPage);

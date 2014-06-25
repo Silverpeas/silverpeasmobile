@@ -2,11 +2,11 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
 <module rename-to="spmobil">
 	
-	
+	<stylesheet src="spmobile.css"/>
+		
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.json.JSON"/>
-	<inherits name="com.gwtmobile.ui.gwtmobile_ui"/>
-	<!-- inherits name="com.gwtmobile.phonegap.gwtmobile_phonegap"/-->	
+	<inherits name="com.gwtmobile.ui.gwtmobile_ui"/>		
 	<inherits name="com.googlecode.gwt.crypto.Crypto"/>
 	<inherits name="org.fusesource.restygwt.RestyGWT"/>
 	<source path="client" />

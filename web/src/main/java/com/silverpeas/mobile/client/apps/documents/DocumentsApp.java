@@ -7,6 +7,7 @@ import com.silverpeas.mobile.client.apps.documents.events.app.internal.Documents
 import com.silverpeas.mobile.client.apps.documents.pages.DocumentsPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
+import com.silverpeas.mobile.client.components.base.PageContent;
 
 public class DocumentsApp extends App implements DocumentsEventHandler {
 	
@@ -16,7 +17,7 @@ public class DocumentsApp extends App implements DocumentsEventHandler {
 	}
 	
 	@Override
-	public void start(Page lauchingPage) {
+	public void start(PageContent lauchingPage) {
 		setController(new DocumentsController());
 		setMainPage(new DocumentsPage());
 		super.start(lauchingPage);

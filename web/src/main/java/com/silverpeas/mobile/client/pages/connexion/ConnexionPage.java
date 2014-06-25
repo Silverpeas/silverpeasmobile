@@ -11,37 +11,36 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
-//import com.gwtmobile.persistence.client.Entity;
-//import com.gwtmobile.persistence.client.Persistence;
-import com.gwtmobile.ui.client.widgets.Button;
-import com.gwtmobile.ui.client.widgets.DropDownItem;
-import com.gwtmobile.ui.client.widgets.DropDownList;
-import com.gwtmobile.ui.client.widgets.PasswordTextBox;
-import com.gwtmobile.ui.client.widgets.TextBox;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
-import com.silverpeas.mobile.client.pages.main.MainPage;
+import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.client.pages.main.AppList;
 import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 
-public class ConnexionPage extends PageView {
+
+public class ConnexionPage extends PageContent {
 
 	private static ConnexionPageUiBinder uiBinder = GWT.create(ConnexionPageUiBinder.class);
-	private MainPage mainPage;
+
 	@UiField(provided = true) protected ApplicationMessages msg = null;
 	@UiField(provided = true) protected ApplicationResources res = null;
-	@UiField Button go;
+	@UiField Anchor go;
 	@UiField TextBox loginField;
 	@UiField PasswordTextBox passwordField;
-	@UiField DropDownList domains;
+	@UiField ListBox domains;
 
 	interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {
 	}
@@ -65,7 +64,7 @@ public class ConnexionPage extends PageView {
 			public void execute() {
 				String login = loginField.getText();
 				String password = passwordField.getText();
-				login(login, password, domains.getSelectedValue());
+				login(login, password, domains.getValue(domains.getSelectedIndex()));
 			}
 		});
 	}
@@ -90,8 +89,10 @@ public class ConnexionPage extends PageView {
 						EventBus.getInstance().fireEvent(new ErrorEvent(e));
 					}
 					storeIds(encryptedPassword);
-					mainPage = new MainPage();
-					goTo(mainPage);				
+					
+					SpMobil.mainPage.setContent(new AppList());
+					RootPanel.get().clear();
+					RootPanel.get().add(SpMobil.mainPage);
 				}
 			});	
 		}
@@ -110,7 +111,7 @@ public class ConnexionPage extends PageView {
 	private void storeIds(final String encryptedPassword) {	
 		Storage storage = Storage.getLocalStorageIfSupported();
 		if (storage != null) {
-			User user = new User(loginField.getText(), encryptedPassword, domains.getSelectedValue());			
+			User user = new User(loginField.getText(), encryptedPassword, domains.getValue(domains.getSelectedIndex()));			
 			storage.setItem("userConnected", user.toJson());			
 		}		
 	}
@@ -128,10 +129,7 @@ public class ConnexionPage extends PageView {
 				Iterator<DomainDTO> iDomains = result.iterator();
 				while (iDomains.hasNext()) {
 					DomainDTO domain = iDomains.next();
-					DropDownItem item = new DropDownItem();
-					item.setValue(domain.getId());
-					item.setText(domain.getName());
-					domains.add(item);
+					domains.addItem(domain.getName(), domain.getId());
 				}
 			}
 		});

@@ -16,11 +16,11 @@ import com.gwtmobile.ui.client.widgets.AccordionStack;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AbstractEventDetailDTOPagesEvent;
 import com.silverpeas.mobile.client.apps.almanach.events.pages.EventDetailDTOPagesEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 
-public class EventDetailDTOPage extends PageView implements EventDetailDTOPagesEventHandler, View{
+public class EventDetailDTOPage extends PageContent implements EventDetailDTOPagesEventHandler, View{
 	
 	private static EventDetailDTOPageUiBinder uiBinder = GWT.create(EventDetailDTOPageUiBinder.class);
 	@UiField AccordionPanel accordionPanel;

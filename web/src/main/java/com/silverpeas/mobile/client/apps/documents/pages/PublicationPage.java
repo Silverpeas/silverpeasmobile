@@ -17,13 +17,13 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
-public class PublicationPage extends PageView implements View, PublicationNavigationPagesEventHandler {
+public class PublicationPage extends PageContent implements View, PublicationNavigationPagesEventHandler {
 
 	private static PublicationPageUiBinder uiBinder = GWT.create(PublicationPageUiBinder.class);
 

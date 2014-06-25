@@ -29,11 +29,11 @@ import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.RemotePictu
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.RemotePicturesPageEventHandler;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
 
-public class GalleryRemoteBrowser extends PageView implements View, RemotePicturesPageEventHandler {
+public class GalleryRemoteBrowser extends PageContent implements View, RemotePicturesPageEventHandler {
 
 	private static GalleryRemoteBrowserUiBinder uiBinder = GWT.create(GalleryRemoteBrowserUiBinder.class);
 	private String galleryId;
@@ -162,7 +162,7 @@ public class GalleryRemoteBrowser extends PageView implements View, RemotePictur
 							public void execute() {
 								PictureViewerPage viewer = new PictureViewerPage();
 								viewer.init(galleryId, ((Image)event.getSource()).getElement().getId());
-								goTo(viewer, Transition.SLIDE);
+								goTo(viewer);
 							}
 						});
 					}

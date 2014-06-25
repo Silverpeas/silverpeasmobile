@@ -1,0 +1,93 @@
+
+.ui-page {
+	
+	
+}
+
+.ui-page-content {
+	background: url(deco-cosse.gif) 50% 100% no-repeat rgb(236, 236, 236);
+	position: relative;
+	border: 0;
+	overflow-x: hidden;
+	z-index: 999;	
+}
+
+.ui-content {
+	
+}
+
+
+.ui-header {	
+	background-color: #313131;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #000000;
+    
+    color: #FFFFFF;
+    
+     font-family: TeX Gyre Adventor,Century gothic,Trebushet MS,sans serif;
+    font-size: 1em;
+    line-height: 3;
+}
+
+.ui-title {
+	display: inline;
+	font-weight: 100;
+	font-size: 1rem;
+	text-align: center;
+	float: right;
+	margin-right: 50%;
+    /*font-size: 1em;
+    margin-bottom: 0;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 0;
+    min-height: 1.1em;    
+    outline-style: none !important;
+    outline-width: 0 !important;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding-bottom: 0.7em;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0.7em;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    */
+}
+
+.ui-back {
+	right: 5px;
+	position: absolute;	
+}
+
+.silverpeas-navmenu-link {
+  display: inline-block;
+  width: 2rem;
+  height: 0.285715rem;
+  background: #fff;
+  border-radius: 0.142855rem;
+  position: relative;
+  left: 0.6rem;
+  vertical-align: middle;
+}
+.silverpeas-navmenu-link:before, .silverpeas-navmenu-link:after {
+  display: inline-block;
+  width: 2rem;
+  height: 0.285715rem;
+  background: #fff;
+  border-radius: 0.142855rem;  
+  position: absolute;
+  content: '';
+}
+.silverpeas-navmenu-link:before {
+  top: 0.5rem;  
+}
+.silverpeas-navmenu-link:after {
+  top: -0.5rem;
+}
+
+
+.ui-panel-navigation {
+	display:none;
+}

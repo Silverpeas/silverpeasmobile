@@ -1,12 +1,12 @@
 package com.silverpeas.mobile.client.apps.status;
 
-import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.apps.status.events.app.internal.AbstractStatusEvent;
 import com.silverpeas.mobile.client.apps.status.events.app.internal.StatusEventHandler;
 import com.silverpeas.mobile.client.apps.status.events.app.internal.StatusStopEvent;
 import com.silverpeas.mobile.client.apps.status.pages.StatusPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
+import com.silverpeas.mobile.client.components.base.PageContent;
 
 public class StatusApp extends App implements StatusEventHandler{
 	
@@ -15,7 +15,7 @@ public class StatusApp extends App implements StatusEventHandler{
 		EventBus.getInstance().addHandler(AbstractStatusEvent.TYPE, this);
 	}
 	
-	public void start(Page lauchingPage){
+	public void start(PageContent lauchingPage){
 		setController(new StatusController());
 		setMainPage(new StatusPage());
 		super.start(lauchingPage);

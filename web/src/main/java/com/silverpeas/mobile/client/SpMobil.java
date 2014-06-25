@@ -2,63 +2,45 @@ package com.silverpeas.mobile.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
-import com.gwtmobile.ui.client.page.Page;
 import com.silverpeas.mobile.client.common.ErrorManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
-import com.silverpeas.mobile.client.pages.main.MainPage;
+import com.silverpeas.mobile.client.pages.main.AppList;
 import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 
-
-//TODO : Call REST services
-//TODO : Gin injection client side
-//TODO : internationalisation globale
-//TODO : generic ConfigurationProvider
-
 public class SpMobil implements EntryPoint{
-	
-	private static boolean noUserIdsStore = true;
+		
 	public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
+	public final static Page mainPage = new Page();
 	
 	/**
-	 * Point de lancement.
+	 * Init. spmobile.
 	 */
 	public void onModuleLoad() {
 				
-		EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());		
-		
+		EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
 		loadIds();
-						
+		
 		if (MobilUtils.isRetina()) {
 			RootLayoutPanel.get().addStyleName("webappIosRetina");			
 		} else if (MobilUtils.isIOS()) {			
 			RootLayoutPanel.get().addStyleName("webappIos");			
-		}
-		
-		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {			
-			public boolean execute() {
-				if (noUserIdsStore) {
-					ConnexionPage connexionPage = new ConnexionPage();
-					Page.load(connexionPage);
-					return false;
-				}
-				return true;
-			}
-		}, 300);
+		}		
 	}
 	
 	/**
-	 * Login automatique.
+	 * Auto login.
 	 * @param login
 	 * @param password
 	 * @param domainId
@@ -69,17 +51,19 @@ public class SpMobil implements EntryPoint{
 			public void onFailure(Throwable reason) {
 				clearIds();
 				ConnexionPage connexionPage = new ConnexionPage();
-				Page.load(connexionPage);		
+				RootPanel.get().clear();
+				RootPanel.get().add(connexionPage);
 			}
 			public void onSuccess(Void result) {
-				MainPage mainPage = new MainPage();
-				Page.load(mainPage);				
+				mainPage.setContent(new AppList());
+				RootPanel.get().clear();
+				RootPanel.get().add(mainPage);
 			}
 		});
 	}
 	
 	/**
-	 * Suppression des ids mémorisés en SQL Web Storage.
+	 * Clean ids in SQL Web Storage.
 	 */
 	public void clearIds() {
 		Storage storage = Storage.getLocalStorageIfSupported();
@@ -89,27 +73,28 @@ public class SpMobil implements EntryPoint{
 	}
 	
 	/**
-	 * Chargement des ids mémorisés en SQL Web Storage.
+	 * Load ids in SQL Web Storage.
 	 */
 	private void loadIds() {		
 		Storage storage = Storage.getLocalStorageIfSupported();
 		if (storage != null) {						
 			String dataItem = storage.getItem("userConnected");			
 			if (dataItem != null) {
-				User user = User.getInstance(dataItem);
-				noUserIdsStore = false;	
+				User user = User.getInstance(dataItem);	
 				String password = decryptPassword(user.getPassword());
 				if (password != null) {
 					login(user.getLogin(), password, user.getDomainId(), true);
 				}
-			}			
-			
-			
+			} else {
+				ConnexionPage connexionPage = new ConnexionPage();
+				RootPanel.get().clear();
+				RootPanel.get().add(connexionPage);
+			}
 		}
 	}
 	
 	/**
-	 * Decrypte le mot de passe mémorisés en SQL Web Storage.
+	 * Decrypt password in SQL Web Storage.
 	 * @param passwordEncrysted
 	 * @return
 	 */

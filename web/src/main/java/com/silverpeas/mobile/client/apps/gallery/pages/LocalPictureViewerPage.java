@@ -29,14 +29,14 @@ import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.gallery.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.app.PageView;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.base.PageContent;
 
 /**
  * Local pictures browser on device.
  * @author svuillet
  */
-public class LocalPictureViewerPage extends PageView implements View, LocalPicturesPageEventHandler, ValueChangeHandler<Boolean> {
+public class LocalPictureViewerPage extends PageContent implements View, LocalPicturesPageEventHandler, ValueChangeHandler<Boolean> {
 
 	private static LocalPictureViewerPageUiBinder uiBinder = GWT.create(LocalPictureViewerPageUiBinder.class);
 	private static int nbPictures = 0;
