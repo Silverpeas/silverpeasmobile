@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.common.navigation.PageHistory;
 
 public class Page extends Composite {
 
@@ -15,6 +16,7 @@ public class Page extends Composite {
 	}
 	
 	@UiField protected SimplePanel contentPlace;
+	@UiField protected PageHeader header;
 	protected PageContent content;
 
 	public Page() {
@@ -22,8 +24,9 @@ public class Page extends Composite {
 	}
 	
 	public void setContent(PageContent content) {
-		this.content = content;
-		contentPlace.setWidget(content);
+		this.content = content;		
+		contentPlace.setWidget(content);		
+		header.setVisibleBackButton(PageHistory.getInstance().size() > 1);		
 	}
 
 }

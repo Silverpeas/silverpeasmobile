@@ -35,5 +35,9 @@ public class PageHeader extends Composite {
 	void onBack(ClickEvent event) {
 		PageHistory.getInstance().back();
 	}	
+	
+	public void setVisibleBackButton(boolean visible) {
+		back.setVisible(visible);
+	}
 
 }

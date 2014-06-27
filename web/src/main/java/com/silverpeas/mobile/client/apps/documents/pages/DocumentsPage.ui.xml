@@ -18,10 +18,7 @@
 	</ui:style>
 
 	<g:HTMLPanel ui:field="htmlPanel">
-		<m:HeaderPanel leftButton="Back" ui:field="header">
-			<g:Label horizontalAlignment="center" text="{msg.title}"></g:Label>			
-		</m:HeaderPanel>		
-		
+				
 		<m:ListPanel selectable="true" ui:field="place">
 			<m:ListItem displayArrow="{Visible}">				
 				<m:HorizontalPanel>
@@ -42,8 +39,6 @@
 				
 			</m:ListPanel>		
 		</m:ScrollPanel>
-		
-		<m:HeaderPanel>	<f:FooterBar/> </m:HeaderPanel>
 		
 	</g:HTMLPanel>
 </ui:UiBinder> 

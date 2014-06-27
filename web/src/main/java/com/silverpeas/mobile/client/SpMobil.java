@@ -13,6 +13,7 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.AppList;
@@ -54,10 +55,10 @@ public class SpMobil implements EntryPoint{
 				RootPanel.get().clear();
 				RootPanel.get().add(connexionPage);
 			}
-			public void onSuccess(Void result) {
-				mainPage.setContent(new AppList());
+			public void onSuccess(Void result) {											
 				RootPanel.get().clear();
 				RootPanel.get().add(mainPage);
+				PageHistory.getInstance().goTo(new AppList());
 			}
 		});
 	}

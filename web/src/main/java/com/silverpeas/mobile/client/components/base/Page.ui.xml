@@ -12,7 +12,7 @@
 		<div class="ui-page-content">
 			
 			<!-- Header -->
-			<b:PageHeader/>
+			<b:PageHeader ui:field="header"/>
 						
 			<!-- Content -->
 			<g:SimplePanel ui:field="contentPlace"/>

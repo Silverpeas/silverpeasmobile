@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.common.navigation;
 
 import java.util.Stack;
 
+import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.components.base.PageContent;
 
 public class PageHistory {
@@ -19,25 +20,26 @@ public class PageHistory {
 	
 	public void goTo(PageContent page) {
 		pages.push(page);
-		
+		SpMobil.mainPage.setContent(page);		
 		//TODO : TODO : css3 transition
 	}
 	
 	public void goBack(PageContent page) {
 		
 		while(pages.isEmpty()) {
-			PageContent currentPage = pages.pop();
+			PageContent currentPage = pages.pop();			
 			if (currentPage.equals(page)) {
+				SpMobil.mainPage.setContent(page);
 				break;
 			}
 		}
-		
 		//TODO : TODO : css3 transition
 	}
 	
-	public PageContent back() {
+	public PageContent back() {		
 		PageContent page = pages.pop();
-		
+		page = pages.peek();
+		SpMobil.mainPage.setContent(page);
 		//TODO : css3 transition
 				
 		return page;
@@ -46,4 +48,9 @@ public class PageHistory {
 	public PageContent getCurrent() {
 		return pages.peek();
 	}
+	
+	public int size() {
+		return pages.size();
+	}
+	
 }
