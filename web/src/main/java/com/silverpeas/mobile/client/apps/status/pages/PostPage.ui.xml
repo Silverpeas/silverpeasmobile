@@ -1,25 +1,17 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
-	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.status.resources.StatusMessages'/>
 	
-	<ui:style>
-		.TextArea {
-			width : 100%;
-			resize : none;
-		}
-	</ui:style>
+
 	
 	<g:HTMLPanel>
-		<m:HeaderPanel ui:field="header" leftButton="Back" rightButton="{msg.post}">
-			<g:Label horizontalAlignment="center" text="{msg.titlePost}"></g:Label>			
-		</m:HeaderPanel>		
-		<m:TextArea ui:field="textField" styleName="{style.TextArea}"/>
+		
+		<m:TextArea ui:field="textField" />
 		<m:ScrollPanel></m:ScrollPanel>		
-		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>
+		
 	</g:HTMLPanel>
 	
 </ui:UiBinder>

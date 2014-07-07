@@ -5,10 +5,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 
 public class PageHeader extends Composite {
@@ -18,17 +19,19 @@ public class PageHeader extends Composite {
 	interface PageHeaderUiBinder extends UiBinder<Widget, PageHeader> {
 	}
 	
+	@UiField protected HTMLPanel header;
 	@UiField protected Anchor menu, back;
+	
 
 	public PageHeader() {
 		initWidget(uiBinder.createAndBindUi(this));
+		header.getElement().setId("header");
 	}
 	
 	
 	@UiHandler("menu")
 	void onMenu(ClickEvent event) {
-		Window.alert("menu");
-		Window.confirm("Yes or No ?");
+		SpMobil.mainPage.toogleMenu();
 	}
 	
 	@UiHandler("back")

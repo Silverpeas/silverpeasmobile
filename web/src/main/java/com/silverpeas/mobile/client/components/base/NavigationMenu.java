@@ -14,6 +14,7 @@ public class NavigationMenu extends Composite {
 
 	public NavigationMenu() {
 		initWidget(uiBinder.createAndBindUi(this));
+		setVisible(false);
 	}
 
 }

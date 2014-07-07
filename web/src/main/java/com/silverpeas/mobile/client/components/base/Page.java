@@ -17,6 +17,7 @@ public class Page extends Composite {
 	
 	@UiField protected SimplePanel contentPlace;
 	@UiField protected PageHeader header;
+	@UiField protected NavigationMenu menu;
 	protected PageContent content;
 
 	public Page() {
@@ -27,6 +28,10 @@ public class Page extends Composite {
 		this.content = content;		
 		contentPlace.setWidget(content);		
 		header.setVisibleBackButton(PageHistory.getInstance().size() > 1);		
+	}
+	
+	public void toogleMenu() {
+		menu.setVisible(!menu.isVisible());
 	}
 
 }

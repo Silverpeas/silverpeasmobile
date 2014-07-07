@@ -4,15 +4,15 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel styleName="ui-page">
-
-		<!-- Menu -->
-		<b:NavigationMenu/>
+	<g:HTMLPanel>
+		
+		<!-- Header -->
+		<b:PageHeader ui:field="header"/>
 		
 		<div class="ui-page-content">
 			
-			<!-- Header -->
-			<b:PageHeader ui:field="header"/>
+			<!-- Menu -->
+			<b:NavigationMenu ui:field="menu"/>			
 						
 			<!-- Content -->
 			<g:SimplePanel ui:field="contentPlace"/>

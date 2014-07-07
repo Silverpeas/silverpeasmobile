@@ -4,7 +4,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.silverpeas.mobile.client.common.ErrorManager;
@@ -12,7 +11,6 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
@@ -31,13 +29,7 @@ public class SpMobil implements EntryPoint{
 	public void onModuleLoad() {
 				
 		EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
-		loadIds();
-		
-		if (MobilUtils.isRetina()) {
-			RootLayoutPanel.get().addStyleName("webappIosRetina");			
-		} else if (MobilUtils.isIOS()) {			
-			RootLayoutPanel.get().addStyleName("webappIos");			
-		}		
+		loadIds();	
 	}
 	
 	/**

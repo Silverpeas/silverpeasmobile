@@ -3,9 +3,9 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel styleName="ui-header">		
-		<g:Anchor ui:field="menu" styleName="silverpeas-navmenu-link"></g:Anchor>		
+	<g:HTMLPanel ui:field="header">		
+		<g:Anchor ui:field="menu" styleName="ui-icon-bars"></g:Anchor>		
 		<h1 class="ui-title">Silverpeas</h1>
-		<g:Anchor ui:field="back" styleName="ui-back">Back</g:Anchor>
+		<g:Anchor ui:field="back" styleName="ui-btn-right ui-btn-corner-all ui-btn ui-icon-grid ui-shadow back">Back</g:Anchor>
 	</g:HTMLPanel>
 </ui:UiBinder> 

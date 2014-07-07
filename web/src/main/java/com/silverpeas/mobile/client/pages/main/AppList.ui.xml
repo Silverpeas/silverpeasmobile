@@ -6,10 +6,10 @@
 	
 	<g:HTMLPanel>
 		<ul id="menu-principal">
-			<li id="btn-find-document"><g:Anchor ui:field="document">Documents</g:Anchor></li>
-			<li id="btn-find-media"><g:Anchor ui:field="media">Media</g:Anchor></li>
+			<li id="btn-find-document"><g:Anchor ui:field="document">Trouver <strong>un document</strong></g:Anchor></li>
+			<li id="btn-find-media"><g:Anchor ui:field="media">Trouver <strong>un média</strong></g:Anchor></li>
 			<li id="btn-find-contact"><g:Anchor ui:field="contact">Contact</g:Anchor></li>
-			<li id="btn-find-statut"><g:Anchor ui:field="statut">Status</g:Anchor></li>			
+			<li id="btn-update-statut"><g:Anchor ui:field="statut">Status</g:Anchor></li>			
 		</ul>	
 	</g:HTMLPanel>
 </ui:UiBinder> 
