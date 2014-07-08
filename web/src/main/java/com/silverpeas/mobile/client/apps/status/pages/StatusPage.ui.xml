@@ -1,18 +1,21 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.status.resources.StatusMessages'/>
-	<ui:import field='com.gwtmobile.ui.client.widgets.ListItem.ShowArrow.*' />
-	
-	<g:HTMLPanel>	
-		<m:ScrollPanel>
-			<m:ListPanel selectable="true" ui:field="panelStatus" >
-				<m:ListItem  displayArrow="{Visible}"><g:Label text="{msg.changeStatus}"></g:Label></m:ListItem>
-			</m:ListPanel>
-		</m:ScrollPanel>
-		<g:Anchor ui:field="more" text="{msg.moreStatus}"></g:Anchor>		
+		
+	<g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
+		<h2 ui:field="titleField"></h2>	
+		
+		<div id="champs-statut">
+			<div class="ouverture-bulle"></div>				
+				<g:TextArea ui:field="status" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
+			</div>
+			<div class=" ui-controlgroup ui-controlgroup-horizontal">
+				<div class="ui-controlgroup-controls ">
+					<g:Anchor ui:field="publish" styleName="btn-validate ui-link"><span class="ui-btn-text" ui:field="publishTitle"></span></g:Anchor>					
+				</div>
+			</div>				
 	</g:HTMLPanel>
 	
 </ui:UiBinder> 

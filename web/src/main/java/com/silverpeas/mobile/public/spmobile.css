@@ -111,21 +111,21 @@ legend,.ui-input-text input,.ui-input-search input {
 /* Shadow
 -----------------------------------------------------------------------------------------------------------*/
 .ui-shadow {
-	-webkit-box-shadow: 0 1px 0 /*{global-box-shadow-size}*/ 
-		rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
-	-moz-box-shadow: 0 1px 0 /*{global-box-shadow-size}*/ 
-		rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
-	box-shadow: 0 1px 0 /*{global-box-shadow-size}*/ 
-		rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
+	-webkit-box-shadow: 0 1px 0 /*{global-box-shadow-size}*/  
+		 rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
+	-moz-box-shadow: 0 1px 0 /*{global-box-shadow-size}*/  
+		 rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
+	box-shadow: 0 1px 0 /*{global-box-shadow-size}*/  
+		 rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
 }
 
 .ui-shadow-inset {
-	-webkit-box-shadow: inset 0 1px 0 /*{global-box-shadow-size}*/ 
-		rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
-	-moz-box-shadow: inset 0 1px 0 /*{global-box-shadow-size}*/ 
-		rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
-	box-shadow: inset 0 1px 0 /*{global-box-shadow-size}*/ 
-		rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
+	-webkit-box-shadow: inset 0 1px 0 /*{global-box-shadow-size}*/  
+		 rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
+	-moz-box-shadow: inset 0 1px 0 /*{global-box-shadow-size}*/  
+		 rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
+	box-shadow: inset 0 1px 0 /*{global-box-shadow-size}*/  
+		 rgba(255, 255, 255, 0.2) /*{global-box-shadow-color}*/;
 }
 
 .ui-overlay-shadow {
@@ -730,3 +730,52 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	margin: .5em 0;
 }
 
+.ui-input-text input,.ui-input-search input,textarea.ui-input-text {
+	padding: .4em;
+	line-height: 1.4em;
+	display: block;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	outline: 0;
+}
+
+textarea.ui-input-text {
+	overflow: auto;
+	resize: vertical;
+}
+
+.ui-input-text,.ui-input-search {
+	margin: .5em 0;
+	border-width: 1px;
+	border-style: solid;
+}
+
+.ui-controlgroup-horizontal .ui-controlgroup-controls {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.ui-controlgroup-controls,.ui-controlgroup-controls .ui-radio,.ui-controlgroup-controls .ui-checkbox,.ui-controlgroup-controls .ui-select,.ui-controlgroup-controls li
+	{
+	-webkit-border-radius: inherit;
+	border-radius: inherit;
+}
+
+.ui-controlgroup-horizontal .ui-controlgroup-controls:before,.ui-controlgroup-horizontal .ui-controlgroup-controls:after
+	{
+	content: "";
+	display: table;
+}
+
+.ui-controlgroup-horizontal .ui-controlgroup-controls:after {
+	clear: both;
+}
+
+.ui-controlgroup-horizontal .ui-controlgroup-controls:before,.ui-controlgroup-horizontal .ui-controlgroup-controls:after
+	{
+	content: "";
+	display: table;
+}

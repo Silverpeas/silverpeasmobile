@@ -3,7 +3,9 @@
 <module rename-to="spmobil">
 	
 	<stylesheet src="spmobile.css"/>
-		
+	<stylesheet src="jquery.mobile.structure-1.4.2.min.css"/>
+	
+	
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.json.JSON"/>
 	<inherits name="com.gwtmobile.ui.gwtmobile_ui"/>		

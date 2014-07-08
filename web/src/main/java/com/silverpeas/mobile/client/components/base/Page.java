@@ -26,7 +26,8 @@ public class Page extends Composite {
 	
 	public void setContent(PageContent content) {
 		this.content = content;		
-		contentPlace.setWidget(content);		
+		contentPlace.setWidget(content);	
+		header.setPageTitle(content.getPageTitle());
 		header.setVisibleBackButton(PageHistory.getInstance().size() > 1);		
 	}
 	

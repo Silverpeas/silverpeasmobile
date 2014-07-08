@@ -8,13 +8,26 @@ import com.silverpeas.mobile.client.common.navigation.PageHistory;
 public class PageContent extends Composite {
 
 	protected boolean clicked = false;
+	protected String pageTitle = "Silverpeas";
 	
+	public String getPageTitle() {
+		return pageTitle;
+	}
+
+	public void setPageTitle(String pageTitle) {
+		this.pageTitle = pageTitle;
+	}
+
 	public void goTo(PageContent page) {
 		PageHistory.getInstance().goTo(page);
 	}
 	
 	public void goBack(Object object) {
 		// TODO Auto-generated method stub		
+	}
+	
+	public void back() {
+		PageHistory.getInstance().back();
 	}
 
 	public void clickGesture(Command call) {
