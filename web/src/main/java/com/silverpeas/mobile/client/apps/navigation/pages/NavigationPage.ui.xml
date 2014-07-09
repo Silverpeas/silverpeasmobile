@@ -13,6 +13,6 @@
 		<m:ScrollPanel>
 			<m:ListPanel selectable="true" ui:field="listPanel"></m:ListPanel>
 		</m:ScrollPanel>
-		<m:HeaderPanel>	<f:FooterBar/> </m:HeaderPanel>
+		<m:HeaderPanel> </m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

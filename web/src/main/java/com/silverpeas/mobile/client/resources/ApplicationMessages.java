@@ -25,4 +25,10 @@ public interface ApplicationMessages extends Messages {
 	String infoTitle();
 	@DefaultMessage("OK")
 	String ok();
+	
+	@DefaultMessage("Home")
+	String home();
+	
+	@DefaultMessage("Déconnexion")
+	String disconnect();
 }

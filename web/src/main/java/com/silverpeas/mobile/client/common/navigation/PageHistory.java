@@ -26,9 +26,10 @@ public class PageHistory {
 	
 	public void goBack(PageContent page) {
 		
-		while(pages.isEmpty()) {
+		while(!pages.isEmpty()) {
 			PageContent currentPage = pages.pop();			
 			if (currentPage.equals(page)) {
+				pages.push(currentPage);
 				SpMobil.mainPage.setContent(page);
 				break;
 			}
@@ -52,5 +53,19 @@ public class PageHistory {
 	public int size() {
 		return pages.size();
 	}
+
+	public void goToFirst() {
+		while(!pages.isEmpty()) {
+			PageContent currentPage = pages.pop();
+			if (pages.isEmpty()) {
+				pages.push(currentPage);
+				SpMobil.mainPage.setContent(currentPage);
+				break;
+			}
+		}	
+	}
 	
+	public void clear() {
+		pages.clear();
+	}
 }

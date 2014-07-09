@@ -37,7 +37,7 @@
 					<m:Button ui:field="delButton" secondaryStyle="{style.center}" text="{msg.localPicture_delete}"></m:Button>
 					<m:Button ui:field="nextButton"  secondaryStyle="{style.right}">&nbsp;&gt;&nbsp;</m:Button>
 				</m:HorizontalPanel>
-				<m:HorizontalPanel><f:FooterBar/></m:HorizontalPanel>
+				<m:HorizontalPanel></m:HorizontalPanel>
 			</m:VerticalPanel>
 		</m:HeaderPanel>					
 			

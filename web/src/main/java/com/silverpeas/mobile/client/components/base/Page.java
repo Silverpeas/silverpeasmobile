@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class Page extends Composite {
 
@@ -32,7 +33,11 @@ public class Page extends Composite {
 	}
 	
 	public void toogleMenu() {
-		menu.setVisible(!menu.isVisible());
+		menu.toogleMenu();
+	}
+	
+	public void setUser(DetailUserDTO user) {
+		menu.setUser(user);
 	}
 
 }

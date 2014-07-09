@@ -23,11 +23,13 @@ import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.pages.main.AppList;
 import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 
 
@@ -77,22 +79,23 @@ public class ConnexionPage extends PageContent {
 	 */
 	private void login(String login, final String password, String domainId) {		
 		if (!login.isEmpty() && !password.isEmpty()) {
-			ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<Void>() {
+			ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
 				public void onFailure(Throwable caught) {
 					EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 				}
-				public void onSuccess(Void result) {
+				public void onSuccess(DetailUserDTO user) {					
 					String encryptedPassword = null;
 					try {
 						encryptedPassword = encryptPassword(password);
 					} catch (InvalidCipherTextException e) {
 						EventBus.getInstance().fireEvent(new ErrorEvent(e));
 					}
+					SpMobil.user = user;
 					storeIds(encryptedPassword);
 					
-					SpMobil.mainPage.setContent(new AppList());
 					RootPanel.get().clear();
 					RootPanel.get().add(SpMobil.mainPage);
+					PageHistory.getInstance().goTo(new AppList());					
 				}
 			});	
 		}

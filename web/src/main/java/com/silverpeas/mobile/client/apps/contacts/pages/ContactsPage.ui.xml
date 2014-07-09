@@ -50,7 +50,7 @@
 			<m:ListPanel ui:field="listPanelContacts" ></m:ListPanel>				
 		</m:ScrollPanel>
 		<m:HeaderPanel>
-			<f:FooterBar />
+			
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

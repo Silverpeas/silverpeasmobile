@@ -8,23 +8,17 @@ import org.dozer.Mapper;
 import org.silverpeas.authentication.AuthenticationCredential;
 import org.silverpeas.authentication.AuthenticationService;
 
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Window;
 import com.silverpeas.admin.ejb.AdminBusiness;
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
-import com.silverpeas.session.SessionManagementFactory;
-import com.stratelia.silverpeas.peasCore.SessionManager;
 import com.stratelia.webactiv.beans.admin.Domain;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.util.EJBUtilitaire;
+import com.stratelia.webactiv.util.GeneralPropertiesManager;
 import com.stratelia.webactiv.util.JNDINames;
 
 /**
@@ -38,7 +32,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 	private AdminBusiness adminBm;
 	private OrganizationController organizationController = new OrganizationController();
 
-	public void login(String login, String password, String domainId)
+	public DetailUserDTO login(String login, String password, String domainId)
 			throws AuthenticationException {
 		
 		// vérification
@@ -72,6 +66,13 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 		}
 		UserDetail user = getUserDetail(userId);
 		setUserInSession(user);
+		
+		DetailUserDTO userDTO = new DetailUserDTO();
+		Mapper mapper = new DozerBeanMapper();
+		userDTO = mapper.map(user, DetailUserDTO.class);
+		userDTO.setAvatar(GeneralPropertiesManager.getString("ApplicationURL")+user.getAvatar());		
+		
+		return userDTO;
 	}
 	
 	public List<DomainDTO> getDomains() {

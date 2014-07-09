@@ -15,6 +15,6 @@
 			<g:Image ui:field="content" width="100%"/>
 		</m:ScrollPanel>
 		<m:Button ui:field="fullScreen" horizontalAlignment="center" text="{msg.fullScreen}"></m:Button>
-		<m:HeaderPanel>	<c:FooterBar/> </m:HeaderPanel>	
+		<m:HeaderPanel>	 </m:HeaderPanel>	
 	</g:HTMLPanel>
 </ui:UiBinder> 

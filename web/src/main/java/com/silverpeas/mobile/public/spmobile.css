@@ -496,6 +496,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	text-shadow: 0 1px 0 #000000;
 }
 
+#silverpeas-navmenu-panel #user {
+	margin-top: 55px;
+}
+
 #silverpeas-navmenu-panel #user img {
 	width: 40px;
 	vertical-align: middle

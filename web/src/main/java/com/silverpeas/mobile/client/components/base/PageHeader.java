@@ -42,7 +42,11 @@ public class PageHeader extends Composite {
 	}	
 	
 	public void setVisibleBackButton(boolean visible) {
-		back.setVisible(visible);
+		// remove active state
+		header.remove(back);
+		header.add(back);
+		// hide button
+		back.setVisible(visible);		
 	}
 	
 	public void setPageTitle(String title) {

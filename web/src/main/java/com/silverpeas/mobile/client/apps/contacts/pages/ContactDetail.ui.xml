@@ -48,7 +48,7 @@
 			
 		
 			
-		<m:HeaderPanel><f:FooterBar/></m:HeaderPanel>		
+		<m:HeaderPanel></m:HeaderPanel>		
 	</g:HTMLPanel>
 
 </ui:UiBinder> 

@@ -21,6 +21,6 @@
 			<g:AbsolutePanel ui:field="content" styleName="{style.photo}"></g:AbsolutePanel>
 		</m:ScrollPanel>
 		
-		<m:HeaderPanel>	<c:FooterBar/> </m:HeaderPanel>	
+		<m:HeaderPanel>	 </m:HeaderPanel>	
 	</g:HTMLPanel>
 </ui:UiBinder> 

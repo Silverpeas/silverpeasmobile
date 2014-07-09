@@ -17,11 +17,13 @@ import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.AppList;
 import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class SpMobil implements EntryPoint{
 		
 	public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
 	public final static Page mainPage = new Page();
+	public static DetailUserDTO user;
 	
 	/**
 	 * Init. spmobile.
@@ -40,17 +42,20 @@ public class SpMobil implements EntryPoint{
 	 * @param auto
 	 */
 	private void login(String login, String password, String domainId, final boolean auto) {
-		ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<Void>() {
+		ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
 			public void onFailure(Throwable reason) {
 				clearIds();
 				ConnexionPage connexionPage = new ConnexionPage();
 				RootPanel.get().clear();
 				RootPanel.get().add(connexionPage);
 			}
-			public void onSuccess(Void result) {											
+			public void onSuccess(DetailUserDTO user) {											
+				SpMobil.user = user;
+				mainPage.setUser(user);
 				RootPanel.get().clear();
-				RootPanel.get().add(mainPage);
+				RootPanel.get().add(mainPage);				
 				PageHistory.getInstance().goTo(new AppList());
+				
 			}
 		});
 	}
@@ -58,11 +63,11 @@ public class SpMobil implements EntryPoint{
 	/**
 	 * Clean ids in SQL Web Storage.
 	 */
-	public void clearIds() {
+	public static void clearIds() {
 		Storage storage = Storage.getLocalStorageIfSupported();
-		if (storage != null) {					
+		if (storage != null) {
 			storage.clear();
-		}		
+		}
 	}
 	
 	/**
