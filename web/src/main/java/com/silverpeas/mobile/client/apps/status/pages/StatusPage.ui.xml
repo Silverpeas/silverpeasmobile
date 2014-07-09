@@ -5,7 +5,7 @@
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.status.resources.StatusMessages'/>
 		
 	<g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
-		<h2 ui:field="titleField"></h2>	
+		<h2><ui:safehtml from="{msg.title}"/></h2>	
 		
 		<div id="champs-statut">
 			<div class="ouverture-bulle"></div>				
@@ -13,7 +13,9 @@
 			</div>
 			<div class=" ui-controlgroup ui-controlgroup-horizontal">
 				<div class="ui-controlgroup-controls ">
-					<g:Anchor ui:field="publish" styleName="btn-validate ui-link"><span class="ui-btn-text" ui:field="publishTitle"></span></g:Anchor>					
+					<g:Anchor ui:field="publish" styleName="btn-validate ui-link">
+						<span class="ui-btn-text"><ui:text from="{msg.changeStatus}"/></span>
+					</g:Anchor>
 				</div>
 			</div>				
 	</g:HTMLPanel>

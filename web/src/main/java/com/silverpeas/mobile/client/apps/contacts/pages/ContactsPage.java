@@ -1,81 +1,50 @@
 package com.silverpeas.mobile.client.apps.contacts.pages;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.event.SelectionChangedEvent;
-import com.gwtmobile.ui.client.widgets.ListItem;
-import com.gwtmobile.ui.client.widgets.ListPanel;
-import com.gwtmobile.ui.client.widgets.RadioButton;
-import com.gwtmobile.ui.client.widgets.RadioButtonGroup;
-import com.gwtmobile.ui.client.widgets.ScrollPanel;
-import com.gwtmobile.ui.client.widgets.TextBox;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;
+import com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.base.PageContent;
-import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
-public class ContactsPage extends PageContent implements ContactsPagesEventHandler,
-		View {
+public class ContactsPage extends PageContent implements ContactsPagesEventHandler, View {
 
 	private static ContactsPageUiBinder uiBinder = GWT.create(ContactsPageUiBinder.class);
-	private List<ListItem> contactsList;
-	@UiField ListPanel listPanelContacts;
-	@UiField ScrollPanel scrollPanel;
-	@UiField TextBox textBox;
-	@UiField RadioButtonGroup group;
-	@UiField RadioButton all, my;
-
+	
+	@UiField(provided = true) protected ContactsMessages msg = null;
+	@UiField HTMLPanel container;
+	@UiField Anchor mycontacts, allcontacts;
+	
 	interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
 	}
 
 	public ContactsPage() {	
+		msg = GWT.create(ContactsMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
+		container.getElement().setId("contacts");
+		mycontacts.getElement().setId("btn-my-contacts");
+		allcontacts.getElement().setId("btn-all-contacts");
 		EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
-		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));
-		my.setValue(true);
-		all.setValue(false);
-		textBox.addKeyUpHandler(new KeyUpHandler() {		
-			@Override
-			public void onKeyUp(KeyUpEvent event) {
-				if(textBox.getText().isEmpty()){
-					refresh(contactsList);
-				}
-				else{
-					List<ListItem> finalListItem = new ArrayList<ListItem>();
-					finalListItem = getFirstItemStartingWith(textBox.getText());
-					refresh(finalListItem);
-				}
-			}
-		});
+		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));		
 	}
 
 	@Override
 	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractContactsPagesEvent.TYPE,
-				this);
+		EventBus.getInstance().removeHandler(AbstractContactsPagesEvent.TYPE, this);
 	}
 
 	@Override
 	public void onContactsLoaded(ContactsLoadedEvent event) {
-		listPanelContacts.clear();
+		/*listPanelContacts.clear();
 		contactsList = new ArrayList<ListItem>();
 		listPanelContacts.setSelectable(true);
 		Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
@@ -99,10 +68,10 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 					});
 				}
 			});
-		}
+		}*/
 	}
 
-	public List<ListItem> getFirstItemStartingWith(String search) {
+	/*public List<ListItem> getFirstItemStartingWith(String search) {
 		List<ListItem> listItemStartingWith = new ArrayList<ListItem>();
 		for (int i = 0; i < contactsList.size(); i++) {
 			ListItem item = contactsList.get(i);
@@ -112,9 +81,9 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 			}
 		}
 		return listItemStartingWith;
-	}
+	}*/
 
-	@UiHandler("group")
+	/*@UiHandler("group")
     void onRadioGroupSelectionChanged(SelectionChangedEvent e) {
 		
     	if(e.getSelection() == 1){
@@ -123,14 +92,14 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     	else{
     		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));
     	}
-    }
+    }*/
 	
-	public void refresh(List<ListItem> listItem){
+	/*public void refresh(List<ListItem> listItem){
 		listPanelContacts.clear();
 		Iterator<ListItem> i = listItem.iterator();
 		while(i.hasNext()){
 			ListItem listItemTemp = i.next();
 			listPanelContacts.add(listItemTemp);
 		}
-	}
+	}*/
 }

@@ -13,7 +13,6 @@
 			<m:AccordionPanel ui:field="accordionPanel"></m:AccordionPanel>
 		</m:ScrollPanel>
 		<m:HeaderPanel>
-			<f:FooterBar />
 		</m:HeaderPanel>
 	</g:HTMLPanel>
 

@@ -54,7 +54,7 @@
 		<m:ScrollPanel ui:field="panelAlmanachWidget"></m:ScrollPanel>	
 		
 		<m:HeaderPanel> 
-			<f:FooterBar/>			
+				
 		</m:HeaderPanel>
 		
 	</g:HTMLPanel>
