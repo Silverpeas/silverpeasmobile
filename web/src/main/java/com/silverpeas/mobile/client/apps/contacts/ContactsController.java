@@ -4,11 +4,8 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.AbstractContactsControllerEvent;
-import com.silverpeas.mobile.client.apps.contacts.events.controller.AddContactEvent;
-import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactDetailLoadEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsControllerEventHandler;
 import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
-import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactDetailLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -41,24 +38,5 @@ public class ContactsController implements Controller, ContactsControllerEventHa
 				Notification.activityStop();
 			}
 		});
-	}
-
-	@Override
-	public void loadContactDetail(ContactDetailLoadEvent event) {
-		Notification.activityStart();
-		ServicesLocator.serviceContact.getContactDetail(event.getId(), new AsyncCallback<DetailUserDTO>(){
-			public void onFailure(Throwable caught) {				
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-			}
-			public void onSuccess(DetailUserDTO result) {				
-				EventBus.getInstance().fireEvent(new ContactDetailLoadedEvent(result));
-				Notification.activityStop();
-			}
-		});
-	}
-
-	@Override
-	public void addContact(AddContactEvent event) {
-		// TODO : remove this feature or use html5
 	}
 }

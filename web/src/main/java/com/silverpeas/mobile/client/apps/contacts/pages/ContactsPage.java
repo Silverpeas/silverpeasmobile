@@ -1,8 +1,12 @@
 package com.silverpeas.mobile.client.apps.contacts.pages;
 
+import java.util.Iterator;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -10,10 +14,13 @@ import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoad
 import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;
+import com.silverpeas.mobile.client.apps.contacts.pages.widgets.ContactItem;
 import com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
 public class ContactsPage extends PageContent implements ContactsPagesEventHandler, View {
@@ -23,6 +30,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 	@UiField(provided = true) protected ContactsMessages msg = null;
 	@UiField HTMLPanel container;
 	@UiField Anchor mycontacts, allcontacts;
+	@UiField UnorderedList list;
 	
 	interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
 	}
@@ -41,65 +49,33 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 	public void stop() {
 		EventBus.getInstance().removeHandler(AbstractContactsPagesEvent.TYPE, this);
 	}
-
-	@Override
-	public void onContactsLoaded(ContactsLoadedEvent event) {
-		/*listPanelContacts.clear();
-		contactsList = new ArrayList<ListItem>();
-		listPanelContacts.setSelectable(true);
-		Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
-		while (i.hasNext()) {
-			DetailUserDTO dudto = i.next();
-			ListItem contact = new ListItem();
-			final String id = dudto.getId();
-			Label labelContact = new Label(dudto.getLastName());
-			labelContact.setWidth("100%");
-			contact.add(labelContact);
-			contactsList.add(contact);
-			listPanelContacts.add(contact);
-			labelContact.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					clickGesture(new Command() {						
-						@Override
-						public void execute() {
-							ContactDetail contactDetail = new ContactDetail(id);
-							goTo(contactDetail);							
-						}
-					});
-				}
-			});
-		}*/
+	
+	@UiHandler("mycontacts")
+	protected void showMycontacts(ClickEvent event) {
+		allcontacts.removeStyleName("ui-btn-active");
+		allcontacts.addStyleName("ui-btn");
+		mycontacts.addStyleName("ui-btn-active");
+		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));
+	}
+	
+	@UiHandler("allcontacts")
+	protected void showAllcontacts(ClickEvent event) {
+		mycontacts.removeStyleName("ui-btn-active");
+		mycontacts.addStyleName("ui-btn");
+		allcontacts.addStyleName("ui-btn-active");
+		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.ALL));
 	}
 
-	/*public List<ListItem> getFirstItemStartingWith(String search) {
-		List<ListItem> listItemStartingWith = new ArrayList<ListItem>();
-		for (int i = 0; i < contactsList.size(); i++) {
-			ListItem item = contactsList.get(i);
-			String label = ((Label) item.getWidget(0)).getText().toUpperCase();
-			if (label.startsWith(search.toUpperCase())) {
-				listItemStartingWith.add(item);
-			}
-		}
-		return listItemStartingWith;
-	}*/
-
-	/*@UiHandler("group")
-    void onRadioGroupSelectionChanged(SelectionChangedEvent e) {
+	@Override
+	public void onContactsLoaded(ContactsLoadedEvent event) {		
+		list.clear();
 		
-    	if(e.getSelection() == 1){
-    		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.ALL));
-    	}
-    	else{
-    		EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));
-    	}
-    }*/
-	
-	/*public void refresh(List<ListItem> listItem){
-		listPanelContacts.clear();
-		Iterator<ListItem> i = listItem.iterator();
-		while(i.hasNext()){
-			ListItem listItemTemp = i.next();
-			listPanelContacts.add(listItemTemp);
+		Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
+		while (i.hasNext()) {
+			DetailUserDTO user = i.next();
+			ContactItem item = new ContactItem();
+			item.setData(user);
+			list.add(item);
 		}
-	}*/
+	}
 }

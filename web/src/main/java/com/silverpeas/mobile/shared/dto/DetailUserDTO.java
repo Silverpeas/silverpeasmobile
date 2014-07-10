@@ -11,6 +11,8 @@ public class DetailUserDTO implements Serializable{
 	private String firstName;
 	private String avatar;
 	private String phoneNumber;
+	private String cellularPhoneNumber;
+	private String faxPhoneNumber;
 	
 	public String getId() {
 		return id;
@@ -58,5 +60,21 @@ public class DetailUserDTO implements Serializable{
 	
 	public void setPhoneNumber(String phoneNumber){
 		this.phoneNumber = phoneNumber;
+	}
+
+	public String getCellularPhoneNumber() {
+		return cellularPhoneNumber;
+	}
+
+	public void setCellularPhoneNumber(String cellularPhoneNumber) {
+		this.cellularPhoneNumber = cellularPhoneNumber;
+	}
+
+	public String getFaxPhoneNumber() {
+		return faxPhoneNumber;
+	}
+
+	public void setFaxPhoneNumber(String faxPhoneNumber) {
+		this.faxPhoneNumber = faxPhoneNumber;
 	}
 }

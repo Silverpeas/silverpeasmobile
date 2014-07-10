@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:com.silverpeas.mobile.client.components">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:l="urn:import:com.silverpeas.mobile.client.components">
 
 	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages' />
 
@@ -20,13 +20,8 @@
 				</g:Anchor>
 			</div>
 		</div>
-		<ul class="list-contacts">
-			<li>
-				<div class="user-name"><img alt="" src="aurore.allibe.jpg.png"/>Allibe Aurore</div>
-				<a class="mail-link" href="mailto:aurore.allibe@silverpeas.com">aurore.allibe@silverpeas.com</a>
-				<div class="tel"><a class="tel-link" href="tel:+33 6 88 76 75 56">+33 6 88 76 75 56 </a> | <a class="tel-link" href="tel:+33 4 76 09 31 61">+33 4 76 09 31 61</a>  | 
-				<a class="tel-link" href="tel:+33 4 76 07 27 73">+33 4 76 07 27 73</a></div>
-			</li>
-		</ul>
+		
+		<l:UnorderedList ui:field="list" styleName="list-contacts"></l:UnorderedList>		
+	
 	</g:HTMLPanel>
 </ui:UiBinder> 
