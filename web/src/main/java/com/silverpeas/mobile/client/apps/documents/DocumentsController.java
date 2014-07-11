@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.apps.documents;
 import java.util.List;
 
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.documents.events.controller.AbstractDocumentsControllerEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsControllerEventHandler;
@@ -12,7 +13,6 @@ import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLo
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadTopicsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsSaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsLoadedSettingsEvent;
-import com.silverpeas.mobile.client.apps.documents.events.pages.NewInstanceLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.PublicationsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
@@ -45,7 +45,8 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 
 	@Override
 	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-		EventBus.getInstance().fireEvent(new NewInstanceLoadedEvent(event.getInstance()));		
+		//EventBus.getInstance().fireEvent(new NewInstanceLoadedEvent(event.getInstance()));
+		Window.alert("show ged explorer!");
 	}
 
 	@Override

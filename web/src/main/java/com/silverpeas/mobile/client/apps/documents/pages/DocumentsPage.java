@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
 import com.gwtmobile.ui.client.widgets.ListItem;
 import com.gwtmobile.ui.client.widgets.ListPanel;
-import com.silverpeas.mobile.client.apps.documents.events.app.internal.DocumentsStopEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsSaveSettingsEvent;
@@ -76,7 +75,7 @@ public class DocumentsPage extends PageContent implements View, DocumentsPagesEv
 	@Override
 	public void goBack(Object returnValue) {
 		stop();
-		EventBus.getInstance().fireEvent(new DocumentsStopEvent());		
+		//EventBus.getInstance().fireEvent(new DocumentsStopEvent());		
 		super.goBack(returnValue);
 	}
 	

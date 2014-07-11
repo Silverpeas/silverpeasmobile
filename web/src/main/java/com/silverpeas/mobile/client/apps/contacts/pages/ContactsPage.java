@@ -17,13 +17,12 @@ import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEven
 import com.silverpeas.mobile.client.apps.contacts.pages.widgets.ContactItem;
 import com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
-public class ContactsPage extends PageContent implements ContactsPagesEventHandler, View {
+public class ContactsPage extends PageContent implements ContactsPagesEventHandler {
 
 	private static ContactsPageUiBinder uiBinder = GWT.create(ContactsPageUiBinder.class);
 	
@@ -37,6 +36,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 
 	public ContactsPage() {	
 		msg = GWT.create(ContactsMessages.class);
+		setPageTitle(msg.title());
 		initWidget(uiBinder.createAndBindUi(this));
 		container.getElement().setId("contacts");
 		mycontacts.getElement().setId("btn-my-contacts");

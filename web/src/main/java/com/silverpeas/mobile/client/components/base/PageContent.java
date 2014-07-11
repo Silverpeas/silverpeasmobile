@@ -3,9 +3,10 @@ package com.silverpeas.mobile.client.components.base;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
+import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 
-public class PageContent extends Composite {
+public class PageContent extends Composite implements View {
 
 	protected boolean clicked = false;
 	protected String pageTitle = "Silverpeas";
@@ -26,6 +27,10 @@ public class PageContent extends Composite {
 		// TODO Auto-generated method stub		
 	}
 	
+	public boolean isVisible() { 
+		return PageHistory.getInstance().isVisible(this);
+	}
+	
 	public void back() {
 		PageHistory.getInstance().back();
 	}
@@ -41,5 +46,9 @@ public class PageContent extends Composite {
 					return false;
 				}}, 400);	
 		}		
+	}
+
+	@Override
+	public void stop() {
 	}
 }

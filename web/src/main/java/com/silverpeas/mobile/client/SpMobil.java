@@ -9,6 +9,7 @@ import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.silverpeas.mobile.client.common.ErrorManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
+import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
@@ -24,6 +25,7 @@ public class SpMobil implements EntryPoint{
 	public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
 	public final static Page mainPage = new Page();
 	public static DetailUserDTO user;
+	public static App currentApp;
 	
 	/**
 	 * Init. spmobile.

@@ -22,7 +22,7 @@ public class ContactsController implements Controller, ContactsControllerEventHa
 	}
 
 	@Override
-	public void stop() {
+	public void stop() {		
 		EventBus.getInstance().removeHandler(AbstractContactsControllerEvent.TYPE, this);
 	}
 

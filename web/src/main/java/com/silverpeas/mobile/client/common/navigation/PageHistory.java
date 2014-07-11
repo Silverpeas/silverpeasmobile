@@ -18,7 +18,7 @@ public class PageHistory {
 		return instance;
 	}
 	
-	public void goTo(PageContent page) {
+	public void goTo(PageContent page) {		
 		pages.push(page);
 		SpMobil.mainPage.setContent(page);		
 		//TODO : TODO : css3 transition
@@ -42,7 +42,7 @@ public class PageHistory {
 		page = pages.peek();
 		SpMobil.mainPage.setContent(page);
 		//TODO : css3 transition
-				
+		
 		return page;
 	}
 	
@@ -67,5 +67,10 @@ public class PageHistory {
 	
 	public void clear() {
 		pages.clear();
+	}
+	
+	public boolean isVisible(PageContent page) {
+		PageContent currentPage = pages.peek();
+		return (currentPage == page);
 	}
 }

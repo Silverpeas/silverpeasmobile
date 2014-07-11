@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
 <module rename-to="spmobil">
-	
-	<stylesheet src="spmobile.css"/>
+		
 	<stylesheet src="jquery.mobile.structure-1.4.2.min.css"/>
-	
+	<stylesheet src="spmobile.css"/>
 	
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.json.JSON"/>
