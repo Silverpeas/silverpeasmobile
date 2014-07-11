@@ -494,6 +494,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	color: #FFF;
 	background-color: #606259;
 	text-shadow: 0 1px 0 #000000;
+	position: fixed;
 }
 
 #silverpeas-navmenu-panel #user {
