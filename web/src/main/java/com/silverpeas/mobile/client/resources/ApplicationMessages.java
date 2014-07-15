@@ -31,4 +31,7 @@ public interface ApplicationMessages extends Messages {
 	
 	@DefaultMessage("Déconnexion")
 	String disconnect();
+	
+	@DefaultMessage("Espace personnel")
+	String personalSpace();
 }

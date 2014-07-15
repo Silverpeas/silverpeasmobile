@@ -14,4 +14,6 @@ public interface ServiceDocumentsAsync {
 
 	void getPublication(String pubId, AsyncCallback<PublicationDTO> callback);
 
+	void getTopicsAndPublications(String instanceId, String rootTopicId, AsyncCallback<List<Object>> callback);
+
 }

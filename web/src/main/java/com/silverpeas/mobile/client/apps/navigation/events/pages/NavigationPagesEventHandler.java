@@ -4,5 +4,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface NavigationPagesEventHandler extends EventHandler {
 	void spacesAndAppsLoaded(SpacesAndAppsLoadedEvent event);
-	//void clickItem(ClickItemEvent event);
+	void clickItem(ClickItemEvent event);
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.controller.LoadSpacesAndAppsEvent;
@@ -26,9 +25,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 
 	private static NavigationPageUiBinder uiBinder = GWT.create(NavigationPageUiBinder.class);
 	private String rootSpaceId;
-	//private boolean dataCached = false;
-	//private boolean stopped = false;
-	//private HashMap<String, SilverpeasObjectDTO> model = new HashMap<String, SilverpeasObjectDTO>();
+	private boolean dataLoaded = false;
 	
 	@UiField UnorderedList list;
 
@@ -44,100 +41,44 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 
 	@Override
 	public void spacesAndAppsLoaded(SpacesAndAppsLoadedEvent event) {
-		if (isVisible()) { 
-		//if (dataCached == false) {
+		
+		if (isVisible() && dataLoaded == false) {
+			
 			list.clear();
 			List<SilverpeasObjectDTO> objectsList = event.getObjectsList();
 			for (SilverpeasObjectDTO silverpeasObjectDTO : objectsList) {
-				// add to model
-				//model.put(silverpeasObjectDTO.getId(), silverpeasObjectDTO);
-
-				
-				// add to ihm list
-				/*ListItem item = new ListItem();
-				Label la = new Label(silverpeasObjectDTO.getLabel());
-				item.getElement().setId(silverpeasObjectDTO.getId());
-			    item.add(la);				
-				if (silverpeasObjectDTO instanceof SpaceDTO) {
-					item.setDisplayArrow(ShowArrow.Visible);
-					item.getElement().setAttribute("space", "true");
-				} else {
-					item.getElement().setAttribute("space", "false");
-				}				
-				listPanel.add(item);*/
-				
-				NavigationItem item = new NavigationItem();
-				item.setNavigationPage(this);
+				NavigationItem item = new NavigationItem();				
 				item.setData(silverpeasObjectDTO);				
 				list.add(item);				
 			}
-			//dataCached = true;
-		//}
+			dataLoaded = true;		
 		}
 		Notification.activityStop();
-	}
-
-	/*@UiHandler("list")
-	void onSelectionChanged(SelectionChangedEvent event) {
-		ListItem item = listPanel.getItem(event.getSelection());
-		if (item.getElement().getAttribute("space").equals("true")) {
-			NavigationPage subPage = new NavigationPage();
-			subPage.setRootSpaceId(item.getElement().getId());
-			goTo(subPage);
-		} else {			
-			EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)model.get(item.getElement().getId())));
-			// remove navigation pages from history
-			PageContent lastPage = null;
-			while (true) {
-				if (PageHistory.getInstance().getCurrent() instanceof NavigationPage) {
-					PageHistory.getInstance().goBack(lastPage);
-					((View) lastPage).stop();
-				} else {
-					//PageHistory.Instance. add(lastPage);
-					//TODO : 
-					break;
-				}		
-			}
-			// return to initial launching page
-			goBack(null);			
-		}		
-	}*/
-	
-	
-	public void clickItem(SilverpeasObjectDTO data) {		
-		if (isVisible()) {	
-			if(data instanceof SpaceDTO) {			
-				NavigationPage subPage = new NavigationPage();				
-				//subPage.setPageTitle("todo");				
-				subPage.setRootSpaceId(data.getId());				
-				goTo(subPage);
-			} else {
-				//EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
-			}
-		}
 	}
 	
 	public void setRootSpaceId(String rootSpaceId) {
 		this.rootSpaceId = rootSpaceId;
 		EventBus.getInstance().fireEvent(new LoadSpacesAndAppsEvent(rootSpaceId));
 	}
-	
-	/*@Override
-	public void goBack(Object returnValue) {
-		stop();
-		if (rootSpaceId == null) {
-			// stop app if first page
-			EventBus.getInstance().fireEvent(new NavigationStopEvent());
-		}
-		super.goBack(returnValue);
-	}*/
+
 
 	@Override
 	public void stop() {
-		//if (!stopped) {
-			EventBus.getInstance().removeHandler(AbstractNavigationPagesEvent.TYPE, this);
-			//stopped = true;
-		//}		
+		EventBus.getInstance().removeHandler(AbstractNavigationPagesEvent.TYPE, this);
+	}
+
+	@Override
+	public void clickItem(ClickItemEvent event) {		
+		if (isVisible()) {	
+			if (event.getData() instanceof SpaceDTO) {			
+				NavigationPage subPage = new NavigationPage();				
+				subPage.setPageTitle(this.getPageTitle());
+				subPage.setRootSpaceId(event.getData().getId());				
+				goTo(subPage);
+			} else {
+				EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
+			}
+		}		
 	}
 
 

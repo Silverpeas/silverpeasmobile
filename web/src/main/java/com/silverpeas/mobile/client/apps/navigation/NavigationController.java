@@ -24,16 +24,16 @@ public class NavigationController implements Controller, NavigationControllerEve
 	}
 
 	@Override
-	public void loadSpacesAndApps(LoadSpacesAndAppsEvent event) {
+	public void loadSpacesAndApps(LoadSpacesAndAppsEvent event) {		
 		ServicesLocator.serviceNavigation.getSpacesAndApps(event.getRootSpaceId(), type, new AsyncCallback<List<SilverpeasObjectDTO>>() {
 			
 			@Override
-			public void onSuccess(List<SilverpeasObjectDTO> result) {
+			public void onSuccess(List<SilverpeasObjectDTO> result) {				
 				EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));				
 			}
 			
 			@Override
-			public void onFailure(Throwable caught) {
+			public void onFailure(Throwable caught) {				
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
 			}
 		});		

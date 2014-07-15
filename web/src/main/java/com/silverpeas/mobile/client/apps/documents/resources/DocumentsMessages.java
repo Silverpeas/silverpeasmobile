@@ -18,4 +18,5 @@ public interface DocumentsMessages extends Messages {
 	String updater();
 	String downloadError();
 	String content();
+	String lastUpdate(String updateDate, String updater);
 }

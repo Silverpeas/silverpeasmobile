@@ -1,11 +1,11 @@
 package com.silverpeas.mobile.client.apps.documents.events.controller;
 
 
-public class DocumentsLoadTopicsEvent extends AbstractDocumentsControllerEvent {
+public class DocumentsLoadGedItemsEvent extends AbstractDocumentsControllerEvent {
 	
 	private String rootTopicId, instanceId;
 	
-	public DocumentsLoadTopicsEvent(String instanceId, String rootTopicId) {
+	public DocumentsLoadGedItemsEvent(String instanceId, String rootTopicId) {
 		super();
 		this.rootTopicId = rootTopicId;
 		this.instanceId = instanceId;

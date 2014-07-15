@@ -3,24 +3,18 @@ package com.silverpeas.mobile.client.apps.documents;
 import java.util.List;
 
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.documents.events.controller.AbstractDocumentsControllerEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsControllerEventHandler;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationEvent;
-import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadSettingsEvent;
-import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadTopicsEvent;
+import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadGedItemsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsSaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.DocumentsLoadedSettingsEvent;
-import com.silverpeas.mobile.client.apps.documents.events.pages.PublicationsLoadedEvent;
-import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.TopicsLoadedEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.persistances.DocumentsSettings;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
-import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;
@@ -29,24 +23,16 @@ import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
-public class DocumentsController implements Controller, DocumentsControllerEventHandler, NavigationEventHandler{
+public class DocumentsController implements Controller, DocumentsControllerEventHandler {
 
 	public DocumentsController() {
 		super();
-		EventBus.getInstance().addHandler(AbstractDocumentsControllerEvent.TYPE, this);
-		EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
+		EventBus.getInstance().addHandler(AbstractDocumentsControllerEvent.TYPE, this);		
 	}
 	
 	@Override
 	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractDocumentsControllerEvent.TYPE, this);
-		EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);		
-	}
-
-	@Override
-	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-		//EventBus.getInstance().fireEvent(new NewInstanceLoadedEvent(event.getInstance()));
-		Window.alert("show ged explorer!");
+		EventBus.getInstance().removeHandler(AbstractDocumentsControllerEvent.TYPE, this);				
 	}
 
 	@Override
@@ -91,35 +77,17 @@ public class DocumentsController implements Controller, DocumentsControllerEvent
 	 * Get subtopics.
 	 */
 	@Override
-	public void loadTopics(DocumentsLoadTopicsEvent event) {		
-		ServicesLocator.serviceDocuments.getTopics(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<TopicDTO>>() {			
+	public void loadTopics(DocumentsLoadGedItemsEvent event) {		
+		ServicesLocator.serviceDocuments.getTopicsAndPublications(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<Object>>() {			
 			@Override
-			public void onSuccess(List<TopicDTO> result) {
-				EventBus.getInstance().fireEvent(new TopicsLoadedEvent(result));				
+			public void onSuccess(List<Object> result) {
+				EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));				
 			}			
 			@Override
 			public void onFailure(Throwable caught) {
 				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
 			}
 		});		
-	}
-
-	/**
-	 * Get publications.
-	 */
-	@Override
-	public void loadPublications(DocumentsLoadPublicationsEvent event) {
-		ServicesLocator.serviceDocuments.getPublications(event.getInstanceId(), event.getTopicId(), new AsyncCallback<List<PublicationDTO>>() {			
-			@Override
-			public void onSuccess(List<PublicationDTO> result) {
-				EventBus.getInstance().fireEvent(new PublicationsLoadedEvent(result));				
-			}			
-			@Override
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
-			}
-		});	
-		
 	}
 
 	/**

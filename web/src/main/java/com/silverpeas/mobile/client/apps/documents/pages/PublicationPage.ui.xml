@@ -1,58 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
-	xmlns:i="urn:import:com.silverpeas.mobile.client.components.icon"
-	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
-	
-	<ui:with field='msg' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages'/>
-	<ui:with field='globalMsg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
-	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources'/>
-
-	<g:HTMLPanel>
-		<m:HeaderPanel leftButton="Back" ui:field="header">
-			<g:Label horizontalAlignment="center" ui:field="title"></g:Label>			
-		</m:HeaderPanel>		
-		<m:ScrollPanel>
-			<m:AccordionPanel>
-				<m:AccordionStack>
-					<m:AccordionHeader><g:Label text="{msg.header}"></g:Label></m:AccordionHeader>
-					<m:AccordionContent>
-						<m:VerticalPanel>
-							<m:HorizontalPanel>
-								<g:Label text="{msg.description}"></g:Label>
-								<g:InlineHTML>&nbsp;</g:InlineHTML>
-								<g:Label ui:field="description"></g:Label>	
-							</m:HorizontalPanel>
-							<m:HorizontalPanel>
-								<g:Label text="{msg.creator}"></g:Label>
-								<g:InlineHTML>&nbsp;</g:InlineHTML>
-								<g:Label ui:field="creator"></g:Label>
-							</m:HorizontalPanel>
-							<m:HorizontalPanel>
-								<g:Label text="{msg.updater}"></g:Label>
-								<g:InlineHTML>&nbsp;</g:InlineHTML>
-								<g:Label ui:field="updater"></g:Label>
-							</m:HorizontalPanel>
-							<m:HorizontalPanel>
-								<g:Label text="{msg.version}"></g:Label>
-								<g:InlineHTML>&nbsp;</g:InlineHTML>
-								<g:Label ui:field="version"></g:Label>
-							</m:HorizontalPanel>						
-						</m:VerticalPanel>				
-					</m:AccordionContent>
-				</m:AccordionStack>
-				<m:AccordionStack ui:field="contentStack">
-					<m:AccordionHeader><g:Label text="{msg.content}"></g:Label></m:AccordionHeader>
-					<m:AccordionContent ui:field="content"></m:AccordionContent>
-				</m:AccordionStack>	
-				<m:AccordionStack ui:field="attachementsStack">
-					<m:AccordionHeader><g:Label text="{msg.attachments}"></g:Label></m:AccordionHeader>
-					<m:AccordionContent ui:field="attachements"></m:AccordionContent>
-				</m:AccordionStack>						
-			</m:AccordionPanel>
-		</m:ScrollPanel>	
-		<m:HeaderPanel> </m:HeaderPanel>
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:l="urn:import:com.silverpeas.mobile.client.components">
+			
+	<g:HTMLPanel ui:field="container" styleName="content">
+		<h2 ui:field="title" class="publiName"></h2>
+		<p ui:field="desc" class="publiDesc"></p>
+		<l:UnorderedList ui:field="attachments"/>		
+		<p ui:field="lastUpdate" class="lastUpdate"></p>				
 	</g:HTMLPanel>
-
+	
 </ui:UiBinder> 

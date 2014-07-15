@@ -14,6 +14,7 @@ public class PublicationDTO implements Serializable, Comparable<PublicationDTO> 
 	private String creator;
 	private String updater;
 	private String wysiwyg;
+	private String updateDate;
 	private ArrayList<AttachmentDTO> attachments = null;
 		
 	public String getId() {
@@ -68,4 +69,11 @@ public class PublicationDTO implements Serializable, Comparable<PublicationDTO> 
 	public void setWysiwyg(String wysiwyg) {
 		this.wysiwyg = wysiwyg;
 	}
+	public String getUpdateDate() {
+		return updateDate;
+	}
+	public void setUpdateDate(String updateDate) {		
+		this.updateDate = updateDate;
+	}
+
 }

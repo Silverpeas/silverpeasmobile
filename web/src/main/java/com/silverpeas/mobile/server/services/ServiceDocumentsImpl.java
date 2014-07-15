@@ -40,6 +40,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 	private NodeBm nodeBm;
 	
 	
+	
+	
 	/**
 	 * Retourne tous les topics de premier niveau d'un topic.
 	 */
@@ -62,7 +64,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 					topic.setId(String.valueOf(nodeDetail.getId()));
 					topic.setName(nodeDetail.getName());				
 					int childrenNumber = getNodeBm().getChildrenNumber(new NodePK(String.valueOf(nodeDetail.getId()), instanceId));
-					topic.setTerminal(childrenNumber == 0);
+					topic.setTerminal(childrenNumber == 0);					
 					topicsList.add(topic);
 				}
 			}			
@@ -139,9 +141,10 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			dto.setId(pub.getId());
 			dto.setName(pub.getName());
 			dto.setCreator(pub.getCreator().getDisplayedName() + " " + sdf.format(pub.getCreationDate()));
-			dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName() + " " + sdf.format(pub.getUpdateDate()));		
+			dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName());		
 			dto.setVersion(pub.getVersion());
 			dto.setDescription(pub.getDescription());
+			dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
 			String content = pub.getWysiwyg();
 			//TODO : convert img url to data uri
 			// use jsoup
@@ -182,5 +185,13 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);			
 			throw new DocumentsException(e.getMessage());
 		}	
+	}
+
+	@Override
+	public List<Object> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
+		ArrayList list = new ArrayList();		
+		list.addAll(getTopics(instanceId, rootTopicId));
+		list.addAll(getPublications(instanceId, rootTopicId));
+		return list;
 	}
 }

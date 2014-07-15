@@ -11,6 +11,7 @@ import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 
 @RemoteServiceRelativePath("Documents")
 public interface ServiceDocuments extends RemoteService {		
+	public List<Object> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException;
 	public List<TopicDTO> getTopics(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException;
 	public List<PublicationDTO> getPublications(String instanceId, String topicId) throws DocumentsException, AuthenticationException;
 	public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException;

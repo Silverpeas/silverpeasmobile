@@ -1,25 +1,23 @@
 package com.silverpeas.mobile.client.apps.documents.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtmobile.ui.client.widgets.AccordionContent;
-import com.gwtmobile.ui.client.widgets.AccordionStack;
 import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
-import com.silverpeas.mobile.client.apps.documents.pages.widgets.AttachmentWidget;
+import com.silverpeas.mobile.client.apps.documents.pages.widgets.Attachment;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
-import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
@@ -29,35 +27,35 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 
 	private PublicationDTO publication;
 	
-	@UiField Label title, description, creator, updater, version;
+	@UiField HeadingElement title;
+	@UiField HTMLPanel container;
+	@UiField UnorderedList attachments;
+	@UiField ParagraphElement desc, lastUpdate;
+	/*@UiField Label title, description, creator, updater, version;
 	@UiField AccordionContent attachements, content;
-	@UiField AccordionStack attachementsStack;
+	@UiField AccordionStack attachementsStack;*/
 	
-	@UiField(provided = true) protected DocumentsMessages msg = null;
-	@UiField(provided = true) protected ApplicationMessages globalMsg = null;
-	@UiField(provided = true) protected DocumentsResources ressources = null;
+	protected DocumentsMessages msg = null;
+	/*@UiField(provided = true) protected ApplicationMessages globalMsg = null;
+	@UiField(provided = true) protected DocumentsResources ressources = null;*/
 	
 	interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
 	}
 
 	public PublicationPage() {
-		ressources = GWT.create(DocumentsResources.class);		
-		ressources.css().ensureInjected();
+		//ressources = GWT.create(DocumentsResources.class);		
+		//ressources.css().ensureInjected();
 		msg = GWT.create(DocumentsMessages.class);
-		globalMsg = GWT.create(ApplicationMessages.class);
+		//globalMsg = GWT.create(ApplicationMessages.class);*/
 		initWidget(uiBinder.createAndBindUi(this));
+		container.getElement().setId("publication");
+		attachments.getElement().setId("attachments");
 		EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);		
 	}
 
 	@Override
 	public void stop() {
 		EventBus.getInstance().removeHandler(AbstractPublicationPagesEvent.TYPE, this);	
-	}
-
-	@Override
-	public void goBack(Object returnValue) {
-		stop();
-		super.goBack(returnValue);
 	}
 
 	public void setPublicationId(String id) {
@@ -77,22 +75,15 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 	 * Refesh view informations.
 	 */
 	private void display() {
-		title.setText(publication.getName());
-		description.setText(publication.getDescription());
-		version.setText(publication.getVersion());
-		creator.setText(publication.getCreator());
-		updater.setText(publication.getUpdater());
+		title.setInnerHTML(publication.getName());
+		desc.setInnerHTML(publication.getDescription());		
+		lastUpdate.setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
 		
-		content.clear();
-		HTML html = new HTML(publication.getWysiwyg());
-		content.add(html);
-		
-		attachements.clear();
-		for (AttachmentDTO attachmentDTO : publication.getAttachments()) {
-			AttachmentWidget att = new AttachmentWidget();
-			att.setAttachment(attachmentDTO);
-			attachements.add(att);
+		for (AttachmentDTO attachment : publication.getAttachments()) {
+			Attachment a = new Attachment();
+			a.setAttachment(attachment);
+			attachments.add(a);
 		}
-		attachementsStack.expand();
+		
 	}
 }

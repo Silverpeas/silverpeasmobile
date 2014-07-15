@@ -9,7 +9,7 @@ public class ClickItemEvent extends AbstractNavigationPagesEvent {
 	
 	@Override
 	protected void dispatch(NavigationPagesEventHandler handler) {
-		//handler.clickItem(this);
+		handler.clickItem(this);
 	}
 
 	public ClickItemEvent(SilverpeasObjectDTO data) {

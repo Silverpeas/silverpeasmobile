@@ -36,7 +36,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 			if (rootSpaceId == null) {
 				List<String> spaceIds = getAdminBm().getAvailableSpaceIds(getUserInSession().getId());
 				for (String spaceId : spaceIds) {
-					SpaceInstLight space = getAdminBm().getSpaceInstLight(spaceId);
+					SpaceInstLight space = getAdminBm().getSpaceInstLight(spaceId);					
 					if (space.getFatherId().equals("0")) {
 						if (containApp(appType,space)) {
 							results.add(populate(space));	
@@ -88,6 +88,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 		SpaceDTO dto = new SpaceDTO();
 		dto.setId(space.getShortId());
 		dto.setLabel(space.getName());
+		dto.setPersonal(space.isPersonalSpace());
 		return dto;
 	}
 	
@@ -95,6 +96,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 		ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
 		dto.setId(app.getId());
 		dto.setLabel(app.getLabel());
+		dto.setType(app.getName());
 		return dto;
 	}
 	
