@@ -2,7 +2,6 @@ package com.silverpeas.mobile.client.common.navigation;
 
 import java.util.Stack;
 
-import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.components.base.PageContent;
 
@@ -28,7 +27,8 @@ public class PageHistory {
 	public void goBack(PageContent page) {
 		
 		while(!pages.isEmpty()) {
-			PageContent currentPage = pages.pop();			
+			PageContent currentPage = pages.pop();
+			page.stop();
 			if (currentPage.equals(page)) {
 				pages.push(currentPage);
 				SpMobil.mainPage.setContent(page);
@@ -40,6 +40,7 @@ public class PageHistory {
 	
 	public PageContent back() {		
 		PageContent page = pages.pop();
+		page.stop();		
 		page = pages.peek();
 		SpMobil.mainPage.setContent(page);
 		//TODO : css3 transition
@@ -57,7 +58,8 @@ public class PageHistory {
 
 	public void goToFirst() {
 		while(!pages.isEmpty()) {
-			PageContent currentPage = pages.pop();			
+			PageContent currentPage = pages.pop();
+			currentPage.stop();
 			if (pages.isEmpty()) {
 				pages.push(currentPage);
 				SpMobil.mainPage.setContent(currentPage);
@@ -67,14 +69,14 @@ public class PageHistory {
 	}
 	
 	public void clear() {
-		pages.clear();
+		while(!pages.isEmpty()) {
+			PageContent currentPage = pages.pop();
+			currentPage.stop();			
+		}		
 	}
 	
 	public boolean isVisible(PageContent page) {
-		PageContent currentPage = pages.peek();
-		//Window.alert(page.toString() + " == " + currentPage.toString() + (currentPage == page));
-		
-		
+		PageContent currentPage = pages.peek();		
 		return (currentPage == page);
 	}
 }

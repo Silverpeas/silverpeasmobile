@@ -50,11 +50,7 @@ public class PictureViewerPage extends PageContent implements View, PicturesView
 		EventBus.getInstance().fireEvent(new LoadRemotePreviewPictureEvent(galleryId, photoId));
 	}
 	
-	@Override
-	public void goBack(Object returnValue) {
-		stop();				
-		super.goBack(returnValue);
-	}
+
 
 	@Override
 	public void stop() {

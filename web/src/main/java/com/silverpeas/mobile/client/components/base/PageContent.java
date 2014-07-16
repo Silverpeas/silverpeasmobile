@@ -18,13 +18,9 @@ public class PageContent extends Composite implements View {
 	public void setPageTitle(String pageTitle) {
 		this.pageTitle = pageTitle;
 	}
-
-	public void goTo(PageContent page) {
-		PageHistory.getInstance().goTo(page);
-	}
 	
-	public void goBack(Object object) {
-		// TODO Auto-generated method stub		
+	public void show() {
+		PageHistory.getInstance().goTo(this);
 	}
 	
 	public boolean isVisible() { 

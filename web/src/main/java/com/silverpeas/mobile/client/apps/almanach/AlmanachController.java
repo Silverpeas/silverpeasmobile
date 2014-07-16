@@ -12,9 +12,9 @@ import com.silverpeas.mobile.client.apps.almanach.events.pages.AlmanachLoadedEve
 import com.silverpeas.mobile.client.apps.almanach.events.pages.AlmanachLoadedSettingsEvent;
 import com.silverpeas.mobile.client.apps.almanach.persistances.AlmanachSettings;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
-import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.Controller;

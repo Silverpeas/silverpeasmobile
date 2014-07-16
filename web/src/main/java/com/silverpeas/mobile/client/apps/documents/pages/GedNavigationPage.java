@@ -6,8 +6,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationEvent;
-import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadGedItemsEvent;
+import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
+import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.AbstractGedNavigationPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemClickEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedNavigationPagesEventHandler;
@@ -42,12 +42,6 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 	@Override
 	public void stop() {		
 		EventBus.getInstance().removeHandler(AbstractGedNavigationPagesEvent.TYPE, this);		
-	}
-	
-	@Override
-	public void goBack(Object returnValue) {
-		stop();		
-		super.goBack(returnValue);
 	}
 	
 	public void setTopicId(String rootTopicId) {
@@ -85,11 +79,11 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 				page.setPageTitle(getPageTitle());				
 				page.setInstanceId(instanceId);
 				page.setTopicId(((TopicDTO)event.getGedItem()).getId());
-				goTo(page);
+				page.show();
 			} else if (event.getGedItem() instanceof PublicationDTO) {
 				PublicationPage page = new PublicationPage();
 				page.setPageTitle("Publication");			
-				goTo(page);
+				page.show();
 				EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(((PublicationDTO) event.getGedItem()).getId()));
 			}		
 		}

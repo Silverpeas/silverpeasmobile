@@ -1,8 +1,5 @@
 package com.silverpeas.mobile.client.common.app;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.PageContent;
@@ -10,9 +7,7 @@ import com.silverpeas.mobile.client.components.base.PageContent;
 public abstract class App {
 
 	private PageContent mainPage;	
-	private Controller controller;
-	private List<View> pages = new ArrayList<View>();
-
+	
 	public void start() {		
 		if (SpMobil.currentApp != null) {			
 			// stop previous app
@@ -24,13 +19,7 @@ public abstract class App {
 	}
 
 	public void stop() {		
-		for (View page : pages) {
-			if (page != null) page.stop();			
-		}
-		pages.clear();	
-		setMainPage(null);		
-		getController().stop();
-		setController(null);
+		setMainPage(null);	
 	}
 
 	public PageContent getMainPage() {
@@ -38,19 +27,6 @@ public abstract class App {
 	}	
 
 	protected void setMainPage(PageContent mainPage) {
-		this.mainPage = mainPage;
-		this.pages.add(mainPage);
-	}
-	
-	protected void addPage(PageContent secondaryPage) {
-		this.pages.add(secondaryPage);
-	}
-
-	public Controller getController() {
-		return controller;
-	}
-
-	public void setController(Controller controller) {
-		this.controller = controller;
+		this.mainPage = mainPage;		
 	}
 }

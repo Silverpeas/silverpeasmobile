@@ -1,7 +1,7 @@
-package com.silverpeas.mobile.client.apps.documents.events.controller;
+package com.silverpeas.mobile.client.apps.documents.events.app;
 
 
-public class DocumentsLoadGedItemsEvent extends AbstractDocumentsControllerEvent {
+public class DocumentsLoadGedItemsEvent extends AbstractDocumentsAppEvent {
 	
 	private String rootTopicId, instanceId;
 	
@@ -12,7 +12,7 @@ public class DocumentsLoadGedItemsEvent extends AbstractDocumentsControllerEvent
 	}
 
 	@Override
-	protected void dispatch(DocumentsControllerEventHandler handler) {
+	protected void dispatch(DocumentsAppEventHandler handler) {
 		handler.loadTopics(this);
 	}
 

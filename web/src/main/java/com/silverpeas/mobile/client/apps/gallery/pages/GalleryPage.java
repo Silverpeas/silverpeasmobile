@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.event.SelectionChangedEvent;
-import com.gwtmobile.ui.client.page.Transition;
 import com.gwtmobile.ui.client.widgets.DropDownItem;
 import com.gwtmobile.ui.client.widgets.DropDownList;
 import com.gwtmobile.ui.client.widgets.HeaderPanel;
@@ -40,7 +39,6 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.base.PageContent;
-import com.silverpeas.mobile.client.components.icon.Icon;
 import com.silverpeas.mobile.client.components.upload.TakePicture;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
@@ -56,7 +54,7 @@ public class GalleryPage extends PageContent implements GalleryPagesEventHandler
 	@UiField(provided = true) protected GalleryMessages msg = null;
 	@UiField(provided = true) protected ApplicationMessages globalMsg = null;
 	@UiField(provided = true) protected GalleryResources ressources = null;
-	@UiField protected Icon local, sync, remote;
+	//@UiField protected Icon local, sync, remote;
 	@UiField protected TakePicture takePicture;
 	@UiField protected HeaderPanel header;
 	@UiField protected HorizontalPanel content;
@@ -83,7 +81,7 @@ public class GalleryPage extends PageContent implements GalleryPagesEventHandler
 		EventBus.getInstance().addHandler(AbstractGalleryPagesEvent.TYPE, this);
 		// load previous gallery and album selection
 		EventBus.getInstance().fireEvent(new GalleryLoadSettingsEvent());		
-		remote.setInactive(true);
+		//remote.setInactive(true);
 	
 	}	
 	
@@ -112,7 +110,7 @@ public class GalleryPage extends PageContent implements GalleryPagesEventHandler
 	 * Load local pictures.
 	 * @param e
 	 */
-	@UiHandler("local")
+	//@UiHandler("local")
 	void localPictures(ClickEvent e){
 		EventBus.getInstance().fireEvent(new LoadLocalPicturesEvent());
 	}
@@ -129,7 +127,7 @@ public class GalleryPage extends PageContent implements GalleryPagesEventHandler
 			final LocalPictureViewerPage picturePage = new LocalPictureViewerPage();
 			picturePage.setPictures(event.getPictures());
 			Notification.activityStop();
-			goTo(picturePage);
+			picturePage.show();
 		}
 	}
 	
@@ -137,7 +135,7 @@ public class GalleryPage extends PageContent implements GalleryPagesEventHandler
 	 * Send local pictures to server
 	 * @param e
 	 */
-	@UiHandler("sync")
+	//@UiHandler("sync")
 	void syncPictures(ClickEvent e) {
 		EventBus.getInstance().fireEvent(new SyncPicturesEvent(currentInstance.getId(), albums.getSelectedValue()));
 	}
@@ -179,13 +177,13 @@ public class GalleryPage extends PageContent implements GalleryPagesEventHandler
 	 * Browse remote galleries.
 	 * @param e
 	 */
-	@UiHandler("remote")
+	//@UiHandler("remote")
 	void remotePictures(ClickEvent e) {
 		final GalleryRemoteBrowser remoteBrowser = new GalleryRemoteBrowser();
 		remoteBrowser.setGalleryId(currentInstance.getId());
 		remoteBrowser.setAlbumId(albums.getSelectedValue());
 		remoteBrowser.init();
-		goTo(remoteBrowser);
+		remoteBrowser.show();
 	}
 
 	@Override
@@ -236,13 +234,6 @@ public class GalleryPage extends PageContent implements GalleryPagesEventHandler
 		albums.getListBox().setSelectedIndex(indexSelected);
 		// store instance gallery
 		this.currentInstance = appDTO;
-		remote.setInactive(false);
-	}
-	
-	@Override
-	public void goBack(Object returnValue) {
-		stop();
-		EventBus.getInstance().fireEvent(new GalleryStopEvent());		
-		super.goBack(returnValue);
+		//remote.setInactive(false);
 	}
 }

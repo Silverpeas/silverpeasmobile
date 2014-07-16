@@ -7,7 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.documents.events.controller.DocumentsLoadPublicationEvent;
+import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;

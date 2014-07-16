@@ -82,7 +82,7 @@ public class AlmanachPage extends PageContent implements AlmanachPagesEventHandl
 	@Override
 	public void onLoadEventDetailDTOLoaded(LoadEventDetailDTOEvent event) {
 		EventDetailDTOPage eventDetailDTOPage = new EventDetailDTOPage(event.getListEventDetailDTO());
-		goTo(eventDetailDTOPage);
+		eventDetailDTOPage.show();
 	}
 
 	@UiHandler("nextButton")

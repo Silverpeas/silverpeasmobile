@@ -10,7 +10,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.contacts.events.controller.ContactsLoadEvent;
+import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;

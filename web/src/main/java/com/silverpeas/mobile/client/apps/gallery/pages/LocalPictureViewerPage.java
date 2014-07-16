@@ -162,7 +162,7 @@ public class LocalPictureViewerPage extends PageContent implements View, LocalPi
 		
 		content.remove(currentSlide);
 		if (event.isNoMorePicture()) {
-			goBack(null);
+			//goBack(null);
 		} else {
 			content.next();
 		}
@@ -175,11 +175,7 @@ public class LocalPictureViewerPage extends PageContent implements View, LocalPi
 		EventBus.getInstance().removeHandler(AbstractLocalPicturesPageEvent.TYPE, this);
 	}
 	
-	@Override
-	public void goBack(Object returnValue) {
-		stop();				
-		super.goBack(returnValue);
-	}
+
 
 	/**
 	 * Refresh current picture position on picture change.

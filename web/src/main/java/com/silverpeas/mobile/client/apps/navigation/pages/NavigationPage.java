@@ -5,10 +5,9 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.controller.LoadSpacesAndAppsEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.AbstractNavigationPagesEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.ClickItemEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPagesEventHandler;
@@ -75,7 +74,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 				NavigationPage subPage = new NavigationPage();				
 				subPage.setPageTitle(this.getPageTitle());
 				subPage.setRootSpaceId(event.getData().getId());				
-				goTo(subPage);
+				subPage.show();
 			} else {
 				EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
 			}

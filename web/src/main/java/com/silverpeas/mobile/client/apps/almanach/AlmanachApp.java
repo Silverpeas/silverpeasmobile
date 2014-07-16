@@ -14,7 +14,7 @@ public class AlmanachApp extends App implements AlmanachEventHandler{
 	}
 	
 	public void start(){
-		setController(new AlmanachController());
+		//setController(new AlmanachController());
 		setMainPage(new AlmanachPage());
 		super.start();
 	}

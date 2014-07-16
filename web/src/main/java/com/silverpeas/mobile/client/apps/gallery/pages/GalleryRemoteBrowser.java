@@ -162,7 +162,7 @@ public class GalleryRemoteBrowser extends PageContent implements View, RemotePic
 							public void execute() {
 								PictureViewerPage viewer = new PictureViewerPage();
 								viewer.init(galleryId, ((Image)event.getSource()).getElement().getId());
-								goTo(viewer);
+								viewer.show();
 							}
 						});
 					}
@@ -203,11 +203,7 @@ public class GalleryRemoteBrowser extends PageContent implements View, RemotePic
 		}
 	}
 	
-	@Override
-	public void goBack(Object returnValue) {
-		stop();				
-		super.goBack(returnValue);
-	}
+
 
 	@Override
 	public void stop() {

@@ -1,6 +1,6 @@
-package com.silverpeas.mobile.client.apps.status.events.controller;
+package com.silverpeas.mobile.client.apps.status.events.app;
 
-public class StatusPostEvent extends AbstractStatusControllerEvent{
+public class StatusPostEvent extends AbstractStatusAppEvent{
 
 	private String postStatus;
 	
@@ -10,7 +10,7 @@ public class StatusPostEvent extends AbstractStatusControllerEvent{
 	}
 	
 	@Override
-	protected void dispatch(StatusControllerEventHandler handler) {
+	protected void dispatch(StatusAppEventHandler handler) {
 		handler.postStatus(this);
 	}
 	

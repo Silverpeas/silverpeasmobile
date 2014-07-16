@@ -28,9 +28,9 @@ import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.RemotePictu
 import com.silverpeas.mobile.client.apps.gallery.events.pages.remote.viewer.PictureViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.gallery.persistances.GallerySettings;
 import com.silverpeas.mobile.client.apps.gallery.persistances.Picture;
-import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationEventHandler;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
