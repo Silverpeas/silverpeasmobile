@@ -1,38 +1,23 @@
-@sprite .instances {
-	gwt-image: "instances";
-	border: none;
-}
-
-@sprite .topics {
-	gwt-image: "topics";
-	border: none;
-	margin-right: 0.5em;
-}
-
-.topicLabel {
-	margin-left: 1em;
-}
-
 @sprite .msword {
 	gwt-image: "msword";
-	border: none;
-	margin-right: 1em;
 }
 
 @sprite .msexcel {
-	gwt-image: "msexcel";
-	border: none;
-	margin-right: 1em;
+	gwt-image: "msexcel";	
+}
+
+@sprite .mspowerpoint {
+	gwt-image: "mspowerpoint";
 }
 
 @sprite .pdf {
-	gwt-image: "pdf";
-	border: none;
-	margin-right: 1em;
+	gwt-image: "pdf";	
+}
+
+@sprite .image {
+	gwt-image: "image";	
 }
 
 @sprite .unknown {
-	gwt-image: "unknown";
-	border: none;
-	margin-right: 1em;
+	gwt-image: "unknown";		
 }

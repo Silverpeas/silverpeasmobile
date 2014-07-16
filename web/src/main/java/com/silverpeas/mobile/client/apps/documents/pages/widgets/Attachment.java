@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 
@@ -23,6 +24,7 @@ public class Attachment extends Composite {
 	@UiField SpanElement size, name;
 	@UiField ImageElement icon;
 	
+	protected DocumentsResources ressources = null;
 	private boolean clicked = false;
 	private AttachmentDTO attachement;
 	
@@ -30,6 +32,8 @@ public class Attachment extends Composite {
 	}
 
 	public Attachment() {
+		ressources = GWT.create(DocumentsResources.class);		
+		ressources.css().ensureInjected();
 		initWidget(uiBinder.createAndBindUi(this));		
 	}
 
@@ -57,20 +61,22 @@ public class Attachment extends Composite {
 			size.setInnerHTML(attachement.getSize()/1024 + " Ko");	
 		} else {
 			size.setInnerHTML(attachement.getSize()/(1024*1024) + " Mo");
-		}
+		}		
 		name.setInnerHTML(attachement.getTitle());		
 		if (attachement.getType().contains("msword")) {
-			icon.setSrc("/silverpeas/util/icons/fileType/word.gif");			
+			icon.setClassName(ressources.css().msword());			
 		} else if (attachement.getType().contains("sheet")) {
-			icon.setSrc("/silverpeas/util/icons/fileType/excel.gif");
+			icon.setClassName(ressources.css().msexcel());
 		} else if (attachement.getType().contains("pdf")) {
-			icon.setSrc("/silverpeas/util/icons/fileType/pdf.gif");
-		} else if (attachement.getType().contains("image")) {
-			icon.setSrc("/silverpeas/util/icons/fileType/image.gif");
-		} else {
-			icon.setSrc("/silverpeas/util/icons/fileType/unknown.gif");			
-			//icon.setStylePrimaryName(ressources.css().unknown());
-			//TODO :other types
+			icon.setClassName(ressources.css().pdf());
+		} else if (attachement.getType().contains("image")) {			
+			icon.setClassName(ressources.css().image());
+		} else if (attachement.getType().contains("presentation")) {
+			icon.setClassName(ressources.css().mspowerpoint());
+		}
+		else {
+			//icon.setSrc("/silverpeas/util/icons/fileType/unknown.gif");			
+			icon.setClassName(ressources.css().unknown());
 		}		
 	}
 	

@@ -4,19 +4,7 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface DocumentsMessages extends Messages {
 	String title();
-	String currentInstance();
-	String viewTopic();
-	String titleECMBrowser();
-	
-	
+		
 	// Publication page
-	String header();
-	String attachments();
-	String description();
-	String version();
-	String creator();
-	String updater();
-	String downloadError();
-	String content();
 	String lastUpdate(String updateDate, String updater);
 }

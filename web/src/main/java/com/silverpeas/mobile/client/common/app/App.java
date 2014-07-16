@@ -14,19 +14,19 @@ public abstract class App {
 	private List<View> pages = new ArrayList<View>();
 
 	public void start(PageContent lauchingPage) {		
-		if (SpMobil.currentApp != null) {
+		if (SpMobil.currentApp != null) {			
 			// stop previous app
 			SpMobil.currentApp.stop(); 
-		}
+		}		
 		SpMobil.currentApp = this;
 		// display first app page
 		this.lauchingPage = lauchingPage;
 		lauchingPage.goTo(mainPage); 
 	}
 
-	public void stop() {				
+	public void stop() {		
 		for (View page : pages) {
-			page.stop();			
+			if (page != null) page.stop();			
 		}
 		pages.clear();	
 		setMainPage(null);		

@@ -7,22 +7,22 @@ public interface DocumentsResources extends ClientBundle {
 	
 	@Source("documents.css")
 	DocumentsCSS css();
-	
-	@Source("instances.png")
-	ImageResource instances();
-
-	@Source("topics.png")
-	ImageResource topics();
-	
-	@Source("msword.png")
+		
+	@Source("word.gif")
 	ImageResource msword();
 	
-	@Source("msexcel.png")	
+	@Source("excel.gif")	
 	ImageResource msexcel();
 	
-	@Source("pdf.png")
+	@Source("powerpoint.gif")	
+	ImageResource mspowerpoint();
+
+	@Source("image.gif")
+	ImageResource image();
+	
+	@Source("pdf.gif")
 	ImageResource pdf();
 	
-	@Source("unknown.png")
+	@Source("unknown.gif")
 	ImageResource unknown();
 }

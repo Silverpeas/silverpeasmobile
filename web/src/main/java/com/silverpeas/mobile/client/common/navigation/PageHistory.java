@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.common.navigation;
 
 import java.util.Stack;
 
+import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.components.base.PageContent;
 
@@ -56,7 +57,7 @@ public class PageHistory {
 
 	public void goToFirst() {
 		while(!pages.isEmpty()) {
-			PageContent currentPage = pages.pop();
+			PageContent currentPage = pages.pop();			
 			if (pages.isEmpty()) {
 				pages.push(currentPage);
 				SpMobil.mainPage.setContent(currentPage);
@@ -71,6 +72,9 @@ public class PageHistory {
 	
 	public boolean isVisible(PageContent page) {
 		PageContent currentPage = pages.peek();
+		//Window.alert(page.toString() + " == " + currentPage.toString() + (currentPage == page));
+		
+		
 		return (currentPage == page);
 	}
 }

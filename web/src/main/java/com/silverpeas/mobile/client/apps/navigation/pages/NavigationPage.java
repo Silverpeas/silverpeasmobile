@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.controller.LoadSpacesAndAppsEvent;
@@ -69,7 +70,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 
 	@Override
 	public void clickItem(ClickItemEvent event) {		
-		if (isVisible()) {	
+		if (isVisible()) {			
 			if (event.getData() instanceof SpaceDTO) {			
 				NavigationPage subPage = new NavigationPage();				
 				subPage.setPageTitle(this.getPageTitle());
