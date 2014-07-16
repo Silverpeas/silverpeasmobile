@@ -124,7 +124,7 @@ public class AlmanachPage extends PageContent implements AlmanachPagesEventHandl
 		NavigationApp app = new NavigationApp();
 		app.setTypeApp(Apps.almanach.name());
 		app.setTitle("Almanach Browser");
-		app.start(this);
+		app.start();
 	}
 	
 	private void displayAlmanach() {

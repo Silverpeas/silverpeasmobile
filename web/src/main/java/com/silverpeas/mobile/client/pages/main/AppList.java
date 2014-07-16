@@ -38,25 +38,25 @@ public class AppList extends PageContent {
 	@UiHandler("statut")
 	void status(ClickEvent e) {
 		App app = new StatusApp();
-		app.start(this);
+		app.start();
 	}
 	
 	@UiHandler("contact")
 	void contacts(ClickEvent e) {
 		App app = new ContactsApp();
-		app.start(this);
+		app.start();
 	}
 	
 	@UiHandler("media")
 	void gallery(ClickEvent e) {
 		App app = new GalleryApp();
-		app.start(this);
+		app.start();
 	}
 	
 	@UiHandler("document")
 	void documents(ClickEvent e) {		
 		App app = new DocumentsApp();
-		app.start(this);
+		app.start();
 	}
 
 }

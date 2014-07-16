@@ -6,7 +6,6 @@ import com.silverpeas.mobile.client.apps.almanach.events.app.internal.AlmanachSt
 import com.silverpeas.mobile.client.apps.almanach.pages.AlmanachPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
-import com.silverpeas.mobile.client.components.base.PageContent;
 
 public class AlmanachApp extends App implements AlmanachEventHandler{
 	public AlmanachApp(){
@@ -14,10 +13,10 @@ public class AlmanachApp extends App implements AlmanachEventHandler{
 		EventBus.getInstance().addHandler(AbstractAlmanachEvent.TYPE, this);
 	}
 	
-	public void start(PageContent lauchingPage){
+	public void start(){
 		setController(new AlmanachController());
 		setMainPage(new AlmanachPage());
-		super.start(lauchingPage);
+		super.start();
 	}
 	
 	@Override

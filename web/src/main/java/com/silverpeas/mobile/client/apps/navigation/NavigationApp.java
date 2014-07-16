@@ -2,7 +2,6 @@ package com.silverpeas.mobile.client.apps.navigation;
 
 import com.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import com.silverpeas.mobile.client.common.app.App;
-import com.silverpeas.mobile.client.components.base.PageContent;
 
 public class NavigationApp extends App {
 
@@ -13,7 +12,7 @@ public class NavigationApp extends App {
 	}
 
 	@Override
-	public void start(PageContent lauchingPage) {
+	public void start() {
 		setController(new NavigationController(type));
 		NavigationPage mainPage = new NavigationPage();
 		mainPage.setPageTitle(title);

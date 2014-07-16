@@ -4,24 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.silverpeas.mobile.client.SpMobil;
+import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.PageContent;
 
 public abstract class App {
 
-	private PageContent mainPage;
-	private PageContent lauchingPage;
+	private PageContent mainPage;	
 	private Controller controller;
 	private List<View> pages = new ArrayList<View>();
 
-	public void start(PageContent lauchingPage) {		
+	public void start() {		
 		if (SpMobil.currentApp != null) {			
 			// stop previous app
 			SpMobil.currentApp.stop(); 
 		}		
 		SpMobil.currentApp = this;
 		// display first app page
-		this.lauchingPage = lauchingPage;
-		lauchingPage.goTo(mainPage); 
+		PageHistory.getInstance().goTo(mainPage);
 	}
 
 	public void stop() {		
@@ -45,14 +44,6 @@ public abstract class App {
 	
 	protected void addPage(PageContent secondaryPage) {
 		this.pages.add(secondaryPage);
-	}
-
-	public PageContent getLauchingPage() {
-		return lauchingPage;
-	}
-
-	public void setLauchingPage(PageContent lauchingPage) {
-		this.lauchingPage = lauchingPage;
 	}
 
 	public Controller getController() {

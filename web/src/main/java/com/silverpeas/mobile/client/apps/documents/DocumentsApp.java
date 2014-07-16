@@ -24,17 +24,17 @@ public class DocumentsApp extends App implements NavigationEventHandler {
 	}
 	
 	@Override
-	public void start(PageContent lauchingPage) {
+	public void start() {
 		setController(new DocumentsController());	
 		
 		navApp.setTypeApp(Apps.kmelia.name());
 		navApp.setTitle(msg.title());
-		navApp.start(lauchingPage);
+		navApp.start();
 		
 		// app main is navigation app main page
 		setMainPage(navApp.getMainPage());
 		
-		super.start(lauchingPage);
+		super.start();
 	}
 
 	@Override
@@ -50,6 +50,7 @@ public class DocumentsApp extends App implements NavigationEventHandler {
 		page.setPageTitle(msg.title());				
 		page.setInstanceId(event.getInstance().getId());
 		page.setTopicId(null);
+		addPage(page);
 		getMainPage().goTo(page);		
 	}
 

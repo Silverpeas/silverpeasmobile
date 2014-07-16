@@ -16,10 +16,10 @@ public class GalleryApp extends App implements GalleryEventHandler {
 	}
 
 	@Override
-	public void start(PageContent lauchingPage) {
+	public void start() {
 		setController(new GalleryController());
 		setMainPage(new GalleryPage());
-		super.start(lauchingPage);
+		super.start();
 	}
 
 	@Override
