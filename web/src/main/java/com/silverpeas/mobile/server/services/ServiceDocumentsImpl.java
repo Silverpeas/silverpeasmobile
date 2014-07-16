@@ -152,9 +152,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			dto.setWysiwyg(content);
 						
 			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();						
-			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");			
+			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");		
 			
-			List<SimpleDocument> pubAttachments = AttachmentServiceFactory.getAttachmentService(). listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, "fr"); // TODO manager langue
+			List<SimpleDocument> pubAttachments = AttachmentServiceFactory.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, "fr"); // TODO manager langue
 						
 			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 			
