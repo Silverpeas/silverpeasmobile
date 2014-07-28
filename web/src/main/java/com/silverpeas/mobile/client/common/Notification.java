@@ -1,17 +1,14 @@
 package com.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.silverpeas.mobile.client.resources.ApplicationResources;
 
 
 public class Notification {
-	
-	private static ApplicationResources res =  GWT.create(ApplicationResources.class);
+		
 
 	public static void activityStart() {
 		RootPanel.getBodyElement().getStyle().setProperty("cursor", "wait");
@@ -27,8 +24,7 @@ public class Notification {
 		popup.add(new HTML("<SPAN>"+message+"</SPAN>"));
 		popup.setGlassEnabled(true);
 		popup.setWidth(Window.getClientWidth() - 30 +"px");
-		popup.setHeight(Window.getClientWidth() /2 + "px");    		
-		popup.setStylePrimaryName(res.css().popup());    		
+		popup.setHeight(Window.getClientWidth() /2 + "px");
 		popup.center();    	
     }
     

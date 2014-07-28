@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.client.components.upload;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -18,21 +17,20 @@ import com.gwtmobile.ui.client.widgets.VerticalPanel;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.TakePictureEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.file.FileMgr;
-import com.silverpeas.mobile.client.common.file.FileMgr.*;
-import com.silverpeas.mobile.client.resources.ApplicationResources;
+import com.silverpeas.mobile.client.common.file.FileMgr.EventCallback;
+import com.silverpeas.mobile.client.common.file.FileMgr.File;
+import com.silverpeas.mobile.client.common.file.FileMgr.FileReader;
 
 public class TakePicture extends Composite implements HasText, HasChangeHandlers, ChangeHandler {	
 	private ChangeHandler handler = null;
-	private FileUpload file = null;
-	private ApplicationResources res =  GWT.create(ApplicationResources.class);
+	private FileUpload file = null;	
 	private Label label = new Label();
 	
 	@UiConstructor
 	public TakePicture(ImageResource icon) {
 		super();
 		VerticalPanel grid = new VerticalPanel();
-		label.setHorizontalAlignment(Label.ALIGN_CENTER);
-		grid.setSecondaryStyle(res.css().icon());
+		label.setHorizontalAlignment(Label.ALIGN_CENTER);		
 		
 		SimplePanel widget = new SimplePanel();		
 		widget.getElement().getStyle().setWidth(icon.getWidth(), Unit.PX);

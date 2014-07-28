@@ -28,7 +28,6 @@ import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.pages.main.AppList;
 import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 
@@ -37,8 +36,7 @@ public class ConnexionPage extends PageContent {
 
 	private static ConnexionPageUiBinder uiBinder = GWT.create(ConnexionPageUiBinder.class);
 
-	@UiField(provided = true) protected ApplicationMessages msg = null;
-	@UiField(provided = true) protected ApplicationResources res = null;
+	@UiField(provided = true) protected ApplicationMessages msg = null;	
 	@UiField Anchor go;
 	@UiField TextBox loginField;
 	@UiField PasswordTextBox passwordField;
@@ -47,9 +45,7 @@ public class ConnexionPage extends PageContent {
 	interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {
 	}
 
-	public ConnexionPage() {
-		res = GWT.create(ApplicationResources.class);		
-		res.css().ensureInjected();
+	public ConnexionPage() {		
 		msg = GWT.create(ApplicationMessages.class);
 		loadDomains();						
 		initWidget(uiBinder.createAndBindUi(this));

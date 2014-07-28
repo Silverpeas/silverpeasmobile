@@ -9,27 +9,22 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
-import com.silverpeas.mobile.client.apps.gallery.GalleryApp;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.client.resources.ApplicationResources;
 
 public class AppList extends PageContent {
 
 	private static AppListUiBinder uiBinder = GWT.create(AppListUiBinder.class);
 
-	@UiField(provided = true) protected ApplicationMessages msg = null;
-	@UiField(provided = true) protected ApplicationResources res = null;
+	@UiField(provided = true) protected ApplicationMessages msg = null;	
 	@UiField protected Anchor statut, contact, document, media;
 	
 	interface AppListUiBinder extends UiBinder<Widget, AppList> {
 	}
 
-	public AppList() {
-		res = GWT.create(ApplicationResources.class);		
-		res.css().ensureInjected();
+	public AppList() {		
 		msg = GWT.create(ApplicationMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
 	}

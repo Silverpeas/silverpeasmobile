@@ -1,8 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	
-	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
-	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
+	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>	
 	
 	<g:HTMLPanel>
 		<ul id="menu-principal">
