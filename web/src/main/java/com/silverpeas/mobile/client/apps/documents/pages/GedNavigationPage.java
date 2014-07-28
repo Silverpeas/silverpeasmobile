@@ -46,7 +46,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 	
 	public void setTopicId(String rootTopicId) {
 		Notification.activityStart();
-		this.rootTopicId = rootTopicId;
+		this.setRootTopicId(rootTopicId);
 		EventBus.getInstance().fireEvent(new DocumentsLoadGedItemsEvent(instanceId, rootTopicId));
 	}
 	
@@ -87,5 +87,13 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 				EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(((PublicationDTO) event.getGedItem()).getId()));
 			}		
 		}
+	}
+
+	public String getRootTopicId() {
+		return rootTopicId;
+	}
+
+	public void setRootTopicId(String rootTopicId) {
+		this.rootTopicId = rootTopicId;
 	}
 }

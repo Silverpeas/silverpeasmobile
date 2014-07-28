@@ -12,6 +12,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.Notification;
@@ -57,6 +58,7 @@ public class Attachment extends Composite {
 	}
 	
 	private void render() {
+		Image img = null;
 		if (attachement.getSize() < 1024*1024) {
 			size.setInnerHTML(attachement.getSize()/1024 + " Ko");	
 		} else {
@@ -64,20 +66,20 @@ public class Attachment extends Composite {
 		}		
 		name.setInnerHTML(attachement.getTitle());		
 		if (attachement.getType().contains("msword")) {
-			icon.setClassName(ressources.css().msword());			
+			img = new Image(ressources.msword());
 		} else if (attachement.getType().contains("sheet")) {
-			icon.setClassName(ressources.css().msexcel());
-		} else if (attachement.getType().contains("pdf")) {
-			icon.setClassName(ressources.css().pdf());
+			img = new Image(ressources.msexcel());
+		} else if (attachement.getType().contains("pdf")) {			
+			img = new Image(ressources.pdf());
 		} else if (attachement.getType().contains("image")) {			
-			icon.setClassName(ressources.css().image());
-		} else if (attachement.getType().contains("presentation")) {
-			icon.setClassName(ressources.css().mspowerpoint());
+			img = new Image(ressources.image());
+		} else if (attachement.getType().contains("presentation")) {			
+			img = new Image(ressources.mspowerpoint());			
 		}
 		else {
-			//icon.setSrc("/silverpeas/util/icons/fileType/unknown.gif");			
-			icon.setClassName(ressources.css().unknown());
-		}		
+			img = new Image(ressources.unknown());			
+		}	
+		icon.getParentElement().replaceChild(img.getElement(), icon);
 	}
 	
 	private void clickAction() {
