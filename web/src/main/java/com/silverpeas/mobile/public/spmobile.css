@@ -784,3 +784,42 @@ textarea.ui-input-text {
 	content: "";
 	display: table;
 }
+
+/*********** LOGIN ***************/
+#header #page-login-title {
+	left:1em; 
+	right:1em;
+}
+#page-login {
+	background-color:transparent;
+}
+#formLogin {
+	text-align:center
+}
+#page-login #Login, #page-login #Password{
+	background:#FFF url(bg-input-login.png) 0 0 no-repeat;
+	padding-left:24px;
+	border:1px solid #dddddd;
+	width:150px;
+	margin:0 0 1em 0;
+}
+#page-login #Password{
+	background:#FFF url(bg-input-password.png) 0 0 no-repeat;
+}
+
+#page-login #DomainId {
+	width:176px;
+}
+#page-login  #copyright  {
+	position:fixed;
+	bottom:1em;
+	text-align:center;
+	width:100%
+}
+
+#page-login  .btn-validate, 
+#page-login  .btn-validate:visited {
+	padding:0.5em 0;
+	width:174px;
+	margin:1em 0 0
+}

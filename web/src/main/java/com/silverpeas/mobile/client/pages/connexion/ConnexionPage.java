@@ -53,6 +53,9 @@ public class ConnexionPage extends PageContent {
 		msg = GWT.create(ApplicationMessages.class);
 		loadDomains();						
 		initWidget(uiBinder.createAndBindUi(this));
+		loginField.getElement().setId("Login");
+		passwordField.getElement().setId("Password");
+		domains.getElement().setId("DomainId");
 	}
 
 	/**
