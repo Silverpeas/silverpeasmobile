@@ -49,8 +49,9 @@ public class AppList extends PageContent {
 	
 	@UiHandler("media")
 	void gallery(ClickEvent e) {
-		App app = new GalleryApp();
-		app.start();
+		//App app = new GalleryApp();
+		//app.start();
+		//TODO : refactore
 	}
 	
 	@UiHandler("document")
