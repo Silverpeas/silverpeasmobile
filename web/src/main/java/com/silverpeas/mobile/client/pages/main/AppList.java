@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
+import com.silverpeas.mobile.client.apps.gallery.GalleryApp;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.components.base.PageContent;
@@ -44,9 +45,8 @@ public class AppList extends PageContent {
 	
 	@UiHandler("media")
 	void gallery(ClickEvent e) {
-		//App app = new GalleryApp();
-		//app.start();
-		//TODO : refactore
+		App app = new GalleryApp();
+		app.start();	
 	}
 	
 	@UiHandler("document")

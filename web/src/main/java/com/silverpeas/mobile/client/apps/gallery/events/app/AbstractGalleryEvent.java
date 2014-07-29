@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.client.apps.gallery.events.app.internal;
+package com.silverpeas.mobile.client.apps.gallery.events.app;
 
 import com.google.gwt.event.shared.GwtEvent;
 

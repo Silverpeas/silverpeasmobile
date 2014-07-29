@@ -18,7 +18,6 @@ import com.gwtmobile.ui.client.widgets.DropDownList;
 import com.gwtmobile.ui.client.widgets.HeaderPanel;
 import com.gwtmobile.ui.client.widgets.HorizontalPanel;
 import com.gwtmobile.ui.client.widgets.ListPanel;
-import com.silverpeas.mobile.client.apps.gallery.events.app.internal.GalleryStopEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GalleryLoadSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.GallerySaveSettingsEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.controller.LoadLocalPicturesEvent;
