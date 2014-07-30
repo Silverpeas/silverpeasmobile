@@ -40,7 +40,8 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 	}
 
 	@Override
-	public void stop() {		
+	public void stop() {	
+		super.stop();
 		EventBus.getInstance().removeHandler(AbstractGedNavigationPagesEvent.TYPE, this);		
 	}
 	

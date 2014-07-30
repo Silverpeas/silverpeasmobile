@@ -8,11 +8,13 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.silverpeas.mobile.client.SpMobil;
+import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 
 public class PageContent extends Composite implements View, NativePreviewHandler {
 
+	private App app;
 	protected boolean clicked = false;
 	protected String pageTitle = "Silverpeas";
 
@@ -56,6 +58,7 @@ public class PageContent extends Composite implements View, NativePreviewHandler
 
 	@Override
 	public void stop() {
+		if (app != null) app.stop();
 	}
 
 	@Override
@@ -70,5 +73,13 @@ public class PageContent extends Composite implements View, NativePreviewHandler
 	        }			
 			SpMobil.mainPage.closeMenu();
 		}
+	}
+
+	public App getApp() {
+		return app;
+	}
+
+	public void setApp(App app) {
+		this.app = app;
 	}
 }

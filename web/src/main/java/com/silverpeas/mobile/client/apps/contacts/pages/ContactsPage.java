@@ -47,6 +47,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 
 	@Override
 	public void stop() {
+		super.stop();
 		EventBus.getInstance().removeHandler(AbstractContactsPagesEvent.TYPE, this);
 	}
 	

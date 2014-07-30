@@ -48,7 +48,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 	}
 
 	@Override
-	public void stop() {		
+	public void stop() {
 		EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
 		EventBus.getInstance().removeHandler(AbstractDocumentsAppEvent.TYPE, this);
 		navApp.stop();
@@ -56,7 +56,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 	}
 	
 	@Override
-	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {		
+	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
 		GedNavigationPage page = new GedNavigationPage();
 		page.setPageTitle(msg.title());				
 		page.setInstanceId(event.getInstance().getId());

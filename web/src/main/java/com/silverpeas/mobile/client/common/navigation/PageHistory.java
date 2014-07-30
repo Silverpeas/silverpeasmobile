@@ -20,8 +20,7 @@ public class PageHistory implements ValueChangeHandler<String> {
 	public static PageHistory getInstance() {
 		if (instance == null) {
 			instance = new PageHistory();			
-			History.addValueChangeHandler(instance);			
-			History.fireCurrentHistoryState();			
+			History.addValueChangeHandler(instance);
 		}
 		return instance;
 	}
@@ -55,11 +54,11 @@ public class PageHistory implements ValueChangeHandler<String> {
 
 	public void goBackToFirst() {
 		while(!pages.isEmpty()) {
-			PageContent currentPage = pages.pop();
-			browserBack();
+			PageContent currentPage = pages.pop();						
 			if (pages.isEmpty()) {
 				pages.push(currentPage);
 				SpMobil.mainPage.setContent(currentPage);
+				browserGoto(""+currentPage.hashCode());				
 				break;
 			} else {
 				currentPage.stop();				
@@ -111,9 +110,9 @@ public class PageHistory implements ValueChangeHandler<String> {
 		}
 		return false;
 	}
-	
+		
 	private void browserBack() {
-		noHistoryEvent = true;
+		noHistoryEvent = true;		
 		History.back();
 	}
 	
@@ -123,7 +122,7 @@ public class PageHistory implements ValueChangeHandler<String> {
 	}
 	
 	@Override
-	public void onValueChange(ValueChangeEvent<String> event) {		
+	public void onValueChange(ValueChangeEvent<String> event) {	
 		if (!noHistoryEvent) {
 			back(event.getValue());
 		}

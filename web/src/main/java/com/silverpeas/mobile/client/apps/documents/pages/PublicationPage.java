@@ -46,6 +46,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 
 	@Override
 	public void stop() {
+		super.stop();
 		EventBus.getInstance().removeHandler(AbstractPublicationPagesEvent.TYPE, this);	
 	}
 

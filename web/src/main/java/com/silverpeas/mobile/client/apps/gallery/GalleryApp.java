@@ -26,10 +26,10 @@ public class GalleryApp extends App implements NavigationEventHandler, GalleryEv
 	}
 
 	@Override
-	public void start() {
-		
+	public void start() {			
 		navApp.setTypeApp(Apps.gallery.name());
 		navApp.setTitle(msg.title());
+		
 		navApp.start();
 		
 		// app main is navigation app main page
@@ -42,7 +42,7 @@ public class GalleryApp extends App implements NavigationEventHandler, GalleryEv
 	public void stop() {
 		EventBus.getInstance().removeHandler(AbstractGalleryEvent.TYPE, this);
 		EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
-		navApp.stop();		
+		navApp.stop();
 		super.stop();		
 	}
 

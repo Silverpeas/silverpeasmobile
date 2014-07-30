@@ -64,6 +64,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 
 	@Override
 	public void stop() {
+		super.stop();
 		EventBus.getInstance().removeHandler(AbstractNavigationPagesEvent.TYPE, this);
 	}
 
