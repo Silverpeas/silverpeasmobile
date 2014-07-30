@@ -28,6 +28,7 @@ public class PageHeader extends Composite {
 	public PageHeader() {
 		initWidget(uiBinder.createAndBindUi(this));
 		header.getElement().setId("header");
+		menu.getElement().setId("menu");
 	}
 	
 	

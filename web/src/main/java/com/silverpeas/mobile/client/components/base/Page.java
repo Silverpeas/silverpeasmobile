@@ -22,7 +22,7 @@ public class Page extends Composite {
 	protected PageContent content;
 
 	public Page() {
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(uiBinder.createAndBindUi(this));		
 	}
 	
 	public void setContent(PageContent content) {
@@ -36,8 +36,11 @@ public class Page extends Composite {
 		menu.toogleMenu();
 	}
 	
+	public void closeMenu() {
+		menu.closeMenu();
+	}
+	
 	public void setUser(DetailUserDTO user) {
 		menu.setUser(user);
 	}
-
 }
