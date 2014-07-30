@@ -2,7 +2,10 @@ package com.silverpeas.mobile.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
@@ -20,7 +23,7 @@ import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
-public class SpMobil implements EntryPoint{
+public class SpMobil implements EntryPoint, ValueChangeHandler<String> {
 		
 	public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
 	public final static Page mainPage = new Page();
@@ -34,6 +37,10 @@ public class SpMobil implements EntryPoint{
 				
 		EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
 		loadIds();	
+		
+		History.addValueChangeHandler(this);
+		
+		History.fireCurrentHistoryState();
 	}
 	
 	/**
@@ -108,6 +115,11 @@ public class SpMobil implements EntryPoint{
 			EventBus.getInstance().fireEvent(new ErrorEvent(e));
 		}
 		return plainPassword;
+	}
+
+	@Override
+	public void onValueChange(ValueChangeEvent<String> event) {
+		PageHistory.getInstance().back(event.getValue());
 	}
 	
 }

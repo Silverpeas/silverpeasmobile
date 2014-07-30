@@ -56,7 +56,7 @@ public class NavigationMenu extends Composite {
 	
 	@UiHandler("home")
 	protected void goHome(ClickEvent event) {		
-		PageHistory.getInstance().goToFirst();
+		PageHistory.getInstance().goBackToFirst();
 		closeMenu();
 	}
 	
