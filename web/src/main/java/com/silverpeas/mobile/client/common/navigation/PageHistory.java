@@ -3,20 +3,25 @@ package com.silverpeas.mobile.client.common.navigation;
 import java.util.Iterator;
 import java.util.Stack;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.components.base.PageContent;
 
-public class PageHistory {
+public class PageHistory implements ValueChangeHandler<String> {
 	
 	private static PageHistory instance = null;
+	private boolean noHistoryEvent = false;
 	
 	private Stack<PageContent> pages = new Stack<PageContent>();
 	private String firstToken = "";
 	
 	public static PageHistory getInstance() {
 		if (instance == null) {
-			instance = new PageHistory();
+			instance = new PageHistory();			
+			History.addValueChangeHandler(instance);			
+			History.fireCurrentHistoryState();			
 		}
 		return instance;
 	}
@@ -25,16 +30,16 @@ public class PageHistory {
 		if (pages.isEmpty()) firstToken = "" + page.hashCode();
 		pages.push(page);
 		SpMobil.mainPage.setContent(page);
-		History.newItem(""+page.hashCode());
+		browserGoto(""+page.hashCode());
 		//TODO : TODO : css3 transition
 	}
 	
 	public PageContent back() {		
 		PageContent page = pages.pop();
-		page.stop();		
+		page.stop();
 		page = pages.peek();
 		SpMobil.mainPage.setContent(page);
-		History.back();
+		browserBack();
 		//TODO : css3 transition
 		
 		return page;
@@ -51,7 +56,7 @@ public class PageHistory {
 	public void goBackToFirst() {
 		while(!pages.isEmpty()) {
 			PageContent currentPage = pages.pop();
-			History.back();
+			browserBack();
 			if (pages.isEmpty()) {
 				pages.push(currentPage);
 				SpMobil.mainPage.setContent(currentPage);
@@ -74,11 +79,11 @@ public class PageHistory {
 		return (currentPage == page);
 	}
 	
-	public boolean back(String token) {	
+	private void back(String token) {	
 		boolean back = false;
 		if (token.isEmpty()) {			
 			// prevent exit
-			History.newItem(firstToken);			
+			browserGoto(firstToken);			
 		} else {
 			back = isBackAction(token);
 			if (back) {			
@@ -87,9 +92,8 @@ public class PageHistory {
 				page = pages.peek();
 				SpMobil.mainPage.setContent(page);			
 			}
-		}		
-		return back;
-	}	
+		}
+	}
 	
 	private boolean isBackAction(String token) {
 		if (!pages.isEmpty()) {
@@ -106,5 +110,23 @@ public class PageHistory {
 			}
 		}
 		return false;
+	}
+	
+	private void browserBack() {
+		noHistoryEvent = true;
+		History.back();
+	}
+	
+	private void browserGoto(String token) {
+		noHistoryEvent = true;
+		History.newItem(token);
+	}
+	
+	@Override
+	public void onValueChange(ValueChangeEvent<String> event) {		
+		if (!noHistoryEvent) {
+			back(event.getValue());
+		}
+		noHistoryEvent = false;
 	}
 }

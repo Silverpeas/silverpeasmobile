@@ -25,28 +25,19 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 
 	private static PublicationPageUiBinder uiBinder = GWT.create(PublicationPageUiBinder.class);
 
+	protected DocumentsMessages msg = null;
 	private PublicationDTO publication;
 	
 	@UiField HeadingElement title;
 	@UiField HTMLPanel container;
 	@UiField UnorderedList attachments;
 	@UiField ParagraphElement desc, lastUpdate;
-	/*@UiField Label title, description, creator, updater, version;
-	@UiField AccordionContent attachements, content;
-	@UiField AccordionStack attachementsStack;*/
-	
-	protected DocumentsMessages msg = null;
-	/*@UiField(provided = true) protected ApplicationMessages globalMsg = null;
-	@UiField(provided = true) protected DocumentsResources ressources = null;*/
-	
+		
 	interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
 	}
 
-	public PublicationPage() {
-		//ressources = GWT.create(DocumentsResources.class);		
-		//ressources.css().ensureInjected();
+	public PublicationPage() {		
 		msg = GWT.create(DocumentsMessages.class);
-		//globalMsg = GWT.create(ApplicationMessages.class);*/
 		initWidget(uiBinder.createAndBindUi(this));
 		container.getElement().setId("publication");
 		attachments.getElement().setId("attachments");

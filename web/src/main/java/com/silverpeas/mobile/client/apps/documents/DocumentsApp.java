@@ -48,7 +48,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 	}
 
 	@Override
-	public void stop() {
+	public void stop() {		
 		EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
 		EventBus.getInstance().removeHandler(AbstractDocumentsAppEvent.TYPE, this);
 		navApp.stop();

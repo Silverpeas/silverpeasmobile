@@ -1,7 +1,10 @@
 package com.silverpeas.mobile.client.apps.gallery;
 
+import com.google.gwt.core.client.GWT;
 import com.silverpeas.mobile.client.apps.gallery.events.app.AbstractGalleryEvent;
 import com.silverpeas.mobile.client.apps.gallery.events.app.GalleryEventHandler;
+import com.silverpeas.mobile.client.apps.gallery.pages.MediaNavigationPage;
+import com.silverpeas.mobile.client.apps.gallery.resources.GalleryMessages;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -12,10 +15,12 @@ import com.silverpeas.mobile.client.common.app.App;
 
 public class GalleryApp extends App implements NavigationEventHandler, GalleryEventHandler {
 	
+	private GalleryMessages msg;
 	private NavigationApp navApp = new NavigationApp();
 	
 	public GalleryApp() {
 		super();
+		msg = GWT.create(GalleryMessages.class);
 		EventBus.getInstance().addHandler(AbstractGalleryEvent.TYPE, this);
 		EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
 	}
@@ -24,7 +29,7 @@ public class GalleryApp extends App implements NavigationEventHandler, GalleryEv
 	public void start() {
 		
 		navApp.setTypeApp(Apps.gallery.name());
-		navApp.setTitle("Media");
+		navApp.setTitle(msg.title());
 		navApp.start();
 		
 		// app main is navigation app main page
@@ -43,7 +48,11 @@ public class GalleryApp extends App implements NavigationEventHandler, GalleryEv
 
 	@Override
 	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-		// TODO Auto-generated method stub
+		MediaNavigationPage page = new MediaNavigationPage();
+		page.setPageTitle(msg.title());				
+		page.setInstanceId(event.getInstance().getId());
+		page.setAlbumId(null);
+		page.show();	
 		
 	}
 }
