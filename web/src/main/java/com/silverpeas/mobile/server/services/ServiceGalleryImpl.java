@@ -240,7 +240,8 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	}
 
   public List<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId) throws GalleryException, AuthenticationException {
-    ArrayList list = new ArrayList();
+	checkUserInSession();
+    ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();
     list.addAll(getAlbums(instanceId, rootAlbumId));
     list.addAll(getPictures(instanceId, rootAlbumId));
     return list;

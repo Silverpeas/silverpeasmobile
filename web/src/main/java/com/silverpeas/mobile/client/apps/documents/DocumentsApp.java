@@ -21,6 +21,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
 public class DocumentsApp extends App implements NavigationEventHandler, DocumentsAppEventHandler {
@@ -69,9 +70,9 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 	 */
 	@Override
 	public void loadTopics(DocumentsLoadGedItemsEvent event) {		
-		ServicesLocator.serviceDocuments.getTopicsAndPublications(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<Object>>() {			
+		ServicesLocator.serviceDocuments.getTopicsAndPublications(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<BaseDTO>>() {			
 			@Override
-			public void onSuccess(List<Object> result) {
+			public void onSuccess(List<BaseDTO> result) {
 				EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));				
 			}			
 			@Override

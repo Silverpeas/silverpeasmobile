@@ -9,6 +9,7 @@ import org.silverpeas.attachment.model.DocumentType;
 import org.silverpeas.attachment.model.SimpleDocument;
 
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -17,7 +18,6 @@ import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.node.control.NodeBm;
@@ -35,13 +35,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 	
 	private static final long serialVersionUID = 1L;
 	private OrganizationController organizationController = new OrganizationController();
-	private KmeliaBm kmeliaBm;
 	private PublicationBm pubBm;
 	private NodeBm nodeBm;
-	
-	
-	
-	
+		
 	/**
 	 * Retourne tous les topics de premier niveau d'un topic.
 	 */
@@ -106,13 +102,6 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 		}
 		
 		return pubs;
-	}
-	
-	private KmeliaBm getKmeliaBm() throws Exception {
-		if (kmeliaBm == null) {
-			kmeliaBm = EJBUtilitaire.getEJBObjectRef(JNDINames.KMELIABM_EJBHOME, KmeliaBm.class);		
-		}
-		return kmeliaBm;
 	}
 	
 	private PublicationBm getPubBm() throws Exception {
@@ -188,8 +177,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 	}
 
 	@Override
-	public List<Object> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
-		ArrayList list = new ArrayList();		
+	public List<BaseDTO> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
+		checkUserInSession();	
+		ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();		
 		list.addAll(getTopics(instanceId, rootTopicId));
 		list.addAll(getPublications(instanceId, rootTopicId));
 		return list;

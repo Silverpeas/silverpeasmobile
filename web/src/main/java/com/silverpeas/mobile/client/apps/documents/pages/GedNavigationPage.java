@@ -19,6 +19,7 @@ import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 
@@ -64,7 +65,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 		if (isVisible() && dataLoaded == false) {
 			
 			list.clear();
-			List<Object> dataItems = event.getTopicsAndPublications();
+			List<BaseDTO> dataItems = event.getTopicsAndPublications();
 			for (Object dataItem : dataItems) {
 				GedItem item = new GedItem();
 				item.setData(dataItem);

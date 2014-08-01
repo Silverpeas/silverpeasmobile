@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PublicationDTO implements Serializable, Comparable<PublicationDTO> {
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 
-	private static final long serialVersionUID = 1L;
-	private String id;
+public class PublicationDTO extends BaseDTO implements Serializable, Comparable<PublicationDTO> {
+
+	private static final long serialVersionUID = 1L;	
 	private String name;
 	private String description;
 	private String version;
@@ -16,13 +17,7 @@ public class PublicationDTO implements Serializable, Comparable<PublicationDTO> 
 	private String wysiwyg;
 	private String updateDate;
 	private ArrayList<AttachmentDTO> attachments = null;
-		
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	
 	public String getName() {
 		return name;
 	}

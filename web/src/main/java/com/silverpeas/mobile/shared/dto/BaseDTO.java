@@ -5,16 +5,18 @@ import java.io.Serializable;
 /**
  * @author: svu
  */
-public abstract class BaseDTO implements Serializable{
+public abstract class BaseDTO implements Serializable {
 
-  public String getId() {
-    return id;
-  }
+	private static final long serialVersionUID = 8186851689918190659L;
 
-  public void setId(final String id) {
-    this.id = id;
-  }
+	public String getId() {
+		return id;
+	}
 
-  private String id;
+	public void setId(final String id) {
+		this.id = id;
+	}
+
+	private String id;
 
 }

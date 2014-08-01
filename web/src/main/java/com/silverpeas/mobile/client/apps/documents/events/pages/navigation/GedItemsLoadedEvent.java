@@ -2,11 +2,13 @@ package com.silverpeas.mobile.client.apps.documents.events.pages.navigation;
 
 import java.util.List;
 
+import com.silverpeas.mobile.shared.dto.BaseDTO;
+
 public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 
-	private List<Object> topicsAndPublications;
+	private List<BaseDTO> topicsAndPublications;
 	
-	public GedItemsLoadedEvent(List<Object> topicsAndPublications) {
+	public GedItemsLoadedEvent(List<BaseDTO> topicsAndPublications) {
 		super();
 		this.topicsAndPublications = topicsAndPublications;
 	}
@@ -16,7 +18,7 @@ public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 		handler.onLoadedTopics(this);
 	}
 
-	public List<Object> getTopicsAndPublications() {
+	public List<BaseDTO> getTopicsAndPublications() {
 		return topicsAndPublications;
 	}
 }

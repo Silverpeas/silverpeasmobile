@@ -2,19 +2,14 @@ package com.silverpeas.mobile.shared.dto.documents;
 
 import java.io.Serializable;
 
-public class TopicDTO implements Serializable, Comparable<TopicDTO> {
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 
-	private static final long serialVersionUID = 1L;
-	private String id;
+public class TopicDTO extends BaseDTO implements Serializable, Comparable<TopicDTO> {
+
+	private static final long serialVersionUID = 1L;	
 	private String name;
 	private boolean terminal;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getName() {
 		return name;
 	}
