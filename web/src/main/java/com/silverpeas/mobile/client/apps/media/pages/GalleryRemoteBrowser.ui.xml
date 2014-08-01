@@ -1,0 +1,26 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
+	xmlns:c="urn:import:com.silverpeas.mobile.client.components">
+	
+	<ui:with field='ressources' type='com.silverpeas.mobile.client.apps.media.resources.GalleryResources'/>
+	
+	<ui:style>
+		.photo td {
+			padding-top: 3em;
+		}
+	</ui:style>
+	
+	<g:HTMLPanel>
+		<m:HeaderPanel leftButton="Back">
+			<g:Label horizontalAlignment="center">Remotes pictures</g:Label>				
+		</m:HeaderPanel>
+		
+		<m:ScrollPanel>			
+			<g:AbsolutePanel ui:field="content" styleName="{style.photo}"></g:AbsolutePanel>
+		</m:ScrollPanel>
+		
+		<m:HeaderPanel>	 </m:HeaderPanel>	
+	</g:HTMLPanel>
+</ui:UiBinder> 

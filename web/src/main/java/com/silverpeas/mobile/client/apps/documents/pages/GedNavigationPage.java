@@ -13,6 +13,7 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedIt
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedNavigationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.pages.widgets.GedItem;
+import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
@@ -22,7 +23,8 @@ import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 
 public class GedNavigationPage extends PageContent implements View, GedNavigationPagesEventHandler {
-	
+
+  private DocumentsMessages msg;
 	
 	@UiField UnorderedList list;	
 		
@@ -35,6 +37,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 	}
 
 	public GedNavigationPage() {
+    msg = GWT.create(DocumentsMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
 		EventBus.getInstance().addHandler(AbstractGedNavigationPagesEvent.TYPE, this);
 	}
@@ -42,7 +45,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 	@Override
 	public void stop() {	
 		super.stop();
-		EventBus.getInstance().removeHandler(AbstractGedNavigationPagesEvent.TYPE, this);		
+		EventBus.getInstance().removeHandler(AbstractGedNavigationPagesEvent.TYPE, this);
 	}
 	
 	public void setTopicId(String rootTopicId) {
@@ -63,13 +66,13 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 			list.clear();
 			List<Object> dataItems = event.getTopicsAndPublications();
 			for (Object dataItem : dataItems) {
-				GedItem item = new GedItem();				
-				item.setData(dataItem);				
-				list.add(item);				
+				GedItem item = new GedItem();
+				item.setData(dataItem);
+				list.add(item);
 			}
-			dataLoaded = true;		
+			dataLoaded = true;
 		}
-		Notification.activityStop();	
+		Notification.activityStop();
 	}
 
 	@Override
@@ -77,13 +80,13 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 		if (isVisible()) {
 			if (event.getGedItem() instanceof TopicDTO) {
 				GedNavigationPage page = new GedNavigationPage();
-				page.setPageTitle(getPageTitle());				
+				page.setPageTitle(getPageTitle());
 				page.setInstanceId(instanceId);
 				page.setTopicId(((TopicDTO)event.getGedItem()).getId());
 				page.show();
 			} else if (event.getGedItem() instanceof PublicationDTO) {
 				PublicationPage page = new PublicationPage();
-				page.setPageTitle("Publication");			
+				page.setPageTitle(msg.publicationTitle());
 				page.show();
 				EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(((PublicationDTO) event.getGedItem()).getId()));
 			}		

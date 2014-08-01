@@ -7,4 +7,6 @@ public interface DocumentsMessages extends Messages {
 		
 	// Publication page
 	String lastUpdate(String updateDate, String updater);
+
+  String publicationTitle();
 }

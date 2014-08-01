@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.gwtmobile.ui.client.widgets.VerticalPanel;
-import com.silverpeas.mobile.client.apps.gallery.events.controller.TakePictureEvent;
+import com.silverpeas.mobile.client.apps.media.events.controller.TakePictureEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.file.FileMgr;
 import com.silverpeas.mobile.client.common.file.FileMgr.EventCallback;

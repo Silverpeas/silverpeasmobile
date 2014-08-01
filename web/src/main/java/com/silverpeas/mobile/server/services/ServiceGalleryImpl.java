@@ -20,6 +20,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.stratelia.webactiv.util.node.model.NodePK;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 
@@ -37,8 +39,8 @@ import com.silverpeas.gallery.model.PhotoSize;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
-import com.silverpeas.mobile.shared.dto.gallery.AlbumDTO;
-import com.silverpeas.mobile.shared.dto.gallery.PhotoDTO;
+import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.GalleryException;
@@ -175,55 +177,74 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	}
 	
 	/**
-	 * Retourne la liste des albums d'une galerie.
+	 * Retourne la liste des albums d'une appli media.
 	 */
-	public List<AlbumDTO> getAllAlbums(String instanceId) throws GalleryException, AuthenticationException {
+	private List<AlbumDTO> getAlbums(String instanceId, String rootAlbumId) throws GalleryException, AuthenticationException {
 		checkUserInSession();
 		
 		ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
-		try {			
-			Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
-			for (AlbumDetail albumDetail : albums) {
-				if (albumDetail.getLevel() != 1) {
-					AlbumDTO album = new AlbumDTO();
-					album.setId(String.valueOf(albumDetail.getId()));
-					album.setName(albumDetail.getName());				
-					results.add(album);
-				}				
-			}
+		try {
+      if (rootAlbumId == null) {
+        Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
+        for (AlbumDetail albumDetail : albums) {
+          if (albumDetail.getLevel() == 2) {
+            AlbumDTO album = populate(albumDetail);
+            results.add(album);
+          }
+        }
+      } else {
+        AlbumDetail rootAlbum = getGalleryBm().getAlbum(new NodePK(rootAlbumId, instanceId), false);
+        Collection<AlbumDetail> albums = rootAlbum.getChildrenAlbumsDetails();
+        for (AlbumDetail albumDetail : albums) {
+          AlbumDTO album = populate(albumDetail);
+          results.add(album);
+        }
+      }
 		} catch (Exception e) {
-			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getAllAlbums", "root.EX_NO_MESSAGE", e);			
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getAlbums", "root.EX_NO_MESSAGE", e);
 		}
 		return results;
 	}
-	
-	
-	/**
+
+  private AlbumDTO populate(final AlbumDetail albumDetail) {
+    AlbumDTO album = new AlbumDTO();
+    album.setId(String.valueOf(albumDetail.getId()));
+    album.setName(albumDetail.getName());
+    return album;
+  }
+
+
+  /**
 	 * Retourne les photos miniatures d'un album.
 	 */
-	public List<PhotoDTO> getAllPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException {
+	private List<PhotoDTO> getPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException {
 		checkUserInSession();
 		
 		ArrayList<PhotoDTO> results = new ArrayList<PhotoDTO>();
-		try {			
-			Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
-			for (AlbumDetail albumDetail : albums) {
-				if (albumDetail.getId() == Integer.parseInt(albumId)) {
-					Collection<PhotoDetail> photos = getGalleryBm().getAllPhoto(albumDetail.getNodePK(), false);
-					Iterator<PhotoDetail> iPhotos = photos.iterator();
+    if (albumId == null) return results;
+		try {
+
+      Collection<PhotoDetail> photos = getGalleryBm().getAllPhoto(new NodePK(albumId, instanceId), false);
+			Iterator<PhotoDetail> iPhotos = photos.iterator();
 					while (iPhotos.hasNext()) {
 						PhotoDetail photoDetail = (PhotoDetail) iPhotos.next();					
-						PhotoDTO photo = getPicture(instanceId, photoDetail.getId(), PhotoSize.SMALL);				
+						PhotoDTO photo = getPicture(instanceId, photoDetail.getId(), PhotoSize.SMALL);
 						results.add(photo);
 					}					
-					return results;
-				}				
-			}
+			return results;
+
 		} catch (Exception e) {
 			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getAllPictures", "root.EX_NO_MESSAGE", e);			
 		}
 		return results;
 	}
+
+  public List<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId) throws GalleryException, AuthenticationException {
+    ArrayList list = new ArrayList();
+    list.addAll(getAlbums(instanceId, rootAlbumId));
+    list.addAll(getPictures(instanceId, rootAlbumId));
+    return list;
+  }
 	
 	/**
 	 * Retourne la photo originale.
