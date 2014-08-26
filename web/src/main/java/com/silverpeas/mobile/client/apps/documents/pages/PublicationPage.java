@@ -3,8 +3,11 @@ package com.silverpeas.mobile.client.apps.documents.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
@@ -32,22 +35,23 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 	@UiField HTMLPanel container;
 	@UiField UnorderedList attachments;
 	@UiField ParagraphElement desc, lastUpdate;
+  @UiField Anchor comments;
 		
 	interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
 	}
 
-	public PublicationPage() {		
+	public PublicationPage() {
 		msg = GWT.create(DocumentsMessages.class);
 		initWidget(uiBinder.createAndBindUi(this));
 		container.getElement().setId("publication");
 		attachments.getElement().setId("attachments");
-		EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);		
+		EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
 	}
 
 	@Override
 	public void stop() {
 		super.stop();
-		EventBus.getInstance().removeHandler(AbstractPublicationPagesEvent.TYPE, this);	
+		EventBus.getInstance().removeHandler(AbstractPublicationPagesEvent.TYPE, this);
 	}
 
 	public void setPublicationId(String id) {
@@ -68,7 +72,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 	 */
 	private void display() {
 		title.setInnerHTML(publication.getName());
-		desc.setInnerHTML(publication.getDescription());		
+		desc.setInnerHTML(publication.getDescription());
 		lastUpdate.setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
 		
 		for (AttachmentDTO attachment : publication.getAttachments()) {
@@ -76,6 +80,22 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 			a.setAttachment(attachment);
 			attachments.add(a);
 		}
-		
+    if (publication.getCommentsNumber() == 0) {
+      comments.setText(msg.noComment());
+    } else if (publication.getCommentsNumber() == 1) {
+      comments.setText(msg.comment());
+    } else {
+      comments.setText(msg.comments(String.valueOf(publication.getCommentsNumber())));
+    }
 	}
+
+  @UiHandler("comments")
+  void displayComments(ClickEvent event) {
+    if (publication.getCommentsNumber() > 0) {
+      CommentsPage page = new CommentsPage();
+      page.setPageTitle(msg.commentsPageTitle(publication.getName()));
+      page.setPublication(publication);
+      page.show();
+    }
+  }
 }

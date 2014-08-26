@@ -1,13 +1,13 @@
 package com.silverpeas.mobile.client.apps.documents;
 
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.documents.events.app.AbstractDocumentsAppEvent;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsAppEventHandler;
+import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadCommentsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
+import com.silverpeas.mobile.client.apps.documents.events.pages.comments.CommentsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.pages.GedNavigationPage;
@@ -22,7 +22,10 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.documents.CommentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+
+import java.util.List;
 
 public class DocumentsApp extends App implements NavigationEventHandler, DocumentsAppEventHandler {
 	
@@ -98,5 +101,20 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 			}
 		});			
 	}
+
+  @Override
+  public void loadComments(final DocumentsLoadCommentsEvent event) {
+    ServicesLocator.serviceDocuments.getComments(event.getPubId(), new AsyncCallback<List<CommentDTO>>() {
+      @Override
+      public void onSuccess(List<CommentDTO> result) {
+        EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));
+      }
+      @Override
+      public void onFailure(Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+      }
+    });
+  }
+
 
 }

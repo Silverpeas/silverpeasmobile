@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <g:HTMLPanel tag="li">
+    <div>
+      <span class="user-name">
+        <g:Image ui:field="avatar"></g:Image>
+        <span ui:field="userName"></span>
+      </span>
+      <span class="date" ui:field="date"/>
+    </div>
+    <p ui:field="content"></p>
+  </g:HTMLPanel>
+</ui:UiBinder> 

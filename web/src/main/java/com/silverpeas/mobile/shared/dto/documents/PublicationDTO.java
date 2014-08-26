@@ -8,7 +8,7 @@ import com.silverpeas.mobile.shared.dto.BaseDTO;
 
 public class PublicationDTO extends BaseDTO implements Serializable, Comparable<PublicationDTO> {
 
-	private static final long serialVersionUID = 1L;	
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String description;
 	private String version;
@@ -17,6 +17,7 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 	private String wysiwyg;
 	private String updateDate;
 	private ArrayList<AttachmentDTO> attachments = null;
+  private int commentsNumber = 0;
 	
 	public String getName() {
 		return name;
@@ -71,4 +72,11 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 		this.updateDate = updateDate;
 	}
 
+  public int getCommentsNumber() {
+    return commentsNumber;
+  }
+
+  public void setCommentsNumber(final int commentsNumber) {
+    this.commentsNumber = commentsNumber;
+  }
 }

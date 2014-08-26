@@ -4,6 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.silverpeas.comment.model.Comment;
+import com.silverpeas.comment.service.CommentServiceFactory;
+import com.silverpeas.mobile.shared.dto.documents.CommentDTO;
+import com.stratelia.webactiv.util.GeneralPropertiesManager;
 import org.silverpeas.attachment.AttachmentServiceFactory;
 import org.silverpeas.attachment.model.DocumentType;
 import org.silverpeas.attachment.model.SimpleDocument;
@@ -134,6 +138,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			dto.setVersion(pub.getVersion());
 			dto.setDescription(pub.getDescription());
 			dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
+      dto.setCommentsNumber(CommentServiceFactory.getFactory().getCommentService().getCommentsCountOnPublication("Publication", new PublicationPK(pubId)));
+
 			String content = pub.getWysiwyg();
 			//TODO : convert img url to data uri
 			// use jsoup
@@ -171,17 +177,37 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			
 			return dto;
 		} catch (Throwable e) {
-			SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);			
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
 			throw new DocumentsException(e.getMessage());
 		}	
 	}
 
 	@Override
 	public List<BaseDTO> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
-		checkUserInSession();	
+		checkUserInSession();
 		ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();		
 		list.addAll(getTopics(instanceId, rootTopicId));
 		list.addAll(getPublications(instanceId, rootTopicId));
 		return list;
 	}
+
+  @Override
+  public List<CommentDTO> getComments(String pubId) throws DocumentsException, AuthenticationException {
+    checkUserInSession();
+    ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+    List<Comment> comments = CommentServiceFactory.getFactory().getCommentService().getAllCommentsOnPublication("Publication", new PublicationPK(pubId));
+    for (Comment c : comments) {
+      CommentDTO dto = new CommentDTO();
+      dto.setContent(c.getMessage());
+      dto.setUserName(c.getOwner());
+      dto.setAvatar("");
+      dto.setAvatar(GeneralPropertiesManager.getString("ApplicationURL")+c.getOwnerDetail().getAvatar());
+      dto.setDate(sdf.format(c.getCreationDate()));
+      list.add(dto);
+    }
+
+    return list;
+  }
 }

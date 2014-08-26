@@ -1,0 +1,48 @@
+package com.silverpeas.mobile.shared.dto.documents;
+
+import com.silverpeas.mobile.shared.dto.BaseDTO;
+
+import java.io.Serializable;
+
+/**
+ * @author: svu
+ */
+public class CommentDTO extends BaseDTO implements Serializable {
+
+  private String content;
+  private String avatar;
+  private String date;
+  private String userName;
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(final String content) {
+    this.content = content;
+  }
+
+  public String getAvatar() {
+    return avatar;
+  }
+
+  public void setAvatar(final String avatar) {
+    this.avatar = avatar;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public void setDate(final String date) {
+    this.date = date;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(final String userName) {
+    this.userName = userName;
+  }
+}
