@@ -26,7 +26,6 @@ import com.silverpeas.mobile.client.apps.media.events.controller.RemotePicturesL
 import com.silverpeas.mobile.client.apps.media.events.pages.remote.AbstractRemotePicturesPageEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.remote.RemotePictureLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.remote.RemotePicturesPageEventHandler;
-import com.silverpeas.mobile.client.apps.media.resources.GalleryResources;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.base.PageContent;
@@ -44,7 +43,7 @@ public class GalleryRemoteBrowser extends PageContent implements View, RemotePic
 	private ArrayList<ArrayList<Image>> grid = new ArrayList<ArrayList<Image>>();
 	
 	
-	@UiField(provided = true) protected GalleryResources ressources = null;
+	//@UiField(provided = true) protected GalleryResources ressources = null;
 	
 	@UiField AbsolutePanel content;
 	
@@ -61,8 +60,8 @@ public class GalleryRemoteBrowser extends PageContent implements View, RemotePic
 	}
 
 	public GalleryRemoteBrowser() {
-		ressources = GWT.create(GalleryResources.class);		
-		ressources.css().ensureInjected();
+		//ressources = GWT.create(GalleryResources.class);
+		//ressources.css().ensureInjected();
 		initWidget(uiBinder.createAndBindUi(this));
 				
 		Window.addResizeHandler(new ResizeHandler() {				

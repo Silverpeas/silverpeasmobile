@@ -12,6 +12,8 @@ public interface DocumentsMessages extends Messages {
   String commentsTitle();
   String comment();
   String noComment();
+  String sizeK(String size);
+  String sizeM(String size);
 
 
   // Comments page

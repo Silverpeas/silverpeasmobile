@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
@@ -26,6 +27,7 @@ public class Attachment extends Composite {
 	@UiField ImageElement icon;
 	
 	protected DocumentsResources ressources = null;
+  private DocumentsMessages msg = null;
 	private boolean clicked = false;
 	private AttachmentDTO attachement;
 	
@@ -33,7 +35,8 @@ public class Attachment extends Composite {
 	}
 
 	public Attachment() {
-		ressources = GWT.create(DocumentsResources.class);		
+		msg = GWT.create(DocumentsMessages.class);
+    ressources = GWT.create(DocumentsResources.class);
 		ressources.css().ensureInjected();
 		initWidget(uiBinder.createAndBindUi(this));		
 	}
@@ -59,11 +62,14 @@ public class Attachment extends Composite {
 	
 	private void render() {
 		Image img = null;
-		if (attachement.getSize() < 1024*1024) {
-			size.setInnerHTML(attachement.getSize()/1024 + " Ko");	
+		String sizeValue;
+    if (attachement.getSize() < 1024*1024) {
+		  sizeValue = String.valueOf(attachement.getSize()/1024);
+      size.setInnerHTML(msg.sizeK(sizeValue));
 		} else {
-			size.setInnerHTML(attachement.getSize()/(1024*1024) + " Mo");
-		}		
+      sizeValue = String.valueOf(attachement.getSize()/(1024*1024));
+      size.setInnerHTML(msg.sizeM(sizeValue));
+		}
 		name.setInnerHTML(attachement.getTitle());		
 		if (attachement.getType().contains("msword")) {
 			img = new Image(ressources.msword());

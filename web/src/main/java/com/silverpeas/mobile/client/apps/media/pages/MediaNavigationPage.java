@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation
     .AbstractMediaNavigationPagesEvent;
@@ -77,11 +78,10 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
         page.setAlbumId(((AlbumDTO) event.getMediaItem()).getId());
         page.show();
       } else if (event.getMediaItem() instanceof PhotoDTO) {
-        // TODO
-        /*MediaPage page = new MediaPage();
-        page.setPageTitle("Média");
+        MediaPage page = new MediaPage();
+        page.setPageTitle(getPageTitle());
         page.show();
-        EventBus.getInstance().fireEvent(new MediasLoadMediaEvent(((PublicationDTO) event.getMediaItem()).getId()));*/
+        EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(instanceId, ((PhotoDTO) event.getMediaItem()).getId()));
       }
     }
   }

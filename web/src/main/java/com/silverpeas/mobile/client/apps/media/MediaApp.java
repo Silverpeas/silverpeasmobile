@@ -2,13 +2,14 @@ package com.silverpeas.mobile.client.apps.media;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
-import com.silverpeas.mobile.client.apps.media.resources.GalleryMessages;
+import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -19,17 +20,18 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
 import java.util.List;
 
 public class MediaApp extends App implements NavigationEventHandler, MediaAppEventHandler {
-	
-	private GalleryMessages msg;
+
+	private MediaMessages msg;
 	private NavigationApp navApp = new NavigationApp();
 	
 	public MediaApp() {
 		super();
-		msg = GWT.create(GalleryMessages.class);
+		msg = GWT.create(MediaMessages.class);
 		EventBus.getInstance().addHandler(AbstractMediaAppEvent.TYPE, this);
 		EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
 	}
@@ -58,7 +60,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 	@Override
 	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
 		MediaNavigationPage page = new MediaNavigationPage();
-		page.setPageTitle(msg.title());				
+		page.setPageTitle(msg.title());
 		page.setInstanceId(event.getInstance().getId());
 		page.setAlbumId(null);
 		page.show();	
@@ -79,5 +81,20 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
             EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
           }
         });
+  }
+
+  @Override
+  public void loadMediaPreview(final MediaPreviewLoadEvent event) {
+    ServicesLocator.serviceGallery.getPreviewPicture(event.getInstanceId(), event.getMediaId(), new AsyncCallback<PhotoDTO>() {
+      @Override
+      public void onFailure(final Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+      }
+
+      @Override
+      public void onSuccess(final PhotoDTO preview) {
+        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview));
+      }
+    });
   }
 }

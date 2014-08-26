@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,8 +21,10 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.silverpeas.comment.service.CommentServiceFactory;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.stratelia.webactiv.util.node.model.NodePK;
+import com.stratelia.webactiv.util.publication.model.PublicationPK;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 
@@ -63,6 +66,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	private static final long serialVersionUID = 1L;
 	private AdminBusiness adminBm;
 	private GalleryBm galleryBm;
+  private OrganizationController organizationController = new OrganizationController();
 		
 	/**
 	 * Importation d'une image dans un album.
@@ -280,12 +284,33 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	private PhotoDTO getPicture(String instanceId, String pictureId, PhotoSize size) throws RemoteException, Exception, FileNotFoundException, IOException {
 		PhotoDTO picture;
 		PhotoDetail photoDetail = getGalleryBm().getPhoto(new PhotoPK(pictureId));
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		picture = new PhotoDTO();
 		picture.setId(photoDetail.getId());
-		picture.setDownload(photoDetail.isDownload());						
+		picture.setDownload(photoDetail.isDownload());
 		picture.setDataPhoto(getBase64ImageData(instanceId, photoDetail, size));
 		picture.setFormat(size.name());
 		picture.setTitle(photoDetail.getTitle());
+    picture.setName(photoDetail.getImageName());
+    picture.setSize(photoDetail.getImageSize());
+    picture.setSizeH(photoDetail.getSizeH());
+    picture.setSizeL(photoDetail.getSizeL());
+
+    if (photoDetail.getUpdateId() != null) {
+      picture.setUpdater(
+          organizationController.getUserDetail(photoDetail.getUpdateId()).getDisplayedName());
+    } else {
+      picture.setUpdater(organizationController.getUserDetail(photoDetail.getCreatorId()).getDisplayedName());
+    }
+    if (photoDetail.getUpdateDate() != null) {
+      picture.setUpdateDate(sdf.format(photoDetail.getUpdateDate()));
+    } else {
+      picture.setUpdateDate(sdf.format(photoDetail.getCreationDate()));
+    }
+
+    picture.setCommentsNumber(CommentServiceFactory
+        .getFactory().getCommentService().getCommentsCountOnPublication("Photo", new PhotoPK(photoDetail.getId())));
+
 		return picture;
 	}
 
