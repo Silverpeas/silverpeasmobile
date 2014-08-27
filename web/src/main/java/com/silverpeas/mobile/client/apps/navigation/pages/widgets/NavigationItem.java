@@ -45,7 +45,7 @@ public class NavigationItem extends Composite {
 			if (type.equalsIgnoreCase(Apps.kmelia.name())) {
 				setStyleName("folder-ged");	
 			} else if (type.equalsIgnoreCase(Apps.gallery.name())) {
-				setStyleName("media");	
+				setStyleName("folder-galery");
 			}
 		}
 		link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");

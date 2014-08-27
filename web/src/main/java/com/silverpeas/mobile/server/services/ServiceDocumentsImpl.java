@@ -55,21 +55,24 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 				rootTopicId = "0";			
 			}
 			NodePK pk = new NodePK(rootTopicId, instanceId);
-			NodeDetail rootNode = getNodeBm().getDetail(pk);			
+			NodeDetail rootNode = getNodeBm().getDetail(pk);
 			ArrayList<NodeDetail> nodes = getNodeBm().getSubTreeByLevel(pk, rootNode.getLevel() + 1);
 			for (NodeDetail nodeDetail : nodes) {
 				
-				if (rootTopicId.equals(nodeDetail.getFatherPK().getId())) {				
+				if (rootTopicId.equals(nodeDetail.getFatherPK().getId())) {
 					TopicDTO topic = new TopicDTO();
-					topic.setId(String.valueOf(nodeDetail.getId()));
-					topic.setName(nodeDetail.getName());				
-					int childrenNumber = getNodeBm().getChildrenNumber(new NodePK(String.valueOf(nodeDetail.getId()), instanceId));
-					topic.setTerminal(childrenNumber == 0);					
-					topicsList.add(topic);
+          if (nodeDetail.getId() != 2) {
+            topic.setId(String.valueOf(nodeDetail.getId()));
+            topic.setName(nodeDetail.getName());
+            int childrenNumber = getNodeBm()
+                .getChildrenNumber(new NodePK(String.valueOf(nodeDetail.getId()), instanceId));
+            topic.setTerminal(childrenNumber == 0);
+            topicsList.add(topic);
+          }
 				}
-			}			
+			}
 		} catch (Exception e) {
-			SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);			
+			SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);
 			throw new DocumentsException(e.getMessage());
 		}
 		return topicsList;

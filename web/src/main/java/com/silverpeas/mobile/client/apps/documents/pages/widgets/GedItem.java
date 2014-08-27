@@ -31,13 +31,17 @@ public class GedItem extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 		msg = GWT.create(ApplicationMessages.class);
 	}
-	
+
 	public void setData(Object data) {
 		this.data = data;
 		if (data instanceof TopicDTO) {
 			dataTopic = (TopicDTO) data;
 			link.setText(dataTopic.getName());
-			setStyleName("folder-ged");			
+      if (dataTopic.getId().equals("1")) {
+        setStyleName("trash");
+      } else {
+        setStyleName("folder-ged");
+      }
 		} else if (data instanceof PublicationDTO) {
 			dataPublication = (PublicationDTO) data;
 			link.setText(dataPublication.getName());
@@ -45,9 +49,9 @@ public class GedItem extends Composite {
 		}
 		link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
 	}
-	
+
 	@UiHandler("link")
-	protected void onClick(ClickEvent event) {		
+	protected void onClick(ClickEvent event) {
 		EventBus.getInstance().fireEvent(new GedItemClickEvent(data));
 	}
 }
