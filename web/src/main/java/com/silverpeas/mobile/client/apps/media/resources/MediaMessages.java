@@ -13,4 +13,6 @@ public interface MediaMessages extends Messages {
   String comment();
   String noComment();
 
+  String importMedia();
+
 }

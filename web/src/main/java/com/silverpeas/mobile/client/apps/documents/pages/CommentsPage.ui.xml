@@ -2,6 +2,15 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:l="urn:import:com.silverpeas.mobile.client.components">
   <g:HTMLPanel ui:field="container" styleName="content comments">
     <h2 ui:field="title" class="publiName"></h2>
+
+    <div id="add-comment">
+      <div id="champs-comment">
+        <div class="ouverture-bulle"></div>
+        <g:TextArea ui:field="newComment" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
+      </div>
+      <g:Anchor ui:field="addComment" styleName="btn-publicate ui-link inactif"><span ui:field="addCommentTitle" class="ui-btn-text"/></g:Anchor>
+    </div>
+
     <l:UnorderedList ui:field="commentsList" styleName="list-comments ui-listview"/>
   </g:HTMLPanel>
 </ui:UiBinder>

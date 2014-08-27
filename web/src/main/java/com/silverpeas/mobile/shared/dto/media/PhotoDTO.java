@@ -18,6 +18,8 @@ public class PhotoDTO extends BaseDTO implements Serializable {
   private String updateDate;
   private String updater;
   private int commentsNumber;
+  private String instance;
+  private String mimeType;
 
   public boolean isDownload() {
 		return download;
@@ -98,5 +100,21 @@ public class PhotoDTO extends BaseDTO implements Serializable {
 
   public int getCommentsNumber() {
     return commentsNumber;
+  }
+
+  public String getInstance() {
+    return instance;
+  }
+
+  public void setInstance(final String instance) {
+    this.instance = instance;
+  }
+
+  public String getMimeType() {
+    return mimeType;
+  }
+
+  public void setMimeType(final String mimeType) {
+    this.mimeType = mimeType;
   }
 }

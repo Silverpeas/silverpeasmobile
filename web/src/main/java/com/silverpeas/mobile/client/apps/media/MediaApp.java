@@ -5,8 +5,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
@@ -69,7 +71,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void loadAlbums(final MediasLoadMediaItemsEvent event) {
-    ServicesLocator.serviceGallery.getAlbumsAndPictures(event.getInstanceId(),
+    ServicesLocator.serviceMedia.getAlbumsAndPictures(event.getInstanceId(),
         event.getRootAlbumId(), new AsyncCallback<List<BaseDTO>>() {
           @Override
           public void onSuccess(List<BaseDTO> result) {
@@ -85,7 +87,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void loadMediaPreview(final MediaPreviewLoadEvent event) {
-    ServicesLocator.serviceGallery.getPreviewPicture(event.getInstanceId(), event.getMediaId(), new AsyncCallback<PhotoDTO>() {
+    ServicesLocator.serviceMedia.getPreviewPicture(event.getInstanceId(), event.getMediaId(), new AsyncCallback<PhotoDTO>() {
       @Override
       public void onFailure(final Throwable caught) {
         EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
@@ -96,5 +98,21 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview));
       }
     });
+  }
+
+  @Override
+  public void loadMediaView(final MediaViewLoadEvent event) {
+    ServicesLocator.serviceMedia.getOriginalPicture(event.getInstanceId(), event.getMediaId(),
+        new AsyncCallback<PhotoDTO>() {
+          @Override
+          public void onFailure(final Throwable caught) {
+            EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+          }
+
+          @Override
+          public void onSuccess(final PhotoDTO view) {
+            EventBus.getInstance().fireEvent(new MediaViewLoadedEvent(view));
+          }
+        });
   }
 }

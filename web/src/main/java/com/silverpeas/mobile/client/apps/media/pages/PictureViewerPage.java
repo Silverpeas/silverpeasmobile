@@ -10,16 +10,10 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtmobile.ui.client.widgets.ScrollPanel;
-import com.silverpeas.mobile.client.apps.media.events.controller.LoadRemotePreviewPictureEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.remote.viewer.AbstractPictureViewerPageEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.remote.viewer.PictureViewLoadedEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.remote.viewer.PicturesViewerPageEventHandler;
-
-import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.base.PageContent;
 
-public class PictureViewerPage extends PageContent implements View, PicturesViewerPageEventHandler {
+public class PictureViewerPage extends PageContent implements View {
 
 	//@UiField(provided = true) protected GalleryMessages msg = null;
 	//@UiField(provided = true) protected GalleryResources ressources = null;
@@ -40,26 +34,26 @@ public class PictureViewerPage extends PageContent implements View, PicturesView
 		ressources.css().ensureInjected();
 		msg = GWT.create(GalleryMessages.class);*/
 		initWidget(uiBinder.createAndBindUi(this));
-		EventBus.getInstance().addHandler(AbstractPictureViewerPageEvent.TYPE, this);
+		//EventBus.getInstance().addHandler(AbstractPictureViewerPageEvent.TYPE, this);
 	}
 	
 	public void init(String galleryId, String photoId) {
 		this.galleryId = galleryId;
 		this.photoId = photoId;
-		EventBus.getInstance().fireEvent(new LoadRemotePreviewPictureEvent(galleryId, photoId));
+		//EventBus.getInstance().fireEvent(new LoadRemotePreviewPictureEvent(galleryId, photoId));
 	}
 	
 
 
 	@Override
 	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractPictureViewerPageEvent.TYPE, this);		
+		//EventBus.getInstance().removeHandler(AbstractPictureViewerPageEvent.TYPE, this);
 	}
 
-	@Override
-	public void onPictureLoaded(PictureViewLoadedEvent event) {		
-		content.setUrl(event.getPhoto().getDataPhoto());
-		title.setText(event.getPhoto().getTitle());
+
+	public void onPictureLoaded(/*PictureViewLoadedEvent event*/) {
+		//content.setUrl(event.getPhoto().getDataPhoto());
+		//title.setText(event.getPhoto().getTitle());
 		//container.addStyleName(ressources.css().localPicture());
 	}
 	

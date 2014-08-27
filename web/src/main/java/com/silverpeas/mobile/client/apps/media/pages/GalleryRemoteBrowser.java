@@ -1,9 +1,5 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
@@ -22,16 +18,15 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.media.events.controller.RemotePicturesLoadEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.remote.AbstractRemotePicturesPageEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.remote.RemotePictureLoadedEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.remote.RemotePicturesPageEventHandler;
-import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
-public class GalleryRemoteBrowser extends PageContent implements View, RemotePicturesPageEventHandler {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class GalleryRemoteBrowser extends PageContent implements View {
 
 	private static GalleryRemoteBrowserUiBinder uiBinder = GWT.create(GalleryRemoteBrowserUiBinder.class);
 	private String galleryId;
@@ -73,13 +68,13 @@ public class GalleryRemoteBrowser extends PageContent implements View, RemotePic
 	}
 	
 	public void init() {
-		EventBus.getInstance().addHandler(AbstractRemotePicturesPageEvent.TYPE, this);
-		EventBus.getInstance().fireEvent(new RemotePicturesLoadEvent(galleryId, albumId));
+		//EventBus.getInstance().addHandler(AbstractRemotePicturesPageEvent.TYPE, this);
+		//EventBus.getInstance().fireEvent(new RemotePicturesLoadEvent(galleryId, albumId));
 	}
 
-	@Override
-	public void onPicturesLoaded(RemotePictureLoadedEvent event) {
-		this.photos = event.getPhotos();
+
+	public void onPicturesLoaded(/*RemotePictureLoadedEvent event*/) {
+		//this.photos = event.getPhotos();
 		renderAlbum();	
 	}
 
@@ -205,6 +200,6 @@ public class GalleryRemoteBrowser extends PageContent implements View, RemotePic
 
 	@Override
 	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractRemotePicturesPageEvent.TYPE, this);		
+		//EventBus.getInstance().removeHandler(AbstractRemotePicturesPageEvent.TYPE, this);
 	}
 }

@@ -1,13 +1,14 @@
 package com.silverpeas.mobile.client.common.navigation;
 
-import java.util.Iterator;
-import java.util.Stack;
-
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.components.base.PageContent;
+
+import java.util.Iterator;
+import java.util.Stack;
 
 public class PageHistory implements ValueChangeHandler<String> {
 	
@@ -24,6 +25,11 @@ public class PageHistory implements ValueChangeHandler<String> {
 		}
 		return instance;
 	}
+
+  public void gotoToFullScreen(String token) {
+    pages.push(null);
+    browserGoto(""+token);
+  }
 	
 	public void goTo(PageContent page) {		
 		if (pages.isEmpty()) firstToken = "" + page.hashCode();
@@ -33,7 +39,7 @@ public class PageHistory implements ValueChangeHandler<String> {
 		//TODO : TODO : css3 transition
 	}
 	
-	public PageContent back() {		
+	public PageContent back() {
 		PageContent page = pages.pop();
 		page.stop();
 		page = pages.peek();
@@ -54,14 +60,14 @@ public class PageHistory implements ValueChangeHandler<String> {
 
 	public void goBackToFirst() {
 		while(!pages.isEmpty()) {
-			PageContent currentPage = pages.pop();						
+			PageContent currentPage = pages.pop();
 			if (pages.isEmpty()) {
 				pages.push(currentPage);
 				SpMobil.mainPage.setContent(currentPage);
-				browserGoto(""+currentPage.hashCode());				
+				browserGoto(""+currentPage.hashCode());
 				break;
 			} else {
-				currentPage.stop();				
+				currentPage.stop();
 			}
 		}	
 	}
@@ -69,33 +75,38 @@ public class PageHistory implements ValueChangeHandler<String> {
 	public void clear() {
 		while(!pages.isEmpty()) {
 			PageContent currentPage = pages.pop();
-			currentPage.stop();			
+			currentPage.stop();
 		}		
 	}
 	
 	public boolean isVisible(PageContent page) {
-		PageContent currentPage = pages.peek();		
+		PageContent currentPage = pages.peek();
 		return (currentPage == page);
 	}
 	
-	private void back(String token) {	
-		boolean back = false;
-		if (token.isEmpty()) {			
-			// prevent exit
-			browserGoto(firstToken);			
-		} else {
+	private void back(String token) {
+    boolean back = false;
+    if (token.isEmpty()) {
+      // prevent exit
+      browserGoto(firstToken);
+    } else {
 			back = isBackAction(token);
-			if (back) {			
+			if (back) {
 				PageContent page = pages.pop();
-				page.stop();		
-				page = pages.peek();
-				SpMobil.mainPage.setContent(page);			
+				if (page != null) {
+          page.stop();
+          page = pages.peek();
+          SpMobil.mainPage.setContent(page);
+        } else {
+          SpMobil.restoreMainPage();
+        }
 			}
 		}
 	}
 	
 	private boolean isBackAction(String token) {
 		if (!pages.isEmpty()) {
+      if (pages.peek()==null) return true;
 			if (String.valueOf(pages.peek().hashCode()).equals(token)) {
 				return false;
 			} else {

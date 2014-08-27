@@ -7,7 +7,7 @@ import com.stratelia.webactiv.beans.admin.UserDetail;
 
 @SuppressWarnings("serial")
 public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
-	private static final String USER_ATTRIBUT_NAME = "user";
+	public static final String USER_ATTRIBUT_NAME = "user";
 
 	protected void setUserInSession(UserDetail user) {
 		getThreadLocalRequest().getSession().setAttribute(USER_ATTRIBUT_NAME, user);

@@ -18,5 +18,6 @@ public interface DocumentsMessages extends Messages {
 
   // Comments page
   String commentsPageTitle(String publicationTitle);
+  String addComment();
 
 }

@@ -22,9 +22,7 @@ public class ServicesLocator {
 	public static ServiceRSEAsync serviceRSE = (ServiceRSEAsync) GWT.create(ServiceRSE.class);
 	public static ServiceConnectionAsync serviceConnection = (ServiceConnectionAsync) GWT.create(ServiceConnection.class);
 	public static ServiceContactAsync serviceContact = (ServiceContactAsync) GWT.create(ServiceContact.class);
-	public static ServiceDashboardAsync serviceDashboard = (ServiceDashboardAsync) GWT.create(ServiceDashboard.class);	
-	public static ServiceGalleryAsync serviceGallery = (ServiceGalleryAsync) GWT.create(ServiceGallery.class);
+	public static ServiceGalleryAsync serviceMedia = (ServiceGalleryAsync) GWT.create(ServiceGallery.class);
 	public static ServiceNavigationAsync serviceNavigation = (ServiceNavigationAsync) GWT.create(ServiceNavigation.class);
-	public static ServiceDocumentsAsync serviceDocuments = (ServiceDocumentsAsync) GWT.create(ServiceDocuments.class); 
-	public static ServiceAlmanachAsync serviceAlmanach = (ServiceAlmanachAsync) GWT.create(ServiceAlmanach.class);
+	public static ServiceDocumentsAsync serviceDocuments = (ServiceDocumentsAsync) GWT.create(ServiceDocuments.class);
 }

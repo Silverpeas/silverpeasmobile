@@ -14,8 +14,6 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.gwtmobile.ui.client.widgets.VerticalPanel;
-import com.silverpeas.mobile.client.apps.media.events.controller.TakePictureEvent;
-import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.file.FileMgr;
 import com.silverpeas.mobile.client.common.file.FileMgr.EventCallback;
 import com.silverpeas.mobile.client.common.file.FileMgr.File;
@@ -96,7 +94,7 @@ public class TakePicture extends Composite implements HasText, HasChangeHandlers
 			@Override
 			public void onEvent(com.silverpeas.mobile.client.common.file.FileMgr.Event evt) {				
 				// send message to controller to store picture in local database
-				EventBus.getInstance().fireEvent(new TakePictureEvent(evt.getTarget().getResult()));				
+				//EventBus.getInstance().fireEvent(new TakePictureEvent(evt.getTarget().getResult()));
 			}			
 		});
 		f.readAsDataURL((File)getImageFile());		

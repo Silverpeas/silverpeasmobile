@@ -258,8 +258,12 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		checkUserInSession();
 		
 		PhotoDTO picture = null;
-		try {		
-			picture = getPicture(instanceId, pictureId, PhotoSize.ORIGINAL);	
+		try {
+			picture = getPicture(instanceId, pictureId, PhotoSize.ORIGINAL);
+      if (!picture.isDownload()) {
+        picture = getPicture(instanceId, pictureId, PhotoSize.NORMAL);
+      }
+
 		} catch (Exception e) {
 			SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getOriginalPicture", "root.EX_NO_MESSAGE", e);			
 		}
@@ -295,6 +299,8 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
     picture.setSize(photoDetail.getImageSize());
     picture.setSizeH(photoDetail.getSizeH());
     picture.setSizeL(photoDetail.getSizeL());
+    picture.setMimeType(photoDetail.getImageMimeType());
+    picture.setInstance(photoDetail.getInstanceId());
 
     if (photoDetail.getUpdateId() != null) {
       picture.setUpdater(

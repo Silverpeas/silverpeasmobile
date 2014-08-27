@@ -81,10 +81,20 @@
 		<servlet-class>com.silverpeas.mobile.server.servlets.AttachmentServlet</servlet-class>
 	</servlet>
 
+  <servlet>
+    <servlet-name>MediaServlet</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.servlets.MediaServlet</servlet-class>
+  </servlet>
+
 	<servlet-mapping>
 		<servlet-name>AttachmentServlet</servlet-name>
 		<url-pattern>/spmobil/Attachment</url-pattern>
 	</servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>MediaServlet</servlet-name>
+    <url-pattern>/spmobil/Media</url-pattern>
+  </servlet-mapping>
 
 
 	<!-- Default page to serve -->

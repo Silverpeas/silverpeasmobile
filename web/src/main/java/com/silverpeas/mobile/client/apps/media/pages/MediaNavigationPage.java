@@ -12,6 +12,7 @@ import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItem
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation
     .MediaNavigationPagesEventHandler;
+import com.silverpeas.mobile.client.apps.media.events.pages.widgets.AddMediaButton;
 import com.silverpeas.mobile.client.apps.media.events.pages.widgets.MediaItem;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -57,6 +58,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     if (isVisible() && dataLoaded == false) {
 
       list.clear();
+      list.add(new AddMediaButton()); //TODO : manage user rights
       List<BaseDTO> dataItems = event.getAlbumsAndMedias();
       for (BaseDTO dataItem : dataItems) {
         MediaItem item = new MediaItem();

@@ -2,9 +2,16 @@ package com.silverpeas.mobile.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.MetaElement;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.silverpeas.mobile.client.common.ErrorManager;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -24,14 +31,22 @@ public class SpMobil implements EntryPoint {
 	public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
 	public final static Page mainPage = new Page();
 	public static DetailUserDTO user;
+  private static String viewport, bodyClass;
 	
 	/**
 	 * Init. spmobile.
 	 */
 	public void onModuleLoad() {
-				
-		EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
-		loadIds();	
+    EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
+    loadIds();
+
+    NodeList<Element> tags = Document.get().getElementsByTagName("meta");
+    for (int i = 0; i < tags.getLength(); i++) {
+      MetaElement metaTag = ((MetaElement) tags.getItem(i));
+      if (metaTag.getName().equals("viewport")) {
+        viewport = metaTag.getContent();
+      }
+    }
 	}
 	
 	/**
@@ -106,5 +121,41 @@ public class SpMobil implements EntryPoint {
 			EventBus.getInstance().fireEvent(new ErrorEvent(e));
 		}
 		return plainPassword;
-	}	
+	}
+
+  public static void showFullScreen(final Widget content, final boolean zoomable) {
+    PageHistory.getInstance().gotoToFullScreen("viewer");
+    RootPanel.get().clear();
+    RootPanel.get().add(content);
+
+    if (zoomable) {
+      NodeList<Element> tags = Document.get().getElementsByTagName("meta");
+      for (int i = 0; i < tags.getLength(); i++) {
+        MetaElement metaTag = ((MetaElement) tags.getItem(i));
+        if (metaTag.getName().equals("viewport")) {
+          metaTag.setContent("");
+        }
+      }
+    }
+    bodyClass = Document.get().getBody().getClassName();
+    Document.get().getBody().setClassName("");
+    Document.get().getBody().getStyle().setPaddingTop(0, Style.Unit.PX);
+  }
+
+  public static void restoreMainPage() {
+    RootPanel.get().clear();
+    RootPanel.get().add(SpMobil.mainPage);
+
+    Document.get().getBody().setClassName(bodyClass);
+    Document.get().getBody().getStyle().clearPaddingTop();
+
+    NodeList<Element> tags = Document.get().getElementsByTagName("meta");
+    for (int i = 0; i < tags.getLength(); i++) {
+      MetaElement metaTag = ((MetaElement) tags.getItem(i));
+      if (metaTag.getName().equals("viewport")) {
+        metaTag.setContent(viewport);
+      }
+    }
+
+  }
 }
