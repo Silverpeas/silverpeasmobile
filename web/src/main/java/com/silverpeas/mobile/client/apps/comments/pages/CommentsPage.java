@@ -1,12 +1,10 @@
-package com.silverpeas.mobile.client.apps.documents.pages;
+package com.silverpeas.mobile.client.apps.comments.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -14,10 +12,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadCommentsEvent;
-import com.silverpeas.mobile.client.apps.documents.events.pages.comments.AbstractCommentsPagesEvent;
-import com.silverpeas.mobile.client.apps.documents.events.pages.comments.CommentsLoadedEvent;
-import com.silverpeas.mobile.client.apps.documents.events.pages.comments.CommentsPagesEventHandler;
+import com.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
+import com.silverpeas.mobile.client.apps.comments.events.pages.AbstractCommentsPagesEvent;
+import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
+import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.pages.widgets.Comment;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -26,7 +24,6 @@ import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.documents.CommentDTO;
-import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
 import java.util.List;
 
@@ -45,7 +42,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   @UiField TextArea newComment;
 
   protected DocumentsMessages msg = null;
-  private PublicationDTO publication;
+  private String contentId;
   private List<CommentDTO> comments;
 
   private static CommentsPageUiBinder uiBinder = GWT.create(CommentsPageUiBinder.class);
@@ -58,11 +55,15 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     addCommentTitle.setInnerHTML(msg.addComment());
   }
 
-  public void setPublication(final PublicationDTO publication) {
-    this.publication = publication;
+  public void setContentId(final String contentId) {
+    this.contentId = contentId;
     // send event to controler for retrieve comments infos
     Notification.activityStart();
-    EventBus.getInstance().fireEvent(new DocumentsLoadCommentsEvent(publication.getId()));
+    EventBus.getInstance().fireEvent(new CommentsLoadEvent(contentId));
+  }
+
+  public void setTitle(String title) {
+    this.title.setInnerText(msg.commentsPageTitle(title));
   }
 
   @Override
@@ -75,7 +76,6 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
       c.setComment(comment);
       commentsList.add(c);
     }
-    title.setInnerText(msg.commentsPageTitle(publication.getName()));
   }
 
   @Override

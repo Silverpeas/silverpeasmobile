@@ -15,17 +15,17 @@ import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
 
 public class StatusApp extends App implements StatusAppEventHandler {
-	
+
 	public StatusApp(){
 		super();
 		EventBus.getInstance().addHandler(AbstractStatusAppEvent.TYPE, this);
 	}
-	
-	public void start(){		
-		setMainPage(new StatusPage());		
+
+	public void start(){
+		setMainPage(new StatusPage());
 		super.start();
 	}
-	
+
 	@Override
 	public void stop() {
 		EventBus.getInstance().removeHandler(AbstractStatusAppEvent.TYPE, this);

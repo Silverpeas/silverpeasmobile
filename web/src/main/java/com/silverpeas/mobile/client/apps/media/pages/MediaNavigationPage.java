@@ -12,8 +12,8 @@ import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItem
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation
     .MediaNavigationPagesEventHandler;
-import com.silverpeas.mobile.client.apps.media.events.pages.widgets.AddMediaButton;
-import com.silverpeas.mobile.client.apps.media.events.pages.widgets.MediaItem;
+import com.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton;
+import com.silverpeas.mobile.client.apps.media.pages.widgets.MediaItem;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;

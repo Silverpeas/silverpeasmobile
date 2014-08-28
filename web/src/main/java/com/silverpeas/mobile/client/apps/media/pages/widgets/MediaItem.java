@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.client.apps.media.events.pages.widgets;
+package com.silverpeas.mobile.client.apps.media.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,12 +19,12 @@ public class MediaItem extends Composite {
 	private Object data;
 	private AlbumDTO dataAlbum;
 	private PhotoDTO dataPhoto;
-	private static GedItemUiBinder uiBinder = GWT.create(GedItemUiBinder.class);
+	private static MediaItemUiBinder uiBinder = GWT.create(MediaItemUiBinder.class);
 	@UiField Anchor link;
 	protected ApplicationMessages msg = null;
 	
 	
-	interface GedItemUiBinder extends UiBinder<Widget, MediaItem> {
+	interface MediaItemUiBinder extends UiBinder<Widget, MediaItem> {
 	}
 
 	public MediaItem() {

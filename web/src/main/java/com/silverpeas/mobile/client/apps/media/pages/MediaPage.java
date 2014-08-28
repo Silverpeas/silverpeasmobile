@@ -3,17 +3,12 @@ package com.silverpeas.mobile.client.apps.media.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.dom.client.MetaElement;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -21,10 +16,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
-import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
+import com.silverpeas.mobile.client.apps.comments.CommentsApp;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.AbstractMediaPagesEvent;
@@ -35,9 +28,7 @@ import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.PageContent;
-import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
 /**
@@ -146,8 +137,8 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiHandler("comments")
   void displayComments(ClickEvent event) {
-    Window.alert("Coming soon!");
-    //TODO : show comments => createcomments app
+    CommentsApp commentsApp = new CommentsApp(media.getId(), media.getTitle());
+    commentsApp.start();
   }
 
 }
