@@ -8,7 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.silverpeas.mobile.shared.dto.documents.CommentDTO;
+import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 /**
  * @author: svu

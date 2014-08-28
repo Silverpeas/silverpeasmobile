@@ -7,10 +7,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
-import com.silverpeas.mobile.client.resources.ApplicationMessages;
 
 /**
  * @author: svu
@@ -20,14 +18,14 @@ public class AddMediaButton extends Composite {
   }
 
   @UiField Anchor link;
-  protected MediaMessages msg = null;
+  
+  @UiField(provided = true) protected MediaMessages msg = null;
 
   private static AddMediaButtonUiBinder uiBinder = GWT.create(AddMediaButtonUiBinder.class);
 
   public AddMediaButton() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(MediaMessages.class);
-    link.setText(msg.importMedia());
   }
 
   @UiHandler("link")

@@ -1,6 +1,9 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+  
+  <ui:with field='msg' type='com.silverpeas.mobile.client.apps.media.resources.MediaMessages'/>
+  
   <g:HTMLPanel tag="li" styleName="add-media">
-    <g:Anchor ui:field="link" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more"/>
+    <g:Anchor ui:field="link" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" text="{msg.importMedia}"/>
   </g:HTMLPanel>
 </ui:UiBinder>

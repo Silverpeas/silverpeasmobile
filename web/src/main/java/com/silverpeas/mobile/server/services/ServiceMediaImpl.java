@@ -23,8 +23,9 @@ import javax.imageio.ImageIO;
 
 import com.silverpeas.comment.service.CommentServiceFactory;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.exceptions.MediaException;
+import com.silverpeas.mobile.shared.services.ServiceMedia;
 import com.stratelia.webactiv.util.node.model.NodePK;
-import com.stratelia.webactiv.util.publication.model.PublicationPK;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 
@@ -46,8 +47,6 @@ import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.GalleryException;
-import com.silverpeas.mobile.shared.services.ServiceGallery;
 import com.silverpeas.util.StringUtil;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.ComponentInstLight;
@@ -61,7 +60,7 @@ import com.stratelia.webactiv.util.ResourceLocator;
  * Service de gestion des galleries d'images.
  * @author svuillet
  */
-public class ServiceGalleryImpl extends AbstractAuthenticateService implements ServiceGallery {
+public class ServiceMediaImpl extends AbstractAuthenticateService implements ServiceMedia {
 	
 	private static final long serialVersionUID = 1L;
 	private AdminBusiness adminBm;
@@ -71,7 +70,8 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	/**
 	 * Importation d'une image dans un album.
 	 */
-	public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws GalleryException, AuthenticationException {
+	public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws
+                                                                                        MediaException, AuthenticationException {
 		checkUserInSession();
 		
 		String extension = "jpg";
@@ -154,7 +154,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	/**
 	 * Retourne la listes des galleries accessibles.
 	 */
-	public List<ApplicationInstanceDTO> getAllGalleries() throws GalleryException, AuthenticationException {
+	public List<ApplicationInstanceDTO> getAllGalleries() throws MediaException, AuthenticationException {
 		checkUserInSession();
 		
 		ArrayList<ApplicationInstanceDTO> results = new ArrayList<ApplicationInstanceDTO>();
@@ -183,7 +183,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	/**
 	 * Retourne la liste des albums d'une appli media.
 	 */
-	private List<AlbumDTO> getAlbums(String instanceId, String rootAlbumId) throws GalleryException, AuthenticationException {
+	private List<AlbumDTO> getAlbums(String instanceId, String rootAlbumId) throws MediaException, AuthenticationException {
 		checkUserInSession();
 		
 		ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
@@ -221,7 +221,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
   /**
 	 * Retourne les photos miniatures d'un album.
 	 */
-	private List<PhotoDTO> getPictures(String instanceId, String albumId) throws GalleryException, AuthenticationException {
+	private List<PhotoDTO> getPictures(String instanceId, String albumId) throws MediaException, AuthenticationException {
 		checkUserInSession();
 		
 		ArrayList<PhotoDTO> results = new ArrayList<PhotoDTO>();
@@ -243,7 +243,8 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 		return results;
 	}
 
-  public List<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId) throws GalleryException, AuthenticationException {
+  public List<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId) throws
+                                                                                   MediaException, AuthenticationException {
 	checkUserInSession();
     ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();
     list.addAll(getAlbums(instanceId, rootAlbumId));
@@ -254,7 +255,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	/**
 	 * Retourne la photo originale.
 	 */
-	public PhotoDTO getOriginalPicture(String instanceId, String pictureId) throws GalleryException, AuthenticationException {
+	public PhotoDTO getOriginalPicture(String instanceId, String pictureId) throws MediaException, AuthenticationException {
 		checkUserInSession();
 		
 		PhotoDTO picture = null;
@@ -273,7 +274,7 @@ public class ServiceGalleryImpl extends AbstractAuthenticateService implements S
 	/**
 	 * Retourne la photo preview.
 	 */
-	public PhotoDTO getPreviewPicture(String instanceId, String pictureId) throws GalleryException, AuthenticationException {
+	public PhotoDTO getPreviewPicture(String instanceId, String pictureId) throws MediaException, AuthenticationException {
 		checkUserInSession();
 		
 		PhotoDTO picture = null;

@@ -11,20 +11,18 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.comments.CommentsApp;
-import com.silverpeas.mobile.client.apps.comments.pages.CommentsPage;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.pages.widgets.Attachment;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import com.silverpeas.mobile.client.apps.navigation.Apps;
-import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
@@ -95,7 +93,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 
   @UiHandler("comments")
   void displayComments(ClickEvent event) {
-    CommentsApp commentsApp = new CommentsApp(publication.getId(), publication.getName());
+    CommentsApp commentsApp = new CommentsApp(publication.getId(), CommentDTO.TYPE_PUBLICATION, getPageTitle(), publication.getName());
     commentsApp.start();
   }
 }

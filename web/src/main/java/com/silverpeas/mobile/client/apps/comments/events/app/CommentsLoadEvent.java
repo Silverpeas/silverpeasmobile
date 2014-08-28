@@ -2,11 +2,12 @@ package com.silverpeas.mobile.client.apps.comments.events.app;
 
 public class CommentsLoadEvent extends AbstractCommentsAppEvent {
 
-	private String contentId;
+	private String contentId, contentType;
 	
-	public CommentsLoadEvent(String contentId){
+	public CommentsLoadEvent(String contentId, String contentType){
 		super();
 		this.contentId = contentId;
+    this.contentType = contentType;
 	}
 	
 	@Override
@@ -17,4 +18,8 @@ public class CommentsLoadEvent extends AbstractCommentsAppEvent {
 	public String getContentId(){
 		return contentId;
 	}
+
+  public String getContentType() {
+    return contentType;
+  }
 }

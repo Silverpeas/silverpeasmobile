@@ -1,6 +1,6 @@
 package com.silverpeas.mobile.client.apps.comments.events.pages;
 
-import com.silverpeas.mobile.shared.dto.documents.CommentDTO;
+import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 import java.util.List;
 

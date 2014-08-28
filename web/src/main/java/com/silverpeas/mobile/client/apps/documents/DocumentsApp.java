@@ -69,15 +69,15 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 	 * Get subtopics.
 	 */
 	@Override
-	public void loadTopics(DocumentsLoadGedItemsEvent event) {		
+	public void loadTopics(DocumentsLoadGedItemsEvent event) {
 		ServicesLocator.serviceDocuments.getTopicsAndPublications(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<BaseDTO>>() {			
 			@Override
 			public void onSuccess(List<BaseDTO> result) {
-				EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));				
+				EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));
 			}			
 			@Override
 			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
 			}
 		});
 	}
@@ -87,14 +87,14 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 	 */
 	@Override
 	public void loadPublication(DocumentsLoadPublicationEvent event) {
-		ServicesLocator.serviceDocuments.getPublication(event.getPubId(), new AsyncCallback<PublicationDTO>() {			
+		ServicesLocator.serviceDocuments.getPublication(event.getPubId(), new AsyncCallback<PublicationDTO>() {
 			@Override
 			public void onSuccess(PublicationDTO result) {
-				EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result));				
+				EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result));
 			}
 			@Override
 			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
 			}
 		});
 	}

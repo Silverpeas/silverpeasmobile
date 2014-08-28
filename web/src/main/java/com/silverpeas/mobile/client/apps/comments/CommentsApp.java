@@ -10,7 +10,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
-import com.silverpeas.mobile.shared.dto.documents.CommentDTO;
+import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 import java.util.List;
 
@@ -21,11 +21,12 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
   private CommentsPage mainPage = new CommentsPage();
 
-  public CommentsApp(String contentId, String title) {
+  public CommentsApp(String contentId, String contentType, String pageTitle, String title) {
     super();
     EventBus.getInstance().addHandler(AbstractCommentsAppEvent.TYPE, this);
     mainPage.setTitle(title);
-    mainPage.setContentId(contentId);
+    mainPage.setPageTitle(pageTitle);
+    mainPage.setContentInfos(contentId, contentType);
   }
 
   public void start(){
@@ -41,7 +42,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
   @Override
   public void loadComments(final CommentsLoadEvent event) {
-    ServicesLocator.serviceDocuments.getComments(event.getContentId(), new AsyncCallback<List<CommentDTO>>() {
+    ServicesLocator.serviceComments.getComments(event.getContentId(), event.getContentType(), new AsyncCallback<List<CommentDTO>>() {
       @Override
       public void onSuccess(List<CommentDTO> result) {
         EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));

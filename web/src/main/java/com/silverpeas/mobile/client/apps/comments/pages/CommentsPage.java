@@ -23,7 +23,7 @@ import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
-import com.silverpeas.mobile.shared.dto.documents.CommentDTO;
+import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   @UiField TextArea newComment;
 
   protected DocumentsMessages msg = null;
-  private String contentId;
+  private String contentId, contentType;
   private List<CommentDTO> comments;
 
   private static CommentsPageUiBinder uiBinder = GWT.create(CommentsPageUiBinder.class);
@@ -55,11 +55,12 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     addCommentTitle.setInnerHTML(msg.addComment());
   }
 
-  public void setContentId(final String contentId) {
+  public void setContentInfos(final String contentId, final String contentType) {
     this.contentId = contentId;
+    this.contentType = contentType;
     // send event to controler for retrieve comments infos
     Notification.activityStart();
-    EventBus.getInstance().fireEvent(new CommentsLoadEvent(contentId));
+    EventBus.getInstance().fireEvent(new CommentsLoadEvent(contentId, contentType));
   }
 
   public void setTitle(String title) {

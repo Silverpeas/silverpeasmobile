@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.shared.dto.documents;
+package com.silverpeas.mobile.shared.dto.comments;
 
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 
@@ -8,6 +8,9 @@ import java.io.Serializable;
  * @author: svu
  */
 public class CommentDTO extends BaseDTO implements Serializable {
+
+  public final static String TYPE_PUBLICATION = "Publication";
+  public final static String TYPE_MEDIA = "Photo";
 
   private String content;
   private String avatar;

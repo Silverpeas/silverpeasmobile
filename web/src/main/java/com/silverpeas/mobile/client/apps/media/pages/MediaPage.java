@@ -29,6 +29,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
 /**
@@ -137,7 +138,7 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiHandler("comments")
   void displayComments(ClickEvent event) {
-    CommentsApp commentsApp = new CommentsApp(media.getId(), media.getTitle());
+    CommentsApp commentsApp = new CommentsApp(media.getId(), CommentDTO.TYPE_MEDIA, getPageTitle(), media.getTitle());
     commentsApp.start();
   }
 
