@@ -3,14 +3,11 @@ package com.silverpeas.mobile.client.apps.documents.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.comments.CommentsApp;
+import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
@@ -37,8 +34,8 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 	@UiField HTMLPanel container;
 	@UiField UnorderedList attachments;
 	@UiField ParagraphElement desc, lastUpdate;
-  @UiField Anchor comments;
-		
+  @UiField CommentsButton comments;
+
 	interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
 	}
 
@@ -53,6 +50,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 	@Override
 	public void stop() {
 		super.stop();
+    comments.stop();
 		EventBus.getInstance().removeHandler(AbstractPublicationPagesEvent.TYPE, this);
 	}
 
@@ -76,24 +74,12 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 		title.setInnerHTML(publication.getName());
 		desc.setInnerHTML(publication.getDescription());
 		lastUpdate.setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
-		
+
 		for (AttachmentDTO attachment : publication.getAttachments()) {
 			Attachment a = new Attachment();
 			a.setAttachment(attachment);
 			attachments.add(a);
 		}
-    if (publication.getCommentsNumber() == 0) {
-      comments.setText(msg.noComment());
-    } else if (publication.getCommentsNumber() == 1) {
-      comments.setText(msg.comment());
-    } else {
-      comments.setText(msg.comments(String.valueOf(publication.getCommentsNumber())));
-    }
+    comments.init(publication.getId(), publication.getInstanceId(), CommentDTO.TYPE_PUBLICATION, getPageTitle(), publication.getName(), publication.getCommentsNumber());
 	}
-
-  @UiHandler("comments")
-  void displayComments(ClickEvent event) {
-    CommentsApp commentsApp = new CommentsApp(publication.getId(), CommentDTO.TYPE_PUBLICATION, getPageTitle(), publication.getName());
-    commentsApp.start();
-  }
 }

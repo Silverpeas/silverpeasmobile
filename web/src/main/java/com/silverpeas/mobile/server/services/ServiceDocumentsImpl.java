@@ -128,11 +128,12 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 	@Override
 	public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException {		
 		SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
-		checkUserInSession();				
+		checkUserInSession();
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			
 			PublicationDetail pub = getPubBm().getDetail(new PublicationPK(pubId));
+
 			PublicationDTO dto = new PublicationDTO();
 			dto.setId(pub.getId());
 			dto.setName(pub.getName());
@@ -142,6 +143,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			dto.setDescription(pub.getDescription());
 			dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
       dto.setCommentsNumber(CommentServiceFactory.getFactory().getCommentService().getCommentsCountOnPublication("Publication", new PublicationPK(pubId)));
+      dto.setInstanceId(pub.getInstanceId());
 
 			String content = pub.getWysiwyg();
 			//TODO : convert img url to data uri
@@ -149,15 +151,15 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 			
 			dto.setWysiwyg(content);
 						
-			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();						
-			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");		
+			ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
+			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");
 			
 			List<SimpleDocument> pubAttachments = AttachmentServiceFactory.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, "fr"); // TODO manager langue
 						
 			SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 			
 			for (SimpleDocument attachment : pubAttachments) {
-				AttachmentDTO attach = new AttachmentDTO();						
+				AttachmentDTO attach = new AttachmentDTO();
 				attach.setTitle(attachment.getTitle());
 				if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
 					attach.setTitle(attachment.getFilename());
@@ -174,9 +176,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 				attach.setAuthor(attachment.getCreatedBy());
 				attach.setOrderNum(attachment.getOrder());
 				attach.setSize(attachment.getSize());
-				attach.setCreationDate(attachment.getCreated());		
+				attach.setCreationDate(attachment.getCreated());
 			}
-			dto.setAttachments(attachments);		
+			dto.setAttachments(attachments);
 			
 			return dto;
 		} catch (Throwable e) {
@@ -188,7 +190,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 	@Override
 	public List<BaseDTO> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
 		checkUserInSession();
-		ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();		
+		ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();
 		list.addAll(getTopics(instanceId, rootTopicId));
 		list.addAll(getPublications(instanceId, rootTopicId));
 		return list;

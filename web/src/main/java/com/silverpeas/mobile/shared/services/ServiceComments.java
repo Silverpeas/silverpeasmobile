@@ -15,4 +15,5 @@ import java.util.List;
 @RemoteServiceRelativePath("Comments")
 public interface ServiceComments extends RemoteService {
   public List<CommentDTO> getComments(String id, String type) throws CommentsException, AuthenticationException;
+  public CommentDTO addComment(String id, String instanceId, String type, String message) throws CommentsException, AuthenticationException;
 }

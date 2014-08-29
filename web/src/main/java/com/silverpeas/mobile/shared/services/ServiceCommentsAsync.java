@@ -15,4 +15,7 @@ import java.util.List;
 
 public interface ServiceCommentsAsync {
   void getComments(String id, String type, final AsyncCallback<List<CommentDTO>> async);
+
+  void addComment(String id, String instanceId, String type, String message,
+      final AsyncCallback<CommentDTO> async);
 }

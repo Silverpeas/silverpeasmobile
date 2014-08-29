@@ -18,8 +18,9 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 	private String updateDate;
 	private ArrayList<AttachmentDTO> attachments = null;
   private int commentsNumber = 0;
-	
-	public String getName() {
+  private String instanceId;
+
+  public String getName() {
 		return name;
 	}
 	public void setName(String name) {
@@ -78,5 +79,13 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 
   public void setCommentsNumber(final int commentsNumber) {
     this.commentsNumber = commentsNumber;
+  }
+
+  public String getInstanceId() {
+    return instanceId;
+  }
+
+  public void setInstanceId(final String instanceId) {
+    this.instanceId = instanceId;
   }
 }

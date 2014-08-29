@@ -1,4 +1,6 @@
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:w="urn:import:com.silverpeas.mobile.client.apps.comments.pages.widgets">
   <g:HTMLPanel>
       <h2 class="mediaName" ui:field="mediaTitle"></h2>
 
@@ -7,9 +9,7 @@
           <img ui:field="preview"/>
         </g:Anchor>
       </div>
-      <div id="comments">
-        <g:Anchor ui:field="comments" styleName="ui-btn ui-btn-icon-right"></g:Anchor>
-      </div>
+      <w:CommentsButton ui:field="comments"/>
       <ul id="attachments">
         <li>
           <g:Anchor ui:field="download" styleName="downloadable">

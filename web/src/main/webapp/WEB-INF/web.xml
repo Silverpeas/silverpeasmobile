@@ -95,6 +95,16 @@
 		<url-pattern>/spmobil/Attachment</url-pattern>
 	</servlet-mapping>
 
+  <servlet>
+    <servlet-name>MediaServlet</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.servlets.MediaServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>MediaServlet</servlet-name>
+    <url-pattern>/spmobil/MediaAction</url-pattern>
+  </servlet-mapping>
+
 
 	<!-- Default page to serve -->
 	<welcome-file-list>

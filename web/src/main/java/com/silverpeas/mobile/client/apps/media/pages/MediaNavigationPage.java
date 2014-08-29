@@ -28,8 +28,8 @@ import java.util.List;
 public class MediaNavigationPage extends PageContent implements View, MediaNavigationPagesEventHandler {
 
 	private static MediaNavigationPageUiBinder uiBinder = GWT.create(MediaNavigationPageUiBinder.class);
-  @UiField
-  UnorderedList list;
+  @UiField UnorderedList list;
+  private AddMediaButton buttonImport= new AddMediaButton();
 
   private String rootAlbumId, instanceId;
   private boolean dataLoaded = false;
@@ -42,14 +42,12 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     EventBus.getInstance().addHandler(AbstractMediaNavigationPagesEvent.TYPE, this);
 	}
 	
-	public void setAlbumId(String rootAlbumId) {
+	public void init(String instanceId, String rootAlbumId) {
     Notification.activityStart();
+    this.instanceId = instanceId;
     this.rootAlbumId = rootAlbumId;
+    buttonImport.init(instanceId, rootAlbumId);
     EventBus.getInstance().fireEvent(new MediasLoadMediaItemsEvent(instanceId, rootAlbumId));
-	}
-	
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
 	}
 
   @Override
@@ -58,7 +56,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     if (isVisible() && dataLoaded == false) {
 
       list.clear();
-      list.add(new AddMediaButton()); //TODO : manage user rights
+      list.add(buttonImport); //TODO : manage user rights
       List<BaseDTO> dataItems = event.getAlbumsAndMedias();
       for (BaseDTO dataItem : dataItems) {
         MediaItem item = new MediaItem();
@@ -76,8 +74,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
       if (event.getMediaItem() instanceof AlbumDTO) {
         MediaNavigationPage page = new MediaNavigationPage();
         page.setPageTitle(getPageTitle());
-        page.setInstanceId(instanceId);
-        page.setAlbumId(((AlbumDTO) event.getMediaItem()).getId());
+        page.init(instanceId, ((AlbumDTO) event.getMediaItem()).getId());
         page.show();
       } else if (event.getMediaItem() instanceof PhotoDTO) {
         MediaPage page = new MediaPage();

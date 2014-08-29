@@ -63,9 +63,8 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
 		MediaNavigationPage page = new MediaNavigationPage();
 		page.setPageTitle(msg.title());
-		page.setInstanceId(event.getInstance().getId());
-		page.setAlbumId(null);
-		page.show();	
+    page.init(event.getInstance().getId(), null);
+		page.show();
 		
 	}
 

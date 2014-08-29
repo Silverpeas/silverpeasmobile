@@ -8,16 +8,17 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
+import com.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
 import com.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
 import com.silverpeas.mobile.client.apps.comments.events.pages.AbstractCommentsPagesEvent;
+import com.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent;
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsPagesEventHandler;
+import com.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
 import com.silverpeas.mobile.client.apps.documents.pages.widgets.Comment;
-import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
@@ -41,23 +42,24 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   @UiField Anchor addComment;
   @UiField TextArea newComment;
 
-  protected DocumentsMessages msg = null;
-  private String contentId, contentType;
+  protected CommentsMessages msg = null;
+  private String contentId, contentType, instanceId;
   private List<CommentDTO> comments;
 
   private static CommentsPageUiBinder uiBinder = GWT.create(CommentsPageUiBinder.class);
 
   public CommentsPage() {
-    msg = GWT.create(DocumentsMessages.class);
+    msg = GWT.create(CommentsMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractCommentsPagesEvent.TYPE, this);
     container.getElement().setId("publication");
     addCommentTitle.setInnerHTML(msg.addComment());
   }
 
-  public void setContentInfos(final String contentId, final String contentType) {
+  public void setContentInfos(final String contentId, final String instanceId, final String contentType) {
     this.contentId = contentId;
     this.contentType = contentType;
+    this.instanceId = instanceId;
     // send event to controler for retrieve comments infos
     Notification.activityStart();
     EventBus.getInstance().fireEvent(new CommentsLoadEvent(contentId, contentType));
@@ -71,12 +73,24 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   public void onLoadedComments(final CommentsLoadedEvent event) {
     Notification.activityStop();
     this.comments = event.getComments();
+    renderList();
+  }
 
+  private void renderList() {
+    commentsList.clear();
     for (CommentDTO comment : comments) {
       Comment c = new Comment();
       c.setComment(comment);
       commentsList.add(c);
     }
+  }
+
+  @Override
+  public void onAddedComment(final CommentAddedEvent event) {
+    comments.add(0, event.getComment());
+    renderList();
+    newComment.setText("");
+    addComment.getElement().addClassName("inactif");
   }
 
   @Override
@@ -97,8 +111,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   @UiHandler("addComment")
   void addComment(ClickEvent event) {
     if (!addComment.getElement().hasClassName("inactif")) {
-      Window.alert("Coming soon!");
-      //TODO : manage user rights + service call
+      EventBus.getInstance().fireEvent(new AddCommentEvent(contentId, instanceId, contentType, newComment.getText()));
     }
   }
 }

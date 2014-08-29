@@ -2,8 +2,10 @@ package com.silverpeas.mobile.client.apps.comments;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.comments.events.app.AbstractCommentsAppEvent;
+import com.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
 import com.silverpeas.mobile.client.apps.comments.events.app.CommentsAppEventHandler;
 import com.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
+import com.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent;
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import com.silverpeas.mobile.client.apps.comments.pages.CommentsPage;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -21,12 +23,12 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
   private CommentsPage mainPage = new CommentsPage();
 
-  public CommentsApp(String contentId, String contentType, String pageTitle, String title) {
+  public CommentsApp(String contentId, String instanceId, String contentType, String pageTitle, String title) {
     super();
     EventBus.getInstance().addHandler(AbstractCommentsAppEvent.TYPE, this);
     mainPage.setTitle(title);
     mainPage.setPageTitle(pageTitle);
-    mainPage.setContentInfos(contentId, contentType);
+    mainPage.setContentInfos(contentId, instanceId, contentType);
   }
 
   public void start(){
@@ -50,6 +52,20 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
       @Override
       public void onFailure(Throwable caught) {
         EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+      }
+    });
+  }
+
+  @Override
+  public void addComment(final AddCommentEvent event) {
+    ServicesLocator.serviceComments.addComment(event.getContentId(), event.getInstanceId(), event.getContentType(), event.getMessage(), new AsyncCallback<CommentDTO>() {
+      @Override
+      public void onFailure(final Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+      }
+      @Override
+      public void onSuccess(final CommentDTO result) {
+        EventBus.getInstance().fireEvent(new CommentAddedEvent(result));
       }
     });
   }

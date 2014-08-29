@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.silverpeas.mobile.client.SpMobil;
-import com.silverpeas.mobile.client.apps.comments.CommentsApp;
+import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.AbstractMediaPagesEvent;
@@ -41,15 +41,15 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
   }
 
   @UiField HeadingElement mediaTitle;
-  @UiField Anchor mediaFullSize, comments, download;
+  @UiField Anchor mediaFullSize, download;
   @UiField ParagraphElement lastUpdate;
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement preview, mediaType;
+  @UiField CommentsButton comments;
   private static MediaPageUiBinder uiBinder = GWT.create(MediaPageUiBinder.class);
   private PhotoDTO media;
+  private DocumentsResources ressources;
   private MediaMessages msg;
-
-  protected DocumentsResources ressources = null;
 
   public MediaPage() {
     initWidget(uiBinder.createAndBindUi(this));
@@ -82,13 +82,7 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
 
     lastUpdate.setInnerHTML(msg.lastUpdate(media.getUpdateDate(), media.getUpdater()));
 
-    if (media.getCommentsNumber() == 0) {
-      comments.setText(msg.noComment());
-    } else if (media.getCommentsNumber() == 1) {
-      comments.setText(msg.comment());
-    } else {
-      comments.setText(msg.comments(String.valueOf(media.getCommentsNumber())));
-    }
+    comments.init(media.getId(), media.getInstance(), CommentDTO.TYPE_MEDIA, getPageTitle(), media.getTitle(), media.getCommentsNumber());
   }
 
   @Override
@@ -102,6 +96,7 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
   @Override
   public void stop() {
     super.stop();
+    comments.stop();
     EventBus.getInstance().removeHandler(AbstractMediaPagesEvent.TYPE, this);
   }
 
@@ -116,8 +111,8 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
       if (!clicked) {
         clicked = true;
         try {
-          String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/spmobile/spmobil/Media";
-          url = url + "?id=" + media.getId() + "&instanceId=" + media.getInstance();
+          String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/spmobile/spmobil/MediaAction";
+          url = url + "?action=view?id=" + media.getId() + "&instanceId=" + media.getInstance();
           download.setHref(url);
           download.setTarget("_self");
           download.fireEvent(new ClickEvent() {});
@@ -135,11 +130,4 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
       }
     }
   }
-
-  @UiHandler("comments")
-  void displayComments(ClickEvent event) {
-    CommentsApp commentsApp = new CommentsApp(media.getId(), CommentDTO.TYPE_MEDIA, getPageTitle(), media.getTitle());
-    commentsApp.start();
-  }
-
 }
