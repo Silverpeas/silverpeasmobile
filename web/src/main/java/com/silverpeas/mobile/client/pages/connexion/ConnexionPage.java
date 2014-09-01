@@ -21,6 +21,7 @@ import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
@@ -45,9 +46,9 @@ public class ConnexionPage extends PageContent {
 	interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {
 	}
 
-	public ConnexionPage() {		
+	public ConnexionPage() {
 		msg = GWT.create(ApplicationMessages.class);
-		loadDomains();						
+		loadDomains();
 		initWidget(uiBinder.createAndBindUi(this));
 		loginField.getElement().setId("Login");
 		passwordField.getElement().setId("Password");
@@ -60,7 +61,7 @@ public class ConnexionPage extends PageContent {
 	 */
 	@UiHandler("go")
 	void connexion(ClickEvent e) {
-		clickGesture(new Command() {			
+		clickGesture(new Command() {
 			@Override
 			public void execute() {
 				String login = loginField.getText();
@@ -76,13 +77,13 @@ public class ConnexionPage extends PageContent {
 	 * @param password
 	 * @param domainId
 	 */
-	private void login(String login, final String password, String domainId) {		
+	private void login(String login, final String password, String domainId) {
 		if (!login.isEmpty() && !password.isEmpty()) {
 			ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
 				public void onFailure(Throwable caught) {
 					EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 				}
-				public void onSuccess(DetailUserDTO user) {					
+				public void onSuccess(DetailUserDTO user) {
 					String encryptedPassword = null;
 					try {
 						encryptedPassword = encryptPassword(password);
@@ -94,7 +95,7 @@ public class ConnexionPage extends PageContent {
 					
 					RootPanel.get().clear();
 					RootPanel.get().add(SpMobil.mainPage);
-					PageHistory.getInstance().goTo(new AppList());					
+					PageHistory.getInstance().goTo(new AppList());
 				}
 			});	
 		}
@@ -110,12 +111,12 @@ public class ConnexionPage extends PageContent {
 	/**
 	 * Mémorisation des identifiants de l'utilisateur.
 	 */
-	private void storeIds(final String encryptedPassword) {	
+	private void storeIds(final String encryptedPassword) {
 		Storage storage = Storage.getLocalStorageIfSupported();
 		if (storage != null) {
-			User user = new User(loginField.getText(), encryptedPassword, domains.getValue(domains.getSelectedIndex()));			
-			storage.setItem("userConnected", user.toJson());			
-		}		
+			User user = new User(loginField.getText(), encryptedPassword, domains.getValue(domains.getSelectedIndex()));
+			storage.setItem("userConnected", user.toJson());
+		}
 	}
 	
 	/**
@@ -127,7 +128,7 @@ public class ConnexionPage extends PageContent {
 				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 			}
 
-			public void onSuccess(List<DomainDTO> result) {						
+			public void onSuccess(List<DomainDTO> result) {
 				Iterator<DomainDTO> iDomains = result.iterator();
 				while (iDomains.hasNext()) {
 					DomainDTO domain = iDomains.next();
@@ -136,4 +137,5 @@ public class ConnexionPage extends PageContent {
 			}
 		});
 	}
+
 }

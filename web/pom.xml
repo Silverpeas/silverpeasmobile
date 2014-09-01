@@ -38,7 +38,6 @@
 					<execution>
 						<configuration>
 							<modules>
-								<module>com.gwtmobile.ui.gwtmobile_ui</module>
 								<module>com.silverpeas.mobile.SpMobil</module>
 							</modules>
 							<localWorkers>3</localWorkers>

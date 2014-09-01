@@ -7,7 +7,7 @@
 	
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.json.JSON"/>
-	<inherits name="com.gwtmobile.ui.gwtmobile_ui"/>		
+
 	<inherits name="com.googlecode.gwt.crypto.Crypto"/>
 	<inherits name="org.fusesource.restygwt.RestyGWT"/>
 	<source path="client" />
