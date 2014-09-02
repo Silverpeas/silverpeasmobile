@@ -6,12 +6,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.navigation
-    .AbstractMediaNavigationPagesEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.navigation.AbstractMediaNavigationPagesEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemClickEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.navigation
-    .MediaNavigationPagesEventHandler;
+import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaNavigationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton;
 import com.silverpeas.mobile.client.apps.media.pages.widgets.MediaItem;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -33,7 +31,6 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   private AddMediaButton buttonImport= new AddMediaButton();
 
   private String rootAlbumId, instanceId;
-  private boolean dataLoaded = false;
   private RightDTO rights;
 
   interface MediaNavigationPageUiBinder extends UiBinder<Widget, MediaNavigationPage> {
@@ -56,11 +53,10 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   @Override
   public void onLoadedAlbums(final MediaItemsLoadedEvent event) {
     Notification.activityStart();
-    if (isVisible() && dataLoaded == false) {
-
+    if (isVisible()) {
       list.clear();
       if (rights.isWriter() || rights.isPublisher() || rights.isManager()) {
-        list.add(buttonImport);
+        if (rootAlbumId != null) list.add(buttonImport);
       }
       List<BaseDTO> dataItems = event.getAlbumsAndMedias();
       for (BaseDTO dataItem : dataItems) {
@@ -68,7 +64,6 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
         item.setData(dataItem);
         list.add(item);
       }
-      dataLoaded = true;
     }
     Notification.activityStop();
   }
