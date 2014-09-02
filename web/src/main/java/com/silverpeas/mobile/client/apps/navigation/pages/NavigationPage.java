@@ -47,11 +47,11 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 			list.clear();
 			List<SilverpeasObjectDTO> objectsList = event.getObjectsList();
 			for (SilverpeasObjectDTO silverpeasObjectDTO : objectsList) {
-				NavigationItem item = new NavigationItem();				
-				item.setData(silverpeasObjectDTO);				
-				list.add(item);				
+				NavigationItem item = new NavigationItem();
+				item.setData(silverpeasObjectDTO);
+				list.add(item);
 			}
-			dataLoaded = true;		
+			dataLoaded = true;
 		}
 		Notification.activityStop();
 	}
@@ -69,12 +69,12 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 	}
 
 	@Override
-	public void clickItem(ClickItemEvent event) {		
-		if (isVisible()) {			
-			if (event.getData() instanceof SpaceDTO) {			
-				NavigationPage subPage = new NavigationPage();				
+	public void clickItem(ClickItemEvent event) {
+		if (isVisible()) {
+			if (event.getData() instanceof SpaceDTO) {
+				NavigationPage subPage = new NavigationPage();
 				subPage.setPageTitle(this.getPageTitle());
-				subPage.setRootSpaceId(event.getData().getId());				
+				subPage.setRootSpaceId(event.getData().getId());
 				subPage.show();
 			} else {
 				EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));

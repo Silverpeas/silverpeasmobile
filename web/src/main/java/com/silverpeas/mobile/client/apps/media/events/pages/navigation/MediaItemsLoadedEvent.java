@@ -7,7 +7,7 @@ import java.util.List;
 public class MediaItemsLoadedEvent extends AbstractMediaNavigationPagesEvent {
 
 	private List<BaseDTO> albumsAndMedias;
-	
+
 	public MediaItemsLoadedEvent(List<BaseDTO> albumsAndMedias) {
 		super();
 		this.albumsAndMedias = albumsAndMedias;

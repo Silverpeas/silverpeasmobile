@@ -20,6 +20,7 @@ import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
@@ -33,6 +34,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
 
   private String rootAlbumId, instanceId;
   private boolean dataLoaded = false;
+  private RightDTO rights;
 
   interface MediaNavigationPageUiBinder extends UiBinder<Widget, MediaNavigationPage> {
 	}
@@ -42,10 +44,11 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     EventBus.getInstance().addHandler(AbstractMediaNavigationPagesEvent.TYPE, this);
 	}
 	
-	public void init(String instanceId, String rootAlbumId) {
+	public void init(String instanceId, String rootAlbumId, RightDTO rights) {
     Notification.activityStart();
     this.instanceId = instanceId;
     this.rootAlbumId = rootAlbumId;
+    this.rights = rights;
     buttonImport.init(instanceId, rootAlbumId);
     EventBus.getInstance().fireEvent(new MediasLoadMediaItemsEvent(instanceId, rootAlbumId));
 	}
@@ -56,7 +59,9 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     if (isVisible() && dataLoaded == false) {
 
       list.clear();
-      list.add(buttonImport); //TODO : manage user rights
+      if (rights.isWriter() || rights.isPublisher() || rights.isManager()) {
+        list.add(buttonImport);
+      }
       List<BaseDTO> dataItems = event.getAlbumsAndMedias();
       for (BaseDTO dataItem : dataItems) {
         MediaItem item = new MediaItem();
@@ -74,7 +79,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
       if (event.getMediaItem() instanceof AlbumDTO) {
         MediaNavigationPage page = new MediaNavigationPage();
         page.setPageTitle(getPageTitle());
-        page.init(instanceId, ((AlbumDTO) event.getMediaItem()).getId());
+        page.init(instanceId, ((AlbumDTO) event.getMediaItem()).getId(), rights);
         page.show();
       } else if (event.getMediaItem() instanceof PhotoDTO) {
         MediaPage page = new MediaPage();

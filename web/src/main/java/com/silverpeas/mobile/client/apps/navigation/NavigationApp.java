@@ -24,7 +24,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
 	}
 
 	@Override
-	public void start() {		
+	public void start() {
 		NavigationPage mainPage = new NavigationPage();
 		mainPage.setPageTitle(title);
 		mainPage.setRootSpaceId(null);
@@ -51,13 +51,13 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
 		ServicesLocator.serviceNavigation.getSpacesAndApps(event.getRootSpaceId(), type, new AsyncCallback<List<SilverpeasObjectDTO>>() {
 			
 			@Override
-			public void onSuccess(List<SilverpeasObjectDTO> result) {				
-				EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));				
+			public void onSuccess(List<SilverpeasObjectDTO> result) {
+				EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
 			}
 			
 			@Override
-			public void onFailure(Throwable caught) {				
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));				
+			public void onFailure(Throwable caught) {
+				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
 			}
 		});			
 	}

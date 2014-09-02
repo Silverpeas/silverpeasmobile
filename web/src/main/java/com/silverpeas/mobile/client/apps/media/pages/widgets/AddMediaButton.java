@@ -1,11 +1,14 @@
 package com.silverpeas.mobile.client.apps.media.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -26,6 +29,7 @@ public class AddMediaButton extends Composite {
   @UiField FileUpload file;
   @UiField FormPanel upload;
   @UiField Hidden componentId, albumId;
+  @UiField Anchor link;
   @UiField(provided = true) protected MediaMessages msg = null;
 
   private static AddMediaButtonUiBinder uiBinder = GWT.create(AddMediaButtonUiBinder.class);
@@ -37,6 +41,7 @@ public class AddMediaButton extends Composite {
     file.getElement().setAttribute("accept", "image/*");
     file.getElement().setAttribute("multiple", "multiple");
     upload.setEncoding(FormPanel.ENCODING_MULTIPART);
+    upload.getElement().getStyle().setDisplay(Style.Display.NONE);
   }
 
   public void init(String instanceId, String albumId) {
@@ -44,11 +49,21 @@ public class AddMediaButton extends Composite {
     this.albumId.setValue(albumId);
   }
 
+
   @UiHandler("file")
   void upload(ChangeEvent event) {
     upload.submit();
     upload.reset();
     //TODO : reload media list
   }
+
+  @UiHandler("link")
+  void upload(ClickEvent event) {
+    clickOnInputFile(file.getElement());
+  }
+
+  private static native void clickOnInputFile(Element elem) /*-{
+    elem.click();
+  }-*/;
 
 }

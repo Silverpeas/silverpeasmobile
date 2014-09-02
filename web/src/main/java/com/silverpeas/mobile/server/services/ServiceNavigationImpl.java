@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.silverpeas.admin.ejb.AdminBusiness;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
+import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
@@ -15,6 +16,7 @@ import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.ComponentInstLight;
+import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.SpaceInstLight;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
@@ -27,6 +29,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
 	private static final long serialVersionUID = 1L;
 	private AdminBusiness adminBm;
+  private OrganizationController organizationController = new OrganizationController();
 	
 	@Override
 	public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId, String appType) throws NavigationException, AuthenticationException {
@@ -79,11 +82,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 			ComponentInstLight app = getAdminBm().getComponentInstLight(appId);
 			if (app.getName().equals(appType)) {
 				return true;
-			}							
+			}
 		}
 		return false;
 	}
-	
+
+  private String[] getUserRoles(String componentId, String userId) {
+    return organizationController.getUserProfiles(userId, componentId);
+  }
+
 	private SpaceDTO populate(SpaceInstLight space) {
 		SpaceDTO dto = new SpaceDTO();
 		dto.setId(space.getShortId());
@@ -97,11 +104,30 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 		dto.setId(app.getId());
 		dto.setLabel(app.getLabel());
 		dto.setType(app.getName());
+
+    RightDTO rights = new RightDTO();
+    String[] roles = getUserRoles(app.getId(), getUserInSession().getId());
+    for (int i = 0; i < roles.length; i++) {
+      if (roles[i].equals("admin")) {
+        rights.setManager(true);
+      }
+      if (roles[i].equals("publisher")) {
+        rights.setPublisher(true);
+      }
+      if (roles[i].equals("writer")) {
+        rights.setWriter(true);
+      }
+      if (roles[i].equals("user")) {
+        rights.setReader(true);
+      }
+    }
+    dto.setRights(rights);
+
 		return dto;
 	}
 	
 	private AdminBusiness getAdminBm() throws Exception {
-		if (adminBm == null) {			 
+		if (adminBm == null) {
 			adminBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBusiness.class);			 
 		}
 		return adminBm;

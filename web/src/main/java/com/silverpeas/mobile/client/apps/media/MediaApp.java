@@ -22,6 +22,7 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
 import java.util.List;
@@ -30,43 +31,44 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
 	private MediaMessages msg;
 	private NavigationApp navApp = new NavigationApp();
-	
-	public MediaApp() {
+  private RightDTO userRight;
+
+  public MediaApp() {
 		super();
 		msg = GWT.create(MediaMessages.class);
 		EventBus.getInstance().addHandler(AbstractMediaAppEvent.TYPE, this);
 		EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
 	}
 
-	@Override
-	public void start() {			
-		navApp.setTypeApp(Apps.gallery.name());
-		navApp.setTitle(msg.title());
-		
-		navApp.start();
-		
-		// app main is navigation app main page
-		setMainPage(navApp.getMainPage());
-		
-		super.start();
-	}
+  @Override
+  public void start() {
+    navApp.setTypeApp(Apps.gallery.name());
+    navApp.setTitle(msg.title());
+    navApp.start();
+
+    // app main is navigation app main page
+    setMainPage(navApp.getMainPage());
+
+    super.start();
+  }
 
 	@Override
 	public void stop() {
 		EventBus.getInstance().removeHandler(AbstractMediaAppEvent.TYPE, this);
 		EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
 		navApp.stop();
-		super.stop();		
+		super.stop();
 	}
 
 	@Override
 	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-		MediaNavigationPage page = new MediaNavigationPage();
-		page.setPageTitle(msg.title());
-    page.init(event.getInstance().getId(), null);
-		page.show();
-		
-	}
+
+    MediaNavigationPage page = new MediaNavigationPage();
+    page.setPageTitle(msg.title());
+    page.init(event.getInstance().getId(), null, event.getInstance().getRights());
+    page.show();
+
+  }
 
   @Override
   public void loadAlbums(final MediasLoadMediaItemsEvent event) {
