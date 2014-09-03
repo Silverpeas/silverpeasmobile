@@ -12,11 +12,15 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.Notification;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 
 public class Attachment extends Composite {
@@ -93,10 +97,16 @@ public class Attachment extends Composite {
       String url = "/spmobile/spmobil/Attachment";
       url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
 
-      link.setHref(url);
-      link.setTarget("_self");
-      link.fireEvent(new ClickEvent() {});
-
+      if (MobilUtils.isIOS()) {
+        IframePage page = new IframePage(url);
+        page.setPageTitle(attachement.getTitle());
+        page.show();
+      } else {
+        link.setHref(url);
+        link.setTarget("_self");
+        link.fireEvent(new ClickEvent() {
+        });
+      }
     } catch(JavaScriptException e) {
       Notification.alert(e.getMessage(), null, "error", "ok");
     }
