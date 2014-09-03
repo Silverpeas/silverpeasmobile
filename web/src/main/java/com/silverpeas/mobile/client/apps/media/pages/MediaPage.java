@@ -28,6 +28,8 @@ import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
@@ -88,10 +90,17 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
   @Override
   public void onMediaViewLoaded(final MediaViewLoadedEvent event) {
     Notification.activityStop();
-    Image picture = new Image();
-    picture.setUrl(event.getView().getDataPhoto());
-    picture.getElement().getStyle().setWidth(100, Style.Unit.PCT); //TODO : do better for center view with best scale
-    SpMobil.showFullScreen(picture, true);
+
+    if (MobilUtils.isIOS()) {
+      IframePage page = new IframePage(event.getView().getDataPhoto());
+      page.setPageTitle(event.getView().getTitle());
+      page.show();
+    } else {
+      Image picture = new Image();
+      picture.setUrl(event.getView().getDataPhoto());
+      picture.getElement().getStyle().setWidth(100, Style.Unit.PCT); //TODO : do better for center view with best scale
+      SpMobil.showFullScreen(picture, true);
+    }
   }
 
   @Override
