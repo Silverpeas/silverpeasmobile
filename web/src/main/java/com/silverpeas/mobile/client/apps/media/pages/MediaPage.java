@@ -87,6 +87,7 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
 
   @Override
   public void onMediaViewLoaded(final MediaViewLoadedEvent event) {
+    Notification.activityStop();
     Image picture = new Image();
     picture.setUrl(event.getView().getDataPhoto());
     picture.getElement().getStyle().setWidth(100, Style.Unit.PCT); //TODO : do better for center view with best scale
@@ -102,6 +103,7 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiHandler("mediaFullSize")
   void showFullScreen(ClickEvent event) {
+    Notification.activityStart();
     EventBus.getInstance().fireEvent(new MediaViewLoadEvent(media.getInstance(), media.getId()));
   }
 

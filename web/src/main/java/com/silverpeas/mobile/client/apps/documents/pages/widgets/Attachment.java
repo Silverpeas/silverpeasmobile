@@ -21,84 +21,84 @@ import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 
 public class Attachment extends Composite {
 
-	private static AttachmentUiBinder uiBinder = GWT.create(AttachmentUiBinder.class);
-	@UiField Anchor link;
-	@UiField SpanElement size, name;
-	@UiField ImageElement icon;
-	
-	protected DocumentsResources ressources = null;
+  private static AttachmentUiBinder uiBinder = GWT.create(AttachmentUiBinder.class);
+  @UiField Anchor link;
+  @UiField SpanElement size, name;
+  @UiField ImageElement icon;
+
+  protected DocumentsResources ressources = null;
   private DocumentsMessages msg = null;
-	private boolean clicked = false;
-	private AttachmentDTO attachement;
-	
-	interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {
-	}
+  private boolean clicked = false;
+  private AttachmentDTO attachement;
 
-	public Attachment() {
-		msg = GWT.create(DocumentsMessages.class);
+  interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {
+  }
+
+  public Attachment() {
+    msg = GWT.create(DocumentsMessages.class);
     ressources = GWT.create(DocumentsResources.class);
-		ressources.css().ensureInjected();
-		initWidget(uiBinder.createAndBindUi(this));		
-	}
+    ressources.css().ensureInjected();
+    initWidget(uiBinder.createAndBindUi(this));
+  }
 
-	@UiHandler("link")
-	protected void onClick(ClickEvent event) {
-		if (!clicked) {
-			clicked = true;
-			clickAction();
-			Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-				@Override
-				public boolean execute() {
-					clicked = false;
-					return false;
-				}}, 400);
-		}
-	}
-	
-	public void setAttachment(AttachmentDTO attachmentDTO) {
-		this.attachement = attachmentDTO;
-		render();
-	}
-	
-	private void render() {
-		Image img = null;
-		String sizeValue;
+  @UiHandler("link")
+  protected void onClick(ClickEvent event) {
+    if (!clicked) {
+      clicked = true;
+      clickAction();
+      Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+        @Override
+        public boolean execute() {
+          clicked = false;
+          return false;
+        }}, 400);
+    }
+  }
+
+  public void setAttachment(AttachmentDTO attachmentDTO) {
+    this.attachement = attachmentDTO;
+    render();
+  }
+
+  private void render() {
+    Image img = null;
+    String sizeValue;
     if (attachement.getSize() < 1024*1024) {
-		  sizeValue = String.valueOf(attachement.getSize()/1024);
+      sizeValue = String.valueOf(attachement.getSize()/1024);
       size.setInnerHTML(msg.sizeK(sizeValue));
-		} else {
+    } else {
       sizeValue = String.valueOf(attachement.getSize()/(1024*1024));
       size.setInnerHTML(msg.sizeM(sizeValue));
-		}
-		name.setInnerHTML(attachement.getTitle());		
-		if (attachement.getType().contains("msword")) {
-			img = new Image(ressources.msword());
-		} else if (attachement.getType().contains("sheet")) {
-			img = new Image(ressources.msexcel());
-		} else if (attachement.getType().contains("pdf")) {			
-			img = new Image(ressources.pdf());
-		} else if (attachement.getType().contains("image")) {			
-			img = new Image(ressources.image());
-		} else if (attachement.getType().contains("presentation")) {			
-			img = new Image(ressources.mspowerpoint());			
-		}
-		else {
-			img = new Image(ressources.unknown());			
-		}	
-		icon.getParentElement().replaceChild(img.getElement(), icon);
-	}
-	
-	private void clickAction() {
-		try {
-			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/spmobile/spmobil/Attachment";					
-			url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
-			
-			link.setHref(url);
-			link.setTarget("_self");
-			link.fireEvent(new ClickEvent() {});
+    }
+    name.setInnerHTML(attachement.getTitle());
+    if (attachement.getType().contains("msword")) {
+      img = new Image(ressources.msword());
+    } else if (attachement.getType().contains("sheet")) {
+      img = new Image(ressources.msexcel());
+    } else if (attachement.getType().contains("pdf")) {
+      img = new Image(ressources.pdf());
+    } else if (attachement.getType().contains("image")) {
+      img = new Image(ressources.image());
+    } else if (attachement.getType().contains("presentation")) {
+      img = new Image(ressources.mspowerpoint());
+    }
+    else {
+      img = new Image(ressources.unknown());
+    }
+    icon.getParentElement().replaceChild(img.getElement(), icon);
+  }
 
-		} catch(JavaScriptException e) {
-			Notification.alert(e.getMessage(), null, "error", "ok");
-		}
-	}
+  private void clickAction() {
+    try {
+      String url = "/spmobile/spmobil/Attachment";
+      url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
+
+      link.setHref(url);
+      link.setTarget("_self");
+      link.fireEvent(new ClickEvent() {});
+
+    } catch(JavaScriptException e) {
+      Notification.alert(e.getMessage(), null, "error", "ok");
+    }
+  }
 }

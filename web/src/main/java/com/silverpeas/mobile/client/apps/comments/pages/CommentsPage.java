@@ -18,7 +18,7 @@ import com.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsPagesEventHandler;
 import com.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
-import com.silverpeas.mobile.client.apps.documents.pages.widgets.Comment;
+import com.silverpeas.mobile.client.apps.comments.pages.widgets.Comment;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;

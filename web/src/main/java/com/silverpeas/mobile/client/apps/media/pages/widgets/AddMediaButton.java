@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 
 
 /**
@@ -65,6 +66,7 @@ public class AddMediaButton extends Composite {
   @UiHandler("file")
   void upload(ChangeEvent event) {
     upload.submit();
+    Notification.activityStart();
     upload.reset();
   }
 
