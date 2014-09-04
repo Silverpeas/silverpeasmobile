@@ -17,42 +17,42 @@ import com.silverpeas.mobile.client.resources.ApplicationMessages;
 
 public class AppList extends PageContent {
 
-	private static AppListUiBinder uiBinder = GWT.create(AppListUiBinder.class);
+  private static AppListUiBinder uiBinder = GWT.create(AppListUiBinder.class);
 
-	@UiField(provided = true) protected ApplicationMessages msg = null;	
-	@UiField protected Anchor statut, contact, document, media;
-	
-	interface AppListUiBinder extends UiBinder<Widget, AppList> {
-	}
+  @UiField(provided = true) protected ApplicationMessages msg = null;
+  @UiField protected Anchor statut, contact, document, media;
 
-	public AppList() {		
-		msg = GWT.create(ApplicationMessages.class);
-		initWidget(uiBinder.createAndBindUi(this));
-	}
-	
-	
-	@UiHandler("statut")
-	void status(ClickEvent e) {
-		App app = new StatusApp();
-		app.start();
-	}
-	
-	@UiHandler("contact")
-	void contacts(ClickEvent e) {
-		App app = new ContactsApp();
-		app.start();
-	}
-	
-	@UiHandler("media")
-	void gallery(ClickEvent e) {
-		App app = new MediaApp();
-		app.start();	
-	}
-	
-	@UiHandler("document")
-	void documents(ClickEvent e) {		
-		App app = new DocumentsApp();
-		app.start();
-	}
+  interface AppListUiBinder extends UiBinder<Widget, AppList> {
+  }
+
+  public AppList() {
+    msg = GWT.create(ApplicationMessages.class);
+    initWidget(uiBinder.createAndBindUi(this));
+  }
+
+
+  @UiHandler("statut")
+  void status(ClickEvent e) {
+    App app = new StatusApp();
+    app.start();
+  }
+
+  @UiHandler("contact")
+  void contacts(ClickEvent e) {
+    App app = new ContactsApp();
+    app.start();
+  }
+
+  @UiHandler("media")
+  void gallery(ClickEvent e) {
+    App app = new MediaApp();
+    app.start();
+  }
+
+  @UiHandler("document")
+  void documents(ClickEvent e) {
+    App app = new DocumentsApp();
+    app.start();
+  }
 
 }

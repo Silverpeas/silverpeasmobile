@@ -27,16 +27,16 @@ import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class SpMobil implements EntryPoint {
-		
-	public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
-	public final static Page mainPage = new Page();
-	public static DetailUserDTO user;
+
+  public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
+  public final static Page mainPage = new Page();
+  public static DetailUserDTO user;
   private static String viewport, bodyClass, bodyId;
-	
-	/**
-	 * Init. spmobile.
-	 */
-	public void onModuleLoad() {
+
+  /**
+   * Init. spmobile.
+   */
+  public void onModuleLoad() {
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
     loadIds();
 
@@ -47,81 +47,81 @@ public class SpMobil implements EntryPoint {
         viewport = metaTag.getContent();
       }
     }
-	}
-	
-	/**
-	 * Auto login.
-	 * @param login
-	 * @param password
-	 * @param domainId
-	 * @param auto
-	 */
-	private void login(String login, String password, String domainId, final boolean auto) {
-		ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
-			public void onFailure(Throwable reason) {
-				clearIds();
-				ConnexionPage connexionPage = new ConnexionPage();
-				RootPanel.get().clear();
-				RootPanel.get().add(connexionPage);
-			}
-			public void onSuccess(DetailUserDTO user) {											
-				SpMobil.user = user;
-				mainPage.setUser(user);
-				RootPanel.get().clear();
-				RootPanel.get().add(mainPage);				
-				PageHistory.getInstance().goTo(new AppList());
-				
-			}
-		});
-	}
-	
-	/**
-	 * Clean ids in SQL Web Storage.
-	 */
-	public static void clearIds() {
-		Storage storage = Storage.getLocalStorageIfSupported();
-		if (storage != null) {
-			storage.clear();
-		}
-	}
-	
-	/**
-	 * Load ids in SQL Web Storage.
-	 */
-	private void loadIds() {		
-		Storage storage = Storage.getLocalStorageIfSupported();
-		if (storage != null) {						
-			String dataItem = storage.getItem("userConnected");			
-			if (dataItem != null) {
-				User user = User.getInstance(dataItem);	
-				String password = decryptPassword(user.getPassword());
-				if (password != null) {
-					login(user.getLogin(), password, user.getDomainId(), true);
-				}
-			} else {
-				ConnexionPage connexionPage = new ConnexionPage();
-				RootPanel.get().clear();
-				RootPanel.get().add(connexionPage);
-			}
-		}
-	}
-	
-	/**
-	 * Decrypt password in SQL Web Storage.
-	 * @param passwordEncrysted
-	 * @return
-	 */
-	private String decryptPassword(String passwordEncrysted) {
-		TripleDesCipher cipher = new TripleDesCipher();
-		cipher.setKey(configuration.getDESKey().getBytes());
-		String plainPassword = null;
-		try {
-			plainPassword = cipher.decrypt(passwordEncrysted);
-		} catch (Exception e) {
-			EventBus.getInstance().fireEvent(new ErrorEvent(e));
-		}
-		return plainPassword;
-	}
+  }
+
+  /**
+   * Auto login.
+   * @param login
+   * @param password
+   * @param domainId
+   * @param auto
+   */
+  private void login(String login, String password, String domainId, final boolean auto) {
+    ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+      public void onFailure(Throwable reason) {
+        clearIds();
+        ConnexionPage connexionPage = new ConnexionPage();
+        RootPanel.get().clear();
+        RootPanel.get().add(connexionPage);
+      }
+      public void onSuccess(DetailUserDTO user) {
+        SpMobil.user = user;
+        mainPage.setUser(user);
+        RootPanel.get().clear();
+        RootPanel.get().add(mainPage);
+        PageHistory.getInstance().goTo(new AppList());
+
+      }
+    });
+  }
+
+  /**
+   * Clean ids in SQL Web Storage.
+   */
+  public static void clearIds() {
+    Storage storage = Storage.getLocalStorageIfSupported();
+    if (storage != null) {
+      storage.clear();
+    }
+  }
+
+  /**
+   * Load ids in SQL Web Storage.
+   */
+  private void loadIds() {
+    Storage storage = Storage.getLocalStorageIfSupported();
+    if (storage != null) {
+      String dataItem = storage.getItem("userConnected");
+      if (dataItem != null) {
+        User user = User.getInstance(dataItem);
+        String password = decryptPassword(user.getPassword());
+        if (password != null) {
+          login(user.getLogin(), password, user.getDomainId(), true);
+        }
+      } else {
+        ConnexionPage connexionPage = new ConnexionPage();
+        RootPanel.get().clear();
+        RootPanel.get().add(connexionPage);
+      }
+    }
+  }
+
+  /**
+   * Decrypt password in SQL Web Storage.
+   * @param passwordEncrysted
+   * @return
+   */
+  private String decryptPassword(String passwordEncrysted) {
+    TripleDesCipher cipher = new TripleDesCipher();
+    cipher.setKey(configuration.getDESKey().getBytes());
+    String plainPassword = null;
+    try {
+      plainPassword = cipher.decrypt(passwordEncrysted);
+    } catch (Exception e) {
+      EventBus.getInstance().fireEvent(new ErrorEvent(e));
+    }
+    return plainPassword;
+  }
 
   public static void showFullScreen(final Widget content, final boolean zoomable, String bodyClass, String bodyId) {
     PageHistory.getInstance().gotoToFullScreen("viewer");

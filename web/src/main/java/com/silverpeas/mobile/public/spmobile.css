@@ -16,7 +16,7 @@ body {
 body,input,select,textarea,button,.ui-btn {
 	font-size: 1em;
 	line-height: 1.3;
-	font-family: TeX Gyre Adventor, Century gothic, Trebushet MS, sans serif
+	font-family: TeX Gyre Adventor, Century gothic, "Apple Gothic",AppleGothic,"URW Gothic L","Avant Garde",Futura,sans-serif;
 		/*{global-font-family}*/;
 }
 
@@ -505,8 +505,18 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #silverpeas-navmenu-panel #user img {
+	float:left;
 	width: 40px;
 	vertical-align: middle
+}
+#silverpeas-navmenu-panel #user .statut {
+	font-style:italic;
+}
+#silverpeas-navmenu-panel #user .edit-my-statut {
+	display:inline-block;
+	text-indent:-3000px;
+	background: transparent url(packPictos.png) 4px 0 no-repeat;
+	width:20px;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel {

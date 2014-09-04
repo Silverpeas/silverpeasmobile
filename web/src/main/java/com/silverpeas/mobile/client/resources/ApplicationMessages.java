@@ -34,4 +34,7 @@ public interface ApplicationMessages extends Messages {
 	
 	@DefaultMessage("Espace personnel")
 	String personalSpace();
+
+  @Messages.DefaultMessage("Modifier mon statut")
+  String editStatus();
 }

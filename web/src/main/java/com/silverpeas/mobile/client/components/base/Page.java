@@ -11,36 +11,36 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class Page extends Composite {
 
-	private static PageUiBinder uiBinder = GWT.create(PageUiBinder.class);
+  private static PageUiBinder uiBinder = GWT.create(PageUiBinder.class);
 
-	interface PageUiBinder extends UiBinder<Widget, Page> {
-	}
-	
-	@UiField protected SimplePanel contentPlace;
-	@UiField protected PageHeader header;
-	@UiField protected NavigationMenu menu;
-	protected PageContent content;
+  interface PageUiBinder extends UiBinder<Widget, Page> {
+  }
 
-	public Page() {
-		initWidget(uiBinder.createAndBindUi(this));		
-	}
-	
-	public void setContent(PageContent content) {
-		this.content = content;		
-		contentPlace.setWidget(content);	
-		header.setPageTitle(content.getPageTitle());
-		header.setVisibleBackButton(PageHistory.getInstance().size() > 1);		
-	}
-	
-	public void toogleMenu() {
-		menu.toogleMenu();
-	}
-	
-	public void closeMenu() {
-		menu.closeMenu();
-	}
-	
-	public void setUser(DetailUserDTO user) {
-		menu.setUser(user);
-	}
+  @UiField protected SimplePanel contentPlace;
+  @UiField protected PageHeader header;
+  @UiField protected NavigationMenu menu;
+  protected PageContent content;
+
+  public Page() {
+    initWidget(uiBinder.createAndBindUi(this));
+  }
+
+  public void setContent(PageContent content) {
+    this.content = content;
+    contentPlace.setWidget(content);
+    header.setPageTitle(content.getPageTitle());
+    header.setVisibleBackButton(PageHistory.getInstance().size() > 1);
+  }
+
+  public void toogleMenu() {
+    menu.toogleMenu();
+  }
+
+  public void closeMenu() {
+    menu.closeMenu();
+  }
+
+  public void setUser(DetailUserDTO user) {
+    menu.setUser(user);
+  }
 }
