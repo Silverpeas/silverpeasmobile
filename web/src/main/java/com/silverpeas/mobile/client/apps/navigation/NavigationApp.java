@@ -57,7 +57,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
 			
 			@Override
 			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
 			}
 		});			
 	}

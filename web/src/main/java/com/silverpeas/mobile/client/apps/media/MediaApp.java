@@ -83,7 +83,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
           @Override
           public void onFailure(Throwable caught) {
-            EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+            EventBus.getInstance().fireEvent(new ErrorEvent(caught));
           }
         });
   }
@@ -93,7 +93,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     ServicesLocator.serviceMedia.getPreviewPicture(event.getInstanceId(), event.getMediaId(), new AsyncCallback<PhotoDTO>() {
       @Override
       public void onFailure(final Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
       }
 
       @Override
@@ -109,7 +109,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         new AsyncCallback<PhotoDTO>() {
           @Override
           public void onFailure(final Throwable caught) {
-            EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+            EventBus.getInstance().fireEvent(new ErrorEvent(caught));
           }
 
           @Override

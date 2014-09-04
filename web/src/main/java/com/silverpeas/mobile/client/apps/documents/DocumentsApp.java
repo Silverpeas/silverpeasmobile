@@ -79,7 +79,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
       @Override
       public void onFailure(Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
       }
     });
   }
@@ -96,7 +96,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
       @Override
       public void onFailure(Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
       }
     });
   }

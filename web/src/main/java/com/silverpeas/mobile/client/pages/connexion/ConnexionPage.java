@@ -35,107 +35,107 @@ import com.silverpeas.mobile.shared.dto.DomainDTO;
 
 public class ConnexionPage extends PageContent {
 
-	private static ConnexionPageUiBinder uiBinder = GWT.create(ConnexionPageUiBinder.class);
+  private static ConnexionPageUiBinder uiBinder = GWT.create(ConnexionPageUiBinder.class);
 
-	@UiField(provided = true) protected ApplicationMessages msg = null;	
-	@UiField Anchor go;
-	@UiField TextBox loginField;
-	@UiField PasswordTextBox passwordField;
-	@UiField ListBox domains;
+  @UiField(provided = true) protected ApplicationMessages msg = null;
+  @UiField Anchor go;
+  @UiField TextBox loginField;
+  @UiField PasswordTextBox passwordField;
+  @UiField ListBox domains;
 
-	interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {
-	}
+  interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {
+  }
 
-	public ConnexionPage() {
-		msg = GWT.create(ApplicationMessages.class);
-		loadDomains();
-		initWidget(uiBinder.createAndBindUi(this));
-		loginField.getElement().setId("Login");
-		passwordField.getElement().setId("Password");
-		domains.getElement().setId("DomainId");
-	}
+  public ConnexionPage() {
+    msg = GWT.create(ApplicationMessages.class);
+    loadDomains();
+    initWidget(uiBinder.createAndBindUi(this));
+    loginField.getElement().setId("Login");
+    passwordField.getElement().setId("Password");
+    domains.getElement().setId("DomainId");
+  }
 
-	/**
-	 * Gestion du clique sur le bouton go.
-	 * @param e
-	 */
-	@UiHandler("go")
-	void connexion(ClickEvent e) {
-		clickGesture(new Command() {
-			@Override
-			public void execute() {
-				String login = loginField.getText();
-				String password = passwordField.getText();
-				login(login, password, domains.getValue(domains.getSelectedIndex()));
-			}
-		});
-	}
+  /**
+   * Gestion du clique sur le bouton go.
+   * @param e
+   */
+  @UiHandler("go")
+  void connexion(ClickEvent e) {
+    clickGesture(new Command() {
+      @Override
+      public void execute() {
+        String login = loginField.getText();
+        String password = passwordField.getText();
+        login(login, password, domains.getValue(domains.getSelectedIndex()));
+      }
+    });
+  }
 
-	/**
-	 * Transition de la demande de connexion au serveur.
-	 * @param login
-	 * @param password
-	 * @param domainId
-	 */
-	private void login(String login, final String password, String domainId) {
-		if (!login.isEmpty() && !password.isEmpty()) {
-			ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
-				public void onFailure(Throwable caught) {
-					EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-				}
-				public void onSuccess(DetailUserDTO user) {
-					String encryptedPassword = null;
-					try {
-						encryptedPassword = encryptPassword(password);
-					} catch (InvalidCipherTextException e) {
-						EventBus.getInstance().fireEvent(new ErrorEvent(e));
-					}
-					SpMobil.user = user;
-					storeIds(encryptedPassword);
-					
-					RootPanel.get().clear();
-					RootPanel.get().add(SpMobil.mainPage);
-					PageHistory.getInstance().goTo(new AppList());
-				}
-			});	
-		}
-	}
+  /**
+   * Transition de la demande de connexion au serveur.
+   * @param login
+   * @param password
+   * @param domainId
+   */
+  private void login(String login, final String password, String domainId) {
+    if (!login.isEmpty() && !password.isEmpty()) {
+      ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+        public void onFailure(Throwable caught) {
+          EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        }
+        public void onSuccess(DetailUserDTO user) {
+          String encryptedPassword = null;
+          try {
+            encryptedPassword = encryptPassword(password);
+          } catch (InvalidCipherTextException e) {
+            EventBus.getInstance().fireEvent(new ErrorEvent(e));
+          }
+          SpMobil.user = user;
+          storeIds(encryptedPassword);
 
-	private String encryptPassword(String password) throws InvalidCipherTextException {
-		TripleDesCipher cipher = new TripleDesCipher();
-		cipher.setKey(SpMobil.configuration.getDESKey().getBytes());
-		String encryptedPassword = cipher.encrypt(passwordField.getText());
-		return encryptedPassword;
-	}
-	
-	/**
-	 * Mémorisation des identifiants de l'utilisateur.
-	 */
-	private void storeIds(final String encryptedPassword) {
-		Storage storage = Storage.getLocalStorageIfSupported();
-		if (storage != null) {
-			User user = new User(loginField.getText(), encryptedPassword, domains.getValue(domains.getSelectedIndex()));
-			storage.setItem("userConnected", user.toJson());
-		}
-	}
-	
-	/**
-	 * Récupération de la liste des domaines.
-	 */
-	private void loadDomains() {
-		ServicesLocator.serviceConnection.getDomains(new AsyncCallback<List<DomainDTO>>() {
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-			}
+          RootPanel.get().clear();
+          RootPanel.get().add(SpMobil.mainPage);
+          PageHistory.getInstance().goTo(new AppList());
+        }
+      });
+    }
+  }
 
-			public void onSuccess(List<DomainDTO> result) {
-				Iterator<DomainDTO> iDomains = result.iterator();
-				while (iDomains.hasNext()) {
-					DomainDTO domain = iDomains.next();
-					domains.addItem(domain.getName(), domain.getId());
-				}
-			}
-		});
-	}
+  private String encryptPassword(String password) throws InvalidCipherTextException {
+    TripleDesCipher cipher = new TripleDesCipher();
+    cipher.setKey(SpMobil.configuration.getDESKey().getBytes());
+    String encryptedPassword = cipher.encrypt(passwordField.getText());
+    return encryptedPassword;
+  }
+
+  /**
+   * Mémorisation des identifiants de l'utilisateur.
+   */
+  private void storeIds(final String encryptedPassword) {
+    Storage storage = Storage.getLocalStorageIfSupported();
+    if (storage != null) {
+      User user = new User(loginField.getText(), encryptedPassword, domains.getValue(domains.getSelectedIndex()));
+      storage.setItem("userConnected", user.toJson());
+    }
+  }
+
+  /**
+   * Récupération de la liste des domaines.
+   */
+  private void loadDomains() {
+    ServicesLocator.serviceConnection.getDomains(new AsyncCallback<List<DomainDTO>>() {
+      public void onFailure(Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+      }
+
+      public void onSuccess(List<DomainDTO> result) {
+        Iterator<DomainDTO> iDomains = result.iterator();
+        while (iDomains.hasNext()) {
+          DomainDTO domain = iDomains.next();
+          domains.addItem(domain.getName(), domain.getId());
+        }
+      }
+    });
+  }
 
 }

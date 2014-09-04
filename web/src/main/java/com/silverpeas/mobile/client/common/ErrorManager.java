@@ -11,9 +11,10 @@ public class ErrorManager implements ErrorEventHandler {
 
   public void onError(ExceptionEvent event) {
     String message = "Erreur système";
+
     if (event.getException() instanceof AuthenticationException) {
-      //TODO : afficher le bon message d'erreur
-      message = "Mot de passe incorrect";
+      Window.Location.reload();
+      return;
     } else {
       message = event.getException().getMessage();
     }
@@ -22,11 +23,9 @@ public class ErrorManager implements ErrorEventHandler {
     Notification.progressStop();
 
     // Affichage du message
-
     ErrorPage page = new ErrorPage();
     page.setText(message);
     SpMobil.showFullScreen(page, false, "ui-panel-wrapper", "error");
-
   }
 
 }

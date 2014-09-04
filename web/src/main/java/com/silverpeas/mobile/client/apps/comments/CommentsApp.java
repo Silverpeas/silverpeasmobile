@@ -51,7 +51,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
       }
       @Override
       public void onFailure(Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
       }
     });
   }
@@ -61,7 +61,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
     ServicesLocator.serviceComments.addComment(event.getContentId(), event.getInstanceId(), event.getContentType(), event.getMessage(), new AsyncCallback<CommentDTO>() {
       @Override
       public void onFailure(final Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
       }
       @Override
       public void onSuccess(final CommentDTO result) {
