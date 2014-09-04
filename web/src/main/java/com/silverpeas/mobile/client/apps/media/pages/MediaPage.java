@@ -84,7 +84,11 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
 
     lastUpdate.setInnerHTML(msg.lastUpdate(media.getUpdateDate(), media.getUpdater()));
 
-    comments.init(media.getId(), media.getInstance(), CommentDTO.TYPE_MEDIA, getPageTitle(), media.getTitle(), media.getCommentsNumber());
+    if (event.isCommentable()) {
+      comments.init(media.getId(), media.getInstance(), CommentDTO.TYPE_MEDIA, getPageTitle(), media.getTitle(), media.getCommentsNumber());
+    } else {
+      comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+    }
   }
 
   @Override
@@ -129,7 +133,7 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
           download.fireEvent(new ClickEvent() {});
 
         } catch(JavaScriptException e) {
-          Notification.alert(e.getMessage(), null, "error", "ok");
+          Notification.alert(e.getMessage());
         }
 
         Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {

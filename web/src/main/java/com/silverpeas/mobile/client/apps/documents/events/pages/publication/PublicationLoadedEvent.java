@@ -4,19 +4,25 @@ import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
 public class PublicationLoadedEvent extends AbstractPublicationPagesEvent {
 
-	private PublicationDTO publication;
-	
-	public PublicationLoadedEvent(PublicationDTO publication) {
-		super();
-		this.publication = publication;
-	}
+  private PublicationDTO publication;
+  private boolean commentable;
 
-	@Override
-	protected void dispatch(PublicationNavigationPagesEventHandler handler) {
-		handler.onLoadedPublication(this);
-	}
+  public PublicationLoadedEvent(PublicationDTO publication, boolean commentable) {
+    super();
+    this.publication = publication;
+    this.commentable = commentable;
+  }
 
-	public PublicationDTO getPublication() {
-		return publication;
-	}	
+  @Override
+  protected void dispatch(PublicationNavigationPagesEventHandler handler) {
+    handler.onLoadedPublication(this);
+  }
+
+  public PublicationDTO getPublication() {
+    return publication;
+  }
+
+  public boolean isCommentable() {
+    return commentable;
+  }
 }

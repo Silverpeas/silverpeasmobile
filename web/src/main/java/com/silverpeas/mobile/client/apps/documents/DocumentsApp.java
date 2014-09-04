@@ -25,78 +25,80 @@ import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import java.util.List;
 
 public class DocumentsApp extends App implements NavigationEventHandler, DocumentsAppEventHandler {
-	
-	private DocumentsMessages msg;
-	private NavigationApp navApp = new NavigationApp();
-	
-	public DocumentsApp() {
-		super();
-		msg = GWT.create(DocumentsMessages.class);
-		EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
-		EventBus.getInstance().addHandler(AbstractDocumentsAppEvent.TYPE, this);
-	}
-	
-	@Override
-	public void start() {
-		navApp.setTypeApp(Apps.kmelia.name());
-		navApp.setTitle(msg.title());
-		navApp.start();
-		
-		// app main is navigation app main page
-		setMainPage(navApp.getMainPage());
-		
-		super.start();
-	}
 
-	@Override
-	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
-		EventBus.getInstance().removeHandler(AbstractDocumentsAppEvent.TYPE, this);
-		navApp.stop();
-		super.stop();
-	}
-	
-	@Override
-	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-		GedNavigationPage page = new GedNavigationPage();
-		page.setPageTitle(msg.title());				
-		page.setInstanceId(event.getInstance().getId());
-		page.setTopicId(null);
-		page.show();		
-	}
-	
-	/**
-	 * Get subtopics.
-	 */
-	@Override
-	public void loadTopics(DocumentsLoadGedItemsEvent event) {
-		ServicesLocator.serviceDocuments.getTopicsAndPublications(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<BaseDTO>>() {			
-			@Override
-			public void onSuccess(List<BaseDTO> result) {
-				EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));
-			}			
-			@Override
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
-			}
-		});
-	}
+  private DocumentsMessages msg;
+  private NavigationApp navApp = new NavigationApp();
+  private boolean commentable;
 
-	/**
-	 * Get publication infos.
-	 */
-	@Override
-	public void loadPublication(DocumentsLoadPublicationEvent event) {
-		ServicesLocator.serviceDocuments.getPublication(event.getPubId(), new AsyncCallback<PublicationDTO>() {
-			@Override
-			public void onSuccess(PublicationDTO result) {
-				EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result));
-			}
-			@Override
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
-			}
-		});
-	}
+  public DocumentsApp() {
+    super();
+    msg = GWT.create(DocumentsMessages.class);
+    EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractDocumentsAppEvent.TYPE, this);
+  }
+
+  @Override
+  public void start() {
+    navApp.setTypeApp(Apps.kmelia.name());
+    navApp.setTitle(msg.title());
+    navApp.start();
+
+    // app main is navigation app main page
+    setMainPage(navApp.getMainPage());
+
+    super.start();
+  }
+
+  @Override
+  public void stop() {
+    EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
+    EventBus.getInstance().removeHandler(AbstractDocumentsAppEvent.TYPE, this);
+    navApp.stop();
+    super.stop();
+  }
+
+  @Override
+  public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
+    this.commentable = event.getInstance().isCommentable();
+    GedNavigationPage page = new GedNavigationPage();
+    page.setPageTitle(msg.title());
+    page.setInstanceId(event.getInstance().getId());
+    page.setTopicId(null);
+    page.show();
+  }
+
+  /**
+   * Get subtopics.
+   */
+  @Override
+  public void loadTopics(DocumentsLoadGedItemsEvent event) {
+    ServicesLocator.serviceDocuments.getTopicsAndPublications(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<BaseDTO>>() {
+      @Override
+      public void onSuccess(List<BaseDTO> result) {
+        EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));
+      }
+      @Override
+      public void onFailure(Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+      }
+    });
+  }
+
+  /**
+   * Get publication infos.
+   */
+  @Override
+  public void loadPublication(DocumentsLoadPublicationEvent event) {
+    ServicesLocator.serviceDocuments.getPublication(event.getPubId(), new AsyncCallback<PublicationDTO>() {
+      @Override
+      public void onSuccess(PublicationDTO result) {
+        EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable));
+      }
+      @Override
+      public void onFailure(Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(new Exception(caught)));
+      }
+    });
+  }
 
 }

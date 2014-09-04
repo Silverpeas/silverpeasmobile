@@ -6,7 +6,7 @@
   <g:HTMLPanel ui:field="container" styleName="content">
     <h2 ui:field="title" class="publiName"></h2>
     <p ui:field="desc" class="publiDesc"></p>
-    <w:CommentsButton ui:field="comments"/>
+    <w:CommentsButton ui:field="comments" visible="false"/>
     <l:UnorderedList ui:field="attachments"/>
     <p ui:field="lastUpdate" class="lastUpdate"></p>
   </g:HTMLPanel>

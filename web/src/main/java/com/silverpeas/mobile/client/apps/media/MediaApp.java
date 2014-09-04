@@ -33,6 +33,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 	private MediaMessages msg;
 	private NavigationApp navApp = new NavigationApp();
   private RightDTO userRight;
+  private boolean commentable;
 
   public MediaApp() {
 		super();
@@ -63,7 +64,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
 	@Override
 	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-
+    this.commentable = event.getInstance().isCommentable();
     MediaNavigationPage page = new MediaNavigationPage();
     page.setPageTitle(msg.title());
     page.init(event.getInstance().getId(), null, event.getInstance().getRights());
@@ -97,7 +98,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
       @Override
       public void onSuccess(final PhotoDTO preview) {
-        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview));
+        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable));
       }
     });
   }

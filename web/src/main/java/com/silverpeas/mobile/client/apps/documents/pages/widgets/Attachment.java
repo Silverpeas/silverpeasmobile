@@ -108,7 +108,7 @@ public class Attachment extends Composite {
         });
       }
     } catch(JavaScriptException e) {
-      Notification.alert(e.getMessage(), null, "error", "ok");
+      Notification.alert(e.getMessage());
     }
   }
 }

@@ -35,14 +35,8 @@ public class Notification {
     RootPanel.getBodyElement().removeClassName("csspinner traditional");
   }
 
-  public static void alert(String message, Callback<Boolean, Boolean> callback, String title, String buttonLabel) {
-    DialogBox popup = new DialogBox(true);
-    popup.setText(title);
-    popup.add(new HTML("<SPAN>"+message+"</SPAN>"));
-    popup.setGlassEnabled(true);
-    popup.setWidth(Window.getClientWidth() - 30 +"px");
-    popup.setHeight(Window.getClientWidth() /2 + "px");
-    popup.center();
+  public static void alert(String message) {
+    Window.alert(message);
   }
 
   public static void confirm(String message, Callback<Boolean, Boolean> callback, String buttonsLabels) {

@@ -58,19 +58,23 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 		}
 		
 		// récupération des informations de l'utilisateur
-		String userId;
+		String userId, authKey;
 		try {
 			userId = getUserId(login, domainId);
+      authKey = new AuthenticationService().getAuthenticationKey(login, domainId);
 		} catch (Exception e) {
 			throw new AuthenticationException(AuthenticationError.Host);
 		}
 		UserDetail user = getUserDetail(userId);
 		setUserInSession(user);
+    setUserkeyInSession(authKey);
 		
 		DetailUserDTO userDTO = new DetailUserDTO();
 		Mapper mapper = new DozerBeanMapper();
 		userDTO = mapper.map(user, DetailUserDTO.class);
-		userDTO.setAvatar(GeneralPropertiesManager.getString("ApplicationURL")+user.getAvatar());		
+		userDTO.setAvatar(GeneralPropertiesManager.getString("ApplicationURL")+user.getAvatar());
+
+
 		
 		return userDTO;
 	}

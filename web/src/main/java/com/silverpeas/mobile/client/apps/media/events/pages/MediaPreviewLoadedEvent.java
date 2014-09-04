@@ -6,10 +6,12 @@ import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 public class MediaPreviewLoadedEvent extends AbstractMediaPagesEvent {
 
   private PhotoDTO preview;
+  private boolean commentable;
 
-	public MediaPreviewLoadedEvent(PhotoDTO preview) {
+	public MediaPreviewLoadedEvent(PhotoDTO preview, boolean commentable) {
 		super();
     this.preview = preview;
+    this.commentable = commentable;
 	}
 
 	@Override
@@ -19,5 +21,9 @@ public class MediaPreviewLoadedEvent extends AbstractMediaPagesEvent {
 
   public PhotoDTO getPreview() {
     return preview;
+  }
+
+  public boolean isCommentable() {
+    return commentable;
   }
 }
