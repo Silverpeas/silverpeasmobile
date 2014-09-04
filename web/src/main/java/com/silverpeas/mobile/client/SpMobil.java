@@ -31,7 +31,7 @@ public class SpMobil implements EntryPoint {
 	public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
 	public final static Page mainPage = new Page();
 	public static DetailUserDTO user;
-  private static String viewport, bodyClass;
+  private static String viewport, bodyClass, bodyId;
 	
 	/**
 	 * Init. spmobile.
@@ -123,7 +123,7 @@ public class SpMobil implements EntryPoint {
 		return plainPassword;
 	}
 
-  public static void showFullScreen(final Widget content, final boolean zoomable) {
+  public static void showFullScreen(final Widget content, final boolean zoomable, String bodyClass, String bodyId) {
     PageHistory.getInstance().gotoToFullScreen("viewer");
     RootPanel.get().clear();
     RootPanel.get().add(content);
@@ -137,8 +137,10 @@ public class SpMobil implements EntryPoint {
         }
       }
     }
-    bodyClass = Document.get().getBody().getClassName();
-    Document.get().getBody().setClassName("");
+    SpMobil.bodyClass = Document.get().getBody().getClassName();
+    SpMobil.bodyId = Document.get().getBody().getId();
+    Document.get().getBody().setClassName(bodyClass);
+    Document.get().getBody().setId(bodyId);
     Document.get().getBody().getStyle().setPaddingTop(0, Style.Unit.PX);
   }
 
@@ -146,6 +148,7 @@ public class SpMobil implements EntryPoint {
     RootPanel.get().clear();
     RootPanel.get().add(SpMobil.mainPage);
 
+    Document.get().getBody().setId(bodyId);
     Document.get().getBody().setClassName(bodyClass);
     Document.get().getBody().getStyle().clearPaddingTop();
 

@@ -928,3 +928,27 @@ textarea.ui-input-text {
 	width:235px;
 	margin:1em 0 0
 }
+
+/************ PAGE D'ERREUR **************/
+
+#error {
+	background:#333 url(fond-casse.jpg) 0 0 no-repeat;
+}
+
+#mascotte {
+	position:fixed;
+	bottom:0;
+	right:0;
+	left:0;
+	text-align:center;
+	background:transparent url(mascotte.png) right bottom no-repeat;
+	min-height:220px;
+	padding-right:130px;
+	padding-left:1em;
+	color:#FFF
+}
+
+#error .ui-btn-right {
+	top:auto;
+	right:50%;
+	}

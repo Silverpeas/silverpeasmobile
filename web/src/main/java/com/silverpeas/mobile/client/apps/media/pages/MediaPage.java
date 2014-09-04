@@ -103,7 +103,7 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
       Image picture = new Image();
       picture.setUrl(event.getView().getDataPhoto());
       picture.getElement().getStyle().setWidth(100, Style.Unit.PCT); //TODO : do better for center view with best scale
-      SpMobil.showFullScreen(picture, true);
+      SpMobil.showFullScreen(picture, true, "", "");
     }
   }
 
