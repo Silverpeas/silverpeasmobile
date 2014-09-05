@@ -9,33 +9,33 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UnorderedList extends ComplexPanel {
 
-	private UListElement list;
-	
-	public UnorderedList() {
-		super();
-		 list = Document.get().createULElement(); 
-	     setElement(list); 
-	}
-	
-	@Override 
-    public void add(Widget child) {
+  private UListElement list;
+
+  public UnorderedList() {
+    super();
+    list = Document.get().createULElement();
+    setElement(list);
+  }
+
+  @Override
+  public void add(Widget child) {
     if (!child.getElement().getTagName().equalsIgnoreCase("li")) {
-			Element li = Document.get().createLIElement().cast(); 
-			list.appendChild(li);
-			super.add(child, li);
-		} else {
-			super.add(child, list);
-		}
+      Element li = Document.get().createLIElement().cast();
+      list.appendChild(li);
+      super.add(child, li);
+    } else {
+      super.add(child, list);
     }
+  }
 
-	@Override
-	public void clear() {		
-		super.clear();
-		list.removeAllChildren();
-	}
+  @Override
+  public void clear() {
+    super.clear();
+    list.removeAllChildren();
+  }
 
-	@Override
-	public void setStyleName(String style) {
-		list.setClassName(style);
-	}	
+  @Override
+  public void setStyleName(String style) {
+    list.setClassName(style);
+  }
 }

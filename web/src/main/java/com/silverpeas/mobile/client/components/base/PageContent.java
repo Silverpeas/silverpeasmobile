@@ -14,72 +14,72 @@ import com.silverpeas.mobile.client.common.navigation.PageHistory;
 
 public class PageContent extends Composite implements View, NativePreviewHandler {
 
-	private App app;
-	protected boolean clicked = false;
-	protected String pageTitle = "Silverpeas";
+  private App app;
+  protected boolean clicked = false;
+  protected String pageTitle = "Silverpeas";
 
-	public PageContent() {
-		super();
-		Event.addNativePreviewHandler(this);
-	}
-	
-	public String getPageTitle() {
-		return pageTitle;
-	}
+  public PageContent() {
+    super();
+    Event.addNativePreviewHandler(this);
+  }
 
-	public void setPageTitle(String pageTitle) {
-		this.pageTitle = pageTitle;
-	}
-	
-	public void show() {
-		PageHistory.getInstance().goTo(this);
-	}
-	
-	public boolean isVisible() { 
-		return PageHistory.getInstance().isVisible(this);
-	}
-	
-	public void back() {
-		PageHistory.getInstance().back();
-	}
+  public String getPageTitle() {
+    return pageTitle;
+  }
 
-	public void clickGesture(Command call) {
-		if (!clicked) {
-			clicked = true;
-			call.execute();			
-			Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-				@Override
-				public boolean execute() {
-					clicked = false;					
-					return false;
-				}}, 400);	
-		}		
-	}
+  public void setPageTitle(String pageTitle) {
+    this.pageTitle = pageTitle;
+  }
 
-	@Override
-	public void stop() {
-		if (app != null) app.stop();
-	}
+  public void show() {
+    PageHistory.getInstance().goTo(this);
+  }
 
-	@Override
-	public void onPreviewNativeEvent(NativePreviewEvent event) {		
-		if (event.getTypeInt() == Event.ONCLICK) {						
-	        Element target = event.getNativeEvent().getEventTarget().cast();	        
-	        while(target.getParentElement() != null) {	        	
-	        	if (target.getId().equals("silverpeas-navmenu-panel") || target.getId().equals("menu")) {
-					return;
-				}
-	        	target = target.getParentElement();
-	        }			
-			SpMobil.mainPage.closeMenu();
-		}
-	}
+  public boolean isVisible() {
+    return PageHistory.getInstance().isVisible(this);
+  }
 
-	public App getApp() {
-		return app;
-	}
+  public void back() {
+    PageHistory.getInstance().back();
+  }
 
-	public void setApp(App app) {
-		this.app = app;
-	}
+  public void clickGesture(Command call) {
+    if (!clicked) {
+      clicked = true;
+      call.execute();
+      Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+        @Override
+        public boolean execute() {
+          clicked = false;
+          return false;
+        }}, 400);
+    }
+  }
+
+  @Override
+  public void stop() {
+    if (app != null) app.stop();
+  }
+
+  @Override
+  public void onPreviewNativeEvent(NativePreviewEvent event) {
+    if (event.getTypeInt() == Event.ONCLICK) {
+      Element target = event.getNativeEvent().getEventTarget().cast();
+      while(target.getParentElement() != null) {
+        if (target.getId().equals("silverpeas-navmenu-panel") || target.getId().equals("menu")) {
+          return;
+        }
+        target = target.getParentElement();
+      }
+      SpMobil.mainPage.closeMenu();
+    }
+  }
+
+  public App getApp() {
+    return app;
+  }
+
+  public void setApp(App app) {
+    this.app = app;
+  }
 }

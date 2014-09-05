@@ -15,43 +15,47 @@ import com.silverpeas.mobile.client.common.navigation.PageHistory;
 
 public class PageHeader extends Composite {
 
-	private static PageHeaderUiBinder uiBinder = GWT.create(PageHeaderUiBinder.class);
+  private static PageHeaderUiBinder uiBinder = GWT.create(PageHeaderUiBinder.class);
 
-	interface PageHeaderUiBinder extends UiBinder<Widget, PageHeader> {
-	}
-	
-	@UiField protected HTMLPanel header;
-	@UiField protected Anchor menu, back;
-	@UiField protected HeadingElement title;
-	
+  interface PageHeaderUiBinder extends UiBinder<Widget, PageHeader> {
+  }
 
-	public PageHeader() {
-		initWidget(uiBinder.createAndBindUi(this));
-		header.getElement().setId("header");
-		menu.getElement().setId("menu");
-	}
-	
-	
-	@UiHandler("menu")
-	void onMenu(ClickEvent event) {
-		SpMobil.mainPage.toogleMenu();
-	}
-	
-	@UiHandler("back")
-	void onBack(ClickEvent event) {
-		PageHistory.getInstance().back();
-	}	
-	
-	public void setVisibleBackButton(boolean visible) {
-		// remove active state
-		header.remove(back);
-		header.add(back);
-		// hide button
-		back.setVisible(visible);		
-	}
-	
-	public void setPageTitle(String title) {
-		this.title.setInnerHTML(title);
-	}
+  @UiField protected HTMLPanel header;
+  @UiField protected Anchor menu, back;
+  @UiField protected HeadingElement title;
+
+
+  public PageHeader() {
+    initWidget(uiBinder.createAndBindUi(this));
+    header.getElement().setId("header");
+    menu.getElement().setId("menu");
+  }
+
+
+  @UiHandler("menu")
+  void onMenu(ClickEvent event) {
+    SpMobil.mainPage.toogleMenu();
+  }
+
+  @UiHandler("back")
+  void onBack(ClickEvent event) {
+    PageHistory.getInstance().back();
+  }
+
+  public void setVisibleBackButton(boolean visible) {
+    // remove active state
+    header.remove(back);
+    header.add(back);
+    // hide button
+    back.setVisible(visible);
+  }
+
+  public void setPageTitle(String title) {
+    this.title.setInnerHTML(title);
+  }
+
+  public int getHeight() {
+    return header.getOffsetHeight();
+  }
 
 }
