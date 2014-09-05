@@ -13,6 +13,7 @@ public class DetailUserDTO implements Serializable{
   private String phoneNumber;
   private String cellularPhoneNumber;
   private String faxPhoneNumber;
+  private String status;
 
   public String getId() {
     return id;
@@ -76,5 +77,13 @@ public class DetailUserDTO implements Serializable{
 
   public void setFaxPhoneNumber(String faxPhoneNumber) {
     this.faxPhoneNumber = faxPhoneNumber;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(final String status) {
+    this.status = status;
   }
 }

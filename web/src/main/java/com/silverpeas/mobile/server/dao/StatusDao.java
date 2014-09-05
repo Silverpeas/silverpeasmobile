@@ -17,44 +17,74 @@ import com.stratelia.webactiv.util.exception.UtilException;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 public class StatusDao {
-	
-	public List<StatusDTO> getAllStatus(int userId, int step) throws SQLException {
-		Connection connection = getConnection();  
-		PreparedStatement pstmt = null;
-		    ResultSet rs = null;
-		    try {
-		      String query =
-		          "SELECT id,userid, creationdate, description FROM sb_sn_status WHERE userid = ? ORDER BY creationdate DESC";
-		      pstmt = connection.prepareStatement(query);
-		      pstmt.setInt(1, userId);
-		      rs = pstmt.executeQuery();
 
-		      return getSocialInformationsList(rs, step);
-		    } finally {
-		      DBUtil.close(rs, pstmt);
-		      DBUtil.close(connection);
-		    }
-	}
-	
-	private List<StatusDTO> getSocialInformationsList(ResultSet rs, int step) throws SQLException {
-		ArrayList<StatusDTO> statusList = new ArrayList<StatusDTO>();		
-		int index = 0;
-		while (rs.next() && index < step * Configurator.getConfigIntValue("mystatus.pagesize")) {
-			StatusDTO status = new StatusDTO();
-    		status.setId(rs.getInt(1));
-    		status.setUserId(rs.getInt(2));
-    		status.setCreationDate(new Date(rs.getTimestamp(3).getTime()));
-    	    status.setDescription(rs.getString(4));
-    	    if (index >= (step-1) * Configurator.getConfigIntValue("mystatus.pagesize") || step == 1) {
-    	    	statusList.add(status);	
-    	    }
-    	    index++;    	    
-		}
-		Collections.sort(statusList);
-		return statusList;
-	}
-	
-	private Connection getConnection() throws UtilException, SQLException {
-	    return DBUtil.makeConnection(JNDINames.DATABASE_DATASOURCE);
-	}
+  public List<StatusDTO> getAllStatus(int userId, int step) throws SQLException {
+    Connection connection = getConnection();
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    try {
+      String query =
+          "SELECT id,userid, creationdate, description FROM sb_sn_status WHERE userid = ? ORDER BY creationdate DESC";
+      pstmt = connection.prepareStatement(query);
+      pstmt.setInt(1, userId);
+      rs = pstmt.executeQuery();
+
+      return getSocialInformationsList(rs, step);
+    } finally {
+      DBUtil.close(rs, pstmt);
+      DBUtil.close(connection);
+    }
+  }
+
+  public StatusDTO getStatus(int userId) throws SQLException {
+    Connection connection = getConnection();
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    try {
+      String query =
+          "SELECT id,userid, creationdate, description FROM sb_sn_status WHERE userid = ? ORDER BY creationdate DESC";
+      pstmt = connection.prepareStatement(query);
+      pstmt.setInt(1, userId);
+      rs = pstmt.executeQuery();
+
+      return getSocialInformations(rs);
+    } finally {
+      DBUtil.close(rs, pstmt);
+      DBUtil.close(connection);
+    }
+  }
+
+  private StatusDTO getSocialInformations(ResultSet rs) throws SQLException {
+    if (rs.next()) {
+      StatusDTO status = new StatusDTO();
+      status.setId(rs.getInt(1));
+      status.setUserId(rs.getInt(2));
+      status.setCreationDate(new Date(rs.getTimestamp(3).getTime()));
+      status.setDescription(rs.getString(4));
+      return status;
+    }
+    return null;
+  }
+
+  private List<StatusDTO> getSocialInformationsList(ResultSet rs, int step) throws SQLException {
+    ArrayList<StatusDTO> statusList = new ArrayList<StatusDTO>();
+    int index = 0;
+    while (rs.next() && index < step * Configurator.getConfigIntValue("mystatus.pagesize")) {
+      StatusDTO status = new StatusDTO();
+      status.setId(rs.getInt(1));
+      status.setUserId(rs.getInt(2));
+      status.setCreationDate(new Date(rs.getTimestamp(3).getTime()));
+      status.setDescription(rs.getString(4));
+      if (index >= (step-1) * Configurator.getConfigIntValue("mystatus.pagesize") || step == 1) {
+        statusList.add(status);
+      }
+      index++;
+    }
+    Collections.sort(statusList);
+    return statusList;
+  }
+
+  private Connection getConnection() throws UtilException, SQLException {
+    return DBUtil.makeConnection(JNDINames.DATABASE_DATASOURCE);
+  }
 }

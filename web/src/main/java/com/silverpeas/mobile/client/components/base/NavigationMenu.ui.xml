@@ -8,7 +8,7 @@
       <g:HTMLPanel ui:field="user">
         <img src="" id="avatar"/>
         <span id="userName"></span>
-        <br /><span class="statut" ui:field="status"><g:Anchor  ui:field="updateStatus" styleName="edit-my-statut" text="{msg.editStatus}"></g:Anchor></span>
+        <br /><span class="statut"><span ui:field="status"></span><g:Anchor  ui:field="updateStatus" styleName="edit-my-statut" text="{msg.editStatus}"></g:Anchor></span>
       </g:HTMLPanel>
       <ul id="navmenu-panel">
         <li id="menu-home"><g:Anchor ui:field="home" styleName="ui-link" text="{msg.home}"/></li>

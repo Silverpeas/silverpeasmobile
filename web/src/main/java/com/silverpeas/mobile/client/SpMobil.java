@@ -70,7 +70,6 @@ public class SpMobil implements EntryPoint {
         RootPanel.get().clear();
         RootPanel.get().add(mainPage);
         PageHistory.getInstance().goTo(new AppList());
-
       }
     });
   }

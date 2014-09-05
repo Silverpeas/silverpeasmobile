@@ -20,25 +20,39 @@ import com.stratelia.webactiv.beans.admin.UserDetail;
  */
 public class ServiceRSEImpl extends AbstractAuthenticateService implements ServiceRSE {
 
-	private static final long serialVersionUID = 1L;
-	private StatusDao statusDao = new StatusDao();
-	private StatusService statusService = new StatusService();
-	
-	public String updateStatus(String textStatus) throws RSEexception, AuthenticationException {
-		checkUserInSession();
-		UserDetail user = getUserInSession();
-		Status status = new Status(Integer.parseInt(user.getId()), new Date(), textStatus);		
-		return statusService.changeStatusService(status);
-	}
+  private static final long serialVersionUID = 1L;
+  private StatusDao statusDao = new StatusDao();
+  private StatusService statusService = new StatusService();
 
-	public List<StatusDTO> getStatus(int step) throws RSEexception, AuthenticationException {
-		checkUserInSession();
-		UserDetail user = getUserInSession();
-		try {			
-		    return statusDao.getAllStatus(Integer.parseInt(user.getId()), step);
-		} catch (Exception ex) {
-			SilverTrace.error(SpMobileLogModule.getName(), "ServiceRSEImpl.getAllStatus", "root.EX_NO_MESSAGE", ex);		    
-		    throw new RSEexception(ex);
-		}	
-	}
+  @Override
+  public String updateStatus(String textStatus) throws RSEexception, AuthenticationException {
+    checkUserInSession();
+    UserDetail user = getUserInSession();
+    Status status = new Status(Integer.parseInt(user.getId()), new Date(), textStatus);
+    return statusService.changeStatusService(status);
+  }
+
+  @Override
+  public List<StatusDTO> getStatus(int step) throws RSEexception, AuthenticationException {
+    checkUserInSession();
+    UserDetail user = getUserInSession();
+    try {
+      return statusDao.getAllStatus(Integer.parseInt(user.getId()), step);
+    } catch (Exception ex) {
+      SilverTrace.error(SpMobileLogModule.getName(), "ServiceRSEImpl.getAllStatus", "root.EX_NO_MESSAGE", ex);
+      throw new RSEexception(ex);
+    }
+  }
+
+  @Override
+  public StatusDTO getStatus() throws RSEexception, AuthenticationException {
+    checkUserInSession();
+    UserDetail user = getUserInSession();
+    try {
+      return statusDao.getStatus(Integer.parseInt(user.getId()));
+    } catch (Exception ex) {
+      SilverTrace.error(SpMobileLogModule.getName(), "ServiceRSEImpl.getAllStatus", "root.EX_NO_MESSAGE", ex);
+      throw new RSEexception(ex);
+    }
+  }
 }

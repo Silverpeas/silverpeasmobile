@@ -8,4 +8,6 @@ import com.silverpeas.mobile.shared.dto.StatusDTO;
 public interface ServiceRSEAsync {
 	void updateStatus(String status, AsyncCallback<String> callback);
 	void getStatus(int step, AsyncCallback<List<StatusDTO>> callback);
+
+  void getStatus(final AsyncCallback<StatusDTO> async);
 }
