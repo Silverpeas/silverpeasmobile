@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.contacts.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -18,6 +19,7 @@ import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEven
 import com.silverpeas.mobile.client.apps.contacts.pages.widgets.ContactItem;
 import com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.components.base.events.AbstractScrollEvent;
@@ -36,6 +38,11 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   @UiField HTMLPanel container;
   @UiField Anchor mycontacts, allcontacts;
   @UiField UnorderedList list;
+  private int startIndexAll, startIndexMy, pageSize = 0;
+  private boolean allContacts = false;
+  private ContactItem itemWaiting;
+  private boolean callingNexData = false;
+  private boolean noMoreData = false;
 
 
   interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
@@ -50,7 +57,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     allcontacts.getElement().setId("btn-all-contacts");
     EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractScrollEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY, computePageSize(), startIndexMy));
     list.getElement().setId("list-contacts");
   }
 
@@ -66,7 +73,11 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     allcontacts.removeStyleName("ui-btn-active");
     allcontacts.addStyleName("ui-btn");
     mycontacts.addStyleName("ui-btn-active");
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY));
+    allContacts = false;
+    list.clear();
+    pageSize = 0;
+    startIndexMy = 0;
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY, computePageSize(), startIndexMy));
   }
 
   @UiHandler("allcontacts")
@@ -74,12 +85,17 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     mycontacts.removeStyleName("ui-btn-active");
     mycontacts.addStyleName("ui-btn");
     allcontacts.addStyleName("ui-btn-active");
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.ALL));
+    allContacts = true;
+    list.clear();
+    pageSize = 0;
+    startIndexAll = 0;
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.ALL, computePageSize(), startIndexAll));
   }
 
   @Override
   public void onContactsLoaded(ContactsLoadedEvent event) {
-    list.clear();
+    noMoreData = event.getListUserDetailDTO().isEmpty();
+    list.remove(getWaitingItem());
     Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
     while (i.hasNext()) {
       DetailUserDTO user = i.next();
@@ -87,25 +103,53 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       item.setData(user);
       list.add(item);
     }
+
+    callingNexData = false;
   }
 
   @Override
   public void onScrollEndPage(final EndPageEvent event) {
-    //TODO
+    if (callingNexData == false && noMoreData == false) {
+      callingNexData = true;
+      list.add(getWaitingItem());
+      Window.scrollTo(0, Document.get().getScrollHeight());
+      if (allContacts) {
+        startIndexAll += computePageSize();
+        EventBus.getInstance()
+            .fireEvent(new ContactsLoadEvent(ContactFilters.ALL, computePageSize(), startIndexAll));
+      } else {
+        startIndexMy += computePageSize();
+        EventBus.getInstance()
+            .fireEvent(new ContactsLoadEvent(ContactFilters.MY, computePageSize(), startIndexMy));
+      }
+    }
+  }
+
+  private ContactItem getWaitingItem() {
+    if (itemWaiting == null) {
+      itemWaiting = new ContactItem();
+      itemWaiting.setData(SpMobil.user);
+      itemWaiting.hideData();
+      itemWaiting.setStyleName("csspinner traditional");
+    }
+    return itemWaiting;
   }
 
   private int computePageSize() {
-    // compute height available for items
-    int available = Window.getClientHeight() - (SpMobil.mainPage.getHeaderHeight() + container.getOffsetHeight());
+    if (pageSize == 0) {
+      // compute height available for items
+      int available = Window.getClientHeight() - (SpMobil.mainPage.getHeaderHeight() + container.getOffsetHeight());
 
-    // compute item height
-    ContactItem item = new ContactItem();
-    item.setData(SpMobil.user);
-    item.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-    list.add(item);
-    int itemHeight = item.getOffsetHeight();
-    list.remove(item);
+      // compute item height
+      ContactItem item = new ContactItem();
+      item.setData(SpMobil.user);
+      item.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+      list.add(item);
+      int itemHeight = item.getOffsetHeight();
+      list.remove(item);
 
-    return (available / itemHeight) + 1; // add one for scroll
+      pageSize =  (available / itemHeight) + 1; // add one for scroll
+    }
+    return pageSize;
   }
 }

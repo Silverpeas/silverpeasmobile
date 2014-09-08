@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.contacts.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -69,6 +70,12 @@ public class ContactItem extends Composite {
     if (nbTel == 0) {
       tel.add(new InlineHTML("&nbsp;"));
     }
+  }
+
+  public void hideData() {
+    tel.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+    mail.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+    user.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
   }
 
 }

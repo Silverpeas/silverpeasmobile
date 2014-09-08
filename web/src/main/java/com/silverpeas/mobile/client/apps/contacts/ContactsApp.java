@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.apps.contacts;
 
 import java.util.List;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.contacts.events.app.AbstractContactsAppEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsAppEventHandler;
@@ -17,33 +18,31 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class ContactsApp extends App implements ContactsAppEventHandler {
 
-	public ContactsApp(){
-		super();
-	}
-	
-	public void start(){
-		EventBus.getInstance().addHandler(AbstractContactsAppEvent.TYPE, this);
-		setMainPage(new ContactsPage());		
-		super.start();
-	}
+  public ContactsApp(){
+    super();
+  }
 
-	@Override
-	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractContactsAppEvent.TYPE, this);
-		super.stop();
-	}
+  public void start(){
+    EventBus.getInstance().addHandler(AbstractContactsAppEvent.TYPE, this);
+    setMainPage(new ContactsPage());
+    super.start();
+  }
 
-	@Override
-	public void loadContacts(ContactsLoadEvent event) {
-		Notification.activityStart();
-		ServicesLocator.serviceContact.getContacts(event.getFilter(), new AsyncCallback<List<DetailUserDTO>>() {
-			public void onFailure(Throwable caught) {
-				EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-			}
-			public void onSuccess(List<DetailUserDTO> result) {
-				EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
-				Notification.activityStop();
-			}
-		});		
-	}
+  @Override
+  public void stop() {
+    EventBus.getInstance().removeHandler(AbstractContactsAppEvent.TYPE, this);
+    super.stop();
+  }
+
+  @Override
+  public void loadContacts(ContactsLoadEvent event) {
+    ServicesLocator.serviceContact.getContacts(event.getFilter(), event.getPageSize(), event.getStartIndex(), new AsyncCallback<List<DetailUserDTO>>() {
+      public void onFailure(Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+      }
+      public void onSuccess(List<DetailUserDTO> result) {
+        EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
+      }
+    });
+  }
 }

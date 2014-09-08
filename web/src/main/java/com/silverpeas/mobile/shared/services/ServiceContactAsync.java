@@ -6,5 +6,5 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public interface ServiceContactAsync {
-	void getContacts(String filter, AsyncCallback<List<DetailUserDTO>> callback);	
+  void getContacts(String filter, int pageSize, int startIndex, final AsyncCallback<List<DetailUserDTO>> async);
 }
