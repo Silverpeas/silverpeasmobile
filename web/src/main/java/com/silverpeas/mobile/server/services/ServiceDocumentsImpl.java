@@ -11,6 +11,7 @@ import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
+import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.node.control.NodeBm;
@@ -25,7 +26,10 @@ import org.silverpeas.attachment.model.SimpleDocument;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Service de gestion des GED.
@@ -37,6 +41,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   private OrganizationController organizationController = new OrganizationController();
   private PublicationBm pubBm;
   private NodeBm nodeBm;
+  private KmeliaBm kmeliaBm;
 
   /**
    * Retourne tous les topics de premier niveau d'un topic.
@@ -62,9 +67,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
             topic.setName(nodeDetail.getName());
             int childrenNumber = getNodeBm().getChildrenNumber(new NodePK(String.valueOf(nodeDetail.getId()), instanceId));
 
-            //TODO : test
+            //TODO : correct recursive count
 
-            ArrayList<NodePK> pks = new ArrayList<NodePK>();
+            Collection<NodePK> pks = getAllSubNodePKs(nodeDetail.getNodePK());
             pks.add(nodeDetail.getNodePK());
             topic.setPubCount(getPubBm().getNbPubInFatherPKs(pks));
 
@@ -78,6 +83,17 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       throw new DocumentsException(e.getMessage());
     }
     return topicsList;
+  }
+
+  private Collection<NodePK> getAllSubNodePKs(final NodePK pk) throws Exception {
+    CopyOnWriteArrayList<NodePK> subNodes = new CopyOnWriteArrayList<NodePK>();
+    if (pk != null) {
+      subNodes.addAll(getNodeBm().getChildrenPKs(pk));
+      for (NodePK subNode : subNodes) {
+        subNodes.addAll(getAllSubNodePKs(subNode));
+      }
+    }
+    return subNodes;
   }
 
   /**
@@ -118,6 +134,13 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       pubBm = EJBUtilitaire.getEJBObjectRef(JNDINames.PUBLICATIONBM_EJBHOME, PublicationBm.class);
     }
     return pubBm;
+  }
+
+  private KmeliaBm getKmeliaBm() throws Exception {
+    if (kmeliaBm == null) {
+      kmeliaBm = EJBUtilitaire.getEJBObjectRef(JNDINames.KMELIABM_EJBHOME, KmeliaBm.class);
+    }
+    return kmeliaBm;
   }
 
   private NodeBm getNodeBm() throws Exception {

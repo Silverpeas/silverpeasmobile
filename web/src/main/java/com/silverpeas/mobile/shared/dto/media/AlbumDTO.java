@@ -8,6 +8,7 @@ public class AlbumDTO extends BaseDTO implements Serializable, Comparable<AlbumD
 
 	private static final long serialVersionUID = 1L;
 	private String name;
+  private int countMedia;
 
 	public String getName() {
 		return name;
@@ -20,4 +21,11 @@ public class AlbumDTO extends BaseDTO implements Serializable, Comparable<AlbumD
 		return name.compareTo(o.getName());
 	}
 
+  public int getCountMedia() {
+    return countMedia;
+  }
+
+  public void setCountMedia(final int countMedia) {
+    this.countMedia = countMedia;
+  }
 }

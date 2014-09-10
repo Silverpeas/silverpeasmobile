@@ -199,6 +199,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       } else {
         AlbumDetail rootAlbum = getGalleryBm().getAlbum(new NodePK(rootAlbumId, instanceId), false);
         Collection<AlbumDetail> albums = rootAlbum.getChildrenAlbumsDetails();
+
         for (AlbumDetail albumDetail : albums) {
           AlbumDTO album = populate(albumDetail);
           results.add(album);
@@ -211,11 +212,28 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     return results;
   }
 
-  private AlbumDTO populate(final AlbumDetail albumDetail) {
+  private AlbumDTO populate(final AlbumDetail albumDetail) throws Exception {
     AlbumDTO album = new AlbumDTO();
     album.setId(String.valueOf(albumDetail.getId()));
     album.setName(albumDetail.getName());
+    int nbPhotos = getNbPhotos(albumDetail);
+    album.setCountMedia(nbPhotos);
     return album;
+  }
+
+  private int getNbPhotos(final AlbumDetail albumDetail) throws Exception {
+    int nbPhotos = 0;
+
+    Collection<PhotoDetail> allPhotos = getGalleryBm().getAllPhoto(albumDetail.getNodePK(), true);
+    nbPhotos = allPhotos.size();
+    // parcourir ses sous albums pour comptabiliser aussi ses photos
+    AlbumDetail thisAlbum = getGalleryBm().getAlbum(albumDetail.getNodePK(), true);
+
+    Collection<AlbumDetail> subAlbums = thisAlbum.getChildrenAlbumsDetails();
+    for (AlbumDetail oneSubAlbum : subAlbums) {
+      nbPhotos = nbPhotos + getNbPhotos(oneSubAlbum);
+    }
+    return nbPhotos;
   }
 
 
