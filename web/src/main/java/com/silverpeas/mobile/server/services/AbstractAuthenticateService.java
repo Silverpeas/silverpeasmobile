@@ -8,31 +8,31 @@ import com.stratelia.webactiv.beans.admin.UserDetail;
 
 @SuppressWarnings("serial")
 public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
-	public static final String USER_ATTRIBUT_NAME = "user";
+  public static final String USER_ATTRIBUT_NAME = "user";
   public static final String USERKEY_ATTRIBUT_NAME = "key";
   public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = "main_session_controller";
 
-	protected void setUserInSession(UserDetail user) {
-		getThreadLocalRequest().getSession().setAttribute(USER_ATTRIBUT_NAME, user);
-	}
+  protected void setUserInSession(UserDetail user) {
+    getThreadLocalRequest().getSession().setAttribute(USER_ATTRIBUT_NAME, user);
+  }
 
   protected void setUserkeyInSession(String key) {
     getThreadLocalRequest().getSession().setAttribute(USERKEY_ATTRIBUT_NAME, key);
   }
-	
-	protected UserDetail getUserInSession() {
-		return (UserDetail) getThreadLocalRequest().getSession().getAttribute(USER_ATTRIBUT_NAME);
-	}
+
+  protected UserDetail getUserInSession() {
+    return (UserDetail) getThreadLocalRequest().getSession().getAttribute(USER_ATTRIBUT_NAME);
+  }
 
   protected String getUserKeyInSession() {
     return (String) getThreadLocalRequest().getSession().getAttribute(USERKEY_ATTRIBUT_NAME);
   }
-	
-	protected void checkUserInSession() throws AuthenticationException {
-		if (getThreadLocalRequest().getSession().getAttribute(USER_ATTRIBUT_NAME) == null) {
-			throw new AuthenticationException(AuthenticationError.NotAuthenticate);
-		}
-	}
+
+  protected void checkUserInSession() throws AuthenticationException {
+    if (getThreadLocalRequest().getSession().getAttribute(USER_ATTRIBUT_NAME) == null) {
+      throw new AuthenticationException(AuthenticationError.NotAuthenticate);
+    }
+  }
 
 
   protected MainSessionController getMainSessionController() throws Exception {

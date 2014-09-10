@@ -9,7 +9,9 @@ import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
+import com.silverpeas.util.StringUtil;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
+import com.stratelia.webactiv.beans.admin.ObjectType;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.util.EJBUtilitaire;
@@ -27,7 +29,6 @@ import org.silverpeas.attachment.model.SimpleDocument;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -63,18 +64,23 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         if (rootTopicId.equals(nodeDetail.getFatherPK().getId())) {
           TopicDTO topic = new TopicDTO();
           if (nodeDetail.getId() != 2) {
-            topic.setId(String.valueOf(nodeDetail.getId()));
-            topic.setName(nodeDetail.getName());
-            int childrenNumber = getNodeBm().getChildrenNumber(new NodePK(String.valueOf(nodeDetail.getId()), instanceId));
 
-            //TODO : correct recursive count
+            //TODO : verify user rights
+            if (isCurrentTopicAvailable(nodeDetail)) {
 
-            Collection<NodePK> pks = getAllSubNodePKs(nodeDetail.getNodePK());
-            pks.add(nodeDetail.getNodePK());
-            topic.setPubCount(getPubBm().getNbPubInFatherPKs(pks));
+              topic.setId(String.valueOf(nodeDetail.getId()));
+              topic.setName(nodeDetail.getName());
+              int childrenNumber = getNodeBm()
+                  .getChildrenNumber(new NodePK(String.valueOf(nodeDetail.getId()), instanceId));
 
-            topic.setTerminal(childrenNumber == 0);
-            topicsList.add(topic);
+              // count publications
+              Collection<NodePK> pks = getAllSubNodePKs(nodeDetail.getNodePK());
+              pks.add(nodeDetail.getNodePK());
+              topic.setPubCount(getPubBm().getNbPubInFatherPKs(pks));
+              //TODO : count using user rights
+              topic.setTerminal(childrenNumber == 0);
+              topicsList.add(topic);
+            }
           }
         }
       }
@@ -127,6 +133,21 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     }
 
     return pubs;
+  }
+
+  private boolean isCurrentTopicAvailable(NodeDetail node) throws Exception {
+    if (isRightsOnTopicsEnabled(node.getNodePK().getInstanceId())) {
+      if (node.haveRights()) {
+        int rightsDependsOn = node.getRightsDependsOn();
+        return organizationController.isObjectAvailable(rightsDependsOn, ObjectType.NODE, node.getNodePK().getInstanceId(), getUserInSession().getId());
+      }
+    }
+    return true;
+  }
+
+  private boolean isRightsOnTopicsEnabled(String instanceId) throws Exception {
+    String value = getMainSessionController().getComponentParameterValue(instanceId, "rightsOnTopics");
+    return StringUtil.getBooleanValue(value);
   }
 
   private PublicationBm getPubBm() throws Exception {
