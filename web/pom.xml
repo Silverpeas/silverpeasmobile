@@ -17,7 +17,7 @@
   <properties>
     <gwtVersion>2.6.1</gwtVersion>
     <gwtMojoPluginVersion>2.6.1</gwtMojoPluginVersion>
-    <silverpeasVersion>5.14.2-SNAPSHOT</silverpeasVersion>
+    <silverpeasVersion>5.14.2</silverpeasVersion>
   </properties>
 
   <repositories>
