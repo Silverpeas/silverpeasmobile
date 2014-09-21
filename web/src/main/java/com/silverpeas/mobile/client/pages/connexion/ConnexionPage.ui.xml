@@ -1,62 +1,45 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:m="urn:import:com.gwtmobile.ui.client.widgets"
-	xmlns:f="urn:import:com.silverpeas.mobile.client.components">
-	<ui:style>
-		.flex > div {
-			display: table;
-			width: 100%;
-		}
-		.flex > div > * {
-			vertical-align: middle;
-			display: table-cell;
-		}
-		.flex > div > *:first-child {
-			text-align: left;
-			padding-right: 1em;
-			width: 30%;
-		}
-		.flex > div > *:last-child {
-			width: 90%;
-		}
-		
-		.footer {
-			position: fixed;
-			bottom : 0px;
-			width: 100%
-		}
-		
-		.go {
-			margin-top: 20px;
-			width: 90%;
-		}
-		
-		.fields {
-			width: 90%;
-			
-		}
-		
-	</ui:style>
-	
-	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
-	<ui:with field='res' type='com.silverpeas.mobile.client.resources.ApplicationResources'/>
-	
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:with field='msg'
+		type='com.silverpeas.mobile.client.resources.ApplicationMessages' />
+
 	<g:HTMLPanel>
-		<m:HeaderPanel>
-			<m:VerticalPanel>
-				<g:SimplePanel styleName="{res.css.logo}"/>
-			</m:VerticalPanel>						
-		</m:HeaderPanel>
-			<div style="margin-left: 5%; margin-top: 20px;">
-			<g:Label>Login:</g:Label><m:TextBox ui:field="loginField" focus="true" secondaryStyle="{style.fields}"/>
-			<g:Label>Password:</g:Label><m:PasswordTextBox ui:field="passwordField" secondaryStyle="{style.fields}"/>
-			<g:Label>Domain:</g:Label><m:DropDownList ui:field="domains"/>
-			<m:Button ui:field="go" horizontalAlignment="center" secondaryStyle="{style.go}">Go</m:Button>
-			</div>
-						
-		<m:HeaderPanel secondaryStyle="{style.footer}">
-			<f:FooterBar />			
-		</m:HeaderPanel>		
+
+		<div id="header">
+			<h1 id="page-login-title"><ui:safehtml from="{msg.loginTitle}"/></h1>
+		</div>
+
+		<div id="page-login" class="ui-content ui-body-a">
+			<form accept-charset="UTF-8" method="post" action="" id="formLogin">
+				<div id="login-formLogin">
+					<g:TextBox ui:field="loginField" focus="true"/>
+				</div>
+				<div id="password-formLogin">
+					<g:PasswordTextBox ui:field="passwordField" />
+				</div>
+				<div id="domain-formLogin">
+					<g:ListBox ui:field="domains" />
+				</div>
+				<div class=" ui-controlgroup ui-controlgroup-horizontal">
+					<div class="ui-controlgroup-controls ">
+						<g:Anchor ui:field="go" styleName="submit btn-validate ui-link">
+							<span class="ui-btn-text"><ui:safehtml from="{msg.loginLabel}"/></span>
+						</g:Anchor>
+					</div>
+				</div>
+
+				<div id="copyright">
+					<ui:safehtml from="{msg.copyright}"/>
+				</div>
+			</form>
+		</div>
+
+
 	</g:HTMLPanel>
+
+
+
+
 </ui:UiBinder> 

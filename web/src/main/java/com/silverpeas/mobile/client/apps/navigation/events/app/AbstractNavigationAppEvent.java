@@ -1,16 +1,16 @@
-package com.silverpeas.mobile.client.apps.navigation.events.controller;
+package com.silverpeas.mobile.client.apps.navigation.events.app;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-public abstract class AbstractNavigationControllerEvent extends GwtEvent<NavigationControllerEventHandler> {
+public abstract class AbstractNavigationAppEvent extends GwtEvent<NavigationAppEventHandler> {
 
-	public static Type<NavigationControllerEventHandler> TYPE = new Type<NavigationControllerEventHandler>();
+	public static Type<NavigationAppEventHandler> TYPE = new Type<NavigationAppEventHandler>();
 	
-	public AbstractNavigationControllerEvent() {
+	public AbstractNavigationAppEvent() {
 	}
 	
 	@Override
-	public com.google.gwt.event.shared.GwtEvent.Type<NavigationControllerEventHandler> getAssociatedType() {
+	public com.google.gwt.event.shared.GwtEvent.Type<NavigationAppEventHandler> getAssociatedType() {
 		return TYPE;
 	}
 }

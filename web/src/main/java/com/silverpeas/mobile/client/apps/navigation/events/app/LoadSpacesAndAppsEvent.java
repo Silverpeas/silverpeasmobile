@@ -1,6 +1,6 @@
-package com.silverpeas.mobile.client.apps.navigation.events.controller;
+package com.silverpeas.mobile.client.apps.navigation.events.app;
 
-public class LoadSpacesAndAppsEvent extends AbstractNavigationControllerEvent {
+public class LoadSpacesAndAppsEvent extends AbstractNavigationAppEvent {
 	
 	private String rootSpaceId;
 	
@@ -10,7 +10,7 @@ public class LoadSpacesAndAppsEvent extends AbstractNavigationControllerEvent {
 	}
 
 	@Override
-	protected void dispatch(NavigationControllerEventHandler handler) {
+	protected void dispatch(NavigationAppEventHandler handler) {
 		handler.loadSpacesAndApps(this);
 	}
 
