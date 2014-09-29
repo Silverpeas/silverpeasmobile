@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
+import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -30,14 +32,26 @@ public class AttachmentServlet extends HttpServlet {
 		
 		
 		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/silverpeas/services/documents/" + instanceId + "/document/" + id + "/content/" + lang;
+						
 		getFile(url, response, userF.getToken());
 		
 		response.getOutputStream().flush();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+   try {
+      checkUserInSession(request);
+		  processRequest(request, response);
+    } catch (Exception e) {
+    e.printStackTrace();
+    }
 	}
+
+  protected void checkUserInSession(HttpServletRequest request) throws AuthenticationException {
+    if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
+      throw new AuthenticationException(AuthenticationException.AuthenticationError.NotAuthenticate);
+    }
+  }
 
 	public static void getFile(String host, HttpServletResponse response, String token) {
 		InputStream input = null;
@@ -47,6 +61,7 @@ public class AttachmentServlet extends HttpServlet {
 			HttpClient client = new HttpClient();
 			HttpMethod method = new GetMethod(host);
 			method.addRequestHeader("X-Silverpeas-Session", token);
+			
 			// String t = "SilverAdmin:SilverAdmin";
 			// method.addRequestHeader("Authorization", "Basic " +
 			// Base64Utils.toBase64(t.getBytes()));
