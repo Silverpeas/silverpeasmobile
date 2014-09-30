@@ -94,7 +94,7 @@ public class Attachment extends Composite {
 
   private void clickAction() {
     try {
-      String url = "/spmobile/spmobil/Attachment";
+      String url = Window.Location.getPath() + "spmobil/Attachment";
       url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
 
       if (MobilUtils.isIOS()) {

@@ -5,7 +5,7 @@
   
   <g:HTMLPanel tag="li" styleName="add-media">
     <g:Anchor ui:field="link" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" text="{msg.importMedia}"/>
-    <g:FormPanel method="POST" action="/spmobile/spmobil/MediaAction" ui:field="upload">
+    <g:FormPanel method="POST" ui:field="upload">
       <g:FlowPanel>
         <g:Hidden name="action" defaultValue="import"/>
         <g:Hidden name="componentId" ui:field="componentId"/>

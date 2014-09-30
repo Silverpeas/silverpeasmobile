@@ -126,7 +126,7 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
       if (!clicked) {
         clicked = true;
         try {
-          String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/spmobile/spmobil/MediaAction";
+          String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + "spmobil/MediaAction";
           url = url + "?action=view?id=" + media.getId() + "&instanceId=" + media.getInstance();
           download.setHref(url);
           download.setTarget("_self");
