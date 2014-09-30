@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.server.config;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -14,43 +15,40 @@ import java.util.ResourceBundle;
  */
 public class Configurator {
 
-		/**
-		 * The controller configuration
-		 */
-		private static Properties conf = null;
+  /**
+   * The controller configuration
+   */
+  private static Properties conf = null;
 
-		private static final String APP_CONFIG_FILENAME = "website.properties";
+  private static final String APP_CONFIG_FILENAME = "website.properties";
 
-		private static final String BUNDLE_FILE_NAME = "resources";
-		private static Hashtable<Locale,ResourceBundle> bundles = new Hashtable<Locale,ResourceBundle>();
+  private static final String BUNDLE_FILE_NAME = "resources";
+  private static Hashtable<Locale,ResourceBundle> bundles = new Hashtable<Locale,ResourceBundle>();
 
-		static {			
-			URL configFile = Configurator.class.getClassLoader().getResource(APP_CONFIG_FILENAME);
-			if (configFile == null) {
-				throw new RuntimeException("Impossible de trouver le fichier de configuration principal");
-			} else {
-				try {
-					conf = new AutoRefreshingProperties(null, configFile.getPath());
-				} catch (IOException e) {
-					throw new RuntimeException("Impossible de charger le fichier de configuration principal");
-				}
-			}
-		}
+  static {
+      try {
+        conf = new Properties();
+        InputStream file = Configurator.class.getClassLoader().getResourceAsStream(APP_CONFIG_FILENAME);
+        conf.load(file);
+      } catch (IOException e) {
+        throw new RuntimeException("Impossible de charger le fichier de configuration principal");
+      }
+  }
 
-		public static String getConfigValue(String key) {
-			return conf.getProperty(key);
-		}
+  public static String getConfigValue(String key) {
+    return conf.getProperty(key);
+  }
 
-		public static int getConfigIntValue(String key) {
-			return Integer.valueOf(conf.getProperty(key)).intValue();
-		}
+  public static int getConfigIntValue(String key) {
+    return Integer.valueOf(conf.getProperty(key)).intValue();
+  }
 
-		public static String getBundle(String language, String key) {
-			Locale locale= new Locale(language);
-			if (!bundles.containsKey(locale)) {
-				bundles.put(locale, ResourceBundle.getBundle(BUNDLE_FILE_NAME, locale));
-			}
-			return bundles.get(locale).getString(key);
-		}
-	}
+  public static String getBundle(String language, String key) {
+    Locale locale= new Locale(language);
+    if (!bundles.containsKey(locale)) {
+      bundles.put(locale, ResourceBundle.getBundle(BUNDLE_FILE_NAME, locale));
+    }
+    return bundles.get(locale).getString(key);
+  }
+}
 
