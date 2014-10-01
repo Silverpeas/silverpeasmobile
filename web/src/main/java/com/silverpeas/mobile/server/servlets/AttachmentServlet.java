@@ -16,36 +16,37 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserFull;
+import org.apache.commons.httpclient.protocol.Protocol;
 
 @SuppressWarnings("serial")
 public class AttachmentServlet extends HttpServlet {
 
-	private OrganizationController organizationController = new OrganizationController();
+  private OrganizationController organizationController = new OrganizationController();
 
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		String id = request.getParameter("id");
-		String instanceId = request.getParameter("instanceId");
-		String lang = request.getParameter("lang");
-		String userId = request.getParameter("userId");		
-		UserFull userF = organizationController.getUserFull(userId);
-		
-		
-		
-		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/silverpeas/services/documents/" + instanceId + "/document/" + id + "/content/" + lang;
-						
-		getFile(url, response, userF.getToken());
-		
-		response.getOutputStream().flush();
-	}
+  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String id = request.getParameter("id");
+    String instanceId = request.getParameter("instanceId");
+    String lang = request.getParameter("lang");
+    String userId = request.getParameter("userId");
+    UserFull userF = organizationController.getUserFull(userId);
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-   try {
+
+
+    String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/silverpeas/services/documents/" + instanceId + "/document/" + id + "/content/" + lang;
+
+    getFile(url, response, userF.getToken());
+
+    response.getOutputStream().flush();
+  }
+
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    try {
       checkUserInSession(request);
-		  processRequest(request, response);
+      processRequest(request, response);
     } catch (Exception e) {
-    e.printStackTrace();
+      e.printStackTrace();
     }
-	}
+  }
 
   protected void checkUserInSession(HttpServletRequest request) throws AuthenticationException {
     if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
@@ -53,34 +54,37 @@ public class AttachmentServlet extends HttpServlet {
     }
   }
 
-	public static void getFile(String host, HttpServletResponse response, String token) {
-		InputStream input = null;
+  public static void getFile(String host, HttpServletResponse response, String token) {
+    InputStream input = null;
 
-		try {
+    try {
 
-			HttpClient client = new HttpClient();
-			HttpMethod method = new GetMethod(host);
-			method.addRequestHeader("X-Silverpeas-Session", token);
-			
-			// String t = "SilverAdmin:SilverAdmin";
-			// method.addRequestHeader("Authorization", "Basic " +
-			// Base64Utils.toBase64(t.getBytes()));
+      Protocol.registerProtocol("https", new Protocol("https", new EasySSLProtocolSocketFactory(), 443));
 
-			client.executeMethod(method);
 
-			input = method.getResponseBodyAsStream();
-			response.setContentType(method.getResponseHeader("Content-Type").getValue());
-			response.setHeader("content-disposition", method.getResponseHeader("content-disposition").getValue());
+      HttpClient client = new HttpClient();
+      HttpMethod method = new GetMethod(host);
+      method.addRequestHeader("X-Silverpeas-Session", token);
 
-			byte[] buffer = new byte[1024];
-			int read;
-			while ((read = input.read(buffer)) > 0) {
-				response.getOutputStream().write(buffer, 0, read);
-			}
-			response.setContentLength(Integer.parseInt(method.getResponseHeader("Content-Length").getValue()));
-		} catch (IOException e) {
-			System.out.println("Error while trying to download the file.");
-			e.printStackTrace();
-		}
-	}
+      // String t = "SilverAdmin:SilverAdmin";
+      // method.addRequestHeader("Authorization", "Basic " +
+      // Base64Utils.toBase64(t.getBytes()));
+
+      client.executeMethod(method);
+
+      input = method.getResponseBodyAsStream();
+      response.setContentType(method.getResponseHeader("Content-Type").getValue());
+      response.setHeader("content-disposition", method.getResponseHeader("content-disposition").getValue());
+
+      byte[] buffer = new byte[1024];
+      int read;
+      while ((read = input.read(buffer)) > 0) {
+        response.getOutputStream().write(buffer, 0, read);
+      }
+      response.setContentLength(Integer.parseInt(method.getResponseHeader("Content-Length").getValue()));
+    } catch (IOException e) {
+      System.out.println("Error while trying to download the file.");
+      e.printStackTrace();
+    }
+  }
 }
