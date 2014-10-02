@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
+import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 
@@ -56,6 +58,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
         }
       }
     } catch (Exception e) {
+      SilverTrace.error(SpMobileLogModule.getName(), "ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
       throw new ContactException(e);
     }
 
