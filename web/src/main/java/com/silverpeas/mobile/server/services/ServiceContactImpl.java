@@ -71,14 +71,21 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
    * @return
    */
   private DetailUserDTO populate(UserDetail userDetail) {
-    UserFull userFull = UserFull.getById(userDetail.getId());
-    Mapper mapper = new DozerBeanMapper();
-    DetailUserDTO userDTO = mapper.map(userDetail, DetailUserDTO.class);
-    userDTO.setAvatar(GeneralPropertiesManager.getString("ApplicationURL")+userDetail.getAvatar());
-    userDTO.setPhoneNumber(userFull.getValue("phone"));
-    userDTO.setCellularPhoneNumber(userFull.getValue("cellularPhone"));
-    userDTO.setFaxPhoneNumber(userFull.getValue("fax"));
-    return userDTO;
+    if (userDetail != null) {
+      SilverTrace.debug(SpMobileLogModule.getName(), "ServiceContactImpl.populate",
+          "User id=" + userDetail.getId());
+      UserFull userFull = UserFull.getById(userDetail.getId());
+      Mapper mapper = new DozerBeanMapper();
+      DetailUserDTO userDTO = mapper.map(userDetail, DetailUserDTO.class);
+      userDTO.setAvatar(GeneralPropertiesManager.getString("ApplicationURL") + userDetail.getAvatar());
+      if (userFull != null) {
+        userDTO.setPhoneNumber(userFull.getValue("phone"));
+        userDTO.setCellularPhoneNumber(userFull.getValue("cellularPhone"));
+        userDTO.setFaxPhoneNumber(userFull.getValue("fax"));
+      }
+      return userDTO;
+    }
+    return null;
   }
 
   /**

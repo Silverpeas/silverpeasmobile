@@ -99,11 +99,12 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
     while (i.hasNext()) {
       DetailUserDTO user = i.next();
-      ContactItem item = new ContactItem();
-      item.setData(user);
-      list.add(item);
+      if (user != null) {
+        ContactItem item = new ContactItem();
+        item.setData(user);
+        list.add(item);
+      }
     }
-
     callingNexData = false;
   }
 
