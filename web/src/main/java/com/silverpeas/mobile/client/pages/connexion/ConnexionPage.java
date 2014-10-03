@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.ListBox;
@@ -31,6 +32,7 @@ import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
+import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
 
 public class ConnexionPage extends PageContent {
@@ -61,14 +63,13 @@ public class ConnexionPage extends PageContent {
    */
   @UiHandler("go")
   void connexion(ClickEvent e) {
-    clickGesture(new Command() {
-      @Override
-      public void execute() {
-        String login = loginField.getText();
-        String password = passwordField.getText();
-        login(login, password, domains.getValue(domains.getSelectedIndex()));
-      }
-    });
+    loginField.setFocus(false);
+    passwordField.setFocus(false);
+    domains.setFocus(false);
+
+    String login = loginField.getText();
+    String password = passwordField.getText();
+    login(login, password, domains.getValue(domains.getSelectedIndex()));
   }
 
   /**
@@ -78,6 +79,18 @@ public class ConnexionPage extends PageContent {
    * @param domainId
    */
   private void login(String login, final String password, String domainId) {
+
+    if (login.isEmpty()) {
+      loginField.getElement().getStyle().setBackgroundColor("#ec9c01");
+    } else {
+      loginField.getElement().getStyle().clearBackgroundColor();
+    }
+    if (password.isEmpty()) {
+      passwordField.getElement().getStyle().setBackgroundColor("#ec9c01");
+    } else {
+      passwordField.getElement().getStyle().clearBackgroundColor();
+    }
+
     if (!login.isEmpty() && !password.isEmpty()) {
       ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
         public void onFailure(Throwable caught) {
