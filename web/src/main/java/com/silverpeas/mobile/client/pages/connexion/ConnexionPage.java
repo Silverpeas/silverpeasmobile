@@ -53,7 +53,14 @@ public class ConnexionPage extends PageContent {
     loadDomains();
     initWidget(uiBinder.createAndBindUi(this));
     loginField.getElement().setId("Login");
+    loginField.getElement().setAttribute("autocapitalize", "off");
+    loginField.getElement().setAttribute("autocorrect", "off");
+    loginField.getElement().setAttribute("spellcheck", "off");
+
     passwordField.getElement().setId("Password");
+    passwordField.getElement().setAttribute("autocapitalize", "off");
+    passwordField.getElement().setAttribute("autocorrect", "off");
+    passwordField.getElement().setAttribute("spellcheck", "off");
     domains.getElement().setId("DomainId");
   }
 
