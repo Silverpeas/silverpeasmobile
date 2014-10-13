@@ -29,6 +29,7 @@ import org.silverpeas.attachment.model.SimpleDocument;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -65,9 +66,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
           TopicDTO topic = new TopicDTO();
           if (nodeDetail.getId() != 2) {
 
-            //TODO : verify user rights
             if (isCurrentTopicAvailable(nodeDetail)) {
-
               topic.setId(String.valueOf(nodeDetail.getId()));
               topic.setName(nodeDetail.getName());
               int childrenNumber = getNodeBm()
@@ -75,9 +74,20 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
               // count publications
               Collection<NodePK> pks = getAllSubNodePKs(nodeDetail.getNodePK());
+              if (isRightsOnTopicsEnabled(instanceId)) {
+                Collection<NodePK> pksAvailables = new ArrayList<NodePK>();
+                for (NodePK onePk : pks) {
+                  NodeDetail oneNode = getNodeBm().getDetail(onePk);
+                  if (isCurrentTopicAvailable(oneNode)) {
+                    pksAvailables.add(onePk);
+                  }
+                }
+                pks = pksAvailables;
+              }
+
               pks.add(nodeDetail.getNodePK());
               topic.setPubCount(getPubBm().getNbPubInFatherPKs(pks));
-              //TODO : count using user rights
+              //TODO : count without draft pub
               topic.setTerminal(childrenNumber == 0);
               topicsList.add(topic);
             }
@@ -192,15 +202,13 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setInstanceId(pub.getInstanceId());
 
       String content = pub.getWysiwyg();
-      //TODO : convert img url to data uri
-      // use jsoup
-
-      dto.setWysiwyg(content);
+      //TODO : in next version
+      //dto.setWysiwyg(content);
 
       ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
       SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");
 
-      List<SimpleDocument> pubAttachments = AttachmentServiceFactory.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, "fr"); // TODO manager langue
+      List<SimpleDocument> pubAttachments = AttachmentServiceFactory.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
 
       SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 
