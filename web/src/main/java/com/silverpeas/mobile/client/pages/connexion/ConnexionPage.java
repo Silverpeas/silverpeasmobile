@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -13,6 +16,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -44,6 +48,7 @@ public class ConnexionPage extends PageContent {
   @UiField TextBox loginField;
   @UiField PasswordTextBox passwordField;
   @UiField ListBox domains;
+  @UiField FormPanel form;
 
   interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {
   }
@@ -62,6 +67,7 @@ public class ConnexionPage extends PageContent {
     passwordField.getElement().setAttribute("autocorrect", "off");
     passwordField.getElement().setAttribute("spellcheck", "off");
     domains.getElement().setId("DomainId");
+    form.getElement().setId("formLogin");
   }
 
   /**

@@ -12,7 +12,8 @@
     </div>
 
     <div id="page-login" class="ui-content ui-body-a">
-      <form accept-charset="UTF-8" method="post" action="" id="formLogin">
+      <g:FormPanel ui:field="form">
+        <g:HTMLPanel>
         <div id="login-formLogin">
           <g:TextBox ui:field="loginField" focus="true"/>
         </div>
@@ -29,11 +30,11 @@
             </g:Anchor>
           </div>
         </div>
-
         <div id="copyright">
           <ui:safehtml from="{msg.copyright}"/>
         </div>
-      </form>
+        </g:HTMLPanel>
+      </g:FormPanel>
     </div>
 
 

@@ -34,6 +34,8 @@ public class StatusPage extends PageContent implements StatusPagesEventHandler {
     setPageTitle(msg.title().asString());
     initWidget(uiBinder.createAndBindUi(this));
     container.getElement().setId("update-statut");
+    status.getElement().setAttribute("x-webkit-speech", "x-webkit-speech");
+    status.getElement().setAttribute("speech", "speech");
     EventBus.getInstance().addHandler(AbstractStatusPagesEvent.TYPE, this);
   }
 
