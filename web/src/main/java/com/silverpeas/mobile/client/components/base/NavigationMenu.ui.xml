@@ -11,6 +11,7 @@
         <br /><span class="statut"><span ui:field="status"></span><g:Anchor  ui:field="updateStatus" styleName="edit-my-statut" text="{msg.editStatus}"></g:Anchor></span>
       </g:HTMLPanel>
       <ul id="navmenu-panel">
+        <li id="menu-search"><g:TextBox ui:field="search" styleName="searchBox"/></li>
         <li id="menu-home"><g:Anchor ui:field="home" styleName="ui-link" text="{msg.home}"/></li>
         <li id="menu-logout"><g:Anchor ui:field="disconnect" styleName="ui-link" text="{msg.disconnect}"/></li>
       </ul>

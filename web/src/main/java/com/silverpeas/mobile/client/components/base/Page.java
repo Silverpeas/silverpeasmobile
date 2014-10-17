@@ -56,6 +56,10 @@ public class Page extends Composite implements Window.ScrollHandler {
     menu.setUser(user);
   }
 
+  public void resetSearchField() {
+    menu.resetSearchField();
+  }
+
   @Override
   public void onWindowScroll(final Window.ScrollEvent event) {
     if (Document.get().getScrollTop() + Document.get().getClientHeight() >= Document.get().getScrollHeight()) {

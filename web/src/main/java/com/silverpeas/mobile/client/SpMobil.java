@@ -23,9 +23,14 @@ import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.AppList;
+import com.silverpeas.mobile.client.pages.search.SearchResultPage;
 import com.silverpeas.mobile.client.persist.User;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
+import com.silverpeas.mobile.shared.dto.search.ResultDTO;
+
+import java.util.List;
 
 public class SpMobil implements EntryPoint {
 
@@ -33,11 +38,13 @@ public class SpMobil implements EntryPoint {
   public final static Page mainPage = new Page();
   public static DetailUserDTO user;
   private static String viewport, bodyClass, bodyId;
+  private static ApplicationMessages msg;
 
   /**
    * Init. spmobile.
    */
   public void onModuleLoad() {
+    msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
     loadIds();
 
@@ -121,6 +128,25 @@ public class SpMobil implements EntryPoint {
       EventBus.getInstance().fireEvent(new ErrorEvent(e));
     }
     return plainPassword;
+  }
+
+  public static void search(String query) {
+    ServicesLocator.serviceSearch.search(query, new AsyncCallback<List<ResultDTO>>() {
+      @Override
+      public void onFailure(final Throwable throwable) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+      }
+
+      @Override
+      public void onSuccess(final List<ResultDTO> results) {
+        mainPage.resetSearchField();
+        mainPage.closeMenu();
+        SearchResultPage page = new SearchResultPage();
+        page.setPageTitle(msg.results());
+        page.setResults(results);
+        page.show();
+      }
+    });
   }
 
   public static void showFullScreen(final Widget content, final boolean zoomable, String bodyClass, String bodyId) {

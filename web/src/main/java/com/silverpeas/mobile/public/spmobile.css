@@ -963,3 +963,8 @@ textarea.ui-input-text {
   top:auto;
   right:50%;
 }
+
+.searchBox {
+  width: 90%;
+  display:none; /* remove for testing */
+}
