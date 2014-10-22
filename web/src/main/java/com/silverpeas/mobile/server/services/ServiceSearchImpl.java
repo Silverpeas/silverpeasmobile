@@ -2,6 +2,7 @@ package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.admin.ejb.AdminBusiness;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
 import com.silverpeas.mobile.shared.exceptions.AlmanachException;
@@ -46,10 +47,10 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
       PlainSearchResult r = SearchEngineFactory.getSearchEngine().search(q);
       for (MatchingIndexEntry result : r.getEntries()) {
 
-        if (result.getObjectType().equals("Photo") || result.getObjectType().equals("Publication") || result.getObjectType().contains("Attachment")) {
+        if (result.getObjectType().equals(ContentsTypes.Photo.toString()) || result.getObjectType().equals(ContentsTypes.Publication.toString()) || result.getObjectType().contains(ContentsTypes.Attachment.toString())) {
           ResultDTO entry = new ResultDTO();
-          if (result.getObjectType().contains("Attachment")) {
-            entry.setType("Attachment");
+          if (result.getObjectType().contains(ContentsTypes.Attachment.toString())) {
+            entry.setType(ContentsTypes.Attachment.toString());
           } else {
             entry.setType(result.getObjectType());
           }

@@ -23,64 +23,64 @@ import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class NavigationPage extends PageContent implements NavigationPagesEventHandler {
 
-	private static NavigationPageUiBinder uiBinder = GWT.create(NavigationPageUiBinder.class);
-	private String rootSpaceId;
-	private boolean dataLoaded = false;
-	
-	@UiField UnorderedList list;
+  private static NavigationPageUiBinder uiBinder = GWT.create(NavigationPageUiBinder.class);
+  private String rootSpaceId;
+  private boolean dataLoaded = false;
 
-	interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {
-	}
+  @UiField UnorderedList list;
 
-	public NavigationPage() {
-		initWidget(uiBinder.createAndBindUi(this));
-		setPageTitle("Nav");
-		EventBus.getInstance().addHandler(AbstractNavigationPagesEvent.TYPE, this);
-		Notification.activityStart();
-	}
+  interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {
+  }
 
-	@Override
-	public void spacesAndAppsLoaded(SpacesAndAppsLoadedEvent event) {
-		
-		if (isVisible() && dataLoaded == false) {
-			
-			list.clear();
-			List<SilverpeasObjectDTO> objectsList = event.getObjectsList();
-			for (SilverpeasObjectDTO silverpeasObjectDTO : objectsList) {
-				NavigationItem item = new NavigationItem();
-				item.setData(silverpeasObjectDTO);
-				list.add(item);
-			}
-			dataLoaded = true;
-		}
-		Notification.activityStop();
-	}
-	
-	public void setRootSpaceId(String rootSpaceId) {
-		this.rootSpaceId = rootSpaceId;
-		EventBus.getInstance().fireEvent(new LoadSpacesAndAppsEvent(rootSpaceId));
-	}
+  public NavigationPage() {
+    initWidget(uiBinder.createAndBindUi(this));
+    setPageTitle("Nav");
+    EventBus.getInstance().addHandler(AbstractNavigationPagesEvent.TYPE, this);
+    Notification.activityStart();
+  }
+
+  @Override
+  public void spacesAndAppsLoaded(SpacesAndAppsLoadedEvent event) {
+
+    if (isVisible() && dataLoaded == false) {
+
+      list.clear();
+      List<SilverpeasObjectDTO> objectsList = event.getObjectsList();
+      for (SilverpeasObjectDTO silverpeasObjectDTO : objectsList) {
+        NavigationItem item = new NavigationItem();
+        item.setData(silverpeasObjectDTO);
+        list.add(item);
+      }
+      dataLoaded = true;
+    }
+    Notification.activityStop();
+  }
+
+  public void setRootSpaceId(String rootSpaceId) {
+    this.rootSpaceId = rootSpaceId;
+    EventBus.getInstance().fireEvent(new LoadSpacesAndAppsEvent(rootSpaceId));
+  }
 
 
-	@Override
-	public void stop() {
-		super.stop();
-		EventBus.getInstance().removeHandler(AbstractNavigationPagesEvent.TYPE, this);
-	}
+  @Override
+  public void stop() {
+    super.stop();
+    EventBus.getInstance().removeHandler(AbstractNavigationPagesEvent.TYPE, this);
+  }
 
-	@Override
-	public void clickItem(ClickItemEvent event) {
-		if (isVisible()) {
-			if (event.getData() instanceof SpaceDTO) {
-				NavigationPage subPage = new NavigationPage();
-				subPage.setPageTitle(this.getPageTitle());
-				subPage.setRootSpaceId(event.getData().getId());
-				subPage.show();
-			} else {
-				EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
-			}
-		}		
-	}
+  @Override
+  public void clickItem(ClickItemEvent event) {
+    if (isVisible()) {
+      if (event.getData() instanceof SpaceDTO) {
+        NavigationPage subPage = new NavigationPage();
+        subPage.setPageTitle(this.getPageTitle());
+        subPage.setRootSpaceId(event.getData().getId());
+        subPage.show();
+      } else {
+        EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
+      }
+    }
+  }
 
 
 }

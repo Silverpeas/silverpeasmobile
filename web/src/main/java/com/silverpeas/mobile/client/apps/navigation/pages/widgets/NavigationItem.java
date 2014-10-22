@@ -19,40 +19,40 @@ import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class NavigationItem extends Composite {
 
-	private SilverpeasObjectDTO data;	
-	private static NavigationItemUiBinder uiBinder = GWT.create(NavigationItemUiBinder.class);
-	@UiField Anchor link;
-	protected ApplicationMessages msg = null;
-	
-	
-	interface NavigationItemUiBinder extends UiBinder<Widget, NavigationItem> {
-	}
+  private SilverpeasObjectDTO data;
+  private static NavigationItemUiBinder uiBinder = GWT.create(NavigationItemUiBinder.class);
+  @UiField Anchor link;
+  protected ApplicationMessages msg = null;
 
-	public NavigationItem() {
-		initWidget(uiBinder.createAndBindUi(this));
-		msg = GWT.create(ApplicationMessages.class);
-	}
-	
-	public void setData(SilverpeasObjectDTO data) {
-		this.data = data;
-		link.setText(data.getLabel());
-		if (data instanceof SpaceDTO) {
-			if (((SpaceDTO)data).isPersonal()) {
-				link.setText(msg.personalSpace());
-			}
-		} else {			
-			String type = ((ApplicationInstanceDTO) data).getType();			
-			if (type.equalsIgnoreCase(Apps.kmelia.name())) {
-				setStyleName("folder-ged");	
-			} else if (type.equalsIgnoreCase(Apps.gallery.name())) {
-				setStyleName("folder-galery");
-			}
-		}
-		link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
-	}
-	
-	@UiHandler("link")
-	protected void onClick(ClickEvent event) {	
-		EventBus.getInstance().fireEvent(new ClickItemEvent(data));
-	}
+
+  interface NavigationItemUiBinder extends UiBinder<Widget, NavigationItem> {
+  }
+
+  public NavigationItem() {
+    initWidget(uiBinder.createAndBindUi(this));
+    msg = GWT.create(ApplicationMessages.class);
+  }
+
+  public void setData(SilverpeasObjectDTO data) {
+    this.data = data;
+    link.setText(data.getLabel());
+    if (data instanceof SpaceDTO) {
+      if (((SpaceDTO)data).isPersonal()) {
+        link.setText(msg.personalSpace());
+      }
+    } else {
+      String type = ((ApplicationInstanceDTO) data).getType();
+      if (type.equalsIgnoreCase(Apps.kmelia.name())) {
+        setStyleName("folder-ged");
+      } else if (type.equalsIgnoreCase(Apps.gallery.name())) {
+        setStyleName("folder-galery");
+      }
+    }
+    link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
+  }
+
+  @UiHandler("link")
+  protected void onClick(ClickEvent event) {
+    EventBus.getInstance().fireEvent(new ClickItemEvent(data));
+  }
 }

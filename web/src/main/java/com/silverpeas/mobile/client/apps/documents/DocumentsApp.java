@@ -1,7 +1,9 @@
 package com.silverpeas.mobile.client.apps.documents;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.requestfactory.shared.ServiceLocator;
 import com.silverpeas.mobile.client.apps.documents.events.app.AbstractDocumentsAppEvent;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsAppEventHandler;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
@@ -9,6 +11,7 @@ import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPubli
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.pages.GedNavigationPage;
+import com.silverpeas.mobile.client.apps.documents.pages.PublicationPage;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
@@ -20,7 +23,9 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.List;
 
@@ -47,6 +52,34 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     setMainPage(navApp.getMainPage());
 
     super.start();
+  }
+
+  @Override
+  public void startWithContent(final String appId, final String contentType, final String contentId) {
+    ServicesLocator.serviceNavigation.getApp(appId, new AsyncCallback<ApplicationInstanceDTO>() {
+      @Override
+      public void onFailure(final Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+      }
+
+      @Override
+      public void onSuccess(final ApplicationInstanceDTO app) {
+        commentable = app.isCommentable();
+        displayContent(contentType, contentId);
+      }
+    });
+  }
+
+  private void displayContent(String contentType, String contentId) {
+    if (contentType.equals(ContentsTypes.Publication.toString())) {
+      PublicationPage page = new PublicationPage();
+      page.setPageTitle(msg.publicationTitle());
+      setMainPage(page);
+      page.show();
+    } else if(contentType.equals(ContentsTypes.Attachment.toString())) {
+      //TODO : implement attachments results display
+    }
+    EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(contentId));
   }
 
   @Override

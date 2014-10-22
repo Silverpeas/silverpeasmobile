@@ -9,9 +9,13 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
+import com.silverpeas.mobile.client.apps.media.MediaApp;
+import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
 
 import java.util.List;
@@ -45,7 +49,16 @@ public class SearchResultPage extends PageContent implements View {
       link.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(final ClickEvent event) {
-          Window.alert(result.getId());
+          if (result.getType().equals(ContentsTypes.Attachment.toString())) {
+            App app = new DocumentsApp();
+            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
+          } else if (result.getType().equals(ContentsTypes.Publication.toString())) {
+            App app = new DocumentsApp();
+            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
+          } else if (result.getType().equals(ContentsTypes.Photo.toString())) {
+            App app = new MediaApp();
+            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
+          }
         }
       });
       link.setText(result.getTitle());

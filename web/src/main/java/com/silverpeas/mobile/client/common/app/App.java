@@ -5,22 +5,26 @@ import com.silverpeas.mobile.client.components.base.PageContent;
 
 public abstract class App {
 
-	private PageContent mainPage;	
-	
-	public void start() {
-		PageHistory.getInstance().goTo(mainPage);
-	}
+  private PageContent mainPage;
 
-	public void stop() {			
-	}
+  public void start() {
+    PageHistory.getInstance().goTo(mainPage);
+  }
 
-	public PageContent getMainPage() {
-		return mainPage;
-	}	
+  public void startWithContent(String appId, String contentType, String contentId) {
 
-	protected void setMainPage(PageContent mainPage) {		
-		this.mainPage = mainPage;	
-		this.mainPage.setApp(this);
-		
-	}
+  }
+
+  public void stop() {
+  }
+
+  public PageContent getMainPage() {
+    return mainPage;
+  }
+
+  protected void setMainPage(PageContent mainPage) {
+    this.mainPage = mainPage;
+    this.mainPage.setApp(this);
+
+  }
 }

@@ -12,6 +12,7 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEv
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
+import com.silverpeas.mobile.client.apps.media.pages.MediaPage;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
@@ -25,22 +26,23 @@ import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
+import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.List;
 
 public class MediaApp extends App implements NavigationEventHandler, MediaAppEventHandler {
 
-	private MediaMessages msg;
-	private NavigationApp navApp = new NavigationApp();
+  private MediaMessages msg;
+  private NavigationApp navApp = new NavigationApp();
   private RightDTO userRight;
   private boolean commentable;
 
   public MediaApp() {
-		super();
-		msg = GWT.create(MediaMessages.class);
-		EventBus.getInstance().addHandler(AbstractMediaAppEvent.TYPE, this);
-		EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
-	}
+    super();
+    msg = GWT.create(MediaMessages.class);
+    EventBus.getInstance().addHandler(AbstractMediaAppEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
+  }
 
   @Override
   public void start() {
@@ -54,16 +56,40 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     super.start();
   }
 
-	@Override
-	public void stop() {
-		EventBus.getInstance().removeHandler(AbstractMediaAppEvent.TYPE, this);
-		EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
-		navApp.stop();
-		super.stop();
-	}
+  @Override
+  public void startWithContent(final String appId, final String contentType, final String contentId) {
+    ServicesLocator.serviceNavigation.getApp(appId, new AsyncCallback<ApplicationInstanceDTO>() {
+      @Override
+      public void onFailure(final Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+      }
 
-	@Override
-	public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
+      @Override
+      public void onSuccess(final ApplicationInstanceDTO app) {
+        commentable = app.isCommentable();
+        displayContent(appId, contentId);
+      }
+    });
+  }
+
+  private void displayContent(final String appId, final String contentId) {
+    MediaPage page = new MediaPage();
+    page.setPageTitle(msg.title());
+    setMainPage(page);
+    page.show();
+    EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentId));
+  }
+
+  @Override
+  public void stop() {
+    EventBus.getInstance().removeHandler(AbstractMediaAppEvent.TYPE, this);
+    EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
+    navApp.stop();
+    super.stop();
+  }
+
+  @Override
+  public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
     this.commentable = event.getInstance().isCommentable();
     MediaNavigationPage page = new MediaNavigationPage();
     page.setPageTitle(msg.title());

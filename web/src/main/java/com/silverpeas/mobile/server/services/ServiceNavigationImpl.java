@@ -77,7 +77,19 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     return results;
   }
 
-  private boolean containApp(String appType, SpaceInstLight space) throws RemoteException, Exception {
+  @Override
+  public ApplicationInstanceDTO getApp(String instanceId) throws NavigationException, AuthenticationException {
+    ApplicationInstanceDTO dto = null;
+    try {
+      ComponentInstLight app = getAdminBm().getComponentInstLight(instanceId);
+      dto = populate(app);
+    } catch(Exception e) {
+      SilverTrace.error(SpMobileLogModule.getName(), "ServiceNavigationImpl.getApp", "root.EX_NO_MESSAGE", e);
+    }
+    return dto;
+  }
+
+  private boolean containApp(String appType, SpaceInstLight space) throws Exception {
     List<String> appsIds = getAdminBm().getAvailCompoIds(space.getShortId(), getUserInSession().getId());
     for (String appId : appsIds) {
       ComponentInstLight app = getAdminBm().getComponentInstLight(appId);
