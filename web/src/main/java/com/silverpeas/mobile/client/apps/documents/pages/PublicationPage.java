@@ -73,21 +73,24 @@ public class PublicationPage extends PageContent implements View, PublicationNav
    * Refesh view informations.
    */
   private void display(boolean commentable) {
-    title.setInnerHTML(publication.getName());
-    desc.setInnerHTML(publication.getDescription());
-    lastUpdate.setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
+    if (isVisible()) {
+      title.setInnerHTML(publication.getName());
+      desc.setInnerHTML(publication.getDescription());
+      lastUpdate.setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater
+          ()));
 
-    for (AttachmentDTO attachment : publication.getAttachments()) {
-      Attachment a = new Attachment();
-      a.setAttachment(attachment);
-      attachments.add(a);
-    }
-    if (commentable) {
-      comments.init(publication.getId(), publication.getInstanceId(), CommentDTO.TYPE_PUBLICATION,
-          getPageTitle(), publication.getName(), publication.getCommentsNumber());
-      comments.getElement().getStyle().clearDisplay();
-    } else {
-      comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      for (AttachmentDTO attachment : publication.getAttachments()) {
+        Attachment a = new Attachment();
+        a.setAttachment(attachment);
+        attachments.add(a);
+      }
+      if (commentable) {
+        comments.init(publication.getId(), publication.getInstanceId(), CommentDTO.TYPE_PUBLICATION,
+            getPageTitle(), publication.getName(), publication.getCommentsNumber());
+        comments.getElement().getStyle().clearDisplay();
+      } else {
+        comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      }
     }
   }
 }

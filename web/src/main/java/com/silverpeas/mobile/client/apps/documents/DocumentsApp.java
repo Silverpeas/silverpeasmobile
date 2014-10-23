@@ -1,9 +1,13 @@
 package com.silverpeas.mobile.client.apps.documents;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptException;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.requestfactory.shared.ServiceLocator;
+import com.google.gwt.user.client.ui.Anchor;
 import com.silverpeas.mobile.client.apps.documents.events.app.AbstractDocumentsAppEvent;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsAppEventHandler;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
@@ -19,11 +23,15 @@ import com.silverpeas.mobile.client.apps.navigation.events.app.external.Abstract
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
+import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
@@ -34,12 +42,17 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   private DocumentsMessages msg;
   private NavigationApp navApp = new NavigationApp();
   private boolean commentable;
+  private Anchor sourceLink;
 
   public DocumentsApp() {
     super();
     msg = GWT.create(DocumentsMessages.class);
     EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractDocumentsAppEvent.TYPE, this);
+  }
+
+  public void setSourceLink(Anchor source) {
+    this.sourceLink = source;
   }
 
   @Override
@@ -65,22 +78,55 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       @Override
       public void onSuccess(final ApplicationInstanceDTO app) {
         commentable = app.isCommentable();
-        displayContent(contentType, contentId);
+        displayContent(appId, contentType, contentId);
       }
     });
   }
 
-  private void displayContent(String contentType, String contentId) {
+  private void displayContent(String appId, String contentType, String contentId) {
     if (contentType.equals(ContentsTypes.Publication.toString())) {
       PublicationPage page = new PublicationPage();
       page.setPageTitle(msg.publicationTitle());
       setMainPage(page);
       page.show();
+      EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(contentId));
     } else if(contentType.equals(ContentsTypes.Attachment.toString())) {
       //TODO : implement attachments results display
+      final DocumentsApp app = this;
+      ServicesLocator.serviceDocuments.getAttachment(contentId, appId, new AsyncCallback<AttachmentDTO>() {
+        @Override
+        public void onFailure(final Throwable caught) {
+          EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        }
+
+        @Override
+        public void onSuccess(final AttachmentDTO attachement) {
+          try {
+            String url = Window.Location.getPath() + "spmobil/Attachment";
+            url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
+
+            if (MobilUtils.isIOS()) {
+              IframePage page = new IframePage(url);
+              page.setPageTitle(attachement.getTitle());
+              page.show();
+            } else {
+              sourceLink.setHref(url);
+              sourceLink.setTarget("_self");
+              clickElement(sourceLink.getElement());
+              app.stop();
+            }
+
+          } catch(JavaScriptException e) {
+            Notification.alert(e.getMessage());
+          }
+        }
+      });
     }
-    EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(contentId));
   }
+
+  private static native void clickElement(Element elem) /*-{
+    elem.click();
+  }-*/;
 
   @Override
   public void stop() {

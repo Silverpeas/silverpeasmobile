@@ -64,30 +64,33 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
 
   @Override
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
-    this.media = event.getPreview();
-    preview.setSrc(media.getDataPhoto());
-    Image img = new Image(ressources.image());
-    mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
-    mediaTitle.setInnerHTML(media.getTitle());
-    mediaFileName.setInnerHTML(media.getName());
+    if (isVisible()) {
+      this.media = event.getPreview();
+      preview.setSrc(media.getDataPhoto());
+      Image img = new Image(ressources.image());
+      mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
+      mediaTitle.setInnerHTML(media.getTitle());
+      mediaFileName.setInnerHTML(media.getName());
 
-    String size;
-    if (media.getSize() < 1024*1024) {
-      size = String.valueOf(media.getSize()/1024);
-      weight.setInnerHTML(msg.sizeK(size));
-    } else {
-      size = String.valueOf(media.getSize()/(1024*1024));
-      weight.setInnerHTML(msg.sizeM(size));
-    }
+      String size;
+      if (media.getSize() < 1024 * 1024) {
+        size = String.valueOf(media.getSize() / 1024);
+        weight.setInnerHTML(msg.sizeK(size));
+      } else {
+        size = String.valueOf(media.getSize() / (1024 * 1024));
+        weight.setInnerHTML(msg.sizeM(size));
+      }
 
-    dimensions.setInnerHTML(msg.dimensions(String.valueOf(media.getSizeL()), String.valueOf(media.getSizeH())));
+      dimensions.setInnerHTML(msg.dimensions(String.valueOf(media.getSizeL()), String.valueOf(media.getSizeH())));
 
-    lastUpdate.setInnerHTML(msg.lastUpdate(media.getUpdateDate(), media.getUpdater()));
+      lastUpdate.setInnerHTML(msg.lastUpdate(media.getUpdateDate(), media.getUpdater()));
 
-    if (event.isCommentable()) {
-      comments.init(media.getId(), media.getInstance(), CommentDTO.TYPE_MEDIA, getPageTitle(), media.getTitle(), media.getCommentsNumber());
-    } else {
-      comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      if (event.isCommentable()) {
+        comments.init(media.getId(), media.getInstance(), CommentDTO.TYPE_MEDIA, getPageTitle(),
+            media.getTitle(), media.getCommentsNumber());
+      } else {
+        comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      }
     }
   }
 

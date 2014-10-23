@@ -9,7 +9,10 @@ import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
+import com.silverpeas.util.ForeignPK;
 import com.silverpeas.util.StringUtil;
+import com.stratelia.silverpeas.contentManager.ContentManager;
+import com.stratelia.silverpeas.contentManager.ContentManagerException;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.ObjectType;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
@@ -23,8 +26,11 @@ import com.stratelia.webactiv.util.publication.control.PublicationBm;
 import com.stratelia.webactiv.util.publication.model.PublicationDetail;
 import com.stratelia.webactiv.util.publication.model.PublicationPK;
 import org.silverpeas.attachment.AttachmentServiceFactory;
+import org.silverpeas.attachment.SimpleDocumentService;
 import org.silverpeas.attachment.model.DocumentType;
 import org.silverpeas.attachment.model.SimpleDocument;
+import org.silverpeas.attachment.model.SimpleDocumentPK;
+import org.silverpeas.attachment.repository.SimpleAttachmentConverter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -213,24 +219,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 
       for (SimpleDocument attachment : pubAttachments) {
-        AttachmentDTO attach = new AttachmentDTO();
-        attach.setTitle(attachment.getTitle());
-        if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
-          attach.setTitle(attachment.getFilename());
-        }
-        attach.setInstanceId(attachment.getInstanceId());
-        attach.setId(attachment.getId());
-        attach.setLang(attachment.getLanguage());
-
-
-
-        attach.setUserId(getUserInSession().getId());
-        attach.setType(attachment.getContentType());
-        attachments.add(attach);
-        attach.setAuthor(attachment.getCreatedBy());
-        attach.setOrderNum(attachment.getOrder());
-        attach.setSize(attachment.getSize());
-        attach.setCreationDate(attachment.getCreated());
+        attachments.add(populate(attachment));
       }
       dto.setAttachments(attachments);
 
@@ -242,11 +231,36 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   }
 
   @Override
+  public AttachmentDTO getAttachment(String attachmentId, String appId) throws DocumentsException, AuthenticationException {
+    SimpleDocumentPK pk = new SimpleDocumentPK(attachmentId, appId);
+    SimpleDocument doc = AttachmentServiceFactory.getAttachmentService().searchDocumentById(pk, getUserInSession().getUserPreferences().getLanguage());
+    return populate(doc);
+  }
+
+  @Override
   public List<BaseDTO> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
     checkUserInSession();
     ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();
     list.addAll(getTopics(instanceId, rootTopicId));
     list.addAll(getPublications(instanceId, rootTopicId));
     return list;
+  }
+
+  private AttachmentDTO populate(SimpleDocument attachment) {
+    AttachmentDTO attach = new AttachmentDTO();
+    attach.setTitle(attachment.getTitle());
+    if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
+      attach.setTitle(attachment.getFilename());
+    }
+    attach.setInstanceId(attachment.getInstanceId());
+    attach.setId(attachment.getId());
+    attach.setLang(attachment.getLanguage());
+    attach.setUserId(getUserInSession().getId());
+    attach.setType(attachment.getContentType());
+    attach.setAuthor(attachment.getCreatedBy());
+    attach.setOrderNum(attachment.getOrder());
+    attach.setSize(attachment.getSize());
+    attach.setCreationDate(attachment.getCreated());
+    return attach;
   }
 }

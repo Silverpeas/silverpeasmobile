@@ -49,8 +49,12 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
 
         if (result.getObjectType().equals(ContentsTypes.Photo.toString()) || result.getObjectType().equals(ContentsTypes.Publication.toString()) || result.getObjectType().contains(ContentsTypes.Attachment.toString())) {
           ResultDTO entry = new ResultDTO();
+
           if (result.getObjectType().contains(ContentsTypes.Attachment.toString())) {
             entry.setType(ContentsTypes.Attachment.toString());
+            String attachmentId = result.getObjectType().replace("Attachment","");
+            attachmentId = attachmentId.replace("_" + getUserInSession().getUserPreferences().getLanguage(), "");
+            entry.setAttachmentId(attachmentId);
           } else {
             entry.setType(result.getObjectType());
           }

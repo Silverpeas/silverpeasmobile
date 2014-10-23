@@ -44,7 +44,7 @@ public class NavigationMenu extends Composite implements StatusPagesEventHandler
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
   @UiField HTMLPanel container, user;
-  @UiField Anchor home, disconnect, updateStatus;
+  @UiField Anchor home, disconnect, updateStatus, searchButton;
   @UiField SpanElement status;
   @UiField TextBox search;
 
@@ -93,6 +93,11 @@ public class NavigationMenu extends Composite implements StatusPagesEventHandler
 
 
     }
+  }
+
+  @UiHandler("searchButton")
+  protected void searchIos(ClickEvent event) {
+    SpMobil.search(search.getText());
   }
 
   @UiHandler("home")

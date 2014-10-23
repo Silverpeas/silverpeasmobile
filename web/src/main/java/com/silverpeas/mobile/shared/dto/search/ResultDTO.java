@@ -9,6 +9,7 @@ public class ResultDTO implements Serializable{
   private String title;
   private String type;
   private String componentId;
+  private String attachmentId;
 
 
   public String getTitle() {
@@ -41,5 +42,13 @@ public class ResultDTO implements Serializable{
 
   public void setComponentId(final String componentId) {
     this.componentId = componentId;
+  }
+
+  public String getAttachmentId() {
+    return attachmentId;
+  }
+
+  public void setAttachmentId(final String attachmentId) {
+    this.attachmentId = attachmentId;
   }
 }

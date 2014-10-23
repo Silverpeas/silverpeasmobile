@@ -45,13 +45,16 @@ public class SearchResultPage extends PageContent implements View {
 
   private void display() {
     for (final ResultDTO result : results) {
-      Anchor link = new Anchor();
+      final Anchor link = new Anchor();
       link.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(final ClickEvent event) {
           if (result.getType().equals(ContentsTypes.Attachment.toString())) {
-            App app = new DocumentsApp();
-            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
+            if (((Anchor)event.getSource()).getHref().isEmpty()) {
+              DocumentsApp app = new DocumentsApp();
+              app.setSourceLink(link);
+              app.startWithContent(result.getComponentId(), result.getType(), result.getAttachmentId());
+            }
           } else if (result.getType().equals(ContentsTypes.Publication.toString())) {
             App app = new DocumentsApp();
             app.startWithContent(result.getComponentId(), result.getType(), result.getId());

@@ -965,6 +965,16 @@ textarea.ui-input-text {
 }
 
 .searchBox {
-  width: 90%;
-  display:none; /* remove for testing */
+  width: 80%;
+}
+
+.searchButton {
+  width: 10%;
+  padding: 0 0 0 5px !important;
+  display: inline !important;
+}
+
+#menu-search {
+  padding-top: 5px !important;
+  display:none !important; /* remove for testing */
 }
