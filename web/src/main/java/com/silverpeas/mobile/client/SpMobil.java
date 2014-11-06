@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.silverpeas.mobile.client.common.ErrorManager;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
@@ -55,6 +56,7 @@ public class SpMobil implements EntryPoint {
         viewport = metaTag.getContent();
       }
     }
+    Notification.activityStop();
   }
 
   /**
