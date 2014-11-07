@@ -18,4 +18,7 @@ public class TasksLoadedEvent extends AbstractTasksPagesEvent {
     handler.onTaskLoad(this);
   }
 
+  public List<TaskDTO> getTasks() {
+    return tasks;
+  }
 }

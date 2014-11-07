@@ -10,7 +10,7 @@ import com.silverpeas.mobile.shared.exceptions.Taskexception;
 
 import java.util.List;
 
-@RemoteServiceRelativePath("RSE")
+@RemoteServiceRelativePath("Tasks")
 public interface ServiceTasks extends RemoteService {
   public List<TaskDTO> loadTasks() throws Taskexception, AuthenticationException;
 }

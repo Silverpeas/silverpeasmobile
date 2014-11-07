@@ -130,6 +130,13 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.silverpeas.core.ejb-core</groupId>
+      <artifactId>calendar</artifactId>
+      <version>${silverpeasVersion}</version>
+      <classifier>client</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.silverpeas.components.gallery</groupId>
       <artifactId>gallery-ejb</artifactId>
       <version>${silverpeasVersion}</version>

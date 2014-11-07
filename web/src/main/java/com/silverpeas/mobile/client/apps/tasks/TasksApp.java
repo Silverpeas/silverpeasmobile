@@ -12,6 +12,7 @@ import com.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import com.silverpeas.mobile.client.apps.tasks.pages.TasksPage;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
@@ -42,6 +43,7 @@ public class TasksApp extends App implements TasksAppEventHandler {
 
   @Override
   public void loadTasks(final TasksLoadEvent event) {
+    Notification.activityStart();
     ServicesLocator.serviceTasks.loadTasks(new AsyncCallback<List<TaskDTO>>() {
       @Override
       public void onFailure(final Throwable caught) {

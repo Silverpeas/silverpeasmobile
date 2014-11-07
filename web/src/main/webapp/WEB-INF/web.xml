@@ -5,6 +5,15 @@
          version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
   <servlet>
+    <servlet-name>serviceTasksImpl</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.services.ServiceTasksImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>serviceTasksImpl</servlet-name>
+    <url-pattern>/spmobil/Tasks</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>serviceSearchImpl</servlet-name>
     <servlet-class>com.silverpeas.mobile.server.services.ServiceSearchImpl</servlet-class>
   </servlet>
