@@ -978,3 +978,7 @@ textarea.ui-input-text {
   padding-top: 5px !important;
   display:none !important; /* remove for testing */
 }
+
+#menu-tasks {
+  display:none !important; /* remove for testing */
+}

@@ -18,7 +18,7 @@ public class TaskItem extends Composite {
 
   private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
 
-  @UiField HTMLPanel container;
+  @UiField HTMLPanel container, name, endDate, delegator, priority, percentCompleted;
 
   interface ContactItemUiBinder extends UiBinder<Widget, TaskItem> {
   }
@@ -27,8 +27,12 @@ public class TaskItem extends Composite {
     initWidget(uiBinder.createAndBindUi(this));
   }
 
-  public void setData(TaskDTO taskData) {
-
+  public void setData(TaskDTO data) {
+    name.add(new HTML(data.getName()));
+    name.add(new HTML(data.getEndDate()));
+    name.add(new HTML(data.getDelegator()));
+    name.add(new HTML(data.getPriority()+""));
+    name.add(new HTML(data.getPercentCompleted() + " %"));
   }
 
 }

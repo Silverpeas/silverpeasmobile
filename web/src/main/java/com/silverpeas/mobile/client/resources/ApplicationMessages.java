@@ -29,6 +29,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Home")
   String home();
 
+  @DefaultMessage("Mes tâches")
+  String tasks();
+
   @DefaultMessage("Déconnexion")
   String disconnect();
 
