@@ -13,6 +13,7 @@ public class TaskDTO implements Serializable {
   private String name = "";
   private String delegator = "";
   private String endDate = "";
+  private String externalId;
 
   public int getId() {
     return id;
@@ -66,5 +67,13 @@ public class TaskDTO implements Serializable {
 
   public int getPriority() {
     return priority;
+  }
+
+  public void setExternalId(final String externalId) {
+    this.externalId = externalId;
+  }
+
+  public String getExternalId() {
+    return externalId;
   }
 }

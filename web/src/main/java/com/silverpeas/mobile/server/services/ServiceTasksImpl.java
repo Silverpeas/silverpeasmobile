@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.server.services;
 
+import com.google.gwt.user.client.ui.HTML;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
@@ -58,6 +59,12 @@ public class ServiceTasksImpl extends AbstractAuthenticateService implements Ser
     }
     UserDetail delegator = organizationController.getUserDetail(todo.getDelegatorId());
     task.setDelegator(delegator.getDisplayedName());
+
+    if (todo.getExternalId() != null) {
+      task.setExternalId(todo.getExternalId());
+    } else {
+      task.setExternalId("");
+    }
     return task;
   }
 

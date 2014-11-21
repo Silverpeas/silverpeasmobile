@@ -976,9 +976,9 @@ textarea.ui-input-text {
 
 #menu-search {
   padding-top: 5px !important;
-  display:none !important; /* remove for testing */
+  /*display:none !important;*/ /* remove for testing */
 }
 
 #menu-tasks {
-  display:none !important; /* remove for testing */
+  /*display:none !important;*/ /* remove for testing */
 }
