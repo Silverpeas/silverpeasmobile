@@ -501,14 +501,14 @@ background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #EEEEEE;
 }
 
 #silverpeas-navmenu-panel #user {
-  margin-top: 55px;
+  margin-top: 92px;
 }
 
 #silverpeas-navmenu-panel #user img {
   float:left;
   width: 40px;
-  vertical-align: middle
-margin-right: 5px;
+  vertical-align: middle;
+   margin-right: 0.25em;
 }
 #silverpeas-navmenu-panel #user .statut {
   font-style:italic;
@@ -540,10 +540,13 @@ margin-right: 5px;
   padding: 1em 0 1em 32px;
 }
 
+
+#silverpeas-navmenu-panel #navmenu-panel li#menu-tasks a {
+  background: transparent url(packPictos.png) 4px -394px no-repeat;
+}
 #silverpeas-navmenu-panel #navmenu-panel li#menu-home a {
   background: transparent url(packPictos.png) 4px -23px no-repeat;
 }
-
 #silverpeas-navmenu-panel #navmenu-panel li#menu-logout a {
   background: transparent url(packPictos.png) 6px -82px no-repeat;
 }
@@ -731,10 +734,16 @@ margin-right: 5px;
   color: #000;
 }
 
-#attachments li a .weight {
+#attachments li a .weight,
+#a-media #attachments li a .dimension {
   display: block;
   padding-left: 24px;
   color: #848484;
+}
+
+#a-media #attachments li a .weight {
+  display:inline-block;
+  padding-left: 4px;
 }
 
 #attachments li a img {
@@ -964,8 +973,13 @@ textarea.ui-input-text {
   right:50%;
 }
 
-.searchBox {
-  width: 80%;
+.searchBox {    
+	border: 0 none;
+    border-radius: 14px;
+    width: 80%;
+	background-color:#80817a;
+	color:#FFF;
+	padding:5px;
 }
 
 .searchButton {
@@ -975,10 +989,10 @@ textarea.ui-input-text {
 }
 
 #menu-search {
-  padding-top: 5px !important;
-  /*display:none !important;*/ /* remove for testing */
+    position: absolute;
+    top: 66px;
 }
 
 #menu-tasks {
-  /*display:none !important;*/ /* remove for testing */
+	display:none;
 }

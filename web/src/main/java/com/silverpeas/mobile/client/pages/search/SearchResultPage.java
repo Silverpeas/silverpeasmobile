@@ -46,6 +46,7 @@ public class SearchResultPage extends PageContent implements View {
   private void display() {
     for (final ResultDTO result : results) {
       final Anchor link = new Anchor();
+      link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
       link.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(final ClickEvent event) {
@@ -65,7 +66,13 @@ public class SearchResultPage extends PageContent implements View {
         }
       });
       link.setText(result.getTitle());
-      list.add(link);
+      if (result.getType().equals(ContentsTypes.Publication.toString())) {
+        list.add(link, "publication");
+      } else if (result.getType().equals(ContentsTypes.Photo.toString())) {
+        list.add(link, "media");
+      } else {
+        list.add(link);
+      }
     }
   }
 }

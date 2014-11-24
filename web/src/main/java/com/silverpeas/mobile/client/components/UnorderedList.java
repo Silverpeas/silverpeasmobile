@@ -19,8 +19,15 @@ public class UnorderedList extends ComplexPanel {
 
   @Override
   public void add(Widget child) {
+    add(child, "");
+  }
+
+  public void add(Widget child, String styleName) {
     if (!child.getElement().getTagName().equalsIgnoreCase("li")) {
       Element li = Document.get().createLIElement().cast();
+      if (!styleName.isEmpty()) {
+        li.setAttribute("class", styleName);
+      }
       list.appendChild(li);
       super.add(child, li);
     } else {
