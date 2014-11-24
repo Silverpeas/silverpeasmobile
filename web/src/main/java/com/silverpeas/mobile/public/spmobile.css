@@ -974,12 +974,13 @@ textarea.ui-input-text {
 }
 
 .searchBox {    
-	border: 0 none;
-    border-radius: 14px;
-    width: 80%;
-	background-color:#80817a;
-	color:#FFF;
-	padding:5px;
+  border: 0 none;
+  border-radius: 14px;
+  width: 80%;
+  background-color:#80817a;
+  color:#FFF;
+  padding:5px;
+  outline-style: none;
 }
 
 .searchButton {
@@ -989,10 +990,10 @@ textarea.ui-input-text {
 }
 
 #menu-search {
-    position: absolute;
-    top: 66px;
+  position: absolute;
+  top: 66px;
 }
 
 #menu-tasks {
-	display:none;
+  display:none;
 }
