@@ -15,8 +15,8 @@
   <name>Silverpeas Mobile</name>
 
   <properties>
-    <gwtVersion>2.6.1</gwtVersion>
-    <gwtMojoPluginVersion>2.6.1</gwtMojoPluginVersion>
+    <gwtVersion>2.7.0</gwtVersion>
+    <gwtMojoPluginVersion>2.7.0</gwtMojoPluginVersion>
     <silverpeasVersion>5.14.2</silverpeasVersion>
   </properties>
 
