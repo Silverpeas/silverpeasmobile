@@ -1,14 +1,15 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	
-	<ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>	
-	
-	<g:HTMLPanel>
-		<ul id="menu-principal">
-			<li id="btn-find-document"><g:Anchor ui:field="document">Trouver <strong>un document</strong></g:Anchor></li>
-			<li id="btn-find-media"><g:Anchor ui:field="media">Médiathèque</g:Anchor></li>
-			<li id="btn-find-contact"><g:Anchor ui:field="contact">Trouver un <strong>contact</strong></g:Anchor></li>
-			<li id="btn-update-statut"><g:Anchor ui:field="statut">Mettre à jour <strong>mon status</strong></g:Anchor></li>			
-		</ul>	
-	</g:HTMLPanel>
+
+  <ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
+
+  <g:HTMLPanel>
+    <ul id="menu-principal">
+      <li id="btn-find-document"><g:Anchor ui:field="document">Trouver <strong>un document</strong></g:Anchor></li>
+      <li id="btn-find-media"><g:Anchor ui:field="media">Médiathèque</g:Anchor></li>
+      <li id="btn-find-contact"><g:Anchor ui:field="contact">Trouver un <strong>contact</strong></g:Anchor></li>
+      <li id="btn-update-statut"><g:Anchor ui:field="statut">Mettre à jour <strong>mon status</strong></g:Anchor></li>
+      <li id="btn-news"><g:Anchor ui:field="news">Les <strong>actualités</strong></g:Anchor></li>
+    </ul>
+  </g:HTMLPanel>
 </ui:UiBinder> 

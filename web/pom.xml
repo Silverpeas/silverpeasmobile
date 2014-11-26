@@ -181,6 +181,13 @@
     </dependency>
 
     <dependency>
+      <groupId>com.silverpeas.components.delegatednews</groupId>
+      <artifactId>delegatednews-jar</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>net.sf.dozer</groupId>
       <artifactId>dozer</artifactId>
       <version>5.3.1</version>

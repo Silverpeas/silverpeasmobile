@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.media.MediaApp;
+import com.silverpeas.mobile.client.apps.news.NewsApp;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.components.base.PageContent;
@@ -52,6 +53,12 @@ public class AppList extends PageContent {
   @UiHandler("document")
   void documents(ClickEvent e) {
     App app = new DocumentsApp();
+    app.start();
+  }
+
+  @UiHandler("news")
+  void news(ClickEvent e) {
+    App app = new NewsApp();
     app.start();
   }
 

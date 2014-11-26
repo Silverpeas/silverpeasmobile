@@ -5,6 +5,15 @@
          version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
   <servlet>
+    <servlet-name>serviceNewsImpl</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.services.ServiceNewsImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>serviceNewsImpl</servlet-name>
+    <url-pattern>/spmobil/News</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>serviceTasksImpl</servlet-name>
     <servlet-class>com.silverpeas.mobile.server.services.ServiceTasksImpl</servlet-class>
   </servlet>
