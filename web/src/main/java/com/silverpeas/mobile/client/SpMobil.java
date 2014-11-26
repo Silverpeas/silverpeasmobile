@@ -8,9 +8,7 @@ import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
@@ -133,6 +131,7 @@ public class SpMobil implements EntryPoint {
   }
 
   public static void search(String query) {
+    Notification.activityStart();
     ServicesLocator.serviceSearch.search(query, new AsyncCallback<List<ResultDTO>>() {
       @Override
       public void onFailure(final Throwable throwable) {
@@ -147,6 +146,7 @@ public class SpMobil implements EntryPoint {
         page.setPageTitle(msg.results());
         page.setResults(results);
         page.show();
+        Notification.activityStop();
       }
     });
   }
