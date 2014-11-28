@@ -11,6 +11,6 @@ public interface DocumentsMessages extends Messages {
   String sizeK(String size);
   String sizeM(String size);
 
-
+  String content();
 
 }

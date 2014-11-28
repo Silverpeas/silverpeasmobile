@@ -1001,3 +1001,19 @@ textarea.ui-input-text {
 #btn-news {
   display:none;
 }
+
+
+}
+#content{
+  background-color: #FFF;
+  border-top: 1px solid #e0e0e0;
+  padding: 0;
+  margin: 0;
+}
+#content a {
+  border: 0 none;
+  margin: 0;
+  text-align: left;
+  /*background:#fff url(packImagesNavigation.png) 0.5625em -386px no-repeat;*/
+  padding-left:2.5625em;
+}

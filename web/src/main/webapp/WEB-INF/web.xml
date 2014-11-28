@@ -123,6 +123,16 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>PublicationContentServlet</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.servlets.PublicationContentServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>PublicationContentServlet</servlet-name>
+    <url-pattern>/spmobil/PublicationContent</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>MediaServlet</servlet-name>
     <servlet-class>com.silverpeas.mobile.server.servlets.MediaServlet</servlet-class>
   </servlet>
