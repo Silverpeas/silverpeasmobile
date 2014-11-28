@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 
 public class PageHeader extends Composite {
 
@@ -23,9 +24,11 @@ public class PageHeader extends Composite {
   @UiField protected HTMLPanel header;
   @UiField protected Anchor menu, back;
   @UiField protected HeadingElement title;
+  @UiField(provided = true) protected ApplicationMessages msg = null;
 
 
   public PageHeader() {
+    msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     header.getElement().setId("header");
     menu.getElement().setId("menu");

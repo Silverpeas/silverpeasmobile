@@ -26,8 +26,14 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("OK")
   String ok();
 
-  @DefaultMessage("Home")
+  @DefaultMessage("Accueil")
   String home();
+
+  @DefaultMessage("Go")
+  String search();
+
+  @DefaultMessage("Retour")
+  String back();
 
   @DefaultMessage("Mes tâches")
   String tasks();
