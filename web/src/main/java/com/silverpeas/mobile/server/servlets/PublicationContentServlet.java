@@ -1,13 +1,19 @@
 package com.silverpeas.mobile.server.servlets;
 
+import com.silverpeas.form.DataRecord;
+import com.silverpeas.form.PagesContext;
+import com.silverpeas.form.form.XmlForm;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
 import com.silverpeas.gallery.model.PhotoDetail;
 import com.silverpeas.gallery.model.PhotoPK;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import com.silverpeas.publicationTemplate.PublicationTemplate;
+import com.silverpeas.publicationTemplate.PublicationTemplateManager;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
+import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.FileRepositoryManager;
@@ -30,6 +36,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.lang.reflect.Method;
 
 @SuppressWarnings("serial")
 public class PublicationContentServlet extends HttpServlet {
@@ -38,33 +47,59 @@ public class PublicationContentServlet extends HttpServlet {
   private KmeliaBm kmeliaBm;
   private GalleryBm galleryBm;
 
-  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String id = request.getParameter("id");
 
-    PublicationDetail pub = null;
-    try {
-      pub = getKmeliaBm().getPublicationDetail(new PublicationPK(id));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    response.getOutputStream().print("<html><body>");
-    String html = pub.getWysiwyg();
-    Document doc = Jsoup.parse(html);
 
-    Elements images = doc.getElementsByTag("img");
-    for (Element img : images) {
-      String source = img.attr("src");
-      String newSource = source;
-      if (source.contains("/silverpeas")) {
-        // need to convert in dataurl
-        newSource = convertSpImageUrlToDataUrl(source);
+    PublicationDetail pub = getKmeliaBm().getPublicationDetail(new PublicationPK(id));
+
+
+    response.getOutputStream().print("<html>");
+    response.getOutputStream().print("<head>");
+    response.getOutputStream().print("<link rel='stylesheet' href='/spmobile/spmobil/spmobile.css'/>");
+    response.getOutputStream().print("</head>");
+    response.getOutputStream().print("<body>");
+
+    if (pub.getInfoId().equals("0")) {
+      // wysiwyg
+      String html = pub.getWysiwyg();
+      Document doc = Jsoup.parse(html);
+      Elements images = doc.getElementsByTag("img");
+      for (Element img : images) {
+        String source = img.attr("src");
+        String newSource = source;
+        if (source.contains("/silverpeas")) {
+          // need to convert in dataurl
+          newSource = convertSpImageUrlToDataUrl(source);
+        }
+        img.attr("src", newSource);
       }
-      img.attr("src", newSource);
+      html = doc.outerHtml();
+      response.getOutputStream().print(html);
+    } else {
+      // form xml
+
+      displayViewInfoModel(new PrintWriter(response.getOutputStream()), pub, getUserInSession(request));
     }
-    html = doc.outerHtml();
-    response.getOutputStream().print(html);
+
     response.getOutputStream().print("</html></body>");
     response.getOutputStream().flush();
+  }
+
+  private void displayViewInfoModel(Writer out, PublicationDetail pub, UserDetail user) throws Exception {
+
+    PublicationTemplate pubTemplate = PublicationTemplateManager.getInstance().getPublicationTemplate(pub.getInstanceId() + ":" + pub.getInfoId());
+    DataRecord xmlData = pubTemplate.getRecordSet().getRecord(pub.getId());
+    XmlForm xmlForm = new XmlForm(pubTemplate.getRecordSet().getRecordTemplate());
+    PagesContext xmlContext = new PagesContext();
+    xmlContext.setDesignMode(false);
+    xmlContext.setBorderPrinted(false);
+    xmlContext.setContentLanguage(user.getUserPreferences().getLanguage());
+
+    Method m = XmlForm.class.getDeclaredMethod("display",new Class[]{PrintWriter.class, PagesContext.class, DataRecord.class});
+    m.setAccessible(true);
+    m.invoke(xmlForm, out, xmlContext, xmlData);
+
   }
 
   private String convertSpImageUrlToDataUrl(String url) {
@@ -130,6 +165,10 @@ public class PublicationContentServlet extends HttpServlet {
     if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
       throw new AuthenticationException(AuthenticationException.AuthenticationError.NotAuthenticate);
     }
+  }
+
+  protected UserDetail getUserInSession(HttpServletRequest request) {
+    return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
   }
 
   private KmeliaBm getKmeliaBm() throws Exception {
