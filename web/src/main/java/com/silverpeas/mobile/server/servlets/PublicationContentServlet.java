@@ -58,6 +58,7 @@ public class PublicationContentServlet extends HttpServlet {
 
     response.getOutputStream().print("<html>");
     response.getOutputStream().print("<head>");
+    response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
     response.getOutputStream().print("<link rel='stylesheet' href='/spmobile/spmobil/spmobile.css'/>");
     response.getOutputStream().print("</head>");
     response.getOutputStream().print("<body>");
@@ -76,6 +77,26 @@ public class PublicationContentServlet extends HttpServlet {
         }
         img.attr("src", newSource);
       }
+      Elements embeds = doc.getElementsByTag("embed");
+      for (Element embed : embeds) {
+        String htmlPart = embed.outerHtml();
+        if (htmlPart.contains("flash")) {
+          String attachmentId = htmlPart.substring(htmlPart.indexOf("attachmentId/") + "attachmentId/".length());
+          attachmentId = attachmentId.substring(0, attachmentId.indexOf("/"));
+          SimpleDocument attachment = AttachmentServiceFactory.getAttachmentService().searchDocumentById(new SimpleDocumentPK(attachmentId), getUserInSession(request).getUserPreferences().getLanguage());
+          String type = attachment.getContentType();
+          String url = getServletContext().getContextPath() + "/spmobil/Attachment";
+          url = url + "?id=" + attachmentId + "&instanceId=" + pub.getInstanceId() + "&lang=" + getUserInSession(request).getUserPreferences().getLanguage()  + "&userId=" + getUserInSession(request).getId();
+          if (type.equals("audio/mpeg") || type.equals("audio/ogg") || type.equals("audio/wav")) {
+            embed.parent().append("<audio controls><source src='"+url+"' type='" + type + "'></audio>");
+            embed.remove();
+          } else if (type.equals("video/mp4") || type.equals("video/ogg") || type.equals("video/webm")) {
+            embed.parent().append("<video controls='controls'><source src='" + url + "' type='" + type + "' />");
+            embed.remove();
+          }
+        }
+      }
+
       html = doc.outerHtml();
       response.getOutputStream().print(html);
     } else {
@@ -173,7 +194,7 @@ public class PublicationContentServlet extends HttpServlet {
     for (Element script : scripts) {
         script.remove();
     }
-    html = doc.toString();
+    html = doc.outerHtml();
     out.write(html);
     out.flush();
   }
