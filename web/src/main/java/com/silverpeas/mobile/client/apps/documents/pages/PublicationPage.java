@@ -109,7 +109,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
   protected void showContent(ClickEvent event) {
 
     // compute height available for content
-    int available = Window.getClientHeight() - SpMobil.mainPage.getHeaderHeight();// + container.getOffsetHeight());
+    int available = Window.getClientHeight() - SpMobil.mainPage.getHeaderHeight();
 
     // display content
     String url = Window.Location.getPath() + "spmobil/PublicationContent";

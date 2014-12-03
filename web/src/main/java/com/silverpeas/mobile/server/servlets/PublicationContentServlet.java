@@ -55,13 +55,21 @@ public class PublicationContentServlet extends HttpServlet {
 
     PublicationDetail pub = getKmeliaBm().getPublicationDetail(new PublicationPK(id));
 
-
     response.getOutputStream().print("<html>");
     response.getOutputStream().print("<head>");
     response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
     response.getOutputStream().print("<link rel='stylesheet' href='/spmobile/spmobil/spmobile.css'/>");
+    response.getOutputStream().print("<script>" +
+        "function resize() { " +
+        "var contentW = document.body.scrollWidth; " +
+        "var pageW = document.body.clientWidth; " +
+        "var ratio = (pageW / contentW) * 100; " +
+        "document.body.style.zoom=ratio+'%';" +
+        " }"
+    +"</script>");
+
     response.getOutputStream().print("</head>");
-    response.getOutputStream().print("<body>");
+    response.getOutputStream().print("<body onload='javascript:resize();'>");
 
     if (pub.getInfoId().equals("0")) {
       // wysiwyg
@@ -96,7 +104,6 @@ public class PublicationContentServlet extends HttpServlet {
           }
         }
       }
-
       html = doc.outerHtml();
       response.getOutputStream().print(html);
     } else {
