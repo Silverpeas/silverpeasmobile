@@ -3,6 +3,7 @@ package com.silverpeas.mobile.server.servlets;
 import com.silverpeas.form.DataRecord;
 import com.silverpeas.form.Form;
 import com.silverpeas.form.PagesContext;
+import com.silverpeas.form.form.HtmlForm;
 import com.silverpeas.form.form.XmlForm;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
 import com.silverpeas.gallery.model.PhotoDetail;
@@ -119,11 +120,9 @@ public class PublicationContentServlet extends HttpServlet {
 
     PublicationTemplate pubTemplate = PublicationTemplateManager.getInstance().getPublicationTemplate(pub.getInstanceId() + ":" + pub.getInfoId());
     DataRecord xmlData = pubTemplate.getRecordSet().getRecord(pub.getId());
-    Form xmlForm = pubTemplate.getViewForm();
+
 
     PagesContext xmlContext = new PagesContext("myForm", "0", user.getUserPreferences().getLanguage(), false, pub.getInstanceId(), "useless");
-
-    //PagesContext xmlContext = new PagesContext();
     xmlContext.setObjectId(pub.getId());
     xmlContext.setDesignMode(false);
     xmlContext.setBorderPrinted(false);
@@ -133,10 +132,17 @@ public class PublicationContentServlet extends HttpServlet {
     StringWriter generatedHtml = new StringWriter();
     PrintWriter outTmp = new PrintWriter(generatedHtml);
 
-    Method m = XmlForm.class.getDeclaredMethod("display",new Class[]{PrintWriter.class, PagesContext.class, DataRecord.class});
-    m.setAccessible(true);
-    m.invoke(xmlForm, outTmp, xmlContext, xmlData);
-    outTmp.flush();
+    Form xmlForm = pubTemplate.getViewForm();
+    if (xmlForm instanceof XmlForm) {
+      Method m = XmlForm.class.getDeclaredMethod("display", new Class[]{PrintWriter.class, PagesContext.class, DataRecord.class});
+      m.setAccessible(true);
+      m.invoke(xmlForm, outTmp, xmlContext, xmlData);
+      outTmp.flush();
+    } else if (xmlForm instanceof HtmlForm) {
+      String html = ((HtmlForm) xmlForm).toString(xmlContext, xmlData);
+      outTmp.write(html);
+      outTmp.flush();
+    }
     String html = generatedHtml.toString();
 
     Document doc = Jsoup.parse(html);
