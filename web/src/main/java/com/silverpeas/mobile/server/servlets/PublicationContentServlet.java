@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -106,7 +107,10 @@ public class PublicationContentServlet extends HttpServlet {
         }
       }
       html = doc.outerHtml();
-      response.getOutputStream().print(html);
+
+      OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
+      out.write(html);
+      out.flush();
     } else {
       // form xml
       displayFormView(new PrintWriter(response.getOutputStream()), pub, getUserInSession(request), ua);
