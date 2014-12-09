@@ -11,8 +11,9 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
 	private String type;
   private RightDTO rights;
   private boolean commentable;
-	
-	public String getType(){
+  private boolean ableToStoreContent;
+
+  public String getType(){
 		return type;
 	}
 	public void setType(String type){
@@ -33,5 +34,13 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
 
   public void setCommentable(final boolean commentable) {
     this.commentable = commentable;
+  }
+
+  public void setAbleToStoreContent(final boolean ableToStoreContent) {
+    this.ableToStoreContent = ableToStoreContent;
+  }
+
+  public boolean isAbleToStoreContent() {
+    return ableToStoreContent;
   }
 }

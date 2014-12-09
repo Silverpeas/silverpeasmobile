@@ -207,10 +207,6 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setCommentsNumber(CommentServiceFactory.getFactory().getCommentService().getCommentsCountOnPublication("Publication", new PublicationPK(pubId)));
       dto.setInstanceId(pub.getInstanceId());
 
-      String content = pub.getWysiwyg();
-      //TODO : in next version
-      //dto.setWysiwyg(content);
-
       ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
       SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");
 

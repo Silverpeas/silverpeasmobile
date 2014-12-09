@@ -75,13 +75,13 @@ public class PublicationPage extends PageContent implements View, PublicationNav
   public void onLoadedPublication(PublicationLoadedEvent event) {
     Notification.activityStop();
     this.publication = event.getPublication();
-    display(event.isCommentable());
+    display(event.isCommentable(), event.isAbleToStoreContent());
   }
 
   /**
    * Refesh view informations.
    */
-  private void display(boolean commentable) {
+  private void display(boolean commentable, boolean ableToStoreContent) {
     if (isVisible()) {
       title.setInnerHTML(publication.getName());
       desc.setInnerHTML(publication.getDescription());
@@ -99,7 +99,9 @@ public class PublicationPage extends PageContent implements View, PublicationNav
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
-      if (publication.getWysiwyg().isEmpty()) {
+      if (ableToStoreContent) {
+        content.getStyle().clearDisplay();
+      } else {
         content.getStyle().setDisplay(Style.Display.NONE);
       }
     }

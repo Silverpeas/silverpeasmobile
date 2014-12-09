@@ -39,7 +39,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   private DocumentsMessages msg;
   private NavigationApp navApp = new NavigationApp();
-  private boolean commentable;
+  private boolean commentable, ableToStoreContent;
   private Anchor sourceLink;
 
   public DocumentsApp() {
@@ -137,6 +137,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   @Override
   public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
     this.commentable = event.getInstance().isCommentable();
+    this.ableToStoreContent = event.getInstance().isAbleToStoreContent();
     GedNavigationPage page = new GedNavigationPage();
     page.setPageTitle(msg.title());
     page.setInstanceId(event.getInstance().getId());
@@ -169,7 +170,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     ServicesLocator.serviceDocuments.getPublication(event.getPubId(), new AsyncCallback<PublicationDTO>() {
       @Override
       public void onSuccess(PublicationDTO result) {
-        EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable));
+        EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent));
       }
       @Override
       public void onFailure(Throwable caught) {

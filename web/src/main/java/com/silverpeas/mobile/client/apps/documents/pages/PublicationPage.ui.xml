@@ -9,7 +9,7 @@
     <h2 ui:field="title" class="publiName"></h2>
     <p ui:field="desc" class="publiDesc"></p>
     <w:CommentsButton ui:field="comments" visible="false"/>
-    <div ui:field="content">
+    <div ui:field="content" style="display:none;">
       <g:Anchor ui:field="contentLink" styleName="ui-btn ui-btn-icon-right" text="{msg.content}"/>
     </div>
     <l:UnorderedList ui:field="attachments"/>
