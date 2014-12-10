@@ -76,7 +76,14 @@ public class PublicationContentServlet extends HttpServlet {
     if (pub.getInfoId().equals("0")) {
       // wysiwyg
       String html = pub.getWysiwyg();
+      html = "<html><body>" + html + "</body></html>";
       Document doc = Jsoup.parse(html);
+
+      Elements body = doc.getElementsByTag("body");
+      if (!body.isEmpty()) {
+        html = body.first().html();
+      }
+
       Elements images = doc.getElementsByTag("img");
       for (Element img : images) {
         String source = img.attr("src");
@@ -116,7 +123,7 @@ public class PublicationContentServlet extends HttpServlet {
       displayFormView(new PrintWriter(response.getOutputStream()), pub, getUserInSession(request), ua);
     }
 
-    response.getOutputStream().print("</html></body>");
+    response.getOutputStream().print("</body></html>");
     response.getOutputStream().flush();
   }
 
