@@ -1002,8 +1002,18 @@ textarea.ui-input-text {
   display:none;
 }
 
-
+.bloc-actu-vignette, .bloc-actu-content {
+  float: left;
 }
+
+.bloc-actu-vignette img {
+  width: 100px;
+}
+
+.bloc-actu-more {
+  clear: both;
+}
+
 #content{
   background-color: #FFF;
   border-top: 1px solid #e0e0e0;
