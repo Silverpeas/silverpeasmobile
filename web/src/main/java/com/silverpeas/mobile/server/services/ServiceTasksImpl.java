@@ -49,8 +49,16 @@ public class ServiceTasksImpl extends AbstractAuthenticateService implements Ser
     return tasks;
   }
 
+  @Override
+  public void updateTask(final int id, final String newPercentComplete) throws Taskexception, AuthenticationException {
+    ToDoHeader todo = getCalendar().getToDoHeader(String.valueOf(id));
+    todo.setPercentCompleted(Integer.parseInt(newPercentComplete));
+    getCalendar().updateToDo(todo);
+  }
+
   private TaskDTO populate(ToDoHeader todo) {
     TaskDTO task = new TaskDTO();
+    task.setId(Integer.parseInt(todo.getId()));
     task.setName(todo.getName());
     task.setPercentCompleted(todo.getPercentCompleted());
     task.setPriority(todo.getPriority().getValue());

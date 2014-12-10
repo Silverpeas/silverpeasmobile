@@ -13,4 +13,5 @@ import java.util.List;
 @RemoteServiceRelativePath("Tasks")
 public interface ServiceTasks extends RemoteService {
   public List<TaskDTO> loadTasks() throws Taskexception, AuthenticationException;
+  public void updateTask(int id, String newPercentComplete) throws Taskexception, AuthenticationException;
 }

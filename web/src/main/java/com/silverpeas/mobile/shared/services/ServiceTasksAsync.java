@@ -13,4 +13,6 @@ import java.util.List;
 
 public interface ServiceTasksAsync {
   void loadTasks(final AsyncCallback<List<TaskDTO>> async);
+
+  void updateTask(int id, String newPercentComplete, final AsyncCallback<Void> async);
 }

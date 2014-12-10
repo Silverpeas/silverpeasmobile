@@ -4,4 +4,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface TasksAppEventHandler extends EventHandler{
   void loadTasks(TasksLoadEvent event);
+  void updateTask(TaskUpdateEvent event);
 }

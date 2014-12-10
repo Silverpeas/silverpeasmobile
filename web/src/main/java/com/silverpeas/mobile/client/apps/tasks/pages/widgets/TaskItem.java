@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.shared.dto.TaskDTO;
 
 public class TaskItem extends Composite {
@@ -21,6 +23,7 @@ public class TaskItem extends Composite {
   @UiField TextBox range;
 
   private HTML percent;
+  private TaskDTO task;
 
   interface ContactItemUiBinder extends UiBinder<Widget, TaskItem> {
   }
@@ -30,6 +33,7 @@ public class TaskItem extends Composite {
   }
 
   public void setData(TaskDTO data) {
+    this.task = data;
     name.add(new HTML(data.getName()));
     endDate.add(new HTML(data.getEndDate()));
     delegator.add(new HTML(data.getDelegator()));
@@ -52,5 +56,6 @@ public class TaskItem extends Composite {
   @UiHandler("range")
   void changePercent(ValueChangeEvent<String> event)  {
     percent.setHTML(event.getValue() + " %");
+    EventBus.getInstance().fireEvent(new TaskUpdateEvent(task, event.getValue()));
   }
 }
