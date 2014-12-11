@@ -12,6 +12,7 @@ import com.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.AbstractTasksPagesEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksPagesEventHandler;
+import com.silverpeas.mobile.client.apps.tasks.pages.widgets.AddTaskItem;
 import com.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -43,6 +44,10 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
   @Override
   public void onTaskLoad(final TasksLoadedEvent event) {
     Notification.activityStop();
+
+
+    list.add(new AddTaskItem());
+
     Iterator<TaskDTO> i = event.getTasks().iterator();
     while (i.hasNext()) {
       TaskDTO task = i.next();

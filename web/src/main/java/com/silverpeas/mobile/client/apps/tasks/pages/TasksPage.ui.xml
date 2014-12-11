@@ -2,7 +2,8 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:l="urn:import:com.silverpeas.mobile.client.components">
 
   <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
-    <l:UnorderedList ui:field="list" styleName="list-tasks"></l:UnorderedList>
+    <l:UnorderedList ui:field="list" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"></l:UnorderedList>
   </g:HTMLPanel>
 
 </ui:UiBinder>
+

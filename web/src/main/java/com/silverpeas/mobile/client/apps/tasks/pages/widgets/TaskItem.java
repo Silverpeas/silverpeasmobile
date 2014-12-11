@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.tasks.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -19,7 +20,8 @@ public class TaskItem extends Composite {
 
   private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
 
-  @UiField HTMLPanel container, name, endDate, delegator, priority, percentCompleted;
+  @UiField HTMLPanel container;
+  @UiField SpanElement name, endDate, delegator, priority, percentCompleted;
   @UiField TextBox range;
 
   private HTML percent;
@@ -34,12 +36,11 @@ public class TaskItem extends Composite {
 
   public void setData(TaskDTO data) {
     this.task = data;
-    name.add(new HTML(data.getName()));
-    endDate.add(new HTML(data.getEndDate()));
-    delegator.add(new HTML(data.getDelegator()));
-    priority.add(new HTML(data.getPriority() + ""));
-    percent = new HTML(data.getPercentCompleted() + " %");
-    percentCompleted.add(percent);
+    name.setInnerHTML(data.getName());
+    endDate.setInnerHTML(data.getEndDate());
+    delegator.setInnerHTML(data.getDelegator());
+    priority.setInnerHTML(data.getPriority() + "");
+    percentCompleted.setInnerHTML(data.getPercentCompleted() + " %");
     if (!data.getExternalId().isEmpty()) {
       //TODO : display edit percent completed
       range.getElement().getStyle().setDisplay(Style.Display.NONE);

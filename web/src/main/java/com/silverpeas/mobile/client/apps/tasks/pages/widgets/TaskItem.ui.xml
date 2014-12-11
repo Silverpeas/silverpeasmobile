@@ -1,14 +1,16 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <g:HTMLPanel tag="li" ui:field="container">
-    <g:HTMLPanel ui:field="name"></g:HTMLPanel>
-    <g:HTMLPanel ui:field="endDate"></g:HTMLPanel>
-    <g:HTMLPanel ui:field="priority"></g:HTMLPanel>
-    <g:HTMLPanel ui:field="delegator"></g:HTMLPanel>
-    <g:HTMLPanel ui:field="percentCompleted"></g:HTMLPanel>
+  <g:HTMLPanel tag="li" ui:field="container" styleName="media">
 
-    <g:TextBox ui:field="range"></g:TextBox>
+    <a class="ui-btn ui-icon-carat-r">
+      <span ui:field="name"></span>
+      <span ui:field="endDate"></span>
+      <span ui:field="priority"></span>
+      <span ui:field="delegator"></span>
+      <span ui:field="percentCompleted"></span>
 
+      <g:TextBox ui:field="range"></g:TextBox>
+    </a>
 
   </g:HTMLPanel>
 </ui:UiBinder> 

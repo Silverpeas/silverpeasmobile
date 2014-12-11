@@ -19,6 +19,7 @@ import com.stratelia.webactiv.calendar.control.SilverpeasCalendar;
 import com.stratelia.webactiv.calendar.model.ToDoHeader;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
+import com.stratelia.webactiv.util.ResourceLocator;
 import com.sun.xml.bind.v2.TODO;
 
 import java.text.SimpleDateFormat;
@@ -36,7 +37,16 @@ public class ServiceTasksImpl extends AbstractAuthenticateService implements Ser
   private static final long serialVersionUID = 1L;
   private OrganizationController organizationController = new OrganizationController();
   private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+  private ResourceLocator todoMultilang = null;
 
+
+
+  private ResourceLocator getTodoMultiLang() {
+    if (todoMultilang == null) {
+      todoMultilang = new ResourceLocator("org.silverpeas.todo.multilang.todo", getUserInSession().getUserPreferences().getLanguage());
+    }
+    return todoMultilang;
+  }
 
   @Override
   public List<TaskDTO> loadTasks() throws Taskexception, AuthenticationException {
@@ -61,7 +71,7 @@ public class ServiceTasksImpl extends AbstractAuthenticateService implements Ser
     task.setId(Integer.parseInt(todo.getId()));
     task.setName(todo.getName());
     task.setPercentCompleted(todo.getPercentCompleted());
-    task.setPriority(todo.getPriority().getValue());
+    task.setPriority(getTodoMultiLang().getString("priorite" + todo.getPriority().getValue()));
     if (todo.getEndDate() != null) {
       task.setEndDate(sdf.format(todo.getEndDate()));
     }

@@ -9,7 +9,8 @@ public class TaskDTO implements Serializable {
 
   private static final long serialVersionUID = 2921606984249560882L;
 
-  private int id, percentCompleted, priority;
+  private int id, percentCompleted;
+  private String priority;
   private String name = "";
   private String delegator = "";
   private String endDate = "";
@@ -41,7 +42,7 @@ public class TaskDTO implements Serializable {
     this.percentCompleted = percentCompleted;
   }
 
-  public void setPriority(final int priority) {
+  public void setPriority(final String priority) {
     this.priority = priority;
   }
 
@@ -65,7 +66,7 @@ public class TaskDTO implements Serializable {
     return percentCompleted;
   }
 
-  public int getPriority() {
+  public String getPriority() {
     return priority;
   }
 
