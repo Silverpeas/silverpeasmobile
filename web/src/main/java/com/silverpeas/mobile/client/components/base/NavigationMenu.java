@@ -4,14 +4,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -27,15 +25,12 @@ import com.silverpeas.mobile.client.apps.status.events.pages.StatusPagesEventHan
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
 import com.silverpeas.mobile.client.apps.tasks.TasksApp;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
-import com.silverpeas.mobile.shared.dto.search.ResultDTO;
-
-import java.util.List;
 
 public class NavigationMenu extends Composite implements StatusPagesEventHandler {
 
@@ -50,6 +45,8 @@ public class NavigationMenu extends Composite implements StatusPagesEventHandler
   @UiField TextBox search;
 
   @UiField(provided = true) protected ApplicationMessages msg = null;
+
+  private ApplicationResources resources = GWT.create(ApplicationResources.class);
 
   interface NavigationMenuUiBinder extends UiBinder<Widget, NavigationMenu> {
   }
@@ -132,7 +129,14 @@ public class NavigationMenu extends Composite implements StatusPagesEventHandler
   }
 
   public void setUser(DetailUserDTO currentUser) {
-    user.addAndReplaceElement(new Image(currentUser.getAvatar()), "avatar");
+    if (currentUser.getAvatar().isEmpty()) {
+      Image avatar = new Image(resources.avatar());
+      avatar.getElement().removeAttribute("height");
+      avatar.getElement().removeAttribute("width");
+      user.addAndReplaceElement(avatar, "avatar");
+    } else {
+      user.addAndReplaceElement(new Image(currentUser.getAvatar()), "avatar");
+    }
     user.addAndReplaceElement(
         new InlineHTML(" " + currentUser.getFirstName() + " " + currentUser.getLastName()),
         "userName");

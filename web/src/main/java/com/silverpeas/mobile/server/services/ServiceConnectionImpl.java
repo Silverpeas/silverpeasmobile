@@ -3,6 +3,7 @@ package com.silverpeas.mobile.server.services;
 import com.silverpeas.admin.ejb.AdminBusiness;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.dao.StatusDao;
+import com.silverpeas.mobile.server.helpers.DataURLHelper;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -79,7 +80,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     Mapper mapper = new DozerBeanMapper();
     userDTO = mapper.map(user, DetailUserDTO.class);
 
-    String avatar = convertAvatarToUrlData(user.getAvatarFileName());
+    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName());
     userDTO.setAvatar(avatar);
 
     try {
@@ -89,24 +90,6 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     }
 
     return userDTO;
-  }
-
-  private String convertAvatarToUrlData(final String photoFileName) {
-    String data = "";
-    try {
-      File f = new File(FileRepositoryManager.getAvatarPath() + File.separatorChar + photoFileName);
-      FileInputStream is = new FileInputStream(f);
-      byte[] binaryData = new byte[(int) f.length()];
-      is.read(binaryData);
-      is.close();
-      MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-      data = "data:" + mimeTypesMap.getContentType(f) + ";base64," + new String(
-          Base64.encodeBase64(binaryData));
-    } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(),
-          "PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
-    }
-    return data;
   }
 
   public List<DomainDTO> getDomains() {

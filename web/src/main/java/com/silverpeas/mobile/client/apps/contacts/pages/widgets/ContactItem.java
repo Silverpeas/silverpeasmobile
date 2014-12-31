@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class ContactItem extends Composite {
@@ -18,6 +19,8 @@ public class ContactItem extends Composite {
   private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
   @UiField Anchor mail;
   @UiField HTMLPanel user, tel, container;
+
+  private ApplicationResources resources = GWT.create(ApplicationResources.class);
 
   interface ContactItemUiBinder extends UiBinder<Widget, ContactItem> {
   }
@@ -27,7 +30,14 @@ public class ContactItem extends Composite {
   }
 
   public void setData(DetailUserDTO userData) {
-    user.add(new Image(userData.getAvatar()));
+    if (userData.getAvatar().isEmpty()) {
+      Image avatar = new Image(resources.avatar());
+      avatar.getElement().removeAttribute("height");
+      avatar.getElement().removeAttribute("width");
+      user.add(avatar);
+    } else {
+      user.add(new Image(userData.getAvatar()));
+    }
     user.add(new HTML(userData.getFirstName() + " " + userData.getLastName()));
 
     mail.setText(userData.geteMail());

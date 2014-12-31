@@ -1,11 +1,16 @@
 package com.silverpeas.mobile.server.services;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
+import com.silverpeas.mobile.server.helpers.DataURLHelper;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
+import com.stratelia.webactiv.util.FileRepositoryManager;
+import org.apache.commons.codec.binary.Base64;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 
@@ -19,6 +24,8 @@ import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.beans.admin.UserFull;
 import com.stratelia.webactiv.util.GeneralPropertiesManager;
+
+import javax.activation.MimetypesFileTypeMap;
 
 public class ServiceContactImpl extends AbstractAuthenticateService implements ServiceContact {
 
@@ -77,7 +84,8 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       UserFull userFull = UserFull.getById(userDetail.getId());
       Mapper mapper = new DozerBeanMapper();
       DetailUserDTO userDTO = mapper.map(userDetail, DetailUserDTO.class);
-      userDTO.setAvatar(GeneralPropertiesManager.getString("ApplicationURL") + userDetail.getAvatar());
+      String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName());
+      userDTO.setAvatar(avatar);
       if (userFull != null) {
         userDTO.setPhoneNumber(userFull.getValue("phone"));
         userDTO.setCellularPhoneNumber(userFull.getValue("cellularPhone"));
