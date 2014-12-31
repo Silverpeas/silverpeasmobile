@@ -1,26 +1,31 @@
 package com.silverpeas.mobile.server.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.silverpeas.mobile.server.dao.StatusDao;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
-import org.silverpeas.authentication.AuthenticationCredential;
-import org.silverpeas.authentication.AuthenticationService;
-
 import com.silverpeas.admin.ejb.AdminBusiness;
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
+import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
+import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.Domain;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.GeneralPropertiesManager;
+import com.stratelia.webactiv.util.FileRepositoryManager;
 import com.stratelia.webactiv.util.JNDINames;
+import org.apache.commons.codec.binary.Base64;
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
+import org.silverpeas.authentication.AuthenticationCredential;
+import org.silverpeas.authentication.AuthenticationService;
+
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service de gestion des connexions.
@@ -73,7 +78,9 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     DetailUserDTO userDTO = new DetailUserDTO();
     Mapper mapper = new DozerBeanMapper();
     userDTO = mapper.map(user, DetailUserDTO.class);
-    userDTO.setAvatar(GeneralPropertiesManager.getString("ApplicationURL")+user.getAvatar());
+
+    String avatar = convertAvatarToUrlData(user.getAvatarFileName());
+    userDTO.setAvatar(avatar);
 
     try {
       userDTO.setStatus(new StatusDao().getStatus(Integer.parseInt(userId)).getDescription());
@@ -82,6 +89,24 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     }
 
     return userDTO;
+  }
+
+  private String convertAvatarToUrlData(final String photoFileName) {
+    String data = "";
+    try {
+      File f = new File(FileRepositoryManager.getAvatarPath() + File.separatorChar + photoFileName);
+      FileInputStream is = new FileInputStream(f);
+      byte[] binaryData = new byte[(int) f.length()];
+      is.read(binaryData);
+      is.close();
+      MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+      data = "data:" + mimeTypesMap.getContentType(f) + ";base64," + new String(
+          Base64.encodeBase64(binaryData));
+    } catch (Exception e) {
+      SilverTrace.error(SpMobileLogModule.getName(),
+          "PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+    }
+    return data;
   }
 
   public List<DomainDTO> getDomains() {
