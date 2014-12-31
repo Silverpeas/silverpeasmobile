@@ -16,6 +16,7 @@ import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.calendar.control.SilverpeasCalendar;
+import com.stratelia.webactiv.calendar.model.Attendee;
 import com.stratelia.webactiv.calendar.model.ToDoHeader;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
@@ -61,9 +62,20 @@ public class ServiceTasksImpl extends AbstractAuthenticateService implements Ser
 
   @Override
   public void updateTask(final int id, final String newPercentComplete) throws Taskexception, AuthenticationException {
+    checkUserInSession();
     ToDoHeader todo = getCalendar().getToDoHeader(String.valueOf(id));
     todo.setPercentCompleted(Integer.parseInt(newPercentComplete));
     getCalendar().updateToDo(todo);
+  }
+
+  @Override
+  public void createTask(final TaskDTO task) throws Taskexception, AuthenticationException {
+    checkUserInSession();
+    ToDoHeader todo = new ToDoHeader(task.getName(), getUserInSession().getId());
+    todo.setPercentCompleted(task.getPercentCompleted());
+    String id = getCalendar().addToDo(todo);
+    Attendee attendee = new Attendee(getUserInSession().getId());
+    getCalendar().addToDoAttendee(id, attendee);
   }
 
   private TaskDTO populate(ToDoHeader todo) {

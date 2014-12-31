@@ -7,6 +7,7 @@ import com.silverpeas.mobile.client.apps.status.events.app.StatusPostEvent;
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
 import com.silverpeas.mobile.client.apps.status.pages.StatusPage;
 import com.silverpeas.mobile.client.apps.tasks.events.app.AbstractTasksAppEvent;
+import com.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TasksAppEventHandler;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
@@ -70,6 +71,22 @@ public class TasksApp extends App implements TasksAppEventHandler {
       @Override
       public void onSuccess(final Void result) {
         // do nothing
+      }
+    });
+  }
+
+  @Override
+  public void createTask(final TaskCreateEvent event) {
+    ServicesLocator.serviceTasks.createTask(event.getTask(), new AsyncCallback<Void>() {
+
+      @Override
+      public void onFailure(final Throwable caught) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+      }
+
+      @Override
+      public void onSuccess(final Void result) {
+        //TODO : reload tasks
       }
     });
   }

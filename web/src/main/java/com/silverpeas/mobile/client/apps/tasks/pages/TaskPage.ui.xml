@@ -1,6 +1,10 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
   <g:HTMLPanel>
-    Coming soon...
+    <g:TextBox ui:field="name"/>
+    <g:TextBox ui:field="range"></g:TextBox>
+
+    <g:Anchor ui:field="create">Creer</g:Anchor>
+
   </g:HTMLPanel>
 </ui:UiBinder>
