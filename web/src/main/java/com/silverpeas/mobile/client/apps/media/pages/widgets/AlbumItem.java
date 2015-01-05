@@ -1,7 +1,6 @@
 package com.silverpeas.mobile.client.apps.media.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -12,30 +11,27 @@ import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemClickEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
+import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
 
-public class MediaItem extends Composite {
+public class AlbumItem extends Composite {
 
-  private PhotoDTO data;
+  private AlbumDTO data;
   private static MediaItemUiBinder uiBinder = GWT.create(MediaItemUiBinder.class);
   @UiField Anchor link;
-  @UiField ImageElement thumb;
   protected ApplicationMessages msg = null;
 
 
-  interface MediaItemUiBinder extends UiBinder<Widget, MediaItem> {
+  interface MediaItemUiBinder extends UiBinder<Widget, AlbumItem> {
   }
 
-  public MediaItem() {
+  public AlbumItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
   }
 
-  public void setData(PhotoDTO data) {
+  public void setData(AlbumDTO data) {
     this.data = data;
-    link.setTitle(data.getTitle());
-    thumb.setSrc(data.getDataPhoto());
-    thumb.setAlt(data.getTitle());
+    link.setText(data.getName() + " (" + data.getCountMedia() + ")");
   }
 
   @UiHandler("link")

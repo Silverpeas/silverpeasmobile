@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
+import com.coremedia.iso.boxes.mdat.MediaDataBox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -11,6 +12,7 @@ import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItem
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaNavigationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton;
+import com.silverpeas.mobile.client.apps.media.pages.widgets.AlbumItem;
 import com.silverpeas.mobile.client.apps.media.pages.widgets.MediaItem;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -60,9 +62,15 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
       }
       List<BaseDTO> dataItems = event.getAlbumsAndMedias();
       for (BaseDTO dataItem : dataItems) {
-        MediaItem item = new MediaItem();
-        item.setData(dataItem);
-        list.add(item);
+        if (dataItem instanceof AlbumDTO) {
+          AlbumItem item = new AlbumItem();
+          item.setData((AlbumDTO)dataItem);
+          list.add(item);
+        } else if (dataItem instanceof PhotoDTO) {
+          MediaItem item = new MediaItem();
+          item.setData((PhotoDTO)dataItem);
+          list.add(item);
+        }
       }
     }
     Notification.activityStop();

@@ -600,6 +600,31 @@ background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #EEEEEE;
   background-position: 0.5625em -287px;
 }
 
+.media-thumb:first-child {
+	clear:left;
+}
+
+.ui-listview .media-thumb {
+	width:70px;
+	border:1px solid #ccc;
+	float:left;
+	margin:8px 0 0 8px;
+}
+.media-thumb .ui-thumb {
+	width:64px;
+	height:64px;
+	overflow:hidden;
+	display:block;
+	border:3px solid #FFF;
+}
+.media-thumb .ui-thumb img{
+	min-width:64px;
+	max-height:75px;
+	max-width:75px;
+	min-height:64px;
+	height:auto;
+}
+
 .info-nb-sous-elmt {
   color: #8b8b8b
 }
