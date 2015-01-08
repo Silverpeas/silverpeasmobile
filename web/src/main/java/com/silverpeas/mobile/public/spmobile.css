@@ -640,6 +640,20 @@ background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #EEEEEE;
   text-decoration:underline !important;
 }
 
+.viewer {
+  touch-action : none;
+  transition: none;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  transform-origin: left top;
+}
+
+.viewer .photo {
+  display: block;
+  margin: auto auto;
+  max-width: 100%;
+}
+
 
 /**** Publication - media ***********/
 #publication,#contacts,#update-statut, #a-media {
