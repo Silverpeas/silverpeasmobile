@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.event.touch.TouchCopy;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.components.base.PageContent;
 
 /**
@@ -111,7 +112,6 @@ public class PhotoViewerPage extends PageContent implements View, TouchStartHand
           Touch touch = event.getTouches().get(0);
           x1 = touch.getPageX();
           y1 = touch.getPageY();
-
           if (startx != 0 && starty != 0) {
             currentTranslationX = Math.round((x1 - startx) / initialZoomLevel) + initialTranslationX;
             currentTranslationY = Math.round((y1 - starty) / initialZoomLevel) + initialTranslationY;
@@ -131,6 +131,7 @@ public class PhotoViewerPage extends PageContent implements View, TouchStartHand
         y1 = touch1.getPageY() - top;
         x2 = touch2.getPageX() - left;
         y2 = touch2.getPageY() - top;
+
         double newDistance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
         calculateZoomLevel(newDistance);
         applyTransformation(zoomLevel, translation);
@@ -146,7 +147,7 @@ public class PhotoViewerPage extends PageContent implements View, TouchStartHand
   }
 
   private void applyTransformation(double zoom, String translation) {
-    img.getElement().setAttribute("style","transform: scale(" + zoom + ") " + translation);
+    img.getElement().setAttribute("style","-webkit-transform: scale(" + zoom + ") " + translation);
   }
 
   private double calculateZoomLevel(double newDistance) {

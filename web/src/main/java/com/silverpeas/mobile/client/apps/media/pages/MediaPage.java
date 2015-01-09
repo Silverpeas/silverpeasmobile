@@ -101,17 +101,6 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
     PhotoViewerPage page = new PhotoViewerPage();
     page.setDataPhoto(event.getView().getDataPhoto());
     page.show();
-
-    /*if (MobilUtils.isIOS()) {
-      IframePage page = new IframePage(event.getView().getDataPhoto());
-      page.setPageTitle(event.getView().getTitle());
-      page.show();
-    } else {
-      Image picture = new Image();
-      picture.setUrl(event.getView().getDataPhoto());
-      picture.getElement().getStyle().setWidth(100, Style.Unit.PCT); //TODO : do better for center view with best scale
-      SpMobil.showFullScreen(picture, true, "", "");
-    }*/
   }
 
   @Override
