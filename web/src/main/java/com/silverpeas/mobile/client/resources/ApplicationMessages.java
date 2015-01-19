@@ -49,4 +49,20 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Contenus trouvés")
   String results();
+
+  @DefaultMessage("Documents")
+  SafeHtml appDocuments();
+
+  @DefaultMessage("Médiathèque")
+  SafeHtml appMedia();
+
+  @DefaultMessage("Trouver un <strong>contact</strong>")
+  SafeHtml appContact();
+
+
+  @DefaultMessage("Mettre à jour <strong>mon statut</strong>")
+  SafeHtml appStatut();
+
+  @DefaultMessage("Les <strong>actualités</strong>")
+  SafeHtml appActus();
 }
