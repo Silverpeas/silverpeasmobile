@@ -3,13 +3,17 @@ package com.silverpeas.mobile.client.apps.contacts.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
@@ -38,8 +42,9 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   @UiField HTMLPanel container;
   @UiField Anchor mycontacts, allcontacts;
   @UiField UnorderedList list;
-  private int startIndexAll, startIndexMy, pageSize = 0;
-  private boolean allContacts = false;
+  @UiField TextBox filter;
+  private int startIndexAll, startIndexMy, startIndex, pageSize = 0;
+  private String currentFilter = ContactFilters.MY;
   private ContactItem itemWaiting;
   private boolean callingNexData = false;
   private boolean noMoreData = false;
@@ -73,7 +78,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     allcontacts.removeStyleName("ui-btn-active");
     allcontacts.addStyleName("ui-btn");
     mycontacts.addStyleName("ui-btn-active");
-    allContacts = false;
+    currentFilter = ContactFilters.MY;
     list.clear();
     pageSize = 0;
     startIndexMy = 0;
@@ -85,11 +90,31 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     mycontacts.removeStyleName("ui-btn-active");
     mycontacts.addStyleName("ui-btn");
     allcontacts.addStyleName("ui-btn-active");
-    allContacts = true;
+    currentFilter = ContactFilters.ALL;
     list.clear();
     pageSize = 0;
     startIndexAll = 0;
     EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.ALL, computePageSize(), startIndexAll));
+  }
+
+  @UiHandler("filter")
+  protected void filterChosen(FocusEvent event) {
+    mycontacts.removeStyleName("ui-btn-active");
+    mycontacts.addStyleName("ui-btn");
+    allcontacts.removeStyleName("ui-btn-active");
+    allcontacts.addStyleName("ui-btn");
+  }
+
+  @UiHandler("filter")
+  protected void filter(KeyUpEvent event) {
+    if(!currentFilter.equalsIgnoreCase(filter.getText())) {
+      currentFilter = filter.getText();
+      list.clear();
+      pageSize = 0;
+      startIndex = 0;
+      EventBus.getInstance()
+          .fireEvent(new ContactsLoadEvent(filter.getText(), computePageSize(), startIndex));
+    }
   }
 
   @Override
@@ -114,14 +139,19 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       callingNexData = true;
       list.add(getWaitingItem());
       Window.scrollTo(0, Document.get().getScrollHeight());
-      if (allContacts) {
+      if (currentFilter.equals(ContactFilters.ALL)) {
         startIndexAll += computePageSize();
         EventBus.getInstance()
             .fireEvent(new ContactsLoadEvent(ContactFilters.ALL, computePageSize(), startIndexAll));
-      } else {
+      } else if (currentFilter.equals(ContactFilters.MY)) {
         startIndexMy += computePageSize();
         EventBus.getInstance()
             .fireEvent(new ContactsLoadEvent(ContactFilters.MY, computePageSize(), startIndexMy));
+      } else {
+        //TODO : test
+        startIndex += computePageSize();
+        EventBus.getInstance()
+            .fireEvent(new ContactsLoadEvent(filter.getText(), computePageSize(), startIndex));
       }
     }
   }

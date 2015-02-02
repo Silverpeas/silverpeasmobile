@@ -6,6 +6,6 @@ public class ContactFilters implements Serializable {
 
 	private static final long serialVersionUID = -2505309587384249007L;
 	
-	public static final String ALL = "ALL";
-	public static final String MY = "MY";
+	public static final String ALL = "ALL&";
+	public static final String MY = "MY&";
 }

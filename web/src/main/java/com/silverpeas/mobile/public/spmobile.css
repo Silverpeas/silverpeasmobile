@@ -817,6 +817,11 @@ background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #EEEEEE;
   text-align: left
 }
 
+.filter-contacts {
+  width: 19em;
+  line-height: 2.4em;
+}
+
 .list-contacts,
 .list-comments{
   font-size: 10pt;

@@ -3,6 +3,7 @@ package com.silverpeas.mobile.server.services;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -64,12 +65,36 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
           }
         }
       }
+      else {
+        ArrayList<UserDetail> tabUserDetail = getFilteredUserList(filter);
+        for(int i=0; i<tabUserDetail.size(); i++){
+          if (i >= startIndex && i < startIndex + pageSize) {
+            listUsers.add(populate(tabUserDetail.get(i)));
+          }
+        }
+      }
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
       throw new ContactException(e);
     }
 
     return listUsers;
+  }
+
+  private ArrayList<UserDetail> getFilteredUserList(final String filter) {
+    UserDetail[] tabUserDetail = organizationController.getAllUsers();
+    ArrayList<UserDetail> filteredUserList = null;
+    if (filter.isEmpty()){
+      filteredUserList = new ArrayList<UserDetail>(Arrays.asList(tabUserDetail));
+      return filteredUserList;
+    }
+    filteredUserList = new ArrayList<UserDetail>();
+    for(int i=0; i<tabUserDetail.length; i++){
+      if (tabUserDetail[i].getLastName().toLowerCase().startsWith(filter.toLowerCase())) {
+        filteredUserList.add(tabUserDetail[i]);
+      }
+    }
+    return filteredUserList;
   }
 
   /**

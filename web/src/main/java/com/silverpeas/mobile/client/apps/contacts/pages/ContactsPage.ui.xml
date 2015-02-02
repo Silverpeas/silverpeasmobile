@@ -18,6 +18,7 @@
             <span class="ui-btn-text"><ui:safehtml from="{msg.allContacts}"/></span>
           </span>
         </g:Anchor>
+        <g:TextBox ui:field="filter" styleName="ui-input-text ui-body-inherit filter-contacts"></g:TextBox>
       </div>
     </div>
 
