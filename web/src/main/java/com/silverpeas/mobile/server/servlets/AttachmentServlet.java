@@ -2,6 +2,7 @@ package com.silverpeas.mobile.server.servlets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 
@@ -42,7 +43,7 @@ public class AttachmentServlet extends HttpServlet {
 
     getFile(url, response, userF.getToken());
 
-    response.getOutputStream().flush();
+    ((OutputStream) response.getOutputStream()).flush();
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -84,7 +85,7 @@ public class AttachmentServlet extends HttpServlet {
       byte[] buffer = new byte[1024];
       int read;
       while ((read = input.read(buffer)) > 0) {
-        response.getOutputStream().write(buffer, 0, read);
+        ((OutputStream) response.getOutputStream()).write(buffer, 0, read);
       }
       response.setContentLength(Integer.parseInt(method.getResponseHeader("Content-Length").getValue()));
       method.releaseConnection();

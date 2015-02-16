@@ -6,8 +6,8 @@ import com.silverpeas.form.PagesContext;
 import com.silverpeas.form.form.HtmlForm;
 import com.silverpeas.form.form.XmlForm;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.model.PhotoDetail;
-import com.silverpeas.gallery.model.PhotoPK;
+import com.silverpeas.gallery.model.MediaPK;
+import com.silverpeas.gallery.model.Photo;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -231,17 +231,17 @@ public class PublicationContentServlet extends HttpServlet {
         instanceId = instanceId.substring(0, instanceId.indexOf("&"));
         String imageId= url.substring(url.indexOf("ImageId") + "ImageId".length() +1);
         imageId = imageId.substring(0, imageId.indexOf("&"));
-        PhotoDetail photo = getGalleryBm().getPhoto(new PhotoPK(imageId));
+        Photo photo = getGalleryBm().getPhoto(new MediaPK(imageId));
         String[] rep = {"image"+imageId};
 
         String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-        File f = new File(path + photo.getImageName());
+        File f = new File(path + photo.getFileName());
 
         FileInputStream is = new FileInputStream(f);
         byte[] binaryData = new byte[(int) f.length()];
         is.read(binaryData);
         is.close();
-        data = "data:" + photo.getImageMimeType() + ";base64," +
+        data = "data:" + photo.getFileMimeType() + ";base64," +
             new String(Base64.encodeBase64(binaryData));
       } catch (Exception e) {
         SilverTrace.error(SpMobileLogModule.getName(),
@@ -269,7 +269,7 @@ public class PublicationContentServlet extends HttpServlet {
       byte[] binaryData = new byte[(int) f.length()];
       is.read(binaryData);
       is.close();
-      data = "data:" + attachment.getFile().getContentType() + ";base64," + new String(
+      data = "data:" + attachment.getContentType() + ";base64," + new String(
           Base64.encodeBase64(binaryData));
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(),

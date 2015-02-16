@@ -3,7 +3,6 @@ package com.silverpeas.mobile.server.services;
 import com.silverpeas.delegatednews.model.DelegatedNews;
 import com.silverpeas.delegatednews.service.DelegatedNewsService;
 import com.silverpeas.delegatednews.service.ServicesFactory;
-import com.silverpeas.gallery.model.PhotoSize;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.comparator.DelegatedNewsBeginDateComparatorAsc;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
@@ -108,12 +107,12 @@ public class ServiceNewsImpl extends AbstractAuthenticateService implements Serv
         String nomRep = gallerySettings.getString("imagesSubDirectory") + id;
         String[] rep = {nomRep};
         String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-        File f = new File(path + id + PhotoSize.SMALL.getPrefix());
+        /*File f = new File(path + id + PhotoSize.SMALL.getPrefix());
         FileInputStream is = new FileInputStream(f);
         byte[] binaryData = new byte[(int) f.length()];
         is.read(binaryData);
         is.close();
-        data = "data:" + imageMimeType + ";base64," + new String(Base64.encodeBase64(binaryData));
+        data = "data:" + imageMimeType + ";base64," + new String(Base64.encodeBase64(binaryData));*/
       } catch (Exception e) {
         throw new NewsException(e);
       }

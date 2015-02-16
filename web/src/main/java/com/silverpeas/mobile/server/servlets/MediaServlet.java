@@ -1,9 +1,11 @@
 package com.silverpeas.mobile.server.servlets;
 
+import com.silverpeas.gallery.constant.MediaType;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.delegate.PhotoDataCreateDelegate;
-import com.silverpeas.gallery.model.PhotoDetail;
-import com.silverpeas.gallery.model.PhotoPK;
+import com.silverpeas.gallery.delegate.MediaDataCreateDelegate;
+import com.silverpeas.gallery.model.Media;
+import com.silverpeas.gallery.model.MediaPK;
+import com.silverpeas.gallery.model.Photo;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -40,18 +43,18 @@ public class MediaServlet extends HttpServlet {
   private static final int MAX_FILE_SIZE      = 1024 * 1024 * 40; // 40MB
   private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 50; // 50MB
 
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String action = request.getParameter("action");
     if (action.equals("view")) {
       String id = request.getParameter("id");
       String instanceId = request.getParameter("instanceId");
-      PhotoDetail photo = getPicture(id);
+      Photo photo = getPicture(id);
       getFile(response, instanceId, photo);
-      response.getOutputStream().flush();
+      ((OutputStream) response.getOutputStream()).flush();
     }
-	}
+  }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       checkUserInSession(request);
       processRequest(request, response);
@@ -115,8 +118,8 @@ public class MediaServlet extends HttpServlet {
     }
   }
 
-  private PhotoDetail getPicture(String pictureId) throws Exception {
-    PhotoDetail photoDetail = getGalleryBm().getPhoto(new PhotoPK(pictureId));
+  private Photo getPicture(String pictureId) throws Exception {
+    Photo photoDetail = getGalleryBm().getPhoto(new MediaPK(pictureId));
     return photoDetail;
   }
 
@@ -126,15 +129,15 @@ public class MediaServlet extends HttpServlet {
     }
   }
 
-	public void getFile(HttpServletResponse response, String instanceId, PhotoDetail photo) {
-		InputStream input = null;
+  public void getFile(HttpServletResponse response, String instanceId, Photo photo) {
+    InputStream input = null;
 
-		try {
+    try {
       ResourceLocator gallerySettings = new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
-      String nomRep = gallerySettings.getString("imagesSubDirectory") + photo.getPhotoPK().getId();
+      String nomRep = gallerySettings.getString("imagesSubDirectory") + photo.getMediaPK().getId();
       String[] rep = {nomRep};
       String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-      File f = new File(path+ photo.getImageName());
+      File f = new File(path+ photo.getFileName());
 
 
       FileInputStream is = new FileInputStream(f);
@@ -143,19 +146,19 @@ public class MediaServlet extends HttpServlet {
       is.close();
 
       input = new ByteArrayInputStream(binaryData);
-			response.setContentType(photo.getImageMimeType());
-			response.setHeader("content-disposition", "attachment; filename=" + photo.getImageName());
+      response.setContentType(photo.getFileMimeType().getMimeType());
+      response.setHeader("content-disposition", "attachment; filename=" + photo.getFileName());
 
-			byte[] buffer = new byte[1024];
-			int read;
-			while ((read = input.read(buffer)) > 0) {
-				response.getOutputStream().write(buffer, 0, read);
-			}
-		} catch (IOException e) {
-			System.out.println("Error while trying to download the media.");
-			e.printStackTrace();
-		}
-	}
+      byte[] buffer = new byte[1024];
+      int read;
+      while ((read = input.read(buffer)) > 0) {
+        ((OutputStream) response.getOutputStream()).write(buffer, 0, read);
+      }
+    } catch (IOException e) {
+      System.out.println("Error while trying to download the media.");
+      e.printStackTrace();
+    }
+  }
 
   private GalleryBm getGalleryBm() throws Exception {
     if (galleryBm == null) {
@@ -170,21 +173,14 @@ public class MediaServlet extends HttpServlet {
       throws Exception {
 
     // création de la photo
-    PhotoDetail newPhoto = new PhotoDetail(name, null, new Date(), null, null, null, download, false);
-    newPhoto.setAlbumId(albumId);
-    newPhoto.setCreatorId(userId);
-    PhotoPK pk = new PhotoPK("unknown", componentId);
-    newPhoto.setPhotoPK(pk);
-
     List<FileItem> parameters = new ArrayList<FileItem>();
     LocalDiskFileItem item = new LocalDiskFileItem(file);
     parameters.add(item);
+    MediaDataCreateDelegate delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
 
-    PhotoDataCreateDelegate delegate = new PhotoDataCreateDelegate("fr", albumId, parameters);
+    Media newMedia = getGalleryBm().createMedia(getUserInSession(request), componentId, watermark, watermarkHD, watermarkOther, delegate);
 
-    getGalleryBm().createPhoto(getUserInSession(request), componentId, newPhoto, watermark, watermarkHD, watermarkOther, delegate);
-
-    return newPhoto.getId();
+    return newMedia.getId();
   }
 
   protected UserDetail getUserInSession(HttpServletRequest request) {

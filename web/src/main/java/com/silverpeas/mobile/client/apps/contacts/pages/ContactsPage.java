@@ -148,7 +148,6 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
         EventBus.getInstance()
             .fireEvent(new ContactsLoadEvent(ContactFilters.MY, computePageSize(), startIndexMy));
       } else {
-        //TODO : test
         startIndex += computePageSize();
         EventBus.getInstance()
             .fireEvent(new ContactsLoadEvent(filter.getText(), computePageSize(), startIndex));

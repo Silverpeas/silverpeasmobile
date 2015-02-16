@@ -15,13 +15,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import com.silverpeas.comment.service.CommentServiceFactory;
+import com.silverpeas.gallery.constant.MediaResolution;
+import com.silverpeas.gallery.constant.MediaType;
+import com.silverpeas.gallery.delegate.MediaDataCreateDelegate;
+import com.silverpeas.gallery.model.Media;
+import com.silverpeas.gallery.model.MediaCriteria;
+import com.silverpeas.gallery.model.MediaPK;
+import com.silverpeas.gallery.model.Photo;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.exceptions.MediaException;
 import com.silverpeas.mobile.shared.services.ServiceMedia;
@@ -35,11 +41,7 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.silverpeas.admin.ejb.AdminBusiness;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.delegate.PhotoDataCreateDelegate;
 import com.silverpeas.gallery.model.AlbumDetail;
-import com.silverpeas.gallery.model.PhotoDetail;
-import com.silverpeas.gallery.model.PhotoPK;
-import com.silverpeas.gallery.model.PhotoSize;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
@@ -55,6 +57,8 @@ import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.FileRepositoryManager;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.ResourceLocator;
+import org.silverpeas.file.SilverpeasFile;
+import org.silverpeas.util.ImageLoader;
 
 /**
  * Service de gestion des galleries d'images.
@@ -133,21 +137,15 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       throws Exception {
 
     // création de la photo
-    PhotoDetail newPhoto = new PhotoDetail(name, null, new Date(), null, null, null, download, false);
-    newPhoto.setAlbumId(albumId);
-    newPhoto.setCreatorId(userId);
-    PhotoPK pk = new PhotoPK("unknown", componentId);
-    newPhoto.setPhotoPK(pk);
-
     List<FileItem> parameters = new ArrayList<FileItem>();
     LocalDiskFileItem item = new LocalDiskFileItem(file);
     parameters.add(item);
+    MediaDataCreateDelegate
+        delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
 
-    PhotoDataCreateDelegate delegate = new PhotoDataCreateDelegate("fr", albumId, parameters);
+    Media newMedia = getGalleryBm().createMedia(getUserInSession(), componentId, watermark, watermarkHD, watermarkOther, delegate);
 
-    getGalleryBm().createPhoto(getUserInSession(), componentId, newPhoto, watermark, watermarkHD, watermarkOther, delegate);
-
-    return newPhoto.getId();
+    return newMedia.getId();
   }
 
 
@@ -197,7 +195,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
           }
         }
       } else {
-        AlbumDetail rootAlbum = getGalleryBm().getAlbum(new NodePK(rootAlbumId, instanceId), false);
+        AlbumDetail rootAlbum = getGalleryBm().getAlbum(new NodePK(rootAlbumId, instanceId),
+            MediaCriteria.VISIBILITY.VISIBLE_ONLY);
         Collection<AlbumDetail> albums = rootAlbum.getChildrenAlbumsDetails();
 
         for (AlbumDetail albumDetail : albums) {
@@ -224,10 +223,13 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
   private int getNbPhotos(final AlbumDetail albumDetail) throws Exception {
     int nbPhotos = 0;
 
-    Collection<PhotoDetail> allPhotos = getGalleryBm().getAllPhoto(albumDetail.getNodePK(), true);
+
+    Collection<Photo> allPhotos = getGalleryBm().getAllPhotos(albumDetail.getNodePK(),
+        MediaCriteria.VISIBILITY.VISIBLE_ONLY);
     nbPhotos = allPhotos.size();
     // parcourir ses sous albums pour comptabiliser aussi ses photos
-    AlbumDetail thisAlbum = getGalleryBm().getAlbum(albumDetail.getNodePK(), true);
+    AlbumDetail thisAlbum = getGalleryBm().getAlbum(albumDetail.getNodePK(),
+        MediaCriteria.VISIBILITY.VISIBLE_ONLY);
 
     Collection<AlbumDetail> subAlbums = thisAlbum.getChildrenAlbumsDetails();
     for (AlbumDetail oneSubAlbum : subAlbums) {
@@ -247,11 +249,12 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     if (albumId == null) return results;
     try {
 
-      Collection<PhotoDetail> photos = getGalleryBm().getAllPhoto(new NodePK(albumId, instanceId), false);
-      Iterator<PhotoDetail> iPhotos = photos.iterator();
+      Collection<Photo> photos = getGalleryBm().getAllPhotos(new NodePK(albumId, instanceId),
+          MediaCriteria.VISIBILITY.VISIBLE_ONLY);
+      Iterator<Photo> iPhotos = photos.iterator();
       while (iPhotos.hasNext()) {
-        PhotoDetail photoDetail = (PhotoDetail) iPhotos.next();
-        PhotoDTO photo = getPicture(instanceId, photoDetail.getId(), PhotoSize.SMALL);
+        Photo photoDetail = (Photo) iPhotos.next();
+        PhotoDTO photo = getPicture(instanceId, photoDetail.getId(), MediaResolution.SMALL);
         results.add(photo);
       }
       return results;
@@ -279,9 +282,9 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     PhotoDTO picture = null;
     try {
-      picture = getPicture(instanceId, pictureId, PhotoSize.ORIGINAL);
+      picture = getPicture(instanceId, pictureId, MediaResolution.ORIGINAL);
       if (!picture.isDownload()) {
-        picture = getPicture(instanceId, pictureId, PhotoSize.NORMAL);
+        picture = getPicture(instanceId, pictureId, MediaResolution.LARGE);
       }
 
     } catch (Exception e) {
@@ -298,66 +301,63 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     PhotoDTO picture = null;
     try {
-      picture = getPicture(instanceId, pictureId, PhotoSize.PREVIEW);
+      picture = getPicture(instanceId, pictureId, MediaResolution.PREVIEW);
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getPreviewPicture", "root.EX_NO_MESSAGE", e);
     }
     return picture;
   }
 
-  private PhotoDTO getPicture(String instanceId, String pictureId, PhotoSize size) throws RemoteException, Exception, FileNotFoundException, IOException {
+  private PhotoDTO getPicture(String instanceId, String pictureId, MediaResolution size) throws RemoteException, Exception, FileNotFoundException, IOException {
     PhotoDTO picture;
-    PhotoDetail photoDetail = getGalleryBm().getPhoto(new PhotoPK(pictureId));
+    Photo photoDetail = getGalleryBm().getPhoto(new MediaPK(pictureId));
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     picture = new PhotoDTO();
     picture.setId(photoDetail.getId());
-    picture.setDownload(photoDetail.isDownload());
+    picture.setDownload(photoDetail.isDownloadAuthorized());
     picture.setDataPhoto(getBase64ImageData(instanceId, photoDetail, size));
     picture.setFormat(size.name());
     picture.setTitle(photoDetail.getTitle());
-    picture.setName(photoDetail.getImageName());
-    picture.setSize(photoDetail.getImageSize());
-    picture.setSizeH(photoDetail.getSizeH());
-    picture.setSizeL(photoDetail.getSizeL());
-    picture.setMimeType(photoDetail.getImageMimeType());
+    picture.setName(photoDetail.getName());
+    picture.setSize(photoDetail.getFileSize());
+    picture.setSizeH(photoDetail.getDefinition().getHeight());
+    picture.setSizeL(photoDetail.getDefinition().getWidth());
+    picture.setMimeType(photoDetail.getFileMimeType().getMimeType());
     picture.setInstance(photoDetail.getInstanceId());
 
-    if (photoDetail.getUpdateId() != null) {
-      picture.setUpdater(
-          organizationController.getUserDetail(photoDetail.getUpdateId()).getDisplayedName());
+
+    if (photoDetail.getLastUpdater() != null) {
+      picture.setUpdater(photoDetail.getLastUpdaterName());
     } else {
-      picture.setUpdater(organizationController.getUserDetail(photoDetail.getCreatorId()).getDisplayedName());
+      picture.setUpdater(photoDetail.getCreatorName());
     }
-    if (photoDetail.getUpdateDate() != null) {
-      picture.setUpdateDate(sdf.format(photoDetail.getUpdateDate()));
+    if (photoDetail.getLastUpdateDate() != null) {
+      picture.setUpdateDate(sdf.format(photoDetail.getLastUpdateDate()));
     } else {
       picture.setUpdateDate(sdf.format(photoDetail.getCreationDate()));
     }
 
     picture.setCommentsNumber(CommentServiceFactory
-        .getFactory().getCommentService().getCommentsCountOnPublication("Photo", new PhotoPK(photoDetail.getId())));
+        .getFactory().getCommentService().getCommentsCountOnPublication("Photo", new MediaPK(photoDetail.getId())));
 
     return picture;
   }
 
   @SuppressWarnings("deprecation")
-  private String getBase64ImageData(String instanceId, PhotoDetail photoDetail, PhotoSize size) throws FileNotFoundException, IOException {
+  private String getBase64ImageData(String instanceId, Photo photoDetail, MediaResolution size) throws Exception {
     ResourceLocator gallerySettings = new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
-    String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getPhotoPK().getId();
+    String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getMediaPK().getId();
     String[] rep = {nomRep};
     String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-    File f;
-    if (size.equals(PhotoSize.ORIGINAL)) {
-      f = new File(path+ photoDetail.getImageName());
-    } else {
-      f = new File(path+ photoDetail.getPhotoPK().getId() + size.getPrefix());
-    }
+
+    Media media = getGalleryBm().getMedia(new MediaPK(photoDetail.getId(), instanceId));
+    SilverpeasFile f = media.getFile(size);
 
     FileInputStream is = new FileInputStream(f);
     byte[] binaryData = new byte[(int) f.length()];
     is.read(binaryData);
     is.close();
-    String data = "data:" + photoDetail.getImageMimeType() + ";base64," + new String(Base64.encodeBase64(binaryData));
+    String data = "data:" + photoDetail.getFileMimeType().getMimeType() + ";base64," + new String(Base64.encodeBase64(binaryData));
 
     return data;
   }
