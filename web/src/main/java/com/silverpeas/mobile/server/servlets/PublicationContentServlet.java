@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -124,7 +125,7 @@ public class PublicationContentServlet extends HttpServlet {
     }
 
     response.getOutputStream().print("</body></html>");
-    response.getOutputStream().flush();
+    ((OutputStream)response.getOutputStream()).flush();
   }
 
   private void displayFormView(Writer out, PublicationDetail pub, UserDetail user, String ua) throws Exception {

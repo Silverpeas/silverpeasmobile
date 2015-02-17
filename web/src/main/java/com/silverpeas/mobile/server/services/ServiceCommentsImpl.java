@@ -4,6 +4,7 @@ import com.silverpeas.comment.model.Comment;
 import com.silverpeas.comment.model.CommentPK;
 import com.silverpeas.comment.service.CommentServiceFactory;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
+import com.silverpeas.mobile.server.helpers.DataURLHelper;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
@@ -61,9 +62,8 @@ public class ServiceCommentsImpl extends AbstractAuthenticateService implements 
     CommentDTO dto = new CommentDTO();
     dto.setContent(c.getMessage());
     dto.setUserName(c.getOwner());
-    dto.setAvatar("");
-    dto.setAvatar(
-        GeneralPropertiesManager.getString("ApplicationURL")+c.getOwnerDetail().getAvatar());
+    String avatar = DataURLHelper.convertAvatarToUrlData(c.getOwnerDetail().getAvatarFileName(), "24x");
+    dto.setAvatar(avatar);
     dto.setDate(sdf.format(c.getCreationDate()));
     return dto;
   }

@@ -58,7 +58,6 @@ import com.stratelia.webactiv.util.FileRepositoryManager;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.ResourceLocator;
 import org.silverpeas.file.SilverpeasFile;
-import org.silverpeas.util.ImageLoader;
 
 /**
  * Service de gestion des galleries d'images.

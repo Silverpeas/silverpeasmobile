@@ -109,7 +109,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       UserFull userFull = UserFull.getById(userDetail.getId());
       Mapper mapper = new DozerBeanMapper();
       DetailUserDTO userDTO = mapper.map(userDetail, DetailUserDTO.class);
-      String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName());
+      String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), "24x");
       userDTO.setAvatar(avatar);
       if (userFull != null) {
         userDTO.setPhoneNumber(userFull.getValue("phone"));

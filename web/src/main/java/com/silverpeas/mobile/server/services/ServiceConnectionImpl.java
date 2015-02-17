@@ -1,7 +1,6 @@
 package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.admin.ejb.AdminBusiness;
-import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.server.helpers.DataURLHelper;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -9,22 +8,16 @@ import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.beans.admin.Domain;
 import com.stratelia.webactiv.beans.admin.OrganizationController;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.FileRepositoryManager;
 import com.stratelia.webactiv.util.JNDINames;
-import org.apache.commons.codec.binary.Base64;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.silverpeas.authentication.AuthenticationCredential;
 import org.silverpeas.authentication.AuthenticationService;
 
-import javax.activation.MimetypesFileTypeMap;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +73,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     Mapper mapper = new DozerBeanMapper();
     userDTO = mapper.map(user, DetailUserDTO.class);
 
-    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName());
+    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), "40x");
     userDTO.setAvatar(avatar);
 
     try {
