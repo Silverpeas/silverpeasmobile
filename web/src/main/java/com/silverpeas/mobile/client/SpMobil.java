@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -16,6 +17,7 @@ import com.silverpeas.mobile.client.common.ErrorManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
+import com.silverpeas.mobile.client.common.ShortCutRouter;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
@@ -38,11 +40,17 @@ public class SpMobil implements EntryPoint {
   public static DetailUserDTO user;
   private static String viewport, bodyClass, bodyId;
   private static ApplicationMessages msg;
+  private static String shortcutAppId;
+  private static String shortcutContentType;
+  private static String shortcutContentId;
 
   /**
    * Init. spmobile.
    */
   public void onModuleLoad() {
+    shortcutAppId = Window.Location.getParameter("shortcutAppId");
+    shortcutContentType = Window.Location.getParameter("shortcutContentType");
+    shortcutContentId = Window.Location.getParameter("shortcutContentId");
     msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
     loadIds();
@@ -78,6 +86,8 @@ public class SpMobil implements EntryPoint {
         RootPanel.get().clear();
         RootPanel.get().add(mainPage);
         PageHistory.getInstance().goTo(new AppList());
+
+        ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
       }
     });
   }

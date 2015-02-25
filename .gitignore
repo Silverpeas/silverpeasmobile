@@ -506,4 +506,5 @@
 *.classpath
 /.svn
 /android/bin
+/bridge/look-war/target/
 

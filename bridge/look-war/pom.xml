@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.silverpeas.mobile.bridge</groupId>
-		<artifactId>look</artifactId>
-		<version>1.0-SNAPSHOT</version>
-	</parent>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.silverpeas.mobile.bridge</groupId>
+    <artifactId>look</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
-	<groupId>com.silverpeas.mobile.bridge.look</groupId>
-	<artifactId>look-war</artifactId>
-	<packaging>war</packaging>
-	<name>Bridge Silverpeas mobile</name>
+  <groupId>com.silverpeas.mobile.bridge.look</groupId>
+  <artifactId>look-war</artifactId>
+  <packaging>war</packaging>
+  <name>Bridge Silverpeas mobile</name>
 
-	
+  <dependencies>
+    <dependency>
+      <groupId>com.silverpeas.core.ejb-core</groupId>
+      <artifactId>publication</artifactId>
+      <version>${core.version}</version>
+      <classifier>client</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.components.gallery</groupId>
+      <artifactId>gallery-ejb</artifactId>
+      <version>${core.version}</version>
+      <classifier>client</classifier>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
 </project>
