@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
-import com.coremedia.iso.boxes.mdat.MediaDataBox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -22,13 +21,15 @@ import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
+import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 
 import java.util.List;
 
 public class MediaNavigationPage extends PageContent implements View, MediaNavigationPagesEventHandler {
 
-	private static MediaNavigationPageUiBinder uiBinder = GWT.create(MediaNavigationPageUiBinder.class);
+  private static MediaNavigationPageUiBinder uiBinder = GWT.create(MediaNavigationPageUiBinder.class);
   @UiField UnorderedList list;
   private AddMediaButton buttonImport= new AddMediaButton();
 
@@ -36,21 +37,21 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   private RightDTO rights;
 
   interface MediaNavigationPageUiBinder extends UiBinder<Widget, MediaNavigationPage> {
-	}
+  }
 
-	public MediaNavigationPage() {
-		initWidget(uiBinder.createAndBindUi(this));
+  public MediaNavigationPage() {
+    initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractMediaNavigationPagesEvent.TYPE, this);
-	}
-	
-	public void init(String instanceId, String rootAlbumId, RightDTO rights) {
+  }
+
+  public void init(String instanceId, String rootAlbumId, RightDTO rights) {
     Notification.activityStart();
     this.instanceId = instanceId;
     this.rootAlbumId = rootAlbumId;
     this.rights = rights;
     buttonImport.init(instanceId, rootAlbumId);
     EventBus.getInstance().fireEvent(new MediasLoadMediaItemsEvent(instanceId, rootAlbumId));
-	}
+  }
 
   @Override
   public void onLoadedAlbums(final MediaItemsLoadedEvent event) {
@@ -66,9 +67,9 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
           AlbumItem item = new AlbumItem();
           item.setData((AlbumDTO)dataItem);
           list.add(item);
-        } else if (dataItem instanceof PhotoDTO) {
+        } else if (dataItem instanceof MediaDTO) {
           MediaItem item = new MediaItem();
-          item.setData((PhotoDTO)dataItem);
+          item.setData((MediaDTO)dataItem);
           list.add(item);
         }
       }
@@ -85,10 +86,15 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
         page.init(instanceId, ((AlbumDTO) event.getMediaItem()).getId(), rights);
         page.show();
       } else if (event.getMediaItem() instanceof PhotoDTO) {
-        MediaPage page = new MediaPage();
+        PhotoPage page = new PhotoPage();
         page.setPageTitle(getPageTitle());
         page.show();
         EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(instanceId, ((PhotoDTO) event.getMediaItem()).getId()));
+      } else if (event.getMediaItem() instanceof SoundDTO) {
+        SoundPage page = new SoundPage();
+        page.setPageTitle(getPageTitle());
+        page.setSound((SoundDTO) event.getMediaItem());
+        page.show();
       }
     }
   }

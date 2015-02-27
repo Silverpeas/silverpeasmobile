@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.media.events.pages;
 
 
+import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
 public class MediaPreviewLoadedEvent extends AbstractMediaPagesEvent {

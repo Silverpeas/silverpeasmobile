@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.google.gwt.user.client.Window;
 import com.silverpeas.comment.service.CommentServiceFactory;
 import com.silverpeas.gallery.constant.MediaResolution;
 import com.silverpeas.gallery.constant.MediaType;
@@ -29,6 +30,8 @@ import com.silverpeas.gallery.model.MediaCriteria;
 import com.silverpeas.gallery.model.MediaPK;
 import com.silverpeas.gallery.model.Photo;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.media.MediaDTO;
+import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.exceptions.MediaException;
 import com.silverpeas.mobile.shared.services.ServiceMedia;
 import com.stratelia.webactiv.util.node.model.NodePK;
@@ -214,52 +217,55 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     AlbumDTO album = new AlbumDTO();
     album.setId(String.valueOf(albumDetail.getId()));
     album.setName(albumDetail.getName());
-    int nbPhotos = getNbPhotos(albumDetail);
+    int nbPhotos = countMedias(albumDetail);
     album.setCountMedia(nbPhotos);
     return album;
   }
 
-  private int getNbPhotos(final AlbumDetail albumDetail) throws Exception {
-    int nbPhotos = 0;
-
-
-    Collection<Photo> allPhotos = getGalleryBm().getAllPhotos(albumDetail.getNodePK(),
+  private int countMedias(final AlbumDetail albumDetail) throws Exception {
+    int count = 0;
+    Collection<Media> allMedias = getGalleryBm().getAllMedia(albumDetail.getNodePK(),
         MediaCriteria.VISIBILITY.VISIBLE_ONLY);
-    nbPhotos = allPhotos.size();
-    // parcourir ses sous albums pour comptabiliser aussi ses photos
+    count = allMedias.size();
+    // browser all sub albums for count all medias
     AlbumDetail thisAlbum = getGalleryBm().getAlbum(albumDetail.getNodePK(),
         MediaCriteria.VISIBILITY.VISIBLE_ONLY);
 
     Collection<AlbumDetail> subAlbums = thisAlbum.getChildrenAlbumsDetails();
     for (AlbumDetail oneSubAlbum : subAlbums) {
-      nbPhotos = nbPhotos + getNbPhotos(oneSubAlbum);
+      count = count + countMedias(oneSubAlbum);
     }
-    return nbPhotos;
+    return count;
   }
 
-
-  /**
-   * Retourne les photos miniatures d'un album.
-   */
-  private List<PhotoDTO> getPictures(String instanceId, String albumId) throws MediaException, AuthenticationException {
+  private List<MediaDTO> getMedias(String instanceId, String albumId) throws MediaException, AuthenticationException {
     checkUserInSession();
 
-    ArrayList<PhotoDTO> results = new ArrayList<PhotoDTO>();
+    ArrayList<MediaDTO> results = new ArrayList<MediaDTO>();
     if (albumId == null) return results;
     try {
-
-      Collection<Photo> photos = getGalleryBm().getAllPhotos(new NodePK(albumId, instanceId),
+      Collection<Media> medias = getGalleryBm().getAllMedia(new NodePK(albumId, instanceId),
           MediaCriteria.VISIBILITY.VISIBLE_ONLY);
-      Iterator<Photo> iPhotos = photos.iterator();
-      while (iPhotos.hasNext()) {
-        Photo photoDetail = (Photo) iPhotos.next();
-        PhotoDTO photo = getPicture(instanceId, photoDetail.getId(), MediaResolution.SMALL);
-        results.add(photo);
+      Iterator<Media> iMedias = medias.iterator();
+      while (iMedias.hasNext()) {
+        Media media = (Media) iMedias.next();
+        if (media.getType().isPhoto()) {
+          PhotoDTO photo = getPhoto(media.getInstanceId(), media.getId(), MediaResolution.SMALL);
+          results.add(photo);
+        } else if (media.getType().isSound()) {
+          SoundDTO sound = getSound(media);
+          results.add(sound);
+        } else if (media.getType().isStreaming()) {
+          //TODO
+        } else if (media.getType().isVideo()) {
+          //TODO
+        }
+
       }
       return results;
 
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getAllPictures", "root.EX_NO_MESSAGE", e);
+      SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getAllMedias", "root.EX_NO_MESSAGE", e);
       throw new MediaException(e);
     }
   }
@@ -269,7 +275,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     checkUserInSession();
     ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();
     list.addAll(getAlbums(instanceId, rootAlbumId));
-    list.addAll(getPictures(instanceId, rootAlbumId));
+    list.addAll(getMedias(instanceId, rootAlbumId));
     return list;
   }
 
@@ -281,9 +287,9 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     PhotoDTO picture = null;
     try {
-      picture = getPicture(instanceId, pictureId, MediaResolution.ORIGINAL);
+      picture = getPhoto(instanceId, pictureId, MediaResolution.ORIGINAL);
       if (!picture.isDownload()) {
-        picture = getPicture(instanceId, pictureId, MediaResolution.LARGE);
+        picture = getPhoto(instanceId, pictureId, MediaResolution.LARGE);
       }
 
     } catch (Exception e) {
@@ -300,14 +306,24 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     PhotoDTO picture = null;
     try {
-      picture = getPicture(instanceId, pictureId, MediaResolution.PREVIEW);
+      picture = getPhoto(instanceId, pictureId, MediaResolution.PREVIEW);
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceGalleryImpl.getPreviewPicture", "root.EX_NO_MESSAGE", e);
     }
     return picture;
   }
 
-  private PhotoDTO getPicture(String instanceId, String pictureId, MediaResolution size) throws RemoteException, Exception, FileNotFoundException, IOException {
+  private SoundDTO getSound(Media media) {
+    SoundDTO sound = new SoundDTO();
+    sound.setName(media.getName());
+    sound.setTitle(media.getTitle());
+    sound.setId(media.getId());
+    sound.setMimeType(media.getType().getMediaWebUriPart());
+    sound.setInstance(media.getInstanceId());
+    return sound;
+  }
+
+  private PhotoDTO getPhoto(String instanceId, String pictureId, MediaResolution size) throws Exception {
     PhotoDTO picture;
     Photo photoDetail = getGalleryBm().getPhoto(new MediaPK(pictureId));
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

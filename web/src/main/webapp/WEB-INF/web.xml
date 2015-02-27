@@ -142,6 +142,16 @@
     <url-pattern>/spmobil/MediaAction</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>SoundServlet</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.servlets.SoundServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>SoundServlet</servlet-name>
+    <url-pattern>/spmobil/SoundAction</url-pattern>
+  </servlet-mapping>
+
 
   <!-- Default page to serve -->
   <welcome-file-list>

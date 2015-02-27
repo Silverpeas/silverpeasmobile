@@ -67,7 +67,7 @@ public class PublicationContentServlet extends HttpServlet {
         "var contentW = document.body.scrollWidth; " +
         "var pageW = document.body.clientWidth; " +
         "var ratio = (pageW / contentW) * 100; " +
-        "document.body.style.zoom=ratio+'%';" +
+        "document.body.style.sk gimp=ratio+'%';" +
         " }"
     +"</script>");
 

@@ -1,7 +1,6 @@
 package com.silverpeas.mobile.client.apps.media;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
@@ -12,7 +11,7 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEv
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
-import com.silverpeas.mobile.client.apps.media.pages.MediaPage;
+import com.silverpeas.mobile.client.apps.media.pages.PhotoPage;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
@@ -73,7 +72,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   }
 
   private void displayContent(final String appId, final String contentId) {
-    MediaPage page = new MediaPage();
+    PhotoPage page = new PhotoPage();
     page.setPageTitle(msg.title());
     setMainPage(page);
     page.show();

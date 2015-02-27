@@ -16,7 +16,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
@@ -28,8 +27,6 @@ import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
-import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
@@ -37,9 +34,9 @@ import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 /**
  * @author: svu
  */
-public class MediaPage extends PageContent implements View, MediaPagesEventHandler {
+public class PhotoPage extends PageContent implements View, MediaPagesEventHandler {
 
-  interface MediaPageUiBinder extends UiBinder<HTMLPanel, MediaPage> {
+  interface MediaPageUiBinder extends UiBinder<HTMLPanel, PhotoPage> {
   }
 
   @UiField HeadingElement mediaTitle;
@@ -49,11 +46,11 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
   @UiField ImageElement preview, mediaType;
   @UiField CommentsButton comments;
   private static MediaPageUiBinder uiBinder = GWT.create(MediaPageUiBinder.class);
-  private PhotoDTO media;
+  private PhotoDTO photo;
   private DocumentsResources ressources;
   private MediaMessages msg;
 
-  public MediaPage() {
+  public PhotoPage() {
     initWidget(uiBinder.createAndBindUi(this));
     ressources = GWT.create(DocumentsResources.class);
     ressources.css().ensureInjected();
@@ -65,29 +62,29 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
   @Override
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
     if (isVisible()) {
-      this.media = event.getPreview();
-      preview.setSrc(media.getDataPhoto());
+      this.photo = event.getPreview();
+      preview.setSrc(photo.getDataPhoto());
       Image img = new Image(ressources.image());
       mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
-      mediaTitle.setInnerHTML(media.getTitle());
-      mediaFileName.setInnerHTML(media.getName());
+      mediaTitle.setInnerHTML(photo.getTitle());
+      mediaFileName.setInnerHTML(photo.getName());
 
       String size;
-      if (media.getSize() < 1024 * 1024) {
-        size = String.valueOf(media.getSize() / 1024);
+      if (photo.getSize() < 1024 * 1024) {
+        size = String.valueOf(photo.getSize() / 1024);
         weight.setInnerHTML(msg.sizeK(size));
       } else {
-        size = String.valueOf(media.getSize() / (1024 * 1024));
+        size = String.valueOf(photo.getSize() / (1024 * 1024));
         weight.setInnerHTML(msg.sizeM(size));
       }
 
-      dimensions.setInnerHTML(msg.dimensions(String.valueOf(media.getSizeL()), String.valueOf(media.getSizeH())));
+      dimensions.setInnerHTML(msg.dimensions(String.valueOf(photo.getSizeL()), String.valueOf(photo.getSizeH())));
 
-      lastUpdate.setInnerHTML(msg.lastUpdate(media.getUpdateDate(), media.getUpdater()));
+      lastUpdate.setInnerHTML(msg.lastUpdate(photo.getUpdateDate(), photo.getUpdater()));
 
       if (event.isCommentable()) {
-        comments.init(media.getId(), media.getInstance(), CommentDTO.TYPE_MEDIA, getPageTitle(),
-            media.getTitle(), media.getCommentsNumber());
+        comments.init(photo.getId(), photo.getInstance(), CommentDTO.TYPE_MEDIA, getPageTitle(),
+            photo.getTitle(), photo.getCommentsNumber());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
@@ -113,17 +110,17 @@ public class MediaPage extends PageContent implements View, MediaPagesEventHandl
   @UiHandler("mediaFullSize")
   void showFullScreen(ClickEvent event) {
     Notification.activityStart();
-    EventBus.getInstance().fireEvent(new MediaViewLoadEvent(media.getInstance(), media.getId()));
+    EventBus.getInstance().fireEvent(new MediaViewLoadEvent(photo.getInstance(), photo.getId()));
   }
 
   @UiHandler("download")
   void download(ClickEvent event) {
-    if (media.isDownload()) {
+    if (photo.isDownload()) {
       if (!clicked) {
         clicked = true;
         try {
           String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + "spmobil/MediaAction";
-          url = url + "?action=view" + "&id=" + media.getId() + "&instanceId=" + media.getInstance();
+          url = url + "?action=view" + "&id=" + photo.getId() + "&instanceId=" + photo.getInstance();
           download.setHref(url);
           download.setTarget("_self");
           download.fireEvent(new ClickEvent() {});

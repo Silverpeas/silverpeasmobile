@@ -39,9 +39,8 @@ public class AddMediaButton extends Composite {
   private static AddMediaButtonUiBinder uiBinder = GWT.create(AddMediaButtonUiBinder.class);
 
   public AddMediaButton() {
-    initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(MediaMessages.class);
-
+    initWidget(uiBinder.createAndBindUi(this));
     file.getElement().setAttribute("accept", "image/*");
     file.getElement().setAttribute("multiple", "multiple");
     upload.setEncoding(FormPanel.ENCODING_MULTIPART);

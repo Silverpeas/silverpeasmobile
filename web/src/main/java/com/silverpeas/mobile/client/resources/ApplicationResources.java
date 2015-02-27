@@ -10,4 +10,7 @@ public interface ApplicationResources extends ClientBundle {
 
   @Source("avatar.png")
   ImageResource avatar();
+
+  @Source("sound.png")
+  ImageResource sound();
 }
