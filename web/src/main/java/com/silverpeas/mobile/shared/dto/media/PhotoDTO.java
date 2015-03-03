@@ -10,7 +10,6 @@ public class PhotoDTO extends MediaDTO implements Serializable {
 
   private String dataPhoto;
   private String format;
-  private long size;
   private int sizeH;
   private int sizeL;
 
@@ -25,14 +24,6 @@ public class PhotoDTO extends MediaDTO implements Serializable {
   }
   public void setFormat(String format) {
     this.format = format;
-  }
-
-  public void setSize(final long size) {
-    this.size = size;
-  }
-
-  public long getSize() {
-    return size;
   }
 
   public void setSizeH(final int sizeH) {

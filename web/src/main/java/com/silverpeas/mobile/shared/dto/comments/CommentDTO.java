@@ -10,7 +10,8 @@ import java.io.Serializable;
 public class CommentDTO extends BaseDTO implements Serializable {
 
   public final static String TYPE_PUBLICATION = "Publication";
-  public final static String TYPE_MEDIA = "Photo";
+  public final static String TYPE_PHOTO = "Photo";
+  public final static String TYPE_SOUND = "Sound";
 
   private String content;
   private String avatar;

@@ -47,7 +47,7 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
       PlainSearchResult r = SearchEngineFactory.getSearchEngine().search(q);
       for (MatchingIndexEntry result : r.getEntries()) {
 
-        if (result.getObjectType().equals(ContentsTypes.Photo.toString()) || result.getObjectType().equals(ContentsTypes.Publication.toString()) || result.getObjectType().contains(ContentsTypes.Attachment.toString())) {
+        if (result.getObjectType().equals(ContentsTypes.Photo.toString()) || result.getObjectType().equals(ContentsTypes.Sound.toString()) || result.getObjectType().equals(ContentsTypes.Video.toString()) || result.getObjectType().equals(ContentsTypes.Publication.toString()) || result.getObjectType().contains(ContentsTypes.Attachment.toString())) {
           String title = result.getTitle(getUserInSession().getUserPreferences().getLanguage());
           if (title != null && title.contains("wysiwyg") == false) {
             ResultDTO entry = new ResultDTO();

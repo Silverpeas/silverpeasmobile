@@ -12,6 +12,8 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
 import com.silverpeas.mobile.client.apps.media.pages.PhotoPage;
+import com.silverpeas.mobile.client.apps.media.pages.SoundPage;
+import com.silverpeas.mobile.client.apps.media.pages.VideoPage;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
@@ -23,8 +25,11 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
+import com.silverpeas.mobile.shared.dto.media.SoundDTO;
+import com.silverpeas.mobile.shared.dto.media.VideoDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.List;
@@ -66,17 +71,31 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       @Override
       public void onSuccess(final ApplicationInstanceDTO app) {
         commentable = app.isCommentable();
-        displayContent(appId, contentId);
+        displayContent(appId, contentType, contentId);
       }
     });
   }
 
-  private void displayContent(final String appId, final String contentId) {
-    PhotoPage page = new PhotoPage();
-    page.setPageTitle(msg.title());
-    setMainPage(page);
-    page.show();
-    EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentId));
+  private void displayContent(final String appId, String contentType, final String contentId) {
+    if (contentType.equals(ContentsTypes.Photo.toString())) {
+      PhotoPage page = new PhotoPage();
+      page.setPageTitle(msg.title());
+      setMainPage(page);
+      page.show();
+      EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
+    } else if (contentType.equals(ContentsTypes.Sound.toString())) {
+      SoundPage page = new SoundPage();
+      page.setPageTitle(msg.title());
+      setMainPage(page);
+      page.show();
+      EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
+    } else if (contentType.equals(ContentsTypes.Video.toString())) {
+      VideoPage page = new VideoPage();
+      page.setPageTitle(msg.title());
+      setMainPage(page);
+      page.show();
+      EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
+    }
   }
 
   @Override
@@ -94,7 +113,6 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     page.setPageTitle(msg.title());
     page.init(event.getInstance().getId(), null, event.getInstance().getRights());
     page.show();
-
   }
 
   @Override
@@ -115,17 +133,50 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void loadMediaPreview(final MediaPreviewLoadEvent event) {
-    ServicesLocator.serviceMedia.getPreviewPicture(event.getInstanceId(), event.getMediaId(), new AsyncCallback<PhotoDTO>() {
-      @Override
-      public void onFailure(final Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-      }
+    if (event.getMedia() == null) {
+      if (event.getContentType().equals(ContentsTypes.Photo.toString())) {
+        ServicesLocator.serviceMedia.getPreviewPicture(event.getInstanceId(), event.getMediaId(),
+            new AsyncCallback<PhotoDTO>() {
+              @Override
+              public void onFailure(final Throwable caught) {
+                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+              }
 
-      @Override
-      public void onSuccess(final PhotoDTO preview) {
-        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable));
+              @Override
+              public void onSuccess(final PhotoDTO preview) {
+                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable));
+              }
+            });
+      } else if (event.getContentType().equals(ContentsTypes.Sound.toString())) {
+        ServicesLocator.serviceMedia.getSound(event.getInstanceId(), event.getMediaId(),
+            new AsyncCallback<SoundDTO>() {
+              @Override
+              public void onFailure(final Throwable caught) {
+                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+              }
+
+              @Override
+              public void onSuccess(final SoundDTO sound) {
+                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable));
+              }
+            });
+      } else if (event.getContentType().equals(ContentsTypes.Video.toString())) {
+        ServicesLocator.serviceMedia.getVideo(event.getInstanceId(), event.getMediaId(),
+            new AsyncCallback<VideoDTO>() {
+              @Override
+              public void onFailure(final Throwable caught) {
+                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+              }
+
+              @Override
+              public void onSuccess(final VideoDTO sound) {
+                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable));
+              }
+            });
       }
-    });
+    } else {
+      EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(event.getMedia(), commentable));
+    }
   }
 
   @Override

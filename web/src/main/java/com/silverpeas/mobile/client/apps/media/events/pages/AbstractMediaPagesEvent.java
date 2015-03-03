@@ -4,13 +4,13 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public abstract class AbstractMediaPagesEvent extends GwtEvent<MediaPagesEventHandler> {
 
-	public static Type<MediaPagesEventHandler> TYPE = new Type<MediaPagesEventHandler>();
+  public static Type<MediaPagesEventHandler> TYPE = new Type<MediaPagesEventHandler>();
 
-	public AbstractMediaPagesEvent() {
-	}
+  public AbstractMediaPagesEvent() {
+  }
 
-	@Override
-	public Type<MediaPagesEventHandler> getAssociatedType() {
-		return TYPE;
-	}
+  @Override
+  public Type<MediaPagesEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 }

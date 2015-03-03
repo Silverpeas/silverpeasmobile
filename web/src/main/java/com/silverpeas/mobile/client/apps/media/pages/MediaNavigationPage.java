@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
@@ -19,11 +20,13 @@ import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
+import com.silverpeas.mobile.shared.dto.media.VideoDTO;
 
 import java.util.List;
 
@@ -89,12 +92,31 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
         PhotoPage page = new PhotoPage();
         page.setPageTitle(getPageTitle());
         page.show();
-        EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(instanceId, ((PhotoDTO) event.getMediaItem()).getId()));
+        EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(instanceId, ContentsTypes.Photo.toString(), ((PhotoDTO) event.getMediaItem()).getId(), null));
       } else if (event.getMediaItem() instanceof SoundDTO) {
         SoundPage page = new SoundPage();
         page.setPageTitle(getPageTitle());
-        page.setSound((SoundDTO) event.getMediaItem());
         page.show();
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+          @Override
+          public void execute() {
+            EventBus.getInstance().fireEvent(
+                new MediaPreviewLoadEvent(((MediaDTO) event.getMediaItem()).getInstance(), ContentsTypes.Sound.toString(),
+                    ((MediaDTO) event.getMediaItem()).getId(), (MediaDTO) event.getMediaItem()));
+          }
+        });
+      } else if (event.getMediaItem() instanceof VideoDTO) {
+        VideoPage page = new VideoPage();
+        page.setPageTitle(getPageTitle());
+        page.show();
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+          @Override
+          public void execute() {
+            EventBus.getInstance().fireEvent(
+                new MediaPreviewLoadEvent(((MediaDTO) event.getMediaItem()).getInstance(), ContentsTypes.Video.toString(),
+                    ((MediaDTO) event.getMediaItem()).getId(), (MediaDTO) event.getMediaItem()));
+          }
+        });
       }
     }
   }

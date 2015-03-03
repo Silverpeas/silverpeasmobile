@@ -5,16 +5,14 @@ import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.ParagraphElement;
-import com.google.gwt.dom.client.SourceElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.media.client.Audio;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import com.silverpeas.mobile.client.apps.media.events.pages.AbstractMediaPagesEvent;
@@ -26,6 +24,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
+import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 
 /**
@@ -33,7 +32,7 @@ import com.silverpeas.mobile.shared.dto.media.SoundDTO;
  */
 public class SoundPage extends PageContent implements View, MediaPagesEventHandler {
 
-  interface MediaPageUiBinder extends UiBinder<HTMLPanel, SoundPage> {
+  interface SoundPageUiBinder extends UiBinder<HTMLPanel, SoundPage> {
   }
 
   @UiField HeadingElement mediaTitle;
@@ -43,7 +42,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
   @UiField ImageElement mediaPreview, mediaType;
   @UiField AudioElement player;
   @UiField CommentsButton comments;
-  private static MediaPageUiBinder uiBinder = GWT.create(MediaPageUiBinder.class);
+  private static SoundPageUiBinder uiBinder = GWT.create(SoundPageUiBinder.class);
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
   private SoundDTO sound;
   private MediaMessages msg;
@@ -51,22 +50,50 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
   public SoundPage() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(MediaMessages.class);
-    EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
     getElement().setId("a-media");
-    mediaPreview.setSrc(resources.sound().getSafeUri().asString());
-  }
-
-  public void setSound(SoundDTO sound) {
-    this.sound = sound;
-    String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + "spmobil/SoundAction";
-    url = url + "?id=" + sound.getId() + "&instanceId=" + sound.getInstance() + "&userId=" + SpMobil.user.getId();
-    player.setSrc(url);
-    player.setAutoplay(true);
-    player.setControls(true);
+    EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
   }
 
   @Override
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
+    if (isVisible()) {
+      mediaPreview.setSrc(resources.sound().getSafeUri().asString());
+      SoundDTO sound = (SoundDTO) event.getPreview();
+      this.sound = sound;
+      String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + "spmobil/SoundAction";
+      url = url + "?id=" + sound.getId() + "&instanceId=" + sound.getInstance() + "&userId=" + SpMobil.user.getId();
+      player.setSrc(url);
+      player.setAutoplay(true);
+      player.setControls(true);
+
+      Image img = new Image(resources.sound());
+      mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
+      mediaTitle.setInnerHTML(sound.getTitle());
+      mediaFileName.setInnerHTML(sound.getName());
+
+      String size;
+      if (sound.getSize() < 1024 * 1024) {
+        size = String.valueOf(sound.getSize() / 1024);
+        weight.setInnerHTML(msg.sizeK(size));
+      } else {
+        size = String.valueOf(sound.getSize() / (1024 * 1024));
+        weight.setInnerHTML(msg.sizeM(size));
+      }
+      dimensions.setInnerHTML(String.valueOf(sound.getDuration()));
+      lastUpdate.setInnerHTML(msg.lastUpdate(sound.getUpdateDate(), sound.getUpdater()));
+
+      if (sound.isDownload()) {
+        download.setHref(url);
+        download.setTarget("_self");
+      }
+
+      if (event.isCommentable()) {
+        comments.init(sound.getId(), sound.getInstance(), CommentDTO.TYPE_SOUND, getPageTitle(),
+            sound.getTitle(), sound.getCommentsNumber());
+      } else {
+        comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      }
+    }
   }
 
   @Override
@@ -78,15 +105,5 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
     super.stop();
     comments.stop();
     EventBus.getInstance().removeHandler(AbstractMediaPagesEvent.TYPE, this);
-  }
-
-  @UiHandler("download")
-  void download(ClickEvent event) {
-    if (sound.isDownload()) {
-      if (!clicked) {
-        clicked = true;
-        //TODO : enable download file
-      }
-    }
   }
 }

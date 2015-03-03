@@ -7,15 +7,15 @@ public class MediaViewLoadedEvent extends AbstractMediaPagesEvent {
 
   private PhotoDTO view;
 
-	public MediaViewLoadedEvent(PhotoDTO view) {
-		super();
+  public MediaViewLoadedEvent(PhotoDTO view) {
+    super();
     this.view = view;
-	}
+  }
 
-	@Override
-	protected void dispatch(MediaPagesEventHandler handler) {
-		handler.onMediaViewLoaded(this);
-	}
+  @Override
+  protected void dispatch(MediaPagesEventHandler handler) {
+    handler.onMediaViewLoaded(this);
+  }
 
   public PhotoDTO getView() {
     return view;

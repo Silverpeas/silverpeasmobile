@@ -6,14 +6,13 @@
 
       <div class="cadrePhoto">
         <g:Anchor ui:field="mediaFullSize">
-          <img ui:field="mediaPreview"/>
-          <audio ui:field="player"></audio>
+          <video ui:field="player"></video>
         </g:Anchor>
       </div>
       <w:CommentsButton ui:field="comments"/>
       <ul id="attachments">
         <li>
-          <g:Anchor ui:field="download" styleName="downloadable" href="#">
+          <g:Anchor ui:field="download" styleName="downloadable">
             <img ui:field="mediaType"/>
             <span ui:field="mediaFileName"></span>
             <span class="weight" ui:field="weight"></span>

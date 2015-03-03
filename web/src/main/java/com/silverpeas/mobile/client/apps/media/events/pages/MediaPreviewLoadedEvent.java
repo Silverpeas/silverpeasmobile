@@ -6,21 +6,21 @@ import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
 public class MediaPreviewLoadedEvent extends AbstractMediaPagesEvent {
 
-  private PhotoDTO preview;
+  private MediaDTO preview;
   private boolean commentable;
 
-	public MediaPreviewLoadedEvent(PhotoDTO preview, boolean commentable) {
-		super();
+  public MediaPreviewLoadedEvent(MediaDTO preview, boolean commentable) {
+    super();
     this.preview = preview;
     this.commentable = commentable;
-	}
+  }
 
-	@Override
-	protected void dispatch(MediaPagesEventHandler handler) {
-		handler.onMediaPreviewLoaded(this);
-	}
+  @Override
+  protected void dispatch(MediaPagesEventHandler handler) {
+    handler.onMediaPreviewLoaded(this);
+  }
 
-  public PhotoDTO getPreview() {
+  public MediaDTO getPreview() {
     return preview;
   }
 

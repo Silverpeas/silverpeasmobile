@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -47,7 +48,7 @@ public class MediaItem extends Composite {
     } else if (data instanceof SoundDTO) {
       thumb.setSrc(resources.sound().getSafeUri().asString());
     } else if (data instanceof VideoDTO) {
-      //TODO
+      thumb.setSrc(resources.video().getSafeUri().asString());
     } else if (data instanceof VideoStreamingDTO) {
       //TODO
     }

@@ -15,6 +15,7 @@ public class MediaDTO extends BaseDTO implements Serializable {
   private int commentsNumber;
   private String instance;
   private String mimeType;
+  private long size;
 
   public boolean isDownload() {
     return download;
@@ -74,5 +75,13 @@ public class MediaDTO extends BaseDTO implements Serializable {
 
   public void setMimeType(final String mimeType) {
     this.mimeType = mimeType;
+  }
+
+  public void setSize(final long size) {
+    this.size = size;
+  }
+
+  public long getSize() {
+    return size;
   }
 }
