@@ -27,6 +27,7 @@ import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
+import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.MediaException;
@@ -258,12 +259,12 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
           SoundDTO sound = getSound(media);
           results.add(sound);
         } else if (media.getType().isStreaming()) {
-          //TODO
+          VideoStreamingDTO video = getVideoStreaming(media);
+          results.add(video);
         } else if (media.getType().isVideo()) {
           VideoDTO video = getVideo(media);
           results.add(video);
         }
-
       }
       return results;
 
@@ -319,9 +320,21 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     try {
       video = getGalleryBm().getMedia(new MediaPK(videoId));
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getSound", "root.EX_NO_MESSAGE", e);
+      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideo", "root.EX_NO_MESSAGE", e);
     }
     return getVideo(video);
+  }
+
+  @Override
+  public VideoStreamingDTO getVideoStreaming(final String instanceId, final String videoId) throws MediaException, AuthenticationException {
+    checkUserInSession();
+    Media video = null;
+    try {
+      video = getGalleryBm().getMedia(new MediaPK(videoId));
+    } catch (Exception e) {
+      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
+    }
+    return getVideoStreaming(video);
   }
 
   /**
@@ -337,6 +350,47 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getPreviewPicture", "root.EX_NO_MESSAGE", e);
     }
     return picture;
+  }
+
+  private VideoStreamingDTO getVideoStreaming(Media media) {
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+    /*long d = media.getStreaming().getDuration() / 1000;
+    Date duration = new Date(d*1000);
+    SimpleDateFormat durationFormat = new SimpleDateFormat("HH:mm:ss");
+    if (d < (60 * 59)) {
+      durationFormat = new SimpleDateFormat("mm:ss");
+    } else if (d < 59) {
+      durationFormat = new SimpleDateFormat("ss");
+    }*/
+
+    VideoStreamingDTO video = new VideoStreamingDTO();
+    video.setName(media.getName());
+    video.setTitle(media.getTitle());
+    video.setId(media.getId());
+    video.setMimeType(media.getType().getMediaWebUriPart());
+    video.setInstance(media.getInstanceId());
+    //TODO : dimenstion
+    //video.setDuration(durationFormat.format(duration));
+    if (media.getLastUpdater() != null) {
+      video.setUpdater(media.getLastUpdaterName());
+    } else {
+      video.setUpdater(media.getCreatorName());
+    }
+    if (media.getLastUpdateDate() != null) {
+      video.setUpdateDate(sdf.format(media.getLastUpdateDate()));
+    } else {
+      video.setUpdateDate(sdf.format(media.getCreationDate()));
+    }
+
+    String urlVideo = media.getStreaming().getHomepageUrl();
+    if (urlVideo.contains("vimeo")) {
+      video.setUrl("https://player.vimeo.com/video/" + media.getStreaming().getProvider().extractStreamingId(urlVideo));
+    } else if (urlVideo.contains("youtu")){
+
+      video.setUrl("https://www.youtube.com/embed/" + urlVideo.substring(urlVideo.lastIndexOf("/")+1));
+    }
+    return video;
   }
 
   private VideoDTO getVideo(Media media) {
@@ -370,6 +424,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     } else {
       video.setUpdateDate(sdf.format(media.getCreationDate()));
     }
+
+    //TODO : dimenstions
 
     video.setDataPoster( getVideoPoster(media.getVideo()));
 

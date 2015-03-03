@@ -14,6 +14,7 @@ import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
 import com.silverpeas.mobile.client.apps.media.pages.PhotoPage;
 import com.silverpeas.mobile.client.apps.media.pages.SoundPage;
 import com.silverpeas.mobile.client.apps.media.pages.VideoPage;
+import com.silverpeas.mobile.client.apps.media.pages.VideoStreamingPage;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
@@ -30,6 +31,7 @@ import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
+import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.List;
@@ -91,6 +93,12 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
     } else if (contentType.equals(ContentsTypes.Video.toString())) {
       VideoPage page = new VideoPage();
+      page.setPageTitle(msg.title());
+      setMainPage(page);
+      page.show();
+      EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
+    } else if (contentType.equals(ContentsTypes.Streaming.toString())) {
+      VideoStreamingPage page = new VideoStreamingPage();
       page.setPageTitle(msg.title());
       setMainPage(page);
       page.show();
@@ -169,8 +177,21 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
               }
 
               @Override
-              public void onSuccess(final VideoDTO sound) {
-                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable));
+              public void onSuccess(final VideoDTO video) {
+                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+              }
+            });
+      } else if (event.getContentType().equals(ContentsTypes.Streaming.toString())) {
+        ServicesLocator.serviceMedia.getVideoStreaming(event.getInstanceId(), event.getMediaId(),
+            new AsyncCallback<VideoStreamingDTO>() {
+              @Override
+              public void onFailure(final Throwable caught) {
+                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+              }
+
+              @Override
+              public void onSuccess(final VideoStreamingDTO video) {
+                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
               }
             });
       }

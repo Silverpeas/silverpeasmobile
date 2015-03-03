@@ -1,48 +1,40 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptException;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.VideoElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
-import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
-import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.AbstractMediaPagesEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPagesEventHandler;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
-import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
-import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
+import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 
 /**
  * @author: svu
  */
-public class VideoPage extends PageContent implements View, MediaPagesEventHandler {
+public class VideoStreamingPage extends PageContent implements View, MediaPagesEventHandler {
 
-  interface VideoPageUiBinder extends UiBinder<HTMLPanel, VideoPage> {
+  interface VideoStreamingPageUiBinder extends UiBinder<HTMLPanel, VideoStreamingPage> {
   }
 
   @UiField HeadingElement mediaTitle;
@@ -51,13 +43,13 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement mediaType;
   @UiField CommentsButton comments;
-  @UiField VideoElement player;
-  private static VideoPageUiBinder uiBinder = GWT.create(VideoPageUiBinder.class);
-  private VideoDTO video;
+  @UiField IFrameElement player;
+  private static VideoStreamingPageUiBinder uiBinder = GWT.create(VideoStreamingPageUiBinder.class);
+  private VideoStreamingDTO video;
   private MediaMessages msg;
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
 
-  public VideoPage() {
+  public VideoStreamingPage() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(MediaMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
@@ -67,32 +59,16 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   @Override
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
     if (isVisible()) {
-      this.video = (VideoDTO) event.getPreview();
+      this.video = (VideoStreamingDTO) event.getPreview();
 
-      String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + "spmobil/VideoAction";
-      url = url + "?id=" + video.getId() + "&instanceId=" + video.getInstance() + "&userId=" + SpMobil.user.getId();
-      player.setSrc(url);
-      player.setAutoplay(false);
-      player.setControls(true);
-      player.setPreload("none");
-      player.setPoster(video.getDataPoster());
-      player.setHeight(140);
+      player.setSrc(video.getUrl());
+      player.setFrameBorder(0);
+      player.setAttribute("allowfullscreen", "");
 
       Image img = new Image(resources.video());
       mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
       mediaTitle.setInnerHTML(video.getTitle());
       mediaFileName.setInnerHTML(video.getName());
-
-      String size;
-      if (video.getSize() < 1024 * 1024) {
-        size = String.valueOf(video.getSize() / 1024);
-        weight.setInnerHTML(msg.sizeK(size));
-      } else {
-        size = String.valueOf(video.getSize() / (1024 * 1024));
-        weight.setInnerHTML(msg.sizeM(size));
-      }
-
-      dimensions.setInnerHTML(String.valueOf(video.getDuration()));
 
       lastUpdate.setInnerHTML(msg.lastUpdate(video.getUpdateDate(), video.getUpdater()));
 

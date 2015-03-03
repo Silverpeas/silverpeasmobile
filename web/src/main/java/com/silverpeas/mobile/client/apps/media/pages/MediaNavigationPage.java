@@ -27,6 +27,7 @@ import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
+import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 
 import java.util.List;
 
@@ -114,6 +115,18 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
           public void execute() {
             EventBus.getInstance().fireEvent(
                 new MediaPreviewLoadEvent(((MediaDTO) event.getMediaItem()).getInstance(), ContentsTypes.Video.toString(),
+                    ((MediaDTO) event.getMediaItem()).getId(), (MediaDTO) event.getMediaItem()));
+          }
+        });
+      } else if (event.getMediaItem() instanceof VideoStreamingDTO) {
+        VideoStreamingPage page = new VideoStreamingPage();
+        page.setPageTitle(getPageTitle());
+        page.show();
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+          @Override
+          public void execute() {
+            EventBus.getInstance().fireEvent(
+                new MediaPreviewLoadEvent(((MediaDTO) event.getMediaItem()).getInstance(), ContentsTypes.Streaming.toString(),
                     ((MediaDTO) event.getMediaItem()).getId(), (MediaDTO) event.getMediaItem()));
           }
         });

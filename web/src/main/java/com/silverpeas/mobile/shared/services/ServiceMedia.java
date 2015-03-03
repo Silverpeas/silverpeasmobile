@@ -8,6 +8,7 @@ import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
+import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.MediaException;
@@ -24,4 +25,5 @@ public interface ServiceMedia extends RemoteService {
 
   public SoundDTO getSound(String instanceId, String soundId) throws MediaException, AuthenticationException;
   public VideoDTO getVideo(String instanceId, String videoId) throws MediaException, AuthenticationException;
+  public VideoStreamingDTO getVideoStreaming(final String instanceId, final String videoId) throws MediaException, AuthenticationException;
 }

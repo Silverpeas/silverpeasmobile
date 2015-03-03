@@ -1,0 +1,26 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:w="urn:import:com.silverpeas.mobile.client.apps.comments.pages.widgets">
+  <g:HTMLPanel>
+      <h2 class="mediaName" ui:field="mediaTitle"></h2>
+
+      <div class="cadrePhoto">
+        <g:Anchor ui:field="mediaFullSize">
+          <iframe ui:field="player" height="140"></iframe>
+        </g:Anchor>
+      </div>
+      <w:CommentsButton ui:field="comments"/>
+      <ul id="attachments">
+        <li>
+          <g:Anchor ui:field="download" styleName="downloadable">
+            <img ui:field="mediaType"/>
+            <span ui:field="mediaFileName"></span>
+            <span class="weight" ui:field="weight"></span>
+            <span class="dimension" ui:field="dimensions"></span>
+          </g:Anchor>
+        </li>
+      </ul>
+
+      <p class="lastUpdate" ui:field="lastUpdate">Dernière modification le 29/01/2014 par David Lesimple</p>
+  </g:HTMLPanel>
+</ui:UiBinder>

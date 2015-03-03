@@ -7,6 +7,7 @@ import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
+import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public interface ServiceMediaAsync {
@@ -25,4 +26,7 @@ public interface ServiceMediaAsync {
   void getSound(String instanceId, String soundId, final AsyncCallback<SoundDTO> async);
 
   void getVideo(String instanceId, String videoId, final AsyncCallback<VideoDTO> async);
+
+  void getVideoStreaming(final String instanceId, final String videoId,
+      final AsyncCallback<VideoStreamingDTO> async);
 }

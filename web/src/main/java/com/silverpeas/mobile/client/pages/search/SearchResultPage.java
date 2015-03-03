@@ -68,15 +68,16 @@ public class SearchResultPage extends PageContent implements View {
           } else if (result.getType().equals(ContentsTypes.Video.toString())) {
             App app = new MediaApp();
             app.startWithContent(result.getComponentId(), result.getType(), result.getId());
+          } else if (result.getType().equals(ContentsTypes.Streaming.toString())) {
+            App app = new MediaApp();
+            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
           }
-
-
         }
       });
       link.setText(result.getTitle());
       if (result.getType().equals(ContentsTypes.Publication.toString())) {
         list.add(link, "publication");
-      } else if (result.getType().equals(ContentsTypes.Photo.toString()) || result.getType().equals(ContentsTypes.Sound.toString()) || result.getType().equals(ContentsTypes.Video.toString())) {
+      } else if (result.getType().equals(ContentsTypes.Photo.toString()) || result.getType().equals(ContentsTypes.Sound.toString()) || result.getType().equals(ContentsTypes.Video.toString()) || result.getType().equals(ContentsTypes.Streaming.toString())) {
         list.add(link, "media");
       } else {
         list.add(link);
