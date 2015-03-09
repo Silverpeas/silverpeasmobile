@@ -65,7 +65,7 @@ public class VideoStreamingPage extends PageContent implements View, MediaPagesE
       player.setFrameBorder(0);
       player.setAttribute("allowfullscreen", "");
 
-      Image img = new Image(resources.video());
+      Image img = new Image(resources.streaming());
       mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
       mediaTitle.setInnerHTML(video.getTitle());
       mediaFileName.setInnerHTML(video.getName());

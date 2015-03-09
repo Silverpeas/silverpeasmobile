@@ -16,4 +16,7 @@ public interface ApplicationResources extends ClientBundle {
 
   @Source("video.png")
   ImageResource video();
+
+  @Source("streaming.png")
+  ImageResource streaming();
 }

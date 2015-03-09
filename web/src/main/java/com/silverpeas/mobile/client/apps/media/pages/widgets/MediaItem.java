@@ -50,7 +50,7 @@ public class MediaItem extends Composite {
     } else if (data instanceof VideoDTO) {
       thumb.setSrc(resources.video().getSafeUri().asString());
     } else if (data instanceof VideoStreamingDTO) {
-      //TODO
+      thumb.setSrc(resources.streaming().getSafeUri().asString());
     }
   }
 

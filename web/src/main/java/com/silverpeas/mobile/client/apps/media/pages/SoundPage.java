@@ -65,6 +65,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       player.setSrc(url);
       player.setAutoplay(true);
       player.setControls(true);
+      player.setAttribute("type", sound.getMimeType());
 
       Image img = new Image(resources.sound());
       mediaType.getParentElement().replaceChild(img.getElement(), mediaType);

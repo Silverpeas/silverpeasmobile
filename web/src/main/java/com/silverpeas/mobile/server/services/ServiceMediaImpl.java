@@ -506,7 +506,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     sound.setName(media.getName());
     sound.setTitle(media.getTitle());
     sound.setId(media.getId());
-    sound.setMimeType(media.getType().getMediaWebUriPart());
+    sound.setMimeType(media.getSound().getFileMimeType().getMimeType());
     sound.setInstance(media.getInstanceId());
     sound.setDownload(media.getSound().isDownloadAuthorized());
     sound.setSize(media.getSound().getFileSize());
