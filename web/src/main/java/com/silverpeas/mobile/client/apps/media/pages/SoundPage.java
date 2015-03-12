@@ -22,6 +22,7 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -60,7 +61,8 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       mediaPreview.setSrc(resources.sound().getSafeUri().asString());
       SoundDTO sound = (SoundDTO) event.getPreview();
       this.sound = sound;
-      String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + "spmobil/SoundAction";
+      String url = UrlUtils.getLocation();
+      url += "spmobil/SoundAction";
       url = url + "?id=" + sound.getId() + "&instanceId=" + sound.getInstance() + "&userId=" + SpMobil.user.getId();
       player.setSrc(url);
       player.setAutoplay(true);

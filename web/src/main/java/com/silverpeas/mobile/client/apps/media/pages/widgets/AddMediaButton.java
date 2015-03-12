@@ -19,6 +19,7 @@ import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEv
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 
 
 /**
@@ -61,7 +62,9 @@ public class AddMediaButton extends Composite {
     this.componentId.setValue(instanceId);
     this.albumId.setValue(albumId);
 
-    upload.setAction(Window.Location.getPath() + "spmobil/MediaAction");
+    String url = UrlUtils.getLocation();
+    url +=  "spmobil/MediaAction";
+    upload.setAction(url);
   }
 
 

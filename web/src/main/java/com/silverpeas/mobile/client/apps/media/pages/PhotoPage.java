@@ -27,6 +27,7 @@ import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
@@ -119,8 +120,9 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
       if (!clicked) {
         clicked = true;
         try {
-          String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + "spmobil/MediaAction";
-          url = url + "?action=view" + "&id=" + photo.getId() + "&instanceId=" + photo.getInstance();
+          String url = UrlUtils.getLocation();
+          url += "spmobil/MediaAction";
+          url += "?action=view" + "&id=" + photo.getId() + "&instanceId=" + photo.getInstance();
           download.setHref(url);
           download.setTarget("_self");
           download.fireEvent(new ClickEvent() {});

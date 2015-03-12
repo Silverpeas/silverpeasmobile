@@ -20,6 +20,7 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 
@@ -94,7 +95,8 @@ public class Attachment extends Composite {
 
   private void clickAction() {
     try {
-      String url = Window.Location.getPath() + "spmobil/Attachment";
+      String url = UrlUtils.getLocation();
+      url += "spmobil/Attachment";
       url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
 
       if (MobilUtils.isIOS()) {

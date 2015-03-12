@@ -30,6 +30,7 @@ import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -68,8 +69,8 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
     if (isVisible()) {
       this.video = (VideoDTO) event.getPreview();
-
-      String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() + "spmobil/VideoAction";
+      String url = UrlUtils.getLocation();
+      url += "spmobil/VideoAction";
       url = url + "?id=" + video.getId() + "&instanceId=" + video.getInstance() + "&userId=" + SpMobil.user.getId();
       player.setSrc(url);
       player.setAutoplay(false);

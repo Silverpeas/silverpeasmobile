@@ -24,6 +24,7 @@ import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
@@ -114,8 +115,9 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     int available = Window.getClientHeight() - SpMobil.mainPage.getHeaderHeight();
 
     // display content
-    String url = Window.Location.getPath() + "spmobil/PublicationContent";
-    url = url + "?id=" + publication.getId();
+    String url = UrlUtils.getLocation();
+    url += "spmobil/PublicationContent";
+    url += "?id=" + publication.getId();
     IframePage page = new IframePage(url);
     page.setSize("100%", available + "px");
     page.setPageTitle("Contenu");
