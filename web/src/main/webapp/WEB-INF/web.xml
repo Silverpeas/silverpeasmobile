@@ -162,7 +162,6 @@
     <url-pattern>/spmobil/VideoAction</url-pattern>
   </servlet-mapping>
 
-
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>spmobil.html</welcome-file>

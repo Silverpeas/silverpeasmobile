@@ -409,7 +409,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     video.setName(media.getName());
     video.setTitle(media.getTitle());
     video.setId(media.getId());
-    video.setMimeType(media.getType().getMediaWebUriPart());
+    video.setMimeType(media.getVideo().getFileMimeType().getMimeType());
     video.setInstance(media.getInstanceId());
     video.setDownload(media.getVideo().isDownloadAuthorized());
     video.setSize(media.getVideo().getFileSize());

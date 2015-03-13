@@ -70,14 +70,14 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
     if (isVisible()) {
       this.video = (VideoDTO) event.getPreview();
       String url = UrlUtils.getLocation();
-      url += "spmobil/VideoAction";
-      url = url + "?id=" + video.getId() + "&instanceId=" + video.getInstance() + "&userId=" + SpMobil.user.getId();
+      url += "spmobil/VideoAction?id=" + video.getId();
       player.setSrc(url);
       player.setAutoplay(false);
       player.setControls(true);
       player.setPreload("none");
       player.setPoster(video.getDataPoster());
       player.setHeight(140);
+      player.setAttribute("type", video.getMimeType());
 
       Image img = new Image(resources.video());
       mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
