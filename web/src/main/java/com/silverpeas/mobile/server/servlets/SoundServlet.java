@@ -1,14 +1,14 @@
 package com.silverpeas.mobile.server.servlets;
 
-import com.silverpeas.mobile.server.config.Configurator;
+import com.silverpeas.gallery.constant.MediaResolution;
+import com.silverpeas.gallery.control.ejb.GalleryBm;
+import com.silverpeas.gallery.model.Media;
+import com.silverpeas.gallery.model.MediaPK;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.beans.admin.UserFull;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.protocol.Protocol;
+import com.stratelia.webactiv.util.EJBUtilitaire;
+import com.stratelia.webactiv.util.JNDINames;
+import org.silverpeas.file.SilverpeasFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,21 +21,59 @@ import java.io.OutputStream;
 @SuppressWarnings("serial")
 public class SoundServlet extends HttpServlet {
 
-  private OrganizationController organizationController = new OrganizationController();
+  private GalleryBm galleryBm;
+  private static final int BUFFER_LENGTH = 9000;
+  private static final long EXPIRE_TIME = 1000 * 60 * 60; // one hour
 
-  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
     String id = request.getParameter("id");
-    String instanceId = request.getParameter("instanceId");
-    String userId = request.getParameter("userId");
-    UserFull userF = organizationController.getUserFull(userId);
+    Media sound = getGalleryBm().getMedia(new MediaPK(id)).getSound();
+    SilverpeasFile f = sound.getFile(MediaResolution.ORIGINAL);
 
-    // call web service localy on http
-    String url = "http://" + Configurator.getConfigValue("localhost") + ":" + Configurator.getConfigValue("jboss.http.port");
-    url = url + "/silverpeas/services/gallery/" + instanceId + "/sounds/" + id + "/content";
+    String range = request.getHeader("Range");
+    if (range == null) range = "bytes=0-";
+    long length = f.length();
+    long start = 0;
+    long end = length - 1;
 
-    getFile(url, response, userF.getToken());
+    String[] ranges = range.substring("bytes=".length()).split("-");
+    start = Integer.valueOf(ranges[0]);
+    if (ranges.length == 2) {
+      end = Integer.valueOf(ranges[1]);
+    }
+    if (end > length - 1) end = length - 1;
+    long contentLength = end - start + 1;
+    long lastModified = f.lastModified();
 
-    ((OutputStream) response.getOutputStream()).flush();
+    response.reset();
+    response.resetBuffer();
+    response.setBufferSize(BUFFER_LENGTH);
+    response.setHeader("Content-Disposition", String.format("inline;filename=\"%s\"", f.getName()));
+    response.setHeader("Accept-Ranges", "bytes");
+    response.setDateHeader("Expires", System.currentTimeMillis() + EXPIRE_TIME);
+    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+    response.setHeader("Content-Range", String.format("bytes %s-%s/%s", start, end, length));
+    response.setHeader("Content-Length", String.format("%s", contentLength));
+    response.setContentType(f.getMimeType());
+    response.setDateHeader("Last-Modified", lastModified);
+
+    InputStream in = f.inputStream();
+    OutputStream out = response.getOutputStream();
+    response.setContentLength((int)contentLength);
+    response.setBufferSize(BUFFER_LENGTH);
+    int bytesRead = 0;
+    int bytesLeft = (int) contentLength;
+    byte[] buffer = new byte[BUFFER_LENGTH];
+    in.mark((int)start);
+    for (;;) {
+      bytesRead = in.read(buffer);
+      if (!(bytesRead != -1 && bytesLeft > 0)) {
+        break;
+      }
+      out.write(buffer, 0, bytesLeft < bytesRead ? bytesLeft : bytesRead);
+      bytesLeft -= bytesRead;
+    }
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,33 +91,10 @@ public class SoundServlet extends HttpServlet {
     }
   }
 
-  public static void getFile(String host, HttpServletResponse response, String token) {
-    InputStream input = null;
-
-    try {
-
-      Protocol.registerProtocol("https", new Protocol("https", new EasySSLProtocolSocketFactory(), 443));
-
-      HttpClient client = new HttpClient();
-      HttpMethod method = new GetMethod(host);
-      method.addRequestHeader("X-Silverpeas-Session", token);
-
-      client.executeMethod(method);
-
-      input = method.getResponseBodyAsStream();
-      response.setContentType(method.getResponseHeader("Content-Type").getValue());
-      response.setHeader("content-disposition", method.getResponseHeader("content-disposition").getValue());
-
-      byte[] buffer = new byte[1024];
-      int read;
-      while ((read = input.read(buffer)) > 0) {
-        ((OutputStream) response.getOutputStream()).write(buffer, 0, read);
-      }
-      response.setContentLength(Integer.parseInt(method.getResponseHeader("Content-Length").getValue()));
-      method.releaseConnection();
-    } catch (IOException e) {
-      System.out.println("Error while trying to download the file.");
-      e.printStackTrace();
+  private GalleryBm getGalleryBm() throws Exception {
+    if (galleryBm == null) {
+      galleryBm = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBm.class);
     }
+    return galleryBm;
   }
 }

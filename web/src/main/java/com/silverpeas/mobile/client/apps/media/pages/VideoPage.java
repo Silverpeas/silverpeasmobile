@@ -38,6 +38,8 @@ import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
 
+import java.util.Date;
+
 /**
  * @author: svu
  */
@@ -71,6 +73,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
       this.video = (VideoDTO) event.getPreview();
       String url = UrlUtils.getLocation();
       url += "spmobil/VideoAction?id=" + video.getId();
+      url += "&t=" + new Date().getTime();
       player.setSrc(url);
       player.setAutoplay(false);
       player.setControls(true);

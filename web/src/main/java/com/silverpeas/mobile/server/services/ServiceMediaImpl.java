@@ -433,7 +433,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
   }
 
   private String getVideoPoster(Video video) {
-    long t = video.getDuration() / 2000;
+    long t = 0;
+    //t = video.getDuration() / 2000;
     String url = "http://" + Configurator.getConfigValue("localhost") + ":" + Configurator.getConfigValue("jboss.http.port") + "/silverpeas/services/gallery/" + video.getInstanceId() + "/videos/" + video.getId() + "/thumbnail/" + t;
     String data = "";
     InputStream input = null;

@@ -19,36 +19,36 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 @SuppressWarnings("serial")
+
 public class VideoServlet extends HttpServlet {
 
   private GalleryBm galleryBm;
-  private static final int BUFFER_LENGTH = 1024 * 16;
-  private static final long EXPIRE_TIME = 1000 * 60 * 60 * 24;
+  private static final int BUFFER_LENGTH = 9000;
+  private static final long EXPIRE_TIME = 1000 * 60 * 60; // one hour
 
-  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
     String id = request.getParameter("id");
-
-    Media video = null;
-    try {
-      video = getGalleryBm().getMedia(new MediaPK(id)).getVideo();
-    } catch (Exception e) {
-      throw new IOException(e);
-    }
-    SilverpeasFile f = video.getFile(MediaResolution.PREVIEW);
+    Media video = getGalleryBm().getMedia(new MediaPK(id)).getVideo();
+    SilverpeasFile f = video.getFile(MediaResolution.ORIGINAL);
 
     String range = request.getHeader("Range");
-    int length = (int) f.length();
-    int start = 0;
-    int end = length - 1;
+    if (range == null) range = "bytes=0-";
+    long length = f.length();
+    long start = 0;
+    long end = length - 1;
 
-    String[] ranges = range.substring("items=".length()).split("-");
+    String[] ranges = range.substring("bytes=".length()).split("-");
     start = Integer.valueOf(ranges[0]);
     if (ranges.length == 2) {
       end = Integer.valueOf(ranges[1]);
     }
-    int contentLength = end - start + 1;
+    if (end > length - 1) end = length - 1;
+    long contentLength = end - start + 1;
+    long lastModified = f.lastModified();
 
     response.reset();
+    response.resetBuffer();
     response.setBufferSize(BUFFER_LENGTH);
     response.setHeader("Content-Disposition", String.format("inline;filename=\"%s\"", f.getName()));
     response.setHeader("Accept-Ranges", "bytes");
@@ -57,21 +57,24 @@ public class VideoServlet extends HttpServlet {
     response.setHeader("Content-Range", String.format("bytes %s-%s/%s", start, end, length));
     response.setHeader("Content-Length", String.format("%s", contentLength));
     response.setContentType(f.getMimeType());
+    response.setDateHeader("Last-Modified", lastModified);
 
-    try {
-      InputStream in = f.inputStream();
-      OutputStream out = response.getOutputStream();
-      int bytesRead;
-      int bytesLeft = contentLength;
+    InputStream in = f.inputStream();
+    OutputStream out = response.getOutputStream();
+    response.setContentLength((int)contentLength);
+      response.setBufferSize(BUFFER_LENGTH);
+      int bytesRead = 0;
+      int bytesLeft = (int) contentLength;
       byte[] buffer = new byte[BUFFER_LENGTH];
-      in.mark(start);
-      while ((bytesRead = in.read(buffer)) != -1 && bytesLeft > 0) {
+      in.mark((int)start);
+      for (;;) {
+        bytesRead = in.read(buffer);
+        if (!(bytesRead != -1 && bytesLeft > 0)) {
+          break;
+        }
         out.write(buffer, 0, bytesLeft < bytesRead ? bytesLeft : bytesRead);
         bytesLeft -= bytesRead;
       }
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
