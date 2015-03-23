@@ -62,14 +62,15 @@ public class VideoServlet extends HttpServlet {
     InputStream in = f.inputStream();
     OutputStream out = response.getOutputStream();
     response.setContentLength((int)contentLength);
-      response.setBufferSize(BUFFER_LENGTH);
-      int bytesRead = 0;
-      int bytesLeft = (int) contentLength;
-      byte[] buffer = new byte[BUFFER_LENGTH];
-      in.mark((int)start);
-      for (;;) {
+    response.setBufferSize(BUFFER_LENGTH);
+    int bytesRead = 0;
+    int bytesLeft = (int) contentLength;
+    byte[] buffer = new byte[BUFFER_LENGTH];
+    in.mark((int)start);
+
+    for (;;) {
         bytesRead = in.read(buffer);
-        if (!(bytesRead != -1 && bytesLeft > 0)) {
+        if (bytesRead == -1 || bytesLeft <= 0) {
           break;
         }
         out.write(buffer, 0, bytesLeft < bytesRead ? bytesLeft : bytesRead);

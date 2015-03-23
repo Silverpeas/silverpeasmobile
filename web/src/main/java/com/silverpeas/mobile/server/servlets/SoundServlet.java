@@ -68,7 +68,7 @@ public class SoundServlet extends HttpServlet {
     in.mark((int)start);
     for (;;) {
       bytesRead = in.read(buffer);
-      if (!(bytesRead != -1 && bytesLeft > 0)) {
+      if (bytesRead == -1 || bytesLeft <= 0) {
         break;
       }
       out.write(buffer, 0, bytesLeft < bytesRead ? bytesLeft : bytesRead);

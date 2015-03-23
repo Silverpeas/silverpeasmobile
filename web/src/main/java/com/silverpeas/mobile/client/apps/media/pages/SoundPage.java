@@ -65,8 +65,9 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       url += "spmobil/SoundAction";
       url = url + "?id=" + sound.getId();
       player.setSrc(url);
-      player.setAutoplay(true);
+      player.setAutoplay(false);
       player.setControls(true);
+      player.setPreload("none");
       player.setAttribute("type", sound.getMimeType());
 
       Image img = new Image(resources.sound());

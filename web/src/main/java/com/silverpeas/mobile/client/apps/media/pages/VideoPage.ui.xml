@@ -13,7 +13,7 @@
       <ul id="attachments">
         <li>
           <g:Anchor ui:field="download" styleName="downloadable">
-            <img ui:field="mediaType"/>
+            <img ui:field="mediaType" src=""/>
             <span ui:field="mediaFileName"></span>
             <span class="weight" ui:field="weight"></span>
             <span class="dimension" ui:field="dimensions"></span>
