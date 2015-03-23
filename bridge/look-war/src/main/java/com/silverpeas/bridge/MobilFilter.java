@@ -40,26 +40,32 @@ public class MobilFilter implements Filter {
     }
 
     String userAgent = ((HttpServletRequest) req).getHeader("User-Agent");
-    boolean isMobile = userAgent.contains("Android") || userAgent.contains("iPhone");
-    ((HttpServletRequest) req).getSession().setAttribute("isMobile", new Boolean(isMobile));
+    if (userAgent != null) {
+      boolean isMobile = userAgent.contains("Android") || userAgent.contains("iPhone");
+      ((HttpServletRequest) req).getSession().setAttribute("isMobile", new Boolean(isMobile));
 
-    if (isMobile) {
-      String url = ((HttpServletRequest) req).getRequestURL().toString();
-      String params = "";
-      if (url.contains("Publication")) {
-        String id = url.substring(url.lastIndexOf("/")+1);
-        PublicationDetail pub = getPubBm().getDetail(new PublicationPK(id));
-        String appId = pub.getInstanceId();
-        params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" + appId;
-      } else  if (url.contains("Media")) {
-        String id = url.substring(url.lastIndexOf("/")+1);
-        Media media = getGalleryBm().getMedia(new MediaPK(id));
-        String appId = media.getInstanceId();
-        params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+      if (isMobile) {
+        String url = ((HttpServletRequest) req).getRequestURL().toString();
+        String params = "";
+        if (url.contains("Publication")) {
+          String id = url.substring(url.lastIndexOf("/") + 1);
+          PublicationDetail pub = getPubBm().getDetail(new PublicationPK(id));
+          String appId = pub.getInstanceId();
+          params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" +
+              appId;
+        } else if (url.contains("Media")) {
+          String id = url.substring(url.lastIndexOf("/") + 1);
+          Media media = getGalleryBm().getMedia(new MediaPK(id));
+          String appId = media.getInstanceId();
+          params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+        }
+
+        ((HttpServletResponse) res).sendRedirect("/spmobile/spmobil.html" + params);
+        return;
+      } else {
+        chain.doFilter(req, res);
+        return;
       }
-
-      ((HttpServletResponse) res).sendRedirect("/spmobile/spmobil.html" + params);
-      return;
     } else {
       chain.doFilter(req, res);
       return;
