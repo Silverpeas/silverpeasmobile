@@ -6,6 +6,7 @@ public class VideoStreamingDTO extends MediaDTO implements Serializable {
 
   private String duration;
   private String url;
+  private String urlPoster;
 
   private static final long serialVersionUID = 1L;
 
@@ -23,5 +24,13 @@ public class VideoStreamingDTO extends MediaDTO implements Serializable {
 
   public void setDuration(final String duration) {
     this.duration = duration;
+  }
+
+  public String getUrlPoster() {
+    return urlPoster;
+  }
+
+  public void setUrlPoster(final String urlPoster) {
+    this.urlPoster = urlPoster;
   }
 }

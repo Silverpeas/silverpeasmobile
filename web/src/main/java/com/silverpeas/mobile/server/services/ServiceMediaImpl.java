@@ -47,6 +47,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.silverpeas.file.SilverpeasFile;
 
 import javax.imageio.ImageIO;
@@ -64,8 +65,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service de gestion des galleries d'images.
@@ -355,23 +358,12 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
   private VideoStreamingDTO getVideoStreaming(Media media) {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-    /*long d = media.getStreaming().getDuration() / 1000;
-    Date duration = new Date(d*1000);
-    SimpleDateFormat durationFormat = new SimpleDateFormat("HH:mm:ss");
-    if (d < (60 * 59)) {
-      durationFormat = new SimpleDateFormat("mm:ss");
-    } else if (d < 59) {
-      durationFormat = new SimpleDateFormat("ss");
-    }*/
-
     VideoStreamingDTO video = new VideoStreamingDTO();
     video.setName(media.getName());
     video.setTitle(media.getTitle());
     video.setId(media.getId());
     video.setMimeType(media.getType().getMediaWebUriPart());
     video.setInstance(media.getInstanceId());
-    //TODO : dimenstion
-    //video.setDuration(durationFormat.format(duration));
     if (media.getLastUpdater() != null) {
       video.setUpdater(media.getLastUpdaterName());
     } else {
@@ -385,10 +377,26 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     String urlVideo = media.getStreaming().getHomepageUrl();
     if (urlVideo.contains("vimeo")) {
-      video.setUrl("https://player.vimeo.com/video/" + media.getStreaming().getProvider().extractStreamingId(urlVideo));
+      String id = media.getStreaming().getProvider().extractStreamingId(urlVideo);
+      video.setUrl("https://player.vimeo.com/video/" + id);
+      String urlJson = "http://vimeo.com/api/v2/video/"+id+".json";
+      HttpClient client = new HttpClient();
+      HttpMethod method = new GetMethod(urlJson);
+      try {
+        client.executeMethod(method);
+        String json = method.getResponseBodyAsString();
+        json = json.substring(1, json.length()-1);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String,String> map = objectMapper.readValue(json, HashMap.class);
+        video.setUrlPoster(map.get("thumbnail_medium"));
+      } catch (IOException e) {
+        SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
+        video.setUrlPoster("");
+      }
     } else if (urlVideo.contains("youtu")){
-
-      video.setUrl("https://www.youtube.com/embed/" + urlVideo.substring(urlVideo.lastIndexOf("/")+1));
+      String id = urlVideo.substring(urlVideo.lastIndexOf("/") + 1);
+      video.setUrl("https://www.youtube.com/embed/" + id);
+      video.setUrlPoster("http://img.youtube.com/vi/" + id + "/0.jpg");
     }
     return video;
   }
@@ -432,7 +440,6 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
   private String getVideoPoster(Video video) {
     long t = 0;
-    //t = video.getDuration() / 2000;
     String url = "http://" + Configurator.getConfigValue("localhost") + ":" + Configurator.getConfigValue("jboss.http.port") + "/silverpeas/services/gallery/" + video.getInstanceId() + "/videos/" + video.getId() + "/thumbnail/" + t;
     String data = "";
     InputStream input = null;

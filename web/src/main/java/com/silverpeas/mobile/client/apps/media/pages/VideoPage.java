@@ -78,6 +78,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
       player.setPreload("none");
       player.setPoster(video.getDataPoster());
       player.setHeight(200);
+      player.setAttribute("style", "max-width:" + Window.getClientWidth() * 0.8 + "px");
       player.setAttribute("type", video.getMimeType());
       mediaFullSize.addClickHandler(new ClickHandler() {
         @Override
@@ -91,7 +92,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
           }
         }
       });
-      
+
       Image img = new Image(resources.video());
       mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
       mediaTitle.setInnerHTML(video.getTitle());

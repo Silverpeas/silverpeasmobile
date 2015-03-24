@@ -48,9 +48,14 @@ public class MediaItem extends Composite {
     } else if (data instanceof SoundDTO) {
       thumb.setSrc(resources.sound().getSafeUri().asString());
     } else if (data instanceof VideoDTO) {
-      thumb.setSrc(resources.video().getSafeUri().asString());
+      thumb.setSrc(((VideoDTO) data).getDataPoster());
     } else if (data instanceof VideoStreamingDTO) {
-      thumb.setSrc(resources.streaming().getSafeUri().asString());
+      String url = ((VideoStreamingDTO) data).getUrlPoster();
+      if (url.isEmpty()) {
+        thumb.setSrc(resources.streaming().getSafeUri().asString());
+      } else {
+        thumb.setSrc(url);
+      }
     }
   }
 
