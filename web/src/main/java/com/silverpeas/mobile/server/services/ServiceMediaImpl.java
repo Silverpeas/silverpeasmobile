@@ -425,8 +425,6 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       video.setUpdateDate(sdf.format(media.getCreationDate()));
     }
 
-    //TODO : dimenstions
-
     video.setDataPoster( getVideoPoster(media.getVideo()));
 
     return video;
