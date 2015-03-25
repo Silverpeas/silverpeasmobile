@@ -111,6 +111,11 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
 
       lastUpdate.setInnerHTML(msg.lastUpdate(video.getUpdateDate(), video.getUpdater()));
 
+      if (video.isDownload()) {
+        download.setHref(url);
+        download.setTarget("_self");
+      }
+
       if (event.isCommentable()) {
         comments.init(video.getId(), video.getInstance(), CommentDTO.TYPE_PHOTO, getPageTitle(),
             video.getTitle(), video.getCommentsNumber());
