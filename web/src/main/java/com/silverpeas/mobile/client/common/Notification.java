@@ -56,12 +56,9 @@ public class Notification {
   }
 
   public static native void notifyMessage(String icon, String title, String message) /*-{
-    if ($wnd.webkitNotifications) {
-      if ($wnd.webkitNotifications.checkPermission() == 0) {
-        $wnd.webkitNotifications.createNotification(icon, title, message);
-      } else {
-        $wnd.webkitNotifications.requestPermission();
-      }
+    if ($wnd.Notification || $wnd.mozNotification || $wnd.webkitNotification || $wnd.msNotification) {
+      Notification.requestPermission(function (permission) {});
+      var instance = new Notification(title, {icon: icon, body: message});
     } else {
       $wnd.alert(message);
     }

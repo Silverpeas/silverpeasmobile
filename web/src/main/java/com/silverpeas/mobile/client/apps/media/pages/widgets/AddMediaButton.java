@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
@@ -42,7 +43,7 @@ public class AddMediaButton extends Composite {
   public AddMediaButton() {
     msg = GWT.create(MediaMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
-    file.getElement().setAttribute("accept", "image/*");
+    file.getElement().setAttribute("accept", "audio/*, video/*, image/*");
     file.getElement().setAttribute("multiple", "multiple");
     upload.setEncoding(FormPanel.ENCODING_MULTIPART);
     upload.getElement().getStyle().setDisplay(Style.Display.NONE);
@@ -51,6 +52,12 @@ public class AddMediaButton extends Composite {
 
       @Override
       public void onSubmitComplete(final FormPanel.SubmitCompleteEvent submitCompleteEvent) {
+        String r = submitCompleteEvent.getResults();
+        if (r.contains("HTTP 413")) {
+          Notification.alert(msg.maxUploadError());
+        } else if(r.contains("HTTP 415")) {
+          Notification.alert(msg.mediaNotSupportedError());
+        }
         EventBus.getInstance().fireEvent(new MediasLoadMediaItemsEvent(instanceIdValue, albumIdValue));
       }
     });

@@ -15,10 +15,12 @@ import com.stratelia.webactiv.util.FileRepositoryManager;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.ResourceLocator;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -90,6 +92,9 @@ public class MediaServlet extends HttpServlet {
     List<FileItem> items = null;
     try {
       items = upload.parseRequest(request);
+    } catch(FileUploadBase.FileSizeLimitExceededException eu) {
+      response.sendError(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
+      return;
     } catch (FileUploadException e) {
       e.printStackTrace();
     }
@@ -110,7 +115,7 @@ public class MediaServlet extends HttpServlet {
         File file = new File(tempDir + File.separator + fileName);
         try {
           item.write(file);
-          createPhoto(request, fileName, getUserInSession(request).getId(), componentId, albumId, file, false, "", "", true);
+          createMedia(request, response, fileName, getUserInSession(request).getId(), componentId, albumId, file, false, "", "", true);
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -167,7 +172,7 @@ public class MediaServlet extends HttpServlet {
     return galleryBm;
   }
 
-  private String createPhoto(HttpServletRequest request, String name, String userId, String componentId,
+  private String createMedia(HttpServletRequest request, HttpServletResponse response, String name, String userId, String componentId,
       String albumId, File file, boolean watermark, String watermarkHD,
       String watermarkOther, boolean download)
       throws Exception {
@@ -176,7 +181,28 @@ public class MediaServlet extends HttpServlet {
     List<FileItem> parameters = new ArrayList<FileItem>();
     LocalDiskFileItem item = new LocalDiskFileItem(file);
     parameters.add(item);
-    MediaDataCreateDelegate delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
+
+    String type = new MimetypesFileTypeMap().getContentType(file);
+
+    MediaDataCreateDelegate delegate = null;
+    if (type.contains("image")) {
+      delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
+    } if (type.contains("audio")) {
+      delegate = new MediaDataCreateDelegate(MediaType.Sound, "fr", albumId, parameters);
+    } else if (type.contains("video")) {
+      delegate = new MediaDataCreateDelegate(MediaType.Video, "fr", albumId, parameters);
+    } else if (type.contains("octet-stream")) {
+      if (file.getName().endsWith(".mp3")) {
+        delegate = new MediaDataCreateDelegate(MediaType.Sound, "fr", albumId, parameters);
+      } else if(file.getName().endsWith(".mp4")) {
+        delegate = new MediaDataCreateDelegate(MediaType.Video, "fr", albumId, parameters);
+      }
+    }
+    //TODO : use right language
+    if (delegate == null) {
+      response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+      return null;
+    }
 
     Media newMedia = getGalleryBm().createMedia(getUserInSession(request), componentId, watermark, watermarkHD, watermarkOther, delegate);
 
@@ -186,4 +212,5 @@ public class MediaServlet extends HttpServlet {
   protected UserDetail getUserInSession(HttpServletRequest request) {
     return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
   }
+
 }

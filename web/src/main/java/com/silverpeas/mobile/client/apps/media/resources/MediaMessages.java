@@ -11,4 +11,7 @@ public interface MediaMessages extends Messages {
 
   String importMedia();
 
+  String maxUploadError();
+
+  String mediaNotSupportedError();
 }
