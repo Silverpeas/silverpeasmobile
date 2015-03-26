@@ -612,7 +612,7 @@ background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #EEEEEE;
 }
 .media-thumb .ui-thumb {
 	width:64px;
-	height:64px;
+	height:94px;
 	overflow:hidden;
 	display:block;
 	border:3px solid #FFF;
@@ -623,6 +623,13 @@ background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #EEEEEE;
 	max-width:75px;
 	min-height:64px;
 	height:auto;
+}
+
+.media-thumb .ui-thumb span {
+  font-size: 0.6em;
+  height: 2.4em;
+  display: inline-block;
+  overflow: hidden;
 }
 
 .info-nb-sous-elmt {

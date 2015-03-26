@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.apps.media.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -26,6 +27,7 @@ public class MediaItem extends Composite {
   private static MediaItemUiBinder uiBinder = GWT.create(MediaItemUiBinder.class);
   @UiField Anchor link;
   @UiField ImageElement thumb;
+  @UiField SpanElement detail;
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
   protected ApplicationMessages msg = null;
 
@@ -42,6 +44,7 @@ public class MediaItem extends Composite {
     this.data = data;
     link.setTitle(data.getTitle());
     thumb.setAlt(data.getTitle());
+    detail.setInnerText(data.getTitle());
 
     if (data instanceof PhotoDTO) {
       thumb.setSrc( ((PhotoDTO)data).getDataPhoto());

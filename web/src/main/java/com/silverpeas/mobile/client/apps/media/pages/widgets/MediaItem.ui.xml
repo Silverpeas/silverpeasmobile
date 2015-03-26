@@ -3,6 +3,7 @@
   <g:HTMLPanel tag="li" styleName="media-thumb">
     <g:Anchor ui:field="link" styleName="ui-thumb">
       <img ui:field="thumb" src=""/>
+      <span ui:field="detail"></span>
     </g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder> 
