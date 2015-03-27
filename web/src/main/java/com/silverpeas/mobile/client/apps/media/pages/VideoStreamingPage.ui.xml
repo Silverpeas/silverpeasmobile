@@ -4,7 +4,7 @@
   <g:HTMLPanel>
       <h2 class="mediaName" ui:field="mediaTitle"></h2>
 
-      <div class="cadrePhoto">
+      <div class="cadrePhoto" ui:field="previewContainer">
         <g:Anchor ui:field="mediaFullSize">
           <iframe ui:field="player" height="140"></iframe>
         </g:Anchor>
@@ -13,7 +13,7 @@
       <ul id="attachments">
         <li>
           <g:Anchor ui:field="download" styleName="downloadable">
-            <img ui:field="mediaType"/>
+            <img ui:field="mediaType" src=""/>
             <span ui:field="mediaFileName"></span>
             <span class="weight" ui:field="weight"></span>
             <span class="dimension" ui:field="dimensions"></span>

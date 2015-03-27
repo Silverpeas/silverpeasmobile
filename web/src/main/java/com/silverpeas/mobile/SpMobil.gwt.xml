@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
 <module rename-to="spmobil">
 
   <stylesheet src="jquery.mobile.structure-1.4.2.min.css"/>
@@ -27,5 +26,18 @@
   <add-linker name="xsiframe" />
   <set-configuration-property name="devModeRedirectEnabled" value="true" />
   <set-property name="compiler.useSourceMaps" value="true" />
+
+  <!-- super dev mode -->
+  <define-configuration-property name="mgwt.superdevmode" is-multi-valued="false" />
+  <define-configuration-property name="mgwt.superdevmode_host" is-multi-valued="false" />
+
+  <!-- generater to build util! -->
+  <generate-with class="com.silverpeas.mobile.rebind.SuperDevModeGenerator">
+    <when-type-assignable class="com.silverpeas.mobile.client.common.gwt.impl.SuperDevModeHelper" />
+  </generate-with>
+
+
+  <set-configuration-property name="mgwt.superdevmode" value="off" />
+  <set-configuration-property name="mgwt.superdevmode_host" value="http://192.168.1.73:9876" />
 
 </module>

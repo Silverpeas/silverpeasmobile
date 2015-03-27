@@ -1,15 +1,20 @@
 package com.silverpeas.mobile.client.apps.media;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
 import com.silverpeas.mobile.client.apps.media.pages.PhotoPage;
@@ -29,6 +34,8 @@ import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.RightDTO;
+import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
+import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
@@ -41,8 +48,10 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   private MediaMessages msg;
   private NavigationApp navApp = new NavigationApp();
-  private RightDTO userRight;
+
+  // Model
   private boolean commentable;
+  private List<BaseDTO> currentAlbumsItems;
 
   public MediaApp() {
     super();
@@ -79,32 +88,70 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     });
   }
 
-  private void displayContent(final String appId, String contentType, final String contentId) {
+  private void displayContent(final String appId, final String contentType, final String contentId) {
+    MediaDTO content = null;
+
     if (contentType.equals(ContentsTypes.Photo.toString())) {
+      content = new PhotoDTO();
+    } else if (contentType.equals(ContentsTypes.Sound.toString())) {
+      content = new SoundDTO();
+    } else if (contentType.equals(ContentsTypes.Video.toString())) {
+      content = new VideoDTO();
+    } else if (contentType.equals(ContentsTypes.Streaming.toString())) {
+      content = new VideoStreamingDTO();
+    }
+    content.setInstance(contentId);
+    content.setInstance(appId);
+    displayContent(content);
+  }
+
+  private void displayContent(final MediaDTO item) {
+    if (item instanceof PhotoDTO) {
       PhotoPage page = new PhotoPage();
       page.setPageTitle(msg.title());
-      setMainPage(page);
       page.show();
-      EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
-    } else if (contentType.equals(ContentsTypes.Sound.toString())) {
+      EventBus.getInstance().fireEvent(
+          new MediaPreviewLoadEvent(item.getInstance(), ContentsTypes.Photo.toString(), item.getId(), null));
+    } else if (item instanceof SoundDTO) {
       SoundPage page = new SoundPage();
       page.setPageTitle(msg.title());
-      setMainPage(page);
       page.show();
-      EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
-    } else if (contentType.equals(ContentsTypes.Video.toString())) {
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+        @Override
+        public void execute() {
+          EventBus.getInstance().fireEvent(
+              new MediaPreviewLoadEvent(item.getInstance(), ContentsTypes.Sound.toString(),
+                  item.getId(), item));
+        }
+      });
+    } else if (item instanceof VideoDTO) {
       VideoPage page = new VideoPage();
       page.setPageTitle(msg.title());
-      setMainPage(page);
       page.show();
-      EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
-    } else if (contentType.equals(ContentsTypes.Streaming.toString())) {
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+        @Override
+        public void execute() {
+          EventBus.getInstance().fireEvent(
+              new MediaPreviewLoadEvent(item.getInstance(), ContentsTypes.Video.toString(), item.getId(), item));
+        }
+      });
+    } else if (item instanceof VideoStreamingDTO) {
       VideoStreamingPage page = new VideoStreamingPage();
       page.setPageTitle(msg.title());
-      setMainPage(page);
       page.show();
-      EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(appId, contentType, contentId, null));
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+        @Override
+        public void execute() {
+          EventBus.getInstance().fireEvent(
+              new MediaPreviewLoadEvent(item.getInstance(), ContentsTypes.Streaming.toString(), item.getId(), item));
+        }
+      });
     }
+  }
+
+  @Override
+  public void loadMediaShow(final MediaViewShowEvent mediaViewShowEvent) {
+    displayContent(mediaViewShowEvent.getMedia());
   }
 
   @Override
@@ -126,10 +173,11 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void loadAlbums(final MediasLoadMediaItemsEvent event) {
-    ServicesLocator.serviceMedia.getAlbumsAndPictures(event.getInstanceId(),
-        event.getRootAlbumId(), new AsyncCallback<List<BaseDTO>>() {
+    ServicesLocator.serviceMedia.getAlbumsAndPictures(event.getInstanceId(), event.getRootAlbumId(),
+        new AsyncCallback<List<BaseDTO>>() {
           @Override
           public void onSuccess(List<BaseDTO> result) {
+            currentAlbumsItems = result;
             EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result));
           }
 
@@ -215,5 +263,40 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
             EventBus.getInstance().fireEvent(new MediaViewLoadedEvent(view));
           }
         });
+  }
+
+  @Override
+  public void nextMediaView(final MediaViewGetNextEvent mediaViewNextEvent) {
+    int index = findMediaIndex(mediaViewNextEvent.getCurrentMedia());
+    for (int i = index + 1; i < currentAlbumsItems.size() ; i++) {
+      if (currentAlbumsItems.get(i) instanceof MediaDTO) {
+        EventBus.getInstance().fireEvent(new MediaViewNextEvent((MediaDTO)currentAlbumsItems.get(i)));
+        return;
+      }
+    }
+    EventBus.getInstance().fireEvent(new MediaViewNextEvent(mediaViewNextEvent.getCurrentMedia()));
+  }
+
+  @Override
+  public void prevMediaView(final MediaViewGetPreviousEvent mediaViewPreviousEvent) {
+    int index = findMediaIndex(mediaViewPreviousEvent.getCurrentMedia());
+    for (int i = index - 1; i >= 0 ; i--) {
+      if (currentAlbumsItems.get(i) instanceof MediaDTO) {
+        EventBus.getInstance().fireEvent(new MediaViewPrevEvent((MediaDTO)currentAlbumsItems.get(i)));
+        return;
+      }
+    }
+    EventBus.getInstance().fireEvent(new MediaViewPrevEvent(mediaViewPreviousEvent.getCurrentMedia()));
+  }
+
+  private int findMediaIndex(MediaDTO media) {
+    int i = 0;
+    for (BaseDTO item : currentAlbumsItems) {
+      if (item instanceof MediaDTO && item.getId().equals(media.getId())) {
+            return i;
+      }
+      i++;
+    }
+    return -1;
   }
 }

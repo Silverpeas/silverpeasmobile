@@ -1,38 +1,47 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.AbstractMediaPagesEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPagesEventHandler;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
-import com.silverpeas.mobile.shared.dto.media.VideoDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 
 /**
  * @author: svu
  */
-public class VideoStreamingPage extends PageContent implements View, MediaPagesEventHandler {
+public class VideoStreamingPage extends PageContent implements View, MediaPagesEventHandler,
+    SwipeEndHandler {
 
   interface VideoStreamingPageUiBinder extends UiBinder<HTMLPanel, VideoStreamingPage> {
   }
@@ -44,16 +53,25 @@ public class VideoStreamingPage extends PageContent implements View, MediaPagesE
   @UiField ImageElement mediaType;
   @UiField CommentsButton comments;
   @UiField IFrameElement player;
+  @UiField DivElement previewContainer;
   private static VideoStreamingPageUiBinder uiBinder = GWT.create(VideoStreamingPageUiBinder.class);
   private VideoStreamingDTO video;
   private MediaMessages msg;
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
+  private SwipeRecognizer swipeRecognizer;
 
   public VideoStreamingPage() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(MediaMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
     getElement().setId("a-media");
+    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+      @Override
+      public void execute() {
+        swipeRecognizer = new SwipeRecognizer(HTML.wrap(previewContainer));
+      }
+    });
+    EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
   }
 
   @Override
@@ -82,7 +100,30 @@ public class VideoStreamingPage extends PageContent implements View, MediaPagesE
   }
 
   @Override
+  public void onSwipeEnd(final SwipeEndEvent event) {
+    if (isVisible()) {
+      if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
+        EventBus.getInstance().fireEvent(new MediaViewGetNextEvent(video));
+      } else if (event.getDirection() == SwipeEvent.DIRECTION.LEFT_TO_RIGHT) {
+        EventBus.getInstance().fireEvent(new MediaViewGetPreviousEvent(video));
+      }
+    }
+  }
+
+  @Override
   public void onMediaViewLoaded(final MediaViewLoadedEvent event) {
+  }
+
+  @Override
+  public void onMediaViewNext(final MediaViewNextEvent mediaViewNextEvent) {
+    EventBus.getInstance().fireEvent(new MediaViewShowEvent(mediaViewNextEvent.getNextMedia()));
+    back();
+  }
+
+  @Override
+  public void onMediaViewPrev(final MediaViewPrevEvent mediaViewPrevEvent) {
+    EventBus.getInstance().fireEvent(new MediaViewShowEvent(mediaViewPrevEvent.getPrevMedia()));
+    back();
   }
 
   @Override

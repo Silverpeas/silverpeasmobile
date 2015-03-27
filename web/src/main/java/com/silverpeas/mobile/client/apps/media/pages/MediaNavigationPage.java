@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.AbstractMediaNavigationPagesEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemClickEvent;
@@ -89,47 +90,9 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
         page.setPageTitle(getPageTitle());
         page.init(instanceId, ((AlbumDTO) event.getMediaItem()).getId(), rights);
         page.show();
-      } else if (event.getMediaItem() instanceof PhotoDTO) {
-        PhotoPage page = new PhotoPage();
-        page.setPageTitle(getPageTitle());
-        page.show();
-        EventBus.getInstance().fireEvent(new MediaPreviewLoadEvent(instanceId, ContentsTypes.Photo.toString(), ((PhotoDTO) event.getMediaItem()).getId(), null));
-      } else if (event.getMediaItem() instanceof SoundDTO) {
-        SoundPage page = new SoundPage();
-        page.setPageTitle(getPageTitle());
-        page.show();
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-          @Override
-          public void execute() {
-            EventBus.getInstance().fireEvent(
-                new MediaPreviewLoadEvent(((MediaDTO) event.getMediaItem()).getInstance(), ContentsTypes.Sound.toString(),
-                    ((MediaDTO) event.getMediaItem()).getId(), (MediaDTO) event.getMediaItem()));
-          }
-        });
-      } else if (event.getMediaItem() instanceof VideoDTO) {
-        VideoPage page = new VideoPage();
-        page.setPageTitle(getPageTitle());
-        page.show();
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-          @Override
-          public void execute() {
-            EventBus.getInstance().fireEvent(
-                new MediaPreviewLoadEvent(((MediaDTO) event.getMediaItem()).getInstance(), ContentsTypes.Video.toString(),
-                    ((MediaDTO) event.getMediaItem()).getId(), (MediaDTO) event.getMediaItem()));
-          }
-        });
-      } else if (event.getMediaItem() instanceof VideoStreamingDTO) {
-        VideoStreamingPage page = new VideoStreamingPage();
-        page.setPageTitle(getPageTitle());
-        page.show();
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-          @Override
-          public void execute() {
-            EventBus.getInstance().fireEvent(
-                new MediaPreviewLoadEvent(((MediaDTO) event.getMediaItem()).getInstance(), ContentsTypes.Streaming.toString(),
-                    ((MediaDTO) event.getMediaItem()).getId(), (MediaDTO) event.getMediaItem()));
-          }
-        });
+      }
+      else {
+        EventBus.getInstance().fireEvent(new MediaViewShowEvent((MediaDTO)event.getMediaItem()));
       }
     }
   }

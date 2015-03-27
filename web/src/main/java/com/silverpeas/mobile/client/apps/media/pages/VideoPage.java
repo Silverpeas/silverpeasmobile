@@ -1,15 +1,8 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.ParagraphElement;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.VideoElement;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -19,18 +12,28 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.AbstractMediaPagesEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPagesEventHandler;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Html5Utils;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.navigation.UrlUtils;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -41,7 +44,8 @@ import java.util.Date;
 /**
  * @author: svu
  */
-public class VideoPage extends PageContent implements View, MediaPagesEventHandler {
+public class VideoPage extends PageContent implements View, MediaPagesEventHandler,
+    SwipeEndHandler {
 
   interface VideoPageUiBinder extends UiBinder<HTMLPanel, VideoPage> {
   }
@@ -53,16 +57,25 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   @UiField ImageElement mediaType;
   @UiField CommentsButton comments;
   @UiField VideoElement player;
+  @UiField DivElement previewContainer;
   private static VideoPageUiBinder uiBinder = GWT.create(VideoPageUiBinder.class);
   private VideoDTO video;
   private MediaMessages msg;
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
+  private SwipeRecognizer swipeRecognizer;
 
   public VideoPage() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(MediaMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
     getElement().setId("a-media");
+    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+      @Override
+      public void execute() {
+        swipeRecognizer = new SwipeRecognizer(HTML.wrap(previewContainer));
+      }
+    });
+    EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
   }
 
   @Override
@@ -126,7 +139,31 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   }
 
   @Override
+  public void onSwipeEnd(final SwipeEndEvent event) {
+    if (isVisible()) {
+      if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
+        EventBus.getInstance().fireEvent(new MediaViewGetNextEvent(video));
+      } else if (event.getDirection() == SwipeEvent.DIRECTION.LEFT_TO_RIGHT) {
+        EventBus.getInstance().fireEvent(new MediaViewGetPreviousEvent(video));
+      }
+    }
+  }
+
+  @Override
   public void onMediaViewLoaded(final MediaViewLoadedEvent event) {
+
+  }
+
+  @Override
+  public void onMediaViewNext(final MediaViewNextEvent mediaViewNextEvent) {
+    EventBus.getInstance().fireEvent(new MediaViewShowEvent(mediaViewNextEvent.getNextMedia()));
+    back();
+  }
+
+  @Override
+  public void onMediaViewPrev(final MediaViewPrevEvent mediaViewPrevEvent) {
+    EventBus.getInstance().fireEvent(new MediaViewShowEvent(mediaViewPrevEvent.getPrevMedia()));
+    back();
   }
 
   @Override

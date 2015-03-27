@@ -20,6 +20,7 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.ShortCutRouter;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
+import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
@@ -48,6 +49,9 @@ public class SpMobil implements EntryPoint {
    * Init. spmobile.
    */
   public void onModuleLoad() {
+
+    SuperDevModeUtil.showDevMode();
+
     shortcutAppId = Window.Location.getParameter("shortcutAppId");
     shortcutContentType = Window.Location.getParameter("shortcutContentType");
     shortcutContentId = Window.Location.getParameter("shortcutContentId");
