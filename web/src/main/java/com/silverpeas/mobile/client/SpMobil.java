@@ -50,6 +50,8 @@ public class SpMobil implements EntryPoint {
    */
   public void onModuleLoad() {
 
+
+
     SuperDevModeUtil.showDevMode();
 
     shortcutAppId = Window.Location.getParameter("shortcutAppId");
@@ -91,7 +93,9 @@ public class SpMobil implements EntryPoint {
         RootPanel.get().add(mainPage);
         PageHistory.getInstance().goTo(new AppList());
 
-        ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
+        if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
+          ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
+        }
       }
     });
   }
