@@ -4,9 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -24,7 +26,6 @@ public class TaskItem extends Composite {
   @UiField SpanElement name, endDate, delegator, priority, percentCompleted;
   @UiField TextBox range;
 
-  private HTML percent;
   private TaskDTO task;
 
   interface ContactItemUiBinder extends UiBinder<Widget, TaskItem> {
@@ -51,12 +52,20 @@ public class TaskItem extends Composite {
     range.getElement().setAttribute("max", "100");
     range.getElement().setAttribute("step", "5");
     range.getElement().setAttribute("value", String.valueOf(data.getPercentCompleted()));
-
+    updateRange(data.getPercentCompleted());
   }
 
   @UiHandler("range")
-  void changePercent(ValueChangeEvent<String> event)  {
-    percent.setHTML(event.getValue() + " %");
+  void changePercent(final ValueChangeEvent<String> event)  {
+    percentCompleted.setInnerText(event.getValue() + " %");
+    int value = Integer.valueOf(event.getValue());
+    updateRange(value);
     EventBus.getInstance().fireEvent(new TaskUpdateEvent(task, event.getValue()));
+  }
+
+  private void updateRange(final int value) {
+    double val = value / 100.0;
+    String css = "background-image: -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(" + val + ", rgb(148, 161, 78)), color-stop(" + val + ", rgb(197, 197, 197)));";
+    range.getElement().setAttribute("style", css);
   }
 }

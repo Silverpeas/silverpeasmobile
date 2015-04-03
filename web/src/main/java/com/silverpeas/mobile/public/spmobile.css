@@ -1179,3 +1179,34 @@ form .forms .fields > li:nth-child(even) {
 .forms .field-occurrence-hidden {
   display: none;
 }
+
+.endDate {
+  float : right;
+}
+
+input[type="range"]{
+  -webkit-appearance: none;
+  -moz-apperance: none;
+  border-radius: 0px;
+  height: 2em;
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      right top,
+      color-stop(0.15, #94A14E),
+      color-stop(0.15, #C5C5C5)
+  );
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  background-color: #94A14E;
+  border: 1px solid #94A14E;
+  height: 2em;
+  width: 2em;
+}
+
+.task-percent-range {
+  width: 80%;
+  float: right;
+}

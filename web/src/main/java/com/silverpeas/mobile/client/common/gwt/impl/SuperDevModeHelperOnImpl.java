@@ -12,6 +12,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Window;
 
 public abstract class SuperDevModeHelperOnImpl implements SuperDevModeHelper {
 
@@ -134,6 +135,7 @@ public abstract class SuperDevModeHelperOnImpl implements SuperDevModeHelper {
 		if (!serverUrl.endsWith("/")) {
 			serverUrl += "/";
 		}
+		Window.alert(serverUrl);
 		setBookMarklet(serverUrl);
 
 		Element head = getHead();

@@ -3,13 +3,13 @@
   <g:HTMLPanel tag="li" ui:field="container" styleName="media">
 
     <a class="ui-btn ui-icon-carat-r">
-      <span ui:field="name"></span>
-      <span ui:field="endDate"></span>
-      <span ui:field="priority"></span>
-      <span ui:field="delegator"></span>
-      <span ui:field="percentCompleted"></span>
+      <span ui:field="name"></span><span>&nbsp;|&nbsp;</span><span ui:field="percentCompleted"></span><g:TextBox ui:field="range" styleName="task-percent-range"></g:TextBox>
+      <br/><span ui:field="delegator"></span>
+      <br/><span ui:field="priority"></span><span ui:field="endDate" class="endDate"></span>
 
-      <g:TextBox ui:field="range"></g:TextBox>
+
+
+
     </a>
 
   </g:HTMLPanel>
