@@ -16,5 +16,5 @@ public interface ServiceTasksAsync {
 
   void updateTask(int id, String newPercentComplete, final AsyncCallback<Void> async);
 
-  void createTask(final TaskDTO task, final AsyncCallback<Void> async);
+  void createTask(final TaskDTO task, final AsyncCallback<TaskDTO> async);
 }

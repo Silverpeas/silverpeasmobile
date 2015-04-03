@@ -69,13 +69,16 @@ public class ServiceTasksImpl extends AbstractAuthenticateService implements Ser
   }
 
   @Override
-  public void createTask(final TaskDTO task) throws Taskexception, AuthenticationException {
+  public TaskDTO createTask(final TaskDTO task) throws Taskexception, AuthenticationException {
     checkUserInSession();
     ToDoHeader todo = new ToDoHeader(task.getName(), getUserInSession().getId());
     todo.setPercentCompleted(task.getPercentCompleted());
     String id = getCalendar().addToDo(todo);
     Attendee attendee = new Attendee(getUserInSession().getId());
     getCalendar().addToDoAttendee(id, attendee);
+
+    ToDoHeader todoCreated = getCalendar().getToDoHeader(String.valueOf(id));
+    return populate(todoCreated);
   }
 
   private TaskDTO populate(ToDoHeader todo) {

@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.client.apps.tasks;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.status.events.app.AbstractStatusAppEvent;
 import com.silverpeas.mobile.client.apps.status.events.app.StatusAppEventHandler;
@@ -11,6 +12,7 @@ import com.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TasksAppEventHandler;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
+import com.silverpeas.mobile.client.apps.tasks.events.pages.TaskCreatedEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import com.silverpeas.mobile.client.apps.tasks.pages.TasksPage;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -77,7 +79,7 @@ public class TasksApp extends App implements TasksAppEventHandler {
 
   @Override
   public void createTask(final TaskCreateEvent event) {
-    ServicesLocator.serviceTasks.createTask(event.getTask(), new AsyncCallback<Void>() {
+    ServicesLocator.serviceTasks.createTask(event.getTask(), new AsyncCallback<TaskDTO>() {
 
       @Override
       public void onFailure(final Throwable caught) {
@@ -85,8 +87,8 @@ public class TasksApp extends App implements TasksAppEventHandler {
       }
 
       @Override
-      public void onSuccess(final Void result) {
-        //TODO : reload tasks
+      public void onSuccess(final TaskDTO result) {
+        EventBus.getInstance().fireEvent(new TaskCreatedEvent(result));
       }
     });
   }

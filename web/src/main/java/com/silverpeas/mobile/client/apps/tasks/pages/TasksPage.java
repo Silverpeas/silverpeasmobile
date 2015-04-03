@@ -10,6 +10,7 @@ import com.silverpeas.mobile.client.apps.contacts.pages.widgets.ContactItem;
 import com.silverpeas.mobile.client.apps.status.events.pages.AbstractStatusPagesEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.AbstractTasksPagesEvent;
+import com.silverpeas.mobile.client.apps.tasks.events.pages.TaskCreatedEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksPagesEventHandler;
 import com.silverpeas.mobile.client.apps.tasks.pages.widgets.AddTaskItem;
@@ -43,7 +44,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
 
   @Override
   public void onTaskLoad(final TasksLoadedEvent event) {
-    /*Notification.activityStop();
+    Notification.activityStop();
 
 
     list.add(new AddTaskItem());
@@ -56,7 +57,14 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
         item.setData(task);
         list.add(item);
       }
-    }*/
+    }
+  }
+
+  @Override
+  public void onTaskCreated(final TaskCreatedEvent taskCreatedEvent) {
+    TaskItem item = new TaskItem();
+    item.setData(taskCreatedEvent.getTask());
+    list.add(item);
   }
 
   @Override

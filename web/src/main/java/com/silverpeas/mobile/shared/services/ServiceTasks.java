@@ -14,5 +14,5 @@ import java.util.List;
 public interface ServiceTasks extends RemoteService {
   public List<TaskDTO> loadTasks() throws Taskexception, AuthenticationException;
   public void updateTask(int id, String newPercentComplete) throws Taskexception, AuthenticationException;
-  public void createTask(final TaskDTO task) throws Taskexception, AuthenticationException;
+  public TaskDTO createTask(final TaskDTO task) throws Taskexception, AuthenticationException;
 }
