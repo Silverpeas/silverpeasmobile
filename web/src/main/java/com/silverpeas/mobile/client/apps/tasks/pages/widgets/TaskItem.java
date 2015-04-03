@@ -1,13 +1,18 @@
 package com.silverpeas.mobile.client.apps.tasks.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -53,7 +58,14 @@ public class TaskItem extends Composite {
     range.getElement().setAttribute("step", "5");
     range.getElement().setAttribute("value", String.valueOf(data.getPercentCompleted()));
     updateRange(data.getPercentCompleted());
+    addListenerInput(range.getElement(), this);
   }
+
+  public native void addListenerInput(Element range, TaskItem item) /*-{
+    range.addEventListener('input', function () {
+      item.@com.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem::updateRange(I)(range.value);
+    }, false);
+  }-*/;
 
   @UiHandler("range")
   void changePercent(final ValueChangeEvent<String> event)  {

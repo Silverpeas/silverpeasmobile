@@ -1051,7 +1051,7 @@ textarea.ui-input-text {
 }
 
 #menu-tasks {
-  display:none;
+  /*display:none;*/
 }
 
 #btn-news {
@@ -1209,4 +1209,8 @@ input[type='range']::-webkit-slider-thumb {
 .task-percent-range {
   width: 80%;
   float: right;
+}
+
+.task-priority {
+  font-style: italic;
 }

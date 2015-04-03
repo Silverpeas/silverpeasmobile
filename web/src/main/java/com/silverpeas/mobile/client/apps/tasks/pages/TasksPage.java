@@ -43,7 +43,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
 
   @Override
   public void onTaskLoad(final TasksLoadedEvent event) {
-    Notification.activityStop();
+    /*Notification.activityStop();
 
 
     list.add(new AddTaskItem());
@@ -56,7 +56,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
         item.setData(task);
         list.add(item);
       }
-    }
+    }*/
   }
 
   @Override
