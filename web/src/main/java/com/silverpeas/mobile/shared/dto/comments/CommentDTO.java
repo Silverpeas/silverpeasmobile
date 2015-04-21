@@ -11,7 +11,9 @@ public class CommentDTO extends BaseDTO implements Serializable {
 
   public final static String TYPE_PUBLICATION = "Publication";
   public final static String TYPE_PHOTO = "Photo";
+  public final static String TYPE_VIDEO = "Video";
   public final static String TYPE_SOUND = "Sound";
+  public final static String TYPE_STREAMING = "Streaming";
 
   private String content;
   private String avatar;

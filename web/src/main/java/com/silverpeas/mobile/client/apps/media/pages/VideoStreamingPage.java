@@ -91,7 +91,7 @@ public class VideoStreamingPage extends PageContent implements View, MediaPagesE
       lastUpdate.setInnerHTML(msg.lastUpdate(video.getUpdateDate(), video.getUpdater()));
 
       if (event.isCommentable()) {
-        comments.init(video.getId(), video.getInstance(), CommentDTO.TYPE_PHOTO, getPageTitle(),
+        comments.init(video.getId(), video.getInstance(), CommentDTO.TYPE_STREAMING, getPageTitle(),
             video.getTitle(), video.getCommentsNumber());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);

@@ -130,7 +130,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
       }
 
       if (event.isCommentable()) {
-        comments.init(video.getId(), video.getInstance(), CommentDTO.TYPE_PHOTO, getPageTitle(),
+        comments.init(video.getId(), video.getInstance(), CommentDTO.TYPE_VIDEO, getPageTitle(),
             video.getTitle(), video.getCommentsNumber());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
