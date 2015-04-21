@@ -46,7 +46,7 @@ public class TaskPage extends PageContent {
 
   private void updateRange(final int value) {
     double val = value / 100.0;
-    String css = "background-image: -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(" + val + ", rgb(148, 161, 78)), color-stop(" + val + ", rgb(197, 197, 197)));";
+    String css = "background-image: -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(" + val + ", rgb(114, 171, 14)), color-stop(" + val + ", rgb(197, 197, 197)));";
     range.getElement().setAttribute("style", css);
   }
 
