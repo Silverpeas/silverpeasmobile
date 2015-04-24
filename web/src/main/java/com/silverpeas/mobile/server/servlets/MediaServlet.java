@@ -13,6 +13,7 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.FileRepositoryManager;
+import com.stratelia.webactiv.util.GeneralPropertiesManager;
 import com.stratelia.webactiv.util.JNDINames;
 import com.stratelia.webactiv.util.ResourceLocator;
 import org.apache.commons.fileupload.FileItem;
@@ -22,6 +23,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,17 +35,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 @SuppressWarnings("serial")
 public class MediaServlet extends HttpServlet {
 
   private GalleryBm galleryBm;
 
+
+
   private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
-  private static final int MAX_FILE_SIZE      = 1024 * 1024 * 100; // 100MB
-  private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 110; // 100MB
+  private static long MAX_FILE_SIZE      = 1024 * 1024 * 100; // 100MB
+  private static long MAX_REQUEST_SIZE   = 1024 * 1024 * 110; // 110MB
+
+  @Override
+  public void init(final ServletConfig config) throws ServletException {
+    super.init(config);
+    MAX_FILE_SIZE = FileRepositoryManager.getUploadMaximumFileSize();
+    MAX_REQUEST_SIZE = (long) (MAX_FILE_SIZE * 1.1);
+  }
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String action = request.getParameter("action");

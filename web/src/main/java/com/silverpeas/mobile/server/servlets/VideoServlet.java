@@ -79,7 +79,6 @@ public class VideoServlet extends HttpServlet {
       out.write(buffer,   0, bytesLeft < bytesRead ? bytesLeft : bytesRead);
       bytesLeft -= bytesRead;
     }
-
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

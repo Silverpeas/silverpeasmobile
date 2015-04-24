@@ -11,8 +11,8 @@ import java.io.IOException;
  */
 public class MediaHelper {
 
-  public static String DIR_UPLOAD = "media";
-  private static String DIR_PREFIX = "webopti";
+  public static final String DIR_UPLOAD = "media";
+  private static final String DIR_PREFIX = "webopti";
 
   public static File optimizeVideoForWeb(File f, String uuid) {
     File dir = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + DIR_PREFIX + uuid);
