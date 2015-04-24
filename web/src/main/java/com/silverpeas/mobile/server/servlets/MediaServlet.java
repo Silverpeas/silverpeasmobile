@@ -7,6 +7,7 @@ import com.silverpeas.gallery.model.Media;
 import com.silverpeas.gallery.model.MediaPK;
 import com.silverpeas.gallery.model.Photo;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
+import com.silverpeas.mobile.server.helpers.MediaHelper;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.stratelia.webactiv.beans.admin.UserDetail;
@@ -32,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,8 +42,8 @@ public class MediaServlet extends HttpServlet {
   private GalleryBm galleryBm;
 
   private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
-  private static final int MAX_FILE_SIZE      = 1024 * 1024 * 40; // 40MB
-  private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 50; // 50MB
+  private static final int MAX_FILE_SIZE      = 1024 * 1024 * 100; // 100MB
+  private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 110; // 100MB
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String action = request.getParameter("action");
@@ -69,17 +69,16 @@ public class MediaServlet extends HttpServlet {
 
     String componentId = "";
     String albumId = "";
+    String tempDir = MediaHelper.getTemporaryUploadMediaPath();
 
     // configures upload settings
     DiskFileItemFactory factory = new DiskFileItemFactory();
     // sets memory threshold - beyond which files are stored in disk
     factory.setSizeThreshold(MEMORY_THRESHOLD);
     // sets temporary location to store files
-    factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+    factory.setRepository(new File(tempDir));
 
     ServletFileUpload upload = new ServletFileUpload(factory);
-
-    String tempDir = System.getProperty("java.io.tmpdir");
 
     // sets maximum size of upload file
     upload.setFileSizeMax(MAX_FILE_SIZE);
@@ -183,18 +182,23 @@ public class MediaServlet extends HttpServlet {
     parameters.add(item);
 
     String type = new MimetypesFileTypeMap().getContentType(file);
-
     MediaDataCreateDelegate delegate = null;
     if (type.contains("image")) {
       delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
     } if (type.contains("audio")) {
       delegate = new MediaDataCreateDelegate(MediaType.Sound, "fr", albumId, parameters);
     } else if (type.contains("video")) {
+      parameters.clear();
+      parameters.add(new LocalDiskFileItem(
+          MediaHelper.optimizeVideoForWeb(file, request.getSession().getId())));
       delegate = new MediaDataCreateDelegate(MediaType.Video, "fr", albumId, parameters);
     } else if (type.contains("octet-stream")) {
       if (file.getName().endsWith(".mp3")) {
         delegate = new MediaDataCreateDelegate(MediaType.Sound, "fr", albumId, parameters);
       } else if(file.getName().endsWith(".mp4")) {
+        parameters.clear();
+        parameters.add(new LocalDiskFileItem(
+            MediaHelper.optimizeVideoForWeb(file, request.getSession().getId())));
         delegate = new MediaDataCreateDelegate(MediaType.Video, "fr", albumId, parameters);
       }
     }

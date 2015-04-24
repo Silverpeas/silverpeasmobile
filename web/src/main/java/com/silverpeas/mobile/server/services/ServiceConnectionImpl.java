@@ -32,6 +32,10 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
   private AdminBusiness adminBm;
   private OrganizationController organizationController = new OrganizationController();
 
+  public void logout() throws AuthenticationException {
+    getThreadLocalRequest().getSession().invalidate();
+  }
+
   public DetailUserDTO login(String login, String password, String domainId)
       throws AuthenticationException {
 

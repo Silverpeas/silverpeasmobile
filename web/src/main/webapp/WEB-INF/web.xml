@@ -167,4 +167,8 @@
     <welcome-file>spmobil.html</welcome-file>
   </welcome-file-list>
 
+  <listener>
+    <listener-class>com.silverpeas.mobile.server.servlets.SessionManager</listener-class>
+  </listener>
+
 </web-app>

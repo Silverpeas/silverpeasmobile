@@ -12,4 +12,5 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 public interface ServiceConnection extends RemoteService {
 	public DetailUserDTO login(String login, String password, String domainId) throws AuthenticationException;
 	public List<DomainDTO> getDomains();
+	public void logout() throws AuthenticationException;
 }

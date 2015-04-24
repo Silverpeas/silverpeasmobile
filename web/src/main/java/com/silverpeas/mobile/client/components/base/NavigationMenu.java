@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -25,6 +26,7 @@ import com.silverpeas.mobile.client.apps.status.events.pages.StatusPagesEventHan
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
 import com.silverpeas.mobile.client.apps.tasks.TasksApp;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
@@ -123,6 +125,12 @@ public class NavigationMenu extends Composite implements StatusPagesEventHandler
     closeMenu();
     SpMobil.clearIds();
     PageHistory.getInstance().clear();
+    ServicesLocator.serviceConnection.logout(new AsyncCallback<Void>() {
+      @Override
+      public void onFailure(final Throwable throwable) {}
+      @Override
+      public void onSuccess(final Void aVoid) {}
+    });
     ConnexionPage connexionPage = new ConnexionPage();
     RootPanel.get().clear();
     RootPanel.get().add(connexionPage);

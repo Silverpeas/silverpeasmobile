@@ -4,6 +4,7 @@ import com.silverpeas.gallery.constant.MediaResolution;
 import com.silverpeas.gallery.control.ejb.GalleryBm;
 import com.silverpeas.gallery.model.Media;
 import com.silverpeas.gallery.model.MediaPK;
+import com.silverpeas.mobile.server.helpers.MediaHelper;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.stratelia.webactiv.util.EJBUtilitaire;
@@ -14,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -59,23 +61,25 @@ public class VideoServlet extends HttpServlet {
     response.setContentType(f.getMimeType());
     response.setDateHeader("Last-Modified", lastModified);
 
-    InputStream in = f.inputStream();
+    InputStream in = new FileInputStream(
+        MediaHelper.optimizeVideoForWeb(f, request.getSession().getId()));
     OutputStream out = response.getOutputStream();
-    response.setContentLength((int)contentLength);
+    response.setContentLength((int) contentLength);
     response.setBufferSize(BUFFER_LENGTH);
     int bytesRead = 0;
     int bytesLeft = (int) contentLength;
     byte[] buffer = new byte[BUFFER_LENGTH];
-    in.mark((int)start);
+    in.mark((int) start);
 
-    for (;;) {
-        bytesRead = in.read(buffer);
-        if (bytesRead == -1 || bytesLeft <= 0) {
-          break;
-        }
-        out.write(buffer, 0, bytesLeft < bytesRead ? bytesLeft : bytesRead);
-        bytesLeft -= bytesRead;
+    for (; ; ) {
+      bytesRead = in.read(buffer);
+      if (bytesRead == -1 || bytesLeft <= 0) {
+        break;
       }
+      out.write(buffer,   0, bytesLeft < bytesRead ? bytesLeft : bytesRead);
+      bytesLeft -= bytesRead;
+    }
+
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

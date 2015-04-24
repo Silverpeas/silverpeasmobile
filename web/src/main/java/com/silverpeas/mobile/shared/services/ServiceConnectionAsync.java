@@ -12,5 +12,6 @@ public interface ServiceConnectionAsync {
 	void login(String login, String password, String domainId, AsyncCallback<DetailUserDTO> callback);
 
 	void getDomains(AsyncCallback<List<DomainDTO>> callback);
-	
+
+	void logout(final AsyncCallback<Void> async);
 }
