@@ -58,8 +58,10 @@ public class MobilFilter implements Filter {
           Media media = getGalleryBm().getMedia(new MediaPK(id));
           String appId = media.getInstanceId();
           params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+        } else {
+          chain.doFilter(req, res);
+          return;
         }
-
         ((HttpServletResponse) res).sendRedirect("/spmobile/spmobil.html" + params);
         return;
       } else {
