@@ -7,12 +7,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.storage.client.Storage;
+import com.google.gwt.http.client.RequestTimeoutException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.gwt.crypto.client.TripleDesCipher;
+import com.silverpeas.mobile.client.common.AuthentificationManager;
 import com.silverpeas.mobile.client.common.ErrorManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -22,6 +23,7 @@ import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.common.network.ConnectionHelper;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.AppList;
@@ -49,9 +51,6 @@ public class SpMobil implements EntryPoint {
    * Init. spmobile.
    */
   public void onModuleLoad() {
-
-
-
     SuperDevModeUtil.showDevMode();
 
     shortcutAppId = Window.Location.getParameter("shortcutAppId");
@@ -79,34 +78,36 @@ public class SpMobil implements EntryPoint {
    * @param auto
    */
   private void login(String login, String password, String domainId, final boolean auto) {
-    ServicesLocator.serviceConnection.login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
-      public void onFailure(Throwable reason) {
-        clearIds();
-        ConnexionPage connexionPage = new ConnexionPage();
-        RootPanel.get().clear();
-        RootPanel.get().add(connexionPage);
-      }
-      public void onSuccess(DetailUserDTO user) {
-        SpMobil.user = user;
-        mainPage.setUser(user);
-        RootPanel.get().clear();
-        RootPanel.get().add(mainPage);
-        PageHistory.getInstance().goTo(new AppList());
+    ServicesLocator.getServiceConnection().login(login, password, domainId,
+        new AsyncCallback<DetailUserDTO>() {
+          public void onFailure(Throwable reason) {
+            if (ConnectionHelper.needToGoOffine(reason)) {
+              User user = AuthentificationManager.getInstance().loadUser();
+              if (user != null) {
+                displayMainPage(user);
+              } else {
+                displayLoginPage();
+              }
+            } else {
+              displayLoginPage();
+            }
+          }
 
-        if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
-          ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
-        }
-      }
-    });
+          public void onSuccess(DetailUserDTO user) {
+            displayMainPage(user);
+          }
+        });
   }
 
-  /**
-   * Clean ids in SQL Web Storage.
-   */
-  public static void clearIds() {
-    Storage storage = Storage.getLocalStorageIfSupported();
-    if (storage != null) {
-      storage.clear();
+  private void displayMainPage(final DetailUserDTO user) {
+    SpMobil.user = user;
+    mainPage.setUser(user);
+    RootPanel.get().clear();
+    RootPanel.get().add(mainPage);
+    PageHistory.getInstance().goTo(new AppList());
+
+    if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
+      ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
     }
   }
 
@@ -114,38 +115,22 @@ public class SpMobil implements EntryPoint {
    * Load ids in SQL Web Storage.
    */
   private void loadIds() {
-    Storage storage = Storage.getLocalStorageIfSupported();
-    if (storage != null) {
-      String dataItem = storage.getItem("userConnected");
-      if (dataItem != null) {
-        User user = User.getInstance(dataItem);
-        String password = decryptPassword(user.getPassword());
-        if (password != null) {
-          login(user.getLogin(), password, user.getDomainId(), true);
-        }
-      } else {
-        ConnexionPage connexionPage = new ConnexionPage();
-        RootPanel.get().clear();
-        RootPanel.get().add(connexionPage);
+    User user = AuthentificationManager.getInstance().loadUser();
+    if (user != null) {
+      String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
+      if (password != null) {
+        login(user.getLogin(), password, user.getDomainId(), true);
       }
+    } else {
+      displayLoginPage();
     }
   }
 
-  /**
-   * Decrypt password in SQL Web Storage.
-   * @param passwordEncrysted
-   * @return
-   */
-  private String decryptPassword(String passwordEncrysted) {
-    TripleDesCipher cipher = new TripleDesCipher();
-    cipher.setKey(configuration.getDESKey().getBytes());
-    String plainPassword = null;
-    try {
-      plainPassword = cipher.decrypt(passwordEncrysted);
-    } catch (Exception e) {
-      EventBus.getInstance().fireEvent(new ErrorEvent(e));
-    }
-    return plainPassword;
+  private void displayLoginPage() {
+    AuthentificationManager.getInstance().clearLocalStorage();
+    ConnexionPage connexionPage = new ConnexionPage();
+    RootPanel.get().clear();
+    RootPanel.get().add(connexionPage);
   }
 
   public static void search(String query) {

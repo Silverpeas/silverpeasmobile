@@ -25,6 +25,7 @@ import com.silverpeas.mobile.client.apps.status.events.pages.AbstractStatusPages
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPagesEventHandler;
 import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
 import com.silverpeas.mobile.client.apps.tasks.TasksApp;
+import com.silverpeas.mobile.client.common.AuthentificationManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
@@ -35,9 +36,6 @@ import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class NavigationMenu extends Composite implements StatusPagesEventHandler {
-
-
-  //TODO retrieve and display user status
 
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
@@ -123,9 +121,9 @@ public class NavigationMenu extends Composite implements StatusPagesEventHandler
   @UiHandler("disconnect")
   protected void disconnect(ClickEvent event) {
     closeMenu();
-    SpMobil.clearIds();
+    AuthentificationManager.getInstance().clearLocalStorage();
     PageHistory.getInstance().clear();
-    ServicesLocator.serviceConnection.logout(new AsyncCallback<Void>() {
+    ServicesLocator.getServiceConnection().logout(new AsyncCallback<Void>() {
       @Override
       public void onFailure(final Throwable throwable) {}
       @Override

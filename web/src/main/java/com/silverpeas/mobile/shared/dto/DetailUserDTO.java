@@ -5,15 +5,15 @@ import java.io.Serializable;
 public class DetailUserDTO implements Serializable{
 
   private static final long serialVersionUID = 5388415881024885835L;
-  private String id;
-  private String lastName;
-  private String eMail;
-  private String firstName;
-  private String avatar;
-  private String phoneNumber;
-  private String cellularPhoneNumber;
-  private String faxPhoneNumber;
-  private String status;
+  public String id;
+  public String lastName;
+  public String eMail;
+  public String firstName;
+  public String avatar;
+  public String phoneNumber;
+  public String cellularPhoneNumber;
+  public String faxPhoneNumber;
+  public String status;
 
   public String getId() {
     return id;

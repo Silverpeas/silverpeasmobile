@@ -3,55 +3,66 @@ package com.silverpeas.mobile.client.persist;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
-public class User {
-	private String login;
-	private String password;
-	private String domainId;
-	
-	public User() {
-		super();		
-	}
-	
-	public static User getInstance(String json) {			
-		UserCodec codec = GWT.create(UserCodec.class);
-		return codec.decode(JSONParser.parseStrict(json));		
-	}
-	
-	public User(String login, String password, String domainId) {
-		super();
-		this.setLogin(login);
-		this.setPassword(password);
-		this.setDomainId(domainId);
-	}
+public class User extends DetailUserDTO {
+  private String login;
+  private String password;
+  private String domainId;
 
-	public String toJson() {
-		UserCodec codec = GWT.create(UserCodec.class);
-		JSONValue json = codec.encode(this);
-		return json.toString();
-	}
+  public User() {
+    super();
+  }
 
-	public String getLogin() {
-		return login;
-	}
+  public static User getInstance(String json) {
+    UserCodec codec = GWT.create(UserCodec.class);
+    return codec.decode(JSONParser.parseStrict(json));
+  }
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
+  public User(String login, String password, String domainId, DetailUserDTO user) {
+    super();
+    this.setLogin(login);
+    this.setPassword(password);
+    this.setDomainId(domainId);
 
-	public String getPassword() {
-		return password;
-	}
+    this.setId(user.getId());
+    this.setAvatar(user.getAvatar());
+    this.setCellularPhoneNumber(user.getCellularPhoneNumber());
+    this.seteMail(user.geteMail());
+    this.setFaxPhoneNumber(user.getFaxPhoneNumber());
+    this.setFirstName(user.getFirstName());
+    this.setLastName(user.getLastName());
+    this.setPhoneNumber(user.getPhoneNumber());
+    this.setStatus(user.getStatus());
+  }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  public String toJson() {
+    UserCodec codec = GWT.create(UserCodec.class);
+    JSONValue json = codec.encode(this);
+    return json.toString();
+  }
 
-	public String getDomainId() {
-		return domainId;
-	}
+  public String getLogin() {
+    return login;
+  }
 
-	public void setDomainId(String domainId) {
-		this.domainId = domainId;
-	}
+  public void setLogin(String login) {
+    this.login = login;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getDomainId() {
+    return domainId;
+  }
+
+  public void setDomainId(String domainId) {
+    this.domainId = domainId;
+  }
 }

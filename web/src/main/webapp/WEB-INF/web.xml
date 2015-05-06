@@ -5,6 +5,17 @@
          version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
 
   <servlet>
+    <servlet-name>manifestServlet</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.servlets.ManifestServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>manifestServlet</servlet-name>
+    <url-pattern>/spmobil.appcache</url-pattern>
+  </servlet-mapping>
+
+
+  <servlet>
     <servlet-name>serviceNewsImpl</servlet-name>
     <servlet-class>com.silverpeas.mobile.server.services.ServiceNewsImpl</servlet-class>
   </servlet>
