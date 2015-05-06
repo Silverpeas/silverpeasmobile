@@ -24,7 +24,22 @@
   <set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true"/>
   <set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true"/>
 
-  <add-linker name="xsiframe" />
+  <inherits name="org.realityforge.gwt.appcache.Appcache"/>
+  <inherits name="org.realityforge.gwt.appcache.linker.Linker"/>
+  <add-linker name="appcache"/>
+
+  <!-- configure all the static files not managed by the GWT compiler -->
+  <extend-configuration-property name="appcache_static_files" value="./"/>
+  <extend-configuration-property name="appcache_static_files" value="spmobil.html"/>
+  <extend-configuration-property name="appcache_static_files" value="nice-highres.png"/>
+  <extend-configuration-property name="appcache_static_files" value="niceicon.png"/>
+  <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone.png"/>
+  <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone4.png"/>
+
+
+  <!-- allow Super Dev Mode -->
+  <add-linker name="xsiframe"/>
+
   <set-configuration-property name="devModeRedirectEnabled" value="true" />
   <set-property name="compiler.useSourceMaps" value="true" />
 
@@ -40,19 +55,5 @@
 
   <set-configuration-property name="mgwt.superdevmode" value="off" />
   <set-configuration-property name="mgwt.superdevmode_host" value="http://192.168.1.73:9876" />
-
-
-
-  <inherits name="org.realityforge.gwt.appcache.Appcache"/>
-  <inherits name="org.realityforge.gwt.appcache.linker.Linker"/>
-  <add-linker name="appcache"/>
-
-  <!-- configure all the static files not managed by the GWT compiler -->
-  <extend-configuration-property name="appcache_static_files" value="./"/>
-  <extend-configuration-property name="appcache_static_files" value="spmobil.html"/>
-  <extend-configuration-property name="appcache_static_files" value="nice-highres.png"/>
-  <extend-configuration-property name="appcache_static_files" value="niceicon.png"/>
-  <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone.png"/>
-  <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone4.png"/>
 
 </module>

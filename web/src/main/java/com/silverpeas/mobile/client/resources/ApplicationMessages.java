@@ -65,4 +65,7 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Les <strong>actualités</strong>")
   SafeHtml appActus();
+
+  @DefaultMessage("Cette action nécessite une connexion.")
+  String needToBeOnline();
 }
