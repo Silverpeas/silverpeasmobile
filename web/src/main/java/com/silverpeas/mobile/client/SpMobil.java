@@ -21,12 +21,12 @@ import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
-import com.silverpeas.mobile.client.common.network.ConnectionHelper;
+import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.AppList;
 import com.silverpeas.mobile.client.pages.search.SearchResultPage;
-import com.silverpeas.mobile.client.persist.User;
+import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -76,25 +76,25 @@ public class SpMobil implements EntryPoint {
    * @param auto
    */
   private void login(String login, String password, String domainId, final boolean auto) {
-    ServicesLocator.getServiceConnection().login(login, password, domainId,
-        new AsyncCallback<DetailUserDTO>() {
-          public void onFailure(Throwable reason) {
-            if (ConnectionHelper.needToGoOffine(reason)) {
-              User user = AuthentificationManager.getInstance().loadUser();
-              if (user != null) {
-                displayMainPage(user);
-              } else {
-                displayLoginPage();
+    ServicesLocator.getServiceConnection()
+        .login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+              public void onFailure(Throwable reason) {
+                if (OfflineHelper.needToGoOffine(reason)) {
+                  FullUserDTO user = AuthentificationManager.getInstance().loadUser();
+                  if (user != null) {
+                    displayMainPage(user);
+                  } else {
+                    displayLoginPage();
+                  }
+                } else {
+                  displayLoginPage();
+                }
               }
-            } else {
-              displayLoginPage();
-            }
-          }
 
-          public void onSuccess(DetailUserDTO user) {
-            displayMainPage(user);
-          }
-        });
+              public void onSuccess(DetailUserDTO user) {
+                displayMainPage(user);
+              }
+            });
   }
 
   private void displayMainPage(final DetailUserDTO user) {
@@ -113,7 +113,7 @@ public class SpMobil implements EntryPoint {
    * Load ids in SQL Web Storage.
    */
   private void loadIds() {
-    User user = AuthentificationManager.getInstance().loadUser();
+    FullUserDTO user = AuthentificationManager.getInstance().loadUser();
     if (user != null) {
       String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
       if (password != null) {
@@ -125,7 +125,7 @@ public class SpMobil implements EntryPoint {
   }
 
   private void displayLoginPage() {
-    AuthentificationManager.getInstance().clearLocalStorage();
+    AuthentificationManager.getInstance().clearUserStorage();
     ConnexionPage connexionPage = new ConnexionPage();
     RootPanel.get().clear();
     RootPanel.get().add(connexionPage);
@@ -152,7 +152,8 @@ public class SpMobil implements EntryPoint {
     });
   }
 
-  public static void showFullScreen(final Widget content, final boolean zoomable, String bodyClass, String bodyId) {
+  public static void showFullScreen(final Widget content, final boolean zoomable, String bodyClass,
+      String bodyId) {
     PageHistory.getInstance().gotoToFullScreen("viewer");
     RootPanel.get().clear();
     RootPanel.get().add(content);

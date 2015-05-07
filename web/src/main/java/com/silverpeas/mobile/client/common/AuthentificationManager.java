@@ -1,12 +1,12 @@
 package com.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.storage.client.Storage;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
-import com.silverpeas.mobile.client.persist.User;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
@@ -16,6 +16,7 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 public class AuthentificationManager {
 
   private static AuthentificationManager instance = null;
+  private static final String USER_CONNECTED_KEY = "userConnected";
   public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
 
   public static AuthentificationManager getInstance() {
@@ -34,32 +35,19 @@ public class AuthentificationManager {
     }
     SpMobil.user = user;
 
-    Storage storage = Storage.getLocalStorageIfSupported();
-    if (storage != null) {
-      User u = new User(login, encryptedPassword, domainId, user);
-      storage.setItem("userConnected", u.toJson());
-    }
+    FullUserDTO u = new FullUserDTO(login, encryptedPassword, domainId, user);
+    LocalStorageHelper.store(USER_CONNECTED_KEY, FullUserDTO.class, u);
   }
 
   /**
    * Clean data in local storage.
    */
   public void clearLocalStorage() {
-    Storage storage = Storage.getLocalStorageIfSupported();
-    if (storage != null) {
-      storage.clear();
-    }
+    LocalStorageHelper.clear();
   }
 
-  public User loadUser() {
-    User user = null;
-    Storage storage = Storage.getLocalStorageIfSupported();
-    if (storage != null) {
-      String dataItem = storage.getItem("userConnected");
-      if (dataItem != null) {
-        user = User.getInstance(dataItem);
-      }
-    }
+  public FullUserDTO loadUser() {
+    FullUserDTO user = LocalStorageHelper.load(USER_CONNECTED_KEY, FullUserDTO.class);
     return user;
   }
 
@@ -85,5 +73,9 @@ public class AuthentificationManager {
     cipher.setKey(SpMobil.configuration.getDESKey().getBytes());
     String encryptedPassword = cipher.encrypt(password);
     return encryptedPassword;
+  }
+
+  public void clearUserStorage() {
+    LocalStorageHelper.remove(USER_CONNECTED_KEY);
   }
 }

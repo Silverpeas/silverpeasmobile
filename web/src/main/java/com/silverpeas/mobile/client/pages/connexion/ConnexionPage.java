@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.pages.connexion;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -16,15 +17,19 @@ import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.AuthentificationManager;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.common.network.OfflineHelper;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.pages.main.AppList;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -97,7 +102,11 @@ public class ConnexionPage extends PageContent {
     if (!login.isEmpty() && !password.isEmpty()) {
       ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
         public void onFailure(Throwable caught) {
-          EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+          if (OfflineHelper.needToGoOffine(caught)) {
+            Notification.alert(msg.needToBeOnline());
+          } else {
+            EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+          }
         }
         public void onSuccess(DetailUserDTO user) {
           AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
@@ -117,16 +126,40 @@ public class ConnexionPage extends PageContent {
   private void loadDomains() {
     ServicesLocator.getServiceConnection().getDomains(new AsyncCallback<List<DomainDTO>>() {
       public void onFailure(Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        if (OfflineHelper.needToGoOffine(caught)) {
+          List<DomainDTO> result = loadInLocalStorage();
+          displayDomains(result);
+        } else {
+          EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        }
       }
 
       public void onSuccess(List<DomainDTO> result) {
-        Iterator<DomainDTO> iDomains = result.iterator();
-        while (iDomains.hasNext()) {
-          DomainDTO domain = iDomains.next();
-          domains.addItem(domain.getName(), domain.getId());
-        }
+        storeInLocalStorage(result);
+        displayDomains(result);
       }
     });
   }
+
+  private void displayDomains(final List<DomainDTO> result) {
+    Iterator<DomainDTO> iDomains = result.iterator();
+    while (iDomains.hasNext()) {
+      DomainDTO domain = iDomains.next();
+      domains.addItem(domain.getName(), domain.getId());
+    }
+  }
+
+  private List<DomainDTO> loadInLocalStorage() {
+    Storage storage = Storage.getLocalStorageIfSupported();
+    List<DomainDTO> result = LocalStorageHelper.load("domains", List.class);
+    if (result == null) {
+      result = new ArrayList<DomainDTO>();
+    }
+    return result;
+  }
+
+  private void storeInLocalStorage(final List<DomainDTO> result) {
+    LocalStorageHelper.store("domains", List.class , result);
+  }
+
 }

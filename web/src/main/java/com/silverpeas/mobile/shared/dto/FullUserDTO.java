@@ -1,25 +1,20 @@
-package com.silverpeas.mobile.client.persist;
+package com.silverpeas.mobile.shared.dto;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
-public class User extends DetailUserDTO {
+public class FullUserDTO extends DetailUserDTO {
   private String login;
   private String password;
   private String domainId;
 
-  public User() {
+  public FullUserDTO() {
     super();
   }
 
-  public static User getInstance(String json) {
-    UserCodec codec = GWT.create(UserCodec.class);
-    return codec.decode(JSONParser.parseStrict(json));
-  }
-
-  public User(String login, String password, String domainId, DetailUserDTO user) {
+  public FullUserDTO(String login, String password, String domainId, DetailUserDTO user) {
     super();
     this.setLogin(login);
     this.setPassword(password);
@@ -34,12 +29,6 @@ public class User extends DetailUserDTO {
     this.setLastName(user.getLastName());
     this.setPhoneNumber(user.getPhoneNumber());
     this.setStatus(user.getStatus());
-  }
-
-  public String toJson() {
-    UserCodec codec = GWT.create(UserCodec.class);
-    JSONValue json = codec.encode(this);
-    return json.toString();
   }
 
   public String getLogin() {

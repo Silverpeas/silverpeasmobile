@@ -1,12 +1,7 @@
 package com.silverpeas.mobile.client.apps.tasks;
 
-import com.google.gwt.user.client.Window;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.silverpeas.mobile.client.apps.status.events.app.AbstractStatusAppEvent;
-import com.silverpeas.mobile.client.apps.status.events.app.StatusAppEventHandler;
-import com.silverpeas.mobile.client.apps.status.events.app.StatusPostEvent;
-import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
-import com.silverpeas.mobile.client.apps.status.pages.StatusPage;
 import com.silverpeas.mobile.client.apps.tasks.events.app.AbstractTasksAppEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
@@ -20,17 +15,22 @@ import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
-import com.silverpeas.mobile.shared.dto.StatusDTO;
+import com.silverpeas.mobile.client.common.network.OfflineHelper;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.TaskDTO;
-import org.apache.poi.ss.formula.functions.Even;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TasksApp extends App implements TasksAppEventHandler {
 
+  public static final String TASKS_KEY = "tasks";
+  private static ApplicationMessages msg;
+
   public TasksApp(){
     super();
+    msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(AbstractTasksAppEvent.TYPE, this);
   }
 
@@ -48,14 +48,20 @@ public class TasksApp extends App implements TasksAppEventHandler {
   @Override
   public void loadTasks(final TasksLoadEvent event) {
     Notification.activityStart();
-    ServicesLocator.serviceTasks.loadTasks(new AsyncCallback<List<TaskDTO>>() {
+    ServicesLocator.getServiceTasks().loadTasks(new AsyncCallback<List<TaskDTO>>() {
       @Override
       public void onFailure(final Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        if (OfflineHelper.needToGoOffine(caught)) {
+          List<TaskDTO> tasks = loadInLocalStorage();
+          EventBus.getInstance().fireEvent(new TasksLoadedEvent(tasks));
+        } else {
+          EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        }
       }
 
       @Override
       public void onSuccess(final List<TaskDTO> tasks) {
+        storeInLocalStorage(tasks);
         EventBus.getInstance().fireEvent(new TasksLoadedEvent(tasks));
       }
     });
@@ -63,27 +69,36 @@ public class TasksApp extends App implements TasksAppEventHandler {
 
   @Override
   public void updateTask(final TaskUpdateEvent event) {
-    ServicesLocator.serviceTasks.updateTask(event.getTask().getId(), event.getNewPercentCompleted(), new AsyncCallback<Void>() {
+    ServicesLocator.getServiceTasks().updateTask(event.getTask().getId(),
+        event.getNewPercentCompleted(), new AsyncCallback<Void>() {
 
-      @Override
-      public void onFailure(final Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-      }
+          @Override
+          public void onFailure(final Throwable caught) {
+            if (OfflineHelper.needToGoOffine(caught)) {
+              Notification.alert(msg.needToBeOnline());
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+            }
+          }
 
-      @Override
-      public void onSuccess(final Void result) {
-        // do nothing
-      }
-    });
+          @Override
+          public void onSuccess(final Void result) {
+            // do nothing
+          }
+        });
   }
 
   @Override
   public void createTask(final TaskCreateEvent event) {
-    ServicesLocator.serviceTasks.createTask(event.getTask(), new AsyncCallback<TaskDTO>() {
+    ServicesLocator.getServiceTasks().createTask(event.getTask(), new AsyncCallback<TaskDTO>() {
 
       @Override
       public void onFailure(final Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        if (OfflineHelper.needToGoOffine(caught)) {
+          Notification.alert(msg.needToBeOnline());
+        } else {
+          EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        }
       }
 
       @Override
@@ -91,5 +106,15 @@ public class TasksApp extends App implements TasksAppEventHandler {
         EventBus.getInstance().fireEvent(new TaskCreatedEvent(result));
       }
     });
+  }
+
+  private List<TaskDTO> loadInLocalStorage() {
+    List<TaskDTO> tasks = LocalStorageHelper.load(TASKS_KEY, List.class);
+    if (tasks == null) tasks = new ArrayList<TaskDTO>();
+    return tasks;
+  }
+
+  private void storeInLocalStorage(final List<TaskDTO> result) {
+    LocalStorageHelper.store("tasks", List.class , result);
   }
 }
