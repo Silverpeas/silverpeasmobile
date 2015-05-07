@@ -111,10 +111,7 @@ public class ConnexionPage extends PageContent {
         public void onSuccess(DetailUserDTO user) {
           AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
               domains.getValue(domains.getSelectedIndex()));
-
-          RootPanel.get().clear();
-          RootPanel.get().add(SpMobil.mainPage);
-          PageHistory.getInstance().goTo(new AppList());
+          SpMobil.displayMainPage(user);
         }
       });
     }

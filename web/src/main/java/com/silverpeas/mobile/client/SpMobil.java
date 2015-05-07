@@ -97,7 +97,7 @@ public class SpMobil implements EntryPoint {
             });
   }
 
-  private void displayMainPage(final DetailUserDTO user) {
+  public static void displayMainPage(final DetailUserDTO user) {
     SpMobil.user = user;
     mainPage.setUser(user);
     RootPanel.get().clear();
