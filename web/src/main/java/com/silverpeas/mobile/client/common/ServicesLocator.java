@@ -13,14 +13,19 @@ public class ServicesLocator {
   private static ServiceConnectionAsync serviceConnection = (ServiceConnectionAsync) GWT.create(ServiceConnection.class);
   private static ServiceContactAsync serviceContact = (ServiceContactAsync) GWT.create(ServiceContact.class);
   private static ServiceTasksAsync serviceTasks = (ServiceTasksAsync) GWT.create(ServiceTasks.class);
+  private static ServiceNavigationAsync serviceNavigation = (ServiceNavigationAsync) GWT.create(ServiceNavigation.class);
 
   public static ServiceRSEAsync serviceRSE = (ServiceRSEAsync) GWT.create(ServiceRSE.class);
   public static ServiceMediaAsync serviceMedia = (ServiceMediaAsync) GWT.create(ServiceMedia.class);
-  public static ServiceNavigationAsync serviceNavigation = (ServiceNavigationAsync) GWT.create(ServiceNavigation.class);
   public static ServiceDocumentsAsync serviceDocuments = (ServiceDocumentsAsync) GWT.create(ServiceDocuments.class);
   public static ServiceCommentsAsync serviceComments = (ServiceCommentsAsync) GWT.create(ServiceComments.class);
   public static ServiceSearchAsync serviceSearch = (ServiceSearchAsync) GWT.create(ServiceSearch.class);
   public static ServiceNewsAsync serviceNews = (ServiceNewsAsync) GWT.create(ServiceNews.class);
+
+  public static ServiceNavigationAsync getServiceNavigation() {
+    ((ServiceDefTarget) serviceTasks).setRpcRequestBuilder(builder);
+    return serviceNavigation;
+  }
 
   public static ServiceTasksAsync getServiceTasks() {
     ((ServiceDefTarget) serviceTasks).setRpcRequestBuilder(builder);

@@ -26,18 +26,24 @@ import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.common.network.OfflineHelper;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.components.IframePage;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DocumentsApp extends App implements NavigationEventHandler, DocumentsAppEventHandler {
 
+  private ApplicationMessages globalMsg;
   private DocumentsMessages msg;
+
   private NavigationApp navApp = new NavigationApp();
   private boolean commentable, ableToStoreContent;
   private Anchor sourceLink;
@@ -45,6 +51,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   public DocumentsApp() {
     super();
     msg = GWT.create(DocumentsMessages.class);
+  globalMsg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractDocumentsAppEvent.TYPE, this);
   }
@@ -67,18 +74,23 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void startWithContent(final String appId, final String contentType, final String contentId) {
-    ServicesLocator.serviceNavigation.getApp(appId, new AsyncCallback<ApplicationInstanceDTO>() {
-      @Override
-      public void onFailure(final Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-      }
+    ServicesLocator.getServiceNavigation().getApp(appId,
+        new AsyncCallback<ApplicationInstanceDTO>() {
+          @Override
+          public void onFailure(final Throwable caught) {
+            if (OfflineHelper.needToGoOffine(caught)) {
+              Notification.alert(globalMsg.needToBeOnline());
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+            }
+          }
 
-      @Override
-      public void onSuccess(final ApplicationInstanceDTO app) {
-        commentable = app.isCommentable();
-        displayContent(appId, contentType, contentId);
-      }
-    });
+          @Override
+          public void onSuccess(final ApplicationInstanceDTO app) {
+            commentable = app.isCommentable();
+            displayContent(appId, contentType, contentId);
+          }
+        });
   }
 
   private void displayContent(String appId, String contentType, String contentId) {
@@ -89,7 +101,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       page.show();
       EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(contentId));
     } else if(contentType.equals(ContentsTypes.Attachment.toString())) {
-      //TODO : implement attachments results display
       final DocumentsApp app = this;
       ServicesLocator.serviceDocuments.getAttachment(contentId, appId, new AsyncCallback<AttachmentDTO>() {
         @Override
@@ -150,14 +161,22 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
    */
   @Override
   public void loadTopics(DocumentsLoadGedItemsEvent event) {
+    final String key = "topic_" + event.getInstanceId() + "_" + event.getRootTopicId();
     ServicesLocator.serviceDocuments.getTopicsAndPublications(event.getInstanceId(), event.getRootTopicId(), new AsyncCallback<List<BaseDTO>>() {
       @Override
       public void onSuccess(List<BaseDTO> result) {
+        LocalStorageHelper.store(key, List.class, result);
         EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));
       }
       @Override
       public void onFailure(Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        if (OfflineHelper.needToGoOffine(caught)) {
+          List<BaseDTO> result = LocalStorageHelper.load(key, List.class);
+          if (result == null) result = new ArrayList<BaseDTO>();
+          EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));
+        } else {
+          EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        }
       }
     });
   }

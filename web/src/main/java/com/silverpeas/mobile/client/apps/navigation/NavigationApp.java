@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.client.apps.navigation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -12,6 +13,8 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.network.OfflineHelper;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 
 public class NavigationApp extends App implements NavigationAppEventHandler {
@@ -48,16 +51,24 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
 
   @Override
   public void loadSpacesAndApps(LoadSpacesAndAppsEvent event) {
-    ServicesLocator.serviceNavigation.getSpacesAndApps(event.getRootSpaceId(), type, new AsyncCallback<List<SilverpeasObjectDTO>>() {
+    final String key = "spaceapp_" + event.getRootSpaceId() + "_" + type;
+    ServicesLocator.getServiceNavigation().getSpacesAndApps(event.getRootSpaceId(), type, new AsyncCallback<List<SilverpeasObjectDTO>>() {
 
       @Override
       public void onSuccess(List<SilverpeasObjectDTO> result) {
+        LocalStorageHelper.store(key, List.class, result);
         EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
       }
 
       @Override
       public void onFailure(Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        if (OfflineHelper.needToGoOffine(caught)) {
+          List<SilverpeasObjectDTO> result = LocalStorageHelper.load(key, List.class);
+          if (result == null) result = new ArrayList<SilverpeasObjectDTO>();
+          EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
+        } else {
+          EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+        }
       }
     });
   }

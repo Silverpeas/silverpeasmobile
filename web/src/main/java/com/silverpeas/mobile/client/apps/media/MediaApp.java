@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.apps.media;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
@@ -28,9 +29,13 @@ import com.silverpeas.mobile.client.apps.navigation.events.app.external.Abstract
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.network.OfflineHelper;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.media.MediaDTO;
@@ -40,11 +45,13 @@ import com.silverpeas.mobile.shared.dto.media.VideoDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MediaApp extends App implements NavigationEventHandler, MediaAppEventHandler {
 
   private MediaMessages msg;
+  private ApplicationMessages globalMsg;
   private NavigationApp navApp = new NavigationApp();
 
   // Model
@@ -54,6 +61,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   public MediaApp() {
     super();
     msg = GWT.create(MediaMessages.class);
+    globalMsg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaAppEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
   }
@@ -72,18 +80,23 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void startWithContent(final String appId, final String contentType, final String contentId) {
-    ServicesLocator.serviceNavigation.getApp(appId, new AsyncCallback<ApplicationInstanceDTO>() {
-      @Override
-      public void onFailure(final Throwable caught) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-      }
+    ServicesLocator.getServiceNavigation().getApp(appId,
+        new AsyncCallback<ApplicationInstanceDTO>() {
+          @Override
+          public void onFailure(final Throwable caught) {
+            if (OfflineHelper.needToGoOffine(caught)) {
+              Notification.alert(globalMsg.needToBeOnline());
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+            }
+          }
 
-      @Override
-      public void onSuccess(final ApplicationInstanceDTO app) {
-        commentable = app.isCommentable();
-        displayContent(appId, contentType, contentId);
-      }
-    });
+          @Override
+          public void onSuccess(final ApplicationInstanceDTO app) {
+            commentable = app.isCommentable();
+            displayContent(appId, contentType, contentId);
+          }
+        });
   }
 
   private void displayContent(final String appId, final String contentType, final String contentId) {
@@ -171,17 +184,25 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void loadAlbums(final MediasLoadMediaItemsEvent event) {
+    final String key = "album_" + event.getInstanceId() + "_" + event.getRootAlbumId();
     ServicesLocator.serviceMedia.getAlbumsAndPictures(event.getInstanceId(), event.getRootAlbumId(),
         new AsyncCallback<List<BaseDTO>>() {
           @Override
           public void onSuccess(List<BaseDTO> result) {
+            LocalStorageHelper.store(key, List.class, result);
             currentAlbumsItems = result;
             EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result));
           }
 
           @Override
           public void onFailure(Throwable caught) {
-            EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+            if (OfflineHelper.needToGoOffine(caught)) {
+              List<BaseDTO> result = LocalStorageHelper.load(key, List.class);
+              if (result == null) result = new ArrayList<BaseDTO>();
+              EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result));
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+            }
           }
         });
   }
