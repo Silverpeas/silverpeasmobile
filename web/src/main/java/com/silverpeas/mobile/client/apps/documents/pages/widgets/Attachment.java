@@ -57,7 +57,6 @@ public class Attachment extends Composite {
             Notification.alert(globalMsg.needToBeOnline());
             return;
         }
-        ApplicationCache.getApplicationCacheIfSupported().
         if (!clicked) {
             clicked = true;
             clickAction();
