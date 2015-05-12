@@ -143,7 +143,7 @@ public class SpMobil implements EntryPoint {
         AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<List<ResultDTO>>() {
             @Override
             public void attempt() {
-                ServicesLocator.serviceSearch.search(query, this);
+                ServicesLocator.getServiceSearch().search(query, this);
             }
 
             @Override

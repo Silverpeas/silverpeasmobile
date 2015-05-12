@@ -183,7 +183,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
             @Override
             public void onSuccess(List<BaseDTO> result) {
-                OfflineHelper.hideOfflineIndicator();
+                super.onSuccess(result);
                 LocalStorageHelper.store(key, List.class, result);
                 EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));
             }

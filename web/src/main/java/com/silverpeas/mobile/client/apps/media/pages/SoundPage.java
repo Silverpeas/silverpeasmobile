@@ -66,13 +66,13 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
     msg = GWT.create(MediaMessages.class);
     getElement().setId("a-media");
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
-    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+    /*Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
       public void execute() {
         swipeRecognizer = new SwipeRecognizer(HTML.wrap(previewContainer));
       }
     });
-    EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
+    EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);*/
   }
 
   @Override
@@ -152,6 +152,6 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
     super.stop();
     comments.stop();
     EventBus.getInstance().removeHandler(AbstractMediaPagesEvent.TYPE, this);
-    EventBus.getInstance().removeHandler(SwipeEndEvent.getType(), this);
+    //EventBus.getInstance().removeHandler(SwipeEndEvent.getType(), this);
   }
 }

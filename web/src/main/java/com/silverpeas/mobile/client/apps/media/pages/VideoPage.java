@@ -69,13 +69,13 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
     msg = GWT.create(MediaMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
     getElement().setId("a-media");
-    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+    /*Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
       public void execute() {
         swipeRecognizer = new SwipeRecognizer(HTML.wrap(previewContainer));
       }
     });
-    EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
+    EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);*/
   }
 
   @Override
@@ -171,5 +171,6 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
     super.stop();
     comments.stop();
     EventBus.getInstance().removeHandler(AbstractMediaPagesEvent.TYPE, this);
+    //EventBus.getInstance().removeHandler(SwipeEndEvent.getType(), this);
   }
 }

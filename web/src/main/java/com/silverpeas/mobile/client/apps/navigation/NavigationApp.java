@@ -68,7 +68,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
 
             @Override
             public void onSuccess(List<SilverpeasObjectDTO> result) {
-                OfflineHelper.hideOfflineIndicator();
+                super.onSuccess(result);
                 LocalStorageHelper.store(key, List.class, result);
                 EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
             }

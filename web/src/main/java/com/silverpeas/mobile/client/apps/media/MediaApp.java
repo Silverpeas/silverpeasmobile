@@ -192,7 +192,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
             @Override
             public void onSuccess(List<BaseDTO> result) {
-                OfflineHelper.hideOfflineIndicator();
+                super.onSuccess(result);
                 LocalStorageHelper.store(key, List.class, result);
                 currentAlbumsItems = result;
                 EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result));

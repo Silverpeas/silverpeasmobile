@@ -22,6 +22,7 @@ import com.silverpeas.mobile.server.config.Configurator;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
 import com.silverpeas.mobile.server.servlets.EasySSLProtocolSocketFactory;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
@@ -398,6 +399,10 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       video.setUrl("https://www.youtube.com/embed/" + id);
       video.setUrlPoster("http://img.youtube.com/vi/" + id + "/0.jpg");
     }
+
+      video.setCommentsNumber(CommentServiceFactory
+              .getFactory().getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_STREAMING, new MediaPK(video.getId())));
+
     return video;
   }
 
@@ -434,6 +439,9 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     }
 
     video.setDataPoster( getVideoPoster(media.getVideo()));
+
+    video.setCommentsNumber(CommentServiceFactory
+            .getFactory().getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_VIDEO, new MediaPK(video.getId())));
 
     return video;
   }
@@ -527,6 +535,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     } else {
       sound.setUpdateDate(sdf.format(media.getCreationDate()));
     }
+    sound.setCommentsNumber(CommentServiceFactory
+            .getFactory().getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_SOUND, new MediaPK(sound.getId())));
 
     return sound;
   }
@@ -561,7 +571,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     }
 
     picture.setCommentsNumber(CommentServiceFactory
-        .getFactory().getCommentService().getCommentsCountOnPublication("Photo", new MediaPK(photoDetail.getId())));
+        .getFactory().getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_PHOTO, new MediaPK(photoDetail.getId())));
 
     return picture;
   }

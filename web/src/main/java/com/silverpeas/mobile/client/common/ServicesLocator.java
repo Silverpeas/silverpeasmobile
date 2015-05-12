@@ -17,10 +17,20 @@ public class ServicesLocator {
     private static ServiceRSEAsync serviceRSE = (ServiceRSEAsync) GWT.create(ServiceRSE.class);
     private static ServiceDocumentsAsync serviceDocuments = (ServiceDocumentsAsync) GWT.create(ServiceDocuments.class);
     private static ServiceMediaAsync serviceMedia = (ServiceMediaAsync) GWT.create(ServiceMedia.class);
+    private static ServiceSearchAsync serviceSearch = (ServiceSearchAsync) GWT.create(ServiceSearch.class);
+    private static ServiceCommentsAsync serviceComments = (ServiceCommentsAsync) GWT.create(ServiceComments.class);
 
-    public static ServiceCommentsAsync serviceComments = (ServiceCommentsAsync) GWT.create(ServiceComments.class);
-    public static ServiceSearchAsync serviceSearch = (ServiceSearchAsync) GWT.create(ServiceSearch.class);
     public static ServiceNewsAsync serviceNews = (ServiceNewsAsync) GWT.create(ServiceNews.class);
+
+    public static ServiceCommentsAsync getServiceComments() {
+        ((ServiceDefTarget) serviceComments).setRpcRequestBuilder(builder);
+        return serviceComments;
+    }
+
+    public static ServiceSearchAsync getServiceSearch() {
+        ((ServiceDefTarget) serviceSearch).setRpcRequestBuilder(builder);
+        return serviceSearch;
+    }
 
     public static ServiceMediaAsync getServiceMedia() {
         ((ServiceDefTarget) serviceMedia).setRpcRequestBuilder(builder);

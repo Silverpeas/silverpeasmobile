@@ -52,7 +52,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
 
             @Override
             public void onSuccess(List<DetailUserDTO> result) {
-                OfflineHelper.hideOfflineIndicator();
+                super.onSuccess(result);
                 // Store in local storage
                 storeInLocalStorage(result, event);
                 // Notify view
