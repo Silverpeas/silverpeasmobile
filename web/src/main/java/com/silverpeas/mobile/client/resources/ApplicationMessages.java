@@ -68,4 +68,8 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Cette action nécessite une connexion.")
   String needToBeOnline();
+
+  @DefaultMessage("Erreur système")
+  String systemError();
+
 }

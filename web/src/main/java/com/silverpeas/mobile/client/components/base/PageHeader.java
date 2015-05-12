@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.client.resources.ApplicationResources;
 
 public class PageHeader extends Composite {
 
@@ -25,7 +27,6 @@ public class PageHeader extends Composite {
   @UiField protected Anchor menu, back;
   @UiField protected HeadingElement title;
   @UiField(provided = true) protected ApplicationMessages msg = null;
-
 
   public PageHeader() {
     msg = GWT.create(ApplicationMessages.class);
@@ -43,6 +44,14 @@ public class PageHeader extends Composite {
   @UiHandler("back")
   void onBack(ClickEvent event) {
     PageHistory.getInstance().back();
+  }
+
+  public void showOfflineIndicator() {
+    menu.addStyleName("offline");
+  }
+
+  public void hideOfflineIndicator() {
+    menu.removeStyleName("offline");
   }
 
   public void setVisibleBackButton(boolean visible) {

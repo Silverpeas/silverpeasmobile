@@ -418,6 +418,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 100%;
+  z-index: -1;
 }
 
 .ui-icon-bars {
@@ -1235,4 +1236,8 @@ input[type='range']::-webkit-slider-thumb {
 .create.task-percent-range {
   width: 100%;
   margin-bottom: 2em;
+}
+
+.offline{
+  background:url('offline.png') no-repeat;
 }
