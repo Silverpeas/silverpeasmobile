@@ -196,18 +196,34 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
      * Get publication infos.
      */
     @Override
-    public void loadPublication(DocumentsLoadPublicationEvent event) {
-        ServicesLocator.getServiceDocuments().getPublication(event.getPubId(), new AsyncCallback<PublicationDTO>() {
+    public void loadPublication(final DocumentsLoadPublicationEvent event) {
+        final String key = "publication_" + event.getPubId();
+        Command offlineAction = new Command() {
             @Override
-            public void onSuccess(PublicationDTO result) {
+            public void execute() {
+                PublicationDTO result = LocalStorageHelper.load(key, PublicationDTO.class);
+                if (result == null) {
+                    result = new PublicationDTO();
+                }
                 EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent));
+            }
+        };
+
+        AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<PublicationDTO>(offlineAction) {
+            @Override
+            public void attempt() {
+                ServicesLocator.getServiceDocuments().getPublication(event.getPubId(), this);
             }
 
             @Override
-            public void onFailure(Throwable caught) {
-                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+            public void onSuccess(PublicationDTO result) {
+                super.onSuccess(result);
+                LocalStorageHelper.store(key, PublicationDTO.class, result);
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent));
             }
-        });
+
+        };
+        action.attempt();
     }
 
 }

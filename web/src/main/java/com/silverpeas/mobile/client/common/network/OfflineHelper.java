@@ -17,25 +17,32 @@ import com.silverpeas.mobile.client.resources.ApplicationResources;
  */
 public class OfflineHelper {
 
-  private static ApplicationMessages msg = GWT.create(ApplicationMessages.class);
+    private static ApplicationMessages msg = GWT.create(ApplicationMessages.class);
+    private static boolean offLine;
 
-
-  public static boolean needToGoOffine (Throwable reason) {
-    if (reason instanceof StatusCodeException) {
-      if (((StatusCodeException) reason).getStatusCode() == 0) {
-        SpMobil.mainPage.showOfflineIndicator();
-        return true;
-      }
+    public static boolean needToGoOffine (Throwable reason) {
+        if (reason instanceof StatusCodeException) {
+            if (((StatusCodeException) reason).getStatusCode() == 0) {
+                SpMobil.mainPage.showOfflineIndicator();
+                offLine = true;
+                return offLine;
+            }
+        }
+        if (reason instanceof RequestTimeoutException) {
+            SpMobil.mainPage.showOfflineIndicator();
+            offLine = true;
+            return offLine;
+        }
+        SpMobil.mainPage.hideOfflineIndicator();
+        offLine = false;
+        return offLine;
     }
-    if (reason instanceof RequestTimeoutException) {
-      SpMobil.mainPage.showOfflineIndicator();
-      return true;
-    }
-    SpMobil.mainPage.hideOfflineIndicator();
-    return false;
-  }
 
-  public static void hideOfflineIndicator() {
-    SpMobil.mainPage.hideOfflineIndicator();
-  }
+    public static void hideOfflineIndicator() {
+        SpMobil.mainPage.hideOfflineIndicator();
+    }
+
+    public static boolean isOffLine() {
+        return offLine;
+    }
 }

@@ -120,6 +120,7 @@ public class ConnexionPage extends PageContent {
 
                 @Override
                 public void onSuccess(DetailUserDTO user) {
+                    LocalStorageHelper.clear(); // clear offline data
                     AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
                             domains.getValue(domains.getSelectedIndex()));
                     SpMobil.displayMainPage(user);
