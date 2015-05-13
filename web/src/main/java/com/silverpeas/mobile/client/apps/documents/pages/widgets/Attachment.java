@@ -6,6 +6,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.http.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -22,10 +23,13 @@ import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.realityforge.gwt.appcache.client.ApplicationCache;
+
+import java.util.Arrays;
 
 public class Attachment extends Composite {
 
@@ -106,7 +110,7 @@ public class Attachment extends Composite {
         try {
             String url = UrlUtils.getLocation();
             url += "spmobil/Attachment";
-            url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang()  + "&userId=" + attachement.getUserId();
+            url = url + "?id=" + attachement.getId() + "&lang=" + attachement.getLang();
 
             if (MobilUtils.isIOS()) {
                 IframePage page = new IframePage(url);
