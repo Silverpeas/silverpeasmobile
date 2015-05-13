@@ -21,6 +21,6 @@
         </li>
       </ul>
 
-      <p class="lastUpdate" ui:field="lastUpdate">Dernière modification le 29/01/2014 par David Lesimple</p>
+      <p class="lastUpdate" ui:field="lastUpdate"></p>
   </g:HTMLPanel>
 </ui:UiBinder>

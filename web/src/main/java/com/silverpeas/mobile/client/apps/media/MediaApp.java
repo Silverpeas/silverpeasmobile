@@ -204,59 +204,96 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
     @Override
     public void loadMediaPreview(final MediaPreviewLoadEvent event) {
+        final String key = "media_" + event.getContentType() + "_" + event.getMediaId();
         if (event.getMedia() == null) {
             if (event.getContentType().equals(ContentsTypes.Photo.toString())) {
-                ServicesLocator.getServiceMedia().getPreviewPicture(event.getInstanceId(), event.getMediaId(),
-                        new AsyncCallback<PhotoDTO>() {
-                            @Override
-                            public void onFailure(final Throwable caught) {
-                                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-                            }
+                Command offlineAction = new Command() {
+                    @Override
+                    public void execute() {
+                        PhotoDTO preview = LocalStorageHelper.load(key, PhotoDTO.class);
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable));
+                    }
+                };
+                AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<PhotoDTO>(offlineAction) {
+                    @Override
+                    public void attempt() {
+                        ServicesLocator.getServiceMedia().getPreviewPicture(event.getInstanceId(), event.getMediaId(), this);
+                    }
 
-                            @Override
-                            public void onSuccess(final PhotoDTO preview) {
-                                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable));
-                            }
-                        });
+                    @Override
+                    public void onSuccess(final PhotoDTO preview) {
+                        super.onSuccess(preview);
+                        LocalStorageHelper.store(key, PhotoDTO.class, preview);
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable));
+                    }
+                };
+                action.attempt();
             } else if (event.getContentType().equals(ContentsTypes.Sound.toString())) {
-                ServicesLocator.getServiceMedia().getSound(event.getInstanceId(), event.getMediaId(),
-                        new AsyncCallback<SoundDTO>() {
-                            @Override
-                            public void onFailure(final Throwable caught) {
-                                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-                            }
+                Command offlineAction = new Command() {
+                    @Override
+                    public void execute() {
+                        SoundDTO sound = LocalStorageHelper.load(key, SoundDTO.class);
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable));
+                    }
+                };
+                AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<SoundDTO>(offlineAction) {
+                    @Override
+                    public void attempt() {
+                        ServicesLocator.getServiceMedia().getSound(event.getInstanceId(), event.getMediaId(), this);
+                    }
 
-                            @Override
-                            public void onSuccess(final SoundDTO sound) {
-                                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable));
-                            }
-                        });
+                    @Override
+                    public void onSuccess(final SoundDTO sound) {
+                        super.onSuccess(sound);
+                        LocalStorageHelper.store(key, SoundDTO.class, sound);
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable));
+                    }
+                };
+                action.attempt();
             } else if (event.getContentType().equals(ContentsTypes.Video.toString())) {
-                ServicesLocator.getServiceMedia().getVideo(event.getInstanceId(), event.getMediaId(),
-                        new AsyncCallback<VideoDTO>() {
-                            @Override
-                            public void onFailure(final Throwable caught) {
-                                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-                            }
+                Command offlineAction = new Command() {
+                    @Override
+                    public void execute() {
+                        VideoDTO video = LocalStorageHelper.load(key, VideoDTO.class);
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+                    }
+                };
+                AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<VideoDTO>(offlineAction) {
+                    @Override
+                    public void attempt() {
+                        ServicesLocator.getServiceMedia().getVideo(event.getInstanceId(), event.getMediaId(), this);
+                    }
 
-                            @Override
-                            public void onSuccess(final VideoDTO video) {
-                                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
-                            }
-                        });
+                    @Override
+                    public void onSuccess(final VideoDTO video) {
+                        super.onSuccess(video);
+                        LocalStorageHelper.store(key, VideoDTO.class, video);
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+                    }
+                };
+                action.attempt();
             } else if (event.getContentType().equals(ContentsTypes.Streaming.toString())) {
-                ServicesLocator.getServiceMedia().getVideoStreaming(event.getInstanceId(), event.getMediaId(),
-                        new AsyncCallback<VideoStreamingDTO>() {
-                            @Override
-                            public void onFailure(final Throwable caught) {
-                                EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-                            }
+                Command offlineAction = new Command() {
+                    @Override
+                    public void execute() {
+                        VideoStreamingDTO video = LocalStorageHelper.load(key, VideoStreamingDTO.class);
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+                    }
+                };
+                AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<VideoStreamingDTO>(offlineAction) {
+                    @Override
+                    public void attempt() {
+                        ServicesLocator.getServiceMedia().getVideoStreaming(event.getInstanceId(), event.getMediaId(), this);
+                    }
 
-                            @Override
-                            public void onSuccess(final VideoStreamingDTO video) {
-                                EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
-                            }
-                        });
+                    @Override
+                    public void onSuccess(final VideoStreamingDTO video) {
+                        super.onSuccess(video);
+                        LocalStorageHelper.store(key, VideoStreamingDTO.class, video);
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+                    }
+                };
+                action.attempt();
             }
         } else {
             EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(event.getMedia(), commentable));
@@ -265,18 +302,29 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
     @Override
     public void loadMediaView(final MediaViewLoadEvent event) {
-        ServicesLocator.getServiceMedia().getOriginalPicture(event.getInstanceId(), event.getMediaId(),
-                new AsyncCallback<PhotoDTO>() {
-                    @Override
-                    public void onFailure(final Throwable caught) {
-                        EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-                    }
+        final String key = "picture_" + event.getMediaId();
+        Command offlineAction = new Command() {
+            @Override
+            public void execute() {
+                PhotoDTO view = LocalStorageHelper.load(key, PhotoDTO.class);
+                EventBus.getInstance().fireEvent(new MediaViewLoadedEvent(view));
+            }
+        };
 
-                    @Override
-                    public void onSuccess(final PhotoDTO view) {
-                        EventBus.getInstance().fireEvent(new MediaViewLoadedEvent(view));
-                    }
-                });
+        AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<PhotoDTO>(offlineAction) {
+            @Override
+            public void attempt() {
+                ServicesLocator.getServiceMedia().getOriginalPicture(event.getInstanceId(), event.getMediaId(), this);
+            }
+
+            @Override
+            public void onSuccess(final PhotoDTO view) {
+                super.onSuccess(view);
+                LocalStorageHelper.store(key, PhotoDTO.class, view);
+                EventBus.getInstance().fireEvent(new MediaViewLoadedEvent(view));
+            }
+        };
+        action.attempt();
     }
 
     @Override

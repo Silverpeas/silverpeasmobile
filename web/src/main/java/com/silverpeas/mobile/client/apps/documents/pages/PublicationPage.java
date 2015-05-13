@@ -86,7 +86,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     if (isVisible()) {
       title.setInnerHTML(publication.getName());
       desc.setInnerHTML(publication.getDescription());
-      lastUpdate.setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
+      if (publication.getUpdater() != null && publication.getUpdateDate() != null) lastUpdate.setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
 
       for (AttachmentDTO attachment : publication.getAttachments()) {
         Attachment a = new Attachment();
