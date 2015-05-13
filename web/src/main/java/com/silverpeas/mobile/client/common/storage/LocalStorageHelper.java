@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.common.storage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.seanchenxi.gwt.storage.client.serializer.StorageSerializer;
 
@@ -20,7 +21,7 @@ public class LocalStorageHelper {
       String data = null;
       try {
         data = serializer.serialize(cBean , bean);
-      } catch (SerializationException e) {}
+      } catch (Throwable t) {}
       storage.setItem(key, data);
     }
   }
@@ -32,7 +33,7 @@ public class LocalStorageHelper {
       if (dataItem != null) {
         try {
           return serializer.deserialize(beanClass, dataItem);
-        } catch (SerializationException e) {
+        } catch (Throwable t) {
         }
       }
     }
