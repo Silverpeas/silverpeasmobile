@@ -575,7 +575,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /***** NAVIGATION ****/
-.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a {
+.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a, .notify a {
   background-image: url(packImagesNavigation.png);
   background-position: 0.5625em 0.5625em;
   background-repeat: no-repeat;
@@ -640,11 +640,11 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #8b8b8b
 }
 
-.add-media .ui-icon-carat-more:after {
+.notify .ui-icon-carat-more:after, .add-media .ui-icon-carat-more:after {
   content: '';
 }
 
-.add-media .ui-icon-carat-more {
+.notify .ui-icon-carat-more, .add-media .ui-icon-carat-more {
   background-position: right -590px;
   padding-left: 1em;
   color: #ec9c01;
@@ -833,6 +833,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   display: block;
   line-height: 0.8em;
   text-align: left
+}
+
+.actions {
+  margin-bottom: 2em;
 }
 
 .filter-contacts {

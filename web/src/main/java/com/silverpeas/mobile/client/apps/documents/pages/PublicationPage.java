@@ -21,6 +21,7 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.publication.Publ
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.pages.widgets.Attachment;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
@@ -40,6 +41,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 
   @UiField HeadingElement title;
   @UiField HTMLPanel container;
+  @UiField UnorderedList listActions;
   @UiField UnorderedList attachments;
   @UiField ParagraphElement desc, lastUpdate;
   @UiField CommentsButton comments;
@@ -57,6 +59,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     attachments.getElement().setId("attachments");
     content.setId("content");
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
+    //listActions.add(new NotifyButton());
   }
 
   @Override
