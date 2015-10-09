@@ -175,7 +175,7 @@
 
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>spmobil.html</welcome-file>
+    <welcome-file>spmobil.jsp</welcome-file>
   </welcome-file-list>
 
   <listener>

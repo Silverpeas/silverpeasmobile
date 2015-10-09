@@ -35,6 +35,8 @@
   <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone.png"/>
   <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone4.png"/>
 
+  <!-- supported languages -->
+  <extend-property name="locale" values="en"/>
 
   <!-- allow Super Dev Mode -->
   <add-linker name="xsiframe"/>
