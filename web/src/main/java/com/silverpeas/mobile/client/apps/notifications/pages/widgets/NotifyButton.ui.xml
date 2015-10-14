@@ -3,7 +3,7 @@
 
     <ui:with field='msg' type='com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages'/>
 
-    <g:HTMLPanel tag="li" ui:field="container" styleName="notify">
-        <g:Anchor styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" ui:field="notify" text="{msg.notifyContent}"/>
+    <g:HTMLPanel tag="li" ui:field="container" styleName="">
+        <g:Anchor styleName="" ui:field="notify" text="{msg.notifyContent}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

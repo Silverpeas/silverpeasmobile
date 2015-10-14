@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
@@ -47,6 +48,8 @@ public class PublicationPage extends PageContent implements View, PublicationNav
   @UiField CommentsButton comments;
   @UiField Anchor contentLink;
   @UiField DivElement content;
+  @UiField
+  Button actions;
   @UiField(provided = true) protected DocumentsMessages msg = null;
 
   interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
@@ -58,6 +61,8 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     container.getElement().setId("publication");
     attachments.getElement().setId("attachments");
     content.setId("content");
+    listActions.setId("action-bloc");
+    actions.getElement().setId("action-button");
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
     //listActions.add(new NotifyButton());
   }
@@ -109,6 +114,11 @@ public class PublicationPage extends PageContent implements View, PublicationNav
         content.getStyle().setDisplay(Style.Display.NONE);
       }
     }
+  }
+
+  @UiHandler("actions")
+  protected void showActions(ClickEvent event) {
+    listActions.setStyledisplay(Style.Display.BLOCK);
   }
 
   @UiHandler("contentLink")

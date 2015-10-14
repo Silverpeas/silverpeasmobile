@@ -7,7 +7,12 @@
   <ui:with field='msg' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages'/>
 
   <g:HTMLPanel ui:field="container" styleName="content">
-    <l:UnorderedList ui:field="listActions" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow actions"/>
+
+      <div id="actions">
+          <g:Button ui:field="actions"/>
+          <l:UnorderedList ui:field="listActions" />
+      </div>
+
     <h2 ui:field="title" class="publiName"></h2>
     <p ui:field="desc" class="publiDesc"></p>
     <w:CommentsButton ui:field="comments" visible="false"/>

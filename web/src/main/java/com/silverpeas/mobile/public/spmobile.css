@@ -360,11 +360,11 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   outline-style: auto;
 }
 
-.ui-listview > li:nth-child(odd) a, .list-contacts > li:nth-child(odd) {
+.ui-listview > li:nth-child(odd) a, .list-contacts > li:nth-child(odd), .list-notifications > li:nth-child(odd) {
   background-color: #fff;
 }
 
-.ui-listview > li:nth-child(even) a, .list-contacts > li:nth-child(even) {
+.ui-listview > li:nth-child(even) a, .list-contacts > li:nth-child(even), .list-notifications > li:nth-child(even) {
   background-color: #f6f6f6;
 }
 
@@ -575,7 +575,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /***** NAVIGATION ****/
-.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a, .notify a {
+.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a {
   background-image: url(packImagesNavigation.png);
   background-position: 0.5625em 0.5625em;
   background-repeat: no-repeat;
@@ -640,17 +640,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #8b8b8b
 }
 
-.notify .ui-icon-carat-more:after, .add-media .ui-icon-carat-more:after {
-  content: '';
-}
-
-.notify .ui-icon-carat-more, .add-media .ui-icon-carat-more {
-  background-position: right -590px;
-  padding-left: 1em;
-  color: #ec9c01;
-  text-decoration: underline !important;
-}
-
 .viewer {
   touch-action: none;
   transition: none;
@@ -709,7 +698,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   max-width: 100%;
 }
 
-#attachments, .list-contacts, .list-comments {
+#attachments, .list-contacts, .list-comments, .list-notifications {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -718,7 +707,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #attachments li,
 .list-contacts li,
-.list-comments li {
+.list-comments li,
+.list-notifications li {
   background-color: #FFF;
   border-bottom: 1px solid #e0e0e0;
   padding: 1em;
@@ -845,13 +835,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .list-contacts,
-.list-comments {
+.list-comments,
+.list-notifications,{
   font-size: 10pt;
   line-height: 1.8em;
 }
 
 .list-contacts .user-name img,
-.list-comments .user-name img {
+.list-comments .user-name img,
+.list-notifications .user-name img {
   width: 24px;
   border: 1px solid #ccc;
   float: right;
@@ -859,8 +851,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .list-contacts .user-name,
-.list-comments .user-name {
+.list-comments .user-name,
+.list-notifications .user-name {
   line-height: 0.8em;
+}
+
+.list-notifications .group-name {
+  line-height: 2em;
 }
 
 .ui-page-theme-a .tel {
@@ -1244,4 +1241,39 @@ input[type='range']::-webkit-slider-thumb {
 
 .offline{
   background:url('offline.png') no-repeat;
+}
+
+/** Actions ****/
+.content {
+  position:relative;
+}
+#action-button {
+  border:0;
+  position:absolute;
+  width:16px;
+  height:24px;
+  text-indent:-3000px;
+  top:1em;
+  right:1em;
+  background:transparent url("qvf.png") 0 0 no-repeat;
+}
+
+#action-bloc {
+  display:none;
+  border:0;
+  position:absolute;
+  top:1em;
+  right:1em;
+  padding:1em;
+  margin:0;
+  width:10em;
+  background-color:#FFF;
+  z-index:100;
+  list-style-type:none;
+  box-shadow: 0  0 3px   rgba(0,0,0, 0.2) ;
+}
+
+#action-bloc a {
+  color:#333;
+  line-height:200%;
 }

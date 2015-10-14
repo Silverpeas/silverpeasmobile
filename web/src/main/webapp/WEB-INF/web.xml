@@ -124,6 +124,15 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>serviceNotificationsImpl</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.services.ServiceNotificationsImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>serviceNotificationsImpl</servlet-name>
+    <url-pattern>/spmobil/Notifications</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>AttachmentServlet</servlet-name>
     <servlet-class>com.silverpeas.mobile.server.servlets.AttachmentServlet</servlet-class>
   </servlet>

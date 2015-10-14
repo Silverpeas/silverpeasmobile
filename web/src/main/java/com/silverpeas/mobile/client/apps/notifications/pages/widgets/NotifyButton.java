@@ -15,6 +15,7 @@ import com.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import com.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
 import com.silverpeas.mobile.client.apps.notifications.NotificationsApp;
+import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 
 /**
@@ -29,8 +30,11 @@ public class NotifyButton extends Composite {
     @UiField  HTMLPanel container;
     @UiField  Anchor notify;
 
+    @UiField(provided = true) protected NotificationsMessages msg = null;
+
 
     public NotifyButton() {
+        msg = GWT.create(NotificationsMessages.class);
         initWidget(uiBinder.createAndBindUi(this));
     }
 
@@ -43,6 +47,10 @@ public class NotifyButton extends Composite {
         String contentName = "";
         NotificationsApp app = new NotificationsApp(contentId, instanceId, contentType, pageTitle, contentName);
         app.start();
+
+        // hide menu
+        getElement().getParentElement().removeAttribute("style");
+
     }
 
 }

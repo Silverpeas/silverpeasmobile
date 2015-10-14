@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.components;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -44,5 +45,13 @@ public class UnorderedList extends ComplexPanel {
   @Override
   public void setStyleName(String style) {
     list.setClassName(style);
+  }
+
+  public void setStyledisplay(Style.Display display) {
+    list.getStyle().setDisplay(display);
+  }
+
+  public void setId(String id) {
+    list.setId(id);
   }
 }
