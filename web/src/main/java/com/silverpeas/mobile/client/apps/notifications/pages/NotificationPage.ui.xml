@@ -11,7 +11,7 @@
 
       <div id="champs-statut">
           <div class="ouverture-bulle"></div>
-          <g:TextArea ui:field="status" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
+          <g:TextArea ui:field="message" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
       </div>
 
       <l:UnorderedList ui:field="list" styleName="list-notifications"></l:UnorderedList>

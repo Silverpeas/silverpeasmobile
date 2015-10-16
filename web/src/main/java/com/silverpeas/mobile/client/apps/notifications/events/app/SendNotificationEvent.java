@@ -1,15 +1,23 @@
 package com.silverpeas.mobile.client.apps.notifications.events.app;
 
+import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
+
+import java.util.List;
+
 public class SendNotificationEvent extends AbstractNotificationsAppEvent {
 
-    private String contentId, instanceId, contentType, message;
+    private NotificationDTO notification;
+    private List<BaseDTO> receivers;
 
-    public SendNotificationEvent(String contentId, String instanceId, String contentType, String message){
+    public List<BaseDTO> getReceivers() {
+        return receivers;
+    }
+
+    public SendNotificationEvent(NotificationDTO notification, List<BaseDTO> receivers){
         super();
-        this.contentId = contentId;
-        this.instanceId = instanceId;
-        this.contentType = contentType;
-        this.message = message;
+        this.notification = notification;
+        this.receivers = receivers;
     }
 
     @Override
@@ -17,19 +25,7 @@ public class SendNotificationEvent extends AbstractNotificationsAppEvent {
         handler.sendNotification(this);
     }
 
-    public String getContentId(){
-        return contentId;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getInstanceId() {
-        return instanceId;
+    public NotificationDTO getNotification() {
+        return notification;
     }
 }

@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.silverpeas.mobile.client.components.HTMLPanelClickable;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.GroupDTO;
@@ -16,8 +17,10 @@ public class UserGroupItem extends Composite {
 
   private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
   @UiField Anchor mail;
-  @UiField HTMLPanel content, container;
+  @UiField HTMLPanel content;
+  @UiField HTMLPanelClickable container;
 
+  private BaseDTO data = null;
   private boolean selected = false;
 
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
@@ -30,6 +33,7 @@ public class UserGroupItem extends Composite {
   }
 
   public void setData(BaseDTO data) {
+    this.data = data;
     if (data instanceof UserDTO) {
       UserDTO dataUser = (UserDTO) data;
       if (dataUser.getAvatar() == null) {
@@ -54,6 +58,10 @@ public class UserGroupItem extends Composite {
     }
   }
 
+  public BaseDTO getData() {
+    return data;
+  }
+
   public void hideData() {
     mail.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
     content.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
@@ -63,9 +71,14 @@ public class UserGroupItem extends Composite {
     return selected;
   }
 
-  @UiHandler("mail")
+  @UiHandler("container")
   protected void selection(ClickEvent event) {
-    container.getElement().setAttribute("style", "background-color:#6fa800;");
+    if (isSelected()) {
+      container.getElement().removeAttribute("style");
+      this.selected = false;
+    } else {
+      container.getElement().setAttribute("style", "background-color:#6fa800;");
+      this.selected = true;
+    }
   }
-
 }

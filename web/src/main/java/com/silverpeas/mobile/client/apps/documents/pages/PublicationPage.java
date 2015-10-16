@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -33,6 +34,7 @@ import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 public class PublicationPage extends PageContent implements View, PublicationNavigationPagesEventHandler {
 
@@ -52,6 +54,8 @@ public class PublicationPage extends PageContent implements View, PublicationNav
   Button actions;
   @UiField(provided = true) protected DocumentsMessages msg = null;
 
+  private NotifyButton notification = new NotifyButton();
+
   interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
   }
 
@@ -64,7 +68,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     listActions.setId("action-bloc");
     actions.getElement().setId("action-button");
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
-    //listActions.add(new NotifyButton());
+    //listActions.add(notification);
   }
 
   @Override
@@ -114,6 +118,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
         content.getStyle().setDisplay(Style.Display.NONE);
       }
     }
+    notification.init(publication.getId(), NotificationDTO.TYPE_PUBLICATION, publication.getName(), getPageTitle());
   }
 
   @UiHandler("actions")
@@ -135,5 +140,12 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     page.setSize("100%", available + "px");
     page.setPageTitle("Contenu");
     page.show();
+  }
+
+  @Override
+  public void onPreviewNativeEvent(Event.NativePreviewEvent event) {
+    if (event.getTypeInt() == Event.ONCLICK) {
+      listActions.setStyledisplay(Style.Display.NONE);
+    }
   }
 }

@@ -8,6 +8,7 @@ import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
+import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.CommentsException;
 import com.silverpeas.mobile.shared.exceptions.NotificationsException;
@@ -48,5 +49,11 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
     usersAndGroups.add(g);
 
     return usersAndGroups;
+  }
+
+  @Override
+  public void send(NotificationDTO notification, List<BaseDTO> receivers) throws NotificationsException, AuthenticationException  {
+    //TODO
+    System.out.println("send notification");
   }
 }

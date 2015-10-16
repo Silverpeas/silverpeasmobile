@@ -7,9 +7,12 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextArea;
+import com.silverpeas.mobile.client.apps.notifications.events.app.SendNotificationEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AbstractNotificationPagesEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationPagesEventHandler;
+import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationSendedEvent;
 import com.silverpeas.mobile.client.apps.notifications.pages.widgets.UserGroupItem;
 import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -17,6 +20,12 @@ import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.UserDTO;
+import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author: svu
@@ -32,6 +41,7 @@ public class NotificationPage extends PageContent implements View, NotificationP
   @UiField protected HTMLPanel container;
   @UiField protected Anchor send;
   @UiField UnorderedList list;
+  @UiField TextArea message;
 
   private String contentId, contentType, instanceId;
 
@@ -53,12 +63,33 @@ public class NotificationPage extends PageContent implements View, NotificationP
 
   @UiHandler("send")
   protected void sendNotification(ClickEvent event) {
-    //TODO
+    List<BaseDTO> receivers = new ArrayList<BaseDTO>();
+    Iterator it = list.iterator();
+    while (it.hasNext()) {
+      UserGroupItem item = (UserGroupItem) it.next();
+      if (item.isSelected()) {
+        BaseDTO d = item.getData();
+        if (d instanceof UserDTO) {
+          ((UserDTO) d).setAvatar("");
+        }
+        receivers.add(d);
+      }
+    }
+    if (receivers.isEmpty()) return;
+    //TODO : pass real parameters
+    NotificationDTO notification = new NotificationDTO(contentId, contentType, message.getText());
+    EventBus.getInstance().fireEvent(new SendNotificationEvent(notification, receivers));
+
   }
 
   @Override
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractNotificationPagesEvent.TYPE, this);
+  }
+
+  @Override
+  public void onNotificationSended(NotificationSendedEvent event) {
+    back();
   }
 }

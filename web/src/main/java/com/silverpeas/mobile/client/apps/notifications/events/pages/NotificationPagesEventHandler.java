@@ -6,4 +6,5 @@ import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEve
 
 public interface NotificationPagesEventHandler extends EventHandler {
     void onAllowedUsersAndGroupsLoaded(AllowedUsersAndGroupsLoadedEvent allowedUsersAndGroupsLoadedEvent);
+    void onNotificationSended(NotificationSendedEvent event);
 }

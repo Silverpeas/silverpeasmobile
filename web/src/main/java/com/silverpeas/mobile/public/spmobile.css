@@ -1276,4 +1276,6 @@ input[type='range']::-webkit-slider-thumb {
 #action-bloc a {
   color:#333;
   line-height:200%;
+  display: block;
+  width: 100%;
 }
