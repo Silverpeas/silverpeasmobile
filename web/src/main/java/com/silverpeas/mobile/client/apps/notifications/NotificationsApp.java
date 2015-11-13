@@ -22,16 +22,16 @@ import java.util.List;
 public class NotificationsApp extends App implements NotificationsAppEventHandler {
 
     private NotificationPage mainPage = new NotificationPage();
-    private String contentId, contentType;
+    private String instanceId, contentId, contentType;
 
-    public NotificationsApp(String contentId, String contentType, String title, String pageTitle) {
+    public NotificationsApp(String instanceId, String contentId, String contentType, String title, String pageTitle) {
         super();
+        this.instanceId = instanceId;
         this.contentId = contentId;
         this.contentType = contentType;
         EventBus.getInstance().addHandler(AbstractNotificationsAppEvent.TYPE, this);
         mainPage.setTitle(title);
         mainPage.setPageTitle(pageTitle);
-        //mainPage.setContentInfos(contentId, instanceId, contentType);
     }
 
     public void start(){
@@ -52,7 +52,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
             @Override
             public void attempt() {
                 //TODO : pass real param
-                ServicesLocator.getServiceNotifications().getAllowedUsersAndGroups("1", this);
+                ServicesLocator.getServiceNotifications().getAllowedUsersAndGroups(instanceId, contentId, this);
             }
 
             @Override
@@ -76,6 +76,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
                 NotificationDTO n = event.getNotification();
                 n.setContentId(contentId);
                 n.setContentType(contentType);
+                n.setInstanceId(instanceId);
                 ServicesLocator.getServiceNotifications().send(n, event.getReceivers(), this);
             }
 

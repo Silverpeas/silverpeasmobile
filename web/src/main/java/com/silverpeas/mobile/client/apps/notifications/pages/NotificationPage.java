@@ -43,7 +43,6 @@ public class NotificationPage extends PageContent implements View, NotificationP
   @UiField UnorderedList list;
   @UiField TextArea message;
 
-  private String contentId, contentType, instanceId;
 
   public NotificationPage() {
     msg = GWT.create(NotificationsMessages.class);
@@ -77,7 +76,7 @@ public class NotificationPage extends PageContent implements View, NotificationP
     }
     if (receivers.isEmpty()) return;
     //TODO : pass real parameters
-    NotificationDTO notification = new NotificationDTO(contentId, contentType, message.getText());
+    NotificationDTO notification = new NotificationDTO(message.getText());
     EventBus.getInstance().fireEvent(new SendNotificationEvent(notification, receivers));
 
   }

@@ -31,7 +31,7 @@ public class NotifyButton extends Composite {
     @UiField  Anchor notify;
 
     @UiField(provided = true) protected NotificationsMessages msg = null;
-    private String contentId, contentType, title, pageTitle;
+    private String instanceId, contentId, contentType, title, pageTitle;
 
 
     public NotifyButton() {
@@ -39,7 +39,8 @@ public class NotifyButton extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
     }
 
-    public void init(String contentId, String contentType, String title, String pageTitle) {
+    public void init(String instanceId, String contentId, String contentType, String title, String pageTitle) {
+        this.instanceId = instanceId;
         this.contentId = contentId;
         this.contentType = contentType;
         this.title = title;
@@ -48,7 +49,7 @@ public class NotifyButton extends Composite {
 
     @UiHandler("notify")
     void displayNotificationPage(ClickEvent event){
-        NotificationsApp app = new NotificationsApp(contentId, contentType, title, pageTitle);
+        NotificationsApp app = new NotificationsApp(instanceId, contentId, contentType, title, pageTitle);
         app.start();
 
         // hide menu

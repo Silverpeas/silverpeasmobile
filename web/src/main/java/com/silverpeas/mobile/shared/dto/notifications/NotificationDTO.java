@@ -16,14 +16,13 @@ public class NotificationDTO extends BaseDTO implements Serializable {
   private String contentId;
   private String contentType;
   private String message;
+  private String instanceId;
 
   public NotificationDTO() {
     super();
   }
 
-  public NotificationDTO(String contentId, String contentType, String message) {
-    this.contentId = contentId;
-    this.contentType = contentType;
+  public NotificationDTO(String message) {
     this.message = message;
   }
 
@@ -49,5 +48,13 @@ public class NotificationDTO extends BaseDTO implements Serializable {
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public String getInstanceId() {
+    return instanceId;
+  }
+
+  public void setInstanceId(String instanceId) {
+    this.instanceId = instanceId;
   }
 }

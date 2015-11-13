@@ -50,8 +50,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
   @UiField CommentsButton comments;
   @UiField Anchor contentLink;
   @UiField DivElement content;
-  @UiField
-  Button actions;
+  @UiField Button actions;
   @UiField(provided = true) protected DocumentsMessages msg = null;
 
   private NotifyButton notification = new NotifyButton();
@@ -68,7 +67,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     listActions.setId("action-bloc");
     actions.getElement().setId("action-button");
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
-    //listActions.add(notification);
+    listActions.add(notification);
   }
 
   @Override
@@ -118,7 +117,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
         content.getStyle().setDisplay(Style.Display.NONE);
       }
     }
-    notification.init(publication.getId(), NotificationDTO.TYPE_PUBLICATION, publication.getName(), getPageTitle());
+    notification.init(publication.getInstanceId(), publication.getId(), NotificationDTO.TYPE_PUBLICATION, publication.getName(), getPageTitle());
   }
 
   @UiHandler("actions")
@@ -138,7 +137,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     url += "?id=" + publication.getId();
     IframePage page = new IframePage(url);
     page.setSize("100%", available + "px");
-    page.setPageTitle("Contenu");
+    page.setPageTitle(msg.content());
     page.show();
   }
 

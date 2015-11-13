@@ -13,6 +13,6 @@ import java.util.List;
 
 @RemoteServiceRelativePath("Notifications")
 public interface ServiceNotifications extends RemoteService {
-  public List<BaseDTO> getAllowedUsersAndGroups(String contentId) throws NotificationsException, AuthenticationException;
+  public List<BaseDTO> getAllowedUsersAndGroups(String componentId, String contentId) throws NotificationsException, AuthenticationException;
   public void send(NotificationDTO notification, List<BaseDTO> receivers) throws NotificationsException, AuthenticationException;
 }

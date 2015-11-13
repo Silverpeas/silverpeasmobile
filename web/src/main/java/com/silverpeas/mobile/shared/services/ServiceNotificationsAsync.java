@@ -13,7 +13,8 @@ import com.silverpeas.mobile.shared.exceptions.NotificationsException;
 import java.util.List;
 
 public interface ServiceNotificationsAsync {
-    void getAllowedUsersAndGroups(String contentId, AsyncCallback<List<BaseDTO>> async);
 
     void send(NotificationDTO notification, List<BaseDTO> receivers, AsyncCallback<Void> async);
+
+    void getAllowedUsersAndGroups(String componentId, String contentId, AsyncCallback<List<BaseDTO>> async);
 }
