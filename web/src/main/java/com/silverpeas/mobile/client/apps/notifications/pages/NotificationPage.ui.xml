@@ -7,12 +7,14 @@
 
 
 
-      <h2><ui:safehtml from="{msg.title}"/></h2>
+      <h2><ui:safehtml from="{msg.message}"/></h2>
 
       <div id="champs-statut">
           <div class="ouverture-bulle"></div>
           <g:TextArea ui:field="message" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
       </div>
+
+      <h2><ui:safehtml from="{msg.recipients}"/></h2>
 
       <l:UnorderedList ui:field="list" styleName="list-notifications"></l:UnorderedList>
 

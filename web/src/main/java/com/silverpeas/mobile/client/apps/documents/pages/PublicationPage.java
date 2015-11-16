@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
@@ -67,7 +68,6 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     listActions.setId("action-bloc");
     actions.getElement().setId("action-button");
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
-    listActions.add(notification);
   }
 
   @Override
@@ -87,7 +87,13 @@ public class PublicationPage extends PageContent implements View, PublicationNav
   public void onLoadedPublication(PublicationLoadedEvent event) {
     Notification.activityStop();
     this.publication = event.getPublication();
+    if (event.isNotifiable()) {
+      listActions.add(notification);
+    }
     display(event.isCommentable(), event.isAbleToStoreContent());
+    if (listActions.isEmpty()) {
+      DOM.getElementById("actions").getStyle().setDisplay(Style.Display.NONE);
+    }
   }
 
   /**

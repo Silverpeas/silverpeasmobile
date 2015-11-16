@@ -143,10 +143,22 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       } else if (app.getName().equals("gallery")) {
         value = getMainSessionController().getComponentParameterValue(app.getId(), "comments");
       }
-      dto.setCommentable(value.equals("yes"));
+      if (app.getName().equals("kmelia")) {
+        dto.setCommentable(value.equals("yes"));
+      } else if (app.getName().equals("gallery")) {
+        dto.setCommentable(true);
+      }
     } catch (Exception e) {
       dto.setCommentable(false);
     }
+    try {
+      String value = "";
+      value = getMainSessionController().getComponentParameterValue(app.getId(), "notifications");
+      dto.setNotifiable(value.equals("yes"));
+    } catch(Exception e) {
+      dto.setNotifiable(false);
+    }
+
 
     try {
       String value = "";

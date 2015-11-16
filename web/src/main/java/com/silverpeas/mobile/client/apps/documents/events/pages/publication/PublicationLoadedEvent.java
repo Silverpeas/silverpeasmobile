@@ -5,10 +5,11 @@ import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 public class PublicationLoadedEvent extends AbstractPublicationPagesEvent {
 
   private PublicationDTO publication;
-  private boolean commentable, ableToStoreContent;
+  private boolean commentable, ableToStoreContent, notifiable;
 
-  public PublicationLoadedEvent(PublicationDTO publication, boolean commentable, boolean ableToStoreContent) {
+  public PublicationLoadedEvent(PublicationDTO publication, boolean commentable, boolean ableToStoreContent, boolean notifiable) {
     super();
+    this.notifiable = notifiable;
     this.publication = publication;
     this.commentable = commentable;
     this.ableToStoreContent = ableToStoreContent;
@@ -29,5 +30,9 @@ public class PublicationLoadedEvent extends AbstractPublicationPagesEvent {
 
   public boolean isAbleToStoreContent() {
     return ableToStoreContent;
+  }
+
+  public boolean isNotifiable() {
+    return notifiable;
   }
 }

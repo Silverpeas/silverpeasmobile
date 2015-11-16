@@ -6,6 +6,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 public interface NotificationsMessages extends Messages {
   String notifyContent();
 
-  SafeHtml title();
+  SafeHtml message();
+  SafeHtml recipients();
   SafeHtml send();
 }

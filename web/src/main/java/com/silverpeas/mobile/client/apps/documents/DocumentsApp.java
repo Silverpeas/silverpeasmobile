@@ -48,7 +48,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     private DocumentsMessages msg;
 
     private NavigationApp navApp = new NavigationApp();
-    private boolean commentable, ableToStoreContent;
+    private boolean commentable, ableToStoreContent, notifiable;
     private Anchor sourceLink;
 
     public DocumentsApp() {
@@ -88,6 +88,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             public void onSuccess(final ApplicationInstanceDTO app) {
                 OfflineHelper.hideOfflineIndicator();
                 commentable = app.isCommentable();
+                notifiable = app.isNotifiable();
                 displayContent(appId, contentType, contentId);
             }
         };
@@ -149,6 +150,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     @Override
     public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
         this.commentable = event.getInstance().isCommentable();
+        this.notifiable = event.getInstance().isNotifiable();
         this.ableToStoreContent = event.getInstance().isAbleToStoreContent();
         GedNavigationPage page = new GedNavigationPage();
         page.setPageTitle(msg.title());
@@ -205,7 +207,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
                 if (result == null) {
                     result = new PublicationDTO();
                 }
-                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent));
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent, notifiable));
             }
         };
 
@@ -219,7 +221,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             public void onSuccess(PublicationDTO result) {
                 super.onSuccess(result);
                 LocalStorageHelper.store(key, PublicationDTO.class, result);
-                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent));
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent, notifiable));
             }
 
         };

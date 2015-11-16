@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class UnorderedList extends ComplexPanel {
 
   private UListElement list;
+  private int count = 0;
 
   public UnorderedList() {
     super();
@@ -21,6 +22,7 @@ public class UnorderedList extends ComplexPanel {
   @Override
   public void add(Widget child) {
     add(child, "");
+    count++;
   }
 
   public void add(Widget child, String styleName) {
@@ -34,12 +36,18 @@ public class UnorderedList extends ComplexPanel {
     } else {
       super.add(child, list);
     }
+    count++;
   }
 
   @Override
   public void clear() {
     super.clear();
     list.removeAllChildren();
+    count = 0;
+  }
+
+  public boolean isEmpty() {
+    return (count == 0);
   }
 
   @Override
