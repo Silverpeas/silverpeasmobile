@@ -396,6 +396,10 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       }
     } else if (urlVideo.contains("youtu")){
       String id = urlVideo.substring(urlVideo.lastIndexOf("/") + 1);
+      int p = id.indexOf("?v=");
+      if (p != -1) {
+        id = id.substring(p+3);
+      }
       video.setUrl("https://www.youtube.com/embed/" + id);
       video.setUrlPoster("http://img.youtube.com/vi/" + id + "/0.jpg");
     }

@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <g:HTMLPanel tag="li" styleName="media-thumb">
+  <g:HTMLPanel tag="li" styleName="media-thumb" ui:field="container">
     <g:Anchor ui:field="link" styleName="ui-thumb">
       <img ui:field="thumb" src=""/>
       <span ui:field="detail"></span>
