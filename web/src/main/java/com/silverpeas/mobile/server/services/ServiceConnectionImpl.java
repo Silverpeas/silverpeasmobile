@@ -76,6 +76,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     DetailUserDTO userDTO = new DetailUserDTO();
     Mapper mapper = new DozerBeanMapper();
     userDTO = mapper.map(user, DetailUserDTO.class);
+    userDTO.setLanguage(user.getUserPreferences().getLanguage());
 
     String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), "40x");
     userDTO.setAvatar(avatar);

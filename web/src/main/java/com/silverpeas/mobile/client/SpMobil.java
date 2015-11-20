@@ -105,6 +105,9 @@ public class SpMobil implements EntryPoint {
     }
 
     public static void displayMainPage(final DetailUserDTO user) {
+        if (!Window.Location.getHref().contains("?locale=") && !user.getLanguage().equalsIgnoreCase("fr")) {
+            Window.Location.replace(Window.Location.getHref() + "?locale=" + user.getLanguage());
+        }
         SpMobil.user = user;
         mainPage.setUser(user);
         RootPanel.get().clear();
