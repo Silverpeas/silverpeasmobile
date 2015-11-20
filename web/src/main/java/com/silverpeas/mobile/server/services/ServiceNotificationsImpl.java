@@ -26,7 +26,6 @@ import com.stratelia.webactiv.util.publication.control.PublicationBm;
 import com.stratelia.webactiv.util.publication.model.PublicationPK;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**

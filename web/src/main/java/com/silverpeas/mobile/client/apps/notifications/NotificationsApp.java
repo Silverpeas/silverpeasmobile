@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.client.apps.notifications;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.notifications.events.app.AbstractNotificationsAppEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.app.NotificationsAppEventHandler;
@@ -8,9 +9,12 @@ import com.silverpeas.mobile.client.apps.notifications.events.pages.AllowedUsers
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationSendedEvent;
 import com.silverpeas.mobile.client.apps.notifications.pages.NotificationPage;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import com.silverpeas.mobile.client.common.network.OfflineHelper;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
@@ -23,6 +27,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
 
     private NotificationPage mainPage = new NotificationPage();
     private String instanceId, contentId, contentType;
+    private ApplicationMessages globalMsg = null;
 
     public NotificationsApp(String instanceId, String contentId, String contentType, String title, String pageTitle) {
         super();
@@ -32,6 +37,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
         EventBus.getInstance().addHandler(AbstractNotificationsAppEvent.TYPE, this);
         mainPage.setTitle(title);
         mainPage.setPageTitle(pageTitle);
+        globalMsg = GWT.create(ApplicationMessages.class);
     }
 
     public void start(){
@@ -52,6 +58,14 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
             @Override
             public void attempt() {
                 ServicesLocator.getServiceNotifications().getAllowedUsersAndGroups(instanceId, contentId, this);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                if (OfflineHelper.isOffLine()) {
+                    Notification.alert(globalMsg.needToBeOnline());
+                }
             }
 
             @Override
@@ -76,6 +90,15 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
                 n.setContentType(contentType);
                 n.setInstanceId(instanceId);
                 ServicesLocator.getServiceNotifications().send(n, event.getReceivers(), this);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                if (OfflineHelper.isOffLine()) {
+                    Notification.alert(globalMsg.needToBeOnline());
+                    return;
+                }
             }
 
             @Override

@@ -16,9 +16,12 @@ import com.silverpeas.mobile.client.apps.notifications.events.pages.Notification
 import com.silverpeas.mobile.client.apps.notifications.pages.widgets.UserGroupItem;
 import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
@@ -75,7 +78,6 @@ public class NotificationPage extends PageContent implements View, NotificationP
       }
     }
     if (receivers.isEmpty()) return;
-    //TODO : pass real parameters
     NotificationDTO notification = new NotificationDTO(message.getText());
     EventBus.getInstance().fireEvent(new SendNotificationEvent(notification, receivers));
 
