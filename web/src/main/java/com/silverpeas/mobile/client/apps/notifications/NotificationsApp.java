@@ -51,7 +51,6 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
         AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<BaseDTO>>(null) {
             @Override
             public void attempt() {
-                //TODO : pass real param
                 ServicesLocator.getServiceNotifications().getAllowedUsersAndGroups(instanceId, contentId, this);
             }
 
@@ -69,7 +68,6 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
 
     @Override
     public void sendNotification(final SendNotificationEvent event) {
-        //TODO
         AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<Void>(null) {
             @Override
             public void attempt() {

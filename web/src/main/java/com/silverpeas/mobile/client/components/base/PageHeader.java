@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
+import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
@@ -27,12 +28,15 @@ public class PageHeader extends Composite {
   @UiField protected Anchor menu, back;
   @UiField protected HeadingElement title;
   @UiField(provided = true) protected ApplicationMessages msg = null;
+  protected ApplicationResources ressources = null;
 
   public PageHeader() {
     msg = GWT.create(ApplicationMessages.class);
+    ressources = GWT.create(ApplicationResources.class);
     initWidget(uiBinder.createAndBindUi(this));
     header.getElement().setId("header");
     menu.getElement().setId("menu");
+    ressources.css().ensureInjected();
   }
 
 
@@ -47,11 +51,11 @@ public class PageHeader extends Composite {
   }
 
   public void showOfflineIndicator() {
-    menu.addStyleName("offline");
+    menu.addStyleName(ressources.css().offline());
   }
 
   public void hideOfflineIndicator() {
-    menu.removeStyleName("offline");
+    menu.removeStyleName(ressources.css().offline());
   }
 
   public void setVisibleBackButton(boolean visible) {
