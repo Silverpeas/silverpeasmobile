@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.apps.media;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.media.events.app.*;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
@@ -41,7 +42,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     private NavigationApp navApp = new NavigationApp();
 
     // Model
-    private boolean commentable;
+    private boolean commentable, notifiable;
     private List<BaseDTO> currentAlbumsItems;
 
     public MediaApp() {
@@ -80,6 +81,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     @Override
                     public void onSuccess(final ApplicationInstanceDTO app) {
                         commentable = app.isCommentable();
+                        notifiable = app.isNotifiable();
                         displayContent(appId, contentType, contentId);
                     }
                 });
@@ -162,6 +164,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     @Override
     public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
         this.commentable = event.getInstance().isCommentable();
+        this.notifiable = event.getInstance().isNotifiable();
         MediaNavigationPage page = new MediaNavigationPage();
         page.setPageTitle(msg.title());
         page.init(event.getInstance().getId(), null, event.getInstance().getRights());
@@ -211,7 +214,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     @Override
                     public void execute() {
                         PhotoDTO preview = LocalStorageHelper.load(key, PhotoDTO.class);
-                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable));
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable, notifiable));
                     }
                 };
                 AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<PhotoDTO>(offlineAction) {
@@ -224,7 +227,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     public void onSuccess(final PhotoDTO preview) {
                         super.onSuccess(preview);
                         LocalStorageHelper.store(key, PhotoDTO.class, preview);
-                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable));
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(preview, commentable, notifiable));
                     }
                 };
                 action.attempt();
@@ -233,7 +236,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     @Override
                     public void execute() {
                         SoundDTO sound = LocalStorageHelper.load(key, SoundDTO.class);
-                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable));
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable, notifiable));
                     }
                 };
                 AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<SoundDTO>(offlineAction) {
@@ -246,7 +249,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     public void onSuccess(final SoundDTO sound) {
                         super.onSuccess(sound);
                         LocalStorageHelper.store(key, SoundDTO.class, sound);
-                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable));
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(sound, commentable, notifiable));
                     }
                 };
                 action.attempt();
@@ -255,7 +258,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     @Override
                     public void execute() {
                         VideoDTO video = LocalStorageHelper.load(key, VideoDTO.class);
-                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable, notifiable));
                     }
                 };
                 AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<VideoDTO>(offlineAction) {
@@ -268,7 +271,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     public void onSuccess(final VideoDTO video) {
                         super.onSuccess(video);
                         LocalStorageHelper.store(key, VideoDTO.class, video);
-                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable, notifiable));
                     }
                 };
                 action.attempt();
@@ -277,7 +280,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     @Override
                     public void execute() {
                         VideoStreamingDTO video = LocalStorageHelper.load(key, VideoStreamingDTO.class);
-                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable, notifiable));
                     }
                 };
                 AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<VideoStreamingDTO>(offlineAction) {
@@ -290,13 +293,13 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     public void onSuccess(final VideoStreamingDTO video) {
                         super.onSuccess(video);
                         LocalStorageHelper.store(key, VideoStreamingDTO.class, video);
-                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable));
+                        EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(video, commentable, notifiable));
                     }
                 };
                 action.attempt();
             }
         } else {
-            EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(event.getMedia(), commentable));
+            EventBus.getInstance().fireEvent(new MediaPreviewLoadedEvent(event.getMedia(), commentable, notifiable));
         }
     }
 

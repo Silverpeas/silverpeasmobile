@@ -13,11 +13,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
@@ -31,6 +27,7 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
@@ -39,10 +36,11 @@ import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
-import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
+import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 /**
  * @author: svu
@@ -59,6 +57,11 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
   @UiField ImageElement preview, mediaType;
   @UiField CommentsButton comments;
   @UiField DivElement previewContainer;
+
+  @UiField ActionsMenu actionsMenu;
+
+  private NotifyButton notification = new NotifyButton();
+
   private static PhotoPageUiBinder uiBinder = GWT.create(PhotoPageUiBinder.class);
   private PhotoDTO photo;
   private DocumentsResources ressources;
@@ -132,6 +135,10 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
             photo.getTitle(), photo.getCommentsNumber());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      }
+      if (event.isNotifiable()) {
+        notification.init(photo.getInstance(), photo.getId(), NotificationDTO.TYPE_PHOTO, photo.getName(), getPageTitle());
+        actionsMenu.addAction(notification);
       }
     }
   }

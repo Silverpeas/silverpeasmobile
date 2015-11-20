@@ -59,6 +59,10 @@ public class UnorderedList extends ComplexPanel {
     list.getStyle().setDisplay(display);
   }
 
+  public String getStyleDisplay() {
+    return list.getStyle().getDisplay();
+  }
+
   public void setId(String id) {
     list.setId(id);
   }

@@ -26,6 +26,7 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Html5Utils;
 import com.silverpeas.mobile.client.common.app.View;
@@ -34,10 +35,12 @@ import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
+import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 import java.util.Date;
 
@@ -58,6 +61,10 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   @UiField CommentsButton comments;
   @UiField VideoElement player;
   @UiField DivElement previewContainer;
+  @UiField ActionsMenu actionsMenu;
+
+  private NotifyButton notification = new NotifyButton();
+
   private static VideoPageUiBinder uiBinder = GWT.create(VideoPageUiBinder.class);
   private VideoDTO video;
   private MediaMessages msg;
@@ -134,6 +141,10 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
             video.getTitle(), video.getCommentsNumber());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      }
+      if (event.isNotifiable()) {
+        notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_VIDEO, video.getName(), getPageTitle());
+        actionsMenu.addAction(notification);
       }
     }
   }

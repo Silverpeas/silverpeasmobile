@@ -1,7 +1,6 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
@@ -12,7 +11,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
@@ -26,6 +24,7 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.navigation.UrlUtils;
@@ -33,10 +32,12 @@ import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
+import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 /**
  * @author: svu
@@ -55,6 +56,9 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
   @UiField AudioElement player;
   @UiField CommentsButton comments;
   @UiField DivElement previewContainer;
+  @UiField ActionsMenu actionsMenu;
+
+  private NotifyButton notification = new NotifyButton();
   private static SoundPageUiBinder uiBinder = GWT.create(SoundPageUiBinder.class);
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
   private SoundDTO sound;
@@ -116,6 +120,10 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
             sound.getTitle(), sound.getCommentsNumber());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      }
+      if (event.isNotifiable()) {
+        notification.init(sound.getInstance(), sound.getId(), NotificationDTO.TYPE_SOUND, sound.getName(), getPageTitle());
+        actionsMenu.addAction(notification);
       }
     }
   }

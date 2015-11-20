@@ -677,7 +677,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding: 0 1em;
   margin: 0;
   font-size: 12pt;
-  font-weight: 100
+  font-weight: 100;
+  height: 2em;
 }
 
 .comments .publiName, .comments .mediaName {
@@ -1256,13 +1257,14 @@ input[type='range']::-webkit-slider-thumb {
   top:1em;
   right:1em;
   background:transparent url("qvf.png") 0 0 no-repeat;
+  outline: none;
 }
 
 #action-bloc {
   display:none;
   border:0;
   position:absolute;
-  top:1em;
+  top:3em;
   right:1em;
   padding:1em;
   margin:0;

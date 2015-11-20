@@ -26,16 +26,19 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
+import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 /**
  * @author: svu
@@ -54,6 +57,9 @@ public class VideoStreamingPage extends PageContent implements View, MediaPagesE
   @UiField CommentsButton comments;
   @UiField IFrameElement player;
   @UiField DivElement previewContainer;
+  @UiField ActionsMenu actionsMenu;
+
+  private NotifyButton notification = new NotifyButton();
   private static VideoStreamingPageUiBinder uiBinder = GWT.create(VideoStreamingPageUiBinder.class);
   private VideoStreamingDTO video;
   private MediaMessages msg;
@@ -95,6 +101,10 @@ public class VideoStreamingPage extends PageContent implements View, MediaPagesE
             video.getTitle(), video.getCommentsNumber());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
+      }
+      if (event.isNotifiable()) {
+        notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_STREAMING, video.getName(), getPageTitle());
+        actionsMenu.addAction(notification);
       }
     }
   }

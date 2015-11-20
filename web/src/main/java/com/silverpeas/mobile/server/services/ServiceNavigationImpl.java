@@ -138,8 +138,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
     try {
       String value = "";
+      try {
+        value = getMainSessionController().getComponentParameterValue(app.getId(), "notifications");
+        dto.setNotifiable(value.equals("yes"));
+      } catch(Exception e) {
+        dto.setNotifiable(false);
+      }
       if (app.getName().equals("kmelia")) {
         value = getMainSessionController().getComponentParameterValue(app.getId(), "tabComments");
+
       } else if (app.getName().equals("gallery")) {
         value = getMainSessionController().getComponentParameterValue(app.getId(), "comments");
       }
@@ -147,18 +154,11 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         dto.setCommentable(value.equals("yes"));
       } else if (app.getName().equals("gallery")) {
         dto.setCommentable(true);
+        dto.setNotifiable(true);
       }
     } catch (Exception e) {
       dto.setCommentable(false);
     }
-    try {
-      String value = "";
-      value = getMainSessionController().getComponentParameterValue(app.getId(), "notifications");
-      dto.setNotifiable(value.equals("yes"));
-    } catch(Exception e) {
-      dto.setNotifiable(false);
-    }
-
 
     try {
       String value = "";

@@ -31,6 +31,7 @@ import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.client.components.UnorderedList;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
@@ -45,13 +46,13 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 
   @UiField HeadingElement title;
   @UiField HTMLPanel container;
-  @UiField UnorderedList listActions;
   @UiField UnorderedList attachments;
   @UiField ParagraphElement desc, lastUpdate;
   @UiField CommentsButton comments;
   @UiField Anchor contentLink;
   @UiField DivElement content;
-  @UiField Button actions;
+  @UiField ActionsMenu actionsMenu;
+
   @UiField(provided = true) protected DocumentsMessages msg = null;
 
   private NotifyButton notification = new NotifyButton();
@@ -65,8 +66,6 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     container.getElement().setId("publication");
     attachments.getElement().setId("attachments");
     content.setId("content");
-    listActions.setId("action-bloc");
-    actions.getElement().setId("action-button");
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
   }
 
@@ -87,12 +86,9 @@ public class PublicationPage extends PageContent implements View, PublicationNav
   public void onLoadedPublication(PublicationLoadedEvent event) {
     Notification.activityStop();
     this.publication = event.getPublication();
-    if (event.isNotifiable()) {
-      listActions.add(notification);
-    }
     display(event.isCommentable(), event.isAbleToStoreContent());
-    if (listActions.isEmpty()) {
-      DOM.getElementById("actions").getStyle().setDisplay(Style.Display.NONE);
+    if (event.isNotifiable()) {
+      actionsMenu.addAction(notification);
     }
   }
 
@@ -126,11 +122,6 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     notification.init(publication.getInstanceId(), publication.getId(), NotificationDTO.TYPE_PUBLICATION, publication.getName(), getPageTitle());
   }
 
-  @UiHandler("actions")
-  protected void showActions(ClickEvent event) {
-    listActions.setStyledisplay(Style.Display.BLOCK);
-  }
-
   @UiHandler("contentLink")
   protected void showContent(ClickEvent event) {
 
@@ -145,12 +136,5 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     page.setSize("100%", available + "px");
     page.setPageTitle(msg.content());
     page.show();
-  }
-
-  @Override
-  public void onPreviewNativeEvent(Event.NativePreviewEvent event) {
-    if (event.getTypeInt() == Event.ONCLICK) {
-      listActions.setStyledisplay(Style.Display.NONE);
-    }
   }
 }

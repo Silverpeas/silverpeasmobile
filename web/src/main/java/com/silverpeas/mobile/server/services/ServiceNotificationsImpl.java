@@ -50,8 +50,8 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
         try {
             ComponentInst componentInst = getAdminBm().getComponentInst(componentId);
             List<ProfileInst> profiles = new ArrayList<ProfileInst>();
-            if (componentId.toLowerCase().startsWith("kmelia")) {
-                if (isRightsOnTopicsEnabled(componentId)) {
+
+                if (componentId.toLowerCase().startsWith("kmelia") && isRightsOnTopicsEnabled(componentId)) {
                     TopicDetail topic = getKmeliaBm().getPublicationFather(new PublicationPK(contentId, componentId), true, getUserInSession().getId(), true);
                     if (topic != null){
                         NodePK pk = topic.getNodePK();
@@ -71,8 +71,10 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
                         profiles.addAll(componentInst.getInheritedProfiles());
                         profiles.addAll(componentInst.getProfiles());
                     }
+                } else {
+                    profiles.addAll(componentInst.getInheritedProfiles());
+                    profiles.addAll(componentInst.getProfiles());
                 }
-            }
 
             for (ProfileInst profile : profiles) {
                 for (String userId : profile.getAllUsers()) {
