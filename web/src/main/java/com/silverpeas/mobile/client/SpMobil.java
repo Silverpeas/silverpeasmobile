@@ -13,6 +13,7 @@ import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import com.silverpeas.mobile.client.common.network.NetworkHelper;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
