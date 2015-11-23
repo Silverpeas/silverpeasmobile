@@ -19,6 +19,7 @@ import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
 import com.stratelia.webactiv.kmelia.model.TopicDetail;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
+import com.stratelia.webactiv.util.ResourceLocator;
 import com.stratelia.webactiv.util.node.control.NodeBm;
 import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
@@ -133,6 +134,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
     @Override
     public void send(NotificationDTO notification, List<BaseDTO> receivers) throws NotificationsException, AuthenticationException {
         try {
+            ResourceLocator resource = new ResourceLocator("org.silverpeas.mobile.multilang.mobileBundle", getUserInSession().getUserPreferences().getLanguage());
             NotificationSender notificationSender = new NotificationSender(notification.getInstanceId());
             NotificationMetaData metaData = new NotificationMetaData();
 
@@ -157,7 +159,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
             SpaceInst space = getAdminBm().getSpaceInstById(app.getDomainFatherId());
             String title = space.getName(getUserInSession().getUserPreferences().getLanguage()) + " - ";
             title += app.getLabel(getUserInSession().getUserPreferences().getLanguage()) + " : ";
-            title += "Notification de " + getUserInSession().getDisplayedName(); //TODO : internationalization
+            title += resource.getString("notification.title", "Notification de ") + getUserInSession().getDisplayedName();
             metaData.setTitle(title);
             notificationSender.notifyUser(metaData);
         } catch (Exception e) {
