@@ -140,9 +140,9 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
 
             for (BaseDTO receiver : receivers) {
                 if (receiver instanceof UserDTO) {
-                    metaData.addUserRecipient(new UserRecipient(((UserDTO) receiver).getId()));
+                    metaData.addUserRecipient(new UserRecipient((receiver).getId()));
                 } else if (receiver instanceof GroupDTO) {
-                    metaData.addGroupRecipient(new GroupRecipient(((GroupDTO) receiver).getId()));
+                    metaData.addGroupRecipient(new GroupRecipient((receiver).getId()));
                 }
             }
 
