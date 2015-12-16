@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.silverpeas</groupId>
     <artifactId>parent</artifactId>
-    <version>28-SNAPSHOT</version>
+    <version>28</version>
   </parent>
 
   <groupId>com.silverpeas.mobile</groupId>
@@ -18,7 +18,7 @@
   <properties>
     <gwtVersion>2.7.0</gwtVersion>
     <gwtMojoPluginVersion>2.7.0</gwtMojoPluginVersion>
-    <silverpeasVersion>5.15-SNAPSHOT</silverpeasVersion>
+    <silverpeasVersion>5.15</silverpeasVersion>
   </properties>
 
   <repositories>
@@ -208,19 +208,19 @@
     <dependency>
       <groupId>org.realityforge.gwt.appcache</groupId>
       <artifactId>gwt-appcache-client</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.realityforge.gwt.appcache</groupId>
       <artifactId>gwt-appcache-linker</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.realityforge.gwt.appcache</groupId>
       <artifactId>gwt-appcache-server</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8</version>
     </dependency>
 
     <dependency>
