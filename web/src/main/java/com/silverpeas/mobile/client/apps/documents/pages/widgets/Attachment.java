@@ -111,18 +111,10 @@ public class Attachment extends Composite {
             String url = UrlUtils.getLocation();
             url += "spmobil/Attachment";
             url = url + "?id=" + attachement.getId() + "&lang=" + attachement.getLang();
-
-            /*if (MobilUtils.isIOS()) {
-                IframePage page = new IframePage(url);
-                page.setPageTitle(attachement.getTitle());
-                page.show();
-            } else {*/
-                link.setHref(url);
-                link.setTarget("_self");
-                link.fireEvent(new ClickEvent() {
-                });
-                link.getElement().setAttribute("download", attachement.getTitle());
-            //}
+            link.setHref(url);
+            link.setTarget("_self");
+            link.fireEvent(new ClickEvent() {});
+            link.getElement().setAttribute("download", attachement.getTitle());
         } catch(JavaScriptException e) {
             Notification.alert(e.getMessage());
         }
