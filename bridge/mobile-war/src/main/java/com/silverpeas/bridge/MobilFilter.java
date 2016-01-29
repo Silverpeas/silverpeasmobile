@@ -62,7 +62,7 @@ public class MobilFilter implements Filter {
           chain.doFilter(req, res);
           return;
         }
-        ((HttpServletResponse) res).sendRedirect("/spmobile/spmobil.html" + params);
+        ((HttpServletResponse) res).sendRedirect("/spmobile/" + params);
         return;
       } else {
         chain.doFilter(req, res);
