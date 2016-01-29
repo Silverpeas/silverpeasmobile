@@ -66,8 +66,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       NodePK pk = new NodePK(rootTopicId, instanceId);
       NodeDetail rootNode = getNodeBm().getDetail(pk);
       ArrayList<NodeDetail> nodes = getNodeBm().getSubTreeByLevel(pk, rootNode.getLevel() + 1);
+      TopicDTO trash = null;
       for (NodeDetail nodeDetail : nodes) {
-
         if (rootTopicId.equals(nodeDetail.getFatherPK().getId())) {
           TopicDTO topic = new TopicDTO();
           if (nodeDetail.getId() != 2) {
@@ -95,11 +95,16 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
               topic.setPubCount(getPubBm().getNbPubInFatherPKs(pks));
               //TODO : count without draft pub
               topic.setTerminal(childrenNumber == 0);
-              topicsList.add(topic);
+              if (nodeDetail.getId() ==1) {
+                trash = topic;
+              } else {
+                topicsList.add(topic);
+              }
             }
           }
         }
       }
+      if (trash != null) topicsList.add(0, trash);
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
@@ -142,7 +147,6 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         dto.setName(publicationDetail.getName());
         pubs.add(dto);
       }
-
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
