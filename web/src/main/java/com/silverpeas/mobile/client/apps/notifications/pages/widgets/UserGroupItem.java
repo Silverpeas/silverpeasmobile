@@ -16,7 +16,7 @@ import com.silverpeas.mobile.shared.dto.UserDTO;
 public class UserGroupItem extends Composite {
 
   private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
-  @UiField Anchor mail;
+  @UiField HTML mail;
   @UiField HTMLPanel content;
   @UiField HTMLPanelClickable container;
 
@@ -49,8 +49,9 @@ public class UserGroupItem extends Composite {
       mail.setText(dataUser.geteMail());
       if (dataUser.geteMail() == null || dataUser.geteMail().isEmpty()) {
         mail.setHTML("&nbsp");
+      } else {
+        mail.setText(dataUser.geteMail());
       }
-      mail.setHref("mailto:" + dataUser.geteMail());
     } else if (data instanceof GroupDTO) {
       content.setStylePrimaryName("group-name");
       GroupDTO dataGroup = (GroupDTO) data;
