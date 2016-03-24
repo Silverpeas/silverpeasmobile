@@ -210,6 +210,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
       dto.setCommentsNumber(CommentServiceFactory.getFactory().getCommentService().getCommentsCountOnPublication("Publication", new PublicationPK(pubId)));
       dto.setInstanceId(pub.getInstanceId());
+      if (pub.getWysiwyg() == null|| !pub.getWysiwyg().trim().isEmpty() || !pub.getInfoId().equals("0")) {
+        dto.setContent(true);
+      }
 
       ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
       SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");

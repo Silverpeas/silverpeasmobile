@@ -90,6 +90,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     if (event.isNotifiable()) {
       actionsMenu.addAction(notification);
     }
+    contentLink.setVisible(publication.getContent());
   }
 
   /**
