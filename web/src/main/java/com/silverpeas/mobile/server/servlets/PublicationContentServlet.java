@@ -62,17 +62,11 @@ public class PublicationContentServlet extends HttpServlet {
     response.getOutputStream().print("<head>");
     response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
     response.getOutputStream().print("<link rel='stylesheet' href='/spmobile/spmobil/spmobile.css'/>");
-    response.getOutputStream().print("<script>" +
-        "function resize() { " +
-        "var contentW = document.body.scrollWidth; " +
-        "var pageW = document.body.clientWidth; " +
-        "var ratio = (pageW / contentW) * 100; " +
-        "document.body.style.sk gimp=ratio+'%';" +
-        " }"
-    +"</script>");
-
+    response.getOutputStream().print("<link rel='stylesheet' href='/spmobile/spmobil/zoom.css'/>");
+    response.getOutputStream().print("<script type='text/javascript' src='/spmobile/spmobil/interact.min.js'></script>");
+    response.getOutputStream().print("<script type='text/javascript' src='/spmobile/spmobil/zoom.js'/></script>");
     response.getOutputStream().print("</head>");
-    response.getOutputStream().print("<body onload='javascript:resize();'>");
+    response.getOutputStream().print("<body style='background-color:grey;padding-top:1em;'>");
 
     if (pub.getInfoId().equals("0")) {
       // wysiwyg
@@ -115,9 +109,8 @@ public class PublicationContentServlet extends HttpServlet {
         }
       }
       html = doc.outerHtml();
-
       OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
-      out.write(html);
+      writeContainer(out, html);
       out.flush();
     } else {
       // form xml
@@ -220,8 +213,18 @@ public class PublicationContentServlet extends HttpServlet {
         script.remove();
     }
     html = doc.outerHtml();
-    out.write(html);
+    writeContainer(out, html);
     out.flush();
+  }
+
+  private void writeContainer(Writer out, String html) throws IOException {
+    out.write("<div id='gesture-area'>");
+    out.write("<div id='scale-element'>");
+    out.write("<div id='real-element' style='display:inline-block;background-color:#ececec;'>");
+    out.write(html);
+    out.write("</div>");
+    out.write("</div>");
+    out.write("</div>");
   }
 
   private String convertSpImageUrlToDataUrl(String url) {
