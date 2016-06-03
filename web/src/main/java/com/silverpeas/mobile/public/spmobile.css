@@ -16,7 +16,7 @@ body {
 body, input, select, textarea, button, .ui-btn {
   font-size: 1em;
   line-height: 1.3;
-  font-family: TeX Gyre Adventor, Century gothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", Futura, sans-serif;
+  font-family: Century gothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", Futura, sans-serif;
   /*{global-font-family}*/;
 }
 
@@ -575,7 +575,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /***** NAVIGATION ****/
-.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a {
+.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a,
+ .publication.ui-input-text{
   background-image: url(packImagesNavigation.png);
   background-position: 0.5625em 0.5625em;
   background-repeat: no-repeat;
@@ -660,9 +661,12 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /**** Publication - media ***********/
-#publication, #contacts, #update-statut, #a-media {
+#publication, #contacts, #update-statut, #a-media , #notification, #edit-notification {
   background-color: #ECECEC;
   padding: 1em 0;
+} 
+#edit-notification {
+  padding: 1em;
 }
 
 .publiDesc, .lastUpdate {
@@ -673,7 +677,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 }
 
-.publiName, .mediaName {
+.publiName, .mediaName, .title-instruction {
   padding: 0 1em;
   margin: 0;
   font-size: 12pt;
@@ -716,7 +720,53 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   margin: 0;
 }
 
-.ui-listview.list-comments > li p {
+#notification .list-contacts li {
+    padding: 1em 1em 2em 1em;
+}
+
+#notification .ui-controlgroup-controls.continu,
+#notification .title-instruction {
+  display:inline-block;
+}
+
+#notification .ui-controlgroup-controls.continu{
+  float:right;
+  padding:0 1em 0 0;
+
+}
+
+#notification  .btn-validate{
+  padding:0.5em 1em;
+ }
+ 
+ #edit-notification .ui-input-text.destinataires {
+  background:#FFF url(packPictos.png) 13px -234px no-repeat;
+  padding-left:3.5em;
+  line-height: 2.4em;
+  position:relative;
+  color:#AAA;
+ }
+ 
+#edit-notification .ui-input-text.destinataires .nb-user-sectionne {
+  position:absolute;
+  top:0.5em;
+  left:2.5em;
+  font-size:0.8em;
+  color:#333
+}
+
+#edit-notification .ui-input-text.destinataires .btn-modif{
+  position:absolute;
+  top:0.1em;
+  right:0.1em;
+  bottom:0.1em;
+  background:#7eb73a url(packPictos.png) 0.5em 0.5em no-repeat;
+  display:block;
+  text-indent:-300em;
+  width:2em;
+}
+ 
+ .ui-listview.list-comments > li p {
   line-height: 100%;
   white-space: normal;
   font-size: 0.90em;
@@ -746,7 +796,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   text-decoration: underline;
 }
 
-#add-comment {
+#add-comment,
+.introduction {
   padding: 0 1em;
   position: relative;
   margin-bottom: 1em
@@ -830,9 +881,21 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   margin-bottom: 2em;
 }
 
-.filter-contacts {
-  width: 19em;
+.filter-contacts,
+#edit-notification .ui-input-text.publication {
+  width: 98%;
+  padding-right:1%;
+  padding-left:1%;
   line-height: 2.4em;
+  background-color:#FFF;
+}
+#edit-notification .ui-input-text.publication input{
+  padding-left:2em;
+  width:100%;
+  background-color:transparent;
+  }
+#edit-notification label {
+  display:block
 }
 
 .list-contacts,
@@ -882,7 +945,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-weight: 100
 }
 
-#champs-statut {
+#champs-statut,
+#champs-message {
   position: relative;
   padding-top: 1px;
   margin-bottom: 1em;
@@ -894,9 +958,14 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   left: 12px;
   width: 0;
   height: 0;
-  border-left: 11px solid transparent;
+  border-left: 1px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 10px solid #FFF;
+}
+
+#champs-statut textarea,
+#champs-message textarea {
+  border-radius:10px;
 }
 
 .ui-page-theme-a .btn-validate {
@@ -908,6 +977,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   text-shadow: 0 1px 0 #6fa800;
   text-decoration: none;
   display: block;
+}
+
+.btn-validate.smaller {
+  padding: 0.5em 1em;
 }
 
 .ui-page-theme-a .btn-validate:hover {
@@ -940,6 +1013,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   -webkit-appearance: none;
   box-sizing: border-box;
   outline: 0;
+  background:#FFF;
 }
 
 textarea.ui-input-text {
@@ -949,8 +1023,7 @@ textarea.ui-input-text {
 
 .ui-input-text, .ui-input-search {
   margin: .5em 0;
-  border-width: 1px;
-  border-style: solid;
+  border:1px solid #ddd;
 }
 
 .ui-controlgroup-horizontal .ui-controlgroup-controls {
@@ -1277,3 +1350,16 @@ input[type='range']::-webkit-slider-thumb {
   display: block;
   width: 100%;
 }
+
+
+/*** Popup ***/
+
+.popupContent {
+  background-color: #6fa800;
+  padding: 50px;
+  border-radius: 10px;
+  color : white;
+  min-width: 300px;
+  text-align: center;
+}
+

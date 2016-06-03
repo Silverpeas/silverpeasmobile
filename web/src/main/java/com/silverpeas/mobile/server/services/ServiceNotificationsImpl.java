@@ -132,7 +132,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
     }
 
     @Override
-    public void send(NotificationDTO notification, List<BaseDTO> receivers) throws NotificationsException, AuthenticationException {
+    public void send(NotificationDTO notification, List<BaseDTO> receivers, String subject) throws NotificationsException, AuthenticationException {
         try {
             ResourceLocator resource = new ResourceLocator("org.silverpeas.mobile.multilang.mobileBundle", getUserInSession().getUserPreferences().getLanguage());
             NotificationSender notificationSender = new NotificationSender(notification.getInstanceId());
@@ -157,10 +157,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
 
             ComponentInst app = getAdminBm().getComponentInst(notification.getInstanceId());
             SpaceInst space = getAdminBm().getSpaceInstById(app.getDomainFatherId());
-            String title = space.getName(getUserInSession().getUserPreferences().getLanguage()) + " - ";
-            title += app.getLabel(getUserInSession().getUserPreferences().getLanguage()) + " : ";
-            title += resource.getString("notification.title", "Notification de ") + getUserInSession().getDisplayedName();
-            metaData.setTitle(title);
+            metaData.setTitle(subject);
             notificationSender.notifyUser(metaData);
         } catch (Exception e) {
             throw new NotificationsException();

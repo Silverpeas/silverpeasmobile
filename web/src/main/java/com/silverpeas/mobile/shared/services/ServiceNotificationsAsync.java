@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface ServiceNotificationsAsync {
 
-    void send(NotificationDTO notification, List<BaseDTO> receivers, AsyncCallback<Void> async);
+    void send(NotificationDTO notification, List<BaseDTO> receivers, String subject, AsyncCallback<Void> async);
 
     void getAllowedUsersAndGroups(String componentId, String contentId, AsyncCallback<List<BaseDTO>> async);
 }

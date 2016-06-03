@@ -8,6 +8,7 @@ import com.silverpeas.mobile.client.apps.notifications.events.app.SendNotificati
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationSendedEvent;
 import com.silverpeas.mobile.client.apps.notifications.pages.NotificationPage;
+import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
@@ -29,16 +30,18 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
     private NotificationPage mainPage = new NotificationPage();
     private String instanceId, contentId, contentType;
     private ApplicationMessages globalMsg = null;
+    private NotificationsMessages msg = null;
 
     public NotificationsApp(String instanceId, String contentId, String contentType, String title, String pageTitle) {
         super();
+        globalMsg = GWT.create(ApplicationMessages.class);
+        msg = GWT.create(NotificationsMessages.class);
         this.instanceId = instanceId;
         this.contentId = contentId;
         this.contentType = contentType;
         EventBus.getInstance().addHandler(AbstractNotificationsAppEvent.TYPE, this);
         mainPage.setTitle(title);
-        mainPage.setPageTitle(pageTitle);
-        globalMsg = GWT.create(ApplicationMessages.class);
+        mainPage.setPageTitle(msg.notifyContent());
     }
 
     public void start(){
@@ -90,7 +93,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
                 n.setContentId(contentId);
                 n.setContentType(contentType);
                 n.setInstanceId(instanceId);
-                ServicesLocator.getServiceNotifications().send(n, event.getReceivers(), this);
+                ServicesLocator.getServiceNotifications().send(n, event.getReceivers(), event.getSubject(), this);
             }
 
             @Override

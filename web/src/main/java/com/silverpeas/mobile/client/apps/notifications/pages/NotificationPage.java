@@ -1,19 +1,26 @@
 package com.silverpeas.mobile.client.apps.notifications.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.notifications.events.app.SendNotificationEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AbstractNotificationPagesEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationSendedEvent;
 import com.silverpeas.mobile.client.apps.notifications.pages.widgets.UserGroupItem;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.events.AbstractSelectionEvent;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.events.ChangeEvent;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.events.SelectionEventHandler;
 import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -33,7 +40,7 @@ import java.util.List;
 /**
  * @author: svu
  */
-public class NotificationPage extends PageContent implements View, NotificationPagesEventHandler {
+public class NotificationPage extends PageContent implements View, NotificationPagesEventHandler, SelectionEventHandler {
 
   private static NotificationPageUiBinder uiBinder = GWT.create(NotificationPageUiBinder.class);
 
@@ -42,20 +49,23 @@ public class NotificationPage extends PageContent implements View, NotificationP
 
   @UiField(provided = true) protected NotificationsMessages msg = null;
   @UiField protected HTMLPanel container;
-  @UiField protected Anchor send;
+  @UiField protected Anchor continu;
   @UiField UnorderedList list;
-  @UiField TextArea message;
 
+  private int nbUserSelected = 0;
 
   public NotificationPage() {
     msg = GWT.create(NotificationsMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
-    container.getElement().setId("update-statut");
+    container.getElement().setId("notification");
     EventBus.getInstance().addHandler(AbstractNotificationPagesEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractSelectionEvent.TYPE, this);
+    continu.setVisible(false);
   }
 
   @Override
   public void onAllowedUsersAndGroupsLoaded(AllowedUsersAndGroupsLoadedEvent allowedUsersAndGroupsLoadedEvent) {
+    setTitle();
     for (BaseDTO data : allowedUsersAndGroupsLoadedEvent.getListAllowedUsersAndGroups()) {
       UserGroupItem item = new UserGroupItem();
       item.setData(data);
@@ -63,8 +73,8 @@ public class NotificationPage extends PageContent implements View, NotificationP
     }
   }
 
-  @UiHandler("send")
-  protected void sendNotification(ClickEvent event) {
+  @UiHandler("continu")
+  protected void prepareToSend(ClickEvent event) {
     List<BaseDTO> receivers = new ArrayList<BaseDTO>();
     Iterator it = list.iterator();
     while (it.hasNext()) {
@@ -77,20 +87,48 @@ public class NotificationPage extends PageContent implements View, NotificationP
         receivers.add(d);
       }
     }
-    if (receivers.isEmpty()) return;
-    NotificationDTO notification = new NotificationDTO(message.getText());
-    EventBus.getInstance().fireEvent(new SendNotificationEvent(notification, receivers));
 
+    NotificationSenderPage page = new NotificationSenderPage();
+    page.setPageTitle(msg.notifyContent());
+    page.setSelection(receivers);
+    page.setTitle(getTitle());
+    page.show();
+
+  }
+
+  @Override
+  public void show() {
+    super.show();
+    nbUserSelected = 0;
   }
 
   @Override
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractNotificationPagesEvent.TYPE, this);
+    EventBus.getInstance().removeHandler(AbstractSelectionEvent.TYPE, this);
+    nbUserSelected = 0;
   }
 
   @Override
   public void onNotificationSended(NotificationSendedEvent event) {
-    back();
+  }
+
+  @Override
+  public void onSelectionChange(ChangeEvent event) {
+    if (event.isSelect()) {
+      nbUserSelected++;
+    } else {
+      nbUserSelected--;
+    }
+    continu.setVisible((nbUserSelected > 0));
+
+    setTitle();
+
+  }
+
+  private void setTitle() {
+    Element title = DOM.getElementById("title-instruction");
+    title.setInnerText(msg.title(nbUserSelected));
   }
 }

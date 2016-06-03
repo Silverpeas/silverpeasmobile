@@ -7,6 +7,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.silverpeas.mobile.client.apps.notifications.pages.widgets.events.ChangeEvent;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.components.HTMLPanelClickable;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
@@ -81,5 +83,7 @@ public class UserGroupItem extends Composite {
       container.getElement().setAttribute("style", "background-color:#6fa800;");
       this.selected = true;
     }
+
+    EventBus.getInstance().fireEvent(new ChangeEvent(selected));
   }
 }

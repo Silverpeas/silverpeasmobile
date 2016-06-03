@@ -6,25 +6,21 @@
     <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
 
 
+        <h2 id="title-instruction" class="title-instruction"></h2>
+        <div class="ui-controlgroup-controls continu">
+            <g:Anchor ui:field="continu" styleName="btn-validate ui-link">
+                <span class="ui-btn-text"><ui:safehtml from="{msg.continu}"/></span>
+            </g:Anchor>
+        </div>
+        <div class="introduction">
+            <input class="ui-input-text filter-contacts " placeholder="Filtrer" title="Filtrer" type="text" id="filter" name="filter" style="display:none;"/>
+        </div>
 
-      <h2><ui:safehtml from="{msg.message}"/></h2>
 
-      <div id="champs-statut">
-          <div class="ouverture-bulle"></div>
-          <g:TextArea ui:field="message" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
-      </div>
-
-      <h2><ui:safehtml from="{msg.recipients}"/></h2>
 
       <l:UnorderedList ui:field="list" styleName="list-notifications"></l:UnorderedList>
 
-      <div class=" ui-controlgroup ui-controlgroup-horizontal">
-          <div class="ui-controlgroup-controls ">
-              <g:Anchor ui:field="send" styleName="btn-validate ui-link">
-                  <span class="ui-btn-text"><ui:safehtml from="{msg.send}"/></span>
-              </g:Anchor>
-          </div>
-      </div>
+
 
     </g:HTMLPanel>
 </ui:UiBinder>

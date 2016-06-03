@@ -9,15 +9,17 @@ public class SendNotificationEvent extends AbstractNotificationsAppEvent {
 
     private NotificationDTO notification;
     private List<BaseDTO> receivers;
+    private String subject;
 
     public List<BaseDTO> getReceivers() {
         return receivers;
     }
 
-    public SendNotificationEvent(NotificationDTO notification, List<BaseDTO> receivers){
+    public SendNotificationEvent(NotificationDTO notification, List<BaseDTO> receivers, String subject){
         super();
         this.notification = notification;
         this.receivers = receivers;
+        this.subject = subject;
     }
 
     @Override
@@ -27,5 +29,9 @@ public class SendNotificationEvent extends AbstractNotificationsAppEvent {
 
     public NotificationDTO getNotification() {
         return notification;
+    }
+
+    public String getSubject() {
+        return subject;
     }
 }
