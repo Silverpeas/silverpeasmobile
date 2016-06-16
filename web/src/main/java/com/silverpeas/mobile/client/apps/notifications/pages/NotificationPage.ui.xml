@@ -13,7 +13,8 @@
             </g:Anchor>
         </div>
         <div class="introduction">
-            <input class="ui-input-text filter-contacts " placeholder="Filtrer" title="Filtrer" type="text" id="filter" name="filter" style="display:none;"/>
+            <g:TextBox ui:field="filter" styleName="ui-input-text filter-contacts"/>
+
         </div>
 
 

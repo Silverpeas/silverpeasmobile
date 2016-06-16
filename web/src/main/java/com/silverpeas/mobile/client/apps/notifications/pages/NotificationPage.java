@@ -2,16 +2,17 @@ package com.silverpeas.mobile.client.apps.notifications.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
+import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.app.SendNotificationEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AbstractNotificationPagesEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AllowedUsersAndGroupsLoadedEvent;
@@ -30,6 +31,7 @@ import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
@@ -51,6 +53,7 @@ public class NotificationPage extends PageContent implements View, NotificationP
   @UiField protected HTMLPanel container;
   @UiField protected Anchor continu;
   @UiField UnorderedList list;
+  @UiField TextBox filter;
 
   private int nbUserSelected = 0;
 
@@ -95,6 +98,36 @@ public class NotificationPage extends PageContent implements View, NotificationP
     page.setTitle(getTitle());
     page.show();
 
+  }
+
+  @UiHandler("filter")
+  protected void filter(KeyUpEvent event) {
+
+    String fi = filter.getText();
+    fi = fi.toLowerCase();
+    Iterator it = list.iterator();
+    while (it.hasNext()) {
+      UserGroupItem item = (UserGroupItem) it.next();
+      if (!item.isSelected()) { // keep selected items visibles
+        BaseDTO d = item.getData();
+        if (fi.isEmpty()) {
+          item.setVisible(true);
+        } else {
+          String value = "";
+          if (d instanceof UserDTO) {
+            value = ((UserDTO) d).getLastName();
+          } else if (d instanceof GroupDTO) {
+            value = ((GroupDTO) d).getName();
+          }
+          value = value.toLowerCase();
+          if (value.startsWith(filter.getText())) {
+            item.setVisible(true);
+          } else {
+            item.setVisible(false);
+          }
+        }
+      }
+    }
   }
 
   @Override

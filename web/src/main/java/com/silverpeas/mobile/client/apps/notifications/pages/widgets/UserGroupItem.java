@@ -80,7 +80,7 @@ public class UserGroupItem extends Composite {
       container.getElement().removeAttribute("style");
       this.selected = false;
     } else {
-      container.getElement().setAttribute("style", "background-color:#6fa800;");
+      container.getElement().setAttribute("style", "color: white; background-color:#6fa800;");
       this.selected = true;
     }
 
