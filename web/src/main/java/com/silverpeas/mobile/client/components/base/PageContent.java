@@ -8,11 +8,15 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.silverpeas.mobile.client.SpMobil;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
+import com.silverpeas.mobile.client.components.base.events.page.PageEvent;
+import com.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
 
-public class PageContent extends Composite implements View, NativePreviewHandler {
+public class PageContent extends Composite implements View, NativePreviewHandler, PageEventHandler {
 
   private App app;
   protected boolean clicked = false;
@@ -21,6 +25,7 @@ public class PageContent extends Composite implements View, NativePreviewHandler
   public PageContent() {
     super();
     Event.addNativePreviewHandler(this);
+    EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
 
   public String getPageTitle() {
@@ -58,6 +63,7 @@ public class PageContent extends Composite implements View, NativePreviewHandler
 
   @Override
   public void stop() {
+    EventBus.getInstance().removeHandler(AbstractPageEvent.TYPE, this);
     if (app != null) app.stop();
   }
 
@@ -81,5 +87,10 @@ public class PageContent extends Composite implements View, NativePreviewHandler
 
   public void setApp(App app) {
     this.app = app;
+  }
+
+  @Override
+  public void receiveEvent(PageEvent event) {
+    // for compatibility
   }
 }

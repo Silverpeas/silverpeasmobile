@@ -39,7 +39,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
         mainPage.setPageTitle(title);
         mainPage.setRootSpaceId(null);
         setMainPage(mainPage);
-        // no "super.start(lauchingPage);" this app is used in another app
+        // no "super.start(lauchingPage);" this apps is used in another apps
     }
 
     public void setTypeApp(String type) {

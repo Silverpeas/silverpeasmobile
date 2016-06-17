@@ -21,21 +21,24 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
-import com.silverpeas.mobile.client.apps.status.events.pages.AbstractStatusPagesEvent;
-import com.silverpeas.mobile.client.apps.status.events.pages.StatusPagesEventHandler;
-import com.silverpeas.mobile.client.apps.status.events.pages.StatusPostedEvent;
+import com.silverpeas.mobile.client.apps.status.events.StatusEvents;
+
 import com.silverpeas.mobile.client.apps.tasks.TasksApp;
 import com.silverpeas.mobile.client.common.AuthentificationManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
+import com.silverpeas.mobile.client.components.base.events.page.PageEvent;
+import com.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
+import com.silverpeas.mobile.shared.dto.StatusDTO;
 
-public class NavigationMenu extends Composite implements StatusPagesEventHandler {
+public class NavigationMenu extends Composite implements PageEventHandler {
 
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
@@ -57,12 +60,15 @@ public class NavigationMenu extends Composite implements StatusPagesEventHandler
     container.getElement().setId("silverpeas-navmenu-panel");
     container.getElement().getStyle().setHeight(Window.getClientHeight(), Unit.PX);
     user.getElement().setId("user");
-    EventBus.getInstance().addHandler(AbstractStatusPagesEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
 
   @Override
-  public void onStatusPost(final StatusPostedEvent event) {
-    status.setInnerHTML(event.getNewStatus().getDescription());
+  public void receiveEvent(PageEvent event) {
+    if (event.getSender() instanceof StatusApp && event.getName().equals(StatusEvents.POSTED.toString())) {
+      StatusDTO newStatus = (StatusDTO) event.getData();
+      status.setInnerHTML(newStatus.getDescription());
+    }
   }
 
   public void toogleMenu() {
@@ -88,8 +94,6 @@ public class NavigationMenu extends Composite implements StatusPagesEventHandler
   protected void search(KeyDownEvent event) {
     if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
       SpMobil.search(search.getText());
-
-
     }
   }
 

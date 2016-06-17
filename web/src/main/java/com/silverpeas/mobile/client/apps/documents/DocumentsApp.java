@@ -69,7 +69,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         navApp.setTitle(msg.title());
         navApp.start();
 
-        // app main is navigation app main page
+        // apps main is navigation apps main page
         setMainPage(navApp.getMainPage());
 
         super.start();
