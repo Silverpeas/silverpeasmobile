@@ -17,5 +17,6 @@ public interface NotificationsMessages extends Messages {
   SafeHtml subject();
   SafeHtml notifiedContacts();
   String sended();
+  String filter();
 
 }

@@ -61,6 +61,7 @@ public class NotificationPage extends PageContent implements View, NotificationP
     msg = GWT.create(NotificationsMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     container.getElement().setId("notification");
+    filter.getElement().setAttribute("placeholder", msg.filter());
 
     EventBus.getInstance().addHandler(AbstractNotificationPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractSelectionEvent.TYPE, this);
