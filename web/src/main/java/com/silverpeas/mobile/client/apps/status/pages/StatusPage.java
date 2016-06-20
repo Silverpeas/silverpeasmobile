@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.apps.status.events.StatusEvents;
 import com.silverpeas.mobile.client.apps.status.resources.StatusMessages;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -45,6 +46,8 @@ public class StatusPage extends PageContent {
 
   @Override
   public void receiveEvent(PageEvent event) {
-    back();
+    if (event.getSender() instanceof StatusApp && event.getName().equals(StatusEvents.POSTED.toString())) {
+      back();
+    }
   }
 }
