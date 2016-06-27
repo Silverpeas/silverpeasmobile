@@ -6,4 +6,5 @@ public interface TasksPagesEventHandler extends EventHandler{
   void onTaskLoad(TasksLoadedEvent event);
 
   void onTaskCreated(TaskCreatedEvent taskCreatedEvent);
+  void onTaskUpdated(TaskUpdatedEvent taskUpdatedEvent);
 }

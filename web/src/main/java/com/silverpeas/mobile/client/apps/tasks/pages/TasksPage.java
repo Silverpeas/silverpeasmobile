@@ -3,12 +3,10 @@ package com.silverpeas.mobile.client.apps.tasks.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
-import com.silverpeas.mobile.client.apps.tasks.events.pages.AbstractTasksPagesEvent;
-import com.silverpeas.mobile.client.apps.tasks.events.pages.TaskCreatedEvent;
-import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
-import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksPagesEventHandler;
+import com.silverpeas.mobile.client.apps.tasks.events.pages.*;
 import com.silverpeas.mobile.client.apps.tasks.pages.widgets.AddTaskItem;
 import com.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -60,6 +58,24 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
     TaskItem item = new TaskItem();
     item.setData(taskCreatedEvent.getTask());
     list.add(item);
+  }
+
+  @Override
+  public void onTaskUpdated(TaskUpdatedEvent taskUpdatedEvent) {
+    int i = 0;
+    while (i < list.getWidgetCount()) {
+      if (list.getWidget(i) instanceof TaskItem) {
+        TaskItem t = (TaskItem) list.getWidget(i);
+        if (t.getData().getId() == taskUpdatedEvent.getTask().getId()) {
+          list.remove(t);
+          TaskItem item = new TaskItem();
+          item.setData(taskUpdatedEvent.getTask());
+          list.add(item);
+          break;
+        }
+      }
+      i++;
+    }
   }
 
   @Override

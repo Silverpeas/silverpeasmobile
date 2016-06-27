@@ -2,12 +2,14 @@ package com.silverpeas.mobile.client.apps.tasks;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.tasks.events.app.AbstractTasksAppEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TasksAppEventHandler;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.TaskCreatedEvent;
+import com.silverpeas.mobile.client.apps.tasks.events.pages.TaskUpdatedEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import com.silverpeas.mobile.client.apps.tasks.pages.TasksPage;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -72,14 +74,13 @@ public class TasksApp extends App implements TasksAppEventHandler {
 
             @Override
             public void attempt() {
-                ServicesLocator.getServiceTasks().updateTask(event.getTask().getId(),
-                        event.getNewPercentCompleted(), this);
+                ServicesLocator.getServiceTasks().updateTask(event.getTask(), this);
             }
 
             @Override
             public void onSuccess(final Void result) {
                 super.onSuccess(result);
-                // do nothing
+                EventBus.getInstance().fireEvent(new TaskUpdatedEvent(event.getTask()));
             }
         };
         action.attempt();
