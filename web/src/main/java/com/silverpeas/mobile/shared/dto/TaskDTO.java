@@ -1,9 +1,6 @@
 package com.silverpeas.mobile.shared.dto;
 
-import com.stratelia.webactiv.calendar.model.Priority;
-
 import java.io.Serializable;
-import java.util.Date;
 
 public class TaskDTO implements Serializable {
 

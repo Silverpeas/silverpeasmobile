@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.server.services;
 
-import com.silverpeas.admin.ejb.AdminBusiness;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -9,15 +8,12 @@ import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
-import com.stratelia.silverpeas.peasCore.MainSessionController;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.beans.admin.ComponentInstLight;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.beans.admin.SpaceInstLight;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.JNDINames;
+import org.silverpeas.core.admin.component.model.ComponentInstLight;
+import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.space.SpaceInstLight;
+import org.silverpeas.core.silvertrace.SilverTrace;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +25,7 @@ import java.util.List;
 public class ServiceNavigationImpl extends AbstractAuthenticateService implements ServiceNavigation {
 
   private static final long serialVersionUID = 1L;
-  private AdminBusiness adminBm;
-  private OrganizationController organizationController = new OrganizationController();
+  private OrganizationController organizationController = OrganizationController.get();
 
   @Override
   public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId, String appType) throws NavigationException, AuthenticationException {
@@ -38,9 +33,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     ArrayList<SilverpeasObjectDTO> results = new ArrayList<SilverpeasObjectDTO>();
     try {
       if (rootSpaceId == null) {
-        List<String> spaceIds = getAdminBm().getAvailableSpaceIds(getUserInSession().getId());
+        String [] spaceIds = Administration.get().getAllSpaceIds(getUserInSession().getId());
         for (String spaceId : spaceIds) {
-          SpaceInstLight space = getAdminBm().getSpaceInstLight(spaceId);
+          SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
           if (space.getFatherId().equals("0")) {
             if (containApp(appType,space)) {
               results.add(populate(space));
@@ -49,9 +44,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         }
         Collections.sort(results);
       } else {
-        List<String> spaceIds = getAdminBm().getAvailableSubSpaceIds(rootSpaceId, getUserInSession().getId());
+        String [] spaceIds = Administration.get().getAllowedSubSpaceIds(getUserInSession().getId(), rootSpaceId);
         for (String spaceId : spaceIds) {
-          SpaceInstLight space = getAdminBm().getSpaceInstLight(spaceId);
+          SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
           if (space.getFatherId().equals(rootSpaceId)) {
             if (containApp(appType,space)) {
               results.add(populate(space));
@@ -60,9 +55,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         }
         Collections.sort(results);
         ArrayList<SilverpeasObjectDTO> partialResults = new ArrayList<SilverpeasObjectDTO>();
-        List<String> appsIds = getAdminBm().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
+        String [] appsIds = Administration.get().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
         for (String appId : appsIds) {
-          ComponentInstLight app = getAdminBm().getComponentInstLight(appId);
+          ComponentInstLight app = Administration.get().getComponentInstLight(appId);
           if (app.getName().equals(appType) && app.getDomainFatherId().equals("WA"+rootSpaceId)) {
             partialResults.add(populate(app));
           }
@@ -81,7 +76,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   public ApplicationInstanceDTO getApp(String instanceId) throws NavigationException, AuthenticationException {
     ApplicationInstanceDTO dto = null;
     try {
-      ComponentInstLight app = getAdminBm().getComponentInstLight(instanceId);
+      ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
       dto = populate(app);
     } catch(Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceNavigationImpl.getApp", "root.EX_NO_MESSAGE", e);
@@ -90,9 +85,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   private boolean containApp(String appType, SpaceInstLight space) throws Exception {
-    List<String> appsIds = getAdminBm().getAvailCompoIds(space.getShortId(), getUserInSession().getId());
+    String [] appsIds = Administration.get().getAvailCompoIds(space.getId(), getUserInSession().getId());
     for (String appId : appsIds) {
-      ComponentInstLight app = getAdminBm().getComponentInstLight(appId);
+      ComponentInstLight app = Administration.get().getComponentInstLight(appId);
       if (app.getName().equals(appType)) {
         return true;
       }
@@ -106,7 +101,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
   private SpaceDTO populate(SpaceInstLight space) {
     SpaceDTO dto = new SpaceDTO();
-    dto.setId(space.getShortId());
+    dto.setId(space.getId());
     dto.setLabel(space.getName());
     dto.setPersonal(space.isPersonalSpace());
     return dto;
@@ -171,12 +166,5 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     }
 
     return dto;
-  }
-
-  private AdminBusiness getAdminBm() throws Exception {
-    if (adminBm == null) {
-      adminBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBusiness.class);
-    }
-    return adminBm;
   }
 }

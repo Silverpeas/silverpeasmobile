@@ -1,38 +1,29 @@
 package com.silverpeas.mobile.server.services;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.helpers.DataURLHelper;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.util.FileRepositoryManager;
-import org.apache.commons.codec.binary.Base64;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
-
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.ContactException;
 import com.silverpeas.mobile.shared.services.ServiceContact;
-import com.silverpeas.socialnetwork.relationShip.RelationShipService;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.beans.admin.UserDetail;
-import com.stratelia.webactiv.beans.admin.UserFull;
-import com.stratelia.webactiv.util.GeneralPropertiesManager;
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.admin.user.model.UserFull;
+import org.silverpeas.core.silvertrace.SilverTrace;
+import org.silverpeas.core.socialnetwork.relationShip.RelationShipService;
 
-import javax.activation.MimetypesFileTypeMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ServiceContactImpl extends AbstractAuthenticateService implements ServiceContact {
 
   private static final long serialVersionUID = 1L;
-  private OrganizationController organizationController = new OrganizationController();
-  private RelationShipService relationShipService = new RelationShipService();
+  private OrganizationController organizationController = OrganizationController.get();
+  private RelationShipService relationShipService = RelationShipService.get();
 
   /**
    * Return list of DetailUserDTO of my contacts

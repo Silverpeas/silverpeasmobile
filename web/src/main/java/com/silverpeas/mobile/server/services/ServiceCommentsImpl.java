@@ -1,14 +1,14 @@
 package com.silverpeas.mobile.server.services;
 
-import com.silverpeas.comment.model.Comment;
-import com.silverpeas.comment.model.CommentPK;
-import com.silverpeas.comment.service.CommentServiceFactory;
+import org.silverpeas.core.comment.model.Comment;
 import com.silverpeas.mobile.server.helpers.DataURLHelper;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.CommentsException;
 import com.silverpeas.mobile.shared.services.ServiceComments;
-import com.stratelia.webactiv.util.publication.model.PublicationPK;
+import org.silverpeas.core.comment.model.CommentPK;
+import org.silverpeas.core.comment.service.CommentServiceProvider;
+import org.silverpeas.core.contribution.publication.model.PublicationPK;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class ServiceCommentsImpl extends AbstractAuthenticateService implements 
   public List<CommentDTO> getComments(String id, String type) throws CommentsException, AuthenticationException {
     checkUserInSession();
     ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
-    List<Comment> comments = CommentServiceFactory.getFactory().getCommentService().getAllCommentsOnPublication(
+    List<Comment> comments = CommentServiceProvider.getCommentService().getAllCommentsOnPublication(
         type, new PublicationPK(id));
     for (Comment c : comments) {
       CommentDTO dto = populate(c);
@@ -59,7 +59,7 @@ public class ServiceCommentsImpl extends AbstractAuthenticateService implements 
         now, now);
     c.setOwnerDetail(getUserInSession());
 
-    CommentServiceFactory.getFactory().getCommentService().createComment(c);
+    CommentServiceProvider.getCommentService().createComment(c);
     comment = populate(c);
 
     return comment;

@@ -4,18 +4,7 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
-import com.silverpeas.admin.ejb.AdminBusiness;
-import com.silverpeas.comment.service.CommentServiceFactory;
-import com.silverpeas.gallery.constant.MediaResolution;
-import com.silverpeas.gallery.constant.MediaType;
-import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.delegate.MediaDataCreateDelegate;
-import com.silverpeas.gallery.model.AlbumDetail;
-import com.silverpeas.gallery.model.Media;
-import com.silverpeas.gallery.model.MediaCriteria;
-import com.silverpeas.gallery.model.MediaPK;
-import com.silverpeas.gallery.model.Photo;
-import com.silverpeas.gallery.model.Video;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.config.Configurator;
@@ -23,53 +12,41 @@ import com.silverpeas.mobile.server.helpers.RotationSupport;
 import com.silverpeas.mobile.server.servlets.EasySSLProtocolSocketFactory;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
-import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
-import com.silverpeas.mobile.shared.dto.media.MediaDTO;
-import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
-import com.silverpeas.mobile.shared.dto.media.SoundDTO;
-import com.silverpeas.mobile.shared.dto.media.VideoDTO;
-import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
+import com.silverpeas.mobile.shared.dto.media.*;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.MediaException;
 import com.silverpeas.mobile.shared.services.ServiceMedia;
-import com.silverpeas.util.StringUtil;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.beans.admin.ComponentInstLight;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.FileRepositoryManager;
-import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.ResourceLocator;
-import com.stratelia.webactiv.util.node.model.NodePK;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.silverpeas.file.SilverpeasFile;
+import org.silverpeas.components.gallery.constant.MediaResolution;
+import org.silverpeas.components.gallery.constant.MediaType;
+import org.silverpeas.components.gallery.delegate.MediaDataCreateDelegate;
+import org.silverpeas.components.gallery.model.*;
+import org.silverpeas.components.gallery.service.GalleryService;
+import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.core.admin.component.model.ComponentInstLight;
+import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.service.OrganizationControllerProvider;
+import org.silverpeas.core.comment.service.CommentServiceProvider;
+import org.silverpeas.core.io.file.SilverpeasFile;
+import org.silverpeas.core.node.model.NodePK;
+import org.silverpeas.core.silvertrace.SilverTrace;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.file.FileRepositoryManager;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Service de gestion des galleries d'images.
@@ -78,9 +55,7 @@ import java.util.Map;
 public class ServiceMediaImpl extends AbstractAuthenticateService implements ServiceMedia {
 
   private static final long serialVersionUID = 1L;
-  private AdminBusiness adminBm;
-  private GalleryBm galleryBm;
-  private OrganizationController organizationController = new OrganizationController();
+  private OrganizationController organizationController = OrganizationControllerProvider.getOrganisationController();
 
   /**
    * Importation d'une image dans un album.
@@ -99,8 +74,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     try {
       // rotation de l'image si nécessaire
-      Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(dataDecoded)), true);
-      Directory directory = metadata.getDirectory(ExifIFD0Directory.class);
+      Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(dataDecoded)));
+      Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
       InputStream in = new ByteArrayInputStream(dataDecoded);
       BufferedImage bi = ImageIO.read(in);
       if (directory != null) {
@@ -119,14 +94,13 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       RotationSupport.setOrientation(RotationSupport.NOT_ROTATED, file);
 
       // récupération de la configuration de la gallery
-      OrganizationController orga = new OrganizationController();
-      boolean watermark = "yes".equalsIgnoreCase(orga.getComponentParameterValue(idGallery, "watermark"));
-      boolean download = !"no".equalsIgnoreCase(orga.getComponentParameterValue(idGallery, "download"));
-      String watermarkHD = orga.getComponentParameterValue(idGallery, "WatermarkHD");
+      boolean watermark = "yes".equalsIgnoreCase(organizationController.getComponentParameterValue(idGallery, "watermark"));
+      boolean download = !"no".equalsIgnoreCase(organizationController.getComponentParameterValue(idGallery, "download"));
+      String watermarkHD = organizationController.getComponentParameterValue(idGallery, "WatermarkHD");
       if(!StringUtil.isInteger(watermarkHD))  {
         watermarkHD = "";
       }
-      String watermarkOther = orga.getComponentParameterValue(idGallery, "WatermarkOther");
+      String watermarkOther = organizationController.getComponentParameterValue(idGallery, "WatermarkOther");
       if(!StringUtil.isInteger(watermarkOther))  {
         watermarkOther = "";
       }
@@ -152,7 +126,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     MediaDataCreateDelegate
         delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
 
-    Media newMedia = getGalleryBm().createMedia(getUserInSession(), componentId, watermark, watermarkHD, watermarkOther, delegate);
+    Media newMedia = getGalleryService().createMedia(getUserInSession(), componentId, watermark, watermarkHD, watermarkOther, delegate);
 
     return newMedia.getId();
   }
@@ -166,11 +140,11 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     ArrayList<ApplicationInstanceDTO> results = new ArrayList<ApplicationInstanceDTO>();
     try {
-      List<String> rootSpaceIds = getAdminBm().getAllRootSpaceIds();
+      String [] rootSpaceIds = Administration.get().getAllRootSpaceIds();
       for (String rootSpaceId : rootSpaceIds) {
-        List<String> componentIds = getAdminBm().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
+        String [] componentIds = Administration.get().getAvailCompoIds(rootSpaceId);
         for (String componentId : componentIds) {
-          ComponentInstLight instance = getAdminBm().getComponentInstLight(componentId);
+          ComponentInstLight instance = Administration.get().getComponentInstLight(componentId);
           if (instance.getName().equals("gallery")) {
             ApplicationInstanceDTO i = new ApplicationInstanceDTO();
             i.setId(instance.getId());
@@ -196,7 +170,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
     try {
       if (rootAlbumId == null) {
-        Collection<AlbumDetail> albums = getGalleryBm().getAllAlbums(instanceId);
+        Collection<AlbumDetail> albums = getGalleryService().getAllAlbums(instanceId);
         for (AlbumDetail albumDetail : albums) {
           if (albumDetail.getLevel() == 2) {
             AlbumDTO album = populate(albumDetail);
@@ -204,8 +178,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
           }
         }
       } else {
-        AlbumDetail rootAlbum = getGalleryBm().getAlbum(new NodePK(rootAlbumId, instanceId),
-            MediaCriteria.VISIBILITY.VISIBLE_ONLY);
+        AlbumDetail rootAlbum = getGalleryService().getAlbum(new NodePK(rootAlbumId, instanceId),
+                MediaCriteria.VISIBILITY.VISIBLE_ONLY);
         Collection<AlbumDetail> albums = rootAlbum.getChildrenAlbumsDetails();
 
         for (AlbumDetail albumDetail : albums) {
@@ -231,12 +205,12 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
   private int countMedias(final AlbumDetail albumDetail) throws Exception {
     int count = 0;
-    Collection<Media> allMedias = getGalleryBm().getAllMedia(albumDetail.getNodePK(),
-        MediaCriteria.VISIBILITY.VISIBLE_ONLY);
+    Collection<Media> allMedias = getGalleryService().getAllMedia(albumDetail.getNodePK(),
+            MediaCriteria.VISIBILITY.VISIBLE_ONLY);
     count = allMedias.size();
     // browser all sub albums for count all medias
-    AlbumDetail thisAlbum = getGalleryBm().getAlbum(albumDetail.getNodePK(),
-        MediaCriteria.VISIBILITY.VISIBLE_ONLY);
+    AlbumDetail thisAlbum = getGalleryService().getAlbum(albumDetail.getNodePK(),
+            MediaCriteria.VISIBILITY.VISIBLE_ONLY);
 
     Collection<AlbumDetail> subAlbums = thisAlbum.getChildrenAlbumsDetails();
     for (AlbumDetail oneSubAlbum : subAlbums) {
@@ -251,8 +225,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     ArrayList<MediaDTO> results = new ArrayList<MediaDTO>();
     if (albumId == null) return results;
     try {
-      Collection<Media> medias = getGalleryBm().getAllMedia(new NodePK(albumId, instanceId),
-          MediaCriteria.VISIBILITY.VISIBLE_ONLY);
+      Collection<Media> medias = getGalleryService().getAllMedia(new NodePK(albumId, instanceId),
+              MediaCriteria.VISIBILITY.VISIBLE_ONLY);
       Iterator<Media> iMedias = medias.iterator();
       while (iMedias.hasNext()) {
         Media media = (Media) iMedias.next();
@@ -310,7 +284,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     checkUserInSession();
     Media sound = null;
     try {
-      sound = getGalleryBm().getMedia(new MediaPK(soundId));
+      sound = getGalleryService().getMedia(new MediaPK(soundId));
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getSound", "root.EX_NO_MESSAGE", e);
     }
@@ -322,7 +296,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     checkUserInSession();
     Media video = null;
     try {
-      video = getGalleryBm().getMedia(new MediaPK(videoId));
+      video = getGalleryService().getMedia(new MediaPK(videoId));
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideo", "root.EX_NO_MESSAGE", e);
     }
@@ -334,7 +308,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     checkUserInSession();
     Media video = null;
     try {
-      video = getGalleryBm().getMedia(new MediaPK(videoId));
+      video = getGalleryService().getMedia(new MediaPK(videoId));
     } catch (Exception e) {
       SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
     }
@@ -404,8 +378,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       video.setUrlPoster("http://img.youtube.com/vi/" + id + "/0.jpg");
     }
 
-      video.setCommentsNumber(CommentServiceFactory
-              .getFactory().getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_STREAMING, new MediaPK(video.getId())));
+      video.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_STREAMING, new MediaPK(video.getId())));
 
     return video;
   }
@@ -444,8 +417,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     video.setDataPoster( getVideoPoster(media.getVideo()));
 
-    video.setCommentsNumber(CommentServiceFactory
-            .getFactory().getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_VIDEO, new MediaPK(video.getId())));
+    video.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_VIDEO, new MediaPK(video.getId())));
 
     return video;
   }
@@ -539,15 +511,14 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     } else {
       sound.setUpdateDate(sdf.format(media.getCreationDate()));
     }
-    sound.setCommentsNumber(CommentServiceFactory
-            .getFactory().getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_SOUND, new MediaPK(sound.getId())));
+    sound.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_SOUND, new MediaPK(sound.getId())));
 
     return sound;
   }
 
   private PhotoDTO getPhoto(String instanceId, String pictureId, MediaResolution size) throws Exception {
     PhotoDTO picture;
-    Photo photoDetail = getGalleryBm().getPhoto(new MediaPK(pictureId));
+    Photo photoDetail = getGalleryService().getPhoto(new MediaPK(pictureId));
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     picture = new PhotoDTO();
     picture.setId(photoDetail.getId());
@@ -574,20 +545,22 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       picture.setUpdateDate(sdf.format(photoDetail.getCreationDate()));
     }
 
-    picture.setCommentsNumber(CommentServiceFactory
-        .getFactory().getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_PHOTO, new MediaPK(photoDetail.getId())));
+
+
+    picture.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_PHOTO, new MediaPK(photoDetail.getId())));
 
     return picture;
   }
 
   @SuppressWarnings("deprecation")
   private String getBase64ImageData(String instanceId, Photo photoDetail, MediaResolution size) throws Exception {
-    ResourceLocator gallerySettings = new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
+    SettingBundle gallerySettings = ResourceLocator.getSettingBundle("com.silverpeas.gallery.settings.gallerySettings");
+
     String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getMediaPK().getId();
     String[] rep = {nomRep};
     String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
 
-    Media media = getGalleryBm().getMedia(new MediaPK(photoDetail.getId(), instanceId));
+    Media media = getGalleryService().getMedia(new MediaPK(photoDetail.getId(), instanceId));
     SilverpeasFile f = media.getFile(size);
 
     FileInputStream is = new FileInputStream(f);
@@ -599,17 +572,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     return data;
   }
 
-  private AdminBusiness getAdminBm() throws Exception {
-    if (adminBm == null) {
-      adminBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBusiness.class);
-    }
-    return adminBm;
-  }
-
-  private GalleryBm getGalleryBm() throws Exception {
-    if (galleryBm == null) {
-      galleryBm = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBm.class);
-    }
-    return galleryBm;
+  private GalleryService getGalleryService() throws Exception {
+    return MediaServiceProvider.getMediaService();
   }
 }

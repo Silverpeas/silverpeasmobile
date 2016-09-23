@@ -1,14 +1,15 @@
 package com.silverpeas.mobile.server.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.silverpeas.calendar.Date;
 import com.silverpeas.jcrutil.BasicDaoFactory;
-import com.silverpeas.socialnetwork.model.SocialInformation;
-import com.silverpeas.socialnetwork.model.SocialInformationType;
-import com.silverpeas.socialnetwork.provider.ProviderSwitchInterface;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
+import org.silverpeas.core.silvertrace.SilverTrace;
+import org.silverpeas.core.socialnetwork.model.SocialInformation;
+import org.silverpeas.core.socialnetwork.model.SocialInformationType;
+import org.silverpeas.core.socialnetwork.provider.ProviderSwitchInterface;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ProviderService {
   private ProviderSwitchInterface switchInterface;
@@ -24,7 +25,7 @@ public class ProviderService {
           myContactIds, begin, end);
     } catch (Exception ex) {
       SilverTrace.info("socialNetwork", "ProviderService.getSocialInformationsListOfMyContact",
-          "root.MSG_GEN_ENTER_METHOD" +ex);
+              "root.MSG_GEN_ENTER_METHOD" + ex);
     }
     return new ArrayList<SocialInformation>();
   }

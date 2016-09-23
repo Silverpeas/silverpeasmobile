@@ -25,6 +25,20 @@ import com.stratelia.webactiv.util.node.model.NodeDetail;
 import com.stratelia.webactiv.util.node.model.NodePK;
 import com.stratelia.webactiv.util.publication.control.PublicationBm;
 import com.stratelia.webactiv.util.publication.model.PublicationPK;
+import org.silverpeas.core.admin.ObjectType;
+import org.silverpeas.core.admin.component.model.ComponentInst;
+import org.silverpeas.core.admin.service.AdminException;
+import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.space.SpaceInst;
+import org.silverpeas.core.admin.user.model.Group;
+import org.silverpeas.core.admin.user.model.ProfileInst;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.notification.user.client.NotificationMetaData;
+import org.silverpeas.core.notification.user.client.NotificationSender;
+import org.silverpeas.core.util.LocalizationBundle;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,18 +51,17 @@ import java.util.List;
 public class ServiceNotificationsImpl extends AbstractAuthenticateService implements ServiceNotifications {
 
     private static final long serialVersionUID = 1L;
-    private AdminBusiness adminBm;
     private PublicationBm pubBm;
     private NodeBm nodeBm;
     private KmeliaBm kmeliaBm;
-    private OrganizationController organizationController = new OrganizationController();
+    private OrganizationController organizationController = OrganizationController.get();
 
     @Override
     public List<BaseDTO> getAllowedUsersAndGroups(String componentId, String contentId) throws NotificationsException, AuthenticationException {
         ArrayList<BaseDTO> usersAndGroups = new ArrayList<BaseDTO>();
 
         try {
-            ComponentInst componentInst = getAdminBm().getComponentInst(componentId);
+            ComponentInst componentInst = Administration.get().getComponentInst(componentId);
             List<ProfileInst> profiles = new ArrayList<ProfileInst>();
 
                 if (componentId.toLowerCase().startsWith("kmelia") && isRightsOnTopicsEnabled(componentId)) {
@@ -102,10 +115,10 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
 
     private List<ProfileInst> getTopicProfiles(String topicId, String componentId) {
         List<ProfileInst> alShowProfile = new ArrayList<ProfileInst>();
-        String[] asAvailProfileNames = getAdmin().getAllProfilesNames("kmelia");
+        String[] asAvailProfileNames = Administration.get().getAllProfilesNames("kmelia");
         for (String asAvailProfileName : asAvailProfileNames) {
             ProfileInst profile = getTopicProfile(asAvailProfileName, topicId, componentId);
-            profile.setLabel(getAdmin().getProfileLabelfromName("kmelia", asAvailProfileName,
+            profile.setLabel(Administration.get().getProfileLabelfromName("kmelia", asAvailProfileName,
                     getUserInSession().getUserPreferences().getLanguage()));
             alShowProfile.add(profile);
         }
@@ -113,8 +126,8 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
         return alShowProfile;
     }
 
-    private ProfileInst getTopicProfile(String role, String topicId, String componentId) {
-        List<ProfileInst> profiles = getAdmin().getProfilesByObject(topicId, ObjectType.NODE.getCode(), componentId);
+    private ProfileInst getTopicProfile(String role, String topicId, String componentId) throws AdminException {
+        List<ProfileInst> profiles = Administration.get().getProfilesByObject(topicId, ObjectType.NODE.getCode(), componentId);
         for (int p = 0; profiles != null && p < profiles.size(); p++) {
             ProfileInst profile = profiles.get(p);
             if (profile.getName().equals(role)) {
@@ -134,7 +147,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
     @Override
     public void send(NotificationDTO notification, List<BaseDTO> receivers, String subject) throws NotificationsException, AuthenticationException {
         try {
-            ResourceLocator resource = new ResourceLocator("org.silverpeas.mobile.multilang.mobileBundle", getUserInSession().getUserPreferences().getLanguage());
+            LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", getUserInSession().getUserPreferences().getLanguage());
             NotificationSender notificationSender = new NotificationSender(notification.getInstanceId());
             NotificationMetaData metaData = new NotificationMetaData();
 
@@ -155,20 +168,13 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
             metaData.setContent(notification.getMessage());
             metaData.setSender(getUserInSession().geteMail());
 
-            ComponentInst app = getAdminBm().getComponentInst(notification.getInstanceId());
-            SpaceInst space = getAdminBm().getSpaceInstById(app.getDomainFatherId());
+            ComponentInst app = Administration.get().getComponentInst(notification.getInstanceId());
+            SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
             metaData.setTitle(subject);
             notificationSender.notifyUser(metaData);
         } catch (Exception e) {
             throw new NotificationsException();
         }
-    }
-
-    private AdminBusiness getAdminBm() throws Exception {
-        if (adminBm == null) {
-            adminBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBusiness.class);
-        }
-        return adminBm;
     }
 
     private PublicationBm getPubBm() throws Exception {
@@ -190,9 +196,5 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
             nodeBm = EJBUtilitaire.getEJBObjectRef(JNDINames.NODEBM_EJBHOME, NodeBm.class);
         }
         return nodeBm;
-    }
-
-    private AdminController getAdmin() {
-        return new AdminController(getUserInSession().getId());
     }
 }

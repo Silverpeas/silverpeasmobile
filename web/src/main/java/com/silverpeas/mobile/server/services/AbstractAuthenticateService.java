@@ -3,8 +3,8 @@ package com.silverpeas.mobile.server.services;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
-import com.stratelia.silverpeas.peasCore.MainSessionController;
-import com.stratelia.webactiv.beans.admin.UserDetail;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.web.mvc.controller.MainSessionController;
 
 @SuppressWarnings("serial")
 public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
@@ -38,7 +38,7 @@ public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
   protected MainSessionController getMainSessionController() throws Exception {
     MainSessionController mainSessionController = (MainSessionController) getThreadLocalRequest().getSession().getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
     if (mainSessionController == null) {
-      mainSessionController = new MainSessionController(getUserKeyInSession(), getThreadLocalRequest().getSession().getId());
+      mainSessionController = new MainSessionController(getUserKeyInSession(), getThreadLocalRequest().getSession());
       getThreadLocalRequest().getSession().setAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME, mainSessionController);
     }
 

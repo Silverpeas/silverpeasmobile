@@ -3,22 +3,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
+  <!--parent>
     <groupId>com.silverpeas</groupId>
     <artifactId>parent</artifactId>
-    <version>29</version>
+    <version>30-SNAPSHOT</version>
+  </parent-->
+
+  <parent>
+    <groupId>org.silverpeas</groupId>
+    <artifactId>silverpeas-project</artifactId>
+    <version>1.0-SNAPSHOT</version>
   </parent>
 
   <groupId>com.silverpeas.mobile</groupId>
   <artifactId>spmobil</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>Silverpeas Mobile</name>
 
   <properties>
     <gwtVersion>2.7.0</gwtVersion>
     <gwtMojoPluginVersion>2.7.0</gwtMojoPluginVersion>
-    <silverpeasVersion>5.15.3</silverpeasVersion>
+    <silverpeasVersion>6.0-SNAPSHOT</silverpeasVersion>
   </properties>
 
   <repositories>
@@ -38,6 +44,7 @@
     </resources>
 
     <plugins>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -100,13 +107,38 @@
       <version>${gwtVersion}</version>
       <type>jar</type>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>javax.ejb</groupId>
       <artifactId>ejb-api</artifactId>
       <scope>provided</scope>
-    </dependency>
+    </dependency-->
 
     <dependency>
+      <groupId>org.silverpeas.core</groupId>
+      <artifactId>silverpeas-core-web</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core</groupId>
+      <artifactId>silverpeas-core-api</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core</groupId>
+      <artifactId>silverpeas-core</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core.services</groupId>
+      <artifactId>silverpeas-core-comment</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!--dependency>
       <groupId>com.silverpeas.core</groupId>
       <artifactId>lib-core</artifactId>
       <version>${silverpeasVersion}</version>
@@ -121,8 +153,9 @@
           <groupId>org.slf4j</groupId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
+    </dependency-->
+
+    <!--dependency>
       <groupId>com.silverpeas.core.ejb-core</groupId>
       <artifactId>admin</artifactId>
       <version>${silverpeasVersion}</version>
@@ -135,15 +168,17 @@
       <version>${silverpeasVersion}</version>
       <classifier>client</classifier>
       <scope>provided</scope>
-    </dependency>
+    </dependency-->
+
+
+
     <dependency>
-      <groupId>com.silverpeas.components.gallery</groupId>
-      <artifactId>gallery-ejb</artifactId>
+      <groupId>org.silverpeas.components.gallery</groupId>
+      <artifactId>silverpeas-gallery</artifactId>
       <version>${silverpeasVersion}</version>
-      <classifier>client</classifier>
       <scope>provided</scope>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>com.silverpeas.components.almanach</groupId>
       <artifactId>almanach-ejb</artifactId>
       <version>${silverpeasVersion}</version>
@@ -171,9 +206,9 @@
       <version>${silverpeasVersion}</version>
       <classifier>client</classifier>
       <scope>provided</scope>
-    </dependency>
+    </dependency-->
 
-    <dependency>
+    <!--dependency>
       <groupId>com.silverpeas.core</groupId>
       <artifactId>web-core</artifactId>
       <version>${silverpeasVersion}</version>
@@ -185,7 +220,7 @@
       <artifactId>delegatednews-jar</artifactId>
       <version>${silverpeasVersion}</version>
       <scope>provided</scope>
-    </dependency>
+    </dependency-->
 
     <dependency>
       <groupId>net.sf.dozer</groupId>
@@ -228,6 +263,12 @@
       <artifactId>gwt-storage</artifactId>
       <version>1.3.0</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.6.3</version>
     </dependency>
 
   </dependencies>

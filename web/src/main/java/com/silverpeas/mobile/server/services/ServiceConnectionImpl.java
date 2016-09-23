@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.server.services;
 
-import com.silverpeas.admin.ejb.AdminBusiness;
 import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.server.helpers.DataURLHelper;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -8,15 +7,14 @@ import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
-import com.stratelia.webactiv.beans.admin.Domain;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.beans.admin.UserDetail;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.JNDINames;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
-import org.silverpeas.authentication.AuthenticationCredential;
-import org.silverpeas.authentication.AuthenticationService;
+import org.silverpeas.core.admin.domain.model.Domain;
+import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.security.authentication.AuthenticationCredential;
+import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +27,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 
   private static final long serialVersionUID = 1L;
 
-  private AdminBusiness adminBm;
-  private OrganizationController organizationController = new OrganizationController();
+  private OrganizationController organizationController = OrganizationController.get();
 
   public void logout() throws AuthenticationException {
     getThreadLocalRequest().getSession().invalidate();
@@ -43,10 +40,9 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     try {
       //String key = getAuthenticationBm().authenticate(login, password, domainId);
 
-      AuthenticationService authenticator = new AuthenticationService();
       AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(login)
           .withAsPassword(password).withAsDomainId(domainId);
-      String key = authenticator.authenticate(credential);
+      String key = AuthenticationServiceProvider.getService().authenticate(credential);
       if (key == null || key.startsWith("Error_")) {
         if (key.equals("Error_1")) {
           throw new AuthenticationException(AuthenticationError.BadCredential);
@@ -65,7 +61,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     String userId, authKey;
     try {
       userId = getUserId(login, domainId);
-      authKey = new AuthenticationService().getAuthenticationKey(login, domainId);
+      authKey = AuthenticationServiceProvider.getService().getAuthenticationKey(login, domainId);
     } catch (Exception e) {
       throw new AuthenticationException(AuthenticationError.Host);
     }
@@ -101,17 +97,12 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
   }
 
   private String getUserId(String login, String domainId) throws Exception {
-    return getAdminBm().getUserIdByLoginAndDomain(login, domainId);
+    return Administration.get().getUserIdByLoginAndDomain(login, domainId);
   }
 
   public UserDetail getUserDetail(String userId) {
     return organizationController.getUserDetail(userId);
   }
 
-  private AdminBusiness getAdminBm() throws Exception {
-    if (adminBm == null) {
-      adminBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBusiness.class);
-    }
-    return adminBm;
-  }
+
 }
