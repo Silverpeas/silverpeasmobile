@@ -2,10 +2,10 @@ package com.silverpeas.mobile.server.servlets;
 
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.stratelia.webactiv.beans.admin.UserDetail;
-import org.silverpeas.attachment.AttachmentServiceFactory;
-import org.silverpeas.attachment.model.SimpleDocument;
-import org.silverpeas.attachment.model.SimpleDocumentPK;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,12 +22,12 @@ public class AttachmentServlet extends HttpServlet {
         String id = request.getParameter("id");
         String lang = request.getParameter("lang");
 
-        SimpleDocument attachment = AttachmentServiceFactory.getAttachmentService().
+        SimpleDocument attachment = AttachmentServiceProvider.getAttachmentService().
                 searchDocumentById(new SimpleDocumentPK(id), lang);
         if (attachment.canBeAccessedBy(user)) {
             response.setContentType(attachment.getContentType());
             response.setHeader("content-disposition", "filename=" + attachment.getFilename());
-            AttachmentServiceFactory.getAttachmentService().getBinaryContent(response.getOutputStream(), new SimpleDocumentPK(id), lang);
+            AttachmentServiceProvider.getAttachmentService().getBinaryContent(response.getOutputStream(), new SimpleDocumentPK(id), lang);
         } else {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
