@@ -1,38 +1,22 @@
 package com.silverpeas.mobile.server.services;
 
-import com.silverpeas.admin.ejb.AdminBusiness;
-import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
-import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
-import com.silverpeas.mobile.shared.exceptions.AlmanachException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.SearchException;
-import com.silverpeas.mobile.shared.services.ServiceAlmanach;
 import com.silverpeas.mobile.shared.services.ServiceSearch;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.almanach.control.ejb.AlmanachBm;
-import com.stratelia.webactiv.almanach.model.EventDetail;
-import com.stratelia.webactiv.almanach.model.EventPK;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.JNDINames;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
-import org.silverpeas.search.PlainSearchResult;
-import org.silverpeas.search.SearchEngineFactory;
-import org.silverpeas.search.searchEngine.model.MatchingIndexEntry;
-import org.silverpeas.search.searchEngine.model.ParseException;
-import org.silverpeas.search.searchEngine.model.QueryDescription;
+import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.index.search.PlainSearchResult;
+import org.silverpeas.core.index.search.SearchEngineProvider;
+import org.silverpeas.core.index.search.model.MatchingIndexEntry;
+import org.silverpeas.core.index.search.model.QueryDescription;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public class ServiceSearchImpl extends AbstractAuthenticateService implements ServiceSearch {
 
   private static final long serialVersionUID = 1L;
-  private AdminBusiness adminBm;
   private final String ALL_SPACES = "*";
   private final String ALL_COMPONENTS = "*";
 
@@ -44,7 +28,7 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
       q.setSearchingUser(getUserInSession().getId());
       q.setRequestedLanguage(getUserInSession().getUserPreferences().getLanguage());
       buildSpaceComponentAvailableForUser(q, ALL_SPACES, ALL_COMPONENTS);
-      PlainSearchResult r = SearchEngineFactory.getSearchEngine().search(q);
+      PlainSearchResult r = SearchEngineProvider.getSearchEngine().search(q);
       for (MatchingIndexEntry result : r.getEntries()) {
 
         if (result.getObjectType().equals(ContentsTypes.Photo.toString()) || result.getObjectType().equals(ContentsTypes.Sound.toString()) || result.getObjectType().equals(ContentsTypes.Video.toString()) || result.getObjectType().equals(ContentsTypes.Streaming.toString()) || result.getObjectType().equals(ContentsTypes.Publication.toString()) || result.getObjectType().contains(
@@ -88,29 +72,26 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
 
     if (spaceId.equals(ALL_SPACES)) {
       //No restriction on spaces.
-      List allowedSpaceIds = getAdminBm().getAvailableSpaceIds(getUserInSession().getId());
+      String [] allowedSpaceIds = getAdministration().getAllSpaceIds(getUserInSession().getId());
 
-      for (int i = 0; i < allowedSpaceIds.size(); i++) {
-        buildSpaceComponentAvailableForUser(queryDescription, (String) allowedSpaceIds.get(i),
-            ALL_COMPONENTS);
+      for (String allowedSpaceId : allowedSpaceIds) {
+        buildSpaceComponentAvailableForUser(queryDescription, (String) allowedSpaceId, ALL_COMPONENTS);
       }
     } else {
       //The search is restricted to one given space
       if (componentId.equals(ALL_COMPONENTS)) {
         //No restriction on components of the selected space
         //First, we get all available components on this space
-        List allowedComponentIds = getAdminBm().getAvailCompoIds(spaceId, getUserInSession().getId());
-        for (int i = 0; i < allowedComponentIds.size(); i++) {
-          buildSpaceComponentAvailableForUser(queryDescription, spaceId,
-              (String) allowedComponentIds.get(i));
+        String [] allowedComponentIds = getAdministration().getAvailCompoIds(spaceId, getUserInSession().getId());
+        for (String allowedComponentId : allowedComponentIds) {
+          buildSpaceComponentAvailableForUser(queryDescription, spaceId, allowedComponentId);
         }
 
         //Second, we recurse on each sub space of this space
-        List subSpaceIds = getAdminBm().getAvailableSubSpaceIds(spaceId, getUserInSession().getId());
+        String [] subSpaceIds = getAdministration().getAllowedSubSpaceIds(getUserInSession().getId(), spaceId);
         if (subSpaceIds != null) {
-          for (int i = 0; i < subSpaceIds.size(); i++) {
-            buildSpaceComponentAvailableForUser(queryDescription, (String) subSpaceIds.get(i),
-                ALL_COMPONENTS);
+          for (String subSpaceId : subSpaceIds) {
+            buildSpaceComponentAvailableForUser(queryDescription, subSpaceId, ALL_COMPONENTS);
           }
         }
       } else {
@@ -119,11 +100,8 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
     }
   }
 
-  private AdminBusiness getAdminBm() throws Exception {
-    if (adminBm == null) {
-      adminBm = EJBUtilitaire.getEJBObjectRef(JNDINames.ADMINBM_EJBHOME, AdminBusiness.class);
-    }
-    return adminBm;
+  private Administration getAdministration() {
+    return Administration.get();
   }
 
 }

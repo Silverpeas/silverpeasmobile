@@ -1,32 +1,22 @@
 package com.silverpeas.mobile.server.services;
 
-import com.google.gwt.user.client.ui.HTML;
-import com.silverpeas.mobile.server.common.SpMobileLogModule;
-import com.silverpeas.mobile.server.dao.StatusDao;
-import com.silverpeas.mobile.shared.dto.StatusDTO;
 import com.silverpeas.mobile.shared.dto.TaskDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.RSEexception;
 import com.silverpeas.mobile.shared.exceptions.Taskexception;
-import com.silverpeas.mobile.shared.services.ServiceRSE;
 import com.silverpeas.mobile.shared.services.ServiceTasks;
-import com.silverpeas.socialnetwork.status.Status;
-import com.silverpeas.socialnetwork.status.StatusService;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.beans.admin.UserDetail;
 import com.stratelia.webactiv.calendar.control.SilverpeasCalendar;
 import com.stratelia.webactiv.calendar.model.Attendee;
 import com.stratelia.webactiv.calendar.model.ToDoHeader;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.ResourceLocator;
-import com.sun.xml.bind.v2.TODO;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.util.LocalizationBundle;
+import org.silverpeas.core.util.ResourceLocator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,15 +26,15 @@ import java.util.List;
 public class ServiceTasksImpl extends AbstractAuthenticateService implements ServiceTasks {
 
   private static final long serialVersionUID = 1L;
-  private OrganizationController organizationController = new OrganizationController();
+  private OrganizationController organizationController = OrganizationController.get();
   private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-  private ResourceLocator todoMultilang = null;
+  private LocalizationBundle todoMultilang = null;
 
 
 
-  private ResourceLocator getTodoMultiLang() {
+  private LocalizationBundle getTodoMultiLang() {
     if (todoMultilang == null) {
-      todoMultilang = new ResourceLocator("org.silverpeas.todo.multilang.todo", getUserInSession().getUserPreferences().getLanguage());
+      todoMultilang = ResourceLocator.getLocalizationBundle("org.silverpeas.todo.multilang.todo", getUserInSession().getUserPreferences().getLanguage());
     }
     return todoMultilang;
   }

@@ -137,6 +137,15 @@
       <version>${silverpeasVersion}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.silverpeas.components.kmelia</groupId>
+      <artifactId>silverpeas-kmelia</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+
+
+
 
     <!--dependency>
       <groupId>com.silverpeas.core</groupId>

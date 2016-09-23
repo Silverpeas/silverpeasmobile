@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.server.services;
 
-import com.silverpeas.comment.service.CommentServiceFactory;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
@@ -9,33 +8,26 @@ import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
-import com.silverpeas.util.ForeignPK;
-import com.silverpeas.util.StringUtil;
-import com.stratelia.silverpeas.contentManager.ContentManager;
-import com.stratelia.silverpeas.contentManager.ContentManagerException;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.beans.admin.ObjectType;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.node.control.NodeBm;
-import com.stratelia.webactiv.util.node.model.NodeDetail;
-import com.stratelia.webactiv.util.node.model.NodePK;
-import com.stratelia.webactiv.util.publication.control.PublicationBm;
-import com.stratelia.webactiv.util.publication.model.PublicationDetail;
-import com.stratelia.webactiv.util.publication.model.PublicationPK;
-import org.silverpeas.attachment.AttachmentServiceFactory;
-import org.silverpeas.attachment.SimpleDocumentService;
-import org.silverpeas.attachment.model.DocumentType;
-import org.silverpeas.attachment.model.SimpleDocument;
-import org.silverpeas.attachment.model.SimpleDocumentPK;
-import org.silverpeas.attachment.repository.SimpleAttachmentConverter;
+import org.silverpeas.components.kmelia.service.KmeliaService;
+import org.silverpeas.core.admin.ObjectType;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.comment.service.CommentServiceProvider;
+import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
+import org.silverpeas.core.contribution.attachment.model.DocumentType;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
+import org.silverpeas.core.contribution.publication.model.PublicationDetail;
+import org.silverpeas.core.contribution.publication.model.PublicationPK;
+import org.silverpeas.core.contribution.publication.service.PublicationService;
+import org.silverpeas.core.node.model.NodeDetail;
+import org.silverpeas.core.node.model.NodePK;
+import org.silverpeas.core.node.service.NodeService;
+import org.silverpeas.core.silvertrace.SilverTrace;
+import org.silverpeas.core.util.StringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -46,10 +38,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ServiceDocumentsImpl extends AbstractAuthenticateService implements ServiceDocuments {
 
   private static final long serialVersionUID = 1L;
-  private OrganizationController organizationController = new OrganizationController();
-  private PublicationBm pubBm;
-  private NodeBm nodeBm;
-  private KmeliaBm kmeliaBm;
+  private OrganizationController organizationController = OrganizationController.get();
 
   /**
    * Retourne tous les topics de premier niveau d'un topic.
@@ -170,25 +159,16 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     return StringUtil.getBooleanValue(value);
   }
 
-  private PublicationBm getPubBm() throws Exception {
-    if (pubBm == null) {
-      pubBm = EJBUtilitaire.getEJBObjectRef(JNDINames.PUBLICATIONBM_EJBHOME, PublicationBm.class);
-    }
-    return pubBm;
+  private PublicationService getPubBm() {
+   return PublicationService.get();
   }
 
-  private KmeliaBm getKmeliaBm() throws Exception {
-    if (kmeliaBm == null) {
-      kmeliaBm = EJBUtilitaire.getEJBObjectRef(JNDINames.KMELIABM_EJBHOME, KmeliaBm.class);
-    }
-    return kmeliaBm;
+  private KmeliaService getKmeliaBm() {
+    return KmeliaService.get();
   }
 
-  private NodeBm getNodeBm() throws Exception {
-    if (nodeBm == null) {
-      nodeBm = EJBUtilitaire.getEJBObjectRef(JNDINames.NODEBM_EJBHOME, NodeBm.class);
-    }
-    return nodeBm;
+  private NodeService getNodeBm() {
+    return NodeService.get();
   }
 
   @Override
@@ -208,7 +188,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setVersion(pub.getVersion());
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
-      dto.setCommentsNumber(CommentServiceFactory.getFactory().getCommentService().getCommentsCountOnPublication("Publication", new PublicationPK(pubId)));
+      dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication("Publication", new PublicationPK(pubId)));
       dto.setInstanceId(pub.getInstanceId());
       if (pub.getWysiwyg() == null|| !pub.getWysiwyg().trim().isEmpty() || !pub.getInfoId().equals("0")) {
         dto.setContent(true);
@@ -217,7 +197,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
       SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");
 
-      List<SimpleDocument> pubAttachments = AttachmentServiceFactory.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
+      List<SimpleDocument> pubAttachments = AttachmentServiceProvider.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
 
       SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 
@@ -236,7 +216,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   @Override
   public AttachmentDTO getAttachment(String attachmentId, String appId) throws DocumentsException, AuthenticationException {
     SimpleDocumentPK pk = new SimpleDocumentPK(attachmentId, appId);
-    SimpleDocument doc = AttachmentServiceFactory.getAttachmentService().searchDocumentById(pk, getUserInSession().getUserPreferences().getLanguage());
+    SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(pk, getUserInSession().getUserPreferences().getLanguage());
     return populate(doc);
   }
 
