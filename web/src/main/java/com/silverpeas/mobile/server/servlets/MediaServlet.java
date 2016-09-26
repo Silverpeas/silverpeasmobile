@@ -1,26 +1,25 @@
 package com.silverpeas.mobile.server.servlets;
 
-import com.silverpeas.gallery.constant.MediaType;
-import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.delegate.MediaDataCreateDelegate;
-import com.silverpeas.gallery.model.Media;
-import com.silverpeas.gallery.model.MediaPK;
-import com.silverpeas.gallery.model.Photo;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.helpers.MediaHelper;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.stratelia.webactiv.beans.admin.UserDetail;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.FileRepositoryManager;
-import com.stratelia.webactiv.util.GeneralPropertiesManager;
-import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.ResourceLocator;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.silverpeas.components.gallery.constant.MediaType;
+import org.silverpeas.components.gallery.delegate.MediaDataCreateDelegate;
+import org.silverpeas.components.gallery.model.Media;
+import org.silverpeas.components.gallery.model.MediaPK;
+import org.silverpeas.components.gallery.model.Photo;
+import org.silverpeas.components.gallery.service.GalleryService;
+import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.file.FileRepositoryManager;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletConfig;
@@ -28,24 +27,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 @SuppressWarnings("serial")
 public class MediaServlet extends HttpServlet {
-
-  private GalleryBm galleryBm;
-
-
 
   private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
   private static long MAX_FILE_SIZE      = 1024 * 1024 * 100; // 100MB
@@ -136,7 +124,7 @@ public class MediaServlet extends HttpServlet {
   }
 
   private Photo getPicture(String pictureId) throws Exception {
-    Photo photoDetail = getGalleryBm().getPhoto(new MediaPK(pictureId));
+    Photo photoDetail = getGalleryService().getPhoto(new MediaPK(pictureId));
     return photoDetail;
   }
 
@@ -150,7 +138,7 @@ public class MediaServlet extends HttpServlet {
     InputStream input = null;
 
     try {
-      ResourceLocator gallerySettings = new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
+      SettingBundle gallerySettings = ResourceLocator.getSettingBundle("com.silverpeas.gallery.settings.gallerySettings");
       String nomRep = gallerySettings.getString("imagesSubDirectory") + photo.getMediaPK().getId();
       String[] rep = {nomRep};
       String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
@@ -177,11 +165,8 @@ public class MediaServlet extends HttpServlet {
     }
   }
 
-  private GalleryBm getGalleryBm() throws Exception {
-    if (galleryBm == null) {
-      galleryBm = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBm.class);
-    }
-    return galleryBm;
+  private GalleryService getGalleryService() throws Exception {
+    return MediaServiceProvider.getMediaService();
   }
 
   private String createMedia(HttpServletRequest request, HttpServletResponse response, String name, String userId, String componentId,
@@ -221,7 +206,7 @@ public class MediaServlet extends HttpServlet {
       return null;
     }
 
-    Media newMedia = getGalleryBm().createMedia(getUserInSession(request), componentId, watermark, watermarkHD, watermarkOther, delegate);
+    Media newMedia = getGalleryService().createMedia(getUserInSession(request), componentId, watermark, watermarkHD, watermarkOther, delegate);
 
     return newMedia.getId();
   }

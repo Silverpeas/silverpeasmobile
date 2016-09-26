@@ -1,56 +1,46 @@
 package com.silverpeas.mobile.server.servlets;
 
-import com.silverpeas.form.DataRecord;
-import com.silverpeas.form.Form;
-import com.silverpeas.form.PagesContext;
-import com.silverpeas.form.form.HtmlForm;
-import com.silverpeas.form.form.XmlForm;
-import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.model.MediaPK;
-import com.silverpeas.gallery.model.Photo;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.publicationTemplate.PublicationTemplate;
-import com.silverpeas.publicationTemplate.PublicationTemplateManager;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.beans.admin.OrganizationController;
-import com.stratelia.webactiv.beans.admin.UserDetail;
-import com.stratelia.webactiv.kmelia.control.ejb.KmeliaBm;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.FileRepositoryManager;
-import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.publication.model.PublicationDetail;
-import com.stratelia.webactiv.util.publication.model.PublicationPK;
 import org.apache.commons.codec.binary.Base64;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.silverpeas.attachment.AttachmentServiceFactory;
-import org.silverpeas.attachment.model.SimpleDocument;
-import org.silverpeas.attachment.model.SimpleDocumentPK;
+import org.silverpeas.components.gallery.model.MediaPK;
+import org.silverpeas.components.gallery.model.Photo;
+import org.silverpeas.components.gallery.service.GalleryService;
+import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.components.kmelia.service.KmeliaService;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
+import org.silverpeas.core.contribution.content.form.DataRecord;
+import org.silverpeas.core.contribution.content.form.Form;
+import org.silverpeas.core.contribution.content.form.PagesContext;
+import org.silverpeas.core.contribution.content.form.form.HtmlForm;
+import org.silverpeas.core.contribution.content.form.form.XmlForm;
+import org.silverpeas.core.contribution.publication.model.PublicationDetail;
+import org.silverpeas.core.contribution.publication.model.PublicationPK;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.util.logging.SilverLogger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Method;
 
 @SuppressWarnings("serial")
 public class PublicationContentServlet extends HttpServlet {
 
-  private OrganizationController organizationController = new OrganizationController();
-  private KmeliaBm kmeliaBm;
-  private GalleryBm galleryBm;
+  private OrganizationController organizationController = OrganizationController.get();
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String id = request.getParameter("id");
@@ -95,7 +85,7 @@ public class PublicationContentServlet extends HttpServlet {
         if (htmlPart.contains("flash")) {
           String attachmentId = htmlPart.substring(htmlPart.indexOf("attachmentId/") + "attachmentId/".length());
           attachmentId = attachmentId.substring(0, attachmentId.indexOf("/"));
-          SimpleDocument attachment = AttachmentServiceFactory.getAttachmentService().searchDocumentById(new SimpleDocumentPK(attachmentId), getUserInSession(request).getUserPreferences().getLanguage());
+          SimpleDocument attachment = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(attachmentId), getUserInSession(request).getUserPreferences().getLanguage());
           String type = attachment.getContentType();
           String url = getServletContext().getContextPath() + "/spmobil/Attachment";
           url = url + "?id=" + attachmentId + "&instanceId=" + pub.getInstanceId() + "&lang=" + getUserInSession(request).getUserPreferences().getLanguage()  + "&userId=" + getUserInSession(request).getId();
@@ -179,7 +169,7 @@ public class PublicationContentServlet extends HttpServlet {
 
           boolean playable = false;
 
-          SimpleDocument attachment = AttachmentServiceFactory.getAttachmentService().searchDocumentById(new SimpleDocumentPK(attachmentId), user.getUserPreferences().getLanguage());
+          SimpleDocument attachment = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(attachmentId), user.getUserPreferences().getLanguage());
           String type = attachment.getContentType();
           if (type.contains("mp4") || type.contains("ogg") || type.contains("webm")) {
             playable = true;
@@ -235,7 +225,7 @@ public class PublicationContentServlet extends HttpServlet {
         instanceId = instanceId.substring(0, instanceId.indexOf("&"));
         String imageId= url.substring(url.indexOf("ImageId") + "ImageId".length() +1);
         imageId = imageId.substring(0, imageId.indexOf("&"));
-        Photo photo = getGalleryBm().getPhoto(new MediaPK(imageId));
+        Photo photo = getGalleryService().getPhoto(new MediaPK(imageId));
         String[] rep = {"image"+imageId};
 
         String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
@@ -248,8 +238,7 @@ public class PublicationContentServlet extends HttpServlet {
         data = "data:" + photo.getFileMimeType() + ";base64," +
             new String(Base64.encodeBase64(binaryData));
       } catch (Exception e) {
-        SilverTrace.error(SpMobileLogModule.getName(),
-            "PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+        SilverLogger.getLogger(SpMobileLogModule.getName()).error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
       }
     } else {
       data = convertImageAttachmentUrl(url, data);
@@ -264,7 +253,7 @@ public class PublicationContentServlet extends HttpServlet {
     componentId = componentId.substring(0, componentId.indexOf("/"));
 
     SimpleDocument attachment =
-        AttachmentServiceFactory.getAttachmentService().searchDocumentById(
+            AttachmentServiceProvider.getAttachmentService().searchDocumentById(
             new SimpleDocumentPK(attachmentId, componentId), null);
 
     try {
@@ -276,8 +265,7 @@ public class PublicationContentServlet extends HttpServlet {
       data = "data:" + attachment.getContentType() + ";base64," + new String(
           Base64.encodeBase64(binaryData));
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(),
-          "PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
     }
     return data;
   }
@@ -302,17 +290,11 @@ public class PublicationContentServlet extends HttpServlet {
     return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
   }
 
-  private KmeliaBm getKmeliaBm() throws Exception {
-    if (kmeliaBm == null) {
-      kmeliaBm = EJBUtilitaire.getEJBObjectRef(JNDINames.KMELIABM_EJBHOME, KmeliaBm.class);
-    }
-    return kmeliaBm;
+  private KmeliaService getKmeliaBm() {
+    return KmeliaService.get();
   }
 
-  private GalleryBm getGalleryBm() throws Exception {
-    if (galleryBm == null) {
-      galleryBm = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBm.class);
-    }
-    return galleryBm;
+  private GalleryService getGalleryService() throws Exception {
+    return MediaServiceProvider.getMediaService();
   }
 }

@@ -1,18 +1,19 @@
 package com.silverpeas.mobile.server.services;
 
-import java.util.Date;
-import java.util.List;
-
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.RSEexception;
 import com.silverpeas.mobile.shared.services.ServiceRSE;
-import com.silverpeas.socialnetwork.status.Status;
-import com.silverpeas.socialnetwork.status.StatusService;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.beans.admin.UserDetail;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.socialnetwork.status.Status;
+import org.silverpeas.core.socialnetwork.status.StatusService;
+import org.silverpeas.core.util.ServiceProvider;
+import org.silverpeas.core.util.logging.SilverLogger;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Service de gestion du réseau social.
@@ -22,14 +23,13 @@ public class ServiceRSEImpl extends AbstractAuthenticateService implements Servi
 
   private static final long serialVersionUID = 1L;
   private StatusDao statusDao = new StatusDao();
-  private StatusService statusService = new StatusService();
 
   @Override
   public String updateStatus(String textStatus) throws RSEexception, AuthenticationException {
     checkUserInSession();
     UserDetail user = getUserInSession();
     Status status = new Status(Integer.parseInt(user.getId()), new Date(), textStatus);
-    return statusService.changeStatusService(status);
+    return getStatusService().changeStatusService(status);
   }
 
   @Override
@@ -39,7 +39,7 @@ public class ServiceRSEImpl extends AbstractAuthenticateService implements Servi
     try {
       return statusDao.getAllStatus(Integer.parseInt(user.getId()), step);
     } catch (Exception ex) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceRSEImpl.getAllStatus", "root.EX_NO_MESSAGE", ex);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceRSEImpl.getAllStatus", ex);
       throw new RSEexception(ex);
     }
   }
@@ -51,8 +51,12 @@ public class ServiceRSEImpl extends AbstractAuthenticateService implements Servi
     try {
       return statusDao.getStatus(Integer.parseInt(user.getId()));
     } catch (Exception ex) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceRSEImpl.getAllStatus", "root.EX_NO_MESSAGE", ex);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceRSEImpl.getStatus", ex);
       throw new RSEexception(ex);
     }
+  }
+
+  private StatusService getStatusService() {
+    return ServiceProvider.getService(StatusService.class);
   }
 }

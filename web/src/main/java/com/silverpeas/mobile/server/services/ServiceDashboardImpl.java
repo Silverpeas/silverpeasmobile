@@ -1,26 +1,19 @@
 package com.silverpeas.mobile.server.services;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.shared.dto.SocialInformationDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DashboardException;
 import com.silverpeas.mobile.shared.services.ServiceDashboard;
-import com.silverpeas.socialnetwork.model.SocialInformation;
-import com.silverpeas.socialnetwork.model.SocialInformationType;
-import com.silverpeas.socialnetwork.relationShip.RelationShipService;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.beans.admin.UserDetail;
-import com.stratelia.webactiv.util.DateUtil;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.socialnetwork.model.SocialInformation;
+import org.silverpeas.core.socialnetwork.model.SocialInformationType;
+import org.silverpeas.core.socialnetwork.relationShip.RelationShipService;
+import org.silverpeas.core.util.DateUtil;
+import org.silverpeas.core.util.logging.SilverLogger;
+
+import java.sql.SQLException;
+import java.util.*;
 
 public class ServiceDashboardImpl extends AbstractAuthenticateService implements ServiceDashboard{
 
@@ -33,8 +26,8 @@ public class ServiceDashboardImpl extends AbstractAuthenticateService implements
     Calendar end = Calendar.getInstance(Locale.FRANCE);
 
     begin.set(Calendar.MONTH, -1);
-    com.silverpeas.calendar.Date dBegin = new com.silverpeas.calendar.Date(begin.getTime());
-    com.silverpeas.calendar.Date dEnd = new com.silverpeas.calendar.Date(end.getTime());
+    org.silverpeas.core.date.Date dBegin = new org.silverpeas.core.date.Date(begin.getTime());
+    org.silverpeas.core.date.Date dEnd = new org.silverpeas.core.date.Date(end.getTime());
 
     List<String> myContactIds = getMyContactsIds();
 
@@ -54,9 +47,9 @@ public class ServiceDashboardImpl extends AbstractAuthenticateService implements
       checkUserInSession();
       UserDetail user = getUserInSession();
       myId = user.getId();
-      return new RelationShipService().getMyContactsIds(Integer.parseInt(myId));
+      return  RelationShipService.get().getMyContactsIds(Integer.parseInt(myId));
     } catch (SQLException ex) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceDashboardImpl.getMyContactsIds", "root.EX_NO_MESSAGE", ex);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDashboardImpl.getMyContactsIds" ,ex);
     }
     return new ArrayList<String>();
   }

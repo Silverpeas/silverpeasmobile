@@ -1,15 +1,14 @@
 package com.silverpeas.mobile.server.servlets;
 
-import com.silverpeas.gallery.constant.MediaResolution;
-import com.silverpeas.gallery.control.ejb.GalleryBm;
-import com.silverpeas.gallery.model.Media;
-import com.silverpeas.gallery.model.MediaPK;
 import com.silverpeas.mobile.server.helpers.MediaHelper;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.JNDINames;
-import org.silverpeas.file.SilverpeasFile;
+import org.silverpeas.components.gallery.constant.MediaResolution;
+import org.silverpeas.components.gallery.model.Media;
+import org.silverpeas.components.gallery.model.MediaPK;
+import org.silverpeas.components.gallery.service.GalleryService;
+import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.core.io.file.SilverpeasFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,14 +23,13 @@ import java.io.OutputStream;
 
 public class VideoServlet extends HttpServlet {
 
-  private GalleryBm galleryBm;
   private static final int BUFFER_LENGTH = 9000;
   private static final long EXPIRE_TIME = 1000 * 60 * 60; // one hour
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     String id = request.getParameter("id");
-    Media video = getGalleryBm().getMedia(new MediaPK(id)).getVideo();
+    Media video = getGalleryService().getMedia(new MediaPK(id)).getVideo();
     SilverpeasFile f = video.getFile(MediaResolution.ORIGINAL);
 
     String range = request.getHeader("Range");
@@ -105,10 +103,7 @@ public class VideoServlet extends HttpServlet {
     }
   }
 
-  private GalleryBm getGalleryBm() throws Exception {
-    if (galleryBm == null) {
-      galleryBm = EJBUtilitaire.getEJBObjectRef(JNDINames.GALLERYBM_EJBHOME, GalleryBm.class);
-    }
-    return galleryBm;
+  private GalleryService getGalleryService() throws Exception {
+    return MediaServiceProvider.getMediaService();
   }
 }

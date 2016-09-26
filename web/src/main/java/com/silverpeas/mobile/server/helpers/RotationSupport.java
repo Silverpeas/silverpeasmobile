@@ -12,8 +12,8 @@ import java.io.RandomAccessFile;
 
 import javax.swing.ImageIcon;
 
-import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.jpeg.JpegSegmentReader;
+import com.drew.imaging.jpeg.JpegSegmentType;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
@@ -90,8 +90,8 @@ public class RotationSupport {
 		}
 
 		try {
-			if (meta.containsDirectory(ExifIFD0Directory.class)) {
-				Directory exif = meta.getDirectory(ExifIFD0Directory.class);
+			if (meta.containsDirectoryOfType(ExifIFD0Directory.class)) {
+				Directory exif = meta.getFirstDirectoryOfType(ExifIFD0Directory.class);
 				int existingOrientation = exif
 						.getInt(ExifIFD0Directory.TAG_ORIENTATION);
 
@@ -113,8 +113,8 @@ public class RotationSupport {
 
 	public static int getOrientation(Metadata meta) {
 		try {
-			if (meta.containsDirectory(ExifIFD0Directory.class)) {
-				Directory exif = meta.getDirectory(ExifIFD0Directory.class);
+			if (meta.containsDirectoryOfType(ExifIFD0Directory.class)) {
+				Directory exif = meta.getFirstDirectoryOfType(ExifIFD0Directory.class);
 
 				return exif.getInt(ExifIFD0Directory.TAG_ORIENTATION);
 			}
@@ -146,7 +146,7 @@ public class RotationSupport {
 			Segment s;
 
 			for (s = f.getFirstSegment(); (s != null)
-					&& (s.getId() != JpegSegmentReader.SEGMENT_APP1); s = s
+					&& (s.getId() != JpegSegmentType.APP1.byteValue); s = s
 					.getNextSegment()) {
 				;
 			}
@@ -187,7 +187,7 @@ public class RotationSupport {
 			Segment s;
 
 			for (s = f.getFirstSegment(); (s != null)
-					&& (s.getId() != JpegSegmentReader.SEGMENT_APP1); s = s
+					&& (s.getId() != JpegSegmentType.APP1.byteValue); s = s
 					.getNextSegment()) {
 				;
 			}
@@ -346,7 +346,7 @@ class APP1Segment {
 	int firstEntryOffset;
 
 	public APP1Segment(Segment seg) throws IOException {
-		if (seg.getId() != JpegSegmentReader.SEGMENT_APP1) {
+		if (seg.getId() != JpegSegmentType.APP1.byteValue) {
 			throw new IOException("Not an APP1 segment");
 		}
 

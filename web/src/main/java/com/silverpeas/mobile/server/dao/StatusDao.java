@@ -1,5 +1,11 @@
 package com.silverpeas.mobile.server.dao;
 
+import com.silverpeas.mobile.server.config.Configurator;
+import com.silverpeas.mobile.shared.dto.StatusDTO;
+import edu.emory.mathcs.backport.java.util.Collections;
+import org.silverpeas.core.persistence.jdbc.DBUtil;
+import org.silverpeas.core.util.UtilException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,14 +13,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.silverpeas.mobile.server.config.Configurator;
-import com.silverpeas.mobile.shared.dto.StatusDTO;
-import com.stratelia.webactiv.util.DBUtil;
-import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.exception.UtilException;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class StatusDao {
 
@@ -85,6 +83,6 @@ public class StatusDao {
   }
 
   private Connection getConnection() throws UtilException, SQLException {
-    return DBUtil.makeConnection(JNDINames.DATABASE_DATASOURCE);
+    return DBUtil.openConnection();
   }
 }

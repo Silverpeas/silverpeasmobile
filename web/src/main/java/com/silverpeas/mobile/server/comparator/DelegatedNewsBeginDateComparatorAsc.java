@@ -1,6 +1,6 @@
 package com.silverpeas.mobile.server.comparator;
 
-import com.silverpeas.delegatednews.model.DelegatedNews;
+import org.silverpeas.components.delegatednews.model.DelegatedNews;
 
 import java.util.Comparator;
 

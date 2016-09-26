@@ -107,12 +107,13 @@
       <version>${gwtVersion}</version>
       <type>jar</type>
     </dependency>
-    <!--dependency>
-      <groupId>javax.ejb</groupId>
-      <artifactId>ejb-api</artifactId>
-      <scope>provided</scope>
-    </dependency-->
 
+    <dependency>
+      <groupId>org.silverpeas.components.delegatednews</groupId>
+      <artifactId>silverpeas-delegatednews</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.silverpeas.core</groupId>
       <artifactId>silverpeas-core-web</artifactId>
@@ -138,12 +139,23 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.silverpeas.core.services</groupId>
+      <artifactId>silverpeas-core-calendar</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.silverpeas.components.kmelia</groupId>
       <artifactId>silverpeas-kmelia</artifactId>
       <version>${silverpeasVersion}</version>
       <scope>provided</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.silverpeas.components.almanach</groupId>
+        <artifactId>silverpeas-almanach</artifactId>
+      <version>${silverpeasVersion}</version>
+      <scope>provided</scope>
+    </dependency>
 
 
 

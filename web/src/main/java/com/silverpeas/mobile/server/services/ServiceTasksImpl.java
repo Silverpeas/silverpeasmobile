@@ -4,15 +4,14 @@ import com.silverpeas.mobile.shared.dto.TaskDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.Taskexception;
 import com.silverpeas.mobile.shared.services.ServiceTasks;
-import com.stratelia.webactiv.calendar.control.SilverpeasCalendar;
-import com.stratelia.webactiv.calendar.model.Attendee;
-import com.stratelia.webactiv.calendar.model.ToDoHeader;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.JNDINames;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.calendar.model.Attendee;
+import org.silverpeas.core.calendar.model.ToDoHeader;
+import org.silverpeas.core.calendar.service.SilverpeasCalendar;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.ServiceProvider;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,10 +92,6 @@ public class ServiceTasksImpl extends AbstractAuthenticateService implements Ser
   }
 
   private SilverpeasCalendar getCalendar() {
-    try {
-      return EJBUtilitaire.getEJBObjectRef(JNDINames.CALENDARBM_EJBHOME, SilverpeasCalendar.class);
-    } catch(Exception e) {
-      return null;
-    }
+    return ServiceProvider.getService(SilverpeasCalendar.class);
   }
 }

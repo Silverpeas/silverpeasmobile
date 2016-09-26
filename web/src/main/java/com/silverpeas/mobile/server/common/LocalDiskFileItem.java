@@ -9,13 +9,25 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.io.IOUtils;
 
 public class LocalDiskFileItem implements FileItem {
 
 	private static final long serialVersionUID = 1L;
 	private File file;
-	
+	private FileItemHeaders headers;
+
+	@Override
+	public FileItemHeaders getHeaders() {
+		return headers;
+	}
+
+	@Override
+	public void setHeaders(FileItemHeaders headers) {
+		this.headers = headers;
+	}
+
 	@Override
 	public InputStream getInputStream() throws IOException {
 		InputStream inputStream = new FileInputStream(file.getAbsolutePath());

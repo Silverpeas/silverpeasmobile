@@ -1,19 +1,20 @@
 package com.silverpeas.mobile.server.services;
 
-import com.silverpeas.delegatednews.model.DelegatedNews;
-import com.silverpeas.delegatednews.service.DelegatedNewsService;
-import com.silverpeas.delegatednews.service.ServicesFactory;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.comparator.DelegatedNewsBeginDateComparatorAsc;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.NewsException;
 import com.silverpeas.mobile.shared.services.ServiceNews;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.util.FileRepositoryManager;
-import com.stratelia.webactiv.util.ResourceLocator;
-import com.stratelia.webactiv.util.publication.model.PublicationDetail;
 import org.apache.commons.codec.binary.Base64;
+import org.silverpeas.components.delegatednews.model.DelegatedNews;
+import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
+import org.silverpeas.components.delegatednews.service.DelegatedNewsServiceProvider;
+import org.silverpeas.core.contribution.publication.model.PublicationDetail;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +31,6 @@ import java.util.List;
 public class ServiceNewsImpl extends AbstractAuthenticateService implements ServiceNews {
 
   private static final long serialVersionUID = 1L;
-  private DelegatedNewsService delegatedNewsService = null;
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 
   @Override
@@ -62,7 +62,7 @@ public class ServiceNewsImpl extends AbstractAuthenticateService implements Serv
         news.add(populate(delegated.getPublicationDetail()));
       } catch (Exception e) {
         // delegated news refers a deleted publication
-        SilverTrace.warn(SpMobileLogModule.getName(), "ServiceNewsImpl.getNews", "CANT_GET_NEWS", "PublicationId = "+delegated.getPubId());
+        SilverLogger.getLogger(SpMobileLogModule.getName()).warn("ServiceNewsImpl.getNews", "CANT_GET_NEWS", "PublicationId = "+delegated.getPubId());
         throw new NewsException(e.getMessage());
       }
     }
@@ -103,7 +103,7 @@ public class ServiceNewsImpl extends AbstractAuthenticateService implements Serv
       instanceId = pub.getImage().substring(pub.getImage().indexOf("ComponentId") + "ComponentId".length() +1);
       instanceId = instanceId.substring(0, instanceId.indexOf("&"));
       try {
-        ResourceLocator gallerySettings = new ResourceLocator("com.silverpeas.gallery.settings.gallerySettings", "");
+        SettingBundle gallerySettings = ResourceLocator.getSettingBundle("com.silverpeas.gallery.settings.gallerySettings");
         String nomRep = gallerySettings.getString("imagesSubDirectory") + id;
         String[] rep = {nomRep};
         String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
@@ -121,9 +121,6 @@ public class ServiceNewsImpl extends AbstractAuthenticateService implements Serv
   }
 
   private DelegatedNewsService getDelegatedNewsService() {
-    if (delegatedNewsService == null) {
-      delegatedNewsService = ServicesFactory.getDelegatedNewsService();
-    }
-    return delegatedNewsService;
+    return DelegatedNewsServiceProvider.getDelegatedNewsService();
   }
 }
