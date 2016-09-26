@@ -157,91 +157,12 @@
       <scope>provided</scope>
     </dependency>
 
-
-
-    <!--dependency>
-      <groupId>com.silverpeas.core</groupId>
-      <artifactId>lib-core</artifactId>
-      <version>${silverpeasVersion}</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>xercesImpl</artifactId>
-          <groupId>xerces</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency-->
-
-    <!--dependency>
-      <groupId>com.silverpeas.core.ejb-core</groupId>
-      <artifactId>admin</artifactId>
-      <version>${silverpeasVersion}</version>
-      <classifier>client</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.silverpeas.core.ejb-core</groupId>
-      <artifactId>calendar</artifactId>
-      <version>${silverpeasVersion}</version>
-      <classifier>client</classifier>
-      <scope>provided</scope>
-    </dependency-->
-
-
-
     <dependency>
       <groupId>org.silverpeas.components.gallery</groupId>
       <artifactId>silverpeas-gallery</artifactId>
       <version>${silverpeasVersion}</version>
       <scope>provided</scope>
     </dependency>
-    <!--dependency>
-      <groupId>com.silverpeas.components.almanach</groupId>
-      <artifactId>almanach-ejb</artifactId>
-      <version>${silverpeasVersion}</version>
-      <classifier>client</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.silverpeas.core.ejb-core</groupId>
-      <artifactId>node</artifactId>
-      <version>${silverpeasVersion}</version>
-      <classifier>client</classifier>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.silverpeas.components.kmelia</groupId>
-      <artifactId>kmelia-ejb</artifactId>
-      <version>${silverpeasVersion}</version>
-      <classifier>client</classifier>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.silverpeas.core.ejb-core</groupId>
-      <artifactId>publication</artifactId>
-      <version>${silverpeasVersion}</version>
-      <classifier>client</classifier>
-      <scope>provided</scope>
-    </dependency-->
-
-    <!--dependency>
-      <groupId>com.silverpeas.core</groupId>
-      <artifactId>web-core</artifactId>
-      <version>${silverpeasVersion}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.silverpeas.components.delegatednews</groupId>
-      <artifactId>delegatednews-jar</artifactId>
-      <version>${silverpeasVersion}</version>
-      <scope>provided</scope>
-    </dependency-->
 
     <dependency>
       <groupId>net.sf.dozer</groupId>
