@@ -8,33 +8,46 @@
   </parent>
 
   <groupId>com.silverpeas.components.mobile</groupId>
-  <artifactId>mobile-war</artifactId>
-  <packaging>war</packaging>
-  <name>Silverpeas mobile services</name>
+  <artifactId>mobile-jar</artifactId>
+  <packaging>jar</packaging>
+  <name>Silverpeas mobile shared</name>
+
+<build>
+<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			
+		</resources>
+
+</build>
+
+  <properties>
+    <gwtVersion>2.7.0</gwtVersion>
+  </properties>
 
   <dependencies>
 
     <dependency>
-      <groupId>org.silverpeas.components.gallery</groupId>
-      <artifactId>silverpeas-gallery</artifactId>
-      <version>${core.version}</version>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwtVersion}</version>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
-      <groupId>org.silverpeas.core</groupId>
-      <artifactId>silverpeas-core</artifactId>
-      <version>${core.version}</version>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <version>${gwtVersion}</version>
       <scope>provided</scope>
     </dependency>
-
-
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
-      <scope>provided</scope>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>${gwtVersion}</version>
+      <type>jar</type>
     </dependency>
+
+    
 
   </dependencies>
 
