@@ -8,6 +8,8 @@
   <inherits name="com.google.gwt.user.User"/>
   <inherits name="com.google.gwt.json.JSON"/>
 
+  <inherits name="com.silverpeas.mobile.shared.SpMobileShared"/>
+
   <inherits name="com.googlecode.gwt.crypto.Crypto"/>
 
   <source path="client"/>
