@@ -52,7 +52,7 @@ public class MobilFilter implements Filter {
           chain.doFilter(req, res);
           return;
         }
-        ((HttpServletResponse) res).sendRedirect("/spmobile/" + params);
+        ((HttpServletResponse) res).sendRedirect("/silverpeas/spmobile/" + params);
         return;
       } else {
         chain.doFilter(req, res);

@@ -9,7 +9,7 @@ public class UrlUtils {
 
   public static String getLocation() {
     String url = Window.Location.getProtocol() + "//" + Window.Location.getHost();
-    url += "/spmobile/";
+    url += "/silverpeas/spmobile/";
     return url;
   }
 }

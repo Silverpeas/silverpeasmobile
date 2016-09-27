@@ -1,4 +1,6 @@
-<%@ page import="com.stratelia.webactiv.util.ResourceLocator" %>
+<%@ page import="org.silverpeas.core.util.ResourceLocator" %>
+<%@ page import="org.silverpeas.core.util.SettingBundle" %>
+<%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
 <!doctype html>
 <html manifest="spmobil.appcache">
 <head>
@@ -16,7 +18,7 @@
     if (!l.equalsIgnoreCase("fr")) {
       l = "en";
     }
-    ResourceLocator resource = new ResourceLocator("org.silverpeas.mobile.mobileSettings", l);
+    LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.mobileSettings", l);
     String css = resource.getString("styleSheet");
     if (css != null && !css.isEmpty()) {
       out.println("<link rel='stylesheet' type='text/css' href='" + css + "'>");

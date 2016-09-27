@@ -51,10 +51,10 @@ public class PublicationContentServlet extends HttpServlet {
     response.getOutputStream().print("<html>");
     response.getOutputStream().print("<head>");
     response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
-    response.getOutputStream().print("<link rel='stylesheet' href='/spmobile/spmobil/spmobile.css'/>");
-    response.getOutputStream().print("<link rel='stylesheet' href='/spmobile/spmobil/zoom.css'/>");
-    response.getOutputStream().print("<script type='text/javascript' src='/spmobile/spmobil/interact.min.js'></script>");
-    response.getOutputStream().print("<script type='text/javascript' src='/spmobile/spmobil/zoom.js'/></script>");
+    response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/spmobil/spmobile.css'/>");
+    response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/spmobil/zoom.css'/>");
+    response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/spmobil/interact.min.js'></script>");
+    response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/spmobil/zoom.js'/></script>");
     response.getOutputStream().print("</head>");
     response.getOutputStream().print("<body style='background-color:grey;padding-top:1em;'>");
 

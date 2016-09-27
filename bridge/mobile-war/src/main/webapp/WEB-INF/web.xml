@@ -189,10 +189,6 @@
     <url-pattern>/spmobil/VideoAction</url-pattern>
   </servlet-mapping>
 
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>spmobil.jsp</welcome-file>
-  </welcome-file-list>
 
   <listener>
     <listener-class>com.silverpeas.mobile.server.servlets.SessionManager</listener-class>
