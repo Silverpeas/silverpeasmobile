@@ -12,7 +12,7 @@ import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
-import org.silverpeas.core.silvertrace.SilverTrace;
+import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,7 +67,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       }
 
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceNavigationImpl.getSpacesAndApps", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getSpacesAndApps", "root.EX_NO_MESSAGE", e);
     }
     return results;
   }
@@ -79,7 +79,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
       dto = populate(app);
     } catch(Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceNavigationImpl.getApp", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getApp", "root.EX_NO_MESSAGE", e);
     }
     return dto;
   }

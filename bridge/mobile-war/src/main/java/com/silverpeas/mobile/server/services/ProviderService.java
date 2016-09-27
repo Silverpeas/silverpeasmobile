@@ -24,6 +24,6 @@ public class ProviderService {
     } catch (Exception ex) {
         SilverLogger.getLogger("socialNetwork").error("ProviderService.getSocialInformationsListOfMyContact",ex);
     }
-    return new ArrayList<SocialInformation>();
+    return new ArrayList<>();
   }
 }

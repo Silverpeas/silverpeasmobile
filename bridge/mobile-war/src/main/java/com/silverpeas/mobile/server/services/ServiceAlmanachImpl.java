@@ -14,7 +14,6 @@ import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public class ServiceAlmanachImpl extends AbstractAuthenticateService implements ServiceAlmanach {
@@ -23,7 +22,7 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
 
   public List<EventDetailDTO> getAlmanach(String instanceId) throws AlmanachException, AuthenticationException {
     checkUserInSession();
-    List<EventDetailDTO> listEventDetailDTO = new ArrayList<EventDetailDTO>();
+    List<EventDetailDTO> listEventDetailDTO = new ArrayList<>();
 
     try {
       EventPK eventPK = new EventPK("");
@@ -31,9 +30,7 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
       Collection<EventDetail> listEventDetail = AlmanachService.get().getAllEvents(eventPK);
       Mapper mapper = new DozerBeanMapper();
       if (!listEventDetail.isEmpty()) {
-        Iterator<EventDetail> i = listEventDetail.iterator();
-        while (i.hasNext()) {
-          EventDetail eventDetail = i.next();
+        for (EventDetail eventDetail : listEventDetail) {
           listEventDetailDTO.add(mapper.map(eventDetail, EventDetailDTO.class));
         }
       }

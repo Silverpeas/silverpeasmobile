@@ -36,11 +36,11 @@ import org.silverpeas.core.admin.service.OrganizationControllerProvider;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.io.file.SilverpeasFile;
 import org.silverpeas.core.node.model.NodePK;
-import org.silverpeas.core.silvertrace.SilverTrace;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.util.logging.SilverLogger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -110,7 +110,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       file.delete();
 
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.uploadPicture", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.uploadPicture", "root.EX_NO_MESSAGE", e);
     }
   }
 
@@ -154,7 +154,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
         }
       }
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getAllGalleries", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getAllGalleries", "root.EX_NO_MESSAGE", e);
     }
 
     Collections.sort(results);
@@ -188,7 +188,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
         }
       }
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getAlbums", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getAlbums", "root.EX_NO_MESSAGE", e);
       throw new MediaException(e);
     }
     return results;
@@ -247,7 +247,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       return results;
 
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getAllMedias", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getAllMedias", "root.EX_NO_MESSAGE", e);
       throw new MediaException(e);
     }
   }
@@ -275,7 +275,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       }
 
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getOriginalPicture", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getOriginalPicture", "root.EX_NO_MESSAGE", e);
     }
     return picture;
   }
@@ -286,7 +286,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     try {
       sound = getGalleryService().getMedia(new MediaPK(soundId));
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getSound", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getSound", "root.EX_NO_MESSAGE", e);
     }
     return getSound(sound);
   }
@@ -298,7 +298,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     try {
       video = getGalleryService().getMedia(new MediaPK(videoId));
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideo", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getVideo", "root.EX_NO_MESSAGE", e);
     }
     return getVideo(video);
   }
@@ -310,7 +310,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     try {
       video = getGalleryService().getMedia(new MediaPK(videoId));
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
     }
     return getVideoStreaming(video);
   }
@@ -325,7 +325,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     try {
       picture = getPhoto(instanceId, pictureId, MediaResolution.PREVIEW);
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getPreviewPicture", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getPreviewPicture", "root.EX_NO_MESSAGE", e);
     }
     return picture;
   }
@@ -365,7 +365,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
         Map<String,String> map = objectMapper.readValue(json, HashMap.class);
         video.setUrlPoster(map.get("thumbnail_medium"));
       } catch (IOException e) {
-        SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
+        SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
         video.setUrlPoster("");
       }
     } else if (urlVideo.contains("youtu")){
@@ -443,7 +443,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       method.releaseConnection();
 
     } catch (IOException e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceMediaImpl.getVideoPoster", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getVideoPoster", "root.EX_NO_MESSAGE", e);
     }
     return data;
   }

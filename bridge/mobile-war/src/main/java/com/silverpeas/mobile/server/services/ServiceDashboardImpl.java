@@ -51,7 +51,7 @@ public class ServiceDashboardImpl extends AbstractAuthenticateService implements
     } catch (SQLException ex) {
       SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDashboardImpl.getMyContactsIds" ,ex);
     }
-    return new ArrayList<String>();
+    return new ArrayList<>();
   }
 
   public List<SocialInformationDTO> processResults(List<SocialInformation> socialInformationsFull, int reinitialisationPage, String socialInformationType){

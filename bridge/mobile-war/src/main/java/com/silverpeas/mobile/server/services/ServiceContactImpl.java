@@ -12,8 +12,8 @@ import org.dozer.Mapper;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
-import org.silverpeas.core.silvertrace.SilverTrace;
 import org.silverpeas.core.socialnetwork.relationShip.RelationShipService;
+import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +65,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
         }
       }
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
       throw new ContactException(e);
     }
 
@@ -95,8 +95,8 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
    */
   private DetailUserDTO populate(UserDetail userDetail) {
     if (userDetail != null) {
-      SilverTrace.debug(SpMobileLogModule.getName(), "ServiceContactImpl.populate",
-          "User id=" + userDetail.getId());
+      SilverLogger.getLogger(SpMobileLogModule.getName()).debug(SpMobileLogModule.getName(), "ServiceContactImpl.populate",
+              "User id=" + userDetail.getId());
       UserFull userFull = UserFull.getById(userDetail.getId());
       Mapper mapper = new DozerBeanMapper();
       DetailUserDTO userDTO = mapper.map(userDetail, DetailUserDTO.class);

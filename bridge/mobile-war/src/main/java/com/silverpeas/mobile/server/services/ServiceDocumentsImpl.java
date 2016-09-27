@@ -22,8 +22,8 @@ import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
-import org.silverpeas.core.silvertrace.SilverTrace;
 import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       }
       if (trash != null) topicsList.add(0, trash);
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
     }
     return topicsList;
@@ -137,7 +137,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         pubs.add(dto);
       }
     } catch (Exception e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
     }
 
@@ -173,7 +173,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
   @Override
   public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException {
-    SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
+    SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
     checkUserInSession();
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -195,11 +195,11 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       }
 
       ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
-      SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Get attachments");
+      SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Get attachments");
 
       List<SimpleDocument> pubAttachments = AttachmentServiceProvider.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
 
-      SilverTrace.debug(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
+      SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 
       for (SimpleDocument attachment : pubAttachments) {
         attachments.add(populate(attachment));
@@ -208,7 +208,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
       return dto;
     } catch (Throwable e) {
-      SilverTrace.error(SpMobileLogModule.getName(), "ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
     }
   }

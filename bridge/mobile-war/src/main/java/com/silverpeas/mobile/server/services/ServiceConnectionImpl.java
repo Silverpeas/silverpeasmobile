@@ -88,10 +88,10 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 
   public List<DomainDTO> getDomains() {
     Domain[] allDomains = organizationController.getAllDomains();
-    ArrayList<DomainDTO> domains = new ArrayList<DomainDTO>();
+    ArrayList<DomainDTO> domains = new ArrayList<>();
     Mapper mapper = new DozerBeanMapper();
-    for (int i = 0; i < allDomains.length; i++) {
-      domains.add(mapper.map(allDomains[i], DomainDTO.class));
+    for (Domain allDomain : allDomains) {
+      domains.add(mapper.map(allDomain, DomainDTO.class));
     }
     return domains;
   }

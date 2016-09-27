@@ -1,11 +1,11 @@
 package com.silverpeas.mobile.server.services;
 
-import org.silverpeas.core.comment.model.Comment;
 import com.silverpeas.mobile.server.helpers.DataURLHelper;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.CommentsException;
 import com.silverpeas.mobile.shared.services.ServiceComments;
+import org.silverpeas.core.comment.model.Comment;
 import org.silverpeas.core.comment.model.CommentPK;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
@@ -20,14 +20,14 @@ import java.util.List;
  * @author svuillet
  */
 public class ServiceCommentsImpl extends AbstractAuthenticateService implements ServiceComments {
-	
-	private static final long serialVersionUID = 1L;
+
+  private static final long serialVersionUID = 1L;
   private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
   @Override
   public List<CommentDTO> getComments(String id, String type) throws CommentsException, AuthenticationException {
     checkUserInSession();
-    ArrayList<CommentDTO> list = new ArrayList<CommentDTO>();
+    ArrayList<CommentDTO> list = new ArrayList<>();
     List<Comment> comments = CommentServiceProvider.getCommentService().getAllCommentsOnPublication(
         type, new PublicationPK(id));
     for (Comment c : comments) {
@@ -51,7 +51,7 @@ public class ServiceCommentsImpl extends AbstractAuthenticateService implements 
   @Override
   public CommentDTO addComment(String id, String instanceId, String type, String message) throws CommentsException, AuthenticationException {
     checkUserInSession();
-    CommentDTO comment = new CommentDTO();
+    CommentDTO comment;
     Date now = new Date();
     Comment c = new Comment(new CommentPK("", instanceId), type, new PublicationPK(
         id, instanceId), Integer.valueOf(getUserInSession().getId()), getUserInSession().getDisplayedName(),
