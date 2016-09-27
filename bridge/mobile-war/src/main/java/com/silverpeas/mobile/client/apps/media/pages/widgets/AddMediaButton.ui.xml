@@ -1,0 +1,17 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+  
+  <ui:with field='msg' type='com.silverpeas.mobile.client.apps.media.resources.MediaMessages'/>
+  
+  <g:HTMLPanel tag="li" styleName="add-media">
+    <g:Anchor ui:field="link" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" text="{msg.importMedia}"/>
+    <g:FormPanel method="POST" ui:field="upload">
+      <g:FlowPanel>
+        <g:Hidden name="action" defaultValue="import"/>
+        <g:Hidden name="componentId" ui:field="componentId"/>
+        <g:Hidden name="albumId" ui:field="albumId"/>
+        <g:FileUpload ui:field="file" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" title="{msg.importMedia}" name="file"/>
+      </g:FlowPanel>
+    </g:FormPanel>
+  </g:HTMLPanel>
+</ui:UiBinder>

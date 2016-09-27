@@ -1,0 +1,21 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:with field='msg' type='com.silverpeas.mobile.client.apps.news.resources.NewsMessages'/>
+  <g:HTMLPanel tag="li" ui:field="container">
+
+    <div  class="bloc-actu-vignette">
+      <g:Image ui:field="vignette"></g:Image>
+    </div>
+    <div class="bloc-actu-content">
+      <h2 ui:field="title" class="publiName"></h2>
+      <p ui:field="description" class="publiDesc"></p>
+      <p ui:field="updateDate" class="lastUpdate"></p>
+    </div>
+    <div ui:field="content" class="bloc-actu-more">
+      <g:Anchor ui:field="more" styleName="ui-btn ui-btn-icon-right" text="{msg.more}"/>
+    </div>
+
+
+
+  </g:HTMLPanel>
+</ui:UiBinder> 

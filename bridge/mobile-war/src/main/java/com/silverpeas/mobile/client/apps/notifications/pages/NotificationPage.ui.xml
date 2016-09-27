@@ -1,0 +1,27 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:l="urn:import:com.silverpeas.mobile.client.components">
+
+    <ui:with field='msg' type='com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages'/>
+
+    <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
+
+
+        <h2 id="title-instruction" class="title-instruction"></h2>
+        <div class="ui-controlgroup-controls continu">
+            <g:Anchor ui:field="continu" styleName="btn-validate ui-link">
+                <span class="ui-btn-text"><ui:safehtml from="{msg.continu}"/></span>
+            </g:Anchor>
+        </div>
+        <div class="introduction">
+            <g:TextBox ui:field="filter" styleName="ui-input-text filter-contacts" />
+
+        </div>
+
+
+
+      <l:UnorderedList ui:field="list" styleName="list-notifications"></l:UnorderedList>
+
+
+
+    </g:HTMLPanel>
+</ui:UiBinder>

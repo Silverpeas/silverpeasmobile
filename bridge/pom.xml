@@ -31,7 +31,7 @@
   <artifactId>mobile</artifactId>
   <packaging>pom</packaging>
   <version>1.1-SNAPSHOT</version>
-  <name>Bridge Silverpeas Mobile</name>
+  <name>Silverpeas Mobile component</name>
 
   <modules>
     <module>mobile-config</module>

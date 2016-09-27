@@ -1,0 +1,6 @@
+@sprite .offline {
+	gwt-image: "offline";
+	overflow: inherit;
+	height: inherit;
+	width: inherit;
+}

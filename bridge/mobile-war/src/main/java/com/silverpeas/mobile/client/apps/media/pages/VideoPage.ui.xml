@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b="urn:import:com.silverpeas.mobile.client.components.base"
+             xmlns:w="urn:import:com.silverpeas.mobile.client.apps.comments.pages.widgets">
+
+    <g:HTMLPanel styleName="content">
+      <b:ActionsMenu ui:field="actionsMenu"/>
+      <h2 class="mediaName" ui:field="mediaTitle"></h2>
+
+      <div class="cadrePhoto" ui:field="previewContainer">
+        <g:Anchor ui:field="mediaFullSize">
+          <video ui:field="player"></video>
+        </g:Anchor>
+      </div>
+      <w:CommentsButton ui:field="comments"/>
+      <ul id="attachments">
+        <li>
+          <g:Anchor ui:field="download" styleName="downloadable">
+            <img ui:field="mediaType" src=""/>
+            <span ui:field="mediaFileName"></span>
+            <span class="weight" ui:field="weight"></span>
+            <span class="dimension" ui:field="dimensions"></span>
+          </g:Anchor>
+        </li>
+      </ul>
+
+      <p class="lastUpdate" ui:field="lastUpdate"></p>
+  </g:HTMLPanel>
+</ui:UiBinder>

@@ -10,9 +10,151 @@
   <groupId>com.silverpeas.components.mobile</groupId>
   <artifactId>mobile-war</artifactId>
   <packaging>war</packaging>
-  <name>Silverpeas mobile services</name>
+  <name>Silverpeas mobile</name>
+
+
+  <properties>
+    <gwtVersion>2.7.0</gwtVersion>
+    <gwtMojoPluginVersion>2.7.0</gwtMojoPluginVersion>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>gwt-crypto repo</id>
+      <url>http://gwt-crypto.googlecode.com/svn/trunk/repo/</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <finalName>spmobile</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <warName>spmobile</warName>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>${gwtMojoPluginVersion}</version>
+        <executions>
+          <execution>
+            <configuration>
+              <modules>
+                <module>com.silverpeas.mobile.SpMobil</module>
+              </modules>
+              <localWorkers>3</localWorkers>
+            </configuration>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
+
+   <dependency>
+      <groupId>com.silverpeas.components.mobile</groupId>
+      <artifactId>mobile-jar</artifactId>
+      <version>1.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jmagick</groupId>
+      <artifactId>jmagick</artifactId>
+      <version>6.2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sanselan</groupId>
+      <artifactId>sanselan</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.gwt.crypto</groupId>
+      <artifactId>gwt-crypto</artifactId>
+      <version>1.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>${gwtVersion}</version>
+      <type>jar</type>
+    </dependency>
+
+    <dependency>
+      <groupId>org.silverpeas.components.delegatednews</groupId>
+      <artifactId>silverpeas-delegatednews</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core</groupId>
+      <artifactId>silverpeas-core-web</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core</groupId>
+      <artifactId>silverpeas-core-api</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core</groupId>
+      <artifactId>silverpeas-core</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core.services</groupId>
+      <artifactId>silverpeas-core-comment</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core.services</groupId>
+      <artifactId>silverpeas-core-calendar</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.components.kmelia</groupId>
+      <artifactId>silverpeas-kmelia</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.components.almanach</groupId>
+        <artifactId>silverpeas-almanach</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.silverpeas.components.gallery</groupId>
@@ -22,20 +164,69 @@
     </dependency>
 
     <dependency>
-      <groupId>org.silverpeas.core</groupId>
-      <artifactId>silverpeas-core</artifactId>
-      <version>${core.version}</version>
+      <groupId>net.sf.dozer</groupId>
+      <artifactId>dozer</artifactId>
+      <version>5.3.1</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.8.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.realityforge.gwt.appcache</groupId>
+      <artifactId>gwt-appcache-client</artifactId>
+      <version>1.0.8</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.realityforge.gwt.appcache</groupId>
+      <artifactId>gwt-appcache-linker</artifactId>
+      <version>1.0.8</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.realityforge.gwt.appcache</groupId>
+      <artifactId>gwt-appcache-server</artifactId>
+      <version>1.0.8</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.seanchenxi.gwt</groupId>
+      <artifactId>gwt-storage</artifactId>
+      <version>1.3.0</version>
       <scope>provided</scope>
     </dependency>
 
-
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.6.3</version>
+    </dependency>
+
+    <!--dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>3.0.1</version>
       <scope>provided</scope>
-    </dependency>
+    </dependency-->
 
   </dependencies>
+
+
+  
+
+
+
+
+
 
 </project>

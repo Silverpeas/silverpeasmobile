@@ -1,0 +1,46 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:with field='msg'
+           type='com.silverpeas.mobile.client.resources.ApplicationMessages' />
+
+  <g:HTMLPanel>
+
+    <div id="header">
+      <h1 id="page-login-title"><ui:safehtml from="{msg.loginTitle}"/></h1>
+    </div>
+
+    <div id="page-login" class="ui-content ui-body-a">
+      <g:FormPanel ui:field="form">
+        <g:HTMLPanel>
+        <div id="login-formLogin">
+          <g:TextBox ui:field="loginField" focus="true"/>
+        </div>
+        <div id="password-formLogin">
+          <g:PasswordTextBox ui:field="passwordField" />
+        </div>
+        <div id="domain-formLogin">
+          <g:ListBox ui:field="domains" />
+        </div>
+        <div class=" ui-controlgroup ui-controlgroup-horizontal">
+          <div class="ui-controlgroup-controls ">
+            <g:Anchor ui:field="go" styleName="submit btn-validate ui-link">
+              <span class="ui-btn-text"><ui:safehtml from="{msg.loginLabel}"/></span>
+            </g:Anchor>
+          </div>
+        </div>
+        <div id="copyright">
+          <ui:safehtml from="{msg.copyright}"/>
+        </div>
+        </g:HTMLPanel>
+      </g:FormPanel>
+    </div>
+
+
+  </g:HTMLPanel>
+
+
+
+
+</ui:UiBinder> 

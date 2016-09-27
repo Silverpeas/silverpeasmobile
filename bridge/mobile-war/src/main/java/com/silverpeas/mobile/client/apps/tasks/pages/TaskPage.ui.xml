@@ -1,0 +1,24 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+  <ui:with field='msg' type='com.silverpeas.mobile.client.apps.tasks.resources.TasksMessages'/>
+
+  <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
+    <h2><ui:text from="{msg.nameField}"/></h2>
+
+    <div id="champs-statut">
+      <div class="ouverture-bulle"></div>
+      <g:TextArea ui:field="name" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
+    </div>
+    <g:TextBox ui:field="range" styleName="create task-percent-range"></g:TextBox>
+
+    <div class=" ui-controlgroup ui-controlgroup-horizontal">
+      <div class="ui-controlgroup-controls ">
+        <g:Anchor ui:field="submit" styleName="btn-validate ui-link">
+          <span class="ui-btn-text"><ui:text from="{msg.actionCreate}"/></span>
+        </g:Anchor>
+      </div>
+    </div>
+
+  </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,9 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+  <g:HTMLPanel>
+    <div id="mascotte">
+      <p ui:field="textError"></p>
+      <g:Anchor ui:field="button" styleName="ui-btn-right ui-btn-corner-all ui-btn ui-icon-grid ui-shadow back"> Ok </g:Anchor>
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder>

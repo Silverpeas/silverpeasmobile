@@ -1,0 +1,22 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:b="urn:import:com.silverpeas.mobile.client.components.base"
+             xmlns:l="urn:import:com.silverpeas.mobile.client.components"
+             xmlns:w="urn:import:com.silverpeas.mobile.client.apps.comments.pages.widgets">
+  <ui:with field='msg' type='com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages'/>
+
+  <g:HTMLPanel ui:field="container" styleName="content">
+
+    <b:ActionsMenu ui:field="actionsMenu"/>
+
+    <h2 ui:field="title" class="publiName"></h2>
+    <p ui:field="desc" class="publiDesc"></p>
+    <w:CommentsButton ui:field="comments" visible="false"/>
+    <div ui:field="content" style="display:none;">
+      <g:Anchor ui:field="contentLink" styleName="ui-btn ui-btn-icon-right" text="{msg.content}"/>
+    </div>
+    <l:UnorderedList ui:field="attachments"/>
+    <p ui:field="lastUpdate" class="lastUpdate"></p>
+  </g:HTMLPanel>
+</ui:UiBinder>

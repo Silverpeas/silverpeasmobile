@@ -1,0 +1,11 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+  <ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
+
+  <g:HTMLPanel ui:field="header">
+    <g:Anchor ui:field="menu" styleName="ui-icon-bars"></g:Anchor>
+    <h1 ui:field="title" class="ui-title">Silverpeas</h1>
+    <g:Anchor ui:field="back" styleName="ui-btn-right ui-btn-corner-all ui-btn ui-icon-grid ui-shadow back" text="{msg.back}"/>
+  </g:HTMLPanel>
+</ui:UiBinder> 
