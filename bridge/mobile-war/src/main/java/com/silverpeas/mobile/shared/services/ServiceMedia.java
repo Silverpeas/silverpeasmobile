@@ -10,13 +10,13 @@ import com.silverpeas.mobile.shared.dto.media.SoundDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoDTO;
 import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
-import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.MediaException;
+import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
 @RemoteServiceRelativePath("Media")
 public interface ServiceMedia extends RemoteService {
   public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws
-                                                                                        MediaException, AuthenticationException;
+          MediaException, AuthenticationException;
   public List<ApplicationInstanceDTO> getAllGalleries() throws MediaException, AuthenticationException;
   public List<BaseDTO> getAlbumsAndPictures(String instanceId, String albumId) throws
                                                                                MediaException, AuthenticationException;

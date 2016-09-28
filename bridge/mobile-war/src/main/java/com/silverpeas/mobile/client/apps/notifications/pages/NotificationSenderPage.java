@@ -14,7 +14,6 @@ import com.silverpeas.mobile.client.apps.notifications.events.pages.AbstractNoti
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationSendedEvent;
-import com.silverpeas.mobile.client.apps.notifications.pages.widgets.events.AbstractSelectionEvent;
 import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;

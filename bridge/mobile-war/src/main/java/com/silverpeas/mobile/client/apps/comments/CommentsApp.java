@@ -1,7 +1,6 @@
 package com.silverpeas.mobile.client.apps.comments;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.comments.events.app.AbstractCommentsAppEvent;
 import com.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
 import com.silverpeas.mobile.client.apps.comments.events.app.CommentsAppEventHandler;
@@ -9,16 +8,12 @@ import com.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent;
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import com.silverpeas.mobile.client.apps.comments.pages.CommentsPage;
-import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
-import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
-import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
-import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 import java.util.ArrayList;

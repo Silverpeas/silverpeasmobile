@@ -3,7 +3,6 @@ package com.silverpeas.mobile.client.apps.contacts.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -23,7 +22,6 @@ import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEven
 import com.silverpeas.mobile.client.apps.contacts.pages.widgets.ContactItem;
 import com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.components.base.events.AbstractScrollEvent;

@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.client.common;
 
-import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.media.MediaApp;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;

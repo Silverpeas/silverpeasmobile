@@ -66,14 +66,6 @@
   </build>
 
   <dependencies>
-
-   <dependency>
-      <groupId>com.silverpeas.components.mobile</groupId>
-      <artifactId>mobile-jar</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-
     <dependency>
       <groupId>jmagick</groupId>
       <artifactId>jmagick</artifactId>

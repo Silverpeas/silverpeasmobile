@@ -15,7 +15,6 @@ import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEve
 import com.silverpeas.mobile.client.apps.comments.events.pages.CommentsPagesEventHandler;
 import com.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 /**
  * @author: svu

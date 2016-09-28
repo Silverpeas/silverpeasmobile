@@ -1,10 +1,5 @@
 package com.silverpeas.mobile.shared.dto;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.silverpeas.mobile.shared.dto.DetailUserDTO;
-
 public class FullUserDTO extends DetailUserDTO {
   private String login;
   private String password;

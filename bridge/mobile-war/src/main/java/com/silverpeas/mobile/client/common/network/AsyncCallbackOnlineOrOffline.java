@@ -2,20 +2,12 @@ package com.silverpeas.mobile.client.common.network;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.SpMobil;
-import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.shared.dto.TaskDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.realityforge.gwt.appcache.client.ApplicationCache;
-
-import java.util.List;
 
 /**
  * @author: svu

@@ -2,18 +2,13 @@ package com.silverpeas.mobile.client.apps.notifications.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
-import com.silverpeas.mobile.client.apps.notifications.events.app.SendNotificationEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AbstractNotificationPagesEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationPagesEventHandler;
@@ -24,16 +19,12 @@ import com.silverpeas.mobile.client.apps.notifications.pages.widgets.events.Chan
 import com.silverpeas.mobile.client.apps.notifications.pages.widgets.events.SelectionEventHandler;
 import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
-import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
-import com.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 import java.util.ArrayList;
 import java.util.Iterator;

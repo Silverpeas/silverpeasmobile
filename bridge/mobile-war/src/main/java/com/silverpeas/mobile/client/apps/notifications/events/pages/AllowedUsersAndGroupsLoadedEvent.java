@@ -1,9 +1,6 @@
 package com.silverpeas.mobile.client.apps.notifications.events.pages;
 
-import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
-import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 import java.util.List;
 

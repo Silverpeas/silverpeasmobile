@@ -36,6 +36,5 @@
   <modules>
     <module>mobile-configuration</module>
     <module>mobile-war</module>
-    <module>mobile-jar</module>
   </modules>
 </project>

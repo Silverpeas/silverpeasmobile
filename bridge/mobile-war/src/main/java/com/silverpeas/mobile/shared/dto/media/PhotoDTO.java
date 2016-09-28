@@ -1,7 +1,5 @@
 package com.silverpeas.mobile.shared.dto.media;
 
-import com.silverpeas.mobile.shared.dto.BaseDTO;
-
 import java.io.Serializable;
 
 public class PhotoDTO extends MediaDTO implements Serializable {

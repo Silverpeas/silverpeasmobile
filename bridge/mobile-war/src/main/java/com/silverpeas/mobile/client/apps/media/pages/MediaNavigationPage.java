@@ -1,11 +1,9 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.AbstractMediaNavigationPagesEvent;
@@ -21,14 +19,9 @@ import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.media.MediaDTO;
-import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
-import com.silverpeas.mobile.shared.dto.media.SoundDTO;
-import com.silverpeas.mobile.shared.dto.media.VideoDTO;
-import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 
 import java.util.List;
 

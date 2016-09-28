@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.client.apps.news.events.pages;
 
-import com.silverpeas.mobile.shared.dto.TaskDTO;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.util.List;

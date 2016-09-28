@@ -3,7 +3,6 @@ package com.silverpeas.mobile.client.apps.media;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.media.events.app.*;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;

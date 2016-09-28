@@ -3,8 +3,6 @@ package com.silverpeas.mobile.shared.dto.notifications;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author: svu

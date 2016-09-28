@@ -3,7 +3,6 @@ package com.silverpeas.mobile.shared.services.navigation;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 

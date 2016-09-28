@@ -2,7 +2,6 @@ package com.silverpeas.mobile.client.apps.tasks;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.tasks.events.app.AbstractTasksAppEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;

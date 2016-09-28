@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppEventHandler;
@@ -15,9 +13,7 @@ import com.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
-import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;

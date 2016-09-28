@@ -6,17 +6,11 @@ import com.silverpeas.mobile.client.apps.news.events.app.NewsAppEventHandler;
 import com.silverpeas.mobile.client.apps.news.events.app.NewsLoadEvent;
 import com.silverpeas.mobile.client.apps.news.events.pages.NewsLoadedEvent;
 import com.silverpeas.mobile.client.apps.news.pages.NewsPage;
-import com.silverpeas.mobile.client.apps.tasks.events.app.AbstractTasksAppEvent;
-import com.silverpeas.mobile.client.apps.tasks.events.app.TasksAppEventHandler;
-import com.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
-import com.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
-import com.silverpeas.mobile.client.apps.tasks.pages.TasksPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
-import com.silverpeas.mobile.shared.dto.TaskDTO;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.util.List;

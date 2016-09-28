@@ -5,8 +5,8 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
-import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.RSEexception;
+import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
 @RemoteServiceRelativePath("RSE")
 public interface ServiceRSE extends RemoteService {

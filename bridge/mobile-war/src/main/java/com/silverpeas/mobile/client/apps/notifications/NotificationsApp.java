@@ -1,7 +1,6 @@
 package com.silverpeas.mobile.client.apps.notifications;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.notifications.events.app.AbstractNotificationsAppEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.app.NotificationsAppEventHandler;
 import com.silverpeas.mobile.client.apps.notifications.events.app.SendNotificationEvent;

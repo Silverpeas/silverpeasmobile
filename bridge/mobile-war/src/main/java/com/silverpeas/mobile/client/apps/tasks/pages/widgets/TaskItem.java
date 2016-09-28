@@ -6,22 +6,12 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
 import com.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
 import com.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
-import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.shared.dto.TaskDTO;
 
 public class TaskItem extends Composite {

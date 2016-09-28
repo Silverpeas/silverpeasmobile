@@ -2,8 +2,6 @@ package com.silverpeas.mobile.client.apps.tasks.events.pages;
 
 import com.silverpeas.mobile.shared.dto.TaskDTO;
 
-import java.util.List;
-
 public class TaskCreatedEvent extends AbstractTasksPagesEvent {
 
   private TaskDTO task;
