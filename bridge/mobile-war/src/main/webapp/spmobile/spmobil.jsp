@@ -35,7 +35,7 @@
   <link rel="shortcut icon" sizes="128x128" href="niceicon.png"/>
 
   <title>Silverpeas Mobile</title>
-  <script type="text/javascript" src="<%=appUrl%>/spmobil/spmobil.nocache.js"></script>
+  <script type="text/javascript" src="<%=appUrl%>/spmobile/spmobile.nocache.js"></script>
   <script>
     function resize() {
       var windowHeight = window.innerHeight;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to="spmobil">
+<module rename-to="spmobile">
 
   <stylesheet src="jquery.mobile.structure-1.4.2.min.css"/>
   <stylesheet src="csspinner.min.css"/>
