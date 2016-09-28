@@ -34,7 +34,7 @@
   <name>Silverpeas Mobile component</name>
 
   <modules>
-    <module>mobile-config</module>
+    <module>mobile-configuration</module>
     <module>mobile-war</module>
     <module>mobile-jar</module>
   </modules>

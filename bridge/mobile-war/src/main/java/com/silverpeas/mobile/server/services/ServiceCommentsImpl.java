@@ -42,7 +42,7 @@ public class ServiceCommentsImpl extends AbstractAuthenticateService implements 
     CommentDTO dto = new CommentDTO();
     dto.setContent(c.getMessage());
     dto.setUserName(c.getOwner());
-    String avatar = DataURLHelper.convertAvatarToUrlData(c.getOwnerDetail().getAvatarFileName(), "24x");
+    String avatar = DataURLHelper.convertAvatarToUrlData(c.getOwnerDetail().getSmallAvatar(), "24x");
     dto.setAvatar(avatar);
     dto.setDate(sdf.format(c.getCreationDate()));
     return dto;

@@ -6,20 +6,19 @@
     <artifactId>mobile</artifactId>
     <version>1.1-SNAPSHOT</version>
   </parent>
-	
+
   <groupId>com.silverpeas.components.mobile</groupId>
-  <artifactId>mobile-config</artifactId>
-  <packaging>pom</packaging>
+  <artifactId>mobile-configuration</artifactId>
+  <packaging>jar</packaging>
   <name>Mobile configuration</name>
 
+
   <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <skipAssembly>false</skipAssembly>
-        </configuration>
-      </plugin>
-    </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/config</directory>
+      </resource>
+    </resources>
   </build>
+
 </project>

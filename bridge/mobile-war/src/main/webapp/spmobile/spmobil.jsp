@@ -1,6 +1,6 @@
 <%@ page import="org.silverpeas.core.util.ResourceLocator" %>
-<%@ page import="org.silverpeas.core.util.SettingBundle" %>
 <%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
+<%@ page import="org.silverpeas.core.util.URLUtil" %>
 <!doctype html>
 <html manifest="spmobil.appcache">
 <head>
@@ -14,6 +14,7 @@
 
   <%
     String l = request.getHeader("Accept-Language");
+    String appUrl = URLUtil.getApplicationURL();
     l = l.substring(0, 2);
     if (!l.equalsIgnoreCase("fr")) {
       l = "en";
@@ -34,7 +35,7 @@
   <link rel="shortcut icon" sizes="128x128" href="niceicon.png"/>
 
   <title>Silverpeas Mobile</title>
-  <script type="text/javascript" src="spmobil/spmobil.nocache.js"></script>
+  <script type="text/javascript" src="<%=appUrl%>/spmobil/spmobil.nocache.js"></script>
   <script>
     function resize() {
       var windowHeight = window.innerHeight;
