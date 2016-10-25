@@ -5,8 +5,6 @@ import com.silverpeas.mobile.shared.dto.EventDetailDTO;
 import com.silverpeas.mobile.shared.exceptions.AlmanachException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.services.ServiceAlmanach;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
 import org.silverpeas.components.almanach.model.EventDetail;
 import org.silverpeas.components.almanach.model.EventPK;
 import org.silverpeas.components.almanach.service.AlmanachService;
@@ -28,10 +26,10 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
       EventPK eventPK = new EventPK("");
       eventPK.setComponentName(instanceId);
       Collection<EventDetail> listEventDetail = AlmanachService.get().getAllEvents(eventPK);
-      Mapper mapper = new DozerBeanMapper();
+
       if (!listEventDetail.isEmpty()) {
         for (EventDetail eventDetail : listEventDetail) {
-          listEventDetailDTO.add(mapper.map(eventDetail, EventDetailDTO.class));
+          listEventDetailDTO.add(populate(eventDetail));
         }
       }
     } catch (Exception e) {
@@ -39,5 +37,20 @@ public class ServiceAlmanachImpl extends AbstractAuthenticateService implements 
       throw new AlmanachException(e.getMessage());
     }
     return listEventDetailDTO;
+  }
+
+  private EventDetailDTO populate(EventDetail event) {
+    EventDetailDTO dto = new EventDetailDTO();
+    dto.setTitle(event.getTitle());
+    dto.set_name(event.getName());
+    dto.setEndDate(event.getEndDate());
+    dto.setEndHour(event.getEndHour());
+    dto.setEventUrl(event.getEventUrl());
+    dto.setStartDate(event.getStartDate());
+    dto.setStartHour(event.getEndHour());
+    dto.setPlace(event.getPlace());
+    dto.setPriority(event.getPriority());
+
+    return dto;
   }
 }

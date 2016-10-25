@@ -7,8 +7,6 @@ import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.ContactException;
 import com.silverpeas.mobile.shared.services.ServiceContact;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
@@ -98,16 +96,22 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       SilverLogger.getLogger(SpMobileLogModule.getName()).debug(SpMobileLogModule.getName(), "ServiceContactImpl.populate",
               "User id=" + userDetail.getId());
       UserFull userFull = UserFull.getById(userDetail.getId());
-      Mapper mapper = new DozerBeanMapper();
-      DetailUserDTO userDTO = mapper.map(userDetail, DetailUserDTO.class);
+      DetailUserDTO dto= new DetailUserDTO();
+      dto.setId(userFull.getId());
+      dto.setFirstName(userFull.getFirstName());
+      dto.setLastName(userFull.getLastName());
+      dto.seteMail(userFull.geteMail());
+      dto.setStatus(userFull.getStatus());
+      dto.setAvatar(userFull.getAvatar());
+      dto.setLanguage(userFull.getUserPreferences().getLanguage());
       String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), "24x");
-      userDTO.setAvatar(avatar);
+      dto.setAvatar(avatar);
       if (userFull != null) {
-        userDTO.setPhoneNumber(userFull.getValue("phone"));
-        userDTO.setCellularPhoneNumber(userFull.getValue("cellularPhone"));
-        userDTO.setFaxPhoneNumber(userFull.getValue("fax"));
+        dto.setPhoneNumber(userFull.getValue("phone"));
+        dto.setCellularPhoneNumber(userFull.getValue("cellularPhone"));
+        dto.setFaxPhoneNumber(userFull.getValue("fax"));
       }
-      return userDTO;
+      return dto;
     }
     return null;
   }

@@ -7,8 +7,6 @@ import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -70,9 +68,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     setUserkeyInSession(authKey);
 
     DetailUserDTO userDTO = new DetailUserDTO();
-    Mapper mapper = new DozerBeanMapper();
-    userDTO = mapper.map(user, DetailUserDTO.class);
-    userDTO.setLanguage(user.getUserPreferences().getLanguage());
+    userDTO = populate(user);
 
     String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), "40x");
     userDTO.setAvatar(avatar);
@@ -89,9 +85,8 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
   public List<DomainDTO> getDomains() {
     Domain[] allDomains = organizationController.getAllDomains();
     ArrayList<DomainDTO> domains = new ArrayList<>();
-    Mapper mapper = new DozerBeanMapper();
     for (Domain allDomain : allDomains) {
-      domains.add(mapper.map(allDomain, DomainDTO.class));
+      domains.add(populate(allDomain));
     }
     return domains;
   }
@@ -102,6 +97,25 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 
   public UserDetail getUserDetail(String userId) {
     return organizationController.getUserDetail(userId);
+  }
+
+  private DomainDTO populate(Domain domain) {
+    DomainDTO dto= new DomainDTO();
+    dto.setName(domain.getName());
+    dto.setId(domain.getId());
+    return dto;
+  }
+
+  private DetailUserDTO populate(UserDetail user) {
+    DetailUserDTO dto= new DetailUserDTO();
+    dto.setId(user.getId());
+    dto.setFirstName(user.getFirstName());
+    dto.setLastName(user.getLastName());
+    dto.seteMail(user.geteMail());
+    dto.setStatus(user.getStatus());
+    dto.setAvatar(user.getAvatar());
+    dto.setLanguage(user.getUserPreferences().getLanguage());
+    return dto;
   }
 
 
