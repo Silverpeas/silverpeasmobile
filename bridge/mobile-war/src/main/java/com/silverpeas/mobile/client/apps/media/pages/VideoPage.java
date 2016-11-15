@@ -85,7 +85,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
     if (isVisible()) {
       this.video = (VideoDTO) event.getPreview();
       String url = UrlUtils.getLocation();
-      url += "spmobil/VideoAction?id=" + video.getId();
+      url += "/VideoAction?id=" + video.getId();
       url += "&t=" + new Date().getTime();
       player.setSrc(url);
       player.setAutoplay(false);

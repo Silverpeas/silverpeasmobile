@@ -99,7 +99,7 @@ public class Attachment extends Composite {
     private void clickAction() {
         try {
             String url = UrlUtils.getLocation();
-            url += "spmobil/Attachment";
+            url += "/Attachment";
             url = url + "?id=" + attachement.getId() + "&lang=" + attachement.getLang();
             link.setHref(url);
             link.setTarget("_self");

@@ -73,7 +73,7 @@ public class AddMediaButton extends Composite {
         this.albumId.setValue(albumId);
 
         String url = UrlUtils.getLocation();
-        url +=  "spmobil/MediaAction";
+        url +=  "/MediaAction";
         upload.setAction(url);
     }
 
