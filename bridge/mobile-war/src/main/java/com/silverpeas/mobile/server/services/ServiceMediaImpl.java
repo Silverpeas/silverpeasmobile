@@ -554,7 +554,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
   @SuppressWarnings("deprecation")
   private String getBase64ImageData(String instanceId, Photo photoDetail, MediaResolution size) throws Exception {
-    SettingBundle gallerySettings = ResourceLocator.getSettingBundle("com.silverpeas.gallery.settings.gallerySettings");
+    SettingBundle gallerySettings = ResourceLocator.getSettingBundle("org.silverpeas.gallery.settings.gallerySettings");
 
     String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getMediaPK().getId();
     String[] rep = {nomRep};

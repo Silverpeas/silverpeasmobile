@@ -95,7 +95,7 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
           }
         }
       } else {
-        queryDescription.addSpaceComponentPair(spaceId, componentId);
+        queryDescription.addComponent(componentId);
       }
     }
   }
