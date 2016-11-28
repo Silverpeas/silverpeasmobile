@@ -172,8 +172,8 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
       if (!clicked) {
         clicked = true;
         try {
-          String url = UrlUtils.getLocation();
-          url += "spmobil/MediaAction";
+          String url = UrlUtils.getServicesLocation();
+          url += "MediaAction";
           url += "?action=view" + "&id=" + photo.getId() + "&instanceId=" + photo.getInstance();
           download.setHref(url);
           download.setTarget("_self");

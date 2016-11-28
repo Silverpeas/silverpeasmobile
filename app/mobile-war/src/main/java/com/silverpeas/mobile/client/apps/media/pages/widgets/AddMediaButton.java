@@ -72,8 +72,8 @@ public class AddMediaButton extends Composite {
         this.componentId.setValue(instanceId);
         this.albumId.setValue(albumId);
 
-        String url = UrlUtils.getLocation();
-        url +=  "/MediaAction";
+        String url = UrlUtils.getServicesLocation();
+        url +=  "MediaAction";
         upload.setAction(url);
     }
 

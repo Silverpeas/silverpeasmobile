@@ -127,8 +127,8 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     int available = Window.getClientHeight() - SpMobil.mainPage.getHeaderHeight();
 
     // display content
-    String url = UrlUtils.getLocation();
-    url += "/PublicationContent";
+    String url = UrlUtils.getServicesLocation();
+    url += "PublicationContent";
     url += "?id=" + publication.getId();
     IframePage page = new IframePage(url);
     page.setSize("100%", available + "px");

@@ -69,6 +69,14 @@ public class PropertiesGenerator extends Generator {
             out.outdent();
             out.println("}");
             out.outdent();
+
+            out.println("public String getUserToken() {");
+            out.indent();
+            out.println("return \"" + Configurator.getConfigValue("user.token") + "\";");
+            out.outdent();
+            out.println("}");
+            out.outdent();
+
             out.commit(logger);
         } catch (Throwable t) {
             t.printStackTrace();

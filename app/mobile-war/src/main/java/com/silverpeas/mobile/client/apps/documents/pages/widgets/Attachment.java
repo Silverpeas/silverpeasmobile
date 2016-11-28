@@ -98,8 +98,8 @@ public class Attachment extends Composite {
 
     private void clickAction() {
         try {
-            String url = UrlUtils.getLocation();
-            url += "/Attachment";
+            String url = UrlUtils.getServicesLocation();
+            url += "Attachment";
             url = url + "?id=" + attachement.getId() + "&lang=" + attachement.getLang();
             link.setHref(url);
             link.setTarget("_self");

@@ -51,10 +51,10 @@ public class PublicationContentServlet extends HttpServlet {
     response.getOutputStream().print("<html>");
     response.getOutputStream().print("<head>");
     response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
-    response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/spmobil/spmobile.css'/>");
-    response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/spmobil/zoom.css'/>");
-    response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/spmobil/interact.min.js'></script>");
-    response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/spmobil/zoom.js'/></script>");
+    response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/spmobile.css'/>");
+    response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/zoom.css'/>");
+    response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/interact.min.js'></script>");
+    response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/zoom.js'/></script>");
     response.getOutputStream().print("</head>");
     response.getOutputStream().print("<body style='background-color:grey;padding-top:1em;'>");
 
@@ -87,7 +87,7 @@ public class PublicationContentServlet extends HttpServlet {
           attachmentId = attachmentId.substring(0, attachmentId.indexOf("/"));
           SimpleDocument attachment = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(attachmentId), getUserInSession(request).getUserPreferences().getLanguage());
           String type = attachment.getContentType();
-          String url = getServletContext().getContextPath() + "/spmobil/Attachment";
+          String url = getServletContext().getContextPath() + "/services/spmobile/Attachment";
           url = url + "?id=" + attachmentId + "&instanceId=" + pub.getInstanceId() + "&lang=" + getUserInSession(request).getUserPreferences().getLanguage()  + "&userId=" + getUserInSession(request).getId();
           if (type.equals("audio/mpeg") || type.equals("audio/ogg") || type.equals("audio/wav")) {
             embed.parent().append("<audio controls><source src='"+url+"' type='" + type + "'></audio>");
@@ -160,7 +160,7 @@ public class PublicationContentServlet extends HttpServlet {
         String url = link.attr("href");
         String attachmentId = url.substring(url.indexOf("attachmentId/") + "attachmentId/".length());
         attachmentId = attachmentId.substring(0, attachmentId.indexOf("/"));
-        url = getServletContext().getContextPath() + "/spmobil/Attachment";
+        url = getServletContext().getContextPath() + "/services/spmobile/Attachment";
         url = url + "?id=" + attachmentId + "&instanceId=" + pub.getInstanceId() + "&lang=" + user.getUserPreferences().getLanguage()  + "&userId=" + user.getId();
         link.attr("href", url);
         link.attr("target", "_self");

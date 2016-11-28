@@ -85,8 +85,8 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       mediaPreview.setSrc(resources.sound().getSafeUri().asString());
       SoundDTO sound = (SoundDTO) event.getPreview();
       this.sound = sound;
-      String url = UrlUtils.getLocation();
-      url += "/SoundAction";
+      String url = UrlUtils.getServicesLocation();
+      url += "SoundAction";
       url = url + "?id=" + sound.getId();
       player.setSrc(url);
       player.setAutoplay(false);

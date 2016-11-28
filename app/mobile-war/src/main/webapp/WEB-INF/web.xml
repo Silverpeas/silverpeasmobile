@@ -29,7 +29,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceNewsImpl</servlet-name>
-    <url-pattern>/spmobile/News</url-pattern>
+    <url-pattern>/services/spmobile/News</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -38,7 +38,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceTasksImpl</servlet-name>
-    <url-pattern>/spmobile/Tasks</url-pattern>
+    <url-pattern>/services/spmobile/Tasks</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -47,7 +47,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceSearchImpl</servlet-name>
-    <url-pattern>/spmobile/Search</url-pattern>
+    <url-pattern>/services/spmobile/Search</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -56,7 +56,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceRSEImpl</servlet-name>
-    <url-pattern>/spmobile/RSE</url-pattern>
+    <url-pattern>/services/spmobile/RSE</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -65,7 +65,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceNavigationImpl</servlet-name>
-    <url-pattern>/spmobile/Navigation</url-pattern>
+    <url-pattern>/services/spmobile/Navigation</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -74,7 +74,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceMediaImpl</servlet-name>
-    <url-pattern>/spmobile/Media</url-pattern>
+    <url-pattern>/services/spmobile/Media</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -83,7 +83,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceDocumentsImpl</servlet-name>
-    <url-pattern>/spmobile/Documents</url-pattern>
+    <url-pattern>/services/spmobile/Documents</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -92,7 +92,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceCommentsImpl</servlet-name>
-    <url-pattern>/spmobile/Comments</url-pattern>
+    <url-pattern>/services/spmobile/Comments</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -101,7 +101,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceConnectionImpl</servlet-name>
-    <url-pattern>/spmobile/Connection</url-pattern>
+    <url-pattern>/services/spmobile/Connection</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -110,7 +110,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceContactImpl</servlet-name>
-    <url-pattern>/spmobile/Contact</url-pattern>
+    <url-pattern>/services/spmobile/Contact</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -119,7 +119,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceDashboardImpl</servlet-name>
-    <url-pattern>/spmobile/Dashboard</url-pattern>
+    <url-pattern>/services/spmobile/Dashboard</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -128,7 +128,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceAlmanachImpl</servlet-name>
-    <url-pattern>/spmobile/Almanach</url-pattern>
+    <url-pattern>/services/spmobile/Almanach</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -137,7 +137,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceNotificationsImpl</servlet-name>
-    <url-pattern>/spmobile/Notifications</url-pattern>
+    <url-pattern>/services/spmobile/Notifications</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -147,7 +147,7 @@
 
   <servlet-mapping>
     <servlet-name>AttachmentServlet</servlet-name>
-    <url-pattern>/spmobile/Attachment</url-pattern>
+    <url-pattern>/services/spmobile/Attachment</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -157,7 +157,7 @@
 
   <servlet-mapping>
     <servlet-name>PublicationContentServlet</servlet-name>
-    <url-pattern>/spmobile/PublicationContent</url-pattern>
+    <url-pattern>/services/spmobile/PublicationContent</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -167,7 +167,7 @@
 
   <servlet-mapping>
     <servlet-name>MediaServlet</servlet-name>
-    <url-pattern>/spmobile/MediaAction</url-pattern>
+    <url-pattern>/services/spmobile/MediaAction</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -177,7 +177,7 @@
 
   <servlet-mapping>
     <servlet-name>SoundServlet</servlet-name>
-    <url-pattern>/spmobile/SoundAction</url-pattern>
+    <url-pattern>/services/spmobile/SoundAction</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -187,7 +187,7 @@
 
   <servlet-mapping>
     <servlet-name>VideoServlet</servlet-name>
-    <url-pattern>/spmobile/VideoAction</url-pattern>
+    <url-pattern>/services/spmobile/VideoAction</url-pattern>
   </servlet-mapping>
 
 

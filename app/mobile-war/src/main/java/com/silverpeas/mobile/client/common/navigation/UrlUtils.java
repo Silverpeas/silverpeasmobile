@@ -7,9 +7,9 @@ import com.google.gwt.user.client.Window;
  */
 public class UrlUtils {
 
-  public static String getLocation() {
+  public static String getServicesLocation() {
     String url = Window.Location.getProtocol() + "//" + Window.Location.getHost();
-    url += "/silverpeas/spmobile/";
+    url += "/silverpeas/services/spmobile/";
     return url;
   }
 }

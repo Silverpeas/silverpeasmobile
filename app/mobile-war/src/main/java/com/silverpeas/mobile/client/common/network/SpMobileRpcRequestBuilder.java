@@ -24,6 +24,7 @@ public class SpMobileRpcRequestBuilder extends RpcRequestBuilder {
   protected RequestBuilder doCreate(String serviceEntryPoint) {
     RequestBuilder builder = super.doCreate(serviceEntryPoint);
     builder.setTimeoutMillis(this.timeout);
+    builder.setHeader("X-Silverpeas-Session", configuration.getUserToken());
 
     return builder;
   }
