@@ -15,6 +15,7 @@ public class DetailUserDTO implements Serializable{
   private String faxPhoneNumber;
   private String status;
   private String language;
+  private String token;
 
   public String getId() {
     return id;
@@ -94,5 +95,13 @@ public class DetailUserDTO implements Serializable{
 
   public String getLanguage() {
     return language;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 }

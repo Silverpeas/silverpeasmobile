@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.common.network;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.rpc.RpcRequestBuilder;
+import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 
 /**
@@ -24,7 +25,9 @@ public class SpMobileRpcRequestBuilder extends RpcRequestBuilder {
   protected RequestBuilder doCreate(String serviceEntryPoint) {
     RequestBuilder builder = super.doCreate(serviceEntryPoint);
     builder.setTimeoutMillis(this.timeout);
-    builder.setHeader("X-Silverpeas-Session", configuration.getUserToken());
+    if (SpMobil.user != null) {
+      builder.setHeader("X-Silverpeas-Session", SpMobil.user.getToken());
+    }
 
     return builder;
   }

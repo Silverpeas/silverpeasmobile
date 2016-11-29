@@ -1,6 +1,8 @@
 <%@ page import="org.silverpeas.core.util.ResourceLocator" %>
 <%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view" %>
+
 <!doctype html>
 <html manifest="spmobil.appcache">
 <head>
@@ -43,7 +45,10 @@
     }
   </script>
 
+  <view:includePlugin name="tkn"/>
+
 </head>
-<body class="ui-panel-wrapper ui-page-theme-a csspinner traditional" onload="resize();"></body>
+<body class="ui-panel-wrapper ui-page-theme-a csspinner traditional" onload="resize();">
+</body>
 
 </html>

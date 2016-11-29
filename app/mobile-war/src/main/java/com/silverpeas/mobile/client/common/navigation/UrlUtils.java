@@ -12,4 +12,10 @@ public class UrlUtils {
     url += "/silverpeas/services/spmobile/";
     return url;
   }
+
+  public static String getUploadLocation() {
+    String url = Window.Location.getProtocol() + "//" + Window.Location.getHost();
+    url += "/silverpeas/DragAndDrop/spmobile/";
+    return url;
+  }
 }

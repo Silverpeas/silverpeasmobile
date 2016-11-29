@@ -73,7 +73,7 @@ public class ServicesLocator {
 
     public static ServiceConnectionAsync getServiceConnection() {
         ((ServiceDefTarget) serviceConnection).setRpcRequestBuilder(builder);
-        changeServiceEntryPoint((ServiceDefTarget)serviceConnection);
+        changeAuthentificationServiceEntryPoint((ServiceDefTarget) serviceConnection);
         return serviceConnection;
     }
 
@@ -87,6 +87,14 @@ public class ServicesLocator {
         String serviceEntryPoint = service.getServiceEntryPoint();
         if (!serviceEntryPoint.contains("services")) {
             serviceEntryPoint = serviceEntryPoint.replace("spmobile", "services/spmobile");
+        }
+        service.setServiceEntryPoint(serviceEntryPoint);
+    }
+
+    private static void changeAuthentificationServiceEntryPoint(ServiceDefTarget service) {
+        String serviceEntryPoint = service.getServiceEntryPoint();
+        if (!serviceEntryPoint.contains("AuthenticationServlet")) {
+            serviceEntryPoint = serviceEntryPoint.replace("spmobile", "AuthenticationServlet/spmobile");
         }
         service.setServiceEntryPoint(serviceEntryPoint);
     }

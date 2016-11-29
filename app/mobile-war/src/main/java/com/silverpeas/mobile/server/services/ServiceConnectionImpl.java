@@ -115,6 +115,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     dto.setStatus(user.getStatus());
     dto.setAvatar(user.getAvatar());
     dto.setLanguage(user.getUserPreferences().getLanguage());
+    dto.setToken(user.getToken());
     return dto;
   }
 

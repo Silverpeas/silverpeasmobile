@@ -172,7 +172,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
       if (!clicked) {
         clicked = true;
         try {
-          String url = UrlUtils.getServicesLocation();
+          String url = UrlUtils.getUploadLocation();
           url += "MediaAction";
           url += "?action=view" + "&id=" + photo.getId() + "&instanceId=" + photo.getInstance();
           download.setHref(url);
