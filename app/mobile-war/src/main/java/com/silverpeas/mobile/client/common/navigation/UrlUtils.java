@@ -15,7 +15,7 @@ public class UrlUtils {
 
   public static String getUploadLocation() {
     String url = Window.Location.getProtocol() + "//" + Window.Location.getHost();
-    url += "/silverpeas/DragAndDrop/spmobile/";
+    url += "/silverpeas/AuthenticationServlet/spmobile/";
     return url;
   }
 }

@@ -24,6 +24,7 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
 
+import java.util.Date;
 import java.util.List;
 
 public class SpMobil implements EntryPoint {
@@ -117,6 +118,7 @@ public class SpMobil implements EntryPoint {
         if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
             ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
         }
+        //reloadTokenScript();
     }
 
     /**
@@ -203,4 +205,21 @@ public class SpMobil implements EntryPoint {
         }
 
     }
+
+    private static void reloadTokenScript(){
+        Date now = new Date();
+        ScriptElement script = Document.get().createScriptElement();
+        script.setSrc("/silverpeas/util/javaScript/silverpeas-tkn.js?_=" + now.getTime());
+
+        NodeList<Element> nodes = Document.get().getHead().getElementsByTagName("script");
+        for (int i = 0; i < nodes.getLength(); i++) {
+            ScriptElement el = nodes.getItem(i).cast();
+            if (el.getSrc().contains("silverpeas-tkn.js")) {
+                Document.get().getHead().removeChild(el);
+            }
+        }
+
+        Document.get().getHead().appendChild(script);
+    }
+
 }

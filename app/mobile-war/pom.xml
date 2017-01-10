@@ -51,6 +51,8 @@
         <executions>
           <execution>
             <configuration>
+              <!-- style>OBF</style -->
+              <style>DETAILED</style>
               <modules>
                 <module>com.silverpeas.mobile.SpMobil</module>
               </modules>
@@ -90,7 +92,7 @@
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>${gwtVersion}</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -198,6 +200,12 @@
       <artifactId>javax.inject</artifactId>
       <version>1</version>
     </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>2.0</version>
+    </dependency>
+
 
   </dependencies>
 
