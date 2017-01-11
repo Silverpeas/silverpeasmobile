@@ -167,7 +167,7 @@
 
   <servlet-mapping>
     <servlet-name>MediaServlet</servlet-name>
-    <url-pattern>/AuthenticationServlet/spmobile/MediaAction</url-pattern>
+    <url-pattern>/RwebPages/AuthenticationServlet/spmobile/MediaAction</url-pattern>
   </servlet-mapping>
 
   <servlet>
