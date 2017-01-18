@@ -115,6 +115,12 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     closeMenu();
   }
 
+  @UiHandler("config")
+  protected void goConfig(ClickEvent event) {
+    //TODO
+    closeMenu();
+  }
+
   @UiHandler("updateStatus")
   protected void updateStatus(ClickEvent event) {
     App app = new StatusApp();

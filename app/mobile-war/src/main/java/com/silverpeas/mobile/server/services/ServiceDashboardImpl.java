@@ -8,7 +8,7 @@ import com.silverpeas.mobile.shared.services.ServiceDashboard;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.socialnetwork.model.SocialInformation;
 import org.silverpeas.core.socialnetwork.model.SocialInformationType;
-import org.silverpeas.core.socialnetwork.relationShip.RelationShipService;
+import org.silverpeas.core.socialnetwork.relationship.RelationShipService;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 

@@ -10,7 +10,7 @@ import com.silverpeas.mobile.shared.services.ServiceContact;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
-import org.silverpeas.core.socialnetwork.relationShip.RelationShipService;
+import org.silverpeas.core.socialnetwork.relationship.RelationShipService;
 import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.util.ArrayList;

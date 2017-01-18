@@ -540,6 +540,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding: 1em 0 1em 32px;
 }
 
+#silverpeas-navmenu-panel #navmenu-panel li#menu-config a {
+  background: transparent url(packPictos.png) 4px -520px no-repeat;
+}
+
 #silverpeas-navmenu-panel #navmenu-panel li#menu-tasks a {
   background: transparent url(packPictos.png) 4px -394px no-repeat;
 }

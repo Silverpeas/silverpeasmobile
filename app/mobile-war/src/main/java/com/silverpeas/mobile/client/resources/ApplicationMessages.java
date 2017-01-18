@@ -38,6 +38,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Mes tâches")
   String tasks();
 
+  @DefaultMessage("Configuration")
+  String config();
+
   @DefaultMessage("Déconnexion")
   String disconnect();
 
