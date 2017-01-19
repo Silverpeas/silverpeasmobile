@@ -104,6 +104,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     dto.setId(space.getId());
     dto.setLabel(space.getName());
     dto.setPersonal(space.isPersonalSpace());
+    dto.setOrberNum(space.getOrderNum());
     return dto;
   }
 
