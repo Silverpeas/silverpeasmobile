@@ -9,7 +9,7 @@
       <li id="btn-find-media"><g:Anchor ui:field="media"><ui:safehtml from="{msg.appMedia}"/></g:Anchor></li>
       <li id="btn-find-contact"><g:Anchor ui:field="contact"><ui:safehtml from="{msg.appContact}"/></g:Anchor></li>
       <li id="btn-update-statut"><g:Anchor ui:field="statut"><ui:safehtml from="{msg.appStatut}"/></g:Anchor></li>
-      <li id="btn-news"><g:Anchor ui:field="news"><ui:safehtml from="{msg.appActus}"/></g:Anchor></li>
     </ul>
   </g:HTMLPanel>
+
 </ui:UiBinder> 

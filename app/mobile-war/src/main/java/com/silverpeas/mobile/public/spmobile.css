@@ -1145,12 +1145,12 @@ textarea.ui-input-text {
   top: 66px;
 }
 
-#menu-tasks {
+#menu-config {
   /*display:none;*/
 }
 
-#btn-news {
-  display: none;
+#menu-tasks {
+  /*display:none;*/
 }
 
 .bloc-actu-vignette, .bloc-actu-content {

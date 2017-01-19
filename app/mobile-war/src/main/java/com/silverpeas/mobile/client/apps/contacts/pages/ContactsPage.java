@@ -166,7 +166,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   private int computePageSize() {
     if (pageSize == 0) {
       // compute height available for items
-      int available = Window.getClientHeight() - (SpMobil.mainPage.getHeaderHeight() + container.getOffsetHeight());
+      int available = Window.getClientHeight() - (SpMobil.getMainPage().getHeaderHeight() + container.getOffsetHeight());
 
       // compute item height
       ContactItem item = new ContactItem();

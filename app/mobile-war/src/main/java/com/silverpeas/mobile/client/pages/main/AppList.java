@@ -2,11 +2,14 @@ package com.silverpeas.mobile.client.pages.main;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
@@ -29,8 +32,21 @@ public class AppList extends PageContent {
   }
 
   public AppList() {
+    /*addAttachHandler(new AttachEvent.Handler() {
+      @Override
+      public void onAttachOrDetach(AttachEvent event) {
+        if (event.isAttached()) {
+          // add widgets on main page
+          NewsApp app = NewsApp.getInstance();
+          app.startAsWidget();
+        }
+      }
+    });*/
+
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+
+
   }
 
 
@@ -57,11 +73,4 @@ public class AppList extends PageContent {
     App app = new DocumentsApp();
     app.start();
   }
-
-  @UiHandler("news")
-  void news(ClickEvent e) {
-    App app = new NewsApp();
-    app.start();
-  }
-
 }

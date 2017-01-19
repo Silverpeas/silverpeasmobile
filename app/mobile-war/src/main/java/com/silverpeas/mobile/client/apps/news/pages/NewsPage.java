@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.apps.news.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.silverpeas.mobile.client.apps.news.events.app.NewsLoadEvent;
 import com.silverpeas.mobile.client.apps.news.events.pages.AbstractNewsPagesEvent;
@@ -20,7 +21,7 @@ import java.util.Iterator;
 /**
  * @author: svu
  */
-public class NewsPage  extends PageContent implements NewsPagesEventHandler {
+public class NewsPage extends Composite implements NewsPagesEventHandler {
 
   interface NewsPageUiBinder extends UiBinder<HTMLPanel, NewsPage> {}
   private static NewsPageUiBinder uiBinder = GWT.create(NewsPageUiBinder.class);
@@ -30,6 +31,7 @@ public class NewsPage  extends PageContent implements NewsPagesEventHandler {
 
   public NewsPage() {
     initWidget(uiBinder.createAndBindUi(this));
+    this.getElement().setId("last-news");
     EventBus.getInstance().fireEvent(new NewsLoadEvent());
     EventBus.getInstance().addHandler(AbstractNewsPagesEvent.TYPE, this);
   }
@@ -48,9 +50,9 @@ public class NewsPage  extends PageContent implements NewsPagesEventHandler {
     }
   }
 
-  @Override
+  /*@Override
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractNewsPagesEvent.TYPE, this);
-  }
+  }*/
 }

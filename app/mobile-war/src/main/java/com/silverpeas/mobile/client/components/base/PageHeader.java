@@ -42,7 +42,7 @@ public class PageHeader extends Composite {
 
   @UiHandler("menu")
   void onMenu(ClickEvent event) {
-    SpMobil.mainPage.toogleMenu();
+    SpMobil.getMainPage().toogleMenu();
   }
 
   @UiHandler("back")

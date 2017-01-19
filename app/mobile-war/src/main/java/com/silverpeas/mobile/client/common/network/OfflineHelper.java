@@ -23,23 +23,23 @@ public class OfflineHelper {
     public static boolean needToGoOffine (Throwable reason) {
         if (reason instanceof StatusCodeException) {
             if (((StatusCodeException) reason).getStatusCode() == 0) {
-                SpMobil.mainPage.showOfflineIndicator();
+                SpMobil.getMainPage().showOfflineIndicator();
                 offLine = true;
                 return offLine;
             }
         }
         if (reason instanceof RequestTimeoutException) {
-            SpMobil.mainPage.showOfflineIndicator();
+            SpMobil.getMainPage().showOfflineIndicator();
             offLine = true;
             return offLine;
         }
-        SpMobil.mainPage.hideOfflineIndicator();
+        SpMobil.getMainPage().hideOfflineIndicator();
         offLine = false;
         return offLine;
     }
 
     public static void hideOfflineIndicator() {
-        SpMobil.mainPage.hideOfflineIndicator();
+        SpMobil.getMainPage().hideOfflineIndicator();
     }
 
     public static boolean isOffLine() {

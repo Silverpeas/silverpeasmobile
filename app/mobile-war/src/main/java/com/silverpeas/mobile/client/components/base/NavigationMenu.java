@@ -142,6 +142,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     ConnexionPage connexionPage = new ConnexionPage();
     RootPanel.get().clear();
     RootPanel.get().add(connexionPage);
+    SpMobil.destroyMainPage();
   }
 
   public void setUser(DetailUserDTO currentUser) {

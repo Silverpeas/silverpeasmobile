@@ -21,7 +21,13 @@ public class ServicesLocator {
     private static ServiceSearchAsync serviceSearch = (ServiceSearchAsync) GWT.create(ServiceSearch.class);
     private static ServiceCommentsAsync serviceComments = (ServiceCommentsAsync) GWT.create(ServiceComments.class);
     private static ServiceNotificationsAsync serviceNotifications = (ServiceNotificationsAsync) GWT.create(ServiceNotifications.class);
-    public static ServiceNewsAsync serviceNews = (ServiceNewsAsync) GWT.create(ServiceNews.class);
+    private static ServiceNewsAsync serviceNews = (ServiceNewsAsync) GWT.create(ServiceNews.class);
+
+    public static ServiceNewsAsync getServiceNews() {
+        ((ServiceDefTarget) serviceNews).setRpcRequestBuilder(builder);
+        changeServiceEntryPoint((ServiceDefTarget)serviceNews);
+        return serviceNews;
+    }
 
     public static ServiceNotificationsAsync getServiceNotifications() {
         ((ServiceDefTarget) serviceNotifications).setRpcRequestBuilder(builder);

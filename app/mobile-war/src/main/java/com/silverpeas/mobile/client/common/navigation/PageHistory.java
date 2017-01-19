@@ -34,7 +34,7 @@ public class PageHistory implements ValueChangeHandler<String> {
   public void goTo(PageContent page) {
     if (pages.isEmpty()) firstToken = "" + page.hashCode();
     pages.push(page);
-    SpMobil.mainPage.setContent(page);
+    SpMobil.getMainPage().setContent(page);
     browserGoto(""+page.hashCode());
     //TODO : TODO : css3 transition
   }
@@ -43,7 +43,7 @@ public class PageHistory implements ValueChangeHandler<String> {
     PageContent page = pages.pop();
     page.stop();
     page = pages.peek();
-    SpMobil.mainPage.setContent(page);
+    SpMobil.getMainPage().setContent(page);
     browserBack();
     //TODO : css3 transition
 
@@ -63,7 +63,7 @@ public class PageHistory implements ValueChangeHandler<String> {
       PageContent currentPage = pages.pop();
       if (pages.isEmpty()) {
         pages.push(currentPage);
-        SpMobil.mainPage.setContent(currentPage);
+        SpMobil.getMainPage().setContent(currentPage);
         browserGoto(""+currentPage.hashCode());
         break;
       } else {
@@ -96,7 +96,7 @@ public class PageHistory implements ValueChangeHandler<String> {
         if (page != null) {
           page.stop();
           page = pages.peek();
-          SpMobil.mainPage.setContent(page);
+          SpMobil.getMainPage().setContent(page);
         } else {
           SpMobil.restoreMainPage();
         }

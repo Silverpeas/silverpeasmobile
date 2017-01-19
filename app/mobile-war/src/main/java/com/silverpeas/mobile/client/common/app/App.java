@@ -19,6 +19,10 @@ public abstract class App implements AppEventHandler {
     PageHistory.getInstance().goTo(mainPage);
   }
 
+  public void startAsWidget(){
+
+  }
+
   public void startWithContent(String appId, String contentType, String contentId) {
 
   }

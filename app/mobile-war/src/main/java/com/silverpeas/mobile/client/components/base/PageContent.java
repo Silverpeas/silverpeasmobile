@@ -77,7 +77,7 @@ public class PageContent extends Composite implements View, NativePreviewHandler
         }
         target = target.getParentElement();
       }
-      SpMobil.mainPage.closeMenu();
+      SpMobil.getMainPage().closeMenu();
     }
   }
 

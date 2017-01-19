@@ -30,7 +30,7 @@ import java.util.List;
 public class SpMobil implements EntryPoint {
 
     public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
-    public final static Page mainPage = new Page();
+    private static Page mainPage = null;
     public static DetailUserDTO user;
     private static String viewport, bodyClass, bodyId;
     private static ApplicationMessages msg;
@@ -61,6 +61,11 @@ public class SpMobil implements EntryPoint {
             }
         }
         Notification.activityStop();
+    }
+
+    public static Page getMainPage() {
+        if (mainPage == null) mainPage = new Page();
+        return mainPage;
     }
 
     public static SpMobil getInstance() {
@@ -110,9 +115,9 @@ public class SpMobil implements EntryPoint {
             Window.Location.replace(Window.Location.getHref() + "?locale=" + user.getLanguage());
         }
         SpMobil.user = user;
-        mainPage.setUser(user);
+        getMainPage().setUser(user);
         RootPanel.get().clear();
-        RootPanel.get().add(mainPage);
+        RootPanel.get().add(getMainPage());
         PageHistory.getInstance().goTo(new AppList());
 
         if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
@@ -154,8 +159,8 @@ public class SpMobil implements EntryPoint {
             @Override
             public void onSuccess(final List<ResultDTO> results) {
                 super.onSuccess(results);
-                mainPage.resetSearchField();
-                mainPage.closeMenu();
+                getMainPage().resetSearchField();
+                getMainPage().closeMenu();
                 SearchResultPage page = new SearchResultPage();
                 page.setPageTitle(msg.results());
                 page.setResults(results);
@@ -190,7 +195,7 @@ public class SpMobil implements EntryPoint {
 
     public static void restoreMainPage() {
         RootPanel.get().clear();
-        RootPanel.get().add(SpMobil.mainPage);
+        RootPanel.get().add(SpMobil.getMainPage());
 
         Document.get().getBody().setId(bodyId);
         Document.get().getBody().setClassName(bodyClass);
@@ -222,4 +227,7 @@ public class SpMobil implements EntryPoint {
         Document.get().getHead().appendChild(script);
     }
 
+    public static void destroyMainPage() {
+        mainPage = null;
+    }
 }
