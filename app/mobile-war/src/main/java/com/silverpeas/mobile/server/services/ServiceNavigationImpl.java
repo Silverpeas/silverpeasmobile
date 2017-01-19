@@ -47,7 +47,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         String [] spaceIds = Administration.get().getAllowedSubSpaceIds(getUserInSession().getId(), rootSpaceId);
         for (String spaceId : spaceIds) {
           SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
-          if (space.getFatherId().equals(rootSpaceId)) {
+          if (("WA"+space.getFatherId()).equals(rootSpaceId)) {
             if (containApp(appType,space)) {
               results.add(populate(space));
             }
