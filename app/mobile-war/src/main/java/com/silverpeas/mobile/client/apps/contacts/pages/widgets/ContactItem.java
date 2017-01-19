@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -11,6 +12,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.contacts.resources.ContactsResources;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
@@ -21,6 +23,7 @@ public class ContactItem extends Composite {
   @UiField HTMLPanel user, tel, container;
 
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
+  private ContactsResources resourcesContact = GWT.create(ContactsResources.class);
 
   interface ContactItemUiBinder extends UiBinder<Widget, ContactItem> {
   }
@@ -64,6 +67,13 @@ public class ContactItem extends Composite {
       tel2.setText(userData.getCellularPhoneNumber());
       tel2.setHref("tel:" + userData.getCellularPhoneNumber());
       tel.add(tel2);
+
+      Anchor sms = new Anchor();
+      sms.setHref("sms:" + userData.getCellularPhoneNumber());
+      Image smsImg = new Image(resourcesContact.sms());
+      sms.getElement().appendChild(smsImg.getElement());
+      tel.add(sms);
+
       nbTel++;
     }
     if (userData.getFaxPhoneNumber() != null && !userData.getFaxPhoneNumber().isEmpty()) {
