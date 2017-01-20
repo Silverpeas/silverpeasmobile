@@ -36,13 +36,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLConnection;
 
 @SuppressWarnings("serial")
 public class PublicationContentServlet extends HttpServlet {
 
   private OrganizationController organizationController = OrganizationController.get();
+  private static String rootContext="";
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+    if (rootContext.isEmpty()) {
+      String url = request.getRequestURL().toString();
+      String uri = request.getRequestURI();
+      rootContext = url.substring( 0, url.indexOf(uri) );
+    }
+
     String id = request.getParameter("id");
     String ua = request.getHeader("User-Agent");
 
@@ -243,7 +253,21 @@ public class PublicationContentServlet extends HttpServlet {
     } else if (url.contains("attachmentId")) {
       data = convertImageAttachmentUrl(url, data);
     } else {
-      //TODO :encode in bas64 for improve display
+      try {
+        if (url.startsWith("/silverpeas")) {
+          url = rootContext + url;
+        }
+        URL urlObject = new URL(url);
+        URLConnection connection = urlObject.openConnection();
+        connection.connect();
+        String contentType = connection.getContentType();
+        byte[] binaryData = new byte[(int) connection.getInputStream().available()];
+        connection.getInputStream().read(binaryData);
+        data = "data:" + contentType + ";base64," + new String(Base64.encodeBase64(binaryData));
+      } catch(Exception e) {
+        SilverLogger.getLogger(SpMobileLogModule.getName()).error("PublicationContentServlet.convertImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+        // If can't connect to url, return the url without change
+      }
     }
     return data;
   }

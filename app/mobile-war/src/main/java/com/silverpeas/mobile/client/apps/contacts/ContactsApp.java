@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.apps.contacts;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.contacts.events.app.AbstractContactsAppEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsAppEventHandler;
 import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;

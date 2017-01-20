@@ -32,16 +32,16 @@ public class AppList extends PageContent {
   }
 
   public AppList() {
-    /*addAttachHandler(new AttachEvent.Handler() {
+    addAttachHandler(new AttachEvent.Handler() {
       @Override
       public void onAttachOrDetach(AttachEvent event) {
         if (event.isAttached()) {
           // add widgets on main page
-          NewsApp app = NewsApp.getInstance();
-          app.startAsWidget();
+          //NewsApp app = NewsApp.getInstance();
+          //app.startAsWidget();
         }
       }
-    });*/
+    });
 
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
