@@ -240,8 +240,10 @@ public class PublicationContentServlet extends HttpServlet {
       } catch (Exception e) {
         SilverLogger.getLogger(SpMobileLogModule.getName()).error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
       }
-    } else {
+    } else if (url.contains("attachmentId")) {
       data = convertImageAttachmentUrl(url, data);
+    } else {
+      //TODO :encode in bas64 for improve display
     }
     return data;
   }
