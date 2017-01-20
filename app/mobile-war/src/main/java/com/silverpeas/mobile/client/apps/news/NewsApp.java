@@ -31,11 +31,8 @@ public class NewsApp extends App implements NewsAppEventHandler {
   }
 
   @Override
-  public void startAsWidget(){
-    //Element container = DOM.getElementById(id);
-    RootPanel.get().add(new NewsPage());
-    //HTMLPanel.wrap(container).add(new Label("test"));
-    //HTMLPanel.wrap(container).add(new NewsPage());
+  public void startAsWidget(SimplePanel container){
+    container.add(new NewsPage());
   }
 
   @Override

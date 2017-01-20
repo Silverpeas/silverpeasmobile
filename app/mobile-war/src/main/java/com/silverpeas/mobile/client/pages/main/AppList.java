@@ -10,6 +10,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
@@ -27,26 +28,18 @@ public class AppList extends PageContent {
 
   @UiField(provided = true) protected ApplicationMessages msg = null;
   @UiField protected Anchor statut, contact, document, media;
+  @UiField protected SimplePanel news;
 
   interface AppListUiBinder extends UiBinder<Widget, AppList> {
   }
 
   public AppList() {
-    addAttachHandler(new AttachEvent.Handler() {
-      @Override
-      public void onAttachOrDetach(AttachEvent event) {
-        if (event.isAttached()) {
-          // add widgets on main page
-          //NewsApp app = NewsApp.getInstance();
-          //app.startAsWidget();
-        }
-      }
-    });
-
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
 
-
+    // add widgets on main page
+    //NewsApp app = NewsApp.getInstance();
+    //app.startAsWidget(news);
   }
 
 

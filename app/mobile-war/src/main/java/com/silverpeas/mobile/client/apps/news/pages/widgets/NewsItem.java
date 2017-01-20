@@ -54,4 +54,8 @@ public class NewsItem extends Composite {
     App app = new DocumentsApp();
     app.startWithContent(data.getInstanceId(), ContentsTypes.Publication.toString(), String.valueOf(data.getId()));
   }
+
+  public void setVisible(boolean visible) {
+    container.setVisible(visible);
+  }
 }

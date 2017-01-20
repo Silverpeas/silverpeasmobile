@@ -40,12 +40,15 @@ public class NewsPage extends Composite implements NewsPagesEventHandler {
   public void onNewsLoad(final NewsLoadedEvent event) {
     Notification.activityStop();
     Iterator<NewsDTO> i = event.getNews().iterator();
+    boolean visible = true;
     while (i.hasNext()) {
       NewsDTO news = i.next();
       if (news != null) {
         NewsItem item = new NewsItem();
         item.setData(news);
+        item.setVisible(visible);
         list.add(item);
+        visible = false;
       }
     }
   }

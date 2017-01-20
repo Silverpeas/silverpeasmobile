@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.client.common.app;
 
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.components.base.PageContent;
@@ -19,7 +20,7 @@ public abstract class App implements AppEventHandler {
     PageHistory.getInstance().goTo(mainPage);
   }
 
-  public void startAsWidget(){
+  public void startAsWidget(SimplePanel container){
 
   }
 

@@ -77,6 +77,9 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
     @Override
     public void startWithContent(final String appId, final String contentType, final String contentId) {
+        if (contentType.equals(ContentsTypes.Publication.toString())) {
+            ableToStoreContent = true;
+        }
         AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
             @Override
