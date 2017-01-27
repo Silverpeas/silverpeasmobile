@@ -42,7 +42,6 @@ public class AppList extends PageContent {
     //app.startAsWidget(news);
   }
 
-
   @UiHandler("statut")
   void status(ClickEvent e) {
     App app = new StatusApp();

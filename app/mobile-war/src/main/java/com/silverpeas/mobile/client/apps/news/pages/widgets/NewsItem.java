@@ -1,61 +1,78 @@
 package com.silverpeas.mobile.client.apps.news.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.news.resources.NewsMessages;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 
-public class NewsItem extends Composite {
+public class NewsItem {
 
-  private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
+  private Anchor titleLink, imageLink;
+  private LIElement container;
+  private boolean visible = true;
 
-  @UiField HTMLPanel container;
+  private ClickHandler more = new ClickHandler() {
+    @Override
+    public void onClick(ClickEvent event) {
+      Anchor a = (Anchor) event.getSource();
+      String permalink = a.getElement().getAttribute("rel");
+      //TODO : send event to app for display news content
+      //EventBus.getInstance().fireEvent();
+      Window.alert(permalink);
+    }
+  };
 
-  @UiField HeadingElement title;
-  @UiField ParagraphElement description, updateDate;
-  @UiField Image vignette;
-  @UiField Anchor more;
-  @UiField(provided = true) protected NewsMessages msg = null;
-
-  private NewsDTO data;
-
-  interface ContactItemUiBinder extends UiBinder<Widget, NewsItem> {
+  private NewsItem() {
   }
 
-  public NewsItem() {
-    msg = GWT.create(NewsMessages.class);
-    initWidget(uiBinder.createAndBindUi(this));
+  protected NewsItem(HTMLPanel content, Element element) {
+    NodeList<Element> links = element.getElementsByTagName("a");
+
+    Element link = links.getItem(0);
+    imageLink = new Anchor();
+    imageLink.removeStyleName("gwt-Anchor");
+    imageLink.setHTML(link.getInnerHTML());
+    imageLink.getElement().setAttribute("rel", link.getAttribute("href"));
+    content.addAndReplaceElement(imageLink, link);
+    imageLink.addClickHandler(more);
+
+    link = links.getItem(1);
+    titleLink = new Anchor();
+    titleLink.removeStyleName("gwt-Anchor");
+    titleLink.setHTML(link.getInnerHTML());
+    titleLink.getElement().setAttribute("rel", link.getAttribute("href"));
+    content.addAndReplaceElement(titleLink, link);
+    titleLink.addClickHandler(more);
+    container = element.cast();
   }
 
-  public void setData(NewsDTO data) {
-    this.data = data;
-    // TODO : display
-    title.setInnerHTML(data.getTitle());
-    description.setInnerHTML(data.getDescription());
-    updateDate.setInnerHTML(data.getUpdateDate());
-    vignette.setUrl(data.getVignette());
-  }
-
-  @UiHandler("more")
-  void viewMore(ClickEvent event) {
-    App app = new DocumentsApp();
-    app.startWithContent(data.getInstanceId(), ContentsTypes.Publication.toString(), String.valueOf(data.getId()));
+  public static NewsItem wrap(HTMLPanel content, Element element) {
+    NewsItem item = new NewsItem(content, element);
+    return item;
   }
 
   public void setVisible(boolean visible) {
-    container.setVisible(visible);
+    this.visible = visible;
+    if (!visible) {
+      container.getStyle().setDisplay(Style.Display.NONE);
+    } else {
+      container.getStyle().clearDisplay();
+    }
   }
+
+  public boolean isVisible() {
+    return visible;
+  }
+
 }
