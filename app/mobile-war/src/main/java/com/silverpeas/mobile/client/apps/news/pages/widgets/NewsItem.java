@@ -21,15 +21,14 @@ public class NewsItem {
   private Anchor titleLink, imageLink;
   private LIElement container;
   private boolean visible = true;
+  private String id, componentId;
 
   private ClickHandler more = new ClickHandler() {
     @Override
     public void onClick(ClickEvent event) {
       Anchor a = (Anchor) event.getSource();
-      String permalink = a.getElement().getAttribute("rel");
-      //TODO : send event to app for display news content
-      //EventBus.getInstance().fireEvent();
-      Window.alert(permalink);
+      App app = new DocumentsApp();
+      app.startWithContent(componentId, ContentsTypes.Publication.toString(), id);
     }
   };
 
@@ -37,21 +36,21 @@ public class NewsItem {
   }
 
   protected NewsItem(HTMLPanel content, Element element) {
-    NodeList<Element> links = element.getElementsByTagName("a");
+    id = element.getAttribute("data-id");
+    componentId = element.getAttribute("data-app-id");
 
+    NodeList<Element> links = element.getElementsByTagName("a");
     Element link = links.getItem(0);
     imageLink = new Anchor();
-    imageLink.removeStyleName("gwt-Anchor");
     imageLink.setHTML(link.getInnerHTML());
-    imageLink.getElement().setAttribute("rel", link.getAttribute("href"));
+    imageLink.setHref("javascript:;");
     content.addAndReplaceElement(imageLink, link);
     imageLink.addClickHandler(more);
 
     link = links.getItem(1);
     titleLink = new Anchor();
-    titleLink.removeStyleName("gwt-Anchor");
     titleLink.setHTML(link.getInnerHTML());
-    titleLink.getElement().setAttribute("rel", link.getAttribute("href"));
+    titleLink.setHref("javascript:;");
     content.addAndReplaceElement(titleLink, link);
     titleLink.addClickHandler(more);
     container = element.cast();

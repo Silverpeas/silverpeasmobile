@@ -20,7 +20,6 @@ import org.silverpeas.components.delegatednews.service.DelegatedNewsServiceProvi
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.admin.component.model.WAComponent;
-import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.annotation.RequestScoped;
 import org.silverpeas.core.annotation.Service;
@@ -101,7 +100,11 @@ public class NewsService extends RESTWebService {
 
 	private String render(PublicationDetail news) {
 		StringBuffer html = new StringBuffer();
-		html.append("<li>");
+		html.append("<li data-id='");
+		html.append(news.getId());
+		html.append("' data-app-id='");
+		html.append(news.getComponentInstanceId());
+		html.append("'>");
 		html.append("<a href='");
 		html.append(news.getPermalink());
 		html.append("'>");
