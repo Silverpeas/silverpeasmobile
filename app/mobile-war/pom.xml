@@ -100,6 +100,13 @@
       <version>${gwtVersion}</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>com.intendia.gwt.autorpc</groupId>
+      <artifactId>autorpc-gwt-processor</artifactId>
+      <version>0.2</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>org.silverpeas.components.delegatednews</groupId>
