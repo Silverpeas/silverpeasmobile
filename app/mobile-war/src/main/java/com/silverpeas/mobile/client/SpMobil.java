@@ -1,3 +1,27 @@
+/*
+ * Copyright (C) 2000 - 2017 Silverpeas
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://www.silverpeas.org/docs/core/legal/floss_exception.html"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.silverpeas.mobile.client;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -14,6 +38,7 @@ import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.AppList;
@@ -22,6 +47,7 @@ import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
+import com.silverpeas.mobile.shared.dto.configuration.Config;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
 
 import java.util.Date;
@@ -229,5 +255,11 @@ public class SpMobil implements EntryPoint {
 
     public static void destroyMainPage() {
         mainPage = null;
+    }
+
+    public static Config getConfiguration() {
+        Config conf = LocalStorageHelper.load("config", Config.class);
+        if (conf == null) conf = Config.getDefaultConfig();
+        return conf;
     }
 }

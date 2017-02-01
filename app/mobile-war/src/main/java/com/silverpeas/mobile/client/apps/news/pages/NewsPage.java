@@ -2,7 +2,6 @@ package com.silverpeas.mobile.client.apps.news.pages;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HTML;
@@ -33,12 +32,10 @@ public class NewsPage extends Composite implements NewsPagesEventHandler, SwipeE
   private SwipeRecognizer swipeRecognizer;
 
   public NewsPage() {
-    EventBus.getInstance().fireEvent(new NewsLoadEvent());
     EventBus.getInstance().addHandler(AbstractNewsPagesEvent.TYPE, this);
     container = new HTMLPanel("");
     container.getElement().setId("lastNews");
     initWidget(container);
-
 
     Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
@@ -47,38 +44,46 @@ public class NewsPage extends Composite implements NewsPagesEventHandler, SwipeE
       }
     });
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
+    EventBus.getInstance().fireEvent(new NewsLoadEvent());
 
   }
 
   @Override
   public void onSwipeEnd(final SwipeEndEvent event) {
-      if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
-        // suivant
-        for (int i = 0; i < items.size(); i++) {
-          if (items.get(i).isVisible()) {
-            items.get(i).setVisible(false);
-            if ((i + 1) >= items.size()) {
-              items.get(0).setVisible(true);
-            } else {
-              items.get(i + 1).setVisible(true);
+      if (isVisible()) {
+        if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
+          // suivant
+          for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).isVisible()) {
+              items.get(i).setVisible(false);
+              if ((i + 1) >= items.size()) {
+                items.get(0).setVisible(true);
+              } else {
+                items.get(i + 1).setVisible(true);
+              }
+              break;
             }
-            break;
           }
-        }
-      } else if (event.getDirection() == SwipeEvent.DIRECTION.LEFT_TO_RIGHT) {
-        // precedent
-        for (int i = 0; i < items.size(); i++) {
-          if (items.get(i).isVisible()) {
-            items.get(i).setVisible(false);
-            if ((i - 1) < 0) {
-              items.get(items.size()-1).setVisible(true);
-            } else {
-              items.get(i - 1).setVisible(true);
+        } else if (event.getDirection() == SwipeEvent.DIRECTION.LEFT_TO_RIGHT) {
+          // precedent
+          for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).isVisible()) {
+              items.get(i).setVisible(false);
+              if ((i - 1) < 0) {
+                items.get(items.size() - 1).setVisible(true);
+              } else {
+                items.get(i - 1).setVisible(true);
+              }
+              break;
             }
-            break;
           }
         }
       }
+  }
+
+  public void stop() {
+    EventBus.getInstance().removeHandler(AbstractNewsPagesEvent.TYPE, this);
+    EventBus.getInstance().removeHandler(SwipeEndEvent.getType(), this);
   }
 
   @Override

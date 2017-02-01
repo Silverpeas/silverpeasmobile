@@ -22,19 +22,26 @@
   ~
   -->
 
-<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:l="urn:import:com.silverpeas.mobile.client.components">
 
-  <ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
+  <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
 
-  <g:HTMLPanel>
-    <ul id="menu-principal">
-      <li id="btn-find-document"><g:Anchor ui:field="document"><ui:safehtml from="{msg.appDocuments}"/></g:Anchor></li>
-      <li id="btn-find-media"><g:Anchor ui:field="media"><ui:safehtml from="{msg.appMedia}"/></g:Anchor></li>
-      <li id="btn-find-contact"><g:Anchor ui:field="contact"><ui:safehtml from="{msg.appContact}"/></g:Anchor></li>
-      <li id="btn-update-statut"><g:Anchor ui:field="statut"><ui:safehtml from="{msg.appStatut}"/></g:Anchor></li>
+
+    <ul class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+      <li>
+        <a class="ui-btn">
+        <g:InlineLabel>Nombre d'actualités affichés</g:InlineLabel>
+        <g:TextBox ui:field="newsNumber"></g:TextBox>
+        </a>
+      </li>
+      <li>
+        <a class="ui-btn">
+        <g:CheckBox ui:field="newsDisplay" text="Afficher les dernières actualités"></g:CheckBox>
+        </a>
+      </li>
     </ul>
-    <g:SimplePanel ui:field="news"></g:SimplePanel>
   </g:HTMLPanel>
 
-</ui:UiBinder> 
+</ui:UiBinder>
+
