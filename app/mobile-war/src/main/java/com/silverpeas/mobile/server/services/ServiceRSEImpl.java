@@ -29,7 +29,7 @@ public class ServiceRSEImpl extends AbstractAuthenticateService implements Servi
     checkUserInSession();
     UserDetail user = getUserInSession();
     Status status = new Status(Integer.parseInt(user.getId()), new Date(), textStatus);
-    return getStatusService().changeStatusService(status);
+    return getStatusService().changeStatus(status);
   }
 
   @Override

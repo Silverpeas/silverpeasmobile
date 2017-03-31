@@ -1,6 +1,9 @@
 <%@ page import="org.silverpeas.core.util.ResourceLocator" %>
 <%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
+<%@ page import="com.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
+<%@ page import="java.util.Map" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view" %>
 
 <!doctype html>
@@ -26,6 +29,10 @@
     if (css != null && !css.isEmpty()) {
       out.println("<link rel='stylesheet' type='text/css' href='" + css + "'>");
     }
+
+    LocalizationBundle resourceLabels = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", l);
+    Map<String, String> map = ResourceBundleHelper.convertResourceBundleToMap(resourceLabels);
+    String jsonLabels = new ObjectMapper().writeValueAsString(map);
   %>
 
   <meta name="gwt:property" content="locale=<%=l%>">
@@ -39,6 +46,8 @@
   <title>Silverpeas Mobile</title>
   <script type="text/javascript" src="<%=appUrl%>/spmobile/spmobile.nocache.js"></script>
   <script>
+    var labels = <% out.println(jsonLabels); %>;
+
     function resize() {
       var windowHeight = window.innerHeight;
       document.body.style.height = windowHeight + "px";

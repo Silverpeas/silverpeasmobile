@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.common.resources.ResourcesManager;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 
@@ -37,6 +38,8 @@ public class PageHeader extends Composite {
     header.getElement().setId("header");
     menu.getElement().setId("menu");
     ressources.css().ensureInjected();
+
+    title.setInnerText(ResourcesManager.getLabel("mainpage.title"));
   }
 
 
