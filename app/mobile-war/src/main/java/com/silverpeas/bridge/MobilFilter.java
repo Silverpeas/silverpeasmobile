@@ -11,7 +11,6 @@ import org.silverpeas.core.contribution.publication.service.PublicationService;
 import javax.servlet.*;
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -53,7 +52,7 @@ public class MobilFilter implements Filter {
           chain.doFilter(req, res);
           return;
         }
-        ((HttpServletResponse) res).sendRedirect("/silverpeas/spmobile/" + params);
+        ((HttpServletResponse) res).sendRedirect("/silverpeas/spmobile/spmobil.jsp" + params);
         return;
       } else {
         chain.doFilter(req, res);
