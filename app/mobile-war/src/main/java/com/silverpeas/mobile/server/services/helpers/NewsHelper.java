@@ -51,6 +51,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.MissingResourceException;
 
 /**
  * @author: svu
@@ -94,7 +95,10 @@ public class NewsHelper {
     } else {
       // News on main page
       SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
-      String newsSource = settings.getString("home.news");
+      String newsSource = null;
+      try{
+        newsSource = settings.getString("home.news");
+      } catch (MissingResourceException e) {}
       if (newsSource != null && newsSource.isEmpty() == false) {
           if (newsSource.startsWith("quickinfo")) {
             return getNewsByComponentId(newsSource);
@@ -149,9 +153,11 @@ public class NewsHelper {
 
   public List<NewsDTO> populate(List<PublicationDetail> pubs) {
     List<NewsDTO> dtos = new ArrayList<NewsDTO>();
-    for (PublicationDetail pub: pubs) {
-      NewsDTO dto = populate(pub);
-      dtos.add(dto);
+    if (pubs != null) {
+      for (PublicationDetail pub : pubs) {
+        NewsDTO dto = populate(pub);
+        dtos.add(dto);
+      }
     }
     return dtos;
   }

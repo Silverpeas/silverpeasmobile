@@ -23,16 +23,6 @@
     <url-pattern>/spmobil.appcache</url-pattern>
   </servlet-mapping>
 
-
-  <servlet>
-    <servlet-name>serviceHomePageImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceHomePageImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceHomePageImpl</servlet-name>
-    <url-pattern>/services/spmobile/HomePage</url-pattern>
-  </servlet-mapping>
-
   <servlet>
     <servlet-name>serviceNewsImpl</servlet-name>
     <servlet-class>com.silverpeas.mobile.server.services.ServiceNewsImpl</servlet-class>

@@ -69,9 +69,11 @@ public class FavoritesHelper {
 
   public List<FavoriteDTO> populate(List<LinkDetail> links) {
     List<FavoriteDTO> dtos = new ArrayList<FavoriteDTO>();
-    for (LinkDetail link : links) {
-      FavoriteDTO dto = populate(link);
-      dtos.add(dto);
+    if (links != null) {
+      for (LinkDetail link : links) {
+        FavoriteDTO dto = populate(link);
+        dtos.add(dto);
+      }
     }
     return dtos;
 
