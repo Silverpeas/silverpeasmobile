@@ -31,6 +31,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.navigation.events.pages.SpacesAndAppsLoadedEvent;
 import com.silverpeas.mobile.client.common.*;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
@@ -48,9 +49,12 @@ import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
+import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.configuration.Config;
+import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -138,19 +142,53 @@ public class SpMobil implements EntryPoint {
     }
 
     public static void displayMainPage(final DetailUserDTO user) {
-        if (!Window.Location.getHref().contains("?locale=") && !user.getLanguage().equalsIgnoreCase("fr")) {
-            Window.Location.replace(Window.Location.getHref() + "?locale=" + user.getLanguage());
-        }
-        SpMobil.user = user;
-        getMainPage().setUser(user);
-        RootPanel.get().clear();
-        RootPanel.get().add(getMainPage());
-        PageHistory.getInstance().goTo(new AppList());
 
-        if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
-            ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
+      if (!Window.Location.getHref().contains("?locale=") && !user.getLanguage().equalsIgnoreCase("fr")) {
+        Window.Location.replace(Window.Location.getHref() + "?locale=" + user.getLanguage());
+      }
+      SpMobil.user = user;
+      getMainPage().setUser(user);
+      RootPanel.get().clear();
+      RootPanel.get().add(getMainPage());
+      PageHistory.getInstance().goTo(new AppList());
+
+      if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
+        ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
+      } else {
+        final String key = "MainHomePage_";
+        AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<HomePageDTO>(getOfflineAction(key)) {
+
+          @Override
+          public void attempt() {
+            ServicesLocator.getServiceNavigation().getHomePageData(null, this);
+          }
+
+          @Override
+          public void onSuccess(HomePageDTO result) {
+            super.onSuccess(result);
+            LocalStorageHelper.store(key, HomePageDTO.class, result);
+
+            //TODO : send event to main page
+            //EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
+          }
+        };
+        action.attempt();
+      }
+    }
+
+    private static Command getOfflineAction(final String key) {
+      Command offlineAction = new Command() {
+
+        public void execute() {
+          HomePageDTO result = LocalStorageHelper.load(key, HomePageDTO.class);
+          if (result == null) {
+            result = new HomePageDTO();
+          }
+          //TODO : send event to main page
+          //EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
         }
-        //reloadTokenScript();
+      };
+      return offlineAction;
     }
 
     /**

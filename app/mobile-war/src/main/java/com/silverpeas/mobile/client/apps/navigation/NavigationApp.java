@@ -54,6 +54,8 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
 
     @Override
     public void loadSpacesAndApps(final LoadSpacesAndAppsEvent event) {
+
+        //TODO : replace call getSpaceAndApps by getHomePage
         final String key = "spaceapp_" + event.getRootSpaceId() + "_" + type;
         AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<SilverpeasObjectDTO>>(getOfflineAction(key)) {
 

@@ -1,17 +1,23 @@
 package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
+import com.silverpeas.mobile.server.services.helpers.FavoritesHelper;
+import com.silverpeas.mobile.server.services.helpers.NewsHelper;
+import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import com.silverpeas.mobile.shared.exceptions.HomePageException;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
+import org.silverpeas.core.contribution.publication.model.PublicationDetail;
+import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.util.ArrayList;
@@ -27,6 +33,31 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private static final long serialVersionUID = 1L;
   private OrganizationController organizationController = OrganizationController.get();
 
+  @Override
+  public HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException {
+    checkUserInSession();
+    HomePageDTO data = new HomePageDTO();
+
+    List<PublicationDetail> lastNews = NewsHelper
+        .getInstance().getLastNews(getUserInSession().getId(), spaceId);
+    data.setNews(NewsHelper.getInstance().populate(lastNews));
+
+    if (spaceId == null || spaceId.isEmpty()) {
+      List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPerso(getUserInSession().getId());
+      data.setFavorites(FavoritesHelper.getInstance().populate(links));
+      data.setSpacesAndApps(getSpacesAndApps(spaceId, ""));
+    }
+
+    //TODO : last publications
+
+    return data;
+  }
+
+  private boolean isSupportedApp(String appType) {
+    return (appType.equalsIgnoreCase("kmelia") || appType.equalsIgnoreCase("gallery"));
+  }
+
+  //TODO : remove appType
   @Override
   public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId, String appType) throws NavigationException, AuthenticationException {
     checkUserInSession();

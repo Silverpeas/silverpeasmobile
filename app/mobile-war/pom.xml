@@ -139,6 +139,12 @@
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core.services</groupId>
+      <artifactId>silverpeas-core-mylinks</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core.services</groupId>
       <artifactId>silverpeas-core-personalorganizer</artifactId>
       <version>${core.version}</version>
       <scope>provided</scope>
