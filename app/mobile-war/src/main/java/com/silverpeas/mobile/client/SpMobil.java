@@ -31,7 +31,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.navigation.events.pages.SpacesAndAppsLoadedEvent;
+import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
+import com.silverpeas.mobile.client.apps.media.MediaApp;
 import com.silverpeas.mobile.client.common.*;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
@@ -39,11 +40,10 @@ import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
-import com.silverpeas.mobile.client.common.resources.ResourcesManager;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.components.base.Page;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
-import com.silverpeas.mobile.client.pages.main.AppList;
+import com.silverpeas.mobile.client.pages.main.HomePage;
 import com.silverpeas.mobile.client.pages.search.SearchResultPage;
 import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -51,10 +51,8 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.configuration.Config;
-import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -91,6 +89,11 @@ public class SpMobil implements EntryPoint {
                 viewport = metaTag.getContent();
             }
         }
+
+        // Instanciate apps
+        DocumentsApp gedApp = new DocumentsApp();
+        MediaApp mediaApp = new MediaApp();
+
         Notification.activityStop();
     }
 
@@ -150,7 +153,7 @@ public class SpMobil implements EntryPoint {
       getMainPage().setUser(user);
       RootPanel.get().clear();
       RootPanel.get().add(getMainPage());
-      PageHistory.getInstance().goTo(new AppList());
+      PageHistory.getInstance().goTo(new HomePage());
 
       if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
         ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);

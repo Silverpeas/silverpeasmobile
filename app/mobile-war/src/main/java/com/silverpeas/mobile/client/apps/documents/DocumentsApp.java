@@ -16,7 +16,6 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.publication.Publ
 import com.silverpeas.mobile.client.apps.documents.pages.GedNavigationPage;
 import com.silverpeas.mobile.client.apps.documents.pages.PublicationPage;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -38,6 +37,7 @@ import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import com.silverpeas.mobile.shared.dto.navigation.Apps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
     @Override
     public void start() {
-        navApp.setTypeApp(Apps.kmelia.name());
+        //navApp.setTypeApp(Apps.kmelia.name());
         navApp.setTitle(msg.title());
         navApp.start();
 
@@ -152,14 +152,16 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
     @Override
     public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
+      if (event.getInstance().getType().equals(Apps.kmelia.name())) {
         this.commentable = event.getInstance().isCommentable();
         this.notifiable = event.getInstance().isNotifiable();
         this.ableToStoreContent = event.getInstance().isAbleToStoreContent();
         GedNavigationPage page = new GedNavigationPage();
-        page.setPageTitle(msg.title());
+        page.setPageTitle(event.getInstance().getLabel());
         page.setInstanceId(event.getInstance().getId());
         page.setTopicId(null);
         page.show();
+      }
     }
 
     /**

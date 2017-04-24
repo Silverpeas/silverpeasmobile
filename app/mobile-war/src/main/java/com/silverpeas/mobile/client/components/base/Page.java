@@ -25,6 +25,7 @@ public class Page extends Composite implements Window.ScrollHandler {
   @UiField protected PageHeader header;
   @UiField protected NavigationMenu menu;
   @UiField protected DivElement contentContainer;
+  @UiField protected PageFooter footer;
 
   protected PageContent content;
 

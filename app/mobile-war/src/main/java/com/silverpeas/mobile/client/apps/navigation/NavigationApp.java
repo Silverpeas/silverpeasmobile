@@ -20,7 +20,7 @@ import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 
 public class NavigationApp extends App implements NavigationAppEventHandler {
 
-    private String type, title;
+    private String title;
     private ApplicationMessages msg;
 
     public NavigationApp() {
@@ -35,11 +35,8 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
         mainPage.setPageTitle(title);
         mainPage.setRootSpaceId(null);
         setMainPage(mainPage);
+        mainPage.show();
         // no "super.start(lauchingPage);" this apps is used in another apps
-    }
-
-    public void setTypeApp(String type) {
-        this.type = type;
     }
 
     @Override
@@ -56,12 +53,12 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
     public void loadSpacesAndApps(final LoadSpacesAndAppsEvent event) {
 
         //TODO : replace call getSpaceAndApps by getHomePage
-        final String key = "spaceapp_" + event.getRootSpaceId() + "_" + type;
+        final String key = "spaceapp_" + event.getRootSpaceId();
         AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<SilverpeasObjectDTO>>(getOfflineAction(key)) {
 
             @Override
             public void attempt() {
-                ServicesLocator.getServiceNavigation().getSpacesAndApps(event.getRootSpaceId(), type, this);
+                ServicesLocator.getServiceNavigation().getSpacesAndApps(event.getRootSpaceId(), this);
             }
 
             @Override

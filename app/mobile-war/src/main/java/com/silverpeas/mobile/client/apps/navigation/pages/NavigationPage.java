@@ -17,6 +17,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
@@ -27,6 +28,8 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   private String rootSpaceId;
   private boolean dataLoaded = false;
 
+  protected ApplicationMessages msg = null;
+
   @UiField UnorderedList list;
 
   interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {
@@ -35,6 +38,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   public NavigationPage() {
     initWidget(uiBinder.createAndBindUi(this));
     setPageTitle("Nav");
+    msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(AbstractNavigationPagesEvent.TYPE, this);
     Notification.activityStart();
   }
@@ -73,7 +77,11 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
     if (isVisible()) {
       if (event.getData() instanceof SpaceDTO) {
         NavigationPage subPage = new NavigationPage();
-        subPage.setPageTitle(this.getPageTitle());
+        if (((SpaceDTO) event.getData()).isPersonal()) {
+          subPage.setPageTitle(msg.personalSpace());
+        } else {
+          subPage.setPageTitle(event.getData().getLabel());
+        }
         subPage.setRootSpaceId(event.getData().getId());
         subPage.show();
       } else {

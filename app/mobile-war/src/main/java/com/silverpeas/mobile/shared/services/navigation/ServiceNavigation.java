@@ -13,7 +13,7 @@ import com.silverpeas.mobile.shared.exceptions.NavigationException;
 
 @RemoteServiceRelativePath("Navigation")
 public interface ServiceNavigation extends RemoteService {
-  public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId, String appType) throws NavigationException, AuthenticationException;
+  public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId) throws NavigationException, AuthenticationException;
   public ApplicationInstanceDTO getApp(String instanceId) throws NavigationException, AuthenticationException;
   public HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException;
 }

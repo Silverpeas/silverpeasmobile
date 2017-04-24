@@ -21,6 +21,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("© 2001-2016 <a target='_blank' href='http://www.silverpeas.com'>Silverpeas</a>	- Tous droits réservés")
   SafeHtml copyright();
 
+  @DefaultMessage("Parcourir la plateforme")
+  SafeHtml browser();
+
   @DefaultMessage("Information")
   String infoTitle();
   @DefaultMessage("OK")
@@ -37,6 +40,12 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Mes tâches")
   String tasks();
+
+  @DefaultMessage("Aide")
+  String help();
+
+  @DefaultMessage("Voir mes favoris")
+  SafeHtml appFavortis();
 
   @DefaultMessage("Configuration")
   String config();
@@ -75,4 +84,6 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Erreur système")
   String systemError();
 
+  @DefaultMessage("Espaces")
+  String navigationTitle();
 }

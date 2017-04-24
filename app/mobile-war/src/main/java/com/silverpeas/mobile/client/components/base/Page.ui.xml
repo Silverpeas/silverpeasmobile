@@ -18,5 +18,9 @@
       <g:SimplePanel ui:field="contentPlace"/>
 
     </div>
+
+    <!-- Footer -->
+    <b:PageFooter ui:field="footer"/>
+
   </g:HTMLPanel>
 </ui:UiBinder> 

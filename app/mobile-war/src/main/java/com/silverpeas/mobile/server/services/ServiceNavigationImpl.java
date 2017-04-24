@@ -6,12 +6,14 @@ import com.silverpeas.mobile.server.services.helpers.NewsHelper;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import com.silverpeas.mobile.shared.dto.navigation.Apps;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.HomePageException;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
+import org.apache.commons.lang3.EnumUtils;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -45,7 +47,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     if (spaceId == null || spaceId.isEmpty()) {
       List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPerso(getUserInSession().getId());
       data.setFavorites(FavoritesHelper.getInstance().populate(links));
-      data.setSpacesAndApps(getSpacesAndApps(spaceId, ""));
+      data.setSpacesAndApps(getSpacesAndApps(spaceId));
     }
 
     //TODO : last publications
@@ -54,12 +56,12 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   private boolean isSupportedApp(String appType) {
-    return (appType.equalsIgnoreCase("kmelia") || appType.equalsIgnoreCase("gallery"));
+    return EnumUtils.isValidEnum(Apps.class, appType);
   }
 
   //TODO : remove appType
   @Override
-  public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId, String appType) throws NavigationException, AuthenticationException {
+  public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId) throws NavigationException, AuthenticationException {
     checkUserInSession();
     ArrayList<SilverpeasObjectDTO> results = new ArrayList<SilverpeasObjectDTO>();
     try {
@@ -68,7 +70,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         for (String spaceId : spaceIds) {
           SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
           if (space.getFatherId().equals("0")) {
-            if (containApp(appType,space)) {
+            if (containApp(space)) {
               results.add(populate(space));
             }
           }
@@ -79,7 +81,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         for (String spaceId : spaceIds) {
           SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
           if (("WA"+space.getFatherId()).equals(rootSpaceId)) {
-            if (containApp(appType,space)) {
+            if (containApp(space)) {
               results.add(populate(space));
             }
           }
@@ -89,7 +91,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         String [] appsIds = Administration.get().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
         for (String appId : appsIds) {
           ComponentInstLight app = Administration.get().getComponentInstLight(appId);
-          if (app.getName().equals(appType) && app.getDomainFatherId().equals(rootSpaceId)) {
+          if (isSupportedApp(app.getName()) && app.getDomainFatherId().equals(rootSpaceId)) {
             partialResults.add(populate(app));
           }
         }
@@ -115,11 +117,11 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     return dto;
   }
 
-  private boolean containApp(String appType, SpaceInstLight space) throws Exception {
+  private boolean containApp(SpaceInstLight space) throws Exception {
     String [] appsIds = Administration.get().getAvailCompoIds(space.getId(), getUserInSession().getId());
     for (String appId : appsIds) {
       ComponentInstLight app = Administration.get().getComponentInstLight(appId);
-      if (app.getName().equals(appType)) {
+      if (isSupportedApp(app.getName())) {
         return true;
       }
     }

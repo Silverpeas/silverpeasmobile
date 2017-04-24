@@ -27,13 +27,6 @@ public class NewsApp extends App implements NewsAppEventHandler {
   }
 
   @Override
-  public void startAsWidget(SimplePanel container){
-    EventBus.getInstance().addHandler(AbstractNewsAppEvent.TYPE, this);
-    super.startAsWidget(container);
-    container.add(new NewsPage());
-  }
-
-  @Override
   public void stop() {
     ((NewsPage) container.getWidget()).stop();
     container.clear();
@@ -43,40 +36,8 @@ public class NewsApp extends App implements NewsAppEventHandler {
 
   @Override
   public void loadNews(final NewsLoadEvent event) {
-    Notification.activityStart();
 
-    final SpMobileRequestBuilder rb = new SpMobileRequestBuilder(RequestBuilder.GET, "/silverpeas/services/fragments/news/last/" + SpMobil.getConfiguration().getNewsNumber());
 
-    final String key = "lastNews";
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        String result = LocalStorageHelper.load(key, String.class);
-        if (result == null) {
-          result = new String();
-        }
-        EventBus.getInstance().fireEvent(new NewsLoadedEvent(result));
-      }
-    };
-
-    RequestCallbackOnlineOrOffline action = new RequestCallbackOnlineOrOffline(offlineAction) {
-      @Override
-      public void attempt() {
-        try {
-          rb.sendRequest(null, this);
-        } catch (RequestException caught) {
-          this.onError(caught);
-        }
-      }
-
-      @Override
-      public void onResponseReceived(Request request, Response response) {
-        super.onResponseReceived(request, response);
-        LocalStorageHelper.store(key, String.class, response.getText());
-        EventBus.getInstance().fireEvent(new NewsLoadedEvent(response.getText()));
-      }
-    };
-    action.attempt();
   }
 
   public void updateDisplay() {

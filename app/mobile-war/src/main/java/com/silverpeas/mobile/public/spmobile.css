@@ -1,3 +1,27 @@
+/*
+ * Copyright (C) 2000 - 2017 Silverpeas
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://www.silverpeas.org/docs/core/legal/floss_exception.html"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 /* Globals */
 /* Font
 -----------------------------------------------------------------------------------------------------------*/
@@ -7,15 +31,14 @@ html {
 }
 
 body {
-  padding: 0;
+  padding:44px 0;
   margin: 0;
   background-color: #ececec;
-  padding-top: 57px
 }
 
 body, input, select, textarea, button, .ui-btn {
   font-size: 1em;
-  line-height: 1.3;
+  line-height: 1em;
   font-family: Century gothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", Futura, sans-serif;
   /*{global-font-family}*/;
 }
@@ -139,8 +162,8 @@ legend, .ui-input-text input, .ui-input-search input {
 /* Icons
 -----------------------------------------------------------------------------------------------------------*/
 .ui-btn-icon-left:after, .ui-btn-icon-right:after, .ui-btn-icon-top:after, .ui-btn-icon-bottom:after, .ui-btn-icon-notext:after {
-  background-color: transparent /*{global-icon-color}*/;
-  content: ">";
+  background: transparent url(packImagesNavigation.png) right -963px;
+  content: " ";
 }
 
 /* Alt icons */
@@ -360,12 +383,20 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   outline-style: auto;
 }
 
+.ui-listview li {
+	font-size:0.95em;	
+}
+
 .ui-listview > li:nth-child(odd) a, .list-contacts > li:nth-child(odd), .list-notifications > li:nth-child(odd) {
   background-color: #fff;
 }
 
 .ui-listview > li:nth-child(even) a, .list-contacts > li:nth-child(even), .list-notifications > li:nth-child(even) {
   background-color: #f6f6f6;
+}
+
+.ui-listview li:last-child a {
+	border-bottom-width:1px;	
 }
 
 .ui-page-theme-a .ui-btn.silverpeas-navmenu-link {
@@ -380,9 +411,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-weight: 100;
 }
 
-#header {
+#header,
+#navigation-footer  {
   background-color: #333;
-  height: 55px;
+  height: 46px;
   border-bottom: 2px solid #151515;
   position: fixed;
   width: 100%;
@@ -390,24 +422,63 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   z-index: 1000;
 }
 
+#navigation-footer  {
+  bottom: 0;
+  top:auto;
+  display:flex;
+}
+
+#navigation-footer a {
+  bottom: 0;
+  top:auto;
+  flex:1;
+  text-indent:-300em;
+  border-left:1px solid #151515;
+  border-right:1px solid #444444;
+}
+
+#navigation-footer .btn-list-navigation{
+	background:transparent url(packImagesNavigation.png) center -644px no-repeat;
+}
+
+#navigation-footer .btn-find-contact{
+	background:transparent url(packImagesNavigation.png) center -709px no-repeat;
+}
+
+
+#navigation-footer .btn-update-statut{
+	background:transparent url(packImagesNavigation.png) center -771px no-repeat;
+}
+
+#navigation-footer .btn-list-task{
+	background:transparent url(packImagesNavigation.png) center -835px no-repeat;
+}
+
+
+#navigation-footer .btn-list-favoris{
+	background:transparent url(packImagesNavigation.png) center -892px no-repeat;
+}
+
+
+
 #header h1 {
   color: #fff;
   font-size: 0.8em;
   font-weight: 100;
-  left: 85px;
-  line-height: 53px;
+  left: 60px;
+  line-height: 44px;
   margin: 0;
   overflow: hidden;
   padding: 0;
   position: absolute;
   right: 94px;
   top: 1px;
-  height: 55px;
+  height: 44px;
   text-shadow: 0 1px 0 #000;
 }
 
 .ui-icon-bars:after {
-  width: 25px;
+  width: 18px;
   height: 18px;
   content: "";
   display: block;
@@ -423,8 +494,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .ui-icon-bars {
   border-right: 2px solid #151515;
-  width: 55px;
-  height: 55px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   text-indent: -9999px;
   display: block;
@@ -436,24 +507,19 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #FFF;
   text-shadow: 0 1px 0 #000;
   border: 1px solid #000;
-  height: 33px;
-  line-height: 33px;
+  height: 28px;
+  line-height: 28px;
   padding: 0 1em;
+  font-size:0.8em;
 }
 
 .ui-btn-right.back:hover {
   background: #4c4c4c url() bottom center repeat-x;
-  color: #FFF;
-  text-shadow: 0 1px 0 #000;
-  border: 1px solid #000;
-  height: 33px;
-  line-height: 33px;
-  padding: 0 1em;
 }
 
 /* HOME */
 .ui-panel-wrapper {
-  background: #ececec url(deco-cosse.gif) bottom center no-repeat;
+  background-color: #ececec ;
 }
 
 .ui-page-content {
@@ -489,28 +555,122 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   line-height: 90%;
 }
 
+.bloc .ui-title {
+	text-transform:uppercase;
+	color:#686868;
+	font-weight:100;
+	padding:0.5em 1em 0 1em;
+	font-size:0.8em;
+}
+
+.favoris-bloc a{
+	padding-left:2.5em;
+	font-size:0.8em;
+	background:transparent url(packImagesNavigation.png) 0.5em -1186px no-repeat;
+}
+
+.last-publication-bloc li a {
+	padding-left:4em;
+	font-size:0.8em;
+}
+
+.last-publication-bloc li a .date{    
+	position: absolute;
+    top: 1em;
+    left: 0.5em;
+    font-size: 0.85em;
+    color: #b3b2b2;
+}
+.last-publication-bloc .ui-listview li .ui-btn {     
+	text-overflow: initial;
+    overflow: auto;
+    white-space: inherit;
+}
+
+.carroussel-news {
+	padding:1em 0.75em 1em 0.5em;
+	margin:0;
+	list-style-type:none;
+}
+
+.carroussel-news li > a:first-child {
+	float:left;
+	max-width:40%;
+}
+
+
+.carroussel-news li {
+	height:90px;
+	position:relative;
+}
+.carroussel-news img {
+	max-width:95%;
+	max-height:100px;
+	margin-right:1em;
+}
+
+.carroussel-news .caption {
+	height:5em;
+	overflow:hidden;
+}
+.carroussel-news h2  {
+	font-size:0.75em;
+	padding:0;
+	margin:0 0 0.25em 0;
+}
+.carroussel-news h2 a {
+	font-size:1em;
+	color:#333;
+	text-decoration:none;
+}
+.carroussel-news p {
+	font-size:0.75em;
+	line-height:1em;
+	color:#666666;
+	padding:0;
+	margin:0;
+}
+.carroussel-news .nbIndication {
+	position:absolute;
+	bottom:-0.7em;
+	right:0.5em;
+	font-size:0.85em;
+}
+.carroussel-news .nbIndication span {
+	color:#1c94d4
+}
 /***** MENU****/
 #silverpeas-navmenu-panel {
+	padding: 0;
+	color: #333333;
+	background-color: #f4f4f4;
+	text-shadow:none;
+	position: fixed;
+	font-size:0.8em;
+}
+
+#silverpeas-navmenu-panel .ui-panel-inner {
   padding: 0;
-  color: #FFF;
-  background-color: #606259;
-  text-shadow: 0 1px 0 #000000;
-  position: fixed;
 }
 
 #silverpeas-navmenu-panel #user {
-  margin-top: 92px;
+	margin-top: 54px;
+	padding:0 1em 1em;
 }
 
 #silverpeas-navmenu-panel #user img {
-  float: left;
-  width: 40px;
-  vertical-align: middle;
-  margin-right: 0.25em;
+    float: left;
+    width: 30px;
+    vertical-align: middle;
+    margin-right: 0.25em;
+    border-radius: 30px;
+	margin-right: 0.5em;    
+	border: 1px solid #9d9c9c;
 }
 
 #silverpeas-navmenu-panel #user .statut {
   font-style: italic;
+  color:#9d9c9c;
 }
 
 #silverpeas-navmenu-panel #user .edit-my-statut {
@@ -521,11 +681,11 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #silverpeas-navmenu-panel #navmenu-panel {
-  border-top: 1px solid #80817a;
-  border-bottom: 1px solid #80817a;
+  border-top: 1px solid #d3d3d3;
+  border-bottom: 1px solid #d3d3d3;
   list-style-type: none;
-  padding: 0 0 1em 0;
-  margin: 1em 0;
+  padding: 0;
+  margin:0;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li {
@@ -535,25 +695,35 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #silverpeas-navmenu-panel #navmenu-panel li a {
   text-decoration: none;
-  color: #FFF;
+  color: #333333;
   display: block;
-  padding: 1em 0 1em 32px;
+  padding: 0.5em 0 0.5em 32px;
+  font-size:0.9em;
+  line-height:1.6em;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-config a {
-  background: transparent url(packPictos.png) 4px -520px no-repeat;
+  background: transparent url(packPictos.png) 8px -520px no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-tasks a {
-  background: transparent url(packPictos.png) 4px -394px no-repeat;
+  background: transparent url(packPictos.png) 8px -394px no-repeat;
+}
+
+#silverpeas-navmenu-panel #navmenu-panel li#menu-help a {
+  background: transparent url(packPictos.png) 8px -134px no-repeat;
+}
+
+#silverpeas-navmenu-panel #navmenu-panel li#menu-parameter a {
+  background: transparent url(packPictos.png) 8px -98px no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-home a {
-  background: transparent url(packPictos.png) 4px -23px no-repeat;
+  background: transparent url(packPictos.png) 8px -25px no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-logout a {
-  background: transparent url(packPictos.png) 6px -82px no-repeat;
+  background: transparent url(packPictos.png) 8px -63px no-repeat;
 }
 
 #menu-principal li a strong {
@@ -579,7 +749,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /***** NAVIGATION ****/
-.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a,
+.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a, .app-actuality a,
  .publication.ui-input-text{
   background-image: url(packImagesNavigation.png);
   background-position: 0.5625em 0.5625em;
@@ -587,16 +757,20 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 2.056em
 }
 
+.app-actuality a {
+  background-position:0.5em -1022px;
+}
+
 .folder-ged a {
-  background-position: 0.5625em 0.5625em;
+  background-position:0.5em 0.5625em;
 }
 
 .folder-galery a {
-  background-position: 0.5625em -89px;
+  background-position: 0.5em -89px;
 }
 
 .publication a {
-  background-position: 0.5625em -184px;
+  background-position:0.5em -184px;
 }
 
 .trash a {
@@ -604,7 +778,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .media a {
-  background-position: 0.5625em -287px;
+  background-position: 0.5em -287px;
 }
 
 .media-thumb:first-child {
@@ -1125,24 +1299,27 @@ textarea.ui-input-text {
 }
 
 .searchBox {
-  border: 0 none;
-  border-radius: 14px;
+  border:1px solid #d3d3d3;
+  border-radius: 3px;
   width: 80%;
-  background-color: #80817a;
-  color: #FFF;
+  background-color:#FFF;
+  color: #666;
   padding: 5px;
   outline-style: none;
 }
 
 .searchButton {
-  width: 10%;
-  padding: 0 0 0 5px !important;
-  display: inline !important;
+    width: 20px;
+    height: 17px;
+    background: transparent url(packPictos.png) bottom left no-repeat;
+    text-indent: -300em;
+    display: inline-block;
 }
 
 #menu-search {
-  position: absolute;
-  top: 66px;
+  background:#efefef;
+  padding:1em;
+  border-top:1px solid #d3d3d3;
 }
 
 #menu-config {

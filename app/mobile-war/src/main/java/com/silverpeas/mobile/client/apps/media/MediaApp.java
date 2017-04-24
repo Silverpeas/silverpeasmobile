@@ -12,7 +12,6 @@ import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.*;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
-import com.silverpeas.mobile.client.apps.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -30,6 +29,7 @@ import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.media.*;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import com.silverpeas.mobile.shared.dto.navigation.Apps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
     @Override
     public void start() {
-        navApp.setTypeApp(Apps.gallery.name());
+        //navApp.setTypeApp(Apps.gallery.name());
         navApp.setTitle(msg.title());
         navApp.start();
 
@@ -162,12 +162,14 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
     @Override
     public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
+      if (event.getInstance().getType().equals(Apps.gallery.name())) {
         this.commentable = event.getInstance().isCommentable();
         this.notifiable = event.getInstance().isNotifiable();
         MediaNavigationPage page = new MediaNavigationPage();
-        page.setPageTitle(msg.title());
+        page.setPageTitle(event.getInstance().getLabel());
         page.init(event.getInstance().getId(), null, event.getInstance().getRights());
         page.show();
+      }
     }
 
     @Override

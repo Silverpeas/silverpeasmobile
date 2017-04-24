@@ -5,10 +5,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.navigation.Apps;
+import com.silverpeas.mobile.shared.dto.navigation.Apps;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.ClickItemEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -45,6 +46,8 @@ public class NavigationItem extends Composite {
         setStyleName("folder-ged");
       } else if (type.equalsIgnoreCase(Apps.gallery.name())) {
         setStyleName("folder-galery");
+      } else if (type.equalsIgnoreCase(Apps.quickinfo.name())) {
+        setStyleName("app-actuality");
       }
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");

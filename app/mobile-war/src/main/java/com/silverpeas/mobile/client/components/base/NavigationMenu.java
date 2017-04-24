@@ -48,7 +48,6 @@ import com.silverpeas.mobile.client.apps.config.ConfigApp;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.apps.status.events.StatusEvents;
 
-import com.silverpeas.mobile.client.apps.tasks.TasksApp;
 import com.silverpeas.mobile.client.common.AuthentificationManager;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
@@ -68,7 +67,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
   @UiField HTMLPanel container, user;
-  @UiField Anchor home, disconnect, updateStatus, searchButton, tasks, config;
+  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config;
   @UiField SpanElement status;
   @UiField TextBox search;
 
@@ -133,10 +132,9 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     closeMenu();
   }
 
-  @UiHandler("tasks")
-  protected void goTasks(ClickEvent event) {
-    App app = new TasksApp();
-    app.start();
+  @UiHandler("help")
+  protected void goHelp(ClickEvent event) {
+    //TODO
     closeMenu();
   }
 

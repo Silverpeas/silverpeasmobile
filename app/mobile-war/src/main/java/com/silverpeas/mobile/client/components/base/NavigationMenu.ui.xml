@@ -10,11 +10,16 @@
         <span id="userName"></span>
         <br /><span class="statut"><span ui:field="status"></span><g:Anchor  ui:field="updateStatus" styleName="edit-my-statut" text="{msg.editStatus}"></g:Anchor></span>
       </g:HTMLPanel>
+
+      <div id="menu-search">
+        <g:TextBox ui:field="search" styleName="searchBox"/>
+        <g:Anchor ui:field="searchButton" styleName="searchButton" text="{msg.search}"/>
+      </div>
+
       <ul id="navmenu-panel">
-        <li id="menu-search"><g:TextBox ui:field="search" styleName="searchBox"/><g:Anchor ui:field="searchButton" styleName="searchButton" text="{msg.search}"/></li>
         <li id="menu-home"><g:Anchor ui:field="home" styleName="ui-link" text="{msg.home}"/></li>
-        <li id="menu-tasks"><g:Anchor ui:field="tasks" styleName="ui-link" text="{msg.tasks}"/></li>
-        <li id="menu-config"><g:Anchor ui:field="config" styleName="ui-link" text="{msg.config}"/></li>
+        <li id="menu-parameter"><g:Anchor ui:field="config" styleName="ui-link" text="{msg.config}"/></li>
+        <li id="menu-help"><g:Anchor ui:field="help" styleName="ui-link" text="{msg.help}"/></li>
         <li id="menu-logout"><g:Anchor ui:field="disconnect" styleName="ui-link" text="{msg.disconnect}"/></li>
       </ul>
     </div>
