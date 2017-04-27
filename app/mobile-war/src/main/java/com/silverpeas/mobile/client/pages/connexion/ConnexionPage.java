@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.pages.connexion;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -67,7 +68,12 @@ public class ConnexionPage extends PageContent {
         domains.getElement().setId("DomainId");
         form.getElement().setId("formLogin");
 
-        DOM.getElementById("page-login-title").setInnerText(ResourcesManager.getLabel("login.title"));
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+        @Override
+        public void execute() {
+          DOM.getElementById("page-login-title").setInnerHTML(ResourcesManager.getLabel("login.title"));
+        }
+      });
     }
 
     /**
