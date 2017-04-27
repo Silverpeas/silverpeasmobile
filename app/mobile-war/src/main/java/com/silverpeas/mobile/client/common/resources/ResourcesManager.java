@@ -47,6 +47,7 @@ public class ResourcesManager {
     }
     if (labels.containsKey(key)) {
       label = labels.get(key).toString();
+      label = label.substring(1, label.length()-1);
     }
     return label;
   }
