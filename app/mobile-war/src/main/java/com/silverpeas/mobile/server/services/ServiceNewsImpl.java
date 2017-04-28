@@ -2,6 +2,7 @@ package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.comparator.DelegatedNewsBeginDateComparatorAsc;
+import com.silverpeas.mobile.server.services.helpers.NewsHelper;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.NewsException;
@@ -10,6 +11,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsServiceProvider;
+import org.silverpeas.core.admin.ObjectType;
+import org.silverpeas.core.admin.service.AdminException;
+import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
@@ -32,95 +37,18 @@ public class ServiceNewsImpl extends AbstractAuthenticateService implements Serv
 
   private static final long serialVersionUID = 1L;
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+  private OrganizationController organizationController = OrganizationController.get();
 
   @Override
-  public List<NewsDTO> loadNews() throws NewsException, AuthenticationException {
+  public List<NewsDTO> getNews(String instanceId) throws NewsException, AuthenticationException {
     checkUserInSession();
-    ArrayList<NewsDTO> news = new ArrayList<NewsDTO>();
-    //TODO
-    List<DelegatedNews> delegatedNews = getDelegatedNewsService().getAllValidDelegatedNews();
-
-    // Keep only visible news
-    List<DelegatedNews> visibleNews = new ArrayList<DelegatedNews>();
-    Date now = new Date();
-    for (DelegatedNews delegated : delegatedNews) {
-      Date beginDate = delegated.getBeginDate();
-      Date endDate = delegated.getEndDate();
-      if ((beginDate == null || (beginDate != null && now.after(beginDate))) &&
-          (endDate == null || (endDate != null && now.before(endDate)))) {
-        visibleNews.add(delegated);
-      }
+    try {
+      boolean managerAccess = Administration.get().isComponentManageable(instanceId, getUserInSession().getId());
+      List<PublicationDetail> pubs = NewsHelper.getInstance().getNewsByComponentId(instanceId, managerAccess);
+      List<NewsDTO> news = NewsHelper.getInstance().populate(pubs, managerAccess);
+      return news;
+    } catch (AdminException e) {
+      throw new  NewsException(e);
     }
-
-    Collections.sort(visibleNews, new DelegatedNewsBeginDateComparatorAsc());
-    Collections.reverse(visibleNews);
-
-    // Sort news according to begin date
-    for (DelegatedNews delegated : visibleNews) {
-      try {
-        delegated.getPublicationDetail().setBeginDate(delegated.getBeginDate());
-        news.add(populate(delegated.getPublicationDetail()));
-      } catch (Exception e) {
-        // delegated news refers a deleted publication
-        SilverLogger.getLogger(SpMobileLogModule.getName()).warn("ServiceNewsImpl.getNews", "CANT_GET_NEWS", "PublicationId = "+delegated.getPubId());
-        throw new NewsException(e.getMessage());
-      }
-    }
-    return news;
-  }
-
-  private NewsDTO populate(PublicationDetail pub) throws NewsException {
-    NewsDTO news = new NewsDTO();
-    news.setId(pub.getId());
-    news.setTitle(pub.getTitle());
-    news.setDescription(pub.getDescription());
-    news.setUpdateDate(sdf.format(pub.getUpdateDate()));
-    news.setVignette(getBase64ImageData(pub.getInstanceId(), pub));
-    news.setInstanceId(pub.getInstanceId());
-    return news;
-  }
-
-  private String getBase64ImageData(String instanceId, PublicationDetail pub) throws NewsException {
-    String data = "";
-    if (!pub.getImage().contains("GalleryInWysiwyg")) {
-      String[] rep = {"images"};
-      String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-      File f = new File(path + pub.getImage());
-      try {
-        FileInputStream is = new FileInputStream(f);
-        byte[] binaryData = new byte[(int) f.length()];
-        is.read(binaryData);
-        is.close();
-        data = "data:" + pub.getImageMimeType() + ";base64," +
-            new String(Base64.encodeBase64(binaryData));
-      } catch (Exception e) {
-        throw new NewsException(e);
-      }
-    } else {
-      String id = pub.getImage().substring(pub.getImage().indexOf("ImageId") + "ImageId".length() +1);
-      id = id.substring(0, id.indexOf("&"));
-      String imageMimeType = pub.getImageMimeType();
-      instanceId = pub.getImage().substring(pub.getImage().indexOf("ComponentId") + "ComponentId".length() +1);
-      instanceId = instanceId.substring(0, instanceId.indexOf("&"));
-      try {
-        SettingBundle gallerySettings = ResourceLocator.getSettingBundle("com.silverpeas.gallery.settings.gallerySettings");
-        String nomRep = gallerySettings.getString("imagesSubDirectory") + id;
-        String[] rep = {nomRep};
-        String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-        /*File f = new File(path + id + PhotoSize.SMALL.getPrefix());
-        FileInputStream is = new FileInputStream(f);
-        byte[] binaryData = new byte[(int) f.length()];
-        is.read(binaryData);
-        is.close();
-        data = "data:" + imageMimeType + ";base64," + new String(Base64.encodeBase64(binaryData));*/
-      } catch (Exception e) {
-        throw new NewsException(e);
-      }
-    }
-    return data;
-  }
-
-  private DelegatedNewsService getDelegatedNewsService() {
-    return DelegatedNewsServiceProvider.getDelegatedNewsService();
   }
 }

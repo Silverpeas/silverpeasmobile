@@ -46,10 +46,6 @@ public abstract class App implements AppEventHandler {
     PageHistory.getInstance().goTo(mainPage);
   }
 
-  public void startAsWidget(SimplePanel container){
-    this.container = container;
-  }
-
   public void startWithContent(ContentDTO content) {
 
   }

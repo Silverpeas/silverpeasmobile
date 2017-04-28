@@ -6,5 +6,5 @@ import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 import java.util.List;
 
 public interface ServiceNewsAsync {
-  void loadNews(final AsyncCallback<List<NewsDTO>> async);
+  void getNews(String instanceId, final AsyncCallback<List<NewsDTO>> async);
 }

@@ -35,6 +35,7 @@ import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.media.MediaApp;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
+import com.silverpeas.mobile.client.apps.news.NewsApp;
 import com.silverpeas.mobile.client.common.*;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
@@ -97,6 +98,7 @@ public class SpMobil implements EntryPoint {
         // Instanciate apps
         DocumentsApp gedApp = new DocumentsApp();
         MediaApp mediaApp = new MediaApp();
+        NewsApp newsApp = new NewsApp();
         NavigationApp navApp = new NavigationApp();
 
         Notification.activityStop();

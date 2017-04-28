@@ -6,9 +6,9 @@ import java.util.List;
 
 public class NewsLoadedEvent extends AbstractNewsPagesEvent {
 
-  private String news;
+  private List<NewsDTO> news;
 
-  public NewsLoadedEvent(String news){
+  public NewsLoadedEvent(List<NewsDTO> news){
     super();
     this.news = news;
   }
@@ -18,7 +18,7 @@ public class NewsLoadedEvent extends AbstractNewsPagesEvent {
     handler.onNewsLoad(this);
   }
 
-  public String getNews() {
+  public List<NewsDTO> getNews() {
     return news;
   }
 }

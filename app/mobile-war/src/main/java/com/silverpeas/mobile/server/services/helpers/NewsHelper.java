@@ -107,7 +107,7 @@ public class NewsHelper {
       } catch (MissingResourceException e) {}
       if (newsSource != null && newsSource.isEmpty() == false) {
           if (newsSource.startsWith("quickinfo")) {
-            return getNewsByComponentId(newsSource);
+            return getNewsByComponentId(newsSource, false);
           } else {
             return getDelegatedNews();
           }
@@ -133,14 +133,18 @@ public class NewsHelper {
     return news;
   }
 
-  private List<PublicationDetail> getNewsByComponentId(String appId) {
+  public List<PublicationDetail> getNewsByComponentId(String appId, boolean managerAccess) {
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
     List<PublicationDetail> allNews = new ArrayList<PublicationDetail>();
-    List<News> news = service.getVisibleNews(appId);
+    List<News> news;
+    if (managerAccess) {
+      news = service.getAllNews(appId);
+    } else {
+      news = service.getVisibleNews(appId);
+    }
     for (News aNews: news) {
       allNews.add(aNews.getPublication());
     }
-
     return allNews;
   }
 
@@ -150,6 +154,8 @@ public class NewsHelper {
     news.setTitle(pub.getTitle());
     news.setDescription(pub.getDescription());
     news.setUpdateDate(sdf.format(pub.getUpdateDate()));
+    news.setDraft(pub.isDraft());
+    news.setVisible(pub.isVisible());
     try {
       news.setVignette(getBase64ImageData(pub.getInstanceId(), pub));
     } catch(Exception e) {e.printStackTrace();}
@@ -157,11 +163,12 @@ public class NewsHelper {
     return news;
   }
 
-  public List<NewsDTO> populate(List<PublicationDetail> pubs) {
+  public List<NewsDTO> populate(List<PublicationDetail> pubs, boolean managerAccess) {
     List<NewsDTO> dtos = new ArrayList<NewsDTO>();
     if (pubs != null) {
       for (PublicationDetail pub : pubs) {
         NewsDTO dto = populate(pub);
+        dto.setManagable(managerAccess);
         dtos.add(dto);
       }
     }
@@ -185,7 +192,7 @@ public class NewsHelper {
       String path = FileRepositoryManager.getAbsolutePath(componentId) + publicationSettings.getString("imagesSubDirectory", "fr") + File.separatorChar;
       path += pub.getImage();
       File originalFile = new File(path);
-      String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), "165x");
+      String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), "x90");
       path = processor.processBefore(askedPath, SilverpeasFileProcessor.ProcessingContext.GETTING);
       File file = new File(path);
       return file;

@@ -10,5 +10,5 @@ import java.util.List;
 
 @RemoteServiceRelativePath("News")
 public interface ServiceNews extends RemoteService {
-  public List<NewsDTO> loadNews() throws NewsException, AuthenticationException;
+  public List<NewsDTO> getNews(String instanceId) throws NewsException, AuthenticationException;
 }

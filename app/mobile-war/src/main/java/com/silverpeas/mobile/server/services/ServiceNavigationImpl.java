@@ -21,6 +21,7 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.mylinks.model.LinkDetail;
+import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationHelper;
@@ -38,7 +39,15 @@ import java.util.List;
 public class ServiceNavigationImpl extends AbstractAuthenticateService implements ServiceNavigation {
 
   private static final long serialVersionUID = 1L;
+  private static boolean showLastPublicationsOnHomePage;
+  private static boolean showLastPublicationsOnSpaceHomePage;
   private OrganizationController organizationController = OrganizationController.get();
+
+  static {
+    SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    showLastPublicationsOnHomePage = mobileSettings.getBoolean("homepage.lastpublications", true);
+    showLastPublicationsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastpublications", true);
+  }
 
   @Override
   public HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException {
@@ -46,7 +55,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     HomePageDTO data = new HomePageDTO();
 
     List<PublicationDetail> lastNews = NewsHelper.getInstance().getLastNews(getUserInSession().getId(), spaceId);
-    data.setNews(NewsHelper.getInstance().populate(lastNews));
+    data.setNews(NewsHelper.getInstance().populate(lastNews, false));
 
     if (spaceId == null || spaceId.isEmpty()) {
       List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPersoVisible(getUserInSession().getId());
@@ -55,28 +64,33 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     data.setSpacesAndApps(getSpacesAndApps(spaceId));
 
     // last publications
-    try {
-      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
-      ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
-      SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
-      int max;
-      if (spaceId == null) {
-        max = settings.getInteger("home.publications.nb", 3);
-      } else {
-        max = settings.getInteger("space.homepage.latestpublications.nb", 3);
-      }
-      List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
-      for (PublicationDetail pub : pubs) {
-        PublicationDTO dto = new PublicationDTO();
-        dto.setId(pub.getId());
-        dto.setName(pub.getName());
-        dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
-        dto.setInstanceId(pub.getInstanceId());
-        lastPubs.add(dto);
-      }
-      data.setLastPublications(lastPubs);
 
-    } catch(Exception e) {e.printStackTrace();}
+    if ((spaceId == null && showLastPublicationsOnHomePage) || (spaceId != null && showLastPublicationsOnSpaceHomePage)) {
+      try {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+        ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
+        SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+        int max;
+        if (spaceId == null) {
+          max = settings.getInteger("home.publications.nb", 3);
+        } else {
+          max = settings.getInteger("space.homepage.latestpublications.nb", 3);
+        }
+        List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
+        for (PublicationDetail pub : pubs) {
+          PublicationDTO dto = new PublicationDTO();
+          dto.setId(pub.getId());
+          dto.setName(pub.getName());
+          dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
+          dto.setInstanceId(pub.getInstanceId());
+          lastPubs.add(dto);
+        }
+        data.setLastPublications(lastPubs);
+
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
 
     return data;
   }

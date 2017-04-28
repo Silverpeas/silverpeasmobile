@@ -13,6 +13,13 @@ public class NewsDTO extends BaseDTO implements Serializable {
   private String updateDate;
   private String vignette;
   private String instanceId;
+  private boolean draft;
+  private boolean visible;
+
+  private boolean managable = false;
+
+  public NewsDTO() {
+  }
 
   @Override
   public boolean equals(Object obj) {
@@ -57,5 +64,30 @@ public class NewsDTO extends BaseDTO implements Serializable {
 
   public String getInstanceId() {
     return instanceId;
+  }
+
+  public boolean isManagable() {
+    return managable;
+  }
+
+  public void setManagable(final boolean managable) {
+    this.managable = managable;
+  }
+
+
+  public boolean isVisible() {
+    return visible;
+  }
+
+  public void setVisible(final boolean visible) {
+    this.visible = visible;
+  }
+
+  public boolean isDraft() {
+    return draft;
+  }
+
+  public void setDraft(final boolean draft) {
+    this.draft = draft;
   }
 }

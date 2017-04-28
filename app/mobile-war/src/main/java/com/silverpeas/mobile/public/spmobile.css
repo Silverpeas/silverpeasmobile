@@ -604,8 +604,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	position:relative;
 }
 .carroussel-news img {
-	max-width:95%;
-	max-height:100px;
+	max-width:120px;
+	max-height:90px;
 	margin-right:1em;
 }
 

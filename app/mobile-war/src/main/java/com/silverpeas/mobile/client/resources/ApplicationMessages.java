@@ -93,4 +93,10 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Les dernières publications")
   SafeHtml lastPublications();
 
+  @DefaultMessage("brouillon")
+  String draft();
+
+  @DefaultMessage("pas encore ou plus visible")
+  String notVisible();
+
 }
