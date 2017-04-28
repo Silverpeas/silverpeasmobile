@@ -6,7 +6,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.silverpeas.mobile.client.apps.documents.events.app.AbstractDocumentsAppEvent;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsAppEventHandler;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
@@ -16,10 +15,10 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.publication.Publ
 import com.silverpeas.mobile.client.apps.documents.pages.GedNavigationPage;
 import com.silverpeas.mobile.client.apps.documents.pages.PublicationPage;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
@@ -33,6 +32,7 @@ import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.ContentDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -47,9 +47,8 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     private ApplicationMessages globalMsg;
     private DocumentsMessages msg;
 
-    private NavigationApp navApp = new NavigationApp();
     private boolean commentable, ableToStoreContent, notifiable;
-    private Anchor sourceLink;
+    //private Anchor sourceLink;
 
     public DocumentsApp() {
         super();
@@ -59,32 +58,21 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         EventBus.getInstance().addHandler(AbstractDocumentsAppEvent.TYPE, this);
     }
 
-    public void setSourceLink(Anchor source) {
-        this.sourceLink = source;
-    }
-
     @Override
     public void start() {
-        //navApp.setTypeApp(Apps.kmelia.name());
-        navApp.setTitle(msg.title());
-        navApp.start();
-
-        // apps main is navigation apps main page
-        setMainPage(navApp.getMainPage());
-
-        super.start();
+      // no "super.start(lauchingPage);" this apps is used in another apps
     }
 
     @Override
-    public void startWithContent(final String appId, final String contentType, final String contentId) {
-        if (contentType.equals(ContentsTypes.Publication.toString())) {
+    public void startWithContent(final ContentDTO content) {
+        if (content.getType().equals(ContentsTypes.Publication.toString())) {
             ableToStoreContent = true;
         }
         AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
             @Override
             public void attempt() {
-                ServicesLocator.getServiceNavigation().getApp(appId, this);
+                ServicesLocator.getServiceNavigation().getApp(content.getInstanceId(), this);
             }
 
             @Override
@@ -92,22 +80,22 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
                 OfflineHelper.hideOfflineIndicator();
                 commentable = app.isCommentable();
                 notifiable = app.isNotifiable();
-                displayContent(appId, contentType, contentId);
+                displayContent(content);
             }
         };
         action.attempt();
     }
 
-    private void displayContent(String appId, String contentType, String contentId) {
-        if (contentType.equals(ContentsTypes.Publication.toString())) {
+    private void displayContent(final ContentDTO content) {
+        if (content.getType().equals(ContentsTypes.Publication.toString())) {
             PublicationPage page = new PublicationPage();
             page.setPageTitle(msg.publicationTitle());
             setMainPage(page);
             page.show();
-            EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(contentId));
-        } else if(contentType.equals(ContentsTypes.Attachment.toString())) {
+            EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content.getId()));
+        } else if(content.getType().equals(ContentsTypes.Attachment.toString())) {
             final DocumentsApp app = this;
-            ServicesLocator.getServiceDocuments().getAttachment(contentId, appId, new AsyncCallback<AttachmentDTO>() {
+            ServicesLocator.getServiceDocuments().getAttachment(content.getId(), content.getInstanceId(), new AsyncCallback<AttachmentDTO>() {
                 @Override
                 public void onFailure(final Throwable caught) {
                     EventBus.getInstance().fireEvent(new ErrorEvent(caught));
@@ -124,9 +112,9 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
                             page.setPageTitle(attachement.getTitle());
                             page.show();
                         } else {
-                            sourceLink.setHref(url);
-                            sourceLink.setTarget("_self");
-                            clickElement(sourceLink.getElement());
+                            content.getLink().setHref(url);
+                          content.getLink().setTarget("_self");
+                            clickElement(content.getLink().getElement());
                             app.stop();
                         }
 
@@ -146,7 +134,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     public void stop() {
         EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
         EventBus.getInstance().removeHandler(AbstractDocumentsAppEvent.TYPE, this);
-        navApp.stop();
         super.stop();
     }
 
@@ -164,7 +151,14 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
     }
 
-    /**
+  @Override
+  public void showContent(final NavigationShowContentEvent event) {
+    if (event.getContent().getType().equals(ContentsTypes.Publication.name()) || event.getContent().getType().equals(ContentsTypes.Attachment.name())) {
+      startWithContent(event.getContent());
+    }
+  }
+
+  /**
      * Get subtopics.
      */
     @Override

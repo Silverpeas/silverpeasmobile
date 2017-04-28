@@ -29,6 +29,7 @@ import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomePageDTO extends BaseDTO implements Serializable{
@@ -36,9 +37,9 @@ public class HomePageDTO extends BaseDTO implements Serializable{
   private static final long serialVersionUID = 5388415881024885835L;
 
   private List<SilverpeasObjectDTO> spacesAndApps;
-  private List<NewsDTO> news;
-  private List<FavoriteDTO> favorites;
-  private List<PublicationDTO> lastPublications;
+  private List<NewsDTO> news = new ArrayList<NewsDTO>();
+  private List<FavoriteDTO> favorites = new ArrayList<FavoriteDTO>();
+  private List<PublicationDTO> lastPublications = new ArrayList<PublicationDTO>();
 
   public List<PublicationDTO> getLastPublications() {
     return lastPublications;

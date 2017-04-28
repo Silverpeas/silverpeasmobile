@@ -31,6 +31,7 @@ import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.components.base.events.apps.AbstractAppEvent;
 import com.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import com.silverpeas.mobile.client.components.base.events.apps.AppEventHandler;
+import com.silverpeas.mobile.shared.dto.ContentDTO;
 
 public abstract class App implements AppEventHandler {
 
@@ -49,7 +50,7 @@ public abstract class App implements AppEventHandler {
     this.container = container;
   }
 
-  public void startWithContent(String appId, String contentType, String contentId) {
+  public void startWithContent(ContentDTO content) {
 
   }
 

@@ -71,7 +71,7 @@ public class ServiceNewsImpl extends AbstractAuthenticateService implements Serv
 
   private NewsDTO populate(PublicationDetail pub) throws NewsException {
     NewsDTO news = new NewsDTO();
-    news.setId(Integer.parseInt(pub.getId()));
+    news.setId(pub.getId());
     news.setTitle(pub.getTitle());
     news.setDescription(pub.getDescription());
     news.setUpdateDate(sdf.format(pub.getUpdateDate()));

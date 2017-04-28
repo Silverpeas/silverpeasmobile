@@ -1,30 +1,22 @@
 package com.silverpeas.mobile.shared.dto.news;
 
+import com.silverpeas.mobile.shared.dto.BaseDTO;
+
 import java.io.Serializable;
 
-public class NewsDTO implements Serializable {
+public class NewsDTO extends BaseDTO implements Serializable {
 
   private static final long serialVersionUID = 2921606984249560882L;
 
-  private int id;
   private String title;
   private String description;
   private String updateDate;
   private String vignette;
   private String instanceId;
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-
   @Override
   public boolean equals(Object obj) {
-    return ((NewsDTO) obj).getId() == id;
+    return ((NewsDTO) obj).getId().equals(getId());
   }
 
   public String getVignette() {

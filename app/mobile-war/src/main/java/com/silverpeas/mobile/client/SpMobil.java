@@ -33,6 +33,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.media.MediaApp;
+import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
+import com.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import com.silverpeas.mobile.client.common.*;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
@@ -51,8 +53,10 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.configuration.Config;
+import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -93,6 +97,7 @@ public class SpMobil implements EntryPoint {
         // Instanciate apps
         DocumentsApp gedApp = new DocumentsApp();
         MediaApp mediaApp = new MediaApp();
+        NavigationApp navApp = new NavigationApp();
 
         Notification.activityStop();
     }
@@ -163,16 +168,16 @@ public class SpMobil implements EntryPoint {
 
           @Override
           public void attempt() {
+            Notification.activityStart();
             ServicesLocator.getServiceNavigation().getHomePageData(null, this);
           }
 
           @Override
           public void onSuccess(HomePageDTO result) {
             super.onSuccess(result);
+            // send event to main home page
+            EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
             LocalStorageHelper.store(key, HomePageDTO.class, result);
-
-            //TODO : send event to main page
-            //EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
           }
         };
         action.attempt();
@@ -187,8 +192,8 @@ public class SpMobil implements EntryPoint {
           if (result == null) {
             result = new HomePageDTO();
           }
-          //TODO : send event to main page
-          //EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
+          // send event to main home page
+          EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
         }
       };
       return offlineAction;

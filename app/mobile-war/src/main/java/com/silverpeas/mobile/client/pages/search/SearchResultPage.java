@@ -9,10 +9,13 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.media.MediaApp;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.ContentDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
 
@@ -48,28 +51,21 @@ public class SearchResultPage extends PageContent implements View {
       link.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(final ClickEvent event) {
+          ContentDTO content = new ContentDTO();
+          content.setId(result.getId());
+          content.setType(result.getType());
+          content.setInstanceId(result.getComponentId());
           if (result.getType().equals(ContentsTypes.Attachment.toString())) {
-            if (((Anchor)event.getSource()).getHref().isEmpty()) {
-              DocumentsApp app = new DocumentsApp();
-              app.setSourceLink(link);
-              app.startWithContent(result.getComponentId(), result.getType(), result.getAttachmentId());
+            Anchor l = ((Anchor)event.getSource());
+            if (l.getHref().isEmpty()) {
+              content.setLink(l);
             }
-          } else if (result.getType().equals(ContentsTypes.Publication.toString())) {
-            App app = new DocumentsApp();
-            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
-          } else if (result.getType().equals(ContentsTypes.Photo.toString())) {
-            App app = new MediaApp();
-            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
-          } else if (result.getType().equals(ContentsTypes.Sound.toString())) {
-            App app = new MediaApp();
-            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
-          } else if (result.getType().equals(ContentsTypes.Video.toString())) {
-            App app = new MediaApp();
-            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
-          } else if (result.getType().equals(ContentsTypes.Streaming.toString())) {
-            App app = new MediaApp();
-            app.startWithContent(result.getComponentId(), result.getType(), result.getId());
           }
+          EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+
+
+
+
         }
       });
       link.setText(result.getTitle());

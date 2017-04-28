@@ -29,7 +29,25 @@
   <ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages'/>
 
   <g:HTMLPanel>
-    <l:homepage.HomePageContent ui:field="content"/>
+
+
+      <div id="actus">
+          <l:UnorderedList ui:field="news" styleName="carroussel-news"/>
+      </div>
+
+      <div>
+        <l:UnorderedList ui:field="spaces" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+      </div>
+      <g:HTMLPanel stylePrimaryName="favoris-bloc bloc" ui:field="favorisSection">
+        <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.favorites}"/></h3>
+        <l:UnorderedList ui:field="favoris" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+      </g:HTMLPanel>
+
+      <g:HTMLPanel stylePrimaryName="last-publication-bloc bloc" ui:field="lastPublicationsSection">
+        <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.lastPublications}"/></h3>
+        <l:UnorderedList ui:field="lastPublications" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+      </g:HTMLPanel>
+
   </g:HTMLPanel>
 
 </ui:UiBinder> 

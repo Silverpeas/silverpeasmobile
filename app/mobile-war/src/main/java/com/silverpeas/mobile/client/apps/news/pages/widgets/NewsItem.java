@@ -10,9 +10,11 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import com.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
+import com.silverpeas.mobile.shared.dto.ContentDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 
@@ -27,8 +29,11 @@ public class NewsItem {
     @Override
     public void onClick(ClickEvent event) {
       Anchor a = (Anchor) event.getSource();
-      App app = new DocumentsApp();
-      app.startWithContent(componentId, ContentsTypes.Publication.toString(), id);
+      ContentDTO content = new ContentDTO();
+      content.setId(id);
+      content.setType(ContentsTypes.Publication.toString());
+      content.setInstanceId(componentId);
+      EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
     }
   };
 

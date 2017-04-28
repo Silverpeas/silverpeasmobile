@@ -86,4 +86,11 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Espaces")
   String navigationTitle();
+
+  @DefaultMessage("Mes favoris")
+  SafeHtml favorites();
+
+  @DefaultMessage("Les dernières publications")
+  SafeHtml lastPublications();
+
 }

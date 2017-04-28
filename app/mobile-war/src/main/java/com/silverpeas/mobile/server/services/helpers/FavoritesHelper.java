@@ -53,6 +53,17 @@ public class FavoritesHelper {
     return (List<LinkDetail>) getMyLinksBm().getAllLinksByUser(userId);
   }
 
+  public List<LinkDetail> getBookmarkPersoVisible(String userId) {
+    ArrayList<LinkDetail> linksVisibles = new ArrayList<LinkDetail>();
+    List<LinkDetail> links = (List<LinkDetail>) getMyLinksBm().getAllLinksByUser(userId);
+    for (LinkDetail link : links) {
+      if (link.isVisible()) {
+        linksVisibles.add(link);
+      }
+    }
+    return linksVisibles;
+  }
+
   private MyLinksService getMyLinksBm() {
     return ServiceProvider.getService(MyLinksService.class);
   }

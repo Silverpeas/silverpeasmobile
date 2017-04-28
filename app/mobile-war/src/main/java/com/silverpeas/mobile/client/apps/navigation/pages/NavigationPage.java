@@ -5,18 +5,20 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.AbstractNavigationPagesEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.ClickItemEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPagesEventHandler;
-import com.silverpeas.mobile.client.apps.navigation.events.pages.SpacesAndAppsLoadedEvent;
 import com.silverpeas.mobile.client.apps.navigation.pages.widgets.NavigationItem;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.client.components.homepage.HomePageContent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
@@ -30,7 +32,8 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 
   protected ApplicationMessages msg = null;
 
-  @UiField UnorderedList list;
+  @UiField
+  HomePageContent content;
 
   interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {
   }
@@ -44,17 +47,9 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   }
 
   @Override
-  public void spacesAndAppsLoaded(SpacesAndAppsLoadedEvent event) {
-
+  public void homePageLoaded(HomePageLoadedEvent event) {
     if (isVisible() && dataLoaded == false) {
-
-      list.clear();
-      List<SilverpeasObjectDTO> objectsList = event.getObjectsList();
-      for (SilverpeasObjectDTO silverpeasObjectDTO : objectsList) {
-        NavigationItem item = new NavigationItem();
-        item.setData(silverpeasObjectDTO);
-        list.add(item);
-      }
+      content.setData(event.getData());
       dataLoaded = true;
     }
     Notification.activityStop();
@@ -69,6 +64,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   @Override
   public void stop() {
     super.stop();
+    content.stop();
     EventBus.getInstance().removeHandler(AbstractNavigationPagesEvent.TYPE, this);
   }
 

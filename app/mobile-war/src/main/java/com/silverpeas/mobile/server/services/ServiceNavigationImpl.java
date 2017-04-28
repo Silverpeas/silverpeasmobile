@@ -5,6 +5,7 @@ import com.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import com.silverpeas.mobile.server.services.helpers.NewsHelper;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
+import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.Apps;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
@@ -40,17 +41,17 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     checkUserInSession();
     HomePageDTO data = new HomePageDTO();
 
-    List<PublicationDetail> lastNews = NewsHelper
-        .getInstance().getLastNews(getUserInSession().getId(), spaceId);
+    List<PublicationDetail> lastNews = NewsHelper.getInstance().getLastNews(getUserInSession().getId(), spaceId);
     data.setNews(NewsHelper.getInstance().populate(lastNews));
 
     if (spaceId == null || spaceId.isEmpty()) {
-      List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPerso(getUserInSession().getId());
+      List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPersoVisible(getUserInSession().getId());
       data.setFavorites(FavoritesHelper.getInstance().populate(links));
-      data.setSpacesAndApps(getSpacesAndApps(spaceId));
     }
+    data.setSpacesAndApps(getSpacesAndApps(spaceId));
 
     //TODO : last publications
+    data.setLastPublications(new ArrayList<PublicationDTO>());
 
     return data;
   }

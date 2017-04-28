@@ -68,10 +68,7 @@ public class PageFooter extends Composite {
 
   @UiHandler("browse")
   protected void browse(ClickEvent event) {
-    //TODO
-    NavigationApp navApp = new NavigationApp();
-    navApp.setTitle(msg.navigationTitle());
-    navApp.start();
+    PageHistory.getInstance().goBackToFirst();
   }
 
   @UiHandler("favoris")

@@ -25,7 +25,6 @@
 package com.silverpeas.mobile.server.services.helpers;
 
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
-import com.silverpeas.mobile.shared.exceptions.NewsException;
 import org.apache.commons.codec.binary.Base64;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsServiceProvider;
@@ -36,7 +35,10 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
+import org.silverpeas.core.io.file.ImageResizingProcessor;
+import org.silverpeas.core.io.file.SilverpeasFileProcessor;
 import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
@@ -45,6 +47,8 @@ import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,8 +63,10 @@ import java.util.MissingResourceException;
 public class NewsHelper {
 
   private static NewsHelper instance;
+  private static ImageResizingProcessor processor = ServiceProvider.getService(ImageResizingProcessor.class);
   private OrganizationController organizationController = OrganizationController.get();
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+  private SettingBundle publicationSettings = ResourceLocator.getSettingBundle("org.silverpeas.publication.publicationSettings");
 
   public static NewsHelper getInstance() {
     if (instance == null) {
@@ -140,7 +146,7 @@ public class NewsHelper {
 
   public NewsDTO populate(PublicationDetail pub) {
     NewsDTO news = new NewsDTO();
-    news.setId(Integer.parseInt(pub.getId()));
+    news.setId(pub.getId());
     news.setTitle(pub.getTitle());
     news.setDescription(pub.getDescription());
     news.setUpdateDate(sdf.format(pub.getUpdateDate()));
@@ -164,31 +170,28 @@ public class NewsHelper {
 
   private String getBase64ImageData(String instanceId, PublicationDetail pub) throws Exception {
     String data = "";
-    if (!pub.getImage().contains("GalleryInWysiwyg")) {
-      String[] rep = {"images"};
-      String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-      File f = new File(path + pub.getImage());
+    File f = getActuThumb(instanceId, pub);
 
-      FileInputStream is = new FileInputStream(f);
-      byte[] binaryData = new byte[(int) f.length()];
-      is.read(binaryData);
-      is.close();
-      data = "data:" + pub.getImageMimeType() + ";base64," +
-            new String(Base64.encodeBase64(binaryData));
+    FileInputStream is = new FileInputStream(f);
+    byte[] binaryData = new byte[(int) f.length()];
+    is.read(binaryData);
+    is.close();
+    data = "data:" + pub.getImageMimeType() + ";base64," + new String(Base64.encodeBase64(binaryData));
 
-    } else {
-      String id = pub.getImage().substring(pub.getImage().indexOf("ImageId") + "ImageId".length() +1);
-      id = id.substring(0, id.indexOf("&"));
-      String imageMimeType = pub.getImageMimeType();
-      instanceId = pub.getImage().substring(pub.getImage().indexOf("ComponentId") + "ComponentId".length() +1);
-      instanceId = instanceId.substring(0, instanceId.indexOf("&"));
-
-      SettingBundle gallerySettings = ResourceLocator.getSettingBundle("com.silverpeas.gallery.settings.gallerySettings");
-      String nomRep = gallerySettings.getString("imagesSubDirectory") + id;
-      String[] rep = {nomRep};
-      String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-
-    }
     return data;
+  }
+
+  private File getActuThumb(String componentId,	PublicationDetail pub) throws IOException {
+      String path = FileRepositoryManager.getAbsolutePath(componentId) + publicationSettings.getString("imagesSubDirectory", "fr") + File.separatorChar;
+      path += pub.getImage();
+      File originalFile = new File(path);
+      String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), "165x");
+      path = processor.processBefore(askedPath, SilverpeasFileProcessor.ProcessingContext.GETTING);
+      File file = new File(path);
+      return file;
+  }
+
+  private String pathForOriginalImageSize(File originalImage,String name, String size) {
+    return originalImage.getParent() + File.separator + size + File.separator + name;
   }
 }

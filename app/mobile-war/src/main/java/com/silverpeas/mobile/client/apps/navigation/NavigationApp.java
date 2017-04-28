@@ -5,17 +5,20 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppEventHandler;
-import com.silverpeas.mobile.client.apps.navigation.events.pages.SpacesAndAppsLoadedEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import com.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 
 public class NavigationApp extends App implements NavigationAppEventHandler {
@@ -51,35 +54,36 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
 
     @Override
     public void loadSpacesAndApps(final LoadSpacesAndAppsEvent event) {
-
         //TODO : replace call getSpaceAndApps by getHomePage
         final String key = "spaceapp_" + event.getRootSpaceId();
-        AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<SilverpeasObjectDTO>>(getOfflineAction(key)) {
 
-            @Override
-            public void attempt() {
-                ServicesLocator.getServiceNavigation().getSpacesAndApps(event.getRootSpaceId(), this);
-            }
+      AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<HomePageDTO>(getOfflineAction(key)) {
 
-            @Override
-            public void onSuccess(List<SilverpeasObjectDTO> result) {
-                super.onSuccess(result);
-                LocalStorageHelper.store(key, List.class, result);
-                EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
-            }
-        };
-        action.attempt();
+        @Override
+        public void attempt() {
+          Notification.activityStart();
+          ServicesLocator.getServiceNavigation().getHomePageData(event.getRootSpaceId(), this);
+        }
+
+        @Override
+        public void onSuccess(HomePageDTO result) {
+          super.onSuccess(result);
+          EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
+          LocalStorageHelper.store(key, HomePageDTO.class, result);
+        }
+      };
+      action.attempt();
     }
 
     private Command getOfflineAction(final String key) {
         Command offlineAction = new Command() {
 
             public void execute() {
-                List<SilverpeasObjectDTO> result = LocalStorageHelper.load(key, List.class);
+                HomePageDTO result = LocalStorageHelper.load(key, HomePageDTO.class);
                 if (result == null) {
-                    result = new ArrayList<SilverpeasObjectDTO>();
+                    result = new HomePageDTO();
                 }
-                EventBus.getInstance().fireEvent(new SpacesAndAppsLoadedEvent(result));
+                EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
             }
         };
         return offlineAction;
