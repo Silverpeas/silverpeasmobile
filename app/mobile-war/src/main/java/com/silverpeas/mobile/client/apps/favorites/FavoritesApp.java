@@ -1,0 +1,97 @@
+/*
+ * Copyright (C) 2000 - 2017 Silverpeas
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://www.silverpeas.org/docs/core/legal/floss_exception.html"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package com.silverpeas.mobile.client.apps.favorites;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
+import com.silverpeas.mobile.client.apps.favorites.events.app.FavoritesAppEventHandler;
+import com.silverpeas.mobile.client.apps.favorites.events.app.FavoritesLoadEvent;
+import com.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
+import com.silverpeas.mobile.client.apps.favorites.pages.FavoritesPage;
+import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.ServicesLocator;
+import com.silverpeas.mobile.client.common.app.App;
+import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.FavoriteDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class FavoritesApp extends App implements FavoritesAppEventHandler {
+
+    private ApplicationMessages msg;
+
+    public FavoritesApp(){
+        super();
+        msg = GWT.create(ApplicationMessages.class);
+    }
+
+    public void start(){
+        EventBus.getInstance().addHandler(AbstractFavoritesAppEvent.TYPE, this);
+        setMainPage(new FavoritesPage());
+        super.start();
+    }
+
+    @Override
+    public void stop() {
+        EventBus.getInstance().removeHandler(AbstractFavoritesAppEvent.TYPE, this);
+        super.stop();
+    }
+
+    @Override
+    public void loadFavorites(final FavoritesLoadEvent event) {
+      final String key = "favorites";
+      Command offlineAction = new Command() {
+
+        @Override
+        public void execute() {
+          List<FavoriteDTO> result = LocalStorageHelper.load(key, List.class);
+          if (result == null) {
+            result = new ArrayList<FavoriteDTO>();
+          }
+          EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(result));
+        }
+      };
+
+      AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<FavoriteDTO>>(offlineAction) {
+        @Override
+        public void attempt() {
+          ServicesLocator.getServiceFavorites().getFavorites(this);
+        }
+
+        @Override
+        public void onSuccess(List<FavoriteDTO> result) {
+          super.onSuccess(result);
+          LocalStorageHelper.store(key, List.class, result);
+          EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(result));
+        }
+      };
+      action.attempt();
+    }
+}

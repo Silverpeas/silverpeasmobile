@@ -30,12 +30,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
+import com.silverpeas.mobile.client.apps.favorites.FavoritesApp;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.apps.tasks.TasksApp;
@@ -73,7 +75,8 @@ public class PageFooter extends Composite {
 
   @UiHandler("favoris")
   protected void goFavoris(ClickEvent event) {
-    //TODO
+    App app = new FavoritesApp();
+    app.start();
   }
 
   @UiHandler("tasks")

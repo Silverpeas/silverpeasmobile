@@ -24,6 +24,15 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>serviceFavoritesImpl</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.services.ServiceFavoritesImpl</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>serviceFavoritesImpl</servlet-name>
+    <url-pattern>/services/spmobile/Favorites</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>serviceNewsImpl</servlet-name>
     <servlet-class>com.silverpeas.mobile.server.services.ServiceNewsImpl</servlet-class>
   </servlet>
