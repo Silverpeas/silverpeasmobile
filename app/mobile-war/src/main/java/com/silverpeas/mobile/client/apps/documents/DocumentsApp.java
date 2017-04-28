@@ -115,7 +115,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
                             content.getLink().setHref(url);
                           content.getLink().setTarget("_self");
                             clickElement(content.getLink().getElement());
-                            app.stop();
                         }
 
                     } catch (JavaScriptException e) {
@@ -132,9 +131,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
     @Override
     public void stop() {
-        EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
-        EventBus.getInstance().removeHandler(AbstractDocumentsAppEvent.TYPE, this);
-        super.stop();
+        // never stop
     }
 
     @Override

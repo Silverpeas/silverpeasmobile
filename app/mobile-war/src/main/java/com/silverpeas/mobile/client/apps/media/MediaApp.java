@@ -174,10 +174,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void stop() {
-    EventBus.getInstance().removeHandler(AbstractMediaAppEvent.TYPE, this);
-    EventBus.getInstance().removeHandler(AbstractNavigationEvent.TYPE, this);
-    //navApp.stop();
-    super.stop();
+    // never stop this app
   }
 
   @Override

@@ -25,13 +25,19 @@
 package com.silverpeas.mobile.client.apps.navigation.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.shared.dto.FavoriteDTO;
+import com.silverpeas.mobile.shared.dto.ContentDTO;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
 public class PublicationItem extends Composite {
@@ -54,5 +60,14 @@ public class PublicationItem extends Composite {
     this.data = data;
     link.setHTML(data.getName() + "<span class='date'>"+data.getUpdateDate()+"</span>");
     link.setStyleName("ui-btn ui-icon-carat-r");
+  }
+
+  @UiHandler("link")
+  protected void onClick(ClickEvent event) {
+    ContentDTO content = new ContentDTO();
+    content.setId(data.getId());
+    content.setType(ContentsTypes.Publication.name());
+    content.setInstanceId(data.getInstanceId());
+    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
   }
 }

@@ -21,8 +21,12 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.mylinks.model.LinkDetail;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.core.web.look.PublicationHelper;
+import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,8 +54,29 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     }
     data.setSpacesAndApps(getSpacesAndApps(spaceId));
 
-    //TODO : last publications
-    data.setLastPublications(new ArrayList<PublicationDTO>());
+    // last publications
+    try {
+      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+      ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
+      SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+      int max;
+      if (spaceId == null) {
+        max = settings.getInteger("home.publications.nb", 3);
+      } else {
+        max = settings.getInteger("space.homepage.latestpublications.nb", 3);
+      }
+      List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
+      for (PublicationDetail pub : pubs) {
+        PublicationDTO dto = new PublicationDTO();
+        dto.setId(pub.getId());
+        dto.setName(pub.getName());
+        dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
+        dto.setInstanceId(pub.getInstanceId());
+        lastPubs.add(dto);
+      }
+      data.setLastPublications(lastPubs);
+
+    } catch(Exception e) {e.printStackTrace();}
 
     return data;
   }
@@ -202,4 +227,16 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
     return dto;
   }
+
+
+  private PublicationHelper getPublicationHelper() throws Exception {
+    SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+    String helperClassName = settings.getString("publicationHelper", "org.silverpeas.components.kmelia.KmeliaTransversal");
+    Class<?> helperClass = Class.forName(helperClassName);
+    PublicationHelper kmeliaTransversal = (PublicationHelper) helperClass.newInstance();
+    kmeliaTransversal.setMainSessionController(getMainSessionController());
+
+    return kmeliaTransversal;
+  }
+
 }

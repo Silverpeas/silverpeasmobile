@@ -44,8 +44,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
 
     @Override
     public void stop() {
-        EventBus.getInstance().removeHandler(AbstractNavigationAppEvent.TYPE, this);
-        super.stop();
+        // never stop
     }
 
     public void setTitle(String title) {
