@@ -84,7 +84,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   @Override
   public void startWithContent(final ContentDTO content) {
     ServicesLocator.getServiceNavigation()
-        .getApp(content.getInstanceId(), new AsyncCallback<ApplicationInstanceDTO>() {
+        .getApp(content.getInstanceId(), content.getId(), content.getType(), new AsyncCallback<ApplicationInstanceDTO>() {
           @Override
           public void onFailure(final Throwable caught) {
             if (OfflineHelper.needToGoOffine(caught)) {

@@ -29,12 +29,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.ClickItemEvent;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.ShortCutRouter;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.FavoriteDTO;
 
 public class FavoriteItem extends Composite {
@@ -56,8 +60,29 @@ public class FavoriteItem extends Composite {
   public void setData(FavoriteDTO data) {
     this.data = data;
     link.setText(data.getName());
-    link.setHref(data.getUrl());
-    link.setTarget("_blank");
+
+    if(data.getUrl().startsWith("/")) {
+      // internal link
+      link.setHref("#");
+    } else {
+      link.setHref(data.getUrl());
+      link.setTarget("_blank");
+    }
     link.setStyleName("ui-btn ui-icon-carat-r");
   }
+
+  @UiHandler("link")
+  protected void onClick(ClickEvent event) {
+    if(data.getUrl().startsWith("/")) {
+      String shortcutContentType = "";
+      String shortcutContentId = data.getUrl().substring(data.getUrl().lastIndexOf("/") + 1);
+      if (data.getUrl().contains("Publication")) {
+        shortcutContentType = ContentsTypes.Publication.name();
+      } else if (data.getUrl().contains("Media")) {
+        shortcutContentType = ContentsTypes.Media.name();
+      }
+      ShortCutRouter.route(SpMobil.user, null, shortcutContentType, shortcutContentId);
+    }
+  }
+
 }

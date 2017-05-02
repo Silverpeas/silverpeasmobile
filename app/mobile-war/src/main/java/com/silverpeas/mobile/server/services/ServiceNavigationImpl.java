@@ -3,6 +3,8 @@ package com.silverpeas.mobile.server.services;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import com.silverpeas.mobile.server.services.helpers.NewsHelper;
+import com.silverpeas.mobile.shared.dto.ContentDTO;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -15,11 +17,16 @@ import com.silverpeas.mobile.shared.exceptions.HomePageException;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import org.apache.commons.lang3.EnumUtils;
+import org.silverpeas.components.gallery.model.Media;
+import org.silverpeas.components.gallery.model.MediaPK;
+import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
+import org.silverpeas.core.contribution.publication.model.PublicationPK;
+import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
@@ -146,13 +153,27 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   @Override
-  public ApplicationInstanceDTO getApp(String instanceId) throws NavigationException, AuthenticationException {
+  public ApplicationInstanceDTO getApp(String instanceId, String contentId, String contentType) throws NavigationException, AuthenticationException {
+    if (instanceId == null) {
+      if (contentType.equals(ContentsTypes.Publication.name())) {
+        PublicationDetail pub = PublicationService.get().getDetail(new PublicationPK(contentId));
+        instanceId = pub.getInstanceId();
+      } else if(contentType.equals(ContentsTypes.Media.name())) {
+        Media media = MediaServiceProvider.getMediaService().getMedia(new MediaPK(contentId));
+        instanceId = media.getInstanceId();
+      }
+    }
+    return getApplicationInstanceDTO(instanceId);
+  }
+
+  private ApplicationInstanceDTO getApplicationInstanceDTO(final String instanceId) {
     ApplicationInstanceDTO dto = null;
     try {
       ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
       dto = populate(app);
-    } catch(Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getApp", "root.EX_NO_MESSAGE", e);
+    } catch (Exception e) {
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error("ServiceNavigationImpl.getApp", "root.EX_NO_MESSAGE", e);
     }
     return dto;
   }

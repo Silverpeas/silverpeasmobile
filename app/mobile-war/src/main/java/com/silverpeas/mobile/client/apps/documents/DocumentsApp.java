@@ -72,7 +72,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
             @Override
             public void attempt() {
-                ServicesLocator.getServiceNavigation().getApp(content.getInstanceId(), this);
+                ServicesLocator.getServiceNavigation().getApp(content.getInstanceId(), content.getId(), content.getType(), this);
             }
 
             @Override

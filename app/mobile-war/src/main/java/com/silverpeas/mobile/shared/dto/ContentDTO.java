@@ -63,7 +63,7 @@ public class ContentDTO implements  Serializable {
     this.link = link;
   }
 
-  public Anchor getLink() {
+  public  Anchor getLink() {
     return link;
   }
 }
