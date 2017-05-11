@@ -75,6 +75,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
   private HomePageDTO data;
   private int currentNewsIndex = 0;
+  private Config config = null;
 
   @UiField(provided = true)
   protected ApplicationMessages msg = null;
@@ -90,32 +91,34 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     Config conf = SpMobil.getConfiguration();
-
-    /*Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-      @Override
-      public void execute() {
-
-      }
-    });*/
-
+    setConfig(conf);
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
+  }
+
+  public void setConfig(final Config config) {
+    this.config = config;
+    favorisSection.setVisible(config.isFavoritesDisplay());
+    lastPublicationsSection.setVisible(config.isLastPublicationsDisplay());
+    news.setVisible(config.isNewsDisplay());
   }
 
   public void setData(HomePageDTO data) {
     this.data = data;
 
     news.clear();
-    List<NewsDTO> newsDTOList = data.getNews();
-    int i = 1;
-    boolean v = true;
-    int max = newsDTOList.size();
-    for (NewsDTO newsDTO : newsDTOList) {
-      NewsItem item = new NewsItem();
-      item.setData(i, max, newsDTO);
-      item.setVisible(v);
-      news.add(item);
-      i++;
-      v = false;
+    if (config.isNewsDisplay()) {
+      List<NewsDTO> newsDTOList = data.getNews();
+      int i = 1;
+      boolean v = true;
+      int max = newsDTOList.size();
+      for (NewsDTO newsDTO : newsDTOList) {
+        NewsItem item = new NewsItem();
+        item.setData(i, max, newsDTO);
+        item.setVisible(v);
+        news.add(item);
+        i++;
+        v = false;
+      }
     }
 
     spaces.clear();
@@ -126,23 +129,26 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
       spaces.add(item);
     }
 
+
     favoris.clear();
     List<FavoriteDTO> favoritesList = data.getFavorites();
-    favorisSection.setVisible(!favoritesList.isEmpty());
+    favorisSection.setVisible(!favoritesList.isEmpty() && config.isFavoritesDisplay());
     for (FavoriteDTO favoriteDTO : favoritesList) {
       FavoriteItem item = new FavoriteItem();
       item.setData(favoriteDTO);
       favoris.add(item);
     }
 
+
     lastPublications.clear();
     List<PublicationDTO> publicationsList = data.getLastPublications();
-    lastPublicationsSection.setVisible(!publicationsList.isEmpty());
+    lastPublicationsSection.setVisible(!publicationsList.isEmpty() && config.isLastPublicationsDisplay());
     for (PublicationDTO publicationDTO : publicationsList) {
       PublicationItem item = new PublicationItem();
       item.setData(publicationDTO);
       lastPublications.add(item);
     }
+
 
     if (MobilUtils.isMobil()) {
       Element e = Document.get().getElementById("actus");

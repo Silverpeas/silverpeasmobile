@@ -53,7 +53,9 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
   @UiField
   CheckBox newsDisplay;
   @UiField
-  TextBox newsNumber;
+  CheckBox lastPublicationsDisplay;
+  @UiField
+  CheckBox favoritesDisplay;
   private Config config;
   public ConfigPage() {
     initWidget(uiBinder.createAndBindUi(this));
@@ -79,14 +81,15 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
   @Override
   public void onConfigLoaded(ConfigLoadedEvent event) {
     config = event.getConfig();
-    newsNumber.setText(String.valueOf(config.getNewsNumber()));
-    newsNumber.getElement().getStyle().setWidth(2, Style.Unit.EM);
     newsDisplay.setValue(config.isNewsDisplay());
+    lastPublicationsDisplay.setValue(config.isLastPublicationsDisplay());
+    favoritesDisplay.setValue(config.isFavoritesDisplay());
   }
 
   private void save() {
-    config.setNewsNumber(Integer.parseInt(newsNumber.getText()));
     config.setNewsDisplay(newsDisplay.getValue());
+    config.setFavoritesDisplay(favoritesDisplay.getValue());
+    config.setLastPublicationsDisplay(lastPublicationsDisplay.getValue());
     EventBus.getInstance().fireEvent(new UpdateConfigEvent(config));
   }
 

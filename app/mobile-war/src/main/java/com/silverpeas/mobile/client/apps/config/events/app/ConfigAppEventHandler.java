@@ -30,6 +30,4 @@ public interface ConfigAppEventHandler extends EventHandler {
   void updateConfig(UpdateConfigEvent event);
 
   void loadConfig(LoadConfigEvent event);
-
-  void configChanged(ConfigChangedEvent event);
 }

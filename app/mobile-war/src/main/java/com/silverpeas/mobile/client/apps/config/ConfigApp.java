@@ -24,9 +24,9 @@
 
 package com.silverpeas.mobile.client.apps.config;
 
+import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.config.events.app.AbstractConfigAppEvent;
 import com.silverpeas.mobile.client.apps.config.events.app.ConfigAppEventHandler;
-import com.silverpeas.mobile.client.apps.config.events.app.ConfigChangedEvent;
 import com.silverpeas.mobile.client.apps.config.events.app.LoadConfigEvent;
 import com.silverpeas.mobile.client.apps.config.events.app.UpdateConfigEvent;
 import com.silverpeas.mobile.client.apps.config.events.pages.ConfigLoadedEvent;
@@ -55,7 +55,6 @@ public class ConfigApp extends App implements ConfigAppEventHandler {
   public void stop() {
     EventBus.getInstance().removeHandler(AbstractConfigAppEvent.TYPE, this);
     super.stop();
-    EventBus.getInstance().fireEvent(new ConfigChangedEvent());
   }
 
 
@@ -74,15 +73,7 @@ public class ConfigApp extends App implements ConfigAppEventHandler {
 
   @Override
   public void loadConfig(LoadConfigEvent event) {
-    Config c = LocalStorageHelper.load("config", Config.class);
-    if (c == null) {
-      c = Config.getDefaultConfig();
-    }
-    EventBus.getInstance().fireEvent(new ConfigLoadedEvent(c));
-  }
-
-  @Override
-  public void configChanged(ConfigChangedEvent event) {
-
+    Config conf = SpMobil.getConfiguration();
+    EventBus.getInstance().fireEvent(new ConfigLoadedEvent(conf));
   }
 }

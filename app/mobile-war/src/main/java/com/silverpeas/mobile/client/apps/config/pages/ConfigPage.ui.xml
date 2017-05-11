@@ -27,20 +27,26 @@
 
   <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
 
-
+  <g:HTMLPanel stylePrimaryName="last-publication-bloc bloc">
+    <h3 class="title-bloc-part ui-title">Page d'accueil</h3>
     <ul class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
-      <li>
-        <a class="ui-btn">
-        <g:InlineLabel>Nombre d'actualités affichés</g:InlineLabel>
-        <g:TextBox ui:field="newsNumber"></g:TextBox>
-        </a>
-      </li>
       <li>
         <a class="ui-btn">
         <g:CheckBox ui:field="newsDisplay" text="Afficher les dernières actualités"></g:CheckBox>
         </a>
       </li>
+      <li>
+        <a class="ui-btn">
+          <g:CheckBox ui:field="lastPublicationsDisplay" text="Afficher les dernières publications"></g:CheckBox>
+        </a>
+      </li>
+      <li>
+        <a class="ui-btn">
+          <g:CheckBox ui:field="favoritesDisplay" text="Afficher les favoris"></g:CheckBox>
+        </a>
+      </li>
     </ul>
+  </g:HTMLPanel>
   </g:HTMLPanel>
 
 </ui:UiBinder>

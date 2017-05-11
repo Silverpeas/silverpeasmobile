@@ -32,23 +32,18 @@ public class Config extends BaseDTO implements Serializable {
 
   private int newsNumber;
   private boolean newsDisplay;
+  private boolean lastPublicationsDisplay;
+  private boolean favoritesDisplay;
 
   public Config() {
   }
 
   public static Config getDefaultConfig() {
     Config c = new Config();
-    c.setNewsDisplay(false);
-    c.setNewsNumber(5);
+    c.setNewsDisplay(true);
+    c.setLastPublicationsDisplay(true);
+    c.setFavoritesDisplay(true);
     return c;
-  }
-
-  public int getNewsNumber() {
-    return newsNumber;
-  }
-
-  public void setNewsNumber(int newsNumber) {
-    this.newsNumber = newsNumber;
   }
 
   public boolean isNewsDisplay() {
@@ -57,5 +52,21 @@ public class Config extends BaseDTO implements Serializable {
 
   public void setNewsDisplay(boolean newsDisplay) {
     this.newsDisplay = newsDisplay;
+  }
+
+  public boolean isLastPublicationsDisplay() {
+    return lastPublicationsDisplay;
+  }
+
+  public void setLastPublicationsDisplay(final boolean lastPublicationsDisplay) {
+    this.lastPublicationsDisplay = lastPublicationsDisplay;
+  }
+
+  public boolean isFavoritesDisplay() {
+    return favoritesDisplay;
+  }
+
+  public void setFavoritesDisplay(final boolean favoritesDisplay) {
+    this.favoritesDisplay = favoritesDisplay;
   }
 }

@@ -28,12 +28,10 @@ package com.silverpeas.mobile.client.pages.main;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.config.events.app.AbstractConfigAppEvent;
 import com.silverpeas.mobile.client.apps.config.events.app.ConfigAppEventHandler;
-import com.silverpeas.mobile.client.apps.config.events.app.ConfigChangedEvent;
 import com.silverpeas.mobile.client.apps.config.events.app.LoadConfigEvent;
 import com.silverpeas.mobile.client.apps.config.events.app.UpdateConfigEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -111,25 +109,10 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
   }
 
   @Override
-  public void updateConfig(UpdateConfigEvent event) {}
+  public void updateConfig(UpdateConfigEvent event) {
+    content.setConfig(event.getConfig());
+  }
 
   @Override
   public void loadConfig(LoadConfigEvent event) {}
-
-  @Override
-  public void configChanged(ConfigChangedEvent event) {
-    /*if (!SpMobil.getConfiguration().isNewsDisplay()) {
-      if (newsApp != null) {
-        newsApp.stop();
-        newsApp = null;
-      }
-    } else {
-      if (newsApp == null) {
-        //TODO : fixe it (NewsApp not receive LoadNewsEvent)
-
-      } else {
-        newsApp.updateDisplay();
-      }
-    }*/
-  }
 }
