@@ -38,6 +38,7 @@ import com.google.gwt.user.client.Window;
 public class ResourcesManager {
 
   private static JSONObject labels = null;
+  private static JSONObject params = null;
 
   public static String getLabel(String key) {
     String label = "";
@@ -52,10 +53,24 @@ public class ResourcesManager {
     return label;
   }
 
+  public static String getParam(String key) {
+    String param = "";
+    if (params == null) {
+      String json = JsonUtils.stringify(getParams());
+      params = JSONParser.parseStrict(json).isObject();
+    }
+    if (params.containsKey(key)) {
+      param = params.get(key).toString();
+      param = param.substring(1, param.length()-1);
+    }
+    return param;
+  }
 
   public static native JavaScriptObject getLabels() /*-{
     return $wnd.labels;
   }-*/;
 
-
+  public static native JavaScriptObject getParams() /*-{
+    return $wnd.params;
+  }-*/;
 }

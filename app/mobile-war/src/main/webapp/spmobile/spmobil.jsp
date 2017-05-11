@@ -24,15 +24,14 @@
     if (!l.equalsIgnoreCase("fr")) {
       l = "en";
     }
-    LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.mobileSettings", l);
-    String css = resource.getString("styleSheet");
-    if (css != null && !css.isEmpty()) {
-      out.println("<link rel='stylesheet' type='text/css' href='" + css + "'>");
-    }
 
     LocalizationBundle resourceLabels = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", l);
     Map<String, String> map = ResourceBundleHelper.convertResourceBundleToMap(resourceLabels);
     String jsonLabels = new ObjectMapper().writeValueAsString(map);
+
+    LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.mobileSettings", l);
+    Map<String, String> mapConfig = ResourceBundleHelper.convertResourceBundleToMap(resource);
+    String jsonParams = new ObjectMapper().writeValueAsString(mapConfig);
   %>
 
   <meta name="gwt:property" content="locale=<%=l%>">
@@ -47,7 +46,7 @@
   <script type="text/javascript" src="<%=appUrl%>/spmobile/spmobile.nocache.js"></script>
   <script>
     var labels = <% out.println(jsonLabels); %>;
-
+    var params = <% out.println(jsonParams); %>;
     function resize() {
       var windowHeight = window.innerHeight;
       document.body.style.height = windowHeight + "px";
@@ -56,7 +55,15 @@
 
   <view:includePlugin name="tkn"/>
 
-</head>
+  <%
+    String css = resource.getString("styleSheet");
+    if (css != null && !css.isEmpty()) {
+      out.println("<link rel='stylesheet' type='text/css' href='" + css + "'>");
+    }
+  %>
+
+
+    </head>
 <body class="ui-panel-wrapper ui-page-theme-a csspinner traditional" onload="resize();">
 </body>
 

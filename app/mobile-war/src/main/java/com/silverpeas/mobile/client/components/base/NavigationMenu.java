@@ -53,6 +53,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.common.resources.ResourcesManager;
 import com.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
@@ -84,6 +85,11 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     container.getElement().setId("silverpeas-navmenu-panel");
     container.getElement().getStyle().setHeight(Window.getClientHeight(), Unit.PX);
     user.getElement().setId("user");
+    String url = ResourcesManager.getParam("help.url");
+    if (url != null && !url.isEmpty()) {
+      help.setHref(url);
+      help.setTarget("_blank");
+    }
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
 
@@ -134,7 +140,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   @UiHandler("help")
   protected void goHelp(ClickEvent event) {
-    //TODO
     closeMenu();
   }
 
