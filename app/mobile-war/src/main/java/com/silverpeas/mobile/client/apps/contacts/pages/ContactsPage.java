@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.contacts.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -46,6 +47,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   private ContactItem itemWaiting;
   private boolean callingNexData = false;
   private boolean noMoreData = false;
+  private static Scheduler.RepeatingCommand command = null;
 
 
   interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
@@ -107,11 +109,22 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   protected void filter(KeyUpEvent event) {
     if(!currentFilter.equalsIgnoreCase(filter.getText())) {
       currentFilter = filter.getText();
-      list.clear();
-      pageSize = 0;
-      startIndex = 0;
-      EventBus.getInstance()
-          .fireEvent(new ContactsLoadEvent(filter.getText(), computePageSize(), startIndex));
+
+      if (command == null) {
+        command = new Scheduler.RepeatingCommand() {
+          @Override
+          public boolean execute() {
+            list.clear();
+            pageSize = 0;
+            startIndex = 0;
+            EventBus.getInstance()
+                .fireEvent(new ContactsLoadEvent(filter.getText(), computePageSize(), startIndex));
+            ContactsPage.command = null;
+            return false;
+          }
+        };
+        Scheduler.get().scheduleFixedDelay(command, 300);
+      }
     }
   }
 
