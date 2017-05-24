@@ -18,18 +18,31 @@ import org.silverpeas.core.index.search.model.MatchingIndexEntry;
 import org.silverpeas.core.index.search.model.ParseException;
 import org.silverpeas.core.index.search.model.QueryDescription;
 import org.silverpeas.core.socialnetwork.relationship.RelationShipService;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 public class ServiceContactImpl extends AbstractAuthenticateService implements ServiceContact {
 
   private static final long serialVersionUID = 1L;
   private OrganizationController organizationController = OrganizationController.get();
   private RelationShipService relationShipService = RelationShipService.get();
+  private static List<String> domainsIds = new ArrayList<String>();
+
+  static {
+    SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    String domains = mobileSettings.getString("directory.domains", "");
+    StringTokenizer stk = new StringTokenizer(domains,",");
+    while(stk.hasMoreTokens()) {
+      domainsIds.add(stk.nextToken());
+    }
+  }
 
   /**
    * Return list of DetailUserDTO of my contacts
@@ -110,7 +123,10 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
               ContactDetail contact = YellowpagesService.get().getContactDetail(new ContactPK(objectId, result.getComponent()));
               results.add(contact);
             } else if (result.getObjectType().equals("UserFull")) {
-              results.add(organizationController.getUserDetail(objectId));
+              UserDetail userDetail = organizationController.getUserDetail(objectId);
+              if (domainsIds.isEmpty() || domainsIds.contains(userDetail.getDomainId())) {
+                results.add(userDetail);
+              }
             }
           }
         }
