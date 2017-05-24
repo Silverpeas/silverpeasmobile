@@ -3,11 +3,12 @@ package com.silverpeas.mobile.client.apps.contacts.events.app;
 
 public class ContactsLoadEvent extends AbstractContactsAppEvent{
 
-  private String filter;
+  private String filter, type;
   private int pageSize, startIndex;
 
-  public ContactsLoadEvent(String filter, int pageSize, int startIndex){
+  public ContactsLoadEvent(String type, String filter, int pageSize, int startIndex){
     super();
+    this.type = type;
     this.filter = filter;
     this.pageSize = pageSize;
     this.startIndex = startIndex;
@@ -28,5 +29,9 @@ public class ContactsLoadEvent extends AbstractContactsAppEvent{
 
   public int getStartIndex() {
     return startIndex;
+  }
+
+  public String getType() {
+    return type;
   }
 }

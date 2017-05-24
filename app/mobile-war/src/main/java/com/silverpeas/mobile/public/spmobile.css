@@ -1039,20 +1039,26 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /********** CONTACT *******/
-#btn-my-contacts > span {
-  background: transparent url(packPictos.png) 4px -241px no-repeat;
-  padding-left: 40px;
-  display: block;
-  line-height: 0.8em;
-  text-align: left
+#btn-my-contacts, #btn-all-contacts, #btn-all-contactsext {
+  padding-left: 5px;
 }
 
-#btn-all-contacts > span {
-  background: transparent url(packPictos.png) 4px -170px no-repeat;
-  padding-left: 40px;
+#btn-my-contacts > span, #btn-all-contacts > span {
+  background: transparent url(packPictos.png) 4px -241px no-repeat;
+  padding-left: 30px;
   display: block;
   line-height: 0.8em;
-  text-align: left
+  text-align: left;
+  font-size: 0.8em;
+}
+
+#btn-all-contactsext > span {
+  background: transparent url(packPictos.png) 4px -170px no-repeat;
+  padding-left: 30px;
+  display: block;
+  line-height: 0.8em;
+  text-align: left;
+  font-size: 0.8em;
 }
 
 .actions {

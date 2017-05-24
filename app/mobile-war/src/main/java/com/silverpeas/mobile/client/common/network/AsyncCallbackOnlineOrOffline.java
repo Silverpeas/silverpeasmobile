@@ -5,6 +5,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -25,6 +26,7 @@ public abstract class AsyncCallbackOnlineOrOffline<T> implements AsyncCallback<T
 
     @Override
     public void onFailure(Throwable t) {
+        Notification.activityStop();
         if (t instanceof AuthenticationException) {
             SpMobil.getInstance().loadIds(new Command() {
                 @Override
@@ -46,6 +48,7 @@ public abstract class AsyncCallbackOnlineOrOffline<T> implements AsyncCallback<T
 
     @Override
     public void onSuccess(T result) {
-        OfflineHelper.hideOfflineIndicator();
+      Notification.activityStop();
+      OfflineHelper.hideOfflineIndicator();
     }
 }

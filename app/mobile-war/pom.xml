@@ -126,6 +126,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.silverpeas.core.services</groupId>
+      <artifactId>silverpeas-core-contact</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.silverpeas.core</groupId>
       <artifactId>silverpeas-core</artifactId>
       <version>${core.version}</version>
@@ -158,6 +164,12 @@
     <dependency>
       <groupId>org.silverpeas.components.almanach</groupId>
         <artifactId>silverpeas-almanach</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.components.yellowpages</groupId>
+      <artifactId>silverpeas-yellowpages</artifactId>
       <version>${core.version}</version>
       <scope>provided</scope>
     </dependency>

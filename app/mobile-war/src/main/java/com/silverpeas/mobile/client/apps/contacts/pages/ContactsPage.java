@@ -39,11 +39,12 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 
   @UiField(provided = true) protected ContactsMessages msg = null;
   @UiField HTMLPanel container;
-  @UiField Anchor mycontacts, allcontacts;
+  @UiField Anchor mycontacts, allcontacts, allextcontacts;
   @UiField UnorderedList list;
   @UiField TextBox filter;
   private int startIndexAll, startIndexMy, startIndex, pageSize = 0;
-  private String currentFilter = ContactFilters.MY;
+  private String currentFilter = "";
+  private String currentType = ContactFilters.MY;
   private ContactItem itemWaiting;
   private boolean callingNexData = false;
   private boolean noMoreData = false;
@@ -57,12 +58,14 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     msg = GWT.create(ContactsMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
+    filter.setVisible(false);
     container.getElement().setId("contacts");
     mycontacts.getElement().setId("btn-my-contacts");
     allcontacts.getElement().setId("btn-all-contacts");
+    allextcontacts.getElement().setId("btn-all-contactsext");
     EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractScrollEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY, computePageSize(), startIndexMy));
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndexMy));
     list.getElement().setId("list-contacts");
   }
 
@@ -77,24 +80,52 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   protected void showMycontacts(ClickEvent event) {
     allcontacts.removeStyleName("ui-btn-active");
     allcontacts.addStyleName("ui-btn");
+    allextcontacts.removeStyleName("ui-btn-active");
+    allextcontacts.addStyleName("ui-btn");
     mycontacts.addStyleName("ui-btn-active");
-    currentFilter = ContactFilters.MY;
+    currentType = ContactFilters.MY;
+    filter.setText("");
+    filter.setVisible(false);
+    currentFilter = "";
     list.clear();
     pageSize = 0;
     startIndexMy = 0;
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY, computePageSize(), startIndexMy));
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexMy));
   }
 
   @UiHandler("allcontacts")
   protected void showAllcontacts(ClickEvent event) {
     mycontacts.removeStyleName("ui-btn-active");
     mycontacts.addStyleName("ui-btn");
+    allextcontacts.removeStyleName("ui-btn-active");
+    allextcontacts.addStyleName("ui-btn");
     allcontacts.addStyleName("ui-btn-active");
-    currentFilter = ContactFilters.ALL;
+    currentType = ContactFilters.ALL;
+    filter.setText("");
+    filter.setVisible(true);
+    currentFilter = "";
     list.clear();
     pageSize = 0;
     startIndexAll = 0;
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.ALL, computePageSize(), startIndexAll));
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexAll));
+  }
+
+  @UiHandler("allextcontacts")
+  protected void showAllExtcontacts(ClickEvent event) {
+    mycontacts.removeStyleName("ui-btn-active");
+    mycontacts.addStyleName("ui-btn");
+    allcontacts.removeStyleName("ui-btn-active");
+    allcontacts.addStyleName("ui-btn");
+
+    allextcontacts.addStyleName("ui-btn-active");
+    currentType = ContactFilters.ALL_EXT;
+    filter.setText("");
+    filter.setVisible(true);
+    currentFilter = "";
+    list.clear();
+    pageSize = 0;
+    startIndexAll = 0;
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexAll));
   }
 
   @UiHandler("filter")
@@ -118,7 +149,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
             pageSize = 0;
             startIndex = 0;
             EventBus.getInstance()
-                .fireEvent(new ContactsLoadEvent(filter.getText(), computePageSize(), startIndex));
+                .fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
             ContactsPage.command = null;
             return false;
           }
@@ -150,19 +181,10 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       callingNexData = true;
       list.add(getWaitingItem());
       Window.scrollTo(0, Document.get().getScrollHeight());
-      if (currentFilter.equals(ContactFilters.ALL)) {
-        startIndexAll += computePageSize();
-        EventBus.getInstance()
-            .fireEvent(new ContactsLoadEvent(ContactFilters.ALL, computePageSize(), startIndexAll));
-      } else if (currentFilter.equals(ContactFilters.MY)) {
-        startIndexMy += computePageSize();
-        EventBus.getInstance()
-            .fireEvent(new ContactsLoadEvent(ContactFilters.MY, computePageSize(), startIndexMy));
-      } else {
-        startIndex += computePageSize();
-        EventBus.getInstance()
-            .fireEvent(new ContactsLoadEvent(filter.getText(), computePageSize(), startIndex));
-      }
+
+      startIndexAll += computePageSize();
+      EventBus.getInstance()
+          .fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexAll));
     }
   }
 

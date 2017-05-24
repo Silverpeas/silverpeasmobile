@@ -7,9 +7,12 @@ import com.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.ContactException;
 import com.silverpeas.mobile.shared.services.ServiceContact;
+import org.silverpeas.components.yellowpages.service.YellowpagesService;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
+import org.silverpeas.core.contact.model.ContactDetail;
+import org.silverpeas.core.contact.model.ContactPK;
 import org.silverpeas.core.index.search.SearchEngineProvider;
 import org.silverpeas.core.index.search.model.MatchingIndexEntry;
 import org.silverpeas.core.index.search.model.ParseException;
@@ -33,21 +36,28 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
    * @return list of UserDetailDTO
    * @throws ContactException
    */
-  public List<DetailUserDTO> getContacts(String filter, int pageSize, int startIndex)
+  public List<DetailUserDTO> getContacts(String type, String filter, int pageSize, int startIndex)
       throws ContactException, AuthenticationException {
     ArrayList<DetailUserDTO> listUsers = new ArrayList<DetailUserDTO>();
     try {
       checkUserInSession();
       UserDetail user = getUserInSession();
 
-      if (filter.equals(ContactFilters.ALL)) {
-        UserDetail[] tabUserDetail = organizationController.getAllUsers();
-        for (int i = 0; i < tabUserDetail.length; i++) {
+      if (type.equals(ContactFilters.ALL)) {
+        List tabUserDetail = getUsersByQuery(filter, "UserFull");
+        for (int i = 0; i < tabUserDetail.size(); i++) {
           if (i >= startIndex && i < startIndex + pageSize) {
-            listUsers.add(populate(tabUserDetail[i]));
+            listUsers.add(populate(tabUserDetail.get(i)));
           }
         }
-      } else if (filter.equals(ContactFilters.MY)) {
+      } else if(type.equals(ContactFilters.ALL_EXT)) {
+        List tabUserDetail = getUsersByQuery(filter,"Contact");
+        for (int i = 0; i < tabUserDetail.size(); i++) {
+          if (i >= startIndex && i < startIndex + pageSize) {
+            listUsers.add(populate(tabUserDetail.get(i)));
+          }
+        }
+      } else if (type.equals(ContactFilters.MY)) {
         List<String> contactsIds =
             relationShipService.getMyContactsIds(Integer.parseInt(user.getId()));
 
@@ -57,13 +67,6 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
             UserDetail userDetail = getUserDetail(id);
             DetailUserDTO userDTO = populate(userDetail);
             listUsers.add(userDTO);
-          }
-        }
-      } else {
-        List<UserDetail> tabUserDetail = getFilteredUserList(filter);
-        for (int i = 0; i < tabUserDetail.size(); i++) {
-          if (i >= startIndex && i < startIndex + pageSize) {
-            listUsers.add(populate(tabUserDetail.get(i)));
           }
         }
       }
@@ -76,21 +79,21 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
     return listUsers;
   }
 
-  private List<UserDetail> getFilteredUserList(final String filter) {
+  private List getFilteredUserList(final String filter, String type) {
     UserDetail[] tabUserDetail = organizationController.getAllUsers();
-    List<UserDetail> filteredUserList = null;
+    List filteredUserList = null;
     if (filter.isEmpty()) {
       filteredUserList = new ArrayList<UserDetail>(Arrays.asList(tabUserDetail));
       return filteredUserList;
     }
-    filteredUserList = getUsersByQuery(filter);
+    filteredUserList = getUsersByQuery(filter, type);
 
     return filteredUserList;
   }
 
-  private List<UserDetail> getUsersByQuery(String query) {
-    query += '*';
-    List<UserDetail> results = new ArrayList<UserDetail>();
+  private List getUsersByQuery(String query, String type) {
+    if (!query.isEmpty()) query += '*';
+    List results = new ArrayList<>();
     try {
       QueryDescription queryDescription = new QueryDescription(query);
       queryDescription.addComponent("users");
@@ -102,10 +105,13 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       if (plainSearchResults != null && !plainSearchResults.isEmpty()) {
         for (MatchingIndexEntry result : plainSearchResults) {
           String objectId = result.getObjectId();
-          if ("Contact".equals(result.getObjectType())) {
-            //TODO : manager contact
-          } else {
-            results.add(organizationController.getUserDetail(objectId));
+          if (type.equals(result.getObjectType())) {
+            if (result.getObjectType().equals("Contact")) {
+              ContactDetail contact = YellowpagesService.get().getContactDetail(new ContactPK(objectId, result.getComponent()));
+              results.add(contact);
+            } else if (result.getObjectType().equals("UserFull")) {
+              results.add(organizationController.getUserDetail(objectId));
+            }
           }
         }
       }
@@ -132,12 +138,13 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
   }
 
   /**
-   * Populate user DTO.
-   * @param userDetail
+   * Populate user or contact DTO.
+   * @param
    * @return
    */
-  private DetailUserDTO populate(UserDetail userDetail) {
-    if (userDetail != null) {
+  private DetailUserDTO populate(Object user) {
+    if (user != null && user instanceof UserDetail) {
+      UserDetail userDetail = (UserDetail) user;
       SilverLogger.getLogger(SpMobileLogModule.getName())
           .debug(SpMobileLogModule.getName(), "ServiceContactImpl.populate",
               "User id=" + userDetail.getId());
@@ -157,6 +164,22 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
         dto.setCellularPhoneNumber(userFull.getValue("cellularPhone"));
         dto.setFaxPhoneNumber(userFull.getValue("fax"));
       }
+      return dto;
+    } else if (user != null && user instanceof ContactDetail) {
+      ContactDetail contactDetail = (ContactDetail) user;
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .debug(SpMobileLogModule.getName(), "ServiceContactImpl.populate",
+              "Contact id=" + contactDetail.getPK().getId() + "app id=" + contactDetail.getPK().getInstanceId());
+      DetailUserDTO dto = new DetailUserDTO();
+      dto.setId(contactDetail.getPK().getId());
+      dto.setFirstName(contactDetail.getFirstName());
+      dto.setLastName(contactDetail.getLastName());
+      dto.seteMail(contactDetail.getEmail());
+      dto.setPhoneNumber(contactDetail.getPhone());
+      dto.setFaxPhoneNumber(contactDetail.getFax());
+      dto.setAvatar("");
+      dto.setCellularPhoneNumber("");
+      dto.setLanguage("");
       return dto;
     }
     return null;

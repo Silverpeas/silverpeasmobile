@@ -13,9 +13,14 @@
             <span class="ui-btn-text"><ui:safehtml from="{msg.myContacts}"/></span>
           </span>
         </g:Anchor>
-        <g:Anchor ui:field="allcontacts" styleName="ui-btn ui-btn-up-c  ui-last-child">
-          <span class="ui-btn-inner ui-corner-right ui-controlgroup-last">
+        <g:Anchor ui:field="allcontacts" styleName="ui-btn ui-btn-up-c ">
+          <span class="ui-btn-inner">
             <span class="ui-btn-text"><ui:safehtml from="{msg.allContacts}"/></span>
+          </span>
+        </g:Anchor>
+        <g:Anchor ui:field="allextcontacts" styleName="ui-btn ui-btn-up-c  ui-last-child">
+          <span class="ui-btn-inner ui-corner-right ui-controlgroup-last">
+            <span class="ui-btn-text"><ui:safehtml from="{msg.allExtContacts}"/></span>
           </span>
         </g:Anchor>
         <g:TextBox ui:field="filter" styleName="ui-input-text ui-body-inherit filter-contacts"></g:TextBox>
