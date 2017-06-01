@@ -273,9 +273,16 @@ public class PublicationContentServlet extends HttpServlet {
   }
 
   private String convertImageAttachmentUrl(final String url, String data) {
+
     String attachmentId = url.substring(url.indexOf("attachmentId/") + "attachmentId/".length());
     attachmentId = attachmentId.substring(0, attachmentId.indexOf("/"));
-    String componentId = url.substring(url.indexOf("kmelia"));
+    String componentId = "";
+
+    if (url.indexOf("kmelia") != -1) {
+      componentId = url.substring(url.indexOf("kmelia"));
+    } else if (url.indexOf("quickinfo") != -1) {
+      componentId = url.substring(url.indexOf("quickinfo"));
+    }
     componentId = componentId.substring(0, componentId.indexOf("/"));
 
     SimpleDocument attachment =
