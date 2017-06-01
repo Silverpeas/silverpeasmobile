@@ -36,13 +36,13 @@
 
   <meta name="gwt:property" content="locale=<%=l%>">
 
-  <link rel="apple-touch-icon" href="touch-icon-iphone.png"/>
-  <link rel="apple-touch-icon" sizes="72x72" href="touch-icon-iphone.png"/>
-  <link rel="apple-touch-icon" sizes="114x114" href="touch-icon-iphone4.png"/>
-  <link rel="shortcut icon" sizes="196x196" href="nice-highres.png"/>
-  <link rel="shortcut icon" sizes="128x128" href="niceicon.png"/>
+  <link rel="apple-touch-icon" href="<%= resource.getString("apple-touch-icon")%>"/>
+  <link rel="apple-touch-icon" sizes="72x72" href="<%= resource.getString("apple-touch-icon72x72")%>"/>
+  <link rel="apple-touch-icon" sizes="114x114" href="<%= resource.getString("apple-touch-icon114x114")%>"/>
+  <link rel="shortcut icon" sizes="196x196" href="<%= resource.getString("shortcut_icon196x196")%>"/>
+  <link rel="shortcut icon" sizes="128x128" href="<%= resource.getString("shortcut_icon128x128")%>"/>
 
-  <title>Silverpeas Mobile</title>
+  <title><%= resourceLabels.getString("shortcut_title")%></title>
   <script type="text/javascript" src="<%=appUrl%>/spmobile/spmobile.nocache.js"></script>
   <script>
     var labels = <% out.println(jsonLabels); %>;
