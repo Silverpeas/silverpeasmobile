@@ -11,6 +11,7 @@ import org.silverpeas.components.yellowpages.service.YellowpagesService;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
+import org.silverpeas.core.contact.model.CompleteContact;
 import org.silverpeas.core.contact.model.ContactDetail;
 import org.silverpeas.core.contact.model.ContactPK;
 import org.silverpeas.core.index.search.SearchEngineProvider;
@@ -25,7 +26,9 @@ import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class ServiceContactImpl extends AbstractAuthenticateService implements ServiceContact {
@@ -34,6 +37,8 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
   private OrganizationController organizationController = OrganizationController.get();
   private RelationShipService relationShipService = RelationShipService.get();
   private static List<String> domainsIds = new ArrayList<String>();
+  private static List<String> userProperties = new ArrayList<String>();
+  private static List<String> contactProperties = new ArrayList<String>();
 
   static {
     SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
@@ -42,6 +47,19 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
     while(stk.hasMoreTokens()) {
       domainsIds.add(stk.nextToken());
     }
+
+    String properties = mobileSettings.getString("directory.user.properties", "");
+    StringTokenizer stkU = new StringTokenizer(properties,",");
+    while(stkU.hasMoreTokens()) {
+      userProperties.add(stkU.nextToken());
+    }
+
+    String formProperties = mobileSettings.getString("directory.contact.properties", "");
+    StringTokenizer stkC = new StringTokenizer(formProperties,",");
+    while(stkC.hasMoreTokens()) {
+      contactProperties.add(stkC.nextToken());
+    }
+
   }
 
   /**
@@ -176,9 +194,9 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), "24x");
       dto.setAvatar(avatar);
       if (userFull != null) {
-        dto.setPhoneNumber(userFull.getValue("phone"));
-        dto.setCellularPhoneNumber(userFull.getValue("cellularPhone"));
-        dto.setFaxPhoneNumber(userFull.getValue("fax"));
+        for (String prop : userProperties) {
+          dto.addProperty(prop, userFull.getValue(prop));
+        }
       }
       return dto;
     } else if (user != null && user instanceof ContactDetail) {
@@ -196,6 +214,14 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       dto.setAvatar("");
       dto.setCellularPhoneNumber("");
       dto.setLanguage("");
+
+      CompleteContact completeContact = YellowpagesService.get().getCompleteContact(((ContactDetail) user).getPK());
+      Map<String, String> fields = completeContact.getFormValues(getUserInSession().getUserPreferences().getLanguage(), true);
+      if (fields != null) {
+        for (String prop : contactProperties) {
+          dto.addProperty(prop, fields.get(prop));
+        }
+      }
       return dto;
     }
     return null;

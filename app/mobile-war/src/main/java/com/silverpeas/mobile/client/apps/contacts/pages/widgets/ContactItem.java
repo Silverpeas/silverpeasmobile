@@ -2,6 +2,8 @@ package com.silverpeas.mobile.client.apps.contacts.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -90,6 +92,44 @@ public class ContactItem extends Composite {
     if (nbTel == 0) {
       tel.add(new InlineHTML("&nbsp;"));
     }
+    for (String prop :userData.getProperties()) {
+
+      String value = userData.getPropertieValue(prop);
+      if (isPhoneNumber(value)) {
+        HTMLPanel field = new HTMLPanel("");
+        Anchor tel = new Anchor();
+        tel.setStyleName("tel-link");
+        tel.setText(value);
+        tel.setHref("tel:" + value);
+        field.add(tel);
+
+        Anchor sms = new Anchor();
+        sms.setHref("sms:" + userData.getCellularPhoneNumber());
+        Image smsImg = new Image(resourcesContact.sms());
+        sms.getElement().appendChild(smsImg.getElement());
+        field.add(sms);
+
+        container.add(field);
+      } else {
+        HTML field = new HTML(value);
+        container.add(field);
+      }
+    }
+  }
+
+  private boolean isPhoneNumber(String value) {
+    if (value == null) return false;
+    value = value.replaceAll(" ", "");
+    value= value.replaceAll("-", "");
+    value= value.replaceFirst("\\+", "");
+    if (value.length() != 10 && value.length() != 12) return false;
+
+    try {
+      Double.parseDouble(value);
+    } catch(Exception e) {
+      return false;
+    }
+    return true;
   }
 
   public void hideData() {

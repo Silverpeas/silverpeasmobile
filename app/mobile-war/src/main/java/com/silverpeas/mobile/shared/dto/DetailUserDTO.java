@@ -1,6 +1,9 @@
 package com.silverpeas.mobile.shared.dto;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Set;
 
 public class DetailUserDTO implements Serializable{
 
@@ -16,6 +19,19 @@ public class DetailUserDTO implements Serializable{
   private String status;
   private String language;
   private String token;
+  private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
+
+  public void addProperty(String key, String value) {
+    properties.put(key, value);
+  }
+
+  public Set<String> getProperties() {
+    return properties.keySet();
+  }
+
+  public String getPropertieValue(String key) {
+    return properties.get(key);
+  }
 
   public String getId() {
     return id;
