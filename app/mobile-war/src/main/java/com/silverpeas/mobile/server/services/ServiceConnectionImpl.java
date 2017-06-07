@@ -50,6 +50,11 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
           throw new AuthenticationException(
               AuthenticationError.PwdNotAvailable);
         }
+        else if (key.equals("Error_6")) {
+          throw new AuthenticationException(
+              AuthenticationError.LoginNotAvailable);
+        }
+        throw new AuthenticationException();
       }
     } catch (Exception e) {
       throw new AuthenticationException();

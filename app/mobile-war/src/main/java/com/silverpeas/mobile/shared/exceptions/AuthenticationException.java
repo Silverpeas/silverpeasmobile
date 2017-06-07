@@ -6,7 +6,7 @@ public class AuthenticationException extends Exception {
 	private AuthenticationError error;
 	
 	public enum AuthenticationError {
-		BadCredential, Host, PwdNotAvailable, NotAuthenticate;
+		BadCredential, Host, PwdNotAvailable, NotAuthenticate, LoginNotAvailable;
 	}
 	
 	public AuthenticationException() {
