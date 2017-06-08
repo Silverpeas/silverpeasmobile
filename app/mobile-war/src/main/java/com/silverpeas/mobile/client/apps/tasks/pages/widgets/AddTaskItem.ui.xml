@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <ui:with field='msg' type='com.silverpeas.mobile.client.apps.tasks.resources.TasksMessages'/>
 
-  <g:HTMLPanel tag="li" ui:field="container" styleName="add-media">
+  <g:HTMLPanel tag="li" ui:field="container" styleName="add-task">
     <g:Anchor ui:field="link" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" text="{msg.create}"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

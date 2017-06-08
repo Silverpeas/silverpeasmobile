@@ -29,6 +29,6 @@
   <ui:with field='msg' type='com.silverpeas.mobile.client.resources.ApplicationMessages' />
 
   <g:HTMLPanel styleName="ui-content ui-body-a">
-    <l:UnorderedList ui:field="favorites" stylePrimaryName="ui-listview ui-listview-inset ui-corner-all ui-shadow"></l:UnorderedList>
+    <l:UnorderedList ui:field="favorites" stylePrimaryName="ui-listview ui-listview-inset ui-corner-all ui-shadow favoris"></l:UnorderedList>
   </g:HTMLPanel>
 </ui:UiBinder> 
