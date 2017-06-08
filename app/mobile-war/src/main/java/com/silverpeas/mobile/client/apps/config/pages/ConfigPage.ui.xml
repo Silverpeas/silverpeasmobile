@@ -29,18 +29,18 @@
 
   <g:HTMLPanel stylePrimaryName="last-publication-bloc bloc">
     <h3 class="title-bloc-part ui-title">Page d'accueil</h3>
-    <ul class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
-      <li>
+    <ul class="ui-listview ui-listview-inset ui-corner-all ui-shadow config">
+      <li class="actuality">
         <a class="ui-btn">
         <g:CheckBox ui:field="newsDisplay" text="Afficher les dernières actualités"></g:CheckBox>
         </a>
       </li>
-      <li>
+      <li class="publication">
         <a class="ui-btn">
           <g:CheckBox ui:field="lastPublicationsDisplay" text="Afficher les dernières publications"></g:CheckBox>
         </a>
       </li>
-      <li>
+      <li class="favoris">
         <a class="ui-btn">
           <g:CheckBox ui:field="favoritesDisplay" text="Afficher les favoris"></g:CheckBox>
         </a>
