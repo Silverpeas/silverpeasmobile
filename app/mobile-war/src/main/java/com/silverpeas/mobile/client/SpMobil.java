@@ -27,6 +27,8 @@ package com.silverpeas.mobile.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -39,12 +41,15 @@ import com.silverpeas.mobile.client.apps.news.NewsApp;
 import com.silverpeas.mobile.client.common.*;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
+import com.silverpeas.mobile.client.common.mobil.Orientation;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.components.base.Page;
+import com.silverpeas.mobile.client.components.base.events.window.OrientationChangeEvent;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.HomePage;
 import com.silverpeas.mobile.client.pages.search.SearchResultPage;
@@ -72,6 +77,7 @@ public class SpMobil implements EntryPoint {
     private static String shortcutContentType;
     private static String shortcutContentId;
     private static SpMobil instance = null;
+    private static Orientation orientation = null;
 
     /**
      * Init. spmobile.
@@ -94,6 +100,20 @@ public class SpMobil implements EntryPoint {
                 viewport = metaTag.getContent();
             }
         }
+
+      orientation = MobilUtils.getOrientation();
+        Window.addResizeHandler(new ResizeHandler() {
+          @Override
+          public void onResize(final ResizeEvent resizeEvent) {
+
+            if (!MobilUtils.getOrientation().equals(orientation)) {
+              orientation = MobilUtils.getOrientation();
+              EventBus.getInstance().fireEvent(new OrientationChangeEvent(orientation));
+            }
+
+          }
+        });
+
 
         // Instanciate apps
         DocumentsApp gedApp = new DocumentsApp();

@@ -96,4 +96,8 @@ public class PageFooter extends Composite {
     App app = new ContactsApp();
     app.start();
   }
+
+  public int getHeight() {
+    return footer.getOffsetHeight();
+  }
 }

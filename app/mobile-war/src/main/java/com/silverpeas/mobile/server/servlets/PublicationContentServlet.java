@@ -62,11 +62,11 @@ public class PublicationContentServlet extends HttpServlet {
     response.getOutputStream().print("<head>");
     response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
     response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/spmobile.css'/>");
-    response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/zoom.css'/>");
-    response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/interact.min.js'></script>");
-    response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/zoom.js'/></script>");
+    //response.getOutputStream().print("<link rel='stylesheet' href='/silverpeas/spmobile/zoom.css'/>");
+    //response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/interact.min.js'></script>");
+    //response.getOutputStream().print("<script type='text/javascript' src='/silverpeas/spmobile/zoom.js'/></script>");
     response.getOutputStream().print("</head>");
-    response.getOutputStream().print("<body style='background-color:grey;padding-top:1em;'>");
+    response.getOutputStream().print("<body>");
 
     if (pub.getInfoId().equals("0")) {
       // wysiwyg

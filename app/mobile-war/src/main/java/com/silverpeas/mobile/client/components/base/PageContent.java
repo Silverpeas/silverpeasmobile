@@ -25,7 +25,9 @@
 package com.silverpeas.mobile.client.components.base;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
@@ -50,8 +52,18 @@ public class PageContent extends Composite implements View, NativePreviewHandler
 
   public PageContent() {
     super();
+    setViewport();
     registration = Event.addNativePreviewHandler(this);
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
+  }
+
+  protected void setViewport() {
+    NodeList<Element> metas = Document.get().getHead().getElementsByTagName("meta");
+    for (int i = 0; i < metas.getLength(); i++) {
+      if (metas.getItem(i).getAttribute("name").equals("viewport")) {
+        metas.getItem(i).setAttribute("content","width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
+      }
+    }
   }
 
   public String getPageTitle() {
