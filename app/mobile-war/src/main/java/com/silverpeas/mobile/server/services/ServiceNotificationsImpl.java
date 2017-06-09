@@ -149,11 +149,19 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
             }
 
             metaData.setSendImmediately(true);
+
+            String silverpeasServerUrl = getUserInSession().getDomain().getSilverpeasServerURL();
+            if (!silverpeasServerUrl.contains("silverpeas")) {
+              silverpeasServerUrl = silverpeasServerUrl + "/silverpeas";
+            }
+
             if (notification.getContentType().equals(NotificationDTO.TYPE_PUBLICATION)) {
-                String url = Configurator.getConfigValue("protocol") + "://" + Configurator.getConfigValue("localhost") + ":" + Configurator.getConfigValue("jboss.http.port") + "/silverpeas/Publication/" + notification.getContentId();
+
+
+                String url = silverpeasServerUrl + "/Publication/" + notification.getContentId();
                 metaData.setLink(url);
             } else if (notification.getContentType().equals(NotificationDTO.TYPE_PHOTO) || notification.getContentType().equals(NotificationDTO.TYPE_SOUND) || notification.getContentType().equals(NotificationDTO.TYPE_VIDEO) || notification.getContentType().equals(NotificationDTO.TYPE_STREAMING)) {
-                String url = Configurator.getConfigValue("protocol") + "://" + Configurator.getConfigValue("localhost") + ":" + Configurator.getConfigValue("jboss.http.port") + "/silverpeas/Media/" + notification.getContentId();
+                String url = silverpeasServerUrl + "/Media/" + notification.getContentId();
                 metaData.setLink(url);
             }
             metaData.setAnswerAllowed(false);
