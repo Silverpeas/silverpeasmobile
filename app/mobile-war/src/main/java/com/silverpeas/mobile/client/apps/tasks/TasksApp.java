@@ -2,6 +2,11 @@ package com.silverpeas.mobile.client.apps.tasks;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external
+    .NavigationAppInstanceChangedEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.AbstractTasksAppEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
@@ -24,7 +29,7 @@ import com.silverpeas.mobile.shared.dto.TaskDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TasksApp extends App implements TasksAppEventHandler {
+public class TasksApp extends App implements TasksAppEventHandler, NavigationEventHandler {
 
     public static final String TASKS_KEY = "tasks";
     private static ApplicationMessages msg;
@@ -33,17 +38,16 @@ public class TasksApp extends App implements TasksAppEventHandler {
         super();
         msg = GWT.create(ApplicationMessages.class);
         EventBus.getInstance().addHandler(AbstractTasksAppEvent.TYPE, this);
+        EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
     }
 
     public void start(){
-        setMainPage(new TasksPage());
-        super.start();
+      // no "super.start(lauchingPage);" this apps is used in another apps
     }
 
     @Override
     public void stop() {
-        EventBus.getInstance().removeHandler(AbstractTasksAppEvent.TYPE, this);
-        super.stop();
+        // never stop
     }
 
     @Override
@@ -117,4 +121,13 @@ public class TasksApp extends App implements TasksAppEventHandler {
         return offlineAction;
     }
 
+  @Override
+  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {}
+
+  @Override
+  public void showContent(final NavigationShowContentEvent event) {
+    TasksPage page = new TasksPage();
+    setMainPage(page);
+    page.show();
+  }
 }

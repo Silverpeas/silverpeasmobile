@@ -39,8 +39,10 @@ import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import com.silverpeas.mobile.client.apps.favorites.FavoritesApp;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import com.silverpeas.mobile.client.apps.status.StatusApp;
 import com.silverpeas.mobile.client.apps.tasks.TasksApp;
+import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.common.resources.ResourcesManager;
@@ -81,8 +83,11 @@ public class PageFooter extends Composite {
 
   @UiHandler("tasks")
   protected void goTasks(ClickEvent event) {
-    App app = new TasksApp();
-    app.start();
+
+    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(null));
+
+    //App app = new TasksApp();
+    //app.start();
   }
 
   @UiHandler("statut")
