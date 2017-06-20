@@ -16,6 +16,8 @@
   <properties>
     <gwtVersion>2.7.0</gwtVersion>
     <gwtMojoPluginVersion>2.7.0</gwtMojoPluginVersion>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
 
   <repositories>

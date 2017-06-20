@@ -60,10 +60,7 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.configuration.Config;
-import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
