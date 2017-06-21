@@ -48,6 +48,8 @@ import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.common.resources.ResourcesManager;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
+import com.silverpeas.mobile.shared.dto.ContentDTO;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 
 public class PageFooter extends Composite {
 
@@ -77,17 +79,16 @@ public class PageFooter extends Composite {
 
   @UiHandler("favoris")
   protected void goFavoris(ClickEvent event) {
-    App app = new FavoritesApp();
-    app.start();
+    ContentDTO content = new ContentDTO();
+    content.setType(ContentsTypes.Favortis.toString());
+    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
   }
 
   @UiHandler("tasks")
   protected void goTasks(ClickEvent event) {
-
-    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(null));
-
-    //App app = new TasksApp();
-    //app.start();
+    ContentDTO content = new ContentDTO();
+    content.setType(ContentsTypes.Tasks.toString());
+    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
   }
 
   @UiHandler("statut")

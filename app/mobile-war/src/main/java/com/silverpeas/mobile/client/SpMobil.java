@@ -34,12 +34,14 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
+import com.silverpeas.mobile.client.apps.favorites.FavoritesApp;
 import com.silverpeas.mobile.client.apps.media.MediaApp;
 import com.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import com.silverpeas.mobile.client.apps.news.NewsApp;
 import com.silverpeas.mobile.client.apps.tasks.TasksApp;
 import com.silverpeas.mobile.client.common.*;
+import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
 import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
@@ -61,6 +63,8 @@ import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.configuration.Config;
 import com.silverpeas.mobile.shared.dto.search.ResultDTO;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -76,6 +80,7 @@ public class SpMobil implements EntryPoint {
     private static String shortcutContentId;
     private static SpMobil instance = null;
     private static Orientation orientation = null;
+    private static List<App> apps = new ArrayList<App>();
 
     /**
      * Init. spmobile.
@@ -114,11 +119,12 @@ public class SpMobil implements EntryPoint {
 
 
         // Instanciate apps
-        DocumentsApp gedApp = new DocumentsApp();
-        MediaApp mediaApp = new MediaApp();
-        NewsApp newsApp = new NewsApp();
-        NavigationApp navApp = new NavigationApp();
-        TasksApp tasksApp = new TasksApp();
+        apps.add(new DocumentsApp());
+        apps.add(new MediaApp());
+        apps.add(new NewsApp());
+        apps.add(new NavigationApp());
+        apps.add(new TasksApp());
+        apps.add(new FavoritesApp());
 
         Notification.activityStop();
     }

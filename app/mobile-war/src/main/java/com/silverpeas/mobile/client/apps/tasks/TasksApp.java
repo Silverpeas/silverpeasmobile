@@ -24,6 +24,7 @@ import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.TaskDTO;
 
 import java.util.ArrayList;
@@ -31,103 +32,107 @@ import java.util.List;
 
 public class TasksApp extends App implements TasksAppEventHandler, NavigationEventHandler {
 
-    public static final String TASKS_KEY = "tasks";
-    private static ApplicationMessages msg;
+  public static final String TASKS_KEY = "tasks";
+  private static ApplicationMessages msg;
 
-    public TasksApp(){
-        super();
-        msg = GWT.create(ApplicationMessages.class);
-        EventBus.getInstance().addHandler(AbstractTasksAppEvent.TYPE, this);
-        EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
-    }
+  public TasksApp() {
+    super();
+    msg = GWT.create(ApplicationMessages.class);
+    EventBus.getInstance().addHandler(AbstractTasksAppEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
+  }
 
-    public void start(){
-      // no "super.start(lauchingPage);" this apps is used in another apps
-    }
-
-    @Override
-    public void stop() {
-        // never stop
-    }
-
-    @Override
-    public void loadTasks(final TasksLoadEvent event) {
-        Notification.activityStart();
-
-        AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<TaskDTO>>(getOffLineAction()) {
-
-            @Override
-            public void attempt() {
-                ServicesLocator.getServiceTasks().loadTasks(this);
-            }
-
-            @Override
-            public void onSuccess(final List<TaskDTO> tasks) {
-                super.onSuccess(tasks);
-                LocalStorageHelper.store("tasks", List.class, tasks);
-                EventBus.getInstance().fireEvent(new TasksLoadedEvent(tasks));
-            }
-        };
-        action.attempt();
-    }
-
-    @Override
-    public void updateTask(final TaskUpdateEvent event) {
-        AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
-
-            @Override
-            public void attempt() {
-                ServicesLocator.getServiceTasks().updateTask(event.getTask(), this);
-            }
-
-            @Override
-            public void onSuccess(final Void result) {
-                super.onSuccess(result);
-                EventBus.getInstance().fireEvent(new TaskUpdatedEvent(event.getTask()));
-            }
-        };
-        action.attempt();
-    }
-
-    @Override
-    public void createTask(final TaskCreateEvent event) {
-        AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<TaskDTO>() {
-
-            @Override
-            public void attempt() {
-                ServicesLocator.getServiceTasks().createTask(event.getTask(), this);
-            }
-
-            @Override
-            public void onSuccess(final TaskDTO result) {
-                super.onSuccess(result);
-                EventBus.getInstance().fireEvent(new TaskCreatedEvent(result));
-            }
-        };
-        action.attempt();
-    }
-
-    private Command getOffLineAction () {
-        Command offlineAction = new Command() {
-            @Override
-            public void execute() {
-                List<TaskDTO> tasks = LocalStorageHelper.load(TASKS_KEY, List.class);
-                if (tasks == null) {
-                    tasks = new ArrayList<TaskDTO>();
-                }
-                EventBus.getInstance().fireEvent(new TasksLoadedEvent(tasks));
-            }
-        };
-        return offlineAction;
-    }
+  public void start() {
+    // no "super.start(lauchingPage);" this apps is used in another apps
+  }
 
   @Override
-  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {}
+  public void stop() {
+    // never stop
+  }
+
+  @Override
+  public void loadTasks(final TasksLoadEvent event) {
+    Notification.activityStart();
+
+    AsyncCallbackOnlineOrOffline action =
+        new AsyncCallbackOnlineOrOffline<List<TaskDTO>>(getOffLineAction()) {
+
+          @Override
+          public void attempt() {
+            ServicesLocator.getServiceTasks().loadTasks(this);
+          }
+
+          @Override
+          public void onSuccess(final List<TaskDTO> tasks) {
+            super.onSuccess(tasks);
+            LocalStorageHelper.store("tasks", List.class, tasks);
+            EventBus.getInstance().fireEvent(new TasksLoadedEvent(tasks));
+          }
+        };
+    action.attempt();
+  }
+
+  @Override
+  public void updateTask(final TaskUpdateEvent event) {
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceTasks().updateTask(event.getTask(), this);
+      }
+
+      @Override
+      public void onSuccess(final Void result) {
+        super.onSuccess(result);
+        EventBus.getInstance().fireEvent(new TaskUpdatedEvent(event.getTask()));
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void createTask(final TaskCreateEvent event) {
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<TaskDTO>() {
+
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceTasks().createTask(event.getTask(), this);
+      }
+
+      @Override
+      public void onSuccess(final TaskDTO result) {
+        super.onSuccess(result);
+        EventBus.getInstance().fireEvent(new TaskCreatedEvent(result));
+      }
+    };
+    action.attempt();
+  }
+
+  private Command getOffLineAction() {
+    Command offlineAction = new Command() {
+      @Override
+      public void execute() {
+        List<TaskDTO> tasks = LocalStorageHelper.load(TASKS_KEY, List.class);
+        if (tasks == null) {
+          tasks = new ArrayList<TaskDTO>();
+        }
+        EventBus.getInstance().fireEvent(new TasksLoadedEvent(tasks));
+      }
+    };
+    return offlineAction;
+  }
+
+  @Override
+  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+  }
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    TasksPage page = new TasksPage();
-    setMainPage(page);
-    page.show();
+    if (event.getContent().getType().equals(ContentsTypes.Tasks.toString())) {
+      TasksPage page = new TasksPage();
+      setMainPage(page);
+      page.show();
+    }
   }
 }

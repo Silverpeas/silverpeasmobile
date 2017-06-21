@@ -32,36 +32,42 @@ import com.silverpeas.mobile.client.apps.favorites.events.app.FavoritesAppEventH
 import com.silverpeas.mobile.client.apps.favorites.events.app.FavoritesLoadEvent;
 import com.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
 import com.silverpeas.mobile.client.apps.favorites.pages.FavoritesPage;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external
+    .NavigationAppInstanceChangedEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
+import com.silverpeas.mobile.client.apps.tasks.pages.TasksPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.FavoriteDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesApp extends App implements FavoritesAppEventHandler {
+public class FavoritesApp extends App implements FavoritesAppEventHandler, NavigationEventHandler {
 
     private ApplicationMessages msg;
 
     public FavoritesApp(){
         super();
         msg = GWT.create(ApplicationMessages.class);
+        EventBus.getInstance().addHandler(AbstractFavoritesAppEvent.TYPE, this);
+        EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
     }
 
     public void start(){
-        EventBus.getInstance().addHandler(AbstractFavoritesAppEvent.TYPE, this);
-        setMainPage(new FavoritesPage());
-        super.start();
+      // no "super.start(lauchingPage);" this apps is used in another apps
     }
 
     @Override
     public void stop() {
-        EventBus.getInstance().removeHandler(AbstractFavoritesAppEvent.TYPE, this);
-        super.stop();
+      // never stop
     }
 
     @Override
@@ -94,4 +100,16 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler {
       };
       action.attempt();
     }
+
+  @Override
+  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) { /* only one instance */ }
+
+  @Override
+  public void showContent(final NavigationShowContentEvent event) {
+    if (event.getContent().getType().equals(ContentsTypes.Favortis.toString())) {
+      FavoritesPage page = new FavoritesPage();
+      setMainPage(page);
+      page.show();
+    }
+  }
 }
