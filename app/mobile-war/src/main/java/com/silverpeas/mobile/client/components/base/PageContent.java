@@ -39,6 +39,7 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.common.resources.ResourcesManager;
 import com.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
@@ -47,11 +48,12 @@ public class PageContent extends Composite implements View, NativePreviewHandler
 
   private App app;
   protected boolean clicked = false;
-  protected String pageTitle = "Silverpeas";
+  protected String pageTitle;
   private HandlerRegistration registration;
 
   public PageContent() {
     super();
+    pageTitle = ResourcesManager.getLabel("mainpage.title");
     setViewport();
     registration = Event.addNativePreviewHandler(this);
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
