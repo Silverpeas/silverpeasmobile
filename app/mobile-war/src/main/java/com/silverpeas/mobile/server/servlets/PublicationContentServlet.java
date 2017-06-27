@@ -220,7 +220,7 @@ public class PublicationContentServlet extends HttpServlet {
   private void writeContainer(Writer out, String html) throws IOException {
     out.write("<div id='gesture-area'>");
     out.write("<div id='scale-element'>");
-    out.write("<div id='real-element' style='display:inline-block;background-color:#ececec;'>");
+    out.write("<div id='real-element'>");
     out.write(html);
     out.write("</div>");
     out.write("</div>");
