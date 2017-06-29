@@ -65,6 +65,7 @@
 
     </head>
 <body class="ui-panel-wrapper ui-page-theme-a csspinner traditional" onload="resize();">
+  <div id="oneinch" style="position: absolute;padding: 0;visibility: hidden;width: 1in;height: 1in;"></div>
 </body>
 
 </html>

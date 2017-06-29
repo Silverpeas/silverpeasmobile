@@ -31,6 +31,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
@@ -88,6 +89,22 @@ public class SpMobil implements EntryPoint {
     public void onModuleLoad() {
         SuperDevModeUtil.showDevMode();
         instance = this;
+
+        if (MobilUtils.isTablet()) {
+          ServicesLocator.getServiceConnection().setTabletMode(new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(final Throwable throwable) {}
+
+            @Override
+            public void onSuccess(final Boolean desktopMode) {
+              if (desktopMode) {
+                String url = Window.Location.getHref();
+                url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());
+                Window.Location.replace(url);
+              }
+            }
+          });
+        }
 
         shortcutAppId = Window.Location.getParameter("shortcutAppId");
         shortcutContentType = Window.Location.getParameter("shortcutContentType");

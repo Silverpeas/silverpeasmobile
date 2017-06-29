@@ -4,13 +4,12 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.silverpeas.mobile.shared.dto.ContentDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.HomePageException;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
+
 
 @RemoteServiceRelativePath("Navigation")
 public interface ServiceNavigation extends RemoteService {

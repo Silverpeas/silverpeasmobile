@@ -6,6 +6,7 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
+import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.Administration;
@@ -13,6 +14,8 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,12 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
   private static final long serialVersionUID = 1L;
 
   private OrganizationController organizationController = OrganizationController.get();
+  private static boolean useGUImobileForTablets;
+
+  static {
+    SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
+  }
 
   public void logout() throws AuthenticationException {
     getThreadLocalRequest().getSession().invalidate();
@@ -85,6 +94,15 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     }
 
     return userDTO;
+  }
+
+  @Override
+  public boolean setTabletMode() throws NavigationException, AuthenticationException {
+    if (!useGUImobileForTablets) {
+      getThreadLocalRequest().getSession().setAttribute("tablet", new Boolean(true));
+      return true;
+    }
+    return false;
   }
 
   public List<DomainDTO> getDomains() {

@@ -14,4 +14,6 @@ public interface ServiceConnectionAsync {
 	void getDomains(AsyncCallback<List<DomainDTO>> callback);
 
 	void logout(final AsyncCallback<Void> async);
+
+  void setTabletMode(final AsyncCallback<Boolean> async);
 }
