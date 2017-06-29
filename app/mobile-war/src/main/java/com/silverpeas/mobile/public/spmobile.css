@@ -39,8 +39,7 @@ body {
 body, input, select, textarea, button, .ui-btn {
   font-size: 1em;
   line-height: 1em;
-  font-family: Century gothic, "Apple Gothic", AppleGothic, "URW Gothic L", "Avant Garde", Futura, sans-serif;
-  /*{global-font-family}*/;
+  font-family: Open Sans,sans-serif
 }
 
 legend, .ui-input-text input, .ui-input-search input {
@@ -263,7 +262,7 @@ legend, .ui-input-text input, .ui-input-search input {
 /* Links */
 .ui-page-theme-a a, html .ui-bar-a a, html .ui-body-a a, html body .ui-group-theme-a a {
   color: #3388cc /*{a-link-color}*/;
-  font-weight: 100;
+  font-weight: normal;
 }
 
 .ui-page-theme-a a:active, html .ui-bar-a a:active, html .ui-body-a a:active, html body .ui-group-theme-a a:active {
@@ -397,7 +396,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 /* GENERAL */
 .ui-header .ui-title, .ui-footer .ui-title {
-  font-weight: 100;
+  font-weight: normal;
 }
 
 #header,
@@ -453,7 +452,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 #header h1 {
   color: #fff;
   font-size: 0.8em;
-  font-weight: 100;
+  font-weight: normal;
   left: 60px;
   line-height: 44px;
   margin: 0;
@@ -543,7 +542,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .bloc .ui-title {
 	text-transform:uppercase;
 	color:#686868;
-	font-weight:100;
+	font-weight:normal;
 	padding:0.5em 1em 0 1em;
 	font-size:0.8em;
 }
@@ -844,7 +843,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding: 0 1em;
   margin: 0;
   font-size: 12pt;
-  font-weight: 100;
+  font-weight: normal;
   height: 2em;
 }
 
@@ -968,7 +967,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #add-comment h3 {
   font-size: 10pt;
-  font-weight: 100;
+  font-weight: normal;
   margin: 0;
   padding: 0;
 }
@@ -1122,7 +1121,7 @@ input.filter-contacts {
 
 #update-statut h2 {
   font-size: 13pt;
-  font-weight: 100
+  font-weight: normal
 }
 
 #champs-statut,
@@ -1588,4 +1587,15 @@ form .forms .fields > li:nth-child(even) {
   min-width: 300px;
   text-align: center;
 }
+
+#real-element{
+  padding:0 0.5em;
+  background-color:#ececec;
+}
+
+#real-element img{
+  max-width:100%;
+  height:auto
+}
+
 
