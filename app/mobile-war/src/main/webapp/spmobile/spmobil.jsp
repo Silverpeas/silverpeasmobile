@@ -10,6 +10,7 @@
 <html manifest="spmobil.appcache">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="robots" content="noindex">
   <meta name="viewport" content="width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 
   <meta name="mobile-web-app-capable" content="yes">
