@@ -21,8 +21,13 @@
   <%
     String l = request.getHeader("Accept-Language");
     String appUrl = URLUtil.getApplicationURL();
-    l = l.substring(0, 2);
-    if (!l.equalsIgnoreCase("fr")) {
+    if (l != null && !l.isEmpty()) {
+
+      l = l.substring(0, 2);
+      if (!l.equalsIgnoreCase("fr")) {
+        l = "en";
+      }
+    } else {
       l = "en";
     }
 
