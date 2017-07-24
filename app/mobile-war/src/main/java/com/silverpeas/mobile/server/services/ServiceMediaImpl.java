@@ -42,6 +42,7 @@ import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.logging.SilverLogger;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -121,7 +122,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     // création de la photo
     List<FileItem> parameters = new ArrayList<FileItem>();
-    LocalDiskFileItem item = new LocalDiskFileItem(file);
+    String type = new MimetypesFileTypeMap().getContentType(file);
+    LocalDiskFileItem item = new LocalDiskFileItem(file, type);
     parameters.add(item);
     MediaDataCreateDelegate
         delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);

@@ -175,11 +175,13 @@ public class MediaServlet extends HttpServlet {
       throws Exception {
 
     // création de la photo
+    String type = new MimetypesFileTypeMap().getContentType(file);
+
     List<FileItem> parameters = new ArrayList<FileItem>();
-    LocalDiskFileItem item = new LocalDiskFileItem(file);
+    LocalDiskFileItem item = new LocalDiskFileItem(file, type);
     parameters.add(item);
 
-    String type = new MimetypesFileTypeMap().getContentType(file);
+
     MediaDataCreateDelegate delegate = null;
     if (type.contains("image")) {
       delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
@@ -188,7 +190,7 @@ public class MediaServlet extends HttpServlet {
     } else if (type.contains("video")) {
       parameters.clear();
       parameters.add(new LocalDiskFileItem(
-          MediaHelper.optimizeVideoForWeb(file, request.getSession().getId())));
+          MediaHelper.optimizeVideoForWeb(file, request.getSession().getId()), type));
       delegate = new MediaDataCreateDelegate(MediaType.Video, "fr", albumId, parameters);
     } else if (type.contains("octet-stream")) {
       if (file.getName().endsWith(".mp3")) {
@@ -196,7 +198,7 @@ public class MediaServlet extends HttpServlet {
       } else if(file.getName().endsWith(".mp4")) {
         parameters.clear();
         parameters.add(new LocalDiskFileItem(
-            MediaHelper.optimizeVideoForWeb(file, request.getSession().getId())));
+            MediaHelper.optimizeVideoForWeb(file, request.getSession().getId()), type));
         delegate = new MediaDataCreateDelegate(MediaType.Video, "fr", albumId, parameters);
       }
     }
