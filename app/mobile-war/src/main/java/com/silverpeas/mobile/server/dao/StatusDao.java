@@ -2,7 +2,6 @@ package com.silverpeas.mobile.server.dao;
 
 import com.silverpeas.mobile.server.config.Configurator;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.silverpeas.core.persistence.jdbc.DBUtil;
 import org.silverpeas.core.util.UtilException;
 
@@ -11,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
