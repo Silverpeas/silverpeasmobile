@@ -4,7 +4,6 @@
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
 <%@ page import="com.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
 <%@ page import="java.util.Map" %>
-<%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view" %>
 
 <!doctype html>
 <html manifest="spmobil.appcache">
@@ -58,8 +57,6 @@
       document.body.style.height = windowHeight + "px";
     }
   </script>
-
-  <view:includePlugin name="tkn"/>
 
   <%
     String css = resource.getString("styleSheet");
