@@ -112,7 +112,7 @@ public class NotificationPage extends PageContent implements View, NotificationP
             value = ((GroupDTO) d).getName();
           }
           value = value.toLowerCase();
-          if (value.startsWith(filter.getText())) {
+          if (value.startsWith(filter.getText().toLowerCase())) {
             item.setVisible(true);
           } else {
             item.setVisible(false);
