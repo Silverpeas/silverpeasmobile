@@ -21,7 +21,14 @@ public class DataURLHelper {
    * @param photoFileName
    * @return
    */
-  public static String convertAvatarToUrlData(final String photoFileName, String size) {
+  public static String convertAvatarToUrlData(String photoFileName, String size) {
+
+    int i = photoFileName.lastIndexOf("/");
+    if (i == -1) i = photoFileName.lastIndexOf("\\");
+    if (i != -1) {
+      photoFileName = photoFileName.substring(i+1);
+    }
+
     String data = "";
     try {
       File originalImage = new File(FileRepositoryManager.getAvatarPath() + File.separatorChar + photoFileName);
