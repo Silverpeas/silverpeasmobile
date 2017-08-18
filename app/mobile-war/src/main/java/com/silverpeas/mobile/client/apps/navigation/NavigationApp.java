@@ -1,14 +1,15 @@
 package com.silverpeas.mobile.client.apps.navigation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppEventHandler;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external
+    .NavigationAppInstanceChangedEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import com.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -18,10 +19,10 @@ import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
-import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 
-public class NavigationApp extends App implements NavigationAppEventHandler {
+public class NavigationApp extends App implements NavigationAppEventHandler,NavigationEventHandler {
 
     private String title;
     private ApplicationMessages msg;
@@ -30,6 +31,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
         super();
         msg = GWT.create(ApplicationMessages.class);
         EventBus.getInstance().addHandler(AbstractNavigationAppEvent.TYPE, this);
+        EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
     }
 
     @Override
@@ -87,4 +89,17 @@ public class NavigationApp extends App implements NavigationAppEventHandler {
         };
         return offlineAction;
     }
+
+  @Override
+  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+  }
+
+  @Override
+  public void showContent(final NavigationShowContentEvent event) {
+    if (event.getContent().getType().equals(ContentsTypes.Space.name())) {
+      String spaceId = event.getContent().getId().replace("WA", "");
+      LoadSpacesAndAppsEvent ev = new LoadSpacesAndAppsEvent(spaceId);
+      loadSpacesAndApps(ev);
+    }
+  }
 }

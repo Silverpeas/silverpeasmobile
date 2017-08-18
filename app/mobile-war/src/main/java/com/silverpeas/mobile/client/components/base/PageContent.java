@@ -74,6 +74,7 @@ public class PageContent extends Composite implements View, NativePreviewHandler
 
   public void setPageTitle(String pageTitle) {
     this.pageTitle = pageTitle;
+    SpMobil.getMainPage().header.setPageTitle(pageTitle);
   }
 
   public void show() {

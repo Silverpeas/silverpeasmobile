@@ -10,6 +10,7 @@ public class TopicDTO extends BaseDTO implements Serializable, Comparable<TopicD
   private String name;
   private boolean terminal;
   private int pubCount;
+  private boolean root = false;
 
   public String getName() {
     return name;
@@ -26,6 +27,13 @@ public class TopicDTO extends BaseDTO implements Serializable, Comparable<TopicD
   }
   public void setTerminal(boolean terminal) {
     this.terminal = terminal;
+  }
+
+  public boolean isRoot() {
+    return root;
+  }
+  public void setRoot(boolean root) {
+    this.root = root;
   }
 
   public int getPubCount() {

@@ -10,6 +10,8 @@ import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.admin.ObjectType;
+import org.silverpeas.core.admin.component.model.ComponentInstLight;
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
@@ -54,6 +56,15 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       }
       NodePK pk = new NodePK(rootTopicId, instanceId);
       NodeDetail rootNode = getNodeBm().getDetail(pk);
+      TopicDTO rootTopic = new TopicDTO();
+      rootTopic.setRoot(true);
+      if (rootNode.hasFather()) {
+        rootTopic.setName(rootNode.getName());
+      } else {
+        ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
+        rootTopic.setName(app.getLabel());
+      }
+      topicsList.add(rootTopic);
       ArrayList<NodeDetail> nodes = getNodeBm().getSubTreeByLevel(pk, rootNode.getLevel() + 1);
       TopicDTO trash = null;
       for (NodeDetail nodeDetail : nodes) {

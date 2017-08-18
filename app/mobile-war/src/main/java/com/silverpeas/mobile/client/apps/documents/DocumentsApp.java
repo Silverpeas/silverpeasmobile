@@ -65,25 +65,34 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
     @Override
     public void startWithContent(final ContentDTO content) {
-        if (content.getType().equals(ContentsTypes.Publication.toString())) {
-            ableToStoreContent = true;
+      if (content.getType().equals(ContentsTypes.Folder.toString())) {
+        //TODO
+        GedNavigationPage page = new GedNavigationPage();
+        page.setInstanceId(content.getInstanceId());
+        page.setTopicId(content.getId());
+        page.show();
+      }
+
+      if (content.getType().equals(ContentsTypes.Publication.toString())) {
+        ableToStoreContent = true;
+      }
+      AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
+
+        @Override
+        public void attempt() {
+          ServicesLocator.getServiceNavigation()
+              .getApp(content.getInstanceId(), content.getId(), content.getType(), this);
         }
-        AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
-            @Override
-            public void attempt() {
-                ServicesLocator.getServiceNavigation().getApp(content.getInstanceId(), content.getId(), content.getType(), this);
-            }
-
-            @Override
-            public void onSuccess(final ApplicationInstanceDTO app) {
-                OfflineHelper.hideOfflineIndicator();
-                commentable = app.isCommentable();
-                notifiable = app.isNotifiable();
-                displayContent(content);
-            }
-        };
-        action.attempt();
+        @Override
+        public void onSuccess(final ApplicationInstanceDTO app) {
+          OfflineHelper.hideOfflineIndicator();
+          commentable = app.isCommentable();
+          notifiable = app.isNotifiable();
+          displayContent(content);
+        }
+      };
+      action.attempt();
     }
 
     private void displayContent(final ContentDTO content) {
@@ -150,7 +159,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals(ContentsTypes.Publication.name()) || event.getContent().getType().equals(ContentsTypes.Attachment.name())) {
+    if (event.getContent().getType().equals(ContentsTypes.Publication.name()) || event.getContent().getType().equals(ContentsTypes.Attachment.name()) || event.getContent().getType().equals(ContentsTypes.Folder.name())) {
       startWithContent(event.getContent());
     }
   }

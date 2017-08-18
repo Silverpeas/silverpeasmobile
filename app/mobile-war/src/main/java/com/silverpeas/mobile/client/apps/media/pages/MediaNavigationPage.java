@@ -62,9 +62,13 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
       List<BaseDTO> dataItems = event.getAlbumsAndMedias();
       for (BaseDTO dataItem : dataItems) {
         if (dataItem instanceof AlbumDTO) {
-          AlbumItem item = new AlbumItem();
-          item.setData((AlbumDTO)dataItem);
-          list.add(item);
+          if (((AlbumDTO) dataItem).isRoot()) {
+            setPageTitle(((AlbumDTO) dataItem).getName());
+          } else {
+            AlbumItem item = new AlbumItem();
+            item.setData((AlbumDTO) dataItem);
+            list.add(item);
+          }
         } else if (dataItem instanceof MediaDTO) {
           MediaItem item = new MediaItem();
           item.setData((MediaDTO)dataItem);
@@ -80,7 +84,6 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     if (isVisible()) {
       if (event.getMediaItem() instanceof AlbumDTO) {
         MediaNavigationPage page = new MediaNavigationPage();
-        page.setPageTitle(getPageTitle());
         page.init(instanceId, ((AlbumDTO) event.getMediaItem()).getId(), rights);
         page.show();
       }

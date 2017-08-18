@@ -6,20 +6,23 @@ import java.io.Serializable;
 
 public class AlbumDTO extends BaseDTO implements Serializable, Comparable<AlbumDTO> {
 
-	private static final long serialVersionUID = 1L;
-	private String name;
+  private static final long serialVersionUID = 1L;
+  private String name;
   private int countMedia;
+  private boolean root = false;
 
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	@Override
-	public int compareTo(AlbumDTO o) {
-		return name.compareTo(o.getName());
-	}
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public int compareTo(AlbumDTO o) {
+    return name.compareTo(o.getName());
+  }
 
   public int getCountMedia() {
     return countMedia;
@@ -27,5 +30,13 @@ public class AlbumDTO extends BaseDTO implements Serializable, Comparable<AlbumD
 
   public void setCountMedia(final int countMedia) {
     this.countMedia = countMedia;
+  }
+
+  public boolean isRoot() {
+    return root;
+  }
+
+  public void setRoot(final boolean root) {
+    this.root = root;
   }
 }

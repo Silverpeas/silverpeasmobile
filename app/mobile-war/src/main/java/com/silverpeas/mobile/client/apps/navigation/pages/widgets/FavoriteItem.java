@@ -29,13 +29,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
-import com.silverpeas.mobile.client.apps.navigation.events.pages.ClickItemEvent;
-import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ShortCutRouter;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -75,13 +72,20 @@ public class FavoriteItem extends Composite {
   protected void onClick(ClickEvent event) {
     if(data.getUrl().startsWith("/")) {
       String shortcutContentType = "";
+      String shortcutAppId = null;
       String shortcutContentId = data.getUrl().substring(data.getUrl().lastIndexOf("/") + 1);
-      if (data.getUrl().contains("Publication")) {
+      if (data.getUrl().contains("/Publication/")) {
         shortcutContentType = ContentsTypes.Publication.name();
-      } else if (data.getUrl().contains("Media")) {
+      } else if (data.getUrl().contains("/Media/")) {
         shortcutContentType = ContentsTypes.Media.name();
+      } else if (data.getUrl().contains("/Topic/")) {
+        shortcutContentType = ContentsTypes.Folder.name();
+        shortcutAppId = shortcutContentId.substring(shortcutContentId.lastIndexOf("=") + 1);
+        shortcutContentId = shortcutContentId.substring(0, shortcutContentId.indexOf("?"));
+      } else if (data.getUrl().contains("/Space/")) {
+        shortcutContentType = ContentsTypes.Space.name();
       }
-      ShortCutRouter.route(SpMobil.user, null, shortcutContentType, shortcutContentId);
+      ShortCutRouter.route(SpMobil.user, shortcutAppId, shortcutContentType, shortcutContentId);
     }
   }
 

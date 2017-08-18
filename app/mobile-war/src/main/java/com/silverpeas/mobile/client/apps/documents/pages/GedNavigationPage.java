@@ -67,9 +67,13 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
       list.clear();
       List<BaseDTO> dataItems = event.getTopicsAndPublications();
       for (Object dataItem : dataItems) {
-        GedItem item = new GedItem();
-        item.setData(dataItem);
-        list.add(item);
+        if (dataItem instanceof TopicDTO && ((TopicDTO) dataItem).isRoot()) {
+          setPageTitle(((TopicDTO) dataItem).getName());
+        } else {
+          GedItem item = new GedItem();
+          item.setData(dataItem);
+          list.add(item);
+        }
       }
       dataLoaded = true;
     }
@@ -81,7 +85,6 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
     if (isVisible()) {
       if (event.getGedItem() instanceof TopicDTO) {
         GedNavigationPage page = new GedNavigationPage();
-        page.setPageTitle(getPageTitle());
         page.setInstanceId(instanceId);
         page.setTopicId(((TopicDTO)event.getGedItem()).getId());
         page.show();

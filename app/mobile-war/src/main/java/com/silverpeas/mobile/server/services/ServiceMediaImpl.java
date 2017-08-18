@@ -172,6 +172,11 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
     try {
       if (rootAlbumId == null) {
+        AlbumDTO rootAlbum = new AlbumDTO();
+        ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
+        rootAlbum.setName(app.getLabel());
+        rootAlbum.setRoot(true);
+        results.add(rootAlbum);
         Collection<AlbumDetail> albums = getGalleryService().getAllAlbums(instanceId);
         for (AlbumDetail albumDetail : albums) {
           if (albumDetail.getLevel() == 2) {
@@ -182,8 +187,11 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       } else {
         AlbumDetail rootAlbum = getGalleryService().getAlbum(new NodePK(rootAlbumId, instanceId),
                 MediaCriteria.VISIBILITY.VISIBLE_ONLY);
-        Collection<AlbumDetail> albums = rootAlbum.getChildrenAlbumsDetails();
+        AlbumDTO rootAlbumDTO = populate(rootAlbum);
+        rootAlbumDTO.setRoot(true);
+        results.add(rootAlbumDTO);
 
+        Collection<AlbumDetail> albums = rootAlbum.getChildrenAlbumsDetails();
         for (AlbumDetail albumDetail : albums) {
           AlbumDTO album = populate(albumDetail);
           results.add(album);
