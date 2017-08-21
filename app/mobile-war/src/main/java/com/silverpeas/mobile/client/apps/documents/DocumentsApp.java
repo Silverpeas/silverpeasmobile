@@ -66,7 +66,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     @Override
     public void startWithContent(final ContentDTO content) {
       if (content.getType().equals(ContentsTypes.Folder.toString())) {
-        //TODO
         GedNavigationPage page = new GedNavigationPage();
         page.setInstanceId(content.getInstanceId());
         page.setTopicId(content.getId());

@@ -25,5 +25,5 @@
 package com.silverpeas.mobile.shared.dto.navigation;
 
 public enum Apps {
-	gallery, kmelia, quickinfo;
+	gallery, kmelia, quickinfo, webPages;
 }

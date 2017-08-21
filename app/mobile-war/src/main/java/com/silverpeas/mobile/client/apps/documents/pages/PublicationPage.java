@@ -122,17 +122,34 @@ public class PublicationPage extends PageContent implements View, PublicationNav
 
   @UiHandler("contentLink")
   protected void showContent(ClickEvent event) {
+    showPublicationContent(publication.getId(), msg.content());
+  }
 
+  public static void showWebPageContent(String Id, String instanceId, String title) {
     // compute height available for content
     int heightAvailable = Window.getClientHeight() - (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
     int widthAvailable = Window.getClientWidth();
     // display content
     String url = UrlUtils.getServicesLocation();
     url += "PublicationContent";
-    url += "?id=" + publication.getId();
+    url += "?id=" + Id + "&componentId=" + instanceId;
     IframePage page = new IframePage(url);
     page.setSize(widthAvailable + "px", heightAvailable + "px");
-    page.setPageTitle(msg.content());
+    page.setPageTitle(title);
+    page.show();
+  }
+
+  public static void showPublicationContent(String pubId, String title) {
+    // compute height available for content
+    int heightAvailable = Window.getClientHeight() - (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
+    int widthAvailable = Window.getClientWidth();
+    // display content
+    String url = UrlUtils.getServicesLocation();
+    url += "PublicationContent";
+    url += "?id=" + pubId;
+    IframePage page = new IframePage(url);
+    page.setSize(widthAvailable + "px", heightAvailable + "px");
+    page.setPageTitle(title);
     page.show();
   }
 }

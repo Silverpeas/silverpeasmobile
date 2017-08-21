@@ -48,6 +48,8 @@ public class NavigationItem extends Composite {
         setStyleName("folder-galery");
       } else if (type.equalsIgnoreCase(Apps.quickinfo.name())) {
         setStyleName("app-actuality");
+      } else if (type.equalsIgnoreCase(Apps.webPages.name())) {
+        setStyleName("app-actuality");
       }
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
