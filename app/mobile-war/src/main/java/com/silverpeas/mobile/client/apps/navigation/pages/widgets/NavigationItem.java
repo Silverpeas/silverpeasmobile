@@ -49,7 +49,7 @@ public class NavigationItem extends Composite {
       } else if (type.equalsIgnoreCase(Apps.quickinfo.name())) {
         setStyleName("app-actuality");
       } else if (type.equalsIgnoreCase(Apps.webPages.name())) {
-        setStyleName("app-actuality");
+        setStyleName("app-pageWeb");
       }
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");

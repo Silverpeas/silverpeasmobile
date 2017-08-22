@@ -734,7 +734,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 /***** NAVIGATION ****/
 .folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a, .app-actuality a,
- .publication.ui-input-text{
+.publication.ui-input-text, .app-blog a, .app-pageWeb a{
   background-image: url(packImagesNavigation.png);
   background-position: 0.5625em 0.5625em;
   background-repeat: no-repeat;
@@ -747,6 +747,14 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .folder-ged a {
   background-position:0.5em 0.5625em;
+}
+
+.app-pageWeb a {
+  background-position: 0.7em -1393px;
+}
+
+.app-blog a {
+  background-position: 0.65em -1506px;
 }
 
 .folder-galery a {

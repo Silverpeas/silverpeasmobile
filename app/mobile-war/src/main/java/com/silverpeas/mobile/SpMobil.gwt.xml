@@ -48,11 +48,6 @@
   <define-configuration-property name="mgwt.superdevmode" is-multi-valued="false"/>
   <define-configuration-property name="mgwt.superdevmode_host" is-multi-valued="false"/>
 
-  <!-- generater to build util! -->
-  <generate-with class="com.silverpeas.mobile.rebind.SuperDevModeGenerator">
-    <when-type-assignable class="com.silverpeas.mobile.client.common.gwt.impl.SuperDevModeHelper"/>
-  </generate-with>
-
 
   <set-configuration-property name="mgwt.superdevmode" value="off"/>
   <set-configuration-property name="mgwt.superdevmode_host" value="http://192.168.1.73:9876"/>

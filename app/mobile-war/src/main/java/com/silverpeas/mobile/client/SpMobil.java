@@ -45,7 +45,6 @@ import com.silverpeas.mobile.client.apps.webpage.WebPageApp;
 import com.silverpeas.mobile.client.common.*;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
-import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.common.mobil.Orientation;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
@@ -88,7 +87,6 @@ public class SpMobil implements EntryPoint {
      * Init. spmobile.
      */
     public void onModuleLoad() {
-        SuperDevModeUtil.showDevMode();
         instance = this;
 
         if (MobilUtils.isTablet()) {

@@ -25,32 +25,21 @@
 package com.silverpeas.mobile.client.components.homepage;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
-import com.silverpeas.mobile.client.apps.config.events.app.AbstractConfigAppEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.external
-    .NavigationAppInstanceChangedEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.pages.AbstractNavigationPagesEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.pages.ClickItemEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPagesEventHandler;
-import com.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import com.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
 import com.silverpeas.mobile.client.apps.navigation.pages.widgets.NavigationItem;
 import com.silverpeas.mobile.client.apps.navigation.pages.widgets.NewsItem;
 import com.silverpeas.mobile.client.apps.navigation.pages.widgets.PublicationItem;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.gwt.SuperDevModeUtil;
 import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
@@ -62,9 +51,7 @@ import com.silverpeas.mobile.shared.dto.FavoriteDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.configuration.Config;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
-import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.util.List;

@@ -8,6 +8,7 @@ import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.services.ServiceDocuments;
+import org.silverpeas.components.kmelia.model.KmeliaPublication;
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.admin.ObjectType;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
@@ -24,6 +25,8 @@ import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
+import org.silverpeas.core.util.LocalizationBundle;
+import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 
@@ -49,7 +52,10 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   public List<TopicDTO> getTopics(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
     checkUserInSession();
     List<TopicDTO> topicsList = new ArrayList<TopicDTO>();
-
+    boolean coWriting = false;
+    try {
+      coWriting = isCoWritingEnabled(instanceId);
+    } catch (Exception e) { }
     try {
       if (rootTopicId == null || rootTopicId.isEmpty()) {
         rootTopicId = "0";
@@ -80,20 +86,50 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
               // count publications
               Collection<NodePK> pks = getAllSubNodePKs(nodeDetail.getNodePK());
+              List<String> ids = new ArrayList<String>();
+              ids.add(String.valueOf(nodeDetail.getId()));
               if (isRightsOnTopicsEnabled(instanceId)) {
-                Collection<NodePK> pksAvailables = new ArrayList<NodePK>();
                 for (NodePK onePk : pks) {
                   NodeDetail oneNode = getNodeBm().getDetail(onePk);
                   if (isCurrentTopicAvailable(oneNode)) {
-                    pksAvailables.add(onePk);
+                    ids.add(onePk.getId());
                   }
                 }
-                pks = pksAvailables;
+              } else {
+                for (NodePK onePk : pks) {
+                  NodeDetail oneNode = getNodeBm().getDetail(onePk);
+                  ids.add(onePk.getId());
+                }
               }
+              PublicationPK pubPK = new PublicationPK("useless", instanceId);
+              List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(ids, pubPK, "pubname");
+              int nbPubNotVisible = 0;
+              for (PublicationDetail publication : publications) {
+                if (coWriting) {
+                  if (isRightsOnTopicsEnabled(instanceId)) {
+                    NodePK f = getKmeliaBm().getPublicationFatherPK(publication.getPK(), true,
+                        getUserInSession().getId(), isRightsOnTopicsEnabled(instanceId));
+                    String[] profiles = organizationController
+                        .getUserProfiles(getUserInSession().getId(), instanceId, Integer.valueOf
+                            (f.getId()), ObjectType.NODE);
+                    if (isSingleReader(profiles) && publication.isDraft()) {
+                      nbPubNotVisible++;
+                    }
+                  } else {
+                    String [] profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId);
+                    if (isSingleReader(profiles) && publication.isDraft()) {
+                      nbPubNotVisible++;
+                    }
+                  }
+                } else {
+                  if (publication.isDraft() && !publication.getUpdaterId().equals(getUserInSession().getId())) {
+                    nbPubNotVisible++;
+                  }
+                }
+              }
+              topic.setPubCount(publications.size() - nbPubNotVisible);
 
-              pks.add(nodeDetail.getNodePK());
-              topic.setPubCount(getPubBm().getNbPubInFatherPKs(pks));
-              //TODO : count without draft pub
+
               topic.setTerminal(childrenNumber == 0);
               if (nodeDetail.getId() ==1) {
                 trash = topic;
@@ -110,6 +146,15 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       throw new DocumentsException(e.getMessage());
     }
     return topicsList;
+  }
+
+  private boolean isSingleReader(final String[] profiles) {
+    for (String profile : profiles) {
+      if (profile.equals("admin")) return false;
+      if (profile.equals("publisher")) return false;
+      if (profile.equals("writer")) return false;
+    }
+    return true;
   }
 
   private Collection<NodePK> getAllSubNodePKs(final NodePK pk) throws Exception {
@@ -129,6 +174,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   @Override
   public List<PublicationDTO> getPublications(String instanceId, String topicId) throws DocumentsException, AuthenticationException {
     checkUserInSession();
+    LocalizationBundle resource = ResourceLocator
+        .getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", getUserInSession().getUserPreferences().getLanguage());
     ArrayList<PublicationDTO> pubs = new ArrayList<PublicationDTO>();
 
     try {
@@ -140,11 +187,19 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       String status = "Valid";
       ArrayList<String> nodeIds = new ArrayList<String>();
       nodeIds.add(nodePK.getId());
-      List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIdsAndStatus(nodeIds, pubPK, "pubname", status);
+
+      List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(nodeIds, pubPK, "pubname");
       for (PublicationDetail publicationDetail : publications) {
+
         PublicationDTO dto = new PublicationDTO();
         dto.setId(publicationDetail.getId());
-        dto.setName(publicationDetail.getName());
+        if (publicationDetail.isDraft()) {
+          if (publicationDetail.getUpdaterId().equals(getUserInSession().getId())) {
+            dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.draft") + ")");
+          }
+        } else if (publicationDetail.getStatus().equals("Valid")) {
+          dto.setName(publicationDetail.getName());
+        }
         pubs.add(dto);
       }
     } catch (Exception e) {
@@ -167,6 +222,11 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
   private boolean isRightsOnTopicsEnabled(String instanceId) throws Exception {
     String value = getMainSessionController().getComponentParameterValue(instanceId, "rightsOnTopics");
+    return StringUtil.getBooleanValue(value);
+  }
+
+  private boolean isCoWritingEnabled(String instanceId) throws Exception {
+    String value = getMainSessionController().getComponentParameterValue(instanceId, "coWriting");
     return StringUtil.getBooleanValue(value);
   }
 
