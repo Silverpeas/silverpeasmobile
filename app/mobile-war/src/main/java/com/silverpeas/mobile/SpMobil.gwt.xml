@@ -44,14 +44,6 @@
   <set-configuration-property name="devModeRedirectEnabled" value="true"/>
   <set-property name="compiler.useSourceMaps" value="true"/>
 
-  <!-- super dev mode -->
-  <define-configuration-property name="mgwt.superdevmode" is-multi-valued="false"/>
-  <define-configuration-property name="mgwt.superdevmode_host" is-multi-valued="false"/>
-
-
-  <set-configuration-property name="mgwt.superdevmode" value="off"/>
-  <set-configuration-property name="mgwt.superdevmode_host" value="http://192.168.1.73:9876"/>
-
   <inherits name="com.seanchenxi.gwt.storage.Storage"/>
   <set-property name="storage.cache" value="false" />
   <set-configuration-property name="storage.type.finder" value="mix" />
