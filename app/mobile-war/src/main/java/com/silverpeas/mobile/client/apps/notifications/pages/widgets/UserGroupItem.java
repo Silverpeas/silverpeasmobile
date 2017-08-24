@@ -77,10 +77,10 @@ public class UserGroupItem extends Composite {
   @UiHandler("container")
   protected void selection(ClickEvent event) {
     if (isSelected()) {
-      container.getElement().removeAttribute("style");
+      container.getElement().removeAttribute("class");
       this.selected = false;
     } else {
-      container.getElement().setAttribute("style", "color: white; background-color:#6fa800;");
+      container.getElement().setAttribute("class", "selected");
       this.selected = true;
     }
 

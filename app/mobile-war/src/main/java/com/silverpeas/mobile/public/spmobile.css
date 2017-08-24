@@ -255,6 +255,14 @@ legend, .ui-input-text input, .ui-input-search input {
   text-shadow: 0 /*{a-body-shadow-x}*/ 1px /*{a-body-shadow-y}*/ 0 /*{a-body-shadow-radius}*/ #f3f3f3 /*{a-body-shadow-color}*/;
 }
 
+.ui-page-theme-a .ui-body-inherit.filter-contacts{
+	background-color: #FFF ;
+	background-image:url(packPictos.png);
+	background-position:5px -577px ;
+	background-repeat:no-repeat;
+	width:92%
+}
+
 .ui-page-theme-a textarea.ui-body-inherit {
     background-color: #fff /*{a-body-background-color}*/;
 }
@@ -740,7 +748,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-repeat: no-repeat;
   padding-left: 2.056em
 }
-
+.publication.ui-input-text{
+	background-position: 0.5625em 0.3em;
+}
 .app-actuality a {
   background-position:0.5em -1022px;
 }
@@ -889,52 +899,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding: 1em;
   margin: 0;
 }
-
-#notification .list-contacts li {
-    padding: 1em 1em 2em 1em;
-}
-
-#notification .ui-controlgroup-controls.continu,
-#notification .title-instruction {
-  display:inline-block;
-}
-
-#notification .ui-controlgroup-controls.continu{
-  float:right;
-  padding:0 1em 0 0;
-
-}
-
-#notification  .btn-validate{
-  padding:0.5em 1em;
- }
- 
- #edit-notification .ui-input-text.destinataires {
-  background:#FFF url(packPictos.png) 13px -234px no-repeat;
-  padding-left:3.5em;
-  line-height: 2.4em;
-  position:relative;
-  color:#AAA;
- }
- 
-#edit-notification .ui-input-text.destinataires .nb-user-sectionne {
-  position:absolute;
-  top:0.5em;
-  left:2.5em;
-  font-size:0.8em;
-  color:#333
-}
-
-#edit-notification .ui-input-text.destinataires .btn-modif{
-  position:absolute;
-  top:0.1em;
-  right:0.1em;
-  bottom:0.1em;
-  background:#7eb73a url(packPictos.png) 0.5em 0.5em no-repeat;
-  display:block;
-  text-indent:-300em;
-  width:2em;
-}
  
  .ui-listview.list-comments > li p {
   line-height: 100%;
@@ -1057,13 +1021,81 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   margin-bottom: 2em;
 }
 
+
+
+/* notification */ 
+
+#notification .list-contacts li {
+    padding: 1em 1em 2em 1em;
+}
+
+#notification .ui-controlgroup-controls.continu,
+#notification .title-instruction {
+  display:inline-block;
+}
+
+#notification .ui-controlgroup-controls.continu{
+  float:right;
+  padding:0 1em 0 0;
+
+}
+
+#notification  .btn-validate{
+  padding:0.5em 1em;
+ }
+ 
+ #edit-notification .ui-input-text.destinataires {
+  background:#FFF url(packPictos.png) 13px -234px no-repeat;
+  padding-left:4em;
+  line-height: 1.4em;
+  position:relative;
+  color:#AAA;
+  font-size:80%;
+  min-height: 3.4em;
+ }
+ 
+#edit-notification .ui-input-text.destinataires .nb-user-sectionne {
+	position:absolute;
+	top: 1em;
+	left: 1.6em;
+	font-size: 1.4em;
+	color: #333;
+}
+
+#edit-notification .ui-input-text.destinataires .btn-modif{
+  position:absolute;
+  top:0.1em;
+  right:0.1em;
+  bottom:0.1em;
+  background:#7eb73a url(packPictos.png) 0.5em 0.5em no-repeat;
+  display:block;
+  text-indent:-300em;
+  width:2em;
+}
+#notification .list-notifications > li.selected {
+	border-left: 8px solid #7eb73a;
+	color:#000
+}
+#notification .list-notifications {
+    font-size: 80%;
+}
+#notification .title-instruction {
+    display: inline-block;
+    font-size: 80%;
+    font-style: italic;
+}
+#notification .introduction {
+	margin-bottom:0;
+}
+
 .filter-contacts,
 #edit-notification .ui-input-text.publication {
-  width: 98%;
-  padding-right:1%;
-  padding-left:1%;
-  line-height: 2.4em;
-  background-color:#FFF;
+	width: 98%;
+	padding-right:1%;
+	padding-left:1%;
+	line-height: 2em;
+	background-color:#FFF;
+	font-size: 80%;
 }
 
 .ui-controlgroup-horizontal .ui-controlgroup-controls>.ui-btn, .ui-controlgroup-horizontal .ui-controlgroup-controls li>.ui-btn, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-checkbox, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-radio, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-select {
@@ -1248,7 +1280,8 @@ textarea.ui-input-text {
 }
 
 #formLogin {
-  text-align: center
+  text-align: center;
+  padding-top:1em;
 }
 
 #page-login #Login, #page-login #Password {
@@ -1605,5 +1638,3 @@ form .forms .fields > li:nth-child(even) {
   max-width:100%;
   height:auto
 }
-
-
