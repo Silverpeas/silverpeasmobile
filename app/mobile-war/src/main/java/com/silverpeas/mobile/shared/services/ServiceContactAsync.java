@@ -7,4 +7,7 @@ import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public interface ServiceContactAsync {
   void getContacts(String type, String filter, int pageSize, int startIndex, final AsyncCallback<List<DetailUserDTO>> async);
+
+
+  void hasContacts(final AsyncCallback<Boolean> async);
 }

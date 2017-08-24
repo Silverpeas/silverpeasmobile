@@ -110,6 +110,11 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
     return listUsers;
   }
 
+  public boolean hasContacts() {
+    List tabUserDetail = getUsersByQuery("","Contact");
+    return !tabUserDetail.isEmpty();
+  }
+
   private List getFilteredUserList(final String filter, String type) {
     UserDetail[] tabUserDetail = organizationController.getAllUsers();
     List filteredUserList = null;

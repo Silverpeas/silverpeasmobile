@@ -50,6 +50,10 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   private boolean noMoreData = false;
   private static Scheduler.RepeatingCommand command = null;
 
+  public void setContactsVisible(final boolean contactsVisible) {
+    allcontacts.setVisible(contactsVisible);
+  }
+
 
   interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
   }

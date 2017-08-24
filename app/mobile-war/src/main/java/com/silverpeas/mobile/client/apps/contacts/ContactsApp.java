@@ -3,6 +3,7 @@ package com.silverpeas.mobile.client.apps.contacts;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.contacts.events.app.AbstractContactsAppEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsAppEventHandler;
 import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
@@ -31,8 +32,24 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
 
     public void start(){
         EventBus.getInstance().addHandler(AbstractContactsAppEvent.TYPE, this);
-        setMainPage(new ContactsPage());
-        super.start();
+
+        ServicesLocator.getServiceContact().hasContacts(new AsyncCallback<Boolean>() {
+          @Override
+          public void onFailure(final Throwable throwable) {
+            ContactsPage page = new ContactsPage();
+            page.setContactsVisible(true);
+            setMainPage(page);
+            ContactsApp.super.start();
+          }
+
+          @Override
+          public void onSuccess(final Boolean hasContacts) {
+            ContactsPage page = new ContactsPage();
+            page.setContactsVisible(hasContacts);
+            setMainPage(page);
+            ContactsApp.super.start();
+          }
+        });
     }
 
     @Override

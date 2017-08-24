@@ -11,4 +11,5 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 @RemoteServiceRelativePath("Contact")
 public interface ServiceContact extends RemoteService {
   List<DetailUserDTO> getContacts(String type, String filter, int pageSize, int startIndex) throws ContactException, AuthenticationException;
+  boolean hasContacts() throws ContactException, AuthenticationException;
 }
