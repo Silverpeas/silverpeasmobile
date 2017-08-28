@@ -75,7 +75,10 @@ public class ServiceTasksImpl extends AbstractAuthenticateService implements Ser
     TaskDTO task = new TaskDTO();
     task.setId(Integer.parseInt(todo.getId()));
     task.setName(todo.getName());
-    task.setPercentCompleted(todo.getPercentCompleted());
+
+    int percent = todo.getPercentCompleted();
+    if (percent == -1) percent = 0;
+    task.setPercentCompleted(percent);
     task.setPriority(getTodoMultiLang().getString("priorite" + todo.getPriority().getValue()));
     if (todo.getEndDate() != null) {
       task.setEndDate(sdf.format(todo.getEndDate()));

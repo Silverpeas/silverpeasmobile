@@ -13,12 +13,7 @@
   <source path="client"/>
   <source path="shared"/>
   <entry-point class="com.silverpeas.mobile.client.SpMobil"/>
-
-
-  <generate-with class="com.silverpeas.mobile.rebind.PropertiesGenerator">
-    <when-type-assignable class="com.silverpeas.mobile.client.rebind.ConfigurationProvider"/>
-  </generate-with>
-
+  
   <set-property name="compiler.emulatedStack" value="true"/>
   <set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true"/>
   <set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true"/>

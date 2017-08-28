@@ -14,16 +14,13 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
-import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 
 

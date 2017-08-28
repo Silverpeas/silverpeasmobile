@@ -57,7 +57,6 @@ import com.silverpeas.mobile.client.components.base.events.window.OrientationCha
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import com.silverpeas.mobile.client.pages.main.HomePage;
 import com.silverpeas.mobile.client.pages.search.SearchResultPage;
-import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
@@ -71,7 +70,6 @@ import java.util.List;
 
 public class SpMobil implements EntryPoint {
 
-    public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
     private static Page mainPage = null;
     public static DetailUserDTO user;
     private static String viewport, bodyClass, bodyId;

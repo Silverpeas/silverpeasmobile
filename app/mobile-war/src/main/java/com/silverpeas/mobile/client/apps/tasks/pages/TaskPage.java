@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
@@ -27,6 +28,7 @@ public class TaskPage extends PageContent {
   @UiField TextArea name;
   @UiField HTMLPanel container;
   @UiField Anchor submit;
+  @UiField Label percent;
   private TaskDTO data;
 
   @UiField(provided = true) protected TasksMessages msg = null;
@@ -57,6 +59,7 @@ public class TaskPage extends PageContent {
     String css = "background-image: -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(" + val + ", rgb(114, 171, 14)), color-stop(" + val + ", rgb(197, 197, 197)));";
     range.getElement().setAttribute("style", css);
     range.getElement().setAttribute("value", String.valueOf(value));
+    percent.setText(String.valueOf(value) + " %");
   }
 
   private void updateModel() {

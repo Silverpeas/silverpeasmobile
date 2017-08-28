@@ -1,13 +1,11 @@
 package com.silverpeas.mobile.client.common;
 
-import com.google.gwt.core.client.GWT;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
-import com.silverpeas.mobile.client.rebind.ConfigurationProvider;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 /**
@@ -17,7 +15,7 @@ public class AuthentificationManager {
 
   private static AuthentificationManager instance = null;
   private static final String USER_CONNECTED_KEY = "userConnected";
-  public final static ConfigurationProvider configuration = GWT.create(ConfigurationProvider.class);
+  private static final String DES_KEY = "LagTegshyeecnoc^";
 
   public static AuthentificationManager getInstance() {
     if (instance == null) {
@@ -58,7 +56,7 @@ public class AuthentificationManager {
    */
   public String decryptPassword(String passwordEncrysted) {
     TripleDesCipher cipher = new TripleDesCipher();
-    cipher.setKey(configuration.getDESKey().getBytes());
+    cipher.setKey(DES_KEY.getBytes());
     String plainPassword = null;
     try {
       plainPassword = cipher.decrypt(passwordEncrysted);
@@ -70,7 +68,7 @@ public class AuthentificationManager {
 
   private String encryptPassword(String password) throws InvalidCipherTextException {
     TripleDesCipher cipher = new TripleDesCipher();
-    cipher.setKey(SpMobil.configuration.getDESKey().getBytes());
+    cipher.setKey(DES_KEY.getBytes());
     String encryptedPassword = cipher.encrypt(password);
     return encryptedPassword;
   }
