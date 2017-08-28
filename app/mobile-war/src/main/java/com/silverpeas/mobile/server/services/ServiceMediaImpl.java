@@ -7,7 +7,6 @@ import com.drew.metadata.exif.ExifIFD0Directory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
-import com.silverpeas.mobile.server.config.Configurator;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
 import com.silverpeas.mobile.server.servlets.EasySSLProtocolSocketFactory;
 import com.silverpeas.mobile.shared.dto.BaseDTO;

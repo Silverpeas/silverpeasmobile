@@ -1,10 +1,19 @@
 package com.silverpeas.mobile.server.common;
 
-import com.silverpeas.mobile.server.config.Configurator;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 
 public class SpMobileLogModule {
-	
-	public static String getName() {
-		return Configurator.getConfigValue("log.module.name");
-	}
+
+  private static String logModuleName;
+
+  static {
+    SettingBundle mobileSettings =
+        ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    logModuleName = mobileSettings.getString("", "");
+  }
+
+  public static String getName() {
+    return logModuleName;
+  }
 }

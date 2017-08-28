@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.server.services;
 
-import com.silverpeas.mobile.server.config.Configurator;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;

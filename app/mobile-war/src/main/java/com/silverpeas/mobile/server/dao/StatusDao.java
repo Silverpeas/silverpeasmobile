@@ -1,6 +1,5 @@
 package com.silverpeas.mobile.server.dao;
 
-import com.silverpeas.mobile.server.config.Configurator;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
 import org.silverpeas.core.persistence.jdbc.DBUtil;
 import org.silverpeas.core.util.UtilException;
@@ -15,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 public class StatusDao {
+
+  private static final int mystatus_pagesize = 10;
 
   public List<StatusDTO> getAllStatus(int userId, int step) throws SQLException {
     Connection connection = getConnection();
@@ -67,13 +68,13 @@ public class StatusDao {
   private List<StatusDTO> getSocialInformationsList(ResultSet rs, int step) throws SQLException {
     ArrayList<StatusDTO> statusList = new ArrayList<StatusDTO>();
     int index = 0;
-    while (rs.next() && index < step * Configurator.getConfigIntValue("mystatus.pagesize")) {
+    while (rs.next() && index < step * mystatus_pagesize) {
       StatusDTO status = new StatusDTO();
       status.setId(rs.getInt(1));
       status.setUserId(rs.getInt(2));
       status.setCreationDate(new Date(rs.getTimestamp(3).getTime()));
       status.setDescription(rs.getString(4));
-      if (index >= (step-1) * Configurator.getConfigIntValue("mystatus.pagesize") || step == 1) {
+      if (index >= (step-1) * mystatus_pagesize) {
         statusList.add(status);
       }
       index++;
