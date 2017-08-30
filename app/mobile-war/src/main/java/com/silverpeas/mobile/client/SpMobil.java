@@ -34,6 +34,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.blog.BlogApp;
 import com.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import com.silverpeas.mobile.client.apps.favorites.FavoritesApp;
 import com.silverpeas.mobile.client.apps.media.MediaApp;
@@ -140,6 +141,7 @@ public class SpMobil implements EntryPoint {
         apps.add(new TasksApp());
         apps.add(new FavoritesApp());
         apps.add(new WebPageApp());
+        apps.add(new BlogApp());
 
         Notification.activityStop();
     }

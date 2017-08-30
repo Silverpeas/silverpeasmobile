@@ -243,6 +243,10 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       } else if (app.getName().equals("gallery")) {
         dto.setCommentable(true);
         dto.setNotifiable(true);
+      } else if (app.getName().equals("blog")) {
+        dto.setCommentable(true);
+        dto.setNotifiable(true);
+
       }
     } catch (Exception e) {
       dto.setCommentable(false);

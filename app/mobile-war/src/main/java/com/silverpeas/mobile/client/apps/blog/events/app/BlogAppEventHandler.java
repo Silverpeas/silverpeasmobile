@@ -22,8 +22,10 @@
  *
  */
 
-package com.silverpeas.mobile.shared.dto.navigation;
+package com.silverpeas.mobile.client.apps.blog.events.app;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog;
+import com.google.gwt.event.shared.EventHandler;
+
+public interface BlogAppEventHandler extends EventHandler{
+  void loadBlog(BlogLoadEvent event);
 }

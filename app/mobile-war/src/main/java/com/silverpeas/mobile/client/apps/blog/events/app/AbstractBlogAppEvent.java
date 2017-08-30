@@ -22,8 +22,19 @@
  *
  */
 
-package com.silverpeas.mobile.shared.dto.navigation;
+package com.silverpeas.mobile.client.apps.blog.events.app;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog;
+import com.google.gwt.event.shared.GwtEvent;
+
+public abstract class AbstractBlogAppEvent extends GwtEvent<BlogAppEventHandler>{
+
+  public static Type<BlogAppEventHandler> TYPE = new Type<BlogAppEventHandler>();
+
+  public AbstractBlogAppEvent(){
+  }
+
+  @Override
+  public Type<BlogAppEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 }

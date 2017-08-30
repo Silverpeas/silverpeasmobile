@@ -22,8 +22,12 @@
  *
  */
 
-package com.silverpeas.mobile.shared.dto.navigation;
+package com.silverpeas.mobile.client.apps.blog.resources;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog;
+import com.google.gwt.i18n.client.Messages;
+
+public interface BlogMessages extends Messages {
+  String more();
+  String title();
+
 }

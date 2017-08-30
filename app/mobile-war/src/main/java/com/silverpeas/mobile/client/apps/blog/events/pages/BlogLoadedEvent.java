@@ -22,8 +22,28 @@
  *
  */
 
-package com.silverpeas.mobile.shared.dto.navigation;
+package com.silverpeas.mobile.client.apps.blog.events.pages;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog;
+import com.silverpeas.mobile.shared.dto.blog.PostDTO;
+import com.silverpeas.mobile.shared.dto.news.NewsDTO;
+
+import java.util.List;
+
+public class BlogLoadedEvent extends AbstractBlogPagesEvent {
+
+  private List<PostDTO> posts;
+
+  public BlogLoadedEvent(List<PostDTO> posts){
+    super();
+    this.posts = posts;
+  }
+
+  @Override
+  protected void dispatch(BlogPagesEventHandler handler) {
+    handler.onBlogLoad(this);
+  }
+
+  public List<PostDTO> getPosts() {
+    return posts;
+  }
 }

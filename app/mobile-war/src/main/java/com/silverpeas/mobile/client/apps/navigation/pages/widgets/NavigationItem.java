@@ -50,6 +50,8 @@ public class NavigationItem extends Composite {
         setStyleName("app-actuality");
       } else if (type.equalsIgnoreCase(Apps.webPages.name())) {
         setStyleName("app-pageWeb");
+      } else if (type.equalsIgnoreCase(Apps.blog.name())) {
+        setStyleName("app-blog");
       }
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
