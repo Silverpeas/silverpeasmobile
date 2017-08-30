@@ -196,7 +196,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     dto.setId(space.getId());
     dto.setLabel(space.getName());
     dto.setPersonal(space.isPersonalSpace());
-    dto.setOrberNum(space.getOrderNum());
+    dto.setOrderNum(space.getOrderNum());
     return dto;
   }
 
@@ -205,6 +205,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     dto.setId(app.getId());
     dto.setLabel(app.getLabel());
     dto.setType(app.getName());
+    dto.setOrderNum(app.getOrderNum());
 
     RightDTO rights = new RightDTO();
     String[] roles = getUserRoles(app.getId(), getUserInSession().getId());
