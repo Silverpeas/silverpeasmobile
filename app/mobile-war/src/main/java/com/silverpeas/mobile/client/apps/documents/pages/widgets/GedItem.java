@@ -45,7 +45,7 @@ public class GedItem extends Composite {
       }
     } else if (data instanceof PublicationDTO) {
       dataPublication = (PublicationDTO) data;
-      link.setText(dataPublication.getName());
+      link.setHTML(dataPublication.getName());
       setStyleName("publication");
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");

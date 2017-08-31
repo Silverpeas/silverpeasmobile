@@ -66,6 +66,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       rootTopic.setRoot(true);
       if (rootNode.hasFather()) {
         rootTopic.setName(rootNode.getName());
+        rootTopic.setId(String.valueOf(rootNode.getId()));
       } else {
         ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
         rootTopic.setName(app.getLabel());
@@ -157,6 +158,22 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     return true;
   }
 
+  private boolean isManager(final String[] profiles) {
+    for (String profile : profiles) {
+      if (profile.equals("admin")) return true;
+    }
+    return false;
+  }
+
+  private boolean isManagerOrPublisherOrWriter(final String[] profiles) {
+    for (String profile : profiles) {
+      if (profile.equals("admin")) return true;
+      if (profile.equals("publisher")) return true;
+      if (profile.equals("writer")) return true;
+    }
+    return false;
+  }
+
   private Collection<NodePK> getAllSubNodePKs(final NodePK pk) throws Exception {
     CopyOnWriteArrayList<NodePK> subNodes = new CopyOnWriteArrayList<NodePK>();
     if (pk != null) {
@@ -189,18 +206,34 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       nodeIds.add(nodePK.getId());
 
       List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(nodeIds, pubPK, "pubname");
-      for (PublicationDetail publicationDetail : publications) {
 
+      String[] profiles;
+
+      if (isRightsOnTopicsEnabled(instanceId)) {
+        profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId, Integer.valueOf(topicId), ObjectType.NODE);
+      } else {
+        profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId);
+      }
+
+      for (PublicationDetail publicationDetail : publications) {
+        boolean visible = publicationDetail.isVisible();
+        if (isManager(profiles)) visible = true;
         PublicationDTO dto = new PublicationDTO();
         dto.setId(publicationDetail.getId());
         if (publicationDetail.isDraft()) {
           if (publicationDetail.getUpdaterId().equals(getUserInSession().getId())) {
             dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.draft") + ")");
           }
-        } else if (publicationDetail.getStatus().equals("Valid")) {
+        } else if (publicationDetail.isValid()) {
           dto.setName(publicationDetail.getName());
+        } else if (publicationDetail.isValidationRequired()) {
+          visible = isManagerOrPublisherOrWriter(profiles);
+          dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.tovalidate") + ")");
+        } else if (publicationDetail.isRefused()) {
+          visible = isManagerOrPublisherOrWriter(profiles); //TODO manage other cases than coediting
+          dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.unvalidate") + ")");
         }
-        pubs.add(dto);
+        if (visible) pubs.add(dto);
       }
     } catch (Exception e) {
       SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);

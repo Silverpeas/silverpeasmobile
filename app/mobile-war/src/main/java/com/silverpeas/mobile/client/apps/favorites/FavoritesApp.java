@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
+import com.silverpeas.mobile.client.apps.favorites.events.app.AddFavoriteEvent;
 import com.silverpeas.mobile.client.apps.favorites.events.app.FavoritesAppEventHandler;
 import com.silverpeas.mobile.client.apps.favorites.events.app.FavoritesLoadEvent;
 import com.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
@@ -37,17 +38,23 @@ import com.silverpeas.mobile.client.apps.navigation.events.app.external
     .NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
+import com.silverpeas.mobile.client.apps.status.StatusApp;
+import com.silverpeas.mobile.client.apps.status.events.StatusEvents;
 import com.silverpeas.mobile.client.apps.tasks.pages.TasksPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
+import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import com.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.FavoriteDTO;
+import com.silverpeas.mobile.shared.dto.StatusDTO;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FavoritesApp extends App implements FavoritesAppEventHandler, NavigationEventHandler {
@@ -100,6 +107,21 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
       };
       action.attempt();
     }
+
+  @Override
+  public void addFavorite(final AddFavoriteEvent event) {
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceFavorites().addFavorite(event.getInstanceId(), event.getObjectId(), event.getObjectType(), event.getDescription(), this);
+      }
+
+      public void onSuccess(String result) {
+        //TODO : message ?
+      }
+    };
+    action.attempt();
+  }
 
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) { /* only one instance */ }

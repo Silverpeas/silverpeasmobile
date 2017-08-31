@@ -22,21 +22,51 @@
  *
  */
 
-package com.silverpeas.mobile.shared.services;
+package com.silverpeas.mobile.client.apps.favorites.events.app;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.silverpeas.mobile.shared.dto.FavoriteDTO;
-import com.silverpeas.mobile.shared.dto.news.NewsDTO;
-import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.FavoritesException;
-import com.silverpeas.mobile.shared.exceptions.NewsException;
 
-import java.util.List;
+public class AddFavoriteEvent extends AbstractFavoritesAppEvent {
 
-@RemoteServiceRelativePath("Favorites")
-public interface ServiceFavorites extends RemoteService {
-  public List<FavoriteDTO> getFavorites() throws FavoritesException, AuthenticationException;
+  private String instanceId, objectId, objectType, description;
 
-  void addFavorite(String instanceId, String objectId, String objectType, String description) throws FavoritesException, AuthenticationException;
+  public AddFavoriteEvent(){
+    super();
+  }
+
+  @Override
+  protected void dispatch(FavoritesAppEventHandler handler) {
+    handler.addFavorite(this);
+  }
+
+  public String getInstanceId() {
+    return instanceId;
+  }
+
+  public void setInstanceId(final String instanceId) {
+    this.instanceId = instanceId;
+  }
+
+  public String getObjectId() {
+    return objectId;
+  }
+
+  public void setObjectId(final String objectId) {
+    this.objectId = objectId;
+  }
+
+  public String getObjectType() {
+    return objectType;
+  }
+
+  public void setObjectType(final String objectType) {
+    this.objectType = objectType;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(final String description) {
+    this.description = description;
+  }
 }

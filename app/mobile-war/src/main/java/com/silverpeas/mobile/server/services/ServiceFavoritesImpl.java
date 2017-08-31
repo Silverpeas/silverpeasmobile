@@ -56,4 +56,11 @@ public class ServiceFavoritesImpl extends AbstractAuthenticateService implements
     List<LinkDetail> favorites = FavoritesHelper.getInstance().getBookmarkPerso(getUserInSession().getId());
     return FavoritesHelper.getInstance().populate(favorites);
   }
+
+  @Override
+  public void addFavorite(String instanceId, String objectId, String objectType, String description) throws FavoritesException, AuthenticationException {
+    checkUserInSession();
+    FavoritesHelper.getInstance().addToFavorite(instanceId,objectId,objectType,description, getUserInSession().getId());
+  }
+
 }

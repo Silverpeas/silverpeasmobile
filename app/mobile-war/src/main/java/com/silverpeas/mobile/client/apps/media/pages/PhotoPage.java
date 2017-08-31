@@ -16,6 +16,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
+import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
@@ -61,6 +62,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
   @UiField ActionsMenu actionsMenu;
 
   private NotifyButton notification = new NotifyButton();
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   private static PhotoPageUiBinder uiBinder = GWT.create(PhotoPageUiBinder.class);
   private PhotoDTO photo;
@@ -136,6 +138,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
+      actionsMenu.addAction(favorite);
       if (event.isNotifiable()) {
         notification.init(photo.getInstance(), photo.getId(), NotificationDTO.TYPE_PHOTO, photo.getName(), getPageTitle());
         actionsMenu.addAction(notification);

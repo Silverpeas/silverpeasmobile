@@ -865,6 +865,14 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   height: 2em;
 }
 
+.appHeader {
+  padding: 0 1em;
+  margin: 0;
+  font-size: 12pt;
+  font-weight: normal;
+  height: 3em;
+}
+
 .comments .publiName, .comments .mediaName {
   margin-right: 1em;
   background: transparent url(packImagesNavigation.png) right -400px no-repeat;

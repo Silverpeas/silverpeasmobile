@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
 import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
@@ -14,12 +15,15 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedNa
 import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.documents.pages.widgets.GedItem;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
+import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 
@@ -28,9 +32,12 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   private DocumentsMessages msg;
 
   @UiField UnorderedList list;
+  @UiField ActionsMenu actionsMenu;
 
+  private TopicDTO root;
   private String rootTopicId, instanceId;
   private boolean dataLoaded = false;
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   private static GedNavigationPageUiBinder uiBinder = GWT.create(GedNavigationPageUiBinder.class);
 
@@ -61,14 +68,14 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 
   @Override
   public void onLoadedTopics(GedItemsLoadedEvent event) {
-    Notification.activityStart();
     if (isVisible() && dataLoaded == false) {
-
+      Notification.activityStart();
       list.clear();
       List<BaseDTO> dataItems = event.getTopicsAndPublications();
       for (Object dataItem : dataItems) {
         if (dataItem instanceof TopicDTO && ((TopicDTO) dataItem).isRoot()) {
           setPageTitle(((TopicDTO) dataItem).getName());
+          root = (TopicDTO) dataItem;
         } else {
           GedItem item = new GedItem();
           item.setData(dataItem);
@@ -76,8 +83,17 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
         }
       }
       dataLoaded = true;
+
+      actionsMenu.addAction(favorite);
+
+      if (root.getId() == null) {
+        favorite.init(instanceId, null, ContentsTypes.App.name(), root.getName());
+      } else {
+        favorite.init(instanceId, root.getId(), ContentsTypes.Folder.name(), root.getName());
+      }
+      Notification.activityStop();
     }
-    Notification.activityStop();
+
   }
 
   @Override

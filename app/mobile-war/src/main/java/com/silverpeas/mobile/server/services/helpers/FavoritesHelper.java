@@ -24,6 +24,7 @@
 
 package com.silverpeas.mobile.server.services.helpers;
 
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.FavoriteDTO;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
@@ -62,6 +63,29 @@ public class FavoritesHelper {
       }
     }
     return linksVisibles;
+  }
+
+  public void addToFavorite(String instanceId, String objectId, String objectType, String description, String userId) {
+    LinkDetail link = new LinkDetail();
+    String url = "";
+
+    if (objectType.equals(ContentsTypes.Folder.name())) {
+      url = "/Topic/" + objectId + "?ComponentId=" + instanceId;
+    } else if (objectType.equals(ContentsTypes.Space.name())) {
+      url = "/Space/" + objectId;
+    } else if (objectType.equals(ContentsTypes.Publication.name())) {
+      url = "/Publication/" + objectId;
+    } else if (objectType.equals(ContentsTypes.App.name())) {
+      url = "/Component/" + instanceId;
+    }
+    link.setUrl(url);
+    link.setName(description);
+    link.setHasPosition(false);
+    link.setPosition(0);
+    link.setVisible(true);
+    link.setPopup(false);
+    link.setUserId(userId);
+    getMyLinksBm().createLink(link);
   }
 
   private MyLinksService getMyLinksBm() {

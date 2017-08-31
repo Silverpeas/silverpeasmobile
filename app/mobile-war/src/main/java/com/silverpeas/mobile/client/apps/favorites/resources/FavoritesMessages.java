@@ -22,21 +22,12 @@
  *
  */
 
-package com.silverpeas.mobile.shared.services;
+package com.silverpeas.mobile.client.apps.favorites.resources;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.silverpeas.mobile.shared.dto.FavoriteDTO;
-import com.silverpeas.mobile.shared.dto.news.NewsDTO;
-import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.FavoritesException;
-import com.silverpeas.mobile.shared.exceptions.NewsException;
+import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
-import java.util.List;
+public interface FavoritesMessages extends Messages {
+  String addToFavoritesContent();
 
-@RemoteServiceRelativePath("Favorites")
-public interface ServiceFavorites extends RemoteService {
-  public List<FavoriteDTO> getFavorites() throws FavoritesException, AuthenticationException;
-
-  void addFavorite(String instanceId, String objectId, String objectType, String description) throws FavoritesException, AuthenticationException;
 }

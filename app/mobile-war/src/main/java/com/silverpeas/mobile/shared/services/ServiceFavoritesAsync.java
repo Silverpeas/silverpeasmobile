@@ -37,4 +37,7 @@ import java.util.List;
 
 public interface ServiceFavoritesAsync {
   void getFavorites(final AsyncCallback<List<FavoriteDTO>> async);
+
+  void addFavorite(String instanceId, String objectId, String objectType, String description,
+      final AsyncCallback<Void> async);
 }

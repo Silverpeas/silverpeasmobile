@@ -21,6 +21,7 @@ import com.silverpeas.mobile.client.apps.documents.events.pages.publication.Publ
 import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.documents.pages.widgets.Attachment;
 import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
+import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import com.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -30,6 +31,7 @@ import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -53,6 +55,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
   @UiField(provided = true) protected DocumentsMessages msg = null;
 
   private NotifyButton notification = new NotifyButton();
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
   }
@@ -84,6 +87,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
     Notification.activityStop();
     this.publication = event.getPublication();
     display(event.isCommentable(), event.isAbleToStoreContent());
+    actionsMenu.addAction(favorite);
     if (event.isNotifiable()) {
       actionsMenu.addAction(notification);
     }
@@ -118,6 +122,7 @@ public class PublicationPage extends PageContent implements View, PublicationNav
       }
     }
     notification.init(publication.getInstanceId(), publication.getId(), NotificationDTO.TYPE_PUBLICATION, publication.getName(), getPageTitle());
+    favorite.init(publication.getInstanceId(), publication.getId(), ContentsTypes.Publication.name(), publication.getName());
   }
 
   @UiHandler("contentLink")

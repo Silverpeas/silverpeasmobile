@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
+import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
@@ -59,6 +60,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
   @UiField ActionsMenu actionsMenu;
 
   private NotifyButton notification = new NotifyButton();
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private static SoundPageUiBinder uiBinder = GWT.create(SoundPageUiBinder.class);
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
   private SoundDTO sound;
@@ -121,6 +123,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
+      actionsMenu.addAction(favorite);
       if (event.isNotifiable()) {
         notification.init(sound.getInstance(), sound.getId(), NotificationDTO.TYPE_SOUND, sound.getName(), getPageTitle());
         actionsMenu.addAction(notification);
