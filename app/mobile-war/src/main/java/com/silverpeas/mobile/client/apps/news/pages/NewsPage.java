@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import com.silverpeas.mobile.client.apps.news.events.app.NewsLoadEvent;
 import com.silverpeas.mobile.client.apps.news.events.pages.AbstractNewsPagesEvent;
 import com.silverpeas.mobile.client.apps.news.events.pages.NewsLoadedEvent;
@@ -36,7 +37,11 @@ import com.silverpeas.mobile.client.apps.news.pages.widgets.NewsItem;
 import com.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.components.UnorderedList;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
+import com.silverpeas.mobile.shared.dto.RightDTO;
+import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.util.List;
@@ -47,6 +52,10 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
 
   @UiField(provided = true) protected NewsMessages msg = null;
   @UiField UnorderedList news;
+  @UiField ActionsMenu actionsMenu;
+
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private String instanceId;
 
   interface NewsPageUiBinder extends UiBinder<Widget, NewsPage> {
   }
@@ -75,8 +84,11 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
       NewsItem item = new NewsItem();
       item.setData(i, max, newsDTO);
       news.add(item);
+      instanceId = newsDTO.getInstanceId();
       i++;
     }
+    actionsMenu.addAction(favorite);
+    favorite.init(instanceId, null, ContentsTypes.App.name(), getPageTitle());
   }
 
 }

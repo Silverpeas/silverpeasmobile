@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.AbstractMediaNavigationPagesEvent;
@@ -17,8 +18,10 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.components.UnorderedList;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import com.silverpeas.mobile.shared.dto.media.MediaDTO;
@@ -30,9 +33,12 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   private static MediaNavigationPageUiBinder uiBinder = GWT.create(MediaNavigationPageUiBinder.class);
   @UiField UnorderedList list;
   private AddMediaButton buttonImport= new AddMediaButton();
+  @UiField ActionsMenu actionsMenu;
 
   private String rootAlbumId, instanceId;
   private RightDTO rights;
+  private AlbumDTO root;
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   interface MediaNavigationPageUiBinder extends UiBinder<Widget, MediaNavigationPage> {
   }
@@ -64,6 +70,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
         if (dataItem instanceof AlbumDTO) {
           if (((AlbumDTO) dataItem).isRoot()) {
             setPageTitle(((AlbumDTO) dataItem).getName());
+            root = (AlbumDTO) dataItem;
           } else {
             AlbumItem item = new AlbumItem();
             item.setData((AlbumDTO) dataItem);
@@ -74,6 +81,13 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
           item.setData((MediaDTO)dataItem);
           list.add(item);
         }
+      }
+
+      actionsMenu.addAction(favorite);
+      if (root.getId() == null) {
+        favorite.init(instanceId, null, ContentsTypes.App.name(), root.getName());
+      } else {
+        favorite.init(instanceId, root.getId(), ContentsTypes.Album.name(), root.getName());
       }
     }
     Notification.activityStop();

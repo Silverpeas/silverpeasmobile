@@ -34,9 +34,12 @@ import com.silverpeas.mobile.client.apps.blog.events.pages.BlogLoadedEvent;
 import com.silverpeas.mobile.client.apps.blog.events.pages.BlogPagesEventHandler;
 import com.silverpeas.mobile.client.apps.blog.pages.widgets.BlogItem;
 import com.silverpeas.mobile.client.apps.blog.resources.BlogMessages;
+import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.components.UnorderedList;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.blog.PostDTO;
 
 import java.util.List;
@@ -47,6 +50,10 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
 
   @UiField(provided = true) protected BlogMessages msg = null;
   @UiField UnorderedList news;
+  @UiField ActionsMenu actionsMenu;
+
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private String instanceId;
 
   interface BlogPageUiBinder extends UiBinder<Widget, BlogPage> {
   }
@@ -75,8 +82,11 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
       BlogItem item = new BlogItem();
       item.setData(i, max, postDTO);
       news.add(item);
+      instanceId = postDTO.getInstanceId();
       i++;
     }
+    actionsMenu.addAction(favorite);
+    favorite.init(instanceId, null, ContentsTypes.App.name(), getPageTitle());
   }
 
 }

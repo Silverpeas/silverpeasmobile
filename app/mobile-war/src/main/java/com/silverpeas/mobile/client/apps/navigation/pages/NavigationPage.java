@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import com.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.pages.AbstractNavigationPagesEvent;
@@ -17,14 +18,20 @@ import com.silverpeas.mobile.client.apps.navigation.pages.widgets.NavigationItem
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.components.UnorderedList;
+import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.components.homepage.HomePageContent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import com.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class NavigationPage extends PageContent implements NavigationPagesEventHandler {
+
+  @UiField ActionsMenu actionsMenu;
+
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   private static NavigationPageUiBinder uiBinder = GWT.create(NavigationPageUiBinder.class);
   private String rootSpaceId;
@@ -51,6 +58,10 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
     if (isVisible() && dataLoaded == false) {
       content.setData(event.getData());
       dataLoaded = true;
+
+
+      actionsMenu.addAction(favorite);
+      favorite.init(null, event.getData().getId(), ContentsTypes.Space.name(), getPageTitle());
     }
     Notification.activityStop();
   }

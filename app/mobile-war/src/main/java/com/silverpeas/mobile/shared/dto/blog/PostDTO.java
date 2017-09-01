@@ -39,6 +39,7 @@ public class PostDTO extends BaseDTO implements Serializable {
   private String creatorName;
   private String dateEvent;
   private String creationDate;
+  private String instanceId;
 
   public PostDTO() {
   }
@@ -102,5 +103,13 @@ public class PostDTO extends BaseDTO implements Serializable {
 
   public String getCreationDate() {
     return creationDate;
+  }
+
+  public String getInstanceId() {
+    return instanceId;
+  }
+
+  public void setInstanceId(final String instanceId) {
+    this.instanceId = instanceId;
   }
 }

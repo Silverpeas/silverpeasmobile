@@ -58,6 +58,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   public HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException {
     checkUserInSession();
     HomePageDTO data = new HomePageDTO();
+    data.setId(spaceId);
 
     List<PublicationDetail> lastNews = NewsHelper.getInstance().getLastNews(getUserInSession().getId(), spaceId);
     data.setNews(NewsHelper.getInstance().populate(lastNews, false));

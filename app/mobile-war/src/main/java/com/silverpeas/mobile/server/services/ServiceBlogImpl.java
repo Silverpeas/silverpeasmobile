@@ -68,6 +68,7 @@ public class ServiceBlogImpl extends AbstractAuthenticateService implements Serv
     dto.setCreatorName(post.getCreatorName());
     dto.setCreationDate(sdf.format(post.getCreationDate()));
     dto.setDateEvent(sdf.format(post.getDateEvent()));
+    dto.setInstanceId(post.getComponentInstanceId());
     return dto;
   }
 
