@@ -59,6 +59,14 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     checkUserInSession();
     HomePageDTO data = new HomePageDTO();
     data.setId(spaceId);
+    try {
+      if (spaceId != null) {
+        SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
+        data.setSpaceName(space.getName(getUserInSession().getUserPreferences().getLanguage()));
+      }
+    } catch (Exception e) {
+      throw new NavigationException(e);
+    }
 
     List<PublicationDetail> lastNews = NewsHelper.getInstance().getLastNews(getUserInSession().getId(), spaceId);
     data.setNews(NewsHelper.getInstance().populate(lastNews, false));

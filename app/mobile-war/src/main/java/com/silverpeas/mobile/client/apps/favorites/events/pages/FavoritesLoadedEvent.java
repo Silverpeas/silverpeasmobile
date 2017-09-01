@@ -40,7 +40,7 @@ public class FavoritesLoadedEvent extends AbstractFavoritesPagesEvent {
 
 	@Override
 	protected void dispatch(FavoritesPagesEventHandler handler) {
-		handler.onContactsLoaded(this);
+		handler.onFavoritesLoaded(this);
 	}
 	
 	public List<FavoriteDTO> getFavorites(){

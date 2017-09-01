@@ -2,6 +2,7 @@ package com.silverpeas.mobile.client.apps.navigation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppEventHandler;
@@ -55,8 +56,8 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
 
     @Override
     public void loadSpacesAndApps(final LoadSpacesAndAppsEvent event) {
-        //TODO : replace call getSpaceAndApps by getHomePage
-        final String key = "spaceapp_" + event.getRootSpaceId();
+      //TODO : replace call getSpaceAndApps by getHomePage
+      final String key = "spaceapp_" + event.getRootSpaceId();
 
       AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<HomePageDTO>(getOfflineAction(key)) {
 
@@ -97,9 +98,9 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
   @Override
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals(ContentsTypes.Space.name())) {
-      String spaceId = event.getContent().getId().replace("WA", "");
-      LoadSpacesAndAppsEvent ev = new LoadSpacesAndAppsEvent(spaceId);
-      loadSpacesAndApps(ev);
+      NavigationPage page = new NavigationPage();
+      page.setRootSpaceId(event.getContent().getId());
+      page.show();
     }
   }
 }

@@ -29,14 +29,23 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
+import com.silverpeas.mobile.client.apps.favorites.events.app.GotoAppEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external
+    .NavigationAppInstanceChangedEvent;
+import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.ShortCutRouter;
+import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.FavoriteDTO;
+import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class FavoriteItem extends Composite {
 
@@ -82,8 +91,17 @@ public class FavoriteItem extends Composite {
         shortcutContentType = ContentsTypes.Folder.name();
         shortcutAppId = shortcutContentId.substring(shortcutContentId.lastIndexOf("=") + 1);
         shortcutContentId = shortcutContentId.substring(0, shortcutContentId.indexOf("?"));
+      } else if (data.getUrl().contains("/Rgallery/")){
+        shortcutContentType = ContentsTypes.Album.name();
+        shortcutContentId = data.getUrl().substring(data.getUrl().lastIndexOf("=") + 1);
+        shortcutAppId = data.getUrl().substring("/Rgallery/".length(), data.getUrl().lastIndexOf("/"));
       } else if (data.getUrl().contains("/Space/")) {
         shortcutContentType = ContentsTypes.Space.name();
+      } else if (data.getUrl().contains("/Component/")) {
+        GotoAppEvent eventGoApp = new GotoAppEvent();
+        eventGoApp.setInstanceId(shortcutContentId);
+        EventBus.getInstance().fireEvent(eventGoApp);
+        return;
       }
       ShortCutRouter.route(SpMobil.user, shortcutAppId, shortcutContentType, shortcutContentId);
     }

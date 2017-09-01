@@ -40,6 +40,7 @@ import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.ContentDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
+import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
@@ -197,6 +198,21 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         event.getContent().getType().equals(ContentsTypes.Video.name()) ||
         event.getContent().getType().equals(ContentsTypes.Streaming.name())) {
       startWithContent(event.getContent());
+    } else if (event.getContent().getType().equals(ContentsTypes.Album.name())) {
+      ServicesLocator.getServiceNavigation().getApp(event.getContent().getInstanceId(), null, null,
+          new AsyncCallback<ApplicationInstanceDTO>() {
+            @Override
+            public void onFailure(final Throwable caught) {
+              EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+            }
+
+            @Override
+            public void onSuccess(final ApplicationInstanceDTO applicationInstanceDTO) {
+              MediaNavigationPage page = new MediaNavigationPage();
+              page.init(event.getContent().getInstanceId(), event.getContent().getId(), applicationInstanceDTO.getRights());
+              page.show();
+            }
+          });
     }
   }
 

@@ -29,4 +29,5 @@ import com.google.gwt.event.shared.EventHandler;
 public interface FavoritesAppEventHandler extends EventHandler{
 	void loadFavorites(FavoritesLoadEvent event);
 	void addFavorite(AddFavoriteEvent event);
+	void gotoApp(GotoAppEvent event);
 }

@@ -27,5 +27,5 @@ package com.silverpeas.mobile.client.apps.favorites.events.pages;
 import com.google.gwt.event.shared.EventHandler;
 
 public interface FavoritesPagesEventHandler extends EventHandler{
-	void onContactsLoaded(FavoritesLoadedEvent event);
+	void onFavoritesLoaded(FavoritesLoadedEvent event);
 }

@@ -57,8 +57,8 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   public void homePageLoaded(HomePageLoadedEvent event) {
     if (isVisible() && dataLoaded == false) {
       content.setData(event.getData());
+      setPageTitle(event.getData().getSpaceName());
       dataLoaded = true;
-
 
       actionsMenu.addAction(favorite);
       favorite.init(null, event.getData().getId(), ContentsTypes.Space.name(), getPageTitle());

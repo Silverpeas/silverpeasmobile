@@ -97,14 +97,18 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   public void onMediaItemClicked(final MediaItemClickEvent event) {
     if (isVisible()) {
       if (event.getMediaItem() instanceof AlbumDTO) {
-        MediaNavigationPage page = new MediaNavigationPage();
-        page.init(instanceId, ((AlbumDTO) event.getMediaItem()).getId(), rights);
-        page.show();
+        showAlbum((AlbumDTO) event.getMediaItem());
       }
       else {
         EventBus.getInstance().fireEvent(new MediaViewShowEvent((MediaDTO)event.getMediaItem()));
       }
     }
+  }
+
+  private void showAlbum(final AlbumDTO album) {
+    MediaNavigationPage page = new MediaNavigationPage();
+    page.init(instanceId, album.getId(), rights);
+    page.show();
   }
 
 }

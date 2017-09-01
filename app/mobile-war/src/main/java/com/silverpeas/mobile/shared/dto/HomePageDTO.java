@@ -36,6 +36,8 @@ public class HomePageDTO extends BaseDTO implements Serializable{
 
   private static final long serialVersionUID = 5388415881024885835L;
 
+  private String spaceName;
+
   private List<SilverpeasObjectDTO> spacesAndApps;
   private List<NewsDTO> news = new ArrayList<NewsDTO>();
   private List<FavoriteDTO> favorites = new ArrayList<FavoriteDTO>();
@@ -71,5 +73,13 @@ public class HomePageDTO extends BaseDTO implements Serializable{
 
   public void setSpacesAndApps(final List<SilverpeasObjectDTO> spacesAndApps) {
     this.spacesAndApps = spacesAndApps;
+  }
+
+  public String getSpaceName() {
+    return spaceName;
+  }
+
+  public void setSpaceName(final String spaceName) {
+    this.spaceName = spaceName;
   }
 }

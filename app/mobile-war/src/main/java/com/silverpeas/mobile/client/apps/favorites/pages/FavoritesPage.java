@@ -68,7 +68,7 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
   }
 
   @Override
-  public void onContactsLoaded(final FavoritesLoadedEvent event) {
+  public void onFavoritesLoaded(final FavoritesLoadedEvent event) {
 
     List<FavoriteDTO> favoritesList = event.getFavorites();
     for (FavoriteDTO favoriteDTO : favoritesList) {

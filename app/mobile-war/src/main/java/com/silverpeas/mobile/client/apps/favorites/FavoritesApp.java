@@ -27,10 +27,12 @@ package com.silverpeas.mobile.client.apps.favorites;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
 import com.silverpeas.mobile.client.apps.favorites.events.app.AddFavoriteEvent;
 import com.silverpeas.mobile.client.apps.favorites.events.app.FavoritesAppEventHandler;
 import com.silverpeas.mobile.client.apps.favorites.events.app.FavoritesLoadEvent;
+import com.silverpeas.mobile.client.apps.favorites.events.app.GotoAppEvent;
 import com.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
 import com.silverpeas.mobile.client.apps.favorites.pages.FavoritesPage;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -44,6 +46,7 @@ import com.silverpeas.mobile.client.apps.tasks.pages.TasksPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
+import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
@@ -52,6 +55,7 @@ import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.FavoriteDTO;
 import com.silverpeas.mobile.shared.dto.StatusDTO;
+import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -121,6 +125,22 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
       }
     };
     action.attempt();
+  }
+
+  @Override
+  public void gotoApp(final GotoAppEvent event) {
+    ServicesLocator.getServiceNavigation().getApp(event.getInstanceId(), null, null,
+        new AsyncCallback<ApplicationInstanceDTO>() {
+          @Override
+          public void onFailure(final Throwable caught) {
+            EventBus.getInstance().fireEvent(new ErrorEvent(caught));
+          }
+
+          @Override
+          public void onSuccess(final ApplicationInstanceDTO applicationInstanceDTO) {
+            EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(applicationInstanceDTO));
+          }
+        });
   }
 
   @Override
