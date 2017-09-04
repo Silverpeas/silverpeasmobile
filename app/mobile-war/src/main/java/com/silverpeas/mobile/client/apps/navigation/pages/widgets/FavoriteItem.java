@@ -69,7 +69,7 @@ public class FavoriteItem extends Composite {
 
     if(data.getUrl().startsWith("/")) {
       // internal link
-      link.setHref("#");
+      link.setHref("javaScript:;");
     } else {
       link.setHref(data.getUrl());
       link.setTarget("_blank");
