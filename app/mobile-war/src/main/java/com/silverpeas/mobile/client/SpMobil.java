@@ -43,6 +43,7 @@ import com.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedE
 import com.silverpeas.mobile.client.apps.news.NewsApp;
 import com.silverpeas.mobile.client.apps.tasks.TasksApp;
 import com.silverpeas.mobile.client.apps.webpage.WebPageApp;
+import com.silverpeas.mobile.client.apps.workflow.WorkflowApp;
 import com.silverpeas.mobile.client.common.*;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ExceptionEvent;
@@ -142,6 +143,7 @@ public class SpMobil implements EntryPoint {
         apps.add(new FavoritesApp());
         apps.add(new WebPageApp());
         apps.add(new BlogApp());
+        apps.add(new WorkflowApp());
 
         Notification.activityStop();
     }

@@ -109,8 +109,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     return data;
   }
 
-  private boolean isSupportedApp(String appType) {
-    return EnumUtils.isValidEnum(Apps.class, appType);
+  private boolean isSupportedApp(ComponentInstLight app) {
+    //return EnumUtils.isValidEnum(Apps.class, app.getName()) || app.isWorkflow();
+    return EnumUtils.isValidEnum(Apps.class, app.getName());
   }
 
   //TODO : remove appType
@@ -145,7 +146,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         String [] appsIds = Administration.get().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
         for (String appId : appsIds) {
           ComponentInstLight app = Administration.get().getComponentInstLight(appId);
-          if (isSupportedApp(app.getName()) && app.getDomainFatherId().equals(rootSpaceId)) {
+          if (isSupportedApp(app) && app.getDomainFatherId().equals(rootSpaceId)) {
             partialResults.add(populate(app));
           }
         }
@@ -189,7 +190,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     String [] appsIds = Administration.get().getAvailCompoIds(space.getId(), getUserInSession().getId());
     for (String appId : appsIds) {
       ComponentInstLight app = Administration.get().getComponentInstLight(appId);
-      if (isSupportedApp(app.getName())) {
+      if (isSupportedApp(app)) {
         return true;
       }
     }
@@ -215,6 +216,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     dto.setLabel(app.getLabel());
     dto.setType(app.getName());
     dto.setOrderNum(app.getOrderNum());
+    dto.setWorkflow(app.isWorkflow());
 
     RightDTO rights = new RightDTO();
     String[] roles = getUserRoles(app.getId(), getUserInSession().getId());

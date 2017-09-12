@@ -13,6 +13,7 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   private boolean commentable;
   private boolean notifiable;
   private boolean ableToStoreContent;
+  private boolean workflow;
 
   public String getType(){
 		return type;
@@ -51,5 +52,13 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
 
   public void setNotifiable(boolean notifiable) {
     this.notifiable = notifiable;
+  }
+
+  public void setWorkflow(boolean workflow) {
+    this.workflow = workflow;
+  }
+
+  public boolean isWorkflow() {
+    return workflow;
   }
 }
