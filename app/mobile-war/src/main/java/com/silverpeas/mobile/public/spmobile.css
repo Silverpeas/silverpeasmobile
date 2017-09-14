@@ -1646,3 +1646,36 @@ form .forms .fields > li:nth-child(even) {
   max-width:100%;
   height:auto
 }
+
+.workflow-list {
+  text-align: center;
+  border-spacing: 0px;
+  width: 100%;
+}
+
+.workflow-list tr {
+  height: 3em;
+}
+
+.workflow-list  > tbody > tr:nth-child(1) {
+  font-weight: bold;
+}
+
+
+.workflow-list  > tbody > tr:nth-child(odd) {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+.workflow-list  > tbody > tr:nth-child(even) {
+  background-color: #f6f6f6;
+  border-bottom: 1px solid #ddd;
+}
+
+.workflow-roles {
+  margin-bottom: 1em;
+}
+
+.workflow-anchor {
+  text-decoration: none;
+}

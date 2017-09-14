@@ -25,18 +25,24 @@
 package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 import com.silverpeas.mobile.shared.services.ServiceWorkflow;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.contribution.content.form.FieldTemplate;
+import org.silverpeas.core.contribution.content.form.RecordTemplate;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.workflow.api.Workflow;
 import org.silverpeas.core.workflow.api.instance.ProcessInstance;
+import org.silverpeas.core.workflow.api.model.Role;
 import org.silverpeas.core.workflow.api.user.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Service de gestion des workflows.
@@ -52,32 +58,67 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
   }
 
   @Override
-  public List<WorkflowInstanceDTO> getInstances(String instanceId) throws WorkflowException, AuthenticationException {
+  public WorkflowInstancesDTO getInstances(String instanceId, String userRole) throws WorkflowException, AuthenticationException {
 
-    ArrayList<WorkflowInstanceDTO> instances = new ArrayList<WorkflowInstanceDTO>();
-
-
+    WorkflowInstancesDTO data = new WorkflowInstancesDTO();
     try {
-
+      ArrayList<WorkflowInstanceDTO> instances = new ArrayList<WorkflowInstanceDTO>();
       User user = Workflow.getUserManager().getUser(getUserInSession().getId());
-      String[] roles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId);
+      Role[] roles = Workflow.getProcessModelManager().getProcessModel(instanceId).getRoles();
+      ProcessInstance[] processInstances = Workflow.getProcessInstanceManager().getProcessInstances(instanceId, user, roles[0].getName());
 
-      ProcessInstance[] processInstances = Workflow.getProcessInstanceManager().getProcessInstances(instanceId, user, roles[0]);
-
-      for (ProcessInstance processInstance : processInstances) {
-        WorkflowInstanceDTO dto = new WorkflowInstanceDTO();
-        dto.setId(processInstance.getInstanceId());
-        String title = processInstance.getTitle(roles[0], getUserInSession().getUserPreferences().getLanguage());
-        dto.setTitle(title);
-        instances.add(dto);
+      if (userRole == null) {
+        userRole = roles[0].getName();
       }
 
+      for (ProcessInstance processInstance : processInstances) {
+        instances.add(populate(processInstance, userRole));
+      }
+      data.setInstances(instances);
 
+      TreeMap<String,String> r = new TreeMap<String, String>();
+      for (Role role : roles) {
+        r.put(role.getName(), role.getLabel(role.getName(), getUserInSession().getUserPreferences().getLanguage()));
+      }
+      data.setRoles(r);
+
+      data.setHeaderLabels(getHeaderLabels(instanceId, userRole));
     } catch (Exception e) {
       throw  new WorkflowException(e);
     }
 
-    return instances;
+
+
+    return data;
+  }
+
+  private List<String> getHeaderLabels(String modelId, String role) throws Exception {
+    ArrayList<String> labels = new ArrayList<String>();
+    RecordTemplate template = Workflow.getProcessModelManager().getProcessModel(modelId).getRowTemplate(role, getUserInSession().getUserPreferences().getLanguage());
+    FieldTemplate[] headers = template.getFieldTemplates();
+    for (FieldTemplate header : headers) {
+      labels.add(header.getLabel());
+    }
+    return labels;
+  }
+
+  private WorkflowInstanceDTO populate(ProcessInstance processInstance, String role) throws Exception {
+    WorkflowInstanceDTO dto = new WorkflowInstanceDTO();
+    dto.setId(processInstance.getInstanceId());
+    String title = processInstance.getTitle(role, getUserInSession().getUserPreferences().getLanguage());
+    dto.setTitle(title);
+    dto.setState(processInstance.getActiveStates().toString());
+
+    RecordTemplate template = Workflow.getProcessModelManager().getProcessModel(processInstance.getModelId()).getRowTemplate(role, getUserInSession().getUserPreferences().getLanguage());
+    FieldTemplate[] headers = template.getFieldTemplates();
+
+    for (FieldTemplate header : headers) {
+      String value = processInstance
+          .getRowDataRecord(role, getUserInSession().getUserPreferences().getLanguage()).getField(header.getFieldName()).getStringValue();
+      dto.addHeaderField(value);
+    }
+
+    return dto;
   }
 
 }

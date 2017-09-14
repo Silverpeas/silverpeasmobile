@@ -31,6 +31,7 @@ import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.exceptions.WorkflowException;
@@ -39,5 +40,5 @@ import java.util.List;
 
 @RemoteServiceRelativePath("Workflow")
 public interface ServiceWorkflow extends RemoteService {
-  public List<WorkflowInstanceDTO> getInstances(String instanceId) throws WorkflowException, AuthenticationException;
+  public WorkflowInstancesDTO getInstances(String instanceId, String userRole) throws WorkflowException, AuthenticationException;
 }

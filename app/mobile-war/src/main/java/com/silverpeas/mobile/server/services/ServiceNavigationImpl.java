@@ -110,8 +110,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   private boolean isSupportedApp(ComponentInstLight app) {
-    //return EnumUtils.isValidEnum(Apps.class, app.getName()) || app.isWorkflow();
-    return EnumUtils.isValidEnum(Apps.class, app.getName());
+    return EnumUtils.isValidEnum(Apps.class, app.getName()) || app.isWorkflow();
+    //return EnumUtils.isValidEnum(Apps.class, app.getName());
   }
 
   //TODO : remove appType

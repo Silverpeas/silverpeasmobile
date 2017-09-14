@@ -22,23 +22,29 @@
  *
  */
 
-package com.silverpeas.mobile.shared.services;
+package com.silverpeas.mobile.client.apps.workflow.events.pages;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
-import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
-import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
+
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
-import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.DocumentsException;
-import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 
-import java.util.List;
+public class WorkflowLoadedInstancesEvent extends AbstractWorkflowPagesEvent {
 
-public interface ServiceWorkflowAsync {
-  void getInstances(String instanceId, String role, final AsyncCallback<WorkflowInstancesDTO> async);
+  private WorkflowInstancesDTO data;
+
+  public WorkflowLoadedInstancesEvent() {
+    super();
+  }
+
+  @Override
+  protected void dispatch(WorkflowPagesEventHandler handler) {
+    handler.loadInstances(this);
+  }
+
+  public WorkflowInstancesDTO getData() {
+    return data;
+  }
+
+  public void setData(final WorkflowInstancesDTO data) {
+    this.data = data;
+  }
 }

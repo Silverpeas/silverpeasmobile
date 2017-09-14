@@ -22,23 +22,48 @@
  *
  */
 
-package com.silverpeas.mobile.shared.services;
+package com.silverpeas.mobile.shared.dto.workflow;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
-import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
-import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
-import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
-import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.DocumentsException;
-import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-public interface ServiceWorkflowAsync {
-  void getInstances(String instanceId, String role, final AsyncCallback<WorkflowInstancesDTO> async);
+public class WorkflowInstancesDTO extends BaseDTO implements Serializable {
+
+  private static final long serialVersionUID = 2921606984249560882L;
+
+  private List<String> headerLabels = new ArrayList<String>();
+  private List<WorkflowInstanceDTO> instances;
+  private Map<String,String> roles;
+
+  public WorkflowInstancesDTO() {
+  }
+
+  public List<WorkflowInstanceDTO> getInstances() {
+    return instances;
+  }
+
+  public void setInstances(final List<WorkflowInstanceDTO> instances) {
+    this.instances = instances;
+  }
+
+  public Map<String, String> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(final Map<String, String> roles) {
+    this.roles = roles;
+  }
+
+  public List<String> getHeaderLabels() {
+    return headerLabels;
+  }
+
+  public void setHeaderLabels(final List<String> headerLabels) {
+    this.headerLabels = headerLabels;
+  }
 }

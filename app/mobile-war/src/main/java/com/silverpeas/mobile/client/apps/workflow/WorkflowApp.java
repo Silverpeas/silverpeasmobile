@@ -25,20 +25,8 @@
 package com.silverpeas.mobile.client.apps.workflow;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptException;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.silverpeas.mobile.client.apps.documents.events.app.AbstractDocumentsAppEvent;
-import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsAppEventHandler;
-import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
-import com.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
-import com.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
-import com.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
-import com.silverpeas.mobile.client.apps.documents.pages.GedNavigationPage;
-import com.silverpeas.mobile.client.apps.documents.pages.PublicationPage;
-import com.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -46,34 +34,20 @@ import com.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import com.silverpeas.mobile.client.apps.workflow.events.app.AbstractWorkflowAppEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowAppEventHandler;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.pages.WorkflowPage;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
-import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
-import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import com.silverpeas.mobile.client.common.network.OfflineHelper;
-import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
-import com.silverpeas.mobile.client.components.IframePage;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.ContentDTO;
-import com.silverpeas.mobile.shared.dto.ContentsTypes;
-import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
-import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
-import com.silverpeas.mobile.shared.dto.navigation.Apps;
-import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 
 public class WorkflowApp extends App implements NavigationEventHandler, WorkflowAppEventHandler {
 
     private ApplicationMessages globalMsg;
+    private ApplicationInstanceDTO instance;
 
 
     public WorkflowApp() {
@@ -96,20 +70,11 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
     @Override
     public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
       if (event.getInstance().isWorkflow()) {
-        ServicesLocator.getServiceWorkflow().getInstances(event.getInstance().getId(), new AsyncCallback
-            <List<WorkflowInstanceDTO>>() {
-          @Override
-          public void onFailure(final Throwable throwable) {
-            EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-          }
+        this.instance = event.getInstance();
 
-          @Override
-          public void onSuccess(final List<WorkflowInstanceDTO> workflowInstanceDTOS) {
-            WorkflowPage page = new WorkflowPage();
-            page.setData(workflowInstanceDTOS);
-            page.show();
-          }
-        });
+        WorkflowPage page = new WorkflowPage();
+        page.show();
+        loadInstances(new WorkflowLoadInstancesEvent());
       }
     }
 
@@ -120,11 +85,19 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstances(final WorkflowLoadInstancesEvent event) {
+    ServicesLocator.getServiceWorkflow().getInstances(instance.getId(), event.getRole(), new AsyncCallback
+        <WorkflowInstancesDTO>() {
+      @Override
+      public void onFailure(final Throwable throwable) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+      }
 
-
-
-
-
-
+      @Override
+      public void onSuccess(final WorkflowInstancesDTO workflowInstanceDTOS) {
+        WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
+        event.setData(workflowInstanceDTOS);
+        EventBus.getInstance().fireEvent(event);
+      }
+    });
   }
 }

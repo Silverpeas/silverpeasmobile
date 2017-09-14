@@ -30,6 +30,7 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <b:ActionsMenu ui:field="actionsMenu"/>
     <h2 class="appHeader"></h2>
-    <l:UnorderedList ui:field="instances" styleName="carroussel-news"/>
+    <g:ListBox ui:field="roles" styleName="workflow-roles"/>
+    <g:FlexTable ui:field="instances" styleName="workflow-list"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

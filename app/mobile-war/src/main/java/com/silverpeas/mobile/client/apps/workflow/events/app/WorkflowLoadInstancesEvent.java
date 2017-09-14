@@ -27,6 +27,8 @@ package com.silverpeas.mobile.client.apps.workflow.events.app;
 
 public class WorkflowLoadInstancesEvent extends AbstractWorkflowAppEvent {
 
+  private String role = null;
+
   public WorkflowLoadInstancesEvent() {
     super();
   }
@@ -34,5 +36,13 @@ public class WorkflowLoadInstancesEvent extends AbstractWorkflowAppEvent {
   @Override
   protected void dispatch(WorkflowAppEventHandler handler) {
     handler.loadInstances(this);
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(final String role) {
+    this.role = role;
   }
 }

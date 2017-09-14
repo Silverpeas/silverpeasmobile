@@ -25,44 +25,93 @@
 package com.silverpeas.mobile.client.apps.workflow.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
-import com.silverpeas.mobile.client.apps.blog.events.pages.AbstractBlogPagesEvent;
-import com.silverpeas.mobile.client.apps.blog.events.pages.BlogLoadedEvent;
-import com.silverpeas.mobile.client.apps.blog.events.pages.BlogPagesEventHandler;
-import com.silverpeas.mobile.client.apps.blog.resources.BlogMessages;
 import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowPagesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
-import com.silverpeas.mobile.client.apps.workflow.pages.widgets.WorkflowItem;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
-import com.silverpeas.mobile.shared.dto.ContentsTypes;
-import com.silverpeas.mobile.shared.dto.blog.PostDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
+import org.apache.poi.hssf.record.WindowOneRecord;
 
-import java.util.List;
+import java.util.Map;
 
-public class WorkflowPage extends PageContent implements WorkflowPagesEventHandler {
+public class WorkflowPage extends PageContent implements WorkflowPagesEventHandler, ChangeHandler {
 
   private static WorkflowPageUiBinder uiBinder = GWT.create(WorkflowPageUiBinder.class);
 
-  @UiField UnorderedList instances;
+  @UiField FlexTable instances;
   @UiField ActionsMenu actionsMenu;
+  @UiField ListBox roles;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
-  private List<WorkflowInstanceDTO> data;
+  private WorkflowInstancesDTO data = null;
 
-  public void setData(final List<WorkflowInstanceDTO> data) {
-    this.data = data;
-    for (WorkflowInstanceDTO d : data) {
-      WorkflowItem item = new WorkflowItem();
-      item.setData(d);
-      instances.add(item);
+  private ClickHandler clickOnInstance = new ClickHandler() {
+    @Override
+    public void onClick(final ClickEvent event) {
+      Anchor link = (Anchor) event.getSource();
+      String id = link.getElement().getAttribute("data");
+      //TODO : display presentation form
+    }
+  };
+
+  @Override
+  public void onChange(final ChangeEvent changeEvent) {
+    WorkflowLoadInstancesEvent event = new WorkflowLoadInstancesEvent();
+    event.setRole(roles.getSelectedValue());
+    EventBus.getInstance().fireEvent(event);
+  }
+
+  @Override
+  public void loadInstances(final WorkflowLoadedInstancesEvent event) {
+    if (data == null) {
+      this.data = event.getData();
+      for (Map.Entry<String,String> role : data.getRoles().entrySet()) {
+        roles.addItem(role.getValue(), role.getKey());
+      }
+    } else {
+      instances.clear();
+      this.data = event.getData();
+    }
+
+    int c = 0;
+    for (String label : data.getHeaderLabels()) {
+      instances.setHTML(0, c, label);
+      c++;
+    }
+
+    int r = 1;
+    for (WorkflowInstanceDTO d : data.getInstances()) {
+      c = 0;
+      for (String value : d.getHeaderFieldsValues()) {
+        Anchor link = new Anchor();
+        link.setHref("javaScript:;");
+        link.setText(value);
+        link.setStylePrimaryName("workflow-anchor");
+        link.getElement().setId("inst" + r + c);
+        link.getElement().setAttribute("data", d.getId());
+        link.addClickHandler(clickOnInstance);
+        instances.setWidget(r,c,link);
+        c++;
+      }
+      r++;
     }
   }
 
@@ -72,6 +121,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
   public WorkflowPage() {
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractWorkflowPagesEvent.TYPE, this);
+    roles.addChangeHandler(this);
   }
 
   @Override
@@ -79,4 +129,6 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
     super.stop();
     EventBus.getInstance().removeHandler(AbstractWorkflowPagesEvent.TYPE, this);
   }
+
+
 }

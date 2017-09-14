@@ -27,4 +27,5 @@ package com.silverpeas.mobile.client.apps.workflow.events.pages;
 import com.google.gwt.event.shared.EventHandler;
 
 public interface WorkflowPagesEventHandler extends EventHandler{
+  void loadInstances(WorkflowLoadedInstancesEvent event);
 }

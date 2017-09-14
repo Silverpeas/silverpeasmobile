@@ -1,17 +1,21 @@
 package com.silverpeas.mobile.server.servlets;
 
+import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.services.AbstractAuthenticateService;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
+import org.silverpeas.core.util.logging.SilverLogger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 @SuppressWarnings("serial")
 public class AttachmentServlet extends HttpServlet {
@@ -38,7 +42,11 @@ public class AttachmentServlet extends HttpServlet {
             checkUserInSession(request);
             processRequest(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
+          /*StringWriter errors = new StringWriter();
+          e.printStackTrace(new PrintWriter(errors));
+          errors.toString();*/
+          SilverLogger.getLogger(SpMobileLogModule.getName()).error("AttachmentServlet", e);
+          response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
