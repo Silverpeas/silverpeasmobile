@@ -4,6 +4,7 @@ public class FullUserDTO extends DetailUserDTO {
   private String login;
   private String password;
   private String domainId;
+  private String token;
 
   public FullUserDTO() {
     super();
@@ -14,6 +15,7 @@ public class FullUserDTO extends DetailUserDTO {
     this.setLogin(login);
     this.setPassword(password);
     this.setDomainId(domainId);
+    this.setToken(user.getToken());
 
     this.setId(user.getId());
     this.setAvatar(user.getAvatar());
@@ -24,6 +26,8 @@ public class FullUserDTO extends DetailUserDTO {
     this.setLastName(user.getLastName());
     this.setPhoneNumber(user.getPhoneNumber());
     this.setStatus(user.getStatus());
+
+    this.setLanguage(user.getLanguage());
   }
 
   public String getLogin() {
@@ -48,5 +52,15 @@ public class FullUserDTO extends DetailUserDTO {
 
   public void setDomainId(String domainId) {
     this.domainId = domainId;
+  }
+
+  @Override
+  public String getToken() {
+    return token;
+  }
+
+  @Override
+  public void setToken(final String token) {
+    this.token = token;
   }
 }

@@ -33,10 +33,12 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
@@ -162,16 +164,17 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     closeMenu();
     AuthentificationManager.getInstance().clearLocalStorage();
     PageHistory.getInstance().clear();
-    ServicesLocator.getServiceConnection().logout(new AsyncCallback<Void>() {
+    ServicesLocator.getServiceNavigation().logout(new AsyncCallback<Void>() {
       @Override
       public void onFailure(final Throwable throwable) {}
       @Override
-      public void onSuccess(final Void aVoid) {}
+      public void onSuccess(final Void aVoid) {
+        ConnexionPage connexionPage = new ConnexionPage();
+        RootPanel.get().clear();
+        RootPanel.get().add(connexionPage);
+        SpMobil.destroyMainPage();
+      }
     });
-    ConnexionPage connexionPage = new ConnexionPage();
-    RootPanel.get().clear();
-    RootPanel.get().add(connexionPage);
-    SpMobil.destroyMainPage();
   }
 
   public void setUser(DetailUserDTO currentUser) {

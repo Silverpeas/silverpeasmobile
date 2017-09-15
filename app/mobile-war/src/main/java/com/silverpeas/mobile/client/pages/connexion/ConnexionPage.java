@@ -68,6 +68,8 @@ public class ConnexionPage extends PageContent {
         domains.getElement().setId("DomainId");
         form.getElement().setId("formLogin");
 
+        form.setAction("/silverpeas/AuthenticationServlet");
+
       Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
         @Override
         public void execute() {
@@ -89,6 +91,9 @@ public class ConnexionPage extends PageContent {
         String login = loginField.getText();
         String password = passwordField.getText();
         login(login, password, domains.getValue(domains.getSelectedIndex()));
+
+
+
     }
 
     /**
@@ -111,6 +116,9 @@ public class ConnexionPage extends PageContent {
         }
 
         if (!login.isEmpty() && !password.isEmpty()) {
+
+            form.submit();
+
             ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
                 @Override
                 public void onFailure(Throwable t) {
@@ -129,6 +137,7 @@ public class ConnexionPage extends PageContent {
                     LocalStorageHelper.clear(); // clear offline data
                     AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
                             domains.getValue(domains.getSelectedIndex()));
+                    SpMobil.setUserToken(user.getToken());
                     SpMobil.displayMainPage(user);
                 }
             });

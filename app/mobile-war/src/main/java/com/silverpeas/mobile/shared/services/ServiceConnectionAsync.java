@@ -9,11 +9,10 @@ import com.silverpeas.mobile.shared.dto.DomainDTO;
 
 public interface ServiceConnectionAsync {
 
-	void login(String login, String password, String domainId, AsyncCallback<DetailUserDTO> callback);
+  void login(String login, String password, String domainId, AsyncCallback<DetailUserDTO> callback);
 
-	void getDomains(AsyncCallback<List<DomainDTO>> callback);
-
-	void logout(final AsyncCallback<Void> async);
+  void getDomains(AsyncCallback<List<DomainDTO>> callback);
 
   void setTabletMode(final AsyncCallback<Boolean> async);
+
 }

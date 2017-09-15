@@ -2,12 +2,16 @@ package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.mobile.server.dao.StatusDao;
 import com.silverpeas.mobile.server.helpers.DataURLHelper;
+import com.silverpeas.mobile.server.services.helpers.UserHelper;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -17,6 +21,7 @@ import org.silverpeas.core.security.authentication.AuthenticationServiceProvider
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +39,6 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
   static {
     SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
-  }
-
-  public void logout() throws AuthenticationException {
-    getThreadLocalRequest().getSession().invalidate();
   }
 
   public DetailUserDTO login(String login, String password, String domainId)
@@ -82,7 +83,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     setUserkeyInSession(authKey);
 
     DetailUserDTO userDTO = new DetailUserDTO();
-    userDTO = populate(user);
+    userDTO = UserHelper.getInstance().populate(user);
 
     String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), "40x");
     userDTO.setAvatar(avatar);
@@ -128,19 +129,4 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
     dto.setId(domain.getId());
     return dto;
   }
-
-  private DetailUserDTO populate(UserDetail user) {
-    DetailUserDTO dto= new DetailUserDTO();
-    dto.setId(user.getId());
-    dto.setFirstName(user.getFirstName());
-    dto.setLastName(user.getLastName());
-    dto.seteMail(user.geteMail());
-    dto.setStatus(user.getStatus());
-    dto.setAvatar(user.getAvatar());
-    dto.setLanguage(user.getUserPreferences().getLanguage());
-    dto.setToken(user.getToken());
-    return dto;
-  }
-
-
 }

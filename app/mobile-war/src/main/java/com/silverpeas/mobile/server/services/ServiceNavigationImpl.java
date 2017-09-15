@@ -4,6 +4,7 @@ import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import com.silverpeas.mobile.server.services.helpers.NewsHelper;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
+import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -15,6 +16,9 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import org.apache.commons.lang3.EnumUtils;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
@@ -22,6 +26,7 @@ import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
+import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
@@ -32,9 +37,12 @@ import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -52,6 +60,41 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
     showLastPublicationsOnHomePage = mobileSettings.getBoolean("homepage.lastpublications", true);
     showLastPublicationsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastpublications", true);
+  }
+
+  @Override
+  public void logout() throws AuthenticationException {
+    try {
+      String token = getUserInSession().getToken();
+      String url = getBaseUrl(getThreadLocalRequest()) + "/LogoutServlet?X-STKN=" + token;
+      Connection c = Jsoup.connect(url);
+      Document d = c.get();
+    } catch (IOException e) {
+
+    }
+    getThreadLocalRequest().getSession().invalidate();
+  }
+
+  private static String getBaseUrl(HttpServletRequest request) {
+    String scheme = request.getScheme() + "://";
+    String serverName = request.getServerName();
+    String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
+    String contextPath = request.getContextPath();
+    return scheme + serverName + serverPort + contextPath;
+  }
+
+  @Override
+  public boolean isUserSessionOpened(FullUserDTO user) throws AuthenticationException {
+    Enumeration<String> n = getThreadLocalRequest().getSession().getAttributeNames();
+    while (n.hasMoreElements()) {
+      String v = n.nextElement();
+      if (v.equalsIgnoreCase("X-STKN")) {
+        UserDetail usr = organizationController.getUserDetail(user.getId());
+        setUserInSession(usr);
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
