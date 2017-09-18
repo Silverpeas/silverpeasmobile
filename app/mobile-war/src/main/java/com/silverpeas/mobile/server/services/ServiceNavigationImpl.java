@@ -54,12 +54,23 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private static final long serialVersionUID = 1L;
   private static boolean showLastPublicationsOnHomePage;
   private static boolean showLastPublicationsOnSpaceHomePage;
+  private static boolean useGUImobileForTablets;
   private OrganizationController organizationController = OrganizationController.get();
 
   static {
     SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
     showLastPublicationsOnHomePage = mobileSettings.getBoolean("homepage.lastpublications", true);
     showLastPublicationsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastpublications", true);
+    useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
+  }
+
+  @Override
+  public boolean setTabletMode() throws NavigationException, AuthenticationException {
+    if (!useGUImobileForTablets) {
+      getThreadLocalRequest().getSession().setAttribute("tablet", new Boolean(true));
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -81,6 +92,12 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
     String contextPath = request.getContextPath();
     return scheme + serverName + serverPort + contextPath;
+  }
+
+  @Override
+  public boolean initSession() throws AuthenticationException {
+    Object token = getThreadLocalRequest().getSession().getAttribute("X-STKN");
+    return (token != null);
   }
 
   @Override

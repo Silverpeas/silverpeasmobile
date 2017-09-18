@@ -42,7 +42,7 @@ public abstract class RequestCallbackOnlineOrOffline<T> implements RequestCallba
                 public void execute() {
                     attempt();
                 }
-            }, true);
+            });
             if (OfflineHelper.needToGoOffine(t)) {
                 if (offlineAction != null) offlineAction.execute();
             }

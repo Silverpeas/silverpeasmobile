@@ -18,9 +18,14 @@ public interface ServiceNavigation extends RemoteService {
   public ApplicationInstanceDTO getApp(String instanceId, String contentId, String contentType) throws NavigationException, AuthenticationException;
 
 
+
+  boolean setTabletMode() throws NavigationException, AuthenticationException;
+
   void logout() throws AuthenticationException;
+
+  boolean initSession() throws AuthenticationException;
 
   boolean isUserSessionOpened(FullUserDTO user) throws AuthenticationException;
 
-  public HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException;
+  HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException;
 }

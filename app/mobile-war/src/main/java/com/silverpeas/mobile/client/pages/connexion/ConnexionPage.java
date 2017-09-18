@@ -70,6 +70,7 @@ public class ConnexionPage extends PageContent {
 
         form.setAction("/silverpeas/AuthenticationServlet");
 
+
       Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
         @Override
         public void execute() {
@@ -117,30 +118,46 @@ public class ConnexionPage extends PageContent {
 
         if (!login.isEmpty() && !password.isEmpty()) {
 
-            form.submit();
+          ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+            @Override
+            public void onFailure(Throwable t) {
+              if (t instanceof AuthenticationException) {
+                Window.Location.reload();
+              }
+              if (OfflineHelper.needToGoOffine(t)) {
+                Notification.alert(msg.needToBeOnline());
+              } else {
+                EventBus.getInstance().fireEvent(new ErrorEvent(t));
+              }
+            }
 
-            ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+            @Override
+            public void onSuccess(DetailUserDTO user) {
+              LocalStorageHelper.clear(); // clear offline data
+              AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
+                  domains.getValue(domains.getSelectedIndex()));
+              SpMobil.setUserToken(user.getToken());
+              form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
                 @Override
-                public void onFailure(Throwable t) {
-                    if (t instanceof AuthenticationException) {
-                        Window.Location.reload();
+                public void onSubmitComplete(final FormPanel.SubmitCompleteEvent submitCompleteEvent) {
+                  ServicesLocator.getServiceNavigation().initSession(new AsyncCallback<Boolean>() {
+                    @Override
+                    public void onFailure(final Throwable throwable) {
                     }
-                    if (OfflineHelper.needToGoOffine(t)) {
-                        Notification.alert(msg.needToBeOnline());
-                    } else {
-                        EventBus.getInstance().fireEvent(new ErrorEvent(t));
-                    }
-                }
 
-                @Override
-                public void onSuccess(DetailUserDTO user) {
-                    LocalStorageHelper.clear(); // clear offline data
-                    AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
-                            domains.getValue(domains.getSelectedIndex()));
-                    SpMobil.setUserToken(user.getToken());
-                    SpMobil.displayMainPage(user);
+                    @Override
+                    public void onSuccess(final Boolean init) {
+                      SpMobil.displayMainPage(user);
+                    }
+                  });
+                  if (submitCompleteEvent.getResults().toLowerCase().contains("error")) {
+                    Window.Location.reload();
+                  }
                 }
-            });
+              });
+              form.submit();
+            }
+          });
         }
     }
 

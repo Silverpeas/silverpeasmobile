@@ -42,9 +42,6 @@ public class AttachmentServlet extends HttpServlet {
             checkUserInSession(request);
             processRequest(request, response);
         } catch (Exception e) {
-          /*StringWriter errors = new StringWriter();
-          e.printStackTrace(new PrintWriter(errors));
-          errors.toString();*/
           SilverLogger.getLogger(SpMobileLogModule.getName()).error("AttachmentServlet", e);
           response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

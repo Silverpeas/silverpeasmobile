@@ -95,29 +95,12 @@ public class SpMobil implements EntryPoint {
      */
     public void onModuleLoad() {
         instance = this;
-
-        /*if (MobilUtils.isTablet()) {
-          ServicesLocator.getServiceConnection().setTabletMode(new AsyncCallback<Boolean>() {
-            @Override
-            public void onFailure(final Throwable throwable) {}
-
-            @Override
-            public void onSuccess(final Boolean desktopMode) {
-              if (desktopMode) {
-                String url = Window.Location.getHref();
-                url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());
-                Window.Location.replace(url);
-              }
-            }
-          });
-        }*/
-
         shortcutAppId = Window.Location.getParameter("shortcutAppId");
         shortcutContentType = Window.Location.getParameter("shortcutContentType");
         shortcutContentId = Window.Location.getParameter("shortcutContentId");
         msg = GWT.create(ApplicationMessages.class);
         EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
-        loadIds(null, false);
+        loadIds(null);
 
         NodeList<Element> tags = Document.get().getElementsByTagName("meta");
         for (int i = 0; i < tags.getLength(); i++) {
@@ -173,121 +156,70 @@ public class SpMobil implements EntryPoint {
      * @param login
      * @param password
      * @param domainId
-     * @param auto
      */
-    private void login(final String login, final String password, final String domainId, final boolean auto, final Command attempt) {
-
-//TODO
-
+    private void login(final String login, final String password, final String domainId, final Command attempt) {
       FullUserDTO user = AuthentificationManager.getInstance().loadUser();
       SpMobil.setUserToken(user.getToken());
       if (user != null) {
-        if (!auto) {
 
-          ServicesLocator.getServiceNavigation().isUserSessionOpened(user, new AsyncCallback
-              <Boolean>() {
-            @Override
-            public void onFailure(final Throwable throwable) {
+        ServicesLocator.getServiceNavigation().isUserSessionOpened(user, new AsyncCallback<Boolean>() {
+          @Override
+          public void onFailure(final Throwable throwable) {
+          }
 
-            }
-
-            @Override
-            public void onSuccess(final Boolean open) {
-              if (!open) {
-
-                FormPanel form = new FormPanel();
-                FlowPanel content = new FlowPanel();
-                form.add(content);
-                TextBox lg = new TextBox();
-                lg.setName("Login");
-                lg.setValue(login);
-                PasswordTextBox pwd = new PasswordTextBox();
-                pwd.setName("Password");
-                pwd.setValue(password);
-                ListBox dom = new ListBox();
-                dom.setName("DomainId");
-                dom.addItem("",domainId);
-
-                content.add(lg);
-                content.add(pwd);
-                content.add(dom);
-
-
-                form.setAction("/silverpeas/AuthenticationServlet");
-
-                form.setVisible(false);
-                RootPanel.get().add(form);
-                form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-                  @Override
-                  public void onSubmitComplete(
-                      final FormPanel.SubmitCompleteEvent submitCompleteEvent) {
-
+          @Override
+          public void onSuccess(final Boolean open) {
+            if (!open) {
+              FormPanel form = new FormPanel();
+              FlowPanel content = new FlowPanel();
+              form.add(content);
+              TextBox lg = new TextBox();
+              lg.setName("Login");
+              lg.setValue(login);
+              PasswordTextBox pwd = new PasswordTextBox();
+              pwd.setName("Password");
+              pwd.setValue(password);
+              ListBox dom = new ListBox();
+              dom.setName("DomainId");
+              dom.addItem("", domainId);
+              content.add(lg);
+              content.add(pwd);
+              content.add(dom);
+              form.setAction("/silverpeas/AuthenticationServlet");
+              form.setVisible(false);
+              RootPanel.get().add(form);
+              form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+                @Override
+                public void onSubmitComplete(final FormPanel.SubmitCompleteEvent submitCompleteEvent) {
                     ServicesLocator.getServiceNavigation().isUserSessionOpened(user, new AsyncCallback<Boolean>() {
                       @Override
                       public void onFailure(final Throwable throwable) {
                       }
+
                       @Override
-                      public void onSuccess(final Boolean aBoolean) {
-                        displayMainPage(user);
+                      public void onSuccess(final Boolean open) {
+                        if (open) {
+                          displayMainPage(user);
+                        } else {
+                          displayLoginPage();
+                        }
                       }
                     });
-
-
                   }
-                });
-                form.submit();
-
-
-
-              } else {
-                displayMainPage(user);
-              }
-            }
-          });
-
-
-
-
-        }
-        // don't do attempt.execute() because connexion is lost again
-      } else {
-        displayLoginPage();
-      }
-
-      /*AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<DetailUserDTO>(null) {
-        @Override
-        public void attempt() {
-          ServicesLocator.getServiceConnection().login(login, password, domainId,this);
-        }
-
-        @Override
-        public void onFailure(Throwable reason) {
-          if (OfflineHelper.needToGoOffine(reason)) {
-            FullUserDTO user = AuthentificationManager.getInstance().loadUser();
-            SpMobil.setUserToken(user.getToken());
-            if (user != null) {
-              if (!auto) displayMainPage(user);
-              // don't do attempt.execute() because connexion is lost again
+              });
+              form.submit();
             } else {
-              displayLoginPage();
+              displayMainPage(user);
             }
-          } else {
-            displayLoginPage();
           }
-        }
-        @Override
-        public void onSuccess(DetailUserDTO user) {
-          super.onSuccess(user);
-          if (!auto) displayMainPage(user);
-          if (attempt != null) attempt.execute();
-        }
-      };
-      action.attempt();*/
+        });
+      }
     }
 
     public static void displayMainPage(final DetailUserDTO user) {
 
-      if (!Window.Location.getHref().contains("?locale=") && !user.getLanguage().equalsIgnoreCase("fr")) {
+      if (!Window.Location.getHref().contains("?locale=") && !user.getLanguage().equalsIgnoreCase
+          ("fr")) {
         Window.Location.replace(Window.Location.getHref() + "?locale=" + user.getLanguage());
       }
       SpMobil.user = user;
@@ -338,16 +270,53 @@ public class SpMobil implements EntryPoint {
     /**
      * Load ids in SQL Web Storage.
      */
-    public void loadIds(Command attempt, boolean auto) {
+    public void loadIds(Command attempt) {
         FullUserDTO user = AuthentificationManager.getInstance().loadUser();
         if (user != null) {
             String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
             if (password != null) {
                 SpMobil.userToken = user.getToken();
-                login(user.getLogin(), password, user.getDomainId(), auto, attempt);
+                login(user.getLogin(), password, user.getDomainId(), attempt);
             }
         } else {
+            tabletGesture(false);
             displayLoginPage();
+        }
+    }
+
+    private void tabletGesture(boolean connected) {
+      if (MobilUtils.isTablet()) {
+        if (connected) {
+          ServicesLocator.getServiceNavigation().setTabletMode(new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(final Throwable throwable) {
+            }
+
+            @Override
+            public void onSuccess(final Boolean desktopMode) {
+              if (desktopMode) {
+                String url = Window.Location.getHref();
+                url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());
+                Window.Location.replace(url);
+              }
+            }
+          });
+        } else {
+           ServicesLocator.getServiceConnection().setTabletMode(new AsyncCallback<Boolean>() {
+              @Override
+              public void onFailure(final Throwable throwable) {
+              }
+
+              @Override
+              public void onSuccess(final Boolean desktopMode) {
+                if (desktopMode) {
+                  String url = Window.Location.getHref();
+                  url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());
+                  Window.Location.replace(url);
+                }
+              }
+            });
+          }
         }
     }
 

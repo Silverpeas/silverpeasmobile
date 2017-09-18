@@ -27,7 +27,7 @@ public abstract class AsyncCallbackOnlineOnly<T> implements AsyncCallback<T> {
                 public void execute() {
                     attempt();
                 }
-            }, true);
+            });
             if (OfflineHelper.needToGoOffine(t)) {
                 Notification.alert(msg.needToBeOnline());
             }

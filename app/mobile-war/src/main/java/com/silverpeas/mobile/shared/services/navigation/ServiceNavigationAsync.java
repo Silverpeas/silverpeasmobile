@@ -21,4 +21,8 @@ public interface ServiceNavigationAsync {
   void logout(final AsyncCallback<Void> async);
 
   void isUserSessionOpened(FullUserDTO user, final AsyncCallback<Boolean> async);
+
+  void setTabletMode(final AsyncCallback<Boolean> async);
+
+  void initSession(final AsyncCallback<Boolean> async);
 }
