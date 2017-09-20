@@ -25,23 +25,27 @@
 package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 import com.silverpeas.mobile.shared.services.ServiceWorkflow;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.contribution.content.form.DataRecord;
 import org.silverpeas.core.contribution.content.form.FieldTemplate;
+import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.RecordTemplate;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.workflow.api.Workflow;
 import org.silverpeas.core.workflow.api.instance.ProcessInstance;
 import org.silverpeas.core.workflow.api.model.Role;
+import org.silverpeas.core.workflow.api.task.Task;
 import org.silverpeas.core.workflow.api.user.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -86,10 +90,39 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
     } catch (Exception e) {
       throw  new WorkflowException(e);
     }
-
-
-
     return data;
+  }
+
+  @Override
+  public WorkflowInstancePresentationFormDTO getPresentationForm(String instanceId, String role) throws WorkflowException, AuthenticationException {
+    WorkflowInstancePresentationFormDTO dto = new WorkflowInstancePresentationFormDTO();
+    Map<String, String> map = new TreeMap<String, String>();
+    Map<String, String> mapActions = new TreeMap<String, String>();
+    try {
+      ProcessInstance instance = Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
+      Form form = instance.getProcessModel().getPresentationForm("presentationForm", role, getUserInSession().getUserPreferences().getLanguage());
+      DataRecord data = instance.getFormRecord("presentationForm", role, getUserInSession().getUserPreferences().getLanguage());
+
+      Task[] tasks = Workflow.getTaskManager().getTasks(Workflow.getUserManager().getUser(getUserInSession().getId()),role, instance);
+
+      for (Task task : tasks) {
+        for(String actionName : task.getActionNames()) {
+          String label = instance.getProcessModel().getAction(actionName).getLabel(role, getUserInSession().getUserPreferences().getLanguage());
+          mapActions.put(actionName, label);
+        }
+      }
+
+      for (FieldTemplate ft : form.getFieldTemplates()) {
+        String label = ft.getLabel(getUserInSession().getUserPreferences().getLanguage());
+        String value = data.getField(ft.getFieldName()).getStringValue();
+        map.put(label, value);
+      }
+    } catch (Exception e) {
+      throw  new WorkflowException(e);
+    }
+    dto.setActions(mapActions);
+    dto.setFields(map);
+    return dto;
   }
 
   private List<String> getHeaderLabels(String modelId, String role) throws Exception {

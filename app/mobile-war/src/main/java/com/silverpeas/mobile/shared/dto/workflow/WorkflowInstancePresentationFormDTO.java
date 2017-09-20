@@ -22,11 +22,44 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.workflow.events.app;
+package com.silverpeas.mobile.shared.dto.workflow;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Serializable {
+
+  private static final long serialVersionUID = 2921606984249560882L;
+  private Map<String, String> fields;
+  private Map<String, String> actions;
+
+  public WorkflowInstancePresentationFormDTO() {
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return ((WorkflowInstancePresentationFormDTO) obj).getId().equals(getId());
+  }
+
+
+  public Map<String, String> getFields() {
+    return fields;
+  }
+
+  public void setFields(final Map<String, String> fields) {
+    this.fields = fields;
+  }
+
+  public Map<String, String> getActions() {
+    return actions;
+  }
+
+  public void setActions(final Map<String, String> actions) {
+    this.actions = actions;
+  }
 }

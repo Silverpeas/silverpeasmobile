@@ -25,58 +25,64 @@
 package com.silverpeas.mobile.client.apps.workflow;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external
+    .NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.AbstractWorkflowAppEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowAppEventHandler;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanceEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.pages.WorkflowPage;
+import com.silverpeas.mobile.client.apps.workflow.pages.WorkflowPresentationPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
+
+import java.util.Map;
 
 public class WorkflowApp extends App implements NavigationEventHandler, WorkflowAppEventHandler {
 
-    private ApplicationMessages globalMsg;
-    private ApplicationInstanceDTO instance;
+  private ApplicationMessages globalMsg;
+  private ApplicationInstanceDTO instance;
+  private String currentRole;
 
 
-    public WorkflowApp() {
-        super();
-        globalMsg = GWT.create(ApplicationMessages.class);
-        EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
-        EventBus.getInstance().addHandler(AbstractWorkflowAppEvent.TYPE, this);
+  public WorkflowApp() {
+    super();
+    globalMsg = GWT.create(ApplicationMessages.class);
+    EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractWorkflowAppEvent.TYPE, this);
+  }
+
+  @Override
+  public void start() {
+    // no "super.start(lauchingPage);" this apps is used in another apps
+  }
+
+  @Override
+  public void stop() {
+    // never stop
+  }
+
+  @Override
+  public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
+    if (event.getInstance().isWorkflow()) {
+      this.instance = event.getInstance();
+
+      WorkflowPage page = new WorkflowPage();
+      page.show();
+      loadInstances(new WorkflowLoadInstancesEvent());
     }
-
-    @Override
-    public void start() {
-      // no "super.start(lauchingPage);" this apps is used in another apps
-    }
-
-    @Override
-    public void stop() {
-        // never stop
-    }
-
-    @Override
-    public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-      if (event.getInstance().isWorkflow()) {
-        this.instance = event.getInstance();
-
-        WorkflowPage page = new WorkflowPage();
-        page.show();
-        loadInstances(new WorkflowLoadInstancesEvent());
-      }
-    }
+  }
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
@@ -85,19 +91,39 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstances(final WorkflowLoadInstancesEvent event) {
-    ServicesLocator.getServiceWorkflow().getInstances(instance.getId(), event.getRole(), new AsyncCallback
-        <WorkflowInstancesDTO>() {
-      @Override
-      public void onFailure(final Throwable throwable) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-      }
+    ServicesLocator.getServiceWorkflow()
+        .getInstances(instance.getId(), event.getRole(), new AsyncCallback<WorkflowInstancesDTO>() {
+          @Override
+          public void onFailure(final Throwable throwable) {
+            EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+          }
 
-      @Override
-      public void onSuccess(final WorkflowInstancesDTO workflowInstanceDTOS) {
-        WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
-        event.setData(workflowInstanceDTOS);
-        EventBus.getInstance().fireEvent(event);
-      }
-    });
+          @Override
+          public void onSuccess(final WorkflowInstancesDTO workflowInstanceDTOS) {
+            WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
+            event.setData(workflowInstanceDTOS);
+            EventBus.getInstance().fireEvent(event);
+          }
+        });
+  }
+
+  @Override
+  public void loadInstance(final WorkflowLoadInstanceEvent event) {
+    currentRole = event.getRole();
+    ServicesLocator.getServiceWorkflow().getPresentationForm(event.getId(), event.getRole(),
+        new AsyncCallback<WorkflowInstancePresentationFormDTO>() {
+          @Override
+          public void onFailure(final Throwable throwable) {
+            EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+          }
+
+          @Override
+          public void onSuccess(final WorkflowInstancePresentationFormDTO form) {
+            WorkflowPresentationPage page = new WorkflowPresentationPage();
+            page.setData(form, instance);
+            page.show();
+          }
+        });
+
   }
 }

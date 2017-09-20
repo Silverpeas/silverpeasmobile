@@ -34,16 +34,20 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanceEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowPagesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.ServicesLocator;
+import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
@@ -68,7 +72,12 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
     public void onClick(final ClickEvent event) {
       Anchor link = (Anchor) event.getSource();
       String id = link.getElement().getAttribute("data");
-      //TODO : display presentation form
+      String role = roles.getSelectedValue();
+
+      WorkflowLoadInstanceEvent loadevent = new WorkflowLoadInstanceEvent();
+      loadevent.setId(id);
+      loadevent.setRole(role);
+      EventBus.getInstance().fireEvent(loadevent);
     }
   };
 

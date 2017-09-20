@@ -1679,3 +1679,21 @@ form .forms .fields > li:nth-child(even) {
 .workflow-anchor {
   text-decoration: none;
 }
+
+.workflow-form {
+  list-style-type:none;
+}
+
+.workflow-form li {
+  line-height: 3em;
+}
+
+.workflow-form li:nth-child(odd) {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+.worflow-form li:nth-child(even) {
+  background-color: #f6f6f6;
+  border-bottom: 1px solid #ddd;
+}

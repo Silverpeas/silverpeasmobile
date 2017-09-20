@@ -22,11 +22,13 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.workflow.events.app;
+package com.silverpeas.mobile.client.apps.workflow.resources;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
+public interface WorkflowMessages extends Messages {
+  String create();
+
+
 }

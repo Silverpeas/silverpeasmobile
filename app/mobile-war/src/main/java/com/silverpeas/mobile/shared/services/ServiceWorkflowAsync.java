@@ -32,13 +32,18 @@ import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ServiceWorkflowAsync {
   void getInstances(String instanceId, String role, final AsyncCallback<WorkflowInstancesDTO> async);
+
+  void getPresentationForm(String instanceId, String role,
+      final AsyncCallback<WorkflowInstancePresentationFormDTO> async);
 }
