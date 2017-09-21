@@ -22,12 +22,10 @@
   ~
   -->
 
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-
-    <ui:with field='msg' type='com.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages'/>
-
-    <g:HTMLPanel tag="li" ui:field="container" styleName="">
-        <g:Anchor styleName="" ui:field="action" text="{msg.create}"/>
-    </g:HTMLPanel>
-</ui:UiBinder>
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<g:HTMLPanel tag="li" ui:field="container">
+	
+		<g:Label ui:field="label"></g:Label>
+	</g:HTMLPanel>
+</ui:UiBinder> 

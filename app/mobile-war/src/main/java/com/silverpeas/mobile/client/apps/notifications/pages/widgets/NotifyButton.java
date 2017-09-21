@@ -10,11 +10,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.silverpeas.mobile.client.apps.notifications.NotificationsApp;
 import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
+import com.silverpeas.mobile.client.components.base.ActionItem;
 
 /**
  * @author: svu
  */
-public class NotifyButton extends Composite {
+public class NotifyButton extends ActionItem {
     interface NotifyButtonUiBinder extends UiBinder<HTMLPanel, NotifyButton> {
     }
 

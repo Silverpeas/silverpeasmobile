@@ -30,6 +30,7 @@ import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 public class WorkflowLoadedInstancesEvent extends AbstractWorkflowPagesEvent {
 
   private WorkflowInstancesDTO data;
+  private String instanceId;
 
   public WorkflowLoadedInstancesEvent() {
     super();
@@ -46,5 +47,13 @@ public class WorkflowLoadedInstancesEvent extends AbstractWorkflowPagesEvent {
 
   public void setData(final WorkflowInstancesDTO data) {
     this.data = data;
+  }
+
+  public void setInstanceId(final String instanceId) {
+    this.instanceId = instanceId;
+  }
+
+  public String getInstanceId() {
+    return instanceId;
   }
 }

@@ -45,6 +45,8 @@ import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanc
 import com.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowPagesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
+import com.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
+import com.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
@@ -58,11 +60,15 @@ import java.util.Map;
 
 public class WorkflowPage extends PageContent implements WorkflowPagesEventHandler, ChangeHandler {
 
+  private static final String ACTION_CREATE = "ACTION_CREATE";
   private static WorkflowPageUiBinder uiBinder = GWT.create(WorkflowPageUiBinder.class);
 
   @UiField FlexTable instances;
   @UiField ActionsMenu actionsMenu;
   @UiField ListBox roles;
+
+  private String instanceId;
+  private WorkflowMessages msg;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private WorkflowInstancesDTO data = null;
@@ -83,6 +89,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
 
   @Override
   public void onChange(final ChangeEvent changeEvent) {
+    creationGesture();
     WorkflowLoadInstancesEvent event = new WorkflowLoadInstancesEvent();
     event.setRole(roles.getSelectedValue());
     EventBus.getInstance().fireEvent(event);
@@ -91,6 +98,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
   @Override
   public void loadInstances(final WorkflowLoadedInstancesEvent event) {
     if (data == null) {
+      this.instanceId = event.getInstanceId();
       this.data = event.getData();
       for (Map.Entry<String,String> role : data.getRoles().entrySet()) {
         roles.addItem(role.getValue(), role.getKey());
@@ -122,6 +130,19 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       }
       r++;
     }
+
+    creationGesture();
+  }
+
+  private void creationGesture() {
+    if (data.getRolesAllowedToCreate().contains(roles.getSelectedValue())) {
+      ActionButton act = new ActionButton();
+      act.setId(ACTION_CREATE);
+      act.init(instanceId, "create", msg.create());
+      actionsMenu.addAction(act);
+    } else {
+      actionsMenu.removeAction(ACTION_CREATE);
+    }
   }
 
   interface WorkflowPageUiBinder extends UiBinder<Widget, WorkflowPage> {
@@ -129,6 +150,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
 
   public WorkflowPage() {
     initWidget(uiBinder.createAndBindUi(this));
+    msg = GWT.create(WorkflowMessages.class);
     EventBus.getInstance().addHandler(AbstractWorkflowPagesEvent.TYPE, this);
     roles.addChangeHandler(this);
   }

@@ -29,6 +29,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 
 public interface WorkflowMessages extends Messages {
   String create();
-
+  String validate();
+  String cancel();
 
 }

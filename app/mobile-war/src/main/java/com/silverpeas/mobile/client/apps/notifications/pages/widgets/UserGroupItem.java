@@ -10,12 +10,13 @@ import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.apps.notifications.pages.widgets.events.ChangeEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.components.HTMLPanelClickable;
+import com.silverpeas.mobile.client.components.base.ActionItem;
 import com.silverpeas.mobile.client.resources.ApplicationResources;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
 
-public class UserGroupItem extends Composite {
+public class UserGroupItem extends ActionItem {
 
   private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
   @UiField HTML mail;

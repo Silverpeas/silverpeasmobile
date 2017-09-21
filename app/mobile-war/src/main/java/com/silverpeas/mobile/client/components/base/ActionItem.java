@@ -22,12 +22,23 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.workflow.events.app;
+package com.silverpeas.mobile.client.components.base;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.user.client.ui.Composite;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
-  void loadActionForm(WorkflowLoadActionFormEvent event);
+/**
+ * @author: svu
+ */
+public class ActionItem extends Composite {
+
+  private String id;
+
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
 }

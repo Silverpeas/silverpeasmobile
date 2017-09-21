@@ -22,62 +22,36 @@
  *
  */
 
-package com.silverpeas.mobile.shared.dto.workflow;
+package com.silverpeas.mobile.client.apps.workflow.events.app;
 
-import com.silverpeas.mobile.shared.dto.BaseDTO;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+public class WorkflowLoadActionFormEvent extends AbstractWorkflowAppEvent {
 
-public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Serializable {
+  private String actionName = null;
+  private String instanceId = null;
 
-  private static final long serialVersionUID = 2921606984249560882L;
-  private String instanceId;
-  private Map<String, String> fields;
-  private Map<String, String> actions;
-  private String title;
-
-  public WorkflowInstancePresentationFormDTO() {
+  public WorkflowLoadActionFormEvent() {
+    super();
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return ((WorkflowInstancePresentationFormDTO) obj).getId().equals(getId());
+  protected void dispatch(WorkflowAppEventHandler handler) {
+    handler.loadActionForm(this);
   }
 
-
-  public Map<String, String> getFields() {
-    return fields;
+  public String getActionName() {
+    return actionName;
   }
 
-  public void setFields(final Map<String, String> fields) {
-    this.fields = fields;
-  }
-
-  public Map<String, String> getActions() {
-    return actions;
-  }
-
-  public void setActions(final Map<String, String> actions) {
-    this.actions = actions;
+  public void setActionName(String actionName) {
+    this.actionName =actionName;
   }
 
   public String getInstanceId() {
     return instanceId;
   }
 
-  public void setInstanceId(final String instanceId) {
+  public void setInstanceId(String instanceId) {
     this.instanceId = instanceId;
-  }
-
-  public void setTitle(final String title) {
-    this.title = title;
-  }
-
-  public String getTitle() {
-    return title;
   }
 }

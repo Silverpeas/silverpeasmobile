@@ -28,9 +28,21 @@
              xmlns:b="urn:import:com.silverpeas.mobile.client.components.base"
              xmlns:l="urn:import:com.silverpeas.mobile.client.components">
 
+  <ui:with field='msg' type='com.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages'/>
+
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <b:ActionsMenu ui:field="actionsMenu"/>
     <h2 class="appHeader" ui:field="header"></h2>
     <l:UnorderedList ui:field="fields" styleName="workflow-form"/>
+    <div class=" ui-controlgroup ui-controlgroup-horizontal">
+      <div class="ui-controlgroup-controls ">
+        <g:Anchor ui:field="validate" styleName="btn-validate ui-link">
+          <span class="ui-btn-text"><ui:text from="{msg.validate}"/></span>
+        </g:Anchor>
+        <g:Anchor ui:field="cancel" styleName="btn-validate ui-link">
+          <span class="ui-btn-text"><ui:text from="{msg.cancel}"/></span>
+        </g:Anchor>
+      </div>
+    </div>
   </g:HTMLPanel>
 </ui:UiBinder> 

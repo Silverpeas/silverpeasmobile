@@ -29,55 +29,34 @@ import com.silverpeas.mobile.shared.dto.BaseDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
-public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Serializable {
+public class WorkflowFormActionDTO extends BaseDTO implements Serializable {
 
   private static final long serialVersionUID = 2921606984249560882L;
-  private String instanceId;
-  private Map<String, String> fields;
-  private Map<String, String> actions;
+  private List<WorkflowFieldDTO> fields = new ArrayList<WorkflowFieldDTO>();
   private String title;
 
-  public WorkflowInstancePresentationFormDTO() {
+  public WorkflowFormActionDTO() {
   }
 
   @Override
   public boolean equals(Object obj) {
-    return ((WorkflowInstancePresentationFormDTO) obj).getId().equals(getId());
+    return ((WorkflowFormActionDTO) obj).getId().equals(getId());
   }
 
-
-  public Map<String, String> getFields() {
+  public List<WorkflowFieldDTO> getFields() {
     return fields;
   }
 
-  public void setFields(final Map<String, String> fields) {
-    this.fields = fields;
-  }
-
-  public Map<String, String> getActions() {
-    return actions;
-  }
-
-  public void setActions(final Map<String, String> actions) {
-    this.actions = actions;
-  }
-
-  public String getInstanceId() {
-    return instanceId;
-  }
-
-  public void setInstanceId(final String instanceId) {
-    this.instanceId = instanceId;
-  }
-
-  public void setTitle(final String title) {
-    this.title = title;
+  public void addField(WorkflowFieldDTO f) {
+    fields.add(f);
   }
 
   public String getTitle() {
     return title;
+  }
+
+  public void setTitle(final String title) {
+    this.title = title;
   }
 }

@@ -31,6 +31,7 @@ import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
@@ -46,4 +47,7 @@ public interface ServiceWorkflowAsync {
 
   void getPresentationForm(String instanceId, String role,
       final AsyncCallback<WorkflowInstancePresentationFormDTO> async);
+
+  void getActionForm(String instanceId, String role, String action,
+      final AsyncCallback<WorkflowFormActionDTO> async);
 }

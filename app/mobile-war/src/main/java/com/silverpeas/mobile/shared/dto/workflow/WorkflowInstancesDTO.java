@@ -39,6 +39,7 @@ public class WorkflowInstancesDTO extends BaseDTO implements Serializable {
   private List<String> headerLabels = new ArrayList<String>();
   private List<WorkflowInstanceDTO> instances;
   private Map<String,String> roles;
+  private List<String> rolesAllowedToCreate;
 
   public WorkflowInstancesDTO() {
   }
@@ -65,5 +66,13 @@ public class WorkflowInstancesDTO extends BaseDTO implements Serializable {
 
   public void setHeaderLabels(final List<String> headerLabels) {
     this.headerLabels = headerLabels;
+  }
+
+  public List<String> getRolesAllowedToCreate() {
+    return rolesAllowedToCreate;
+  }
+
+  public void setRolesAllowedToCreate(final List<String> rolesAllowedToCreate) {
+    this.rolesAllowedToCreate = rolesAllowedToCreate;
   }
 }

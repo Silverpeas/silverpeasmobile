@@ -24,6 +24,8 @@
 
 package com.silverpeas.mobile.server.services;
 
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
@@ -39,11 +41,15 @@ import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.workflow.api.Workflow;
 import org.silverpeas.core.workflow.api.instance.ProcessInstance;
+import org.silverpeas.core.workflow.api.model.Input;
+import org.silverpeas.core.workflow.api.model.ProcessModel;
 import org.silverpeas.core.workflow.api.model.Role;
+import org.silverpeas.core.workflow.api.model.Roles;
 import org.silverpeas.core.workflow.api.task.Task;
 import org.silverpeas.core.workflow.api.user.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -85,7 +91,8 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
         r.put(role.getName(), role.getLabel(role.getName(), getUserInSession().getUserPreferences().getLanguage()));
       }
       data.setRoles(r);
-
+      data.setRolesAllowedToCreate(new ArrayList(
+          Arrays.asList(Workflow.getProcessModelManager().getProcessModel(instanceId).getCreationRoles())));
       data.setHeaderLabels(getHeaderLabels(instanceId, userRole));
     } catch (Exception e) {
       throw  new WorkflowException(e);
@@ -111,17 +118,52 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
           mapActions.put(actionName, label);
         }
       }
-
       for (FieldTemplate ft : form.getFieldTemplates()) {
         String label = ft.getLabel(getUserInSession().getUserPreferences().getLanguage());
         String value = data.getField(ft.getFieldName()).getStringValue();
         map.put(label, value);
       }
+      dto.setTitle(form.getTitle());
     } catch (Exception e) {
       throw  new WorkflowException(e);
     }
+    dto.setInstanceId(instanceId);
     dto.setActions(mapActions);
     dto.setFields(map);
+
+    return dto;
+  }
+
+  @Override
+  public WorkflowFormActionDTO getActionForm(String instanceId, String role, String action) throws WorkflowException, AuthenticationException {
+    WorkflowFormActionDTO dto = new WorkflowFormActionDTO();
+    try {
+      org.silverpeas.core.workflow.api.model.Form form = null;
+      if (action.equals("create")) {
+        ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
+        form = model.getCreateAction(role).getForm();
+      } else {
+        ProcessInstance instance = Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
+        form = instance.getProcessModel().getActionForm(action);
+      }
+      //DataRecord data = instance.getFolder();
+      for (Input input : form.getInputs()) {
+        WorkflowFieldDTO fdto = new WorkflowFieldDTO();
+        fdto.setDisplayerName(input.getDisplayerName());
+        fdto.setMandatory(input.isMandatory());
+        fdto.setReadOnly(input.isReadonly());
+        fdto.setName(input.getItem().getName());
+        fdto.setLabel(input.getItem().getLabel(role, getUserInSession().getUserPreferences().getLanguage()));
+        fdto.setValue(input.getValue()); // TODO : a tester
+        fdto.setType(input.getItem().getType());
+        fdto.setValues(input.getItem().getKeyValuePairs());
+        dto.addField(fdto);
+      }
+      dto.setTitle(form.getTitle(role, getUserInSession().getUserPreferences().getLanguage()));
+
+    } catch (Exception e) {
+      throw  new WorkflowException(e);
+    }
     return dto;
   }
 

@@ -33,12 +33,15 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadActionFormEvent;
 import com.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
+import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.components.base.ActionItem;
 
 /**
  * @author: svu
  */
-public class ActionButton extends Composite {
+public class ActionButton extends ActionItem {
     interface ActionButtonUiBinder extends UiBinder<HTMLPanel, ActionButton> {
     }
 
@@ -64,8 +67,10 @@ public class ActionButton extends Composite {
 
     @UiHandler("action")
     void executeAction(ClickEvent event){
-        //TODO
-        Window.alert("Display action form");
+      WorkflowLoadActionFormEvent ev = new WorkflowLoadActionFormEvent();
+      ev.setActionName(actionCode);
+      ev.setInstanceId(instanceId);
+      EventBus.getInstance().fireEvent(ev);
         // hide menu
         getElement().getParentElement().removeAttribute("style");
     }

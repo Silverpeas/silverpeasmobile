@@ -871,6 +871,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-size: 12pt;
   font-weight: normal;
   height: 3em;
+  line-height: 3em;
 }
 
 .comments .publiName, .comments .mediaName {
@@ -1682,6 +1683,7 @@ form .forms .fields > li:nth-child(even) {
 
 .workflow-form {
   list-style-type:none;
+  padding-left : 0;
 }
 
 .workflow-form li {

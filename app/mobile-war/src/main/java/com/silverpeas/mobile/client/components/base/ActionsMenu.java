@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -44,11 +45,28 @@ public class ActionsMenu  extends Composite {
     }
 
     public boolean isEmpty() {
-        return listActions.isEmpty();
+        return (listActions.getWidgetCount() == 0);
     }
 
-    public void addAction(Widget action) {
+    public void addAction(ActionItem action) {
+        for (int i = 0; i < listActions.getWidgetCount(); i++) {
+          ActionItem act = (ActionItem) listActions.getWidget(i);
+          if (act.getId().equals(action.getId())) return;
+        }
         listActions.add(action);
         container.getElement().getStyle().setDisplay(Style.Display.BLOCK);
+    }
+
+    public void removeAction(String id) {
+      for (int i = 0; i < listActions.getWidgetCount(); i++) {
+        ActionItem act = (ActionItem) listActions.getWidget(i);
+        if (act.getId().equals(id)) {
+          listActions.remove(act);
+          break;
+        }
+      }
+      if (isEmpty()) {
+        container.getElement().getStyle().setDisplay(Style.Display.NONE);
+      }
     }
 }

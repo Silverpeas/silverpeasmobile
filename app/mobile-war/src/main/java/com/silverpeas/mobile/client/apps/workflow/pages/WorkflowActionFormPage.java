@@ -26,56 +26,54 @@ package com.silverpeas.mobile.client.apps.workflow.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
-import com.silverpeas.mobile.client.apps.workflow.pages.widgets.Field;
+import com.silverpeas.mobile.client.apps.workflow.pages.widgets.FieldEditable;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 
-import java.util.Map;
-
-public class WorkflowPresentationPage extends PageContent {
+public class WorkflowActionFormPage extends PageContent {
 
   private static WorkflowPresentationPageUiBinder
       uiBinder = GWT.create(WorkflowPresentationPageUiBinder.class);
 
-  private WorkflowInstancePresentationFormDTO data;
+  private WorkflowFormActionDTO data;
 
   @UiField UnorderedList fields;
   @UiField ActionsMenu actionsMenu;
   @UiField HeadingElement header;
+  @UiField Anchor validate, cancel;
 
   public void setData(final WorkflowInstancePresentationFormDTO data) {
 
   }
 
-  public void setData(final WorkflowInstancePresentationFormDTO data, final ApplicationInstanceDTO instance) {
+  public void setData(final WorkflowFormActionDTO data, final ApplicationInstanceDTO instance) {
     this.data = data;
-    //TODO : display presentation form
     header.setInnerText(data.getTitle());
-    for (Map.Entry<String, String> field : data.getFields().entrySet()) {
-      Field f = new Field();
-      f.setData(field.getKey(), field.getValue());
+    for (WorkflowFieldDTO field : data.getFields()) {
+      FieldEditable f = new FieldEditable();
+      f.setData(field);
       fields.add(f);
     }
-    for (Map.Entry<String, String> action : data.getActions().entrySet()) {
-      ActionButton act = new ActionButton();
-      act.init(data.getInstanceId(), action.getKey(), action.getValue());
-      actionsMenu.addAction(act);
-    }
+
   }
 
-  interface WorkflowPresentationPageUiBinder extends UiBinder<Widget, WorkflowPresentationPage> {
+  interface WorkflowPresentationPageUiBinder extends UiBinder<Widget, WorkflowActionFormPage> {
   }
 
-  public WorkflowPresentationPage() {
+  public WorkflowActionFormPage() {
     initWidget(uiBinder.createAndBindUi(this));
+    validate.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+    cancel.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
   }
 
   @Override

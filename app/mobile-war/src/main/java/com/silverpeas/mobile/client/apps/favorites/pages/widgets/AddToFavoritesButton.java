@@ -36,11 +36,12 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.silverpeas.mobile.client.apps.favorites.events.app.AddFavoriteEvent;
 import com.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.components.base.ActionItem;
 
 /**
  * @author: svu
  */
-public class AddToFavoritesButton extends Composite {
+public class AddToFavoritesButton extends ActionItem {
     interface AddToFavoritesButtonUiBinder extends UiBinder<HTMLPanel, AddToFavoritesButton> {
     }
 

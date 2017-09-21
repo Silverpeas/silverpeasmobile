@@ -27,57 +27,90 @@ package com.silverpeas.mobile.shared.dto.workflow;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
-public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Serializable {
+public class WorkflowFieldDTO extends BaseDTO implements Serializable {
 
   private static final long serialVersionUID = 2921606984249560882L;
-  private String instanceId;
-  private Map<String, String> fields;
-  private Map<String, String> actions;
-  private String title;
+  private boolean readOnly;
+  private boolean mandatory;
+  private String displayerName;
+  private String name;
+  private String label;
+  private String value;
+  private String type;
+  private Map<String,String> values;
 
-  public WorkflowInstancePresentationFormDTO() {
+  public WorkflowFieldDTO() {
   }
 
   @Override
   public boolean equals(Object obj) {
-    return ((WorkflowInstancePresentationFormDTO) obj).getId().equals(getId());
+    return ((WorkflowFieldDTO) obj).getId().equals(getId());
   }
 
-
-  public Map<String, String> getFields() {
-    return fields;
+  public boolean isReadOnly() {
+    return readOnly;
   }
 
-  public void setFields(final Map<String, String> fields) {
-    this.fields = fields;
+  public void setReadOnly(final boolean readOnly) {
+    this.readOnly = readOnly;
   }
 
-  public Map<String, String> getActions() {
-    return actions;
+  public boolean isMandatory() {
+    return mandatory;
   }
 
-  public void setActions(final Map<String, String> actions) {
-    this.actions = actions;
+  public void setMandatory(final boolean mandatory) {
+    this.mandatory = mandatory;
   }
 
-  public String getInstanceId() {
-    return instanceId;
+  public String getDisplayerName() {
+    return displayerName;
   }
 
-  public void setInstanceId(final String instanceId) {
-    this.instanceId = instanceId;
+  public void setDisplayerName(final String displayerName) {
+    this.displayerName = displayerName;
   }
 
-  public void setTitle(final String title) {
-    this.title = title;
+  public String getName() {
+    return name;
   }
 
-  public String getTitle() {
-    return title;
+  public void setName(final String name) {
+    this.name = name;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(final String label) {
+    this.label = label;
+  }
+
+  public void setValue(final String value) {
+    this.value = value;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setType(final String type) {
+    this.type = type;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setValues(final Map<String,String> values) {
+    this.values = values;
+  }
+
+  public Map<String, String> getValues() {
+    return values;
   }
 }

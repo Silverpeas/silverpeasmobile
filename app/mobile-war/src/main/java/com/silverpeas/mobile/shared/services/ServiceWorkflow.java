@@ -30,6 +30,7 @@ import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
@@ -45,4 +46,6 @@ public interface ServiceWorkflow extends RemoteService {
   WorkflowInstancesDTO getInstances(String instanceId, String userRole) throws WorkflowException, AuthenticationException;
 
   WorkflowInstancePresentationFormDTO getPresentationForm(String instanceId, String role) throws WorkflowException, AuthenticationException;
+
+  WorkflowFormActionDTO getActionForm(String instanceId, String role, String action) throws WorkflowException, AuthenticationException;
 }
