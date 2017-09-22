@@ -57,6 +57,7 @@ public class AddToFavoritesButton extends ActionItem {
     public AddToFavoritesButton() {
         msg = GWT.create(FavoritesMessages.class);
         initWidget(uiBinder.createAndBindUi(this));
+        setId("favorite");
     }
 
     public void init(String instanceId, String contentId, String contentType, String title) {

@@ -22,13 +22,10 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.workflow.events.app;
+package com.silverpeas.mobile.client.components.userselection.events.components;
 
 import com.google.gwt.event.shared.EventHandler;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
-  void loadActionForm(WorkflowLoadActionFormEvent event);
-  void loadUserField(WorkflowLoadUserFieldEvent event);
+public interface UserSelectionComponentEventHandler extends EventHandler {
+    void onUsersAndGroupSelected(UsersAndGroupsSelectedEvent event);
 }

@@ -24,6 +24,9 @@
 
 package com.silverpeas.mobile.server.services;
 
+import com.silverpeas.mobile.server.services.helpers.UserHelper;
+import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
@@ -32,7 +35,10 @@ import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 import com.silverpeas.mobile.shared.services.ServiceWorkflow;
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.ProfileInst;
+import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.content.form.DataRecord;
 import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
@@ -44,14 +50,15 @@ import org.silverpeas.core.workflow.api.instance.ProcessInstance;
 import org.silverpeas.core.workflow.api.model.Input;
 import org.silverpeas.core.workflow.api.model.ProcessModel;
 import org.silverpeas.core.workflow.api.model.Role;
-import org.silverpeas.core.workflow.api.model.Roles;
 import org.silverpeas.core.workflow.api.task.Task;
 import org.silverpeas.core.workflow.api.user.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 /**
@@ -65,6 +72,51 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
 
   static {
     SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+  }
+
+  @Override
+  public List<BaseDTO> getUserField(String instanceId, String fieldName, String role) throws WorkflowException, AuthenticationException {
+    //ArrayList<BaseDTO> result = new ArrayList<BaseDTO>();
+    HashSet<BaseDTO> result = new HashSet<BaseDTO>();
+    try {
+      ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
+      org.silverpeas.core.workflow.api.model.Form form = model.getCreateAction(role).getForm();
+      Map<String,String> parameters = null;
+      for (Input input : form.getInputs()) {
+        if (input.getItem().getName().equals(fieldName)) {
+          parameters = input.getItem().getKeyValuePairs();
+          break;
+        }
+      }
+      ArrayList<String> users = new ArrayList<String>();
+      String roles = parameters.get("roles");
+      List<ProfileInst> profiles = Administration.get().getComponentInst(instanceId).getProfiles();
+      if (roles == null || roles.isEmpty()) {
+        for (ProfileInst profil : profiles) {
+          users.addAll(profil.getAllUsers());
+        }
+      } else {
+        StringTokenizer stk = new StringTokenizer(roles, ",");
+        while (stk.hasMoreTokens()) {
+          String r = stk.nextToken();
+          for (ProfileInst profil : profiles) {
+            if (profil.getName().equals(r)) {
+              users.addAll(profil.getAllGroups());
+            }
+          }
+        }
+      }
+
+      // populate users
+      for (String id : users) {
+        UserDetail u = Administration.get().getUserDetail(id);
+        result.add(UserHelper.getInstance().populateUserDTO(u));
+      }
+    } catch (Exception e) {
+      throw  new WorkflowException(e);
+    }
+
+    return new ArrayList<BaseDTO>(result);
   }
 
   @Override
@@ -149,6 +201,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
       //DataRecord data = instance.getFolder();
       for (Input input : form.getInputs()) {
         WorkflowFieldDTO fdto = new WorkflowFieldDTO();
+        fdto.setId(instanceId);
         fdto.setDisplayerName(input.getDisplayerName());
         fdto.setMandatory(input.isMandatory());
         fdto.setReadOnly(input.isReadonly());

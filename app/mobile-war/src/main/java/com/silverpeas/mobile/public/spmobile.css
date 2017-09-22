@@ -1699,3 +1699,10 @@ form .forms .fields > li:nth-child(even) {
   background-color: #f6f6f6;
   border-bottom: 1px solid #ddd;
 }
+
+.mandatory {
+  background-color: darkorange;
+  height: 10px;
+  width: 10px;
+  margin-left: 1em;
+}

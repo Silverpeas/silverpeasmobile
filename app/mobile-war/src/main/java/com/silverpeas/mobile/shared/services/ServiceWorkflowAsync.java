@@ -28,6 +28,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -50,4 +51,7 @@ public interface ServiceWorkflowAsync {
 
   void getActionForm(String instanceId, String role, String action,
       final AsyncCallback<WorkflowFormActionDTO> async);
+
+  void getUserField(String instanceId, String fieldName, String role,
+      final AsyncCallback<List<BaseDTO>> async);
 }

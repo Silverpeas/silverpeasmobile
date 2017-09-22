@@ -11,7 +11,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.apps.notifications.events.app.SendNotificationEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.AbstractNotificationPagesEvent;
-import com.silverpeas.mobile.client.apps.notifications.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationPagesEventHandler;
 import com.silverpeas.mobile.client.apps.notifications.events.pages.NotificationSendedEvent;
 import com.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
@@ -93,9 +92,6 @@ public class NotificationSenderPage extends PageContent implements View, Notific
         NotificationDTO notification = new NotificationDTO(message.getText());
         EventBus.getInstance().fireEvent(new SendNotificationEvent(notification, selection, subject.getText()));
     }
-
-    @Override
-    public void onAllowedUsersAndGroupsLoaded(AllowedUsersAndGroupsLoadedEvent allowedUsersAndGroupsLoadedEvent) {}
 
     @Override
     public void onNotificationSended(NotificationSendedEvent event) {

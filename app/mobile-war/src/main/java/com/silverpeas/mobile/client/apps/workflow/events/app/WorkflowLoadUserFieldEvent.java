@@ -24,11 +24,34 @@
 
 package com.silverpeas.mobile.client.apps.workflow.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
-  void loadActionForm(WorkflowLoadActionFormEvent event);
-  void loadUserField(WorkflowLoadUserFieldEvent event);
+public class WorkflowLoadUserFieldEvent extends AbstractWorkflowAppEvent {
+
+  private String instanceId = null;
+  private String fieldName = null;
+
+  public WorkflowLoadUserFieldEvent() {
+    super();
+  }
+
+  @Override
+  protected void dispatch(WorkflowAppEventHandler handler) {
+    handler.loadUserField(this);
+  }
+
+  public String getInstanceId() {
+    return instanceId;
+  }
+
+  public void setInstanceId(final String instanceId) {
+    this.instanceId = instanceId;
+  }
+
+  public String getFieldName() {
+    return fieldName;
+  }
+
+  public void setFieldName(final String fieldName) {
+    this.fieldName = fieldName;
+  }
 }

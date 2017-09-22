@@ -10,7 +10,7 @@ import org.silverpeas.core.web.mvc.controller.MainSessionController;
 public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
   public static final String USER_ATTRIBUT_NAME = "user";
   public static final String USERKEY_ATTRIBUT_NAME = "key";
-  public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = "main_session_controller";
+  public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = "SilverSessionController";
 
   protected void setUserInSession(UserDetail user) {
     getThreadLocalRequest().getSession().setAttribute(USER_ATTRIBUT_NAME, user);
@@ -37,11 +37,6 @@ public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
 
   protected MainSessionController getMainSessionController() throws Exception {
     MainSessionController mainSessionController = (MainSessionController) getThreadLocalRequest().getSession().getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
-    if (mainSessionController == null) {
-      mainSessionController = new MainSessionController(getUserKeyInSession(), getThreadLocalRequest().getSession());
-      getThreadLocalRequest().getSession().setAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME, mainSessionController);
-    }
-
     return mainSessionController;
   }
 }

@@ -1,4 +1,4 @@
-package com.silverpeas.mobile.client.apps.notifications.pages.widgets.events;
+package com.silverpeas.mobile.client.components.userselection.widgets.events;
 
 import com.google.gwt.event.shared.EventHandler;
 

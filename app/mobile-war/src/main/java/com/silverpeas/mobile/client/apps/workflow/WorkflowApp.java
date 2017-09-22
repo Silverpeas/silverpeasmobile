@@ -25,7 +25,6 @@
 package com.silverpeas.mobile.client.apps.workflow;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external
@@ -37,6 +36,7 @@ import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowAppEventHan
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadActionFormEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanceEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFieldEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.pages.WorkflowActionFormPage;
 import com.silverpeas.mobile.client.apps.workflow.pages.WorkflowPage;
@@ -45,14 +45,18 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 
+import java.util.List;
 
-public class WorkflowApp extends App implements NavigationEventHandler, WorkflowAppEventHandler {
+
+public class WorkflowApp extends App implements NavigationEventHandler, WorkflowAppEventHandler{
 
   private ApplicationMessages globalMsg;
   private ApplicationInstanceDTO instance;
@@ -152,5 +156,22 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       }
     });
 
+  }
+
+  @Override
+  public void loadUserField(final WorkflowLoadUserFieldEvent event) {
+    ServicesLocator.getServiceWorkflow().getUserField(event.getInstanceId(), event.getFieldName(), currentRole,
+        new AsyncCallback<List<BaseDTO>>() {
+          @Override
+          public void onFailure(final Throwable throwable) {
+            EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+          }
+
+          @Override
+          public void onSuccess(final List<BaseDTO> users) {
+            AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users);
+            EventBus.getInstance().fireEvent(ev);
+          }
+        });
   }
 }

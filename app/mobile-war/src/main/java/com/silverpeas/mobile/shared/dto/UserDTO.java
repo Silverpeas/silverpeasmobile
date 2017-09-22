@@ -42,4 +42,26 @@ public class UserDTO extends BaseDTO implements Serializable{
   public void setAvatar(String avatar) {
     this.avatar = avatar;
   }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    UserDTO other = (UserDTO) obj;
+    if (getId() == null) {
+      return false;
+    } else if (!getId().equals(other.getId()))
+      return false;
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return Integer.parseInt(getId());
+  }
 }

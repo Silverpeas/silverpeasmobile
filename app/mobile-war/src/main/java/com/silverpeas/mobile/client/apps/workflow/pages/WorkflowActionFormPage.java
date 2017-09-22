@@ -27,11 +27,15 @@ package com.silverpeas.mobile.client.apps.workflow.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.workflow.pages.widgets.FieldEditable;
+import com.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
+import com.silverpeas.mobile.client.components.Popin;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
@@ -40,12 +44,15 @@ import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 
+import java.util.ArrayList;
+
 public class WorkflowActionFormPage extends PageContent {
 
   private static WorkflowPresentationPageUiBinder
       uiBinder = GWT.create(WorkflowPresentationPageUiBinder.class);
 
   private WorkflowFormActionDTO data;
+  private WorkflowMessages msg;
 
   @UiField UnorderedList fields;
   @UiField ActionsMenu actionsMenu;
@@ -72,6 +79,7 @@ public class WorkflowActionFormPage extends PageContent {
 
   public WorkflowActionFormPage() {
     initWidget(uiBinder.createAndBindUi(this));
+    msg = GWT.create(WorkflowMessages.class);
     validate.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
     cancel.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
   }
@@ -81,5 +89,42 @@ public class WorkflowActionFormPage extends PageContent {
     super.stop();
   }
 
+  @UiHandler("validate")
+  protected void validate(ClickEvent event) {
+
+    //TODO : manage mandatory
+    ArrayList<String> errors = new ArrayList<String>();
+    for (WorkflowFieldDTO f : data.getFields()) {
+      if (f.isMandatory()) {
+        if (f.getValue() == null || f.getValue().isEmpty()) {
+          errors.add(f.getLabel());
+        }
+      }
+    }
+    if (!errors.isEmpty()) {
+      String message = "";
+      for (String error : errors) {
+        message += error + ",";
+      }
+      message = message.substring(0, message.length() - 2) + " ";
+      message += msg.mandatory();
+
+      new Popin(message).show();
+    }
+
+    //EventBus.getInstance().fireEvent();
+    //stopAllFields();
+  }
+
+  @UiHandler("cancel")
+  protected void cancel(ClickEvent event) {
+    stopAllFields();
+    back();
+  }
+  private void stopAllFields() {
+    for (int i = 0; i < fields.getWidgetCount(); i++) {
+      ((FieldEditable) fields.getWidget(i)).stop();
+    }
+  }
 
 }

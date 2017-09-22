@@ -31,6 +31,7 @@ public class NotifyButton extends ActionItem {
     public NotifyButton() {
         msg = GWT.create(NotificationsMessages.class);
         initWidget(uiBinder.createAndBindUi(this));
+        setId("notify");
     }
 
     public void init(String instanceId, String contentId, String contentType, String title, String pageTitle) {

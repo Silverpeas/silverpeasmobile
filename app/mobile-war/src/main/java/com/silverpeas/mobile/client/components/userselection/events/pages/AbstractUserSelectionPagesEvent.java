@@ -22,13 +22,19 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.workflow.events.app;
+package com.silverpeas.mobile.client.components.userselection.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
-  void loadActionForm(WorkflowLoadActionFormEvent event);
-  void loadUserField(WorkflowLoadUserFieldEvent event);
+public abstract class AbstractUserSelectionPagesEvent extends GwtEvent<UserSelectionPagesEventHandler> {
+
+	public static Type<UserSelectionPagesEventHandler> TYPE = new Type<UserSelectionPagesEventHandler>();
+	
+	public AbstractUserSelectionPagesEvent() {
+	}
+	
+	@Override
+	public Type<UserSelectionPagesEventHandler> getAssociatedType() {
+		return TYPE;
+	}
 }

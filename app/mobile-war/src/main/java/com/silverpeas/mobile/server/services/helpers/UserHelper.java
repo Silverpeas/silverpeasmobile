@@ -25,6 +25,7 @@
 package com.silverpeas.mobile.server.services.helpers;
 
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
+import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 import org.apache.commons.codec.binary.Base64;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
@@ -82,6 +83,16 @@ public class UserHelper {
     dto.setAvatar(user.getAvatar());
     dto.setLanguage(user.getUserPreferences().getLanguage());
     dto.setToken(user.getToken());
+    return dto;
+  }
+
+  public UserDTO populateUserDTO(UserDetail user) {
+    UserDTO dto= new UserDTO();
+    dto.setId(user.getId());
+    dto.setFirstName(user.getFirstName());
+    dto.setLastName(user.getLastName());
+    dto.seteMail(user.geteMail());
+    dto.setAvatar(user.getAvatar());
     return dto;
   }
 }

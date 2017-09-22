@@ -8,15 +8,12 @@ public interface NotificationsMessages extends Messages {
 
   SafeHtml message();
   SafeHtml recipients();
-  SafeHtml continu();
 
-  String title(@PluralCount int count);
 
   SafeHtml modify();
   SafeHtml send();
   SafeHtml subject();
   SafeHtml notifiedContacts();
   String sended();
-  String filter();
 
 }

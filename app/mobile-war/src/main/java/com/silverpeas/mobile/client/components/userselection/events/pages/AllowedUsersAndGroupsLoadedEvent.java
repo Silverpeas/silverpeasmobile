@@ -22,13 +22,27 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.workflow.events.app;
+package com.silverpeas.mobile.client.components.userselection.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
-  void loadActionForm(WorkflowLoadActionFormEvent event);
-  void loadUserField(WorkflowLoadUserFieldEvent event);
+import java.util.List;
+
+public class AllowedUsersAndGroupsLoadedEvent extends AbstractUserSelectionPagesEvent {
+
+	List<BaseDTO> list;
+
+	public AllowedUsersAndGroupsLoadedEvent(List<BaseDTO> list){
+		super();
+		this.list = list;
+	}
+	
+	@Override
+	protected void dispatch(UserSelectionPagesEventHandler handler) {
+		handler.onAllowedUsersAndGroupsLoaded(this);
+	}
+	
+	public List<BaseDTO> getListAllowedUsersAndGroups(){
+		return list;
+	}
 }

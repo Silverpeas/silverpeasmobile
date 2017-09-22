@@ -32,4 +32,5 @@ public interface WorkflowMessages extends Messages {
   String validate();
   String cancel();
 
+  String mandatory();
 }
