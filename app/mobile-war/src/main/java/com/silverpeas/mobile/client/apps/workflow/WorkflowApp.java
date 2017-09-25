@@ -25,6 +25,7 @@
 package com.silverpeas.mobile.client.apps.workflow;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external
@@ -37,6 +38,8 @@ import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadActionF
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanceEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFieldEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowProcessFormEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.pages.WorkflowActionFormPage;
 import com.silverpeas.mobile.client.apps.workflow.pages.WorkflowPage;
@@ -61,6 +64,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   private ApplicationMessages globalMsg;
   private ApplicationInstanceDTO instance;
   private String currentRole;
+  private String currentAction;
 
 
   public WorkflowApp() {
@@ -140,6 +144,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadActionForm(final WorkflowLoadActionFormEvent event) {
+    currentAction = event.getActionName();
     ServicesLocator.getServiceWorkflow().getActionForm(event.getInstanceId(), currentRole, event.getActionName(), new AsyncCallback<WorkflowFormActionDTO>() {
 
 
@@ -173,5 +178,20 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
             EventBus.getInstance().fireEvent(ev);
           }
         });
+  }
+
+  @Override
+  public void processForm(final WorkflowProcessFormEvent event) {
+    ServicesLocator.getServiceWorkflow().processAction(event.getData(), instance.getId(), currentAction, currentRole, new AsyncCallback<Void>() {
+      @Override
+      public void onFailure(final Throwable throwable) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+      }
+
+      @Override
+      public void onSuccess(final Void aVoid) {
+        EventBus.getInstance().fireEvent(new WorkflowActionProcessedEvent());
+      }
+    });
   }
 }

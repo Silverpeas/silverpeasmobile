@@ -27,23 +27,19 @@ package com.silverpeas.mobile.shared.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.UserDTO;
-import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
-import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
-import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.DocumentsException;
 import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 
 import java.util.List;
-import java.util.Map;
 
 @RemoteServiceRelativePath("Workflow")
 public interface ServiceWorkflow extends RemoteService {
+  void processAction(List<WorkflowFieldDTO> data, String instanceId, String action, String role) throws WorkflowException, AuthenticationException;
+
   List<BaseDTO> getUserField(String instanceId, String fieldName, String role) throws WorkflowException, AuthenticationException;
 
   WorkflowInstancesDTO getInstances(String instanceId, String userRole) throws WorkflowException, AuthenticationException;

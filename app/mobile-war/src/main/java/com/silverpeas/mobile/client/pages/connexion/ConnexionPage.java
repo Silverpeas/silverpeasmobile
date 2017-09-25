@@ -104,7 +104,7 @@ public class ConnexionPage extends PageContent {
      * @param domainId
      */
     private void login(final String login, final String password, final String domainId) {
-
+        Notification.activityStart();
         if (login.isEmpty()) {
             loginField.getElement().getStyle().setBackgroundColor("#ec9c01");
         } else {
@@ -143,10 +143,12 @@ public class ConnexionPage extends PageContent {
                   ServicesLocator.getServiceNavigation().initSession(new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(final Throwable throwable) {
+                      Notification.activityStop();
                     }
 
                     @Override
                     public void onSuccess(final Boolean init) {
+                      Notification.activityStop();
                       SpMobil.displayMainPage(user);
                     }
                   });

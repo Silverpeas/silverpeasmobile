@@ -43,6 +43,7 @@ import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesB
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanceEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowPagesEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
@@ -132,6 +133,13 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
     }
 
     creationGesture();
+  }
+
+  @Override
+  public void actionProcessed(final WorkflowActionProcessedEvent ev) {
+    WorkflowLoadInstancesEvent event = new WorkflowLoadInstancesEvent();
+    event.setRole(roles.getSelectedValue());
+    EventBus.getInstance().fireEvent(event);
   }
 
   private void creationGesture() {

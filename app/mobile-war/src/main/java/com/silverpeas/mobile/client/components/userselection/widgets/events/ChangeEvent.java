@@ -1,11 +1,13 @@
 package com.silverpeas.mobile.client.components.userselection.widgets.events;
 
 
+import com.silverpeas.mobile.client.components.userselection.widgets.UserGroupItem;
+
 public class ChangeEvent extends AbstractSelectionEvent {
 
-  private boolean select;
+  private UserGroupItem select;
 
-  public ChangeEvent(boolean select){
+  public ChangeEvent(UserGroupItem select){
     super();
     this.select = select;
   }
@@ -15,7 +17,7 @@ public class ChangeEvent extends AbstractSelectionEvent {
     handler.onSelectionChange(this);
   }
 
-  public boolean isSelect() {
+  public UserGroupItem getItem() {
     return select;
   }
 }

@@ -71,7 +71,13 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
   public void onChange(final ChangeEvent changeEvent) {
     String value = "";
     if (getType().equals("user")) {
-      //TODO
+      ListBox l = (ListBox) changeEvent.getSource();
+      for (int i = 0; i < l.getItemCount(); i++) {
+        value += l.getValue(i) + ",";
+      }
+      if (value.indexOf(",") != -1) {
+        value = value.substring(0, value.length() - 2);
+      }
     } else {
       if (changeEvent.getSource() instanceof TextBox) {
         value = ((TextBox) changeEvent.getSource()).getText();
@@ -80,14 +86,27 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       } else if (changeEvent.getSource() instanceof ListBox) {
         value = ((ListBox) changeEvent.getSource()).getSelectedValue();
       }
-      //TODO : file ?
     }
     data.setValue(value);
   }
 
   @Override
   public void onValueChange(final ValueChangeEvent valueChangeEvent) {
-    String value = ((RadioButton) valueChangeEvent.getSource()).getName();
+    String value = "";
+    if (valueChangeEvent.getSource() instanceof RadioButton) {
+      value = ((RadioButton) valueChangeEvent.getSource()).getText();
+    } else if(valueChangeEvent.getSource() instanceof CheckBox) {
+      FlowPanel p = (FlowPanel) ((CheckBox) valueChangeEvent.getSource()).getParent();
+      for (int i = 0; i < p.getWidgetCount(); i++) {
+        CheckBox c = (CheckBox) p.getWidget(i);
+        if (c.getValue()) {
+          value += c.getName() + ",";
+        }
+      }
+      if (value.indexOf(",") != -1) {
+        value = value.substring(0, value.length() - 2);
+      }
+    }
     data.setValue(value);
   }
 
@@ -96,7 +115,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
     if (event.getContentId().equals(data.getName()) ) {
       ListBox l = ((ListBox) w);
       l.clear();
-      l.setVisibleItemCount(event.getUsersAndGroupsSelected().size());
+      l.setVisibleItemCount(event.getUsersAndGroupsSelected().size() + 1);
       for (BaseDTO user : event.getUsersAndGroupsSelected()) {
         UserDTO u = (UserDTO) user;
         l.addItem(u.getFirstName() + " " + u.getLastName(), u.getId());
@@ -123,6 +142,9 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
     return type;
   }
 
+  //TODO : manage displayer :
+  // ISO Formtemplate : checkbox, file, image, video, wysiwyg, ldap, accessPath, jdbc, pdc, group, sequence, explorer, map
+  // ISO WorkflowEngine : checkbox, file, wysiwyg, ldap, accessPath, jdbc, pdc, group, sequence, explorer
   public void setData(WorkflowFieldDTO data) {
     this.data = data;
     label.setText(data.getLabel());
@@ -143,12 +165,21 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       FlowPanel panel = new FlowPanel();
       panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
       for(Map.Entry<String,String> v : data.getValues().entrySet()) {
-        RadioButton rb0 = new RadioButton(v.getKey(),v.getValue());
+        RadioButton rb0 = new RadioButton(data.getName(), v.getValue());
         rb0.addValueChangeHandler(this);
         panel.add(rb0);
       }
       w = panel;
-
+    } else if(type.equalsIgnoreCase("checkbox")) {
+      FlowPanel panel = new FlowPanel();
+      panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
+      for(Map.Entry<String,String> v : data.getValues().entrySet()) {
+        CheckBox chk = new CheckBox(v.getKey());
+        chk.setName(v.getValue());
+        chk.addValueChangeHandler(this);
+        panel.add(chk);
+      }
+      w = panel;
     } else if(type.equalsIgnoreCase("listbox")) {
       ListBox l = new ListBox();
       for(Map.Entry<String,String> v : data.getValues().entrySet()) {
@@ -172,7 +203,21 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       t.setReadOnly(data.isReadOnly());
       t.addChangeHandler(this);
       w = t;
-    } else if(type.equalsIgnoreCase("user")) {
+    } else if(type.equalsIgnoreCase("time")) {
+      TextBox t = new TextBox();
+      t.getElement().setAttribute("type", "time");
+      t.setText(data.getValue());
+      t.setReadOnly(data.isReadOnly());
+      t.addChangeHandler(this);
+      w = t;
+    } else if(type.equalsIgnoreCase("email")) {
+        TextBox t = new TextBox();
+        t.getElement().setAttribute("type", "email");
+        t.setText(data.getValue());
+        t.setReadOnly(data.isReadOnly());
+        t.addChangeHandler(this);
+        w = t;
+    } else if(type.equalsIgnoreCase("user") || type.equalsIgnoreCase("multipleUser")) {
       ListBox l = new ListBox();
       if (data.getValue() != null && !data.getValue().isEmpty()) {
         l.addItem(data.getValue(), data.getValue());
@@ -180,10 +225,12 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       l.setWidth("10em");
       l.setEnabled(!data.isReadOnly());
       l.addChangeHandler(this);
+      l.setVisibleItemCount(2);
       l.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(final ClickEvent clickEvent) {
           UserSelectionPage page = new UserSelectionPage();
+          if (type.equalsIgnoreCase("user")) page.setMaxUsers(1);
           page.setContentId(data.getName());
           WorkflowLoadUserFieldEvent event = new WorkflowLoadUserFieldEvent();
           event.setFieldName(data.getName());

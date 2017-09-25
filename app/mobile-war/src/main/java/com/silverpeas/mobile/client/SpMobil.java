@@ -134,8 +134,6 @@ public class SpMobil implements EntryPoint {
         apps.add(new WebPageApp());
         apps.add(new BlogApp());
         apps.add(new WorkflowApp());
-
-        Notification.activityStop();
     }
 
     public static Page getMainPage() {
@@ -158,6 +156,7 @@ public class SpMobil implements EntryPoint {
      * @param domainId
      */
     private void login(final String login, final String password, final String domainId, final Command attempt) {
+      Notification.activityStart();
       FullUserDTO user = AuthentificationManager.getInstance().loadUser();
       SpMobil.setUserToken(user.getToken());
       if (user != null) {
@@ -198,6 +197,7 @@ public class SpMobil implements EntryPoint {
 
                       @Override
                       public void onSuccess(final Boolean open) {
+                        Notification.activityStop();
                         if (open) {
                           displayMainPage(user);
                         } else {

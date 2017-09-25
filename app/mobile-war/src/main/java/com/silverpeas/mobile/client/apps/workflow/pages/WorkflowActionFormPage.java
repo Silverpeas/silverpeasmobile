@@ -25,6 +25,7 @@
 package com.silverpeas.mobile.client.apps.workflow.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,8 +34,15 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowProcessFormEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowPagesEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
 import com.silverpeas.mobile.client.apps.workflow.pages.widgets.FieldEditable;
 import com.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
+import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.components.Popin;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
@@ -46,13 +54,13 @@ import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFor
 
 import java.util.ArrayList;
 
-public class WorkflowActionFormPage extends PageContent {
+public class WorkflowActionFormPage extends PageContent implements WorkflowPagesEventHandler {
 
   private static WorkflowPresentationPageUiBinder
       uiBinder = GWT.create(WorkflowPresentationPageUiBinder.class);
 
   private WorkflowFormActionDTO data;
-  private WorkflowMessages msg;
+  @UiField WorkflowMessages msg;
 
   @UiField UnorderedList fields;
   @UiField ActionsMenu actionsMenu;
@@ -74,6 +82,17 @@ public class WorkflowActionFormPage extends PageContent {
 
   }
 
+  @Override
+  public void loadInstances(final WorkflowLoadedInstancesEvent event) {
+  }
+
+  @Override
+  public void actionProcessed(final WorkflowActionProcessedEvent event) {
+    stopAllFields();
+    Notification.activityStop();
+    back();
+  }
+
   interface WorkflowPresentationPageUiBinder extends UiBinder<Widget, WorkflowActionFormPage> {
   }
 
@@ -82,17 +101,19 @@ public class WorkflowActionFormPage extends PageContent {
     msg = GWT.create(WorkflowMessages.class);
     validate.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
     cancel.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+    EventBus.getInstance().addHandler(AbstractWorkflowPagesEvent.TYPE, this);
   }
 
   @Override
   public void stop() {
+    EventBus.getInstance().removeHandler(AbstractWorkflowPagesEvent.TYPE, this);
     super.stop();
   }
 
   @UiHandler("validate")
   protected void validate(ClickEvent event) {
 
-    //TODO : manage mandatory
+    // manage mandatory fields
     ArrayList<String> errors = new ArrayList<String>();
     for (WorkflowFieldDTO f : data.getFields()) {
       if (f.isMandatory()) {
@@ -110,10 +131,12 @@ public class WorkflowActionFormPage extends PageContent {
       message += msg.mandatory();
 
       new Popin(message).show();
+    } else {
+      WorkflowProcessFormEvent ev = new WorkflowProcessFormEvent();
+      ev.setData(data.getFields());
+      Notification.activityStart();
+      EventBus.getInstance().fireEvent(ev);
     }
-
-    //EventBus.getInstance().fireEvent();
-    //stopAllFields();
   }
 
   @UiHandler("cancel")

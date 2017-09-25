@@ -59,6 +59,10 @@ public class UserGroupItem extends ActionItem {
     initWidget(uiBinder.createAndBindUi(this));
   }
 
+  public void unSelect() {
+    if (isSelected()) toggleSelection();
+  }
+
   public void setData(BaseDTO data) {
     this.data = data;
     if (data instanceof UserDTO) {
@@ -101,6 +105,11 @@ public class UserGroupItem extends ActionItem {
 
   @UiHandler("container")
   protected void selection(ClickEvent event) {
+    toggleSelection();
+    EventBus.getInstance().fireEvent(new ChangeEvent(this));
+  }
+
+  private void toggleSelection() {
     if (isSelected()) {
       container.getElement().removeAttribute("class");
       this.selected = false;
@@ -108,7 +117,5 @@ public class UserGroupItem extends ActionItem {
       container.getElement().setAttribute("class", "selected");
       this.selected = true;
     }
-
-    EventBus.getInstance().fireEvent(new ChangeEvent(selected));
   }
 }

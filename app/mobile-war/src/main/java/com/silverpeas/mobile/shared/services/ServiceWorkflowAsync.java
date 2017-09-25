@@ -25,23 +25,13 @@
 package com.silverpeas.mobile.shared.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.UserDTO;
-import com.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
-import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-import com.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
-import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
-import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import com.silverpeas.mobile.shared.exceptions.DocumentsException;
-import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ServiceWorkflowAsync {
   void getInstances(String instanceId, String role, final AsyncCallback<WorkflowInstancesDTO> async);
@@ -54,4 +44,7 @@ public interface ServiceWorkflowAsync {
 
   void getUserField(String instanceId, String fieldName, String role,
       final AsyncCallback<List<BaseDTO>> async);
+
+  void processAction(List<WorkflowFieldDTO> data, final String id, final String currentAction,
+      final String currentRole, final AsyncCallback<Void> async);
 }

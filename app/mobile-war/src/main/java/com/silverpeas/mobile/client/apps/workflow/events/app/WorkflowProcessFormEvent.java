@@ -24,12 +24,29 @@
 
 package com.silverpeas.mobile.client.apps.workflow.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
-  void loadActionForm(WorkflowLoadActionFormEvent event);
-  void loadUserField(WorkflowLoadUserFieldEvent event);
-  void processForm(WorkflowProcessFormEvent event);
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
+
+import java.util.List;
+
+public class WorkflowProcessFormEvent extends AbstractWorkflowAppEvent {
+
+  public WorkflowProcessFormEvent() {
+    super();
+  }
+
+  private List<WorkflowFieldDTO> data;
+
+  @Override
+  protected void dispatch(WorkflowAppEventHandler handler) {
+    handler.processForm(this);
+  }
+
+  public void setData(final List<WorkflowFieldDTO> data) {
+    this.data = data;
+  }
+
+  public List<WorkflowFieldDTO> getData() {
+    return data;
+  }
 }

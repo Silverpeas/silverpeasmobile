@@ -26,7 +26,6 @@ package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.mobile.server.services.helpers.UserHelper;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
@@ -40,18 +39,23 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.ProfileInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.content.form.DataRecord;
+import org.silverpeas.core.contribution.content.form.Field;
 import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.RecordTemplate;
+import org.silverpeas.core.contribution.content.form.record.GenericDataRecord;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.workflow.api.Workflow;
+import org.silverpeas.core.workflow.api.event.TaskDoneEvent;
 import org.silverpeas.core.workflow.api.instance.ProcessInstance;
+import org.silverpeas.core.workflow.api.model.Action;
 import org.silverpeas.core.workflow.api.model.Input;
 import org.silverpeas.core.workflow.api.model.ProcessModel;
 import org.silverpeas.core.workflow.api.model.Role;
 import org.silverpeas.core.workflow.api.task.Task;
 import org.silverpeas.core.workflow.api.user.User;
+import org.silverpeas.core.workflow.engine.user.UserImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,8 +79,60 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
   }
 
   @Override
+  public void processAction(List<WorkflowFieldDTO> data, String instanceId, String action, String role) throws WorkflowException, AuthenticationException {
+    try {
+      ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
+      String kind = "";
+      if (action.equalsIgnoreCase("create")) {
+        kind = model.getCreateAction(role).getKind();
+      } else {
+        kind = model.getAction(action).getKind();
+      }
+
+
+
+      if (kind.equals("create")) {
+        Action creation = model.getCreateAction(role);
+
+        Form form = model.getPublicationForm(creation.getName(), role, getUserInSession().getUserPreferences().getLanguage());
+        GenericDataRecord record = (GenericDataRecord) model.getNewActionRecord(creation.getName(), role, getUserInSession().getUserPreferences().getLanguage(), null);
+        for (WorkflowFieldDTO f : data) {
+          Field field = record.getField(f.getName());
+          if (f.getValue() == null) {
+            field.setNull();
+          } else {
+            field.setValue(f.getValue());
+          }
+          //TODO : value type list
+        }
+
+        TaskDoneEvent event = getCreationTask(model, getUserInSession().getId(), role).buildTaskDoneEvent(creation.getName(), record);
+        Workflow.getWorkflowEngine().process(event);
+
+        Thread.sleep(1000);
+
+      } else if (kind.equals("update")) {
+        //TODO
+
+      } else if (kind.equals("delete")) {
+        //TODO
+      }
+
+      } catch (Exception e) {
+      throw  new WorkflowException(e);
+    }
+
+  }
+
+  private Task getCreationTask(ProcessModel processModel, String userId, String currentRole)  throws Exception {
+    User user = new UserImpl(UserDetail.getById(userId));
+    Task creationTask =
+          Workflow.getTaskManager().getCreationTask(user, currentRole, processModel);
+    return creationTask;
+  }
+
+  @Override
   public List<BaseDTO> getUserField(String instanceId, String fieldName, String role) throws WorkflowException, AuthenticationException {
-    //ArrayList<BaseDTO> result = new ArrayList<BaseDTO>();
     HashSet<BaseDTO> result = new HashSet<BaseDTO>();
     try {
       ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
