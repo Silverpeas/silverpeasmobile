@@ -146,7 +146,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
     if (data.getRolesAllowedToCreate().contains(roles.getSelectedValue())) {
       ActionButton act = new ActionButton();
       act.setId(ACTION_CREATE);
-      act.init(instanceId, "create", msg.create());
+      act.init(instanceId, "create", msg.create(), null);
       actionsMenu.addAction(act);
     } else {
       actionsMenu.removeAction(ACTION_CREATE);

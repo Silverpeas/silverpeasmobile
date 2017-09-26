@@ -46,5 +46,5 @@ public interface ServiceWorkflowAsync {
       final AsyncCallback<List<BaseDTO>> async);
 
   void processAction(List<WorkflowFieldDTO> data, final String id, final String currentAction,
-      final String currentRole, final AsyncCallback<Void> async);
+      final String currentRole, final String state, String processId, final AsyncCallback<Void> async);
 }

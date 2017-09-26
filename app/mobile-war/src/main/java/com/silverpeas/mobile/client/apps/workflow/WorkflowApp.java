@@ -25,7 +25,6 @@
 package com.silverpeas.mobile.client.apps.workflow;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external
@@ -65,6 +64,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   private ApplicationInstanceDTO instance;
   private String currentRole;
   private String currentAction;
+  private String currentState;
 
 
   public WorkflowApp() {
@@ -145,9 +145,8 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   @Override
   public void loadActionForm(final WorkflowLoadActionFormEvent event) {
     currentAction = event.getActionName();
+    currentState = event.getState();
     ServicesLocator.getServiceWorkflow().getActionForm(event.getInstanceId(), currentRole, event.getActionName(), new AsyncCallback<WorkflowFormActionDTO>() {
-
-
       @Override
       public void onFailure(final Throwable throwable) {
         EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
@@ -182,7 +181,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void processForm(final WorkflowProcessFormEvent event) {
-    ServicesLocator.getServiceWorkflow().processAction(event.getData(), instance.getId(), currentAction, currentRole, new AsyncCallback<Void>() {
+    ServicesLocator.getServiceWorkflow().processAction(event.getData(), instance.getId(), currentAction, currentRole, currentState, event.getProcessId(), new AsyncCallback<Void>() {
       @Override
       public void onFailure(final Throwable throwable) {
         EventBus.getInstance().fireEvent(new ErrorEvent(throwable));

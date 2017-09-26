@@ -29,6 +29,7 @@ public class WorkflowLoadActionFormEvent extends AbstractWorkflowAppEvent {
 
   private String actionName = null;
   private String instanceId = null;
+  private String state = null;
 
   public WorkflowLoadActionFormEvent() {
     super();
@@ -53,5 +54,13 @@ public class WorkflowLoadActionFormEvent extends AbstractWorkflowAppEvent {
 
   public void setInstanceId(String instanceId) {
     this.instanceId = instanceId;
+  }
+
+  public void setState(final String state) {
+    this.state = state;
+  }
+
+  public String getState() {
+    return state;
   }
 }

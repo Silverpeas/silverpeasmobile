@@ -35,6 +35,7 @@ public class WorkflowProcessFormEvent extends AbstractWorkflowAppEvent {
     super();
   }
 
+  private String processId;
   private List<WorkflowFieldDTO> data;
 
   @Override
@@ -48,5 +49,14 @@ public class WorkflowProcessFormEvent extends AbstractWorkflowAppEvent {
 
   public List<WorkflowFieldDTO> getData() {
     return data;
+  }
+
+
+  public String getProcessId() {
+    return processId;
+  }
+
+  public void setProcessId(final String processId) {
+    this.processId = processId;
   }
 }

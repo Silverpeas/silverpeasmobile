@@ -51,7 +51,7 @@ public class MobilFilter implements Filter {
           Media media = getGalleryService().getMedia(new MediaPK(id));
           String appId = media.getInstanceId();
           params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
-        } else if(url.endsWith("silverpeas") || url.endsWith("silverpeas/") || url.contains("/silverpeas/")) {
+        } else if(!url.contains("AuthenticationServlet") && (url.endsWith("silverpeas") || url.endsWith("silverpeas/") || url.contains("/silverpeas/"))) {
           // simple redirection on mobile login page
           params = "";
         } else {

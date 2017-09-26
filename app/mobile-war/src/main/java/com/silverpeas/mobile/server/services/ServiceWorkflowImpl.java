@@ -79,44 +79,32 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
   }
 
   @Override
-  public void processAction(List<WorkflowFieldDTO> data, String instanceId, String action, String role) throws WorkflowException, AuthenticationException {
+  public void processAction(List<WorkflowFieldDTO> data, String instanceId, String actionName, String role, String state, String processId) throws WorkflowException, AuthenticationException {
     try {
       ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
       String kind = "";
-      if (action.equalsIgnoreCase("create")) {
+      if (actionName.equalsIgnoreCase("create")) {
         kind = model.getCreateAction(role).getKind();
       } else {
-        kind = model.getAction(action).getKind();
+        kind = model.getAction(actionName).getKind();
       }
 
-
-
+      Action action = null;
+      TaskDoneEvent event = null;
       if (kind.equals("create")) {
-        Action creation = model.getCreateAction(role);
-
-        Form form = model.getPublicationForm(creation.getName(), role, getUserInSession().getUserPreferences().getLanguage());
-        GenericDataRecord record = (GenericDataRecord) model.getNewActionRecord(creation.getName(), role, getUserInSession().getUserPreferences().getLanguage(), null);
-        for (WorkflowFieldDTO f : data) {
-          Field field = record.getField(f.getName());
-          if (f.getValue() == null) {
-            field.setNull();
-          } else {
-            field.setValue(f.getValue());
-          }
-          //TODO : value type list
-        }
-
-        TaskDoneEvent event = getCreationTask(model, getUserInSession().getId(), role).buildTaskDoneEvent(creation.getName(), record);
-        Workflow.getWorkflowEngine().process(event);
-
-        Thread.sleep(1000);
-
-      } else if (kind.equals("update")) {
-        //TODO
-
-      } else if (kind.equals("delete")) {
-        //TODO
+        action = model.getCreateAction(role);
+        GenericDataRecord record = getGenericDataRecord(data, role, model, action);
+        event = getCreationTask(model, getUserInSession().getId(), role).buildTaskDoneEvent(action.getName(), record);
+      } else {
+        ProcessInstance processInstance = Workflow.getProcessInstanceManager().getProcessInstance(processId);
+        //User user = new UserImpl(UserDetail.getById(getUserInSession().getId()));
+        //processInstance.lock(model.getState(state), user);
+        action = model.getAction(actionName);
+        GenericDataRecord record = getGenericDataRecord(data, role, model, action);
+        event = getTask(model, processInstance, getUserInSession().getId(), role, state).buildTaskDoneEvent(action.getName(), record);
       }
+      Workflow.getWorkflowEngine().process(event, true); //TODO : how to persiste lock on instance
+      Thread.sleep(1000); // Wait task creation
 
       } catch (Exception e) {
       throw  new WorkflowException(e);
@@ -124,11 +112,36 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
 
   }
 
+  private GenericDataRecord getGenericDataRecord(final List<WorkflowFieldDTO> data, final String role, final ProcessModel model, final Action action)  throws Exception {
+    Form form = model.getPublicationForm(action.getName(), role, getUserInSession().getUserPreferences().getLanguage());
+    GenericDataRecord record = (GenericDataRecord) model.getNewActionRecord(action.getName(), role, getUserInSession().getUserPreferences().getLanguage(), null);
+    for (WorkflowFieldDTO f : data) {
+      Field field = record.getField(f.getName());
+      if (f.getValue() == null) {
+        field.setNull();
+      } else {
+        field.setValue(f.getValue());
+      }
+      //TODO : value type list
+    }
+    return record;
+  }
+
   private Task getCreationTask(ProcessModel processModel, String userId, String currentRole)  throws Exception {
     User user = new UserImpl(UserDetail.getById(userId));
-    Task creationTask =
-          Workflow.getTaskManager().getCreationTask(user, currentRole, processModel);
+    Task creationTask = Workflow.getTaskManager().getCreationTask(user, currentRole, processModel);
     return creationTask;
+  }
+
+  private Task getTask(ProcessModel processModel, ProcessInstance processInstance, String userId, String currentRole, String stateName) throws Exception {
+    User user = new UserImpl(UserDetail.getById(userId));
+    Task[] tasks = Workflow.getTaskManager().getTasks(user, currentRole, processInstance);
+    for (final Task task : tasks) {
+      if (task.getState().getName().equals(stateName)) {
+        return task;
+      }
+    }
+    return null;
   }
 
   @Override
@@ -224,6 +237,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
         for(String actionName : task.getActionNames()) {
           String label = instance.getProcessModel().getAction(actionName).getLabel(role, getUserInSession().getUserPreferences().getLanguage());
           mapActions.put(actionName, label);
+          dto.setState(task.getState().getName());
         }
       }
       for (FieldTemplate ft : form.getFieldTemplates()) {
@@ -269,6 +283,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
         dto.addField(fdto);
       }
       dto.setTitle(form.getTitle(role, getUserInSession().getUserPreferences().getLanguage()));
+      dto.setId(instanceId);
 
     } catch (Exception e) {
       throw  new WorkflowException(e);

@@ -39,6 +39,7 @@ public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Seri
   private Map<String, String> fields;
   private Map<String, String> actions;
   private String title;
+  private String state;
 
   public WorkflowInstancePresentationFormDTO() {
   }
@@ -80,4 +81,8 @@ public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Seri
   public String getTitle() {
     return title;
   }
+
+  public String getState() { return state; }
+
+  public void setState(String state) { this.state = state; }
 }

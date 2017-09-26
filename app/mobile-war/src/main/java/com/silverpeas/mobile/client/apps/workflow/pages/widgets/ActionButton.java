@@ -51,17 +51,18 @@ public class ActionButton extends ActionItem {
     @UiField  Anchor action;
 
     @UiField(provided = true) protected WorkflowMessages msg = null;
-    private String instanceId, actionCode, actionLabel;
+    private String instanceId, actionCode, actionLabel, state;
 
     public ActionButton() {
         msg = GWT.create(WorkflowMessages.class);
         initWidget(uiBinder.createAndBindUi(this));
     }
 
-    public void init(String instanceId, String actionCode, String actionLabel) {
+    public void init(String instanceId, String actionCode, String actionLabel, String state) {
         this.instanceId = instanceId;
         this.actionCode = actionCode;
         this.actionLabel = actionLabel;
+        this.state = state;
         action.setText(actionLabel);
     }
 
@@ -70,6 +71,7 @@ public class ActionButton extends ActionItem {
       WorkflowLoadActionFormEvent ev = new WorkflowLoadActionFormEvent();
       ev.setActionName(actionCode);
       ev.setInstanceId(instanceId);
+      ev.setState(state);
       EventBus.getInstance().fireEvent(ev);
         // hide menu
         getElement().getParentElement().removeAttribute("style");
