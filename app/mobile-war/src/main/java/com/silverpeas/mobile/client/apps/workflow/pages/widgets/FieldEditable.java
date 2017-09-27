@@ -34,7 +34,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFieldEvent;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -48,6 +47,7 @@ import com.silverpeas.mobile.client.components.userselection.events.components
     .UsersAndGroupsSelectedEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 
@@ -76,7 +76,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         value += l.getValue(i) + ",";
       }
       if (value.indexOf(",") != -1) {
-        value = value.substring(0, value.length() - 2);
+        value = value.substring(0, value.length() - 1);
       }
     } else {
       if (changeEvent.getSource() instanceof TextBox) {
@@ -104,7 +104,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         }
       }
       if (value.indexOf(",") != -1) {
-        value = value.substring(0, value.length() - 2);
+        value = value.substring(0, value.length() - 1);
       }
     }
     data.setValue(value);
@@ -113,13 +113,25 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
   @Override
   public void onUsersAndGroupSelected(final UsersAndGroupsSelectedEvent event) {
     if (event.getContentId().equals(data.getName()) ) {
+      String value = "";
       ListBox l = ((ListBox) w);
       l.clear();
       l.setVisibleItemCount(event.getUsersAndGroupsSelected().size() + 1);
-      for (BaseDTO user : event.getUsersAndGroupsSelected()) {
-        UserDTO u = (UserDTO) user;
-        l.addItem(u.getFirstName() + " " + u.getLastName(), u.getId());
+      for (BaseDTO dto : event.getUsersAndGroupsSelected()) {
+        if (dto instanceof UserDTO) {
+          UserDTO u = (UserDTO) dto;
+          l.addItem(u.getFirstName() + " " + u.getLastName(), u.getId());
+          value = value + u.getId() + ",";
+        } else if (dto instanceof GroupDTO) {
+          GroupDTO g = (GroupDTO) dto;
+          l.addItem(g.getName(), g.getId());
+          value = value + g.getId() + ",";
+        }
+        if (!value.isEmpty()) {
+          value = value.substring(0, value.length()-1);
+        }
       }
+      data.setValue(value);
     }
   }
 
@@ -143,8 +155,8 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
   }
 
   //TODO : manage displayer :
-  // ISO Formtemplate : checkbox, file, image, video, wysiwyg, ldap, accessPath, jdbc, pdc, group, sequence, explorer, map
-  // ISO WorkflowEngine : checkbox, file, wysiwyg, ldap, accessPath, jdbc, pdc, group, sequence, explorer
+  // ISO Formtemplate : checkbox, file, image, video, wysiwyg, ldap, accessPath, jdbc, pdc, sequence, explorer, map
+  // ISO WorkflowEngine : checkbox, file, wysiwyg, ldap, accessPath, jdbc, pdc, sequence, explorer
   public void setData(WorkflowFieldDTO data) {
     this.data = data;
     label.setText(data.getLabel());
@@ -217,20 +229,19 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         t.setReadOnly(data.isReadOnly());
         t.addChangeHandler(this);
         w = t;
-    } else if(type.equalsIgnoreCase("user") || type.equalsIgnoreCase("multipleUser")) {
+    } else if(type.equalsIgnoreCase("user") || type.equalsIgnoreCase("multipleUser") || type.equalsIgnoreCase("group")) {
       ListBox l = new ListBox();
       if (data.getValue() != null && !data.getValue().isEmpty()) {
         l.addItem(data.getValue(), data.getValue());
       }
       l.setWidth("10em");
       l.setEnabled(!data.isReadOnly());
-      l.addChangeHandler(this);
       l.setVisibleItemCount(2);
       l.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(final ClickEvent clickEvent) {
           UserSelectionPage page = new UserSelectionPage();
-          if (type.equalsIgnoreCase("user")) page.setMaxUsers(1);
+          if (type.equalsIgnoreCase("user") || type.equalsIgnoreCase("group")) page.setMaxSelection(1);
           page.setContentId(data.getName());
           WorkflowLoadUserFieldEvent event = new WorkflowLoadUserFieldEvent();
           event.setFieldName(data.getName());

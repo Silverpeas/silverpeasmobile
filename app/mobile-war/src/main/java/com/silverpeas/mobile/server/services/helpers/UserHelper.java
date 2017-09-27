@@ -25,6 +25,7 @@
 package com.silverpeas.mobile.server.services.helpers;
 
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
+import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.news.NewsDTO;
 import org.apache.commons.codec.binary.Base64;
@@ -34,6 +35,7 @@ import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
@@ -93,6 +95,13 @@ public class UserHelper {
     dto.setLastName(user.getLastName());
     dto.seteMail(user.geteMail());
     dto.setAvatar(user.getAvatar());
+    return dto;
+  }
+
+  public GroupDTO populateGroupDTO(GroupDetail group) {
+    GroupDTO dto = new GroupDTO();
+    dto.setId(group.getId());
+    dto.setName(group.getName());
     return dto;
   }
 }

@@ -92,7 +92,9 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
     stopAllFields();
     Notification.activityStop();
     back();
-    back();
+    if (!data.getActionName().equalsIgnoreCase("create")) {
+      back();
+    }
   }
 
   interface WorkflowPresentationPageUiBinder extends UiBinder<Widget, WorkflowActionFormPage> {

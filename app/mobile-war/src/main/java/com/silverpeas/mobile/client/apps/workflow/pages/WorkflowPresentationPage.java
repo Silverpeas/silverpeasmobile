@@ -57,12 +57,14 @@ public class WorkflowPresentationPage extends PageContent {
 
   public void setData(final WorkflowInstancePresentationFormDTO data, final ApplicationInstanceDTO instance) {
     this.data = data;
-    //TODO : display presentation form
+    // display presentation form
     header.setInnerText(data.getTitle());
     for (Map.Entry<String, String> field : data.getFields().entrySet()) {
-      Field f = new Field();
-      f.setData(field.getKey(), field.getValue());
-      fields.add(f);
+      if (field.getValue() != null && !field.getValue().isEmpty()) {
+        Field f = new Field();
+        f.setData(field.getKey(), field.getValue());
+        fields.add(f);
+      }
     }
     for (Map.Entry<String, String> action : data.getActions().entrySet()) {
       ActionButton act = new ActionButton();

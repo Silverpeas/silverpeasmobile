@@ -65,8 +65,8 @@ public class UserSelectionPage extends PageContent implements View, UserSelectio
   private static UserSelectionPageUiBinder uiBinder = GWT.create(UserSelectionPageUiBinder.class);
   private String contentId;
 
-  public void setMaxUsers(final int maxUsers) {
-    this.maxUsers = maxUsers;
+  public void setMaxSelection(final int maxSelection) {
+    this.maxSelection = maxSelection;
   }
 
   interface UserSelectionPageUiBinder extends UiBinder<HTMLPanel, UserSelectionPage> {
@@ -79,7 +79,7 @@ public class UserSelectionPage extends PageContent implements View, UserSelectio
   @UiField protected TextBox filter;
 
   private int nbUserSelected = 0;
-  private int maxUsers = 0;
+  private int maxSelection = 0;
 
   public UserSelectionPage() {
     msg = GWT.create(UserSelectionMessages.class);
@@ -172,7 +172,7 @@ public class UserSelectionPage extends PageContent implements View, UserSelectio
 
   @Override
   public void onSelectionChange(ChangeEvent event) {
-    if (maxUsers == 1) {
+    if (maxSelection == 1) {
       for (int i = 0; i < list.getWidgetCount(); i++) {
         UserGroupItem item = (UserGroupItem)list.getWidget(i);
         if (item != event.getItem()) {

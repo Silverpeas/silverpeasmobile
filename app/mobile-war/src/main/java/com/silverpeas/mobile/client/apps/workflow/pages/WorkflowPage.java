@@ -105,6 +105,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
         roles.addItem(role.getValue(), role.getKey());
       }
     } else {
+      //Window.alert("refresh !");
       instances.clear();
       this.data = event.getData();
     }

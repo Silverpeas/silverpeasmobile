@@ -35,6 +35,7 @@ public class WorkflowFormActionDTO extends BaseDTO implements Serializable {
   private static final long serialVersionUID = 2921606984249560882L;
   private List<WorkflowFieldDTO> fields = new ArrayList<WorkflowFieldDTO>();
   private String title;
+  private String actionName;
 
   public WorkflowFormActionDTO() {
   }
@@ -58,5 +59,13 @@ public class WorkflowFormActionDTO extends BaseDTO implements Serializable {
 
   public void setTitle(final String title) {
     this.title = title;
+  }
+
+  public String getActionName() {
+    return actionName;
+  }
+
+  public void setActionName(final String actionName) {
+    this.actionName = actionName;
   }
 }

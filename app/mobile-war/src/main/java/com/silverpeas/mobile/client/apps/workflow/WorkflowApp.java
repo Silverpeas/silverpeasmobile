@@ -154,6 +154,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
       @Override
       public void onSuccess(final WorkflowFormActionDTO dto) {
+        dto.setActionName(currentAction);
         WorkflowActionFormPage page = new WorkflowActionFormPage();
         page.setData(dto, instance);
         page.show();

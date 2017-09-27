@@ -62,6 +62,7 @@ public class Field extends Composite {
   }
 
   public void setData(String label, String value) {
+    if (value == null) value = "";
     this.label.setText(label + " : " + value);
   }
 

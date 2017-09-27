@@ -36,6 +36,7 @@ import com.silverpeas.mobile.shared.exceptions.WorkflowException;
 import com.silverpeas.mobile.shared.services.ServiceWorkflow;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.ProfileInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.content.form.DataRecord;
@@ -44,6 +45,7 @@ import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.RecordTemplate;
 import org.silverpeas.core.contribution.content.form.record.GenericDataRecord;
+import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.workflow.api.Workflow;
@@ -57,8 +59,11 @@ import org.silverpeas.core.workflow.api.task.Task;
 import org.silverpeas.core.workflow.api.user.User;
 import org.silverpeas.core.workflow.engine.user.UserImpl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +85,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
 
   @Override
   public void processAction(List<WorkflowFieldDTO> data, String instanceId, String actionName, String role, String state, String processId) throws WorkflowException, AuthenticationException {
+    checkUserInSession();
     try {
       ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
       String kind = "";
@@ -120,9 +126,31 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
       if (f.getValue() == null) {
         field.setNull();
       } else {
-        field.setValue(f.getValue());
+        if (field.getTypeName().equalsIgnoreCase("user")) {
+          UserDetail u = Administration.get().getUserDetail(f.getValue());
+          field.setObjectValue(u);
+        } else if (field.getTypeName().equalsIgnoreCase("group")) {
+          GroupDetail g = Administration.get().getGroup(f.getValue());
+          field.setObjectValue(g);
+        } else if (field.getTypeName().equalsIgnoreCase("multipleUser")) {
+          StringTokenizer stk = new StringTokenizer(f.getValue(), ",");
+          UserDetail[] users = new UserDetail[stk.countTokens()];
+          int i = 0;
+          while (stk.hasMoreTokens()) {
+            String id = stk.nextToken();
+            UserDetail u = Administration.get().getUserDetail(id);
+            users[i] = u;
+            i++;
+          }
+          field.setObjectValue(users);
+        } else if (field.getTypeName().equalsIgnoreCase("date")) {
+          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+          Date d = sdf.parse(f.getValue());
+          field.setValue(DateUtil.formatDate(d));
+        } else {
+          field.setValue(f.getValue());
+        }
       }
-      //TODO : value type list
     }
     return record;
   }
@@ -144,42 +172,75 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
     return null;
   }
 
+  private List<GroupDetail> getGroups(List<String> ids) throws Exception {
+    ArrayList<GroupDetail> groups = new ArrayList<GroupDetail>();
+    for (String id : ids) {
+      groups.add(Administration.get().getGroup(id));
+    }
+    return groups;
+  }
+
   @Override
   public List<BaseDTO> getUserField(String instanceId, String fieldName, String role) throws WorkflowException, AuthenticationException {
+    checkUserInSession();
     HashSet<BaseDTO> result = new HashSet<BaseDTO>();
     try {
+      boolean group = false;
       ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
       org.silverpeas.core.workflow.api.model.Form form = model.getCreateAction(role).getForm();
       Map<String,String> parameters = null;
       for (Input input : form.getInputs()) {
         if (input.getItem().getName().equals(fieldName)) {
           parameters = input.getItem().getKeyValuePairs();
+          group = input.getItem().getType().equalsIgnoreCase("group");
           break;
         }
       }
       ArrayList<String> users = new ArrayList<String>();
+      ArrayList<GroupDetail> groups = new ArrayList<GroupDetail>();
       String roles = parameters.get("roles");
       List<ProfileInst> profiles = Administration.get().getComponentInst(instanceId).getProfiles();
-      if (roles == null || roles.isEmpty()) {
-        for (ProfileInst profil : profiles) {
-          users.addAll(profil.getAllUsers());
-        }
-      } else {
-        StringTokenizer stk = new StringTokenizer(roles, ",");
-        while (stk.hasMoreTokens()) {
-          String r = stk.nextToken();
-          for (ProfileInst profil : profiles) {
-            if (profil.getName().equals(r)) {
-              users.addAll(profil.getAllGroups());
+
+      if (group) {
+        if (roles == null || roles.isEmpty()) {
+          groups.addAll(Administration.get().getAllGroups());
+        } else {
+          StringTokenizer stk = new StringTokenizer(roles, ",");
+          while (stk.hasMoreTokens()) {
+            String r = stk.nextToken();
+            for (ProfileInst profil : profiles) {
+              if (profil.getName().equals(r)) {
+                groups.addAll(getGroups(profil.getAllGroups()));
+              }
             }
           }
         }
-      }
 
-      // populate users
-      for (String id : users) {
-        UserDetail u = Administration.get().getUserDetail(id);
-        result.add(UserHelper.getInstance().populateUserDTO(u));
+        //populate groups
+        for (GroupDetail gp : groups) {
+          result.add(UserHelper.getInstance().populateGroupDTO(gp));
+        }
+
+      } else {
+        if (roles == null || roles.isEmpty()) {
+          users.addAll(Arrays.asList(Administration.get().getAllUsersIds()));
+        } else {
+          StringTokenizer stk = new StringTokenizer(roles, ",");
+          while (stk.hasMoreTokens()) {
+            String r = stk.nextToken();
+            for (ProfileInst profil : profiles) {
+              if (profil.getName().equals(r)) {
+                users.addAll(profil.getAllUsers());
+              }
+            }
+          }
+        }
+
+        // populate users
+        for (String id : users) {
+          UserDetail u = Administration.get().getUserDetail(id);
+          result.add(UserHelper.getInstance().populateUserDTO(u));
+        }
       }
     } catch (Exception e) {
       throw  new WorkflowException(e);
@@ -190,7 +251,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
 
   @Override
   public WorkflowInstancesDTO getInstances(String instanceId, String userRole) throws WorkflowException, AuthenticationException {
-
+    checkUserInSession();
     WorkflowInstancesDTO data = new WorkflowInstancesDTO();
     try {
       ArrayList<WorkflowInstanceDTO> instances = new ArrayList<WorkflowInstanceDTO>();
@@ -223,6 +284,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
 
   @Override
   public WorkflowInstancePresentationFormDTO getPresentationForm(String instanceId, String role) throws WorkflowException, AuthenticationException {
+    checkUserInSession();
     WorkflowInstancePresentationFormDTO dto = new WorkflowInstancePresentationFormDTO();
     Map<String, String> map = new TreeMap<String, String>();
     Map<String, String> mapActions = new TreeMap<String, String>();
@@ -243,6 +305,22 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
       for (FieldTemplate ft : form.getFieldTemplates()) {
         String label = ft.getLabel(getUserInSession().getUserPreferences().getLanguage());
         String value = data.getField(ft.getFieldName()).getStringValue();
+        if (ft.getTypeName().equalsIgnoreCase("user")) {
+          UserDetail u = Administration.get().getUserDetail(value);
+          value = u.getDisplayedName();
+        } else if (ft.getTypeName().equalsIgnoreCase("multipleUser")) {
+          StringTokenizer stk = new StringTokenizer(value, ",");
+          value = "";
+          while(stk.hasMoreTokens()) {
+            String id = stk.nextToken();
+            UserDetail u = Administration.get().getUserDetail(id);
+            value += u.getDisplayedName() + ", ";
+          }
+          if (!value.isEmpty()) value = value.substring(0, value.length()-2);
+        } else if(ft.getTypeName().equalsIgnoreCase("group")) {
+          GroupDetail g = Administration.get().getGroup(value);
+          value = g.getName();
+        }
         map.put(label, value);
       }
       dto.setTitle(form.getTitle());
@@ -258,6 +336,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
 
   @Override
   public WorkflowFormActionDTO getActionForm(String instanceId, String role, String action) throws WorkflowException, AuthenticationException {
+    checkUserInSession();
     WorkflowFormActionDTO dto = new WorkflowFormActionDTO();
     try {
       org.silverpeas.core.workflow.api.model.Form form = null;
@@ -277,7 +356,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
         fdto.setReadOnly(input.isReadonly());
         fdto.setName(input.getItem().getName());
         fdto.setLabel(input.getItem().getLabel(role, getUserInSession().getUserPreferences().getLanguage()));
-        fdto.setValue(input.getValue()); // TODO : a tester
+        fdto.setValue(input.getValue());
         fdto.setType(input.getItem().getType());
         fdto.setValues(input.getItem().getKeyValuePairs());
         dto.addField(fdto);
