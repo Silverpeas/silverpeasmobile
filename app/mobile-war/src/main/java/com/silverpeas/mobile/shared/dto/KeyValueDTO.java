@@ -22,45 +22,61 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.workflow.events.app;
+package com.silverpeas.mobile.shared.dto;
+
+import java.io.Serializable;
+
+public class KeyValueDTO extends BaseDTO implements Serializable{
+
+  private static final long serialVersionUID = 5388415881024885835L;
+
+  private String key;
+  private String value;
+
+  public KeyValueDTO() {
+  }
+
+  public KeyValueDTO(final String key, final String value) {
+    this.key = key;
+    this.value = value;
+  }
 
 
-public class WorkflowLoadUserFieldEvent extends AbstractWorkflowAppEvent {
 
-  private String instanceId = null;
-  private String fieldName = null;
-  private String actionName = null;
+  public String getKey() {
+    return key;
+  }
 
-  public WorkflowLoadUserFieldEvent() {
-    super();
+  public void setKey(final String key) {
+    this.key = key;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(final String value) {
+    this.value = value;
   }
 
   @Override
-  protected void dispatch(WorkflowAppEventHandler handler) {
-    handler.loadUserField(this);
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    KeyValueDTO other = (KeyValueDTO) obj;
+    if (getId() == null) {
+      return false;
+    } else if (!getId().equals(other.getId()))
+      return false;
+    return true;
   }
 
-  public String getInstanceId() {
-    return instanceId;
-  }
-
-  public void setInstanceId(final String instanceId) {
-    this.instanceId = instanceId;
-  }
-
-  public String getFieldName() {
-    return fieldName;
-  }
-
-  public void setFieldName(final String fieldName) {
-    this.fieldName = fieldName;
-  }
-
-  public String getActionName() {
-    return actionName;
-  }
-
-  public void setActionName(final String actionName) {
-    this.actionName = actionName;
+  @Override
+  public int hashCode() {
+    return Integer.parseInt(getId());
   }
 }

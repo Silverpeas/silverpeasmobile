@@ -25,6 +25,7 @@
 package com.silverpeas.mobile.shared.dto.workflow;
 
 import com.silverpeas.mobile.shared.dto.BaseDTO;
+import com.silverpeas.mobile.shared.dto.KeyValueDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Seri
 
   private static final long serialVersionUID = 2921606984249560882L;
   private String instanceId;
-  private Map<String, String> fields;
+  private List<KeyValueDTO> fields;
   private Map<String, String> actions;
   private String title;
   private String state;
@@ -50,11 +51,11 @@ public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Seri
   }
 
 
-  public Map<String, String> getFields() {
+  public List<KeyValueDTO> getFields() {
     return fields;
   }
 
-  public void setFields(final Map<String, String> fields) {
+  public void setFields(final List<KeyValueDTO> fields) {
     this.fields = fields;
   }
 

@@ -39,7 +39,9 @@ public class WorkflowFieldDTO extends BaseDTO implements Serializable {
   private String name;
   private String label;
   private String value;
+  private String valueId;
   private String type;
+  private String actionName;
   private Map<String,String> values;
 
   public WorkflowFieldDTO() {
@@ -112,5 +114,21 @@ public class WorkflowFieldDTO extends BaseDTO implements Serializable {
 
   public Map<String, String> getValues() {
     return values;
+  }
+
+  public String getValueId() {
+    return valueId;
+  }
+
+  public void setValueId(final String valueId) {
+    this.valueId = valueId;
+  }
+
+  public String getActionName() {
+    return actionName;
+  }
+
+  public void setActionName(final String actionName) {
+    this.actionName = actionName;
   }
 }

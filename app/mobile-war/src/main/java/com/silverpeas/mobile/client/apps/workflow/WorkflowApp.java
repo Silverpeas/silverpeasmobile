@@ -165,7 +165,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadUserField(final WorkflowLoadUserFieldEvent event) {
-    ServicesLocator.getServiceWorkflow().getUserField(event.getInstanceId(), event.getFieldName(), currentRole,
+    ServicesLocator.getServiceWorkflow().getUserField(event.getInstanceId(), event.getActionName(), event.getFieldName(), currentRole,
         new AsyncCallback<List<BaseDTO>>() {
           @Override
           public void onFailure(final Throwable throwable) {

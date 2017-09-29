@@ -35,6 +35,7 @@ import com.silverpeas.mobile.client.apps.workflow.pages.widgets.Field;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
+import com.silverpeas.mobile.shared.dto.KeyValueDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 
@@ -59,10 +60,11 @@ public class WorkflowPresentationPage extends PageContent {
     this.data = data;
     // display presentation form
     header.setInnerText(data.getTitle());
-    for (Map.Entry<String, String> field : data.getFields().entrySet()) {
-      if (field.getValue() != null && !field.getValue().isEmpty()) {
+    for (KeyValueDTO field : data.getFields()) {
+      String value = field.getValue();
+      if (field.getValue() != null && !value.isEmpty()) {
         Field f = new Field();
-        f.setData(field.getKey(), field.getValue());
+        f.setData(field.getKey(), value);
         fields.add(f);
       }
     }

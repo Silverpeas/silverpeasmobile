@@ -7,16 +7,16 @@ import java.io.Serializable;
  */
 public abstract class BaseDTO implements Serializable {
 
-	private static final long serialVersionUID = 8186851689918190659L;
+  private static final long serialVersionUID = 8186851689918190659L;
 
-	public String getId() {
-		return id;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public void setId(final String id) {
-		this.id = id;
-	}
+  public void setId(final String id) {
+    this.id = id;
+  }
 
-	private String id;
+  private String id;
 
 }

@@ -40,7 +40,7 @@ import java.util.List;
 public interface ServiceWorkflow extends RemoteService {
   void processAction(List<WorkflowFieldDTO> data, String instanceId, String action, String role, String state, String processId) throws WorkflowException, AuthenticationException;
 
-  List<BaseDTO> getUserField(String instanceId, String fieldName, String role) throws WorkflowException, AuthenticationException;
+  List<BaseDTO> getUserField(String instanceId, String actionName, String fieldName, String role) throws WorkflowException, AuthenticationException;
 
   WorkflowInstancesDTO getInstances(String instanceId, String userRole) throws WorkflowException, AuthenticationException;
 
