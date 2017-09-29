@@ -32,6 +32,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -64,9 +65,14 @@ public class UserSelectionPage extends PageContent implements View, UserSelectio
 
   private static UserSelectionPageUiBinder uiBinder = GWT.create(UserSelectionPageUiBinder.class);
   private String contentId;
+  private List<String> preSelectedIds = new ArrayList<String>();
 
   public void setMaxSelection(final int maxSelection) {
     this.maxSelection = maxSelection;
+  }
+
+  public void setPreSelectedIds(final List<String> preSelectedIds) {
+    this.preSelectedIds = preSelectedIds;
   }
 
   interface UserSelectionPageUiBinder extends UiBinder<HTMLPanel, UserSelectionPage> {
@@ -102,6 +108,9 @@ public class UserSelectionPage extends PageContent implements View, UserSelectio
     for (BaseDTO data : allowedUsersAndGroupsLoadedEvent.getListAllowedUsersAndGroups()) {
       UserGroupItem item = new UserGroupItem();
       item.setData(data);
+      if (preSelectedIds.contains(data.getId())) {
+        item.select();
+      }
       list.add(item);
     }
   }

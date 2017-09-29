@@ -62,6 +62,9 @@ public class UserGroupItem extends ActionItem {
   public void unSelect() {
     if (isSelected()) toggleSelection();
   }
+  public void select() {
+    if (!isSelected()) toggleSelection();
+  }
 
   public void setData(BaseDTO data) {
     this.data = data;

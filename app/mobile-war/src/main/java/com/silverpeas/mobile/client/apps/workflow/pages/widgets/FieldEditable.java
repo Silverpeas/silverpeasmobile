@@ -34,6 +34,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFieldEvent;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -51,6 +52,8 @@ import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -247,7 +250,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         String[] values = data.getValue().split(",");
         String[] ids = data.getValueId().split(",");
         for (int i = 0; i < values.length; i++) {
-          l.addItem(values[i], ids[i]);
+          l.addItem(values[i], ids[i].trim());
         }
       } else {
         if (data.getValue() != null && !data.getValue().isEmpty()) {
@@ -263,6 +266,15 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
           UserSelectionPage page = new UserSelectionPage();
           if (type.equalsIgnoreCase("user") || type.equalsIgnoreCase("group")) page.setMaxSelection(1);
           page.setContentId(data.getName());
+
+          // get users or groups selected before
+          ListBox ls = ((ListBox) clickEvent.getSource());
+          List<String> ids = new ArrayList<String>();
+          for (int i = 0; i < ls.getItemCount(); i++) {
+            ids.add(ls.getValue(i));
+          }
+          page.setPreSelectedIds(ids);
+
           WorkflowLoadUserFieldEvent event = new WorkflowLoadUserFieldEvent();
           event.setFieldName(data.getName());
           event.setInstanceId(data.getId());
