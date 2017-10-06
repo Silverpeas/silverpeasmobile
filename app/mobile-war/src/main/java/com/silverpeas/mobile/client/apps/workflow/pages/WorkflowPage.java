@@ -25,16 +25,12 @@
 package com.silverpeas.mobile.client.apps.workflow.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.ListBox;
@@ -44,18 +40,15 @@ import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanc
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowPagesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
-import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
 import com.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
 import com.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.ServicesLocator;
-import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
-import org.apache.poi.hssf.record.WindowOneRecord;
 
 import java.util.Map;
 
@@ -105,7 +98,6 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
         roles.addItem(role.getValue(), role.getKey());
       }
     } else {
-      //Window.alert("refresh !");
       instances.clear();
       this.data = event.getData();
     }

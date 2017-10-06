@@ -25,14 +25,12 @@
 package com.silverpeas.mobile.client.apps.workflow.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowProcessFormEvent;
@@ -69,7 +67,6 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
   @UiField Anchor validate, cancel;
 
   public void setData(final WorkflowInstancePresentationFormDTO data) {
-
   }
 
   public void setData(final WorkflowFormActionDTO data, final ApplicationInstanceDTO instance) {
@@ -80,7 +77,6 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
       f.setData(field);
       fields.add(f);
     }
-
   }
 
   @Override
@@ -121,8 +117,20 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
     ArrayList<String> errors = new ArrayList<String>();
     for (WorkflowFieldDTO f : data.getFields()) {
       if (f.isMandatory()) {
-        if (f.getValue() == null || f.getValue().isEmpty()) {
-          errors.add(f.getLabel());
+        if (f.getType().equalsIgnoreCase("file")) {
+          if (f.getValueId() == null || f.getValueId().isEmpty()) {
+            if (f.getObjectValue() == null) {
+              errors.add(f.getLabel());
+            }
+          }
+        } else if (f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("group") ||f.getType().equalsIgnoreCase("multipleUser")) {
+          if (f.getValueId() == null || f.getValueId().isEmpty()) {
+            errors.add(f.getLabel());
+          }
+        } else {
+          if (f.getValue() == null || f.getValue().isEmpty()) {
+            errors.add(f.getLabel());
+          }
         }
       }
     }
@@ -131,15 +139,19 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
       for (String error : errors) {
         message += error + ",";
       }
-      message = message.substring(0, message.length() - 2) + " ";
-      message += msg.mandatory();
+      message = message.substring(0, message.length() - 1) + " ";
+      if (errors.size() == 1) {
+        message += msg.mandatoryOneField();
+      } else {
+        message += msg.mandatory();
+      }
 
       new Popin(message).show();
     } else {
+      Notification.activityStart();
       WorkflowProcessFormEvent ev = new WorkflowProcessFormEvent();
       ev.setProcessId(data.getId());
       ev.setData(data.getFields());
-      Notification.activityStart();
       EventBus.getInstance().fireEvent(ev);
     }
   }

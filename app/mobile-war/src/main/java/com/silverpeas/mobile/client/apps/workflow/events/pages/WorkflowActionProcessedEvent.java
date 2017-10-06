@@ -25,8 +25,6 @@
 package com.silverpeas.mobile.client.apps.workflow.events.pages;
 
 
-import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
-
 public class WorkflowActionProcessedEvent extends AbstractWorkflowPagesEvent {
 
   public WorkflowActionProcessedEvent() {

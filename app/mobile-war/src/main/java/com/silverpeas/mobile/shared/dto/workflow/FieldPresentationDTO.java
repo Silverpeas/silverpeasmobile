@@ -22,33 +22,36 @@
  *
  */
 
-package com.silverpeas.mobile.shared.dto;
+package com.silverpeas.mobile.shared.dto.workflow;
+
+import com.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
 
-public class KeyValueDTO extends BaseDTO implements Serializable{
+public class FieldPresentationDTO extends BaseDTO implements Serializable{
 
   private static final long serialVersionUID = 5388415881024885835L;
 
-  private String key;
+  private String label;
   private String value;
+  private String type;
 
-  public KeyValueDTO() {
+  public FieldPresentationDTO() {
   }
 
-  public KeyValueDTO(final String key, final String value) {
-    this.key = key;
+  public FieldPresentationDTO(final String key, final String value, final String id, final String type) {
+    this.label = key;
     this.value = value;
+    setId(id);
+    this.type = type;
   }
 
-
-
-  public String getKey() {
-    return key;
+  public String getLabel() {
+    return label;
   }
 
-  public void setKey(final String key) {
-    this.key = key;
+  public void setLabel(final String label) {
+    this.label = label;
   }
 
   public String getValue() {
@@ -67,7 +70,7 @@ public class KeyValueDTO extends BaseDTO implements Serializable{
       return false;
     if (getClass() != obj.getClass())
       return false;
-    KeyValueDTO other = (KeyValueDTO) obj;
+    FieldPresentationDTO other = (FieldPresentationDTO) obj;
     if (getId() == null) {
       return false;
     } else if (!getId().equals(other.getId()))
@@ -78,5 +81,13 @@ public class KeyValueDTO extends BaseDTO implements Serializable{
   @Override
   public int hashCode() {
     return Integer.parseInt(getId());
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(final String type) {
+    this.type = type;
   }
 }

@@ -44,7 +44,4 @@ public interface ServiceWorkflowAsync {
 
   void getUserField(String instanceId, String actionName, String fieldName, String role,
       final AsyncCallback<List<BaseDTO>> async);
-
-  void processAction(List<WorkflowFieldDTO> data, final String id, final String currentAction,
-      final String currentRole, final String state, String processId, final AsyncCallback<Void> async);
 }

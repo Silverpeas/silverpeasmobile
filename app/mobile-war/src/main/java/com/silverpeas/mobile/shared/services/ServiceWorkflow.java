@@ -38,7 +38,6 @@ import java.util.List;
 
 @RemoteServiceRelativePath("Workflow")
 public interface ServiceWorkflow extends RemoteService {
-  void processAction(List<WorkflowFieldDTO> data, String instanceId, String action, String role, String state, String processId) throws WorkflowException, AuthenticationException;
 
   List<BaseDTO> getUserField(String instanceId, String actionName, String fieldName, String role) throws WorkflowException, AuthenticationException;
 

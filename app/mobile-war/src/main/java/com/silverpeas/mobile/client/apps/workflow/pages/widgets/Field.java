@@ -26,29 +26,27 @@ package com.silverpeas.mobile.client.apps.workflow.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.SpMobil;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
-import com.silverpeas.mobile.shared.dto.ContentDTO;
-import com.silverpeas.mobile.shared.dto.ContentsTypes;
-import com.silverpeas.mobile.shared.dto.news.NewsDTO;
+import com.silverpeas.mobile.shared.dto.workflow.FieldPresentationDTO;
 
 public class Field extends Composite {
 
   private static FieldUiBinder uiBinder = GWT.create(FieldUiBinder.class);
+  private FieldPresentationDTO data;
 
   @UiField
   Label label;
+  @UiField
+  Anchor link;
   @UiField
   HTMLPanel container;
   protected ApplicationMessages msg = null;
@@ -58,12 +56,28 @@ public class Field extends Composite {
   public Field() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
-
+    link.setVisible(false);
   }
 
-  public void setData(String label, String value) {
-    if (value == null) value = "";
-    this.label.setText(label + " : " + value);
-  }
+  public void setData(FieldPresentationDTO data) {
+    this.data = data;
+    String value = "";
+    if (data.getValue() != null) value = data.getValue();
 
+    if (data.getType().equalsIgnoreCase("file")) {
+      label.setText(data.getLabel() + " : ");
+      link.setVisible(true);
+      link.setText(value);
+      label.getElement().getStyle().setDisplay(Style.Display.INLINE);
+      String url = UrlUtils.getServicesLocation();
+      url += "Attachment";
+      url = url + "?id=" + data.getId() + "&lang=" + SpMobil.user.getLanguage();
+      link.setHref(url);
+      link.setTarget("_self");
+      link.getElement().setAttribute("download", data.getValue());
+      //link.fireEvent(new ClickEvent() {});
+    } else {
+      label.setText(data.getLabel() + " : " + value);
+    }
+  }
 }

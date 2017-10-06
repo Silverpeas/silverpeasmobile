@@ -24,10 +24,10 @@
 
 package com.silverpeas.mobile.shared.dto.workflow;
 
+import com.google.gwt.dom.client.Element;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 public class WorkflowFieldDTO extends BaseDTO implements Serializable {
@@ -42,7 +42,8 @@ public class WorkflowFieldDTO extends BaseDTO implements Serializable {
   private String valueId;
   private String type;
   private String actionName;
-  private Map<String,String> values;
+  private Map<String, String> values;
+  private transient Element objectValue = null;
 
   public WorkflowFieldDTO() {
   }
@@ -108,7 +109,7 @@ public class WorkflowFieldDTO extends BaseDTO implements Serializable {
     return type;
   }
 
-  public void setValues(final Map<String,String> values) {
+  public void setValues(final Map<String, String> values) {
     this.values = values;
   }
 
@@ -130,5 +131,13 @@ public class WorkflowFieldDTO extends BaseDTO implements Serializable {
 
   public void setActionName(final String actionName) {
     this.actionName = actionName;
+  }
+
+  public void setObjectValue(final Element objectValue) {
+    this.objectValue = objectValue;
+  }
+
+  public Element getObjectValue() {
+    return objectValue;
   }
 }

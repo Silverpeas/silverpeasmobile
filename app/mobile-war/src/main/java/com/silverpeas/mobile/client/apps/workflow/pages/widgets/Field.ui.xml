@@ -23,9 +23,10 @@
   -->
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<g:HTMLPanel tag="li" ui:field="container">
-	
-		<g:Label ui:field="label"></g:Label>
-	</g:HTMLPanel>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <g:HTMLPanel tag="li" ui:field="container">
+    <g:Label ui:field="label"></g:Label>
+    <g:Anchor ui:field="link" visible="false"></g:Anchor>
+  </g:HTMLPanel>
 </ui:UiBinder> 

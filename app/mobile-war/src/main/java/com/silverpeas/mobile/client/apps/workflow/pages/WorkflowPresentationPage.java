@@ -28,14 +28,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
 import com.silverpeas.mobile.client.apps.workflow.pages.widgets.Field;
 import com.silverpeas.mobile.client.components.UnorderedList;
 import com.silverpeas.mobile.client.components.base.ActionsMenu;
 import com.silverpeas.mobile.client.components.base.PageContent;
-import com.silverpeas.mobile.shared.dto.KeyValueDTO;
+import com.silverpeas.mobile.shared.dto.workflow.FieldPresentationDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 
@@ -60,11 +59,11 @@ public class WorkflowPresentationPage extends PageContent {
     this.data = data;
     // display presentation form
     header.setInnerText(data.getTitle());
-    for (KeyValueDTO field : data.getFields()) {
+    for (FieldPresentationDTO field : data.getFields()) {
       String value = field.getValue();
       if (field.getValue() != null && !value.isEmpty()) {
         Field f = new Field();
-        f.setData(field.getKey(), value);
+        f.setData(field);
         fields.add(f);
       }
     }

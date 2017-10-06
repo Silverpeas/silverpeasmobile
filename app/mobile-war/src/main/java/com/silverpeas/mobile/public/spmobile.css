@@ -1706,3 +1706,11 @@ form .forms .fields > li:nth-child(even) {
   width: 10px;
   margin-left: 1em;
 }
+
+.delete {
+  color: red !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  padding: 1em !important;
+  font-size: 1em !important;
+}

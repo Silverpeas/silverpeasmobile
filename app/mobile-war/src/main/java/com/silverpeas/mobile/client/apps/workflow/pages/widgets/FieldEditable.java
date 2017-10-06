@@ -34,18 +34,17 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFieldEvent;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.components.userselection.UserSelectionPage;
-import com.silverpeas.mobile.client.components.userselection.events.components
-    .AbstractUserSelectionComponentEvent;
-import com.silverpeas.mobile.client.components.userselection.events.components
-    .UserSelectionComponentEventHandler;
-import com.silverpeas.mobile.client.components.userselection.events.components
-    .UsersAndGroupsSelectedEvent;
+import com.silverpeas.mobile.client.components.userselection.events.components.AbstractUserSelectionComponentEvent;
+import com.silverpeas.mobile.client.components.userselection.events.components.UserSelectionComponentEventHandler;
+import com.silverpeas.mobile.client.components.userselection.events.components.UsersAndGroupsSelectedEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.GroupDTO;
@@ -62,10 +61,9 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
 
   private static FieldUiBinder uiBinder = GWT.create(FieldUiBinder.class);
 
-  @UiField
-  Label label;
-  @UiField
-  HTMLPanel container;
+  @UiField Label label;
+  @UiField Anchor file, deleteFile;
+  @UiField HTMLPanel container, inputContainer;
 
   private Widget w;
   protected ApplicationMessages msg = null;
@@ -74,22 +72,16 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
   @Override
   public void onChange(final ChangeEvent changeEvent) {
     String value = "";
-    if (getType().equals("user")) {
-      ListBox l = (ListBox) changeEvent.getSource();
-      for (int i = 0; i < l.getItemCount(); i++) {
-        value += l.getValue(i) + ",";
-      }
-      if (value.indexOf(",") != -1) {
-        value = value.substring(0, value.length() - 1);
-      }
-    } else {
-      if (changeEvent.getSource() instanceof TextBox) {
+    if (changeEvent.getSource() instanceof TextBox) {
+      if (((TextBox) changeEvent.getSource()).getElement().getAttribute("type").equalsIgnoreCase("file")) {
+        data.setObjectValue(((TextBox) changeEvent.getSource()).getElement());
+      } else {
         value = ((TextBox) changeEvent.getSource()).getText();
-      } else if (changeEvent.getSource() instanceof TextArea) {
-        value = ((TextArea) changeEvent.getSource()).getText();
-      } else if (changeEvent.getSource() instanceof ListBox) {
-        value = ((ListBox) changeEvent.getSource()).getSelectedValue();
       }
+    } else if (changeEvent.getSource() instanceof TextArea) {
+      value = ((TextArea) changeEvent.getSource()).getText();
+    } else if (changeEvent.getSource() instanceof ListBox) {
+      value = ((ListBox) changeEvent.getSource()).getSelectedValue();
     }
     data.setValue(value);
   }
@@ -135,7 +127,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       if (!value.isEmpty()) {
         value = value.substring(0, value.length()-1);
       }
-      data.setValue(value);
+      data.setValueId(value);
     }
   }
 
@@ -158,9 +150,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
     return type;
   }
 
-  //TODO : manage displayer :
-  // ISO Formtemplate : checkbox, file, image, video, wysiwyg, ldap, accessPath, jdbc, pdc, sequence, explorer, map
-  // ISO WorkflowEngine : checkbox, file, wysiwyg, ldap, accessPath, jdbc, pdc, sequence, explorer
+  //TODO : manage displayer : wysiwyg, sequence, jdbc, ldap, accessPath, pdc, explorer
   public void setData(WorkflowFieldDTO data) {
     this.data = data;
     label.setText(data.getLabel());
@@ -193,7 +183,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       FlowPanel panel = new FlowPanel();
       panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
       for(Map.Entry<String,String> v : data.getValues().entrySet()) {
-        CheckBox chk = new CheckBox(v.getKey());
+        CheckBox chk = new CheckBox(v.getLabel());
         chk.setName(v.getValue());
         chk.addValueChangeHandler(this);
         panel.add(chk);
@@ -218,10 +208,22 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
     } else if(type.equalsIgnoreCase("file")) {
       TextBox t = new TextBox();
       t.getElement().setAttribute("type", "file");
-      t.setText(data.getValue());
       t.setReadOnly(data.isReadOnly());
       t.addChangeHandler(this);
       w = t;
+
+      if (data.getValue() != null && !data.getValue().isEmpty()) {
+        file.setText(data.getValue());
+        label.getElement().getStyle().setDisplay(Style.Display.INLINE);
+        String url = UrlUtils.getServicesLocation();
+        url += "Attachment";
+        url = url + "?id=" + data.getValueId() + "&lang=" + SpMobil.user.getLanguage();
+        file.setHref(url);
+        file.setTarget("_self");
+        file.getElement().setAttribute("download", data.getValue());
+        file.setVisible(true);
+        deleteFile.setVisible(true);
+      }
     } else if(type.equalsIgnoreCase("date")) {
       TextBox t = new TextBox();
       t.getElement().setAttribute("type", "date");
@@ -246,11 +248,12 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
     } else if(type.equalsIgnoreCase("user") || type.equalsIgnoreCase("multipleUser") || type.equalsIgnoreCase("group")) {
       ListBox l = new ListBox();
       if (type.equalsIgnoreCase("multipleUser")) {
-
-        String[] values = data.getValue().split(",");
-        String[] ids = data.getValueId().split(",");
-        for (int i = 0; i < values.length; i++) {
-          l.addItem(values[i], ids[i].trim());
+        if (data.getValue() != null && data.getValueId() != null && !data.getValue().isEmpty() && !data.getValueId().isEmpty()) {
+          String[] values = data.getValue().split(",");
+          String[] ids = data.getValueId().split(",");
+          for (int i = 0; i < values.length; i++) {
+            l.addItem(values[i], ids[i].trim());
+          }
         }
       } else {
         if (data.getValue() != null && !data.getValue().isEmpty()) {
@@ -293,16 +296,26 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       t.addChangeHandler(this);
       w = t;
     }
-    container.add(w);
+    inputContainer.add(w);
     if (data.isMandatory()) {
       Image im = new Image();
       im.setStylePrimaryName("mandatory");
-      container.add(im);
+      inputContainer.add(im);
     }
   }
 
   public WorkflowFieldDTO getData() {
     return data;
+  }
+
+  @UiHandler("deleteFile")
+  void executeAction(ClickEvent event){
+    data.setValue(null);
+    data.setObjectValue(null);
+    data.setValueId(null);
+    file.setText("");
+    file.setVisible(false);
+    deleteFile.setVisible(false);
   }
 
 }

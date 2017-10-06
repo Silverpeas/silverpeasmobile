@@ -25,10 +25,13 @@
 package com.silverpeas.mobile.client.apps.workflow;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
-import com.silverpeas.mobile.client.apps.navigation.events.app.external
-    .NavigationAppInstanceChangedEvent;
+import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.AbstractWorkflowAppEvent;
@@ -47,10 +50,12 @@ import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
@@ -112,9 +117,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
           @Override
           public void onSuccess(final WorkflowInstancesDTO dto) {
             WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
-            if (currentRole == null) {
-              currentRole = dto.getRoles().entrySet().iterator().next().getKey();
-            }
+            currentRole = dto.getRoles().entrySet().iterator().next().getKey();
             event.setData(dto);
             event.setInstanceId(instance.getId());
             EventBus.getInstance().fireEvent(event);
@@ -182,16 +185,65 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void processForm(final WorkflowProcessFormEvent event) {
-    ServicesLocator.getServiceWorkflow().processAction(event.getData(), instance.getId(), currentAction, currentRole, currentState, event.getProcessId(), new AsyncCallback<Void>() {
-      @Override
-      public void onFailure(final Throwable throwable) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+    JavaScriptObject formData = createFormData();
+    for (WorkflowFieldDTO f : event.getData()) {
+      if (f.getType().equalsIgnoreCase("file")) {
+        formData = populateFormData(formData, f.getName(), f.getObjectValue());
+      } else if(f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") || f.getType().equalsIgnoreCase("group")) {
+        formData = populateFormData(formData, f.getName(), f.getValueId());
+      } else {
+        formData = populateFormData(formData, f.getName(), f.getValue());
       }
-
-      @Override
-      public void onSuccess(final Void aVoid) {
-        EventBus.getInstance().fireEvent(new WorkflowActionProcessedEvent());
-      }
-    });
+    }
+    String url = UrlUtils.getUploadLocation();
+    url +=  "FormAction";
+    processAction(this, url, formData, SpMobil.getUserToken(), instance.getId(), currentAction, currentRole, currentState, event.getProcessId());
   }
+
+  public void actionProcessed() {
+    EventBus.getInstance().fireEvent(new WorkflowActionProcessedEvent());
+  }
+
+  public void actionNotProcessed(int error) {
+    EventBus.getInstance().fireEvent(new ErrorEvent(new RequestException("Error " + error)));
+  }
+
+  private static native JavaScriptObject populateFormData(JavaScriptObject formData, String name, Element value) /*-{
+    if (value == null) {
+      formData.append(name, null);
+    } else {
+      formData.append(name, value.files[0]);
+    }
+    return formData;
+  }-*/;
+
+  private static native JavaScriptObject populateFormData(JavaScriptObject formData, String name, String value) /*-{
+    formData.append(name, value);
+    return formData;
+  }-*/;
+
+  private static native JavaScriptObject createFormData() /*-{
+    var fd = new FormData();
+    return fd;
+  }-*/;
+
+  private static native void processAction(WorkflowApp app, String url, JavaScriptObject fd, String token, String instanceId, String currentAction, String currentRole, String currentState, String processId) /*-{
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, false);
+    xhr.setRequestHeader("X-Silverpeas-Session", token);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        // Every thing ok, file uploaded
+        app.@com.silverpeas.mobile.client.apps.workflow.WorkflowApp::actionProcessed()();
+      } else {
+        app.@com.silverpeas.mobile.client.apps.workflow.WorkflowApp::actionNotProcessed(I)(xhr.status);
+      }
+    };
+    fd.append("instanceId", instanceId);
+    fd.append("currentAction", currentAction);
+    fd.append("currentRole", currentRole);
+    fd.append("currentState", currentState);
+    fd.append("processId", processId);
+    xhr.send(fd);
+  }-*/;
 }

@@ -33,4 +33,6 @@ public interface WorkflowMessages extends Messages {
   String cancel();
 
   String mandatory();
+
+  String mandatoryOneField();
 }

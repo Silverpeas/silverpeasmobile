@@ -194,7 +194,17 @@
 
   <servlet-mapping>
     <servlet-name>MediaServlet</servlet-name>
-    <url-pattern>/RwebPages/AuthenticationServlet/spmobile/MediaAction</url-pattern>
+    <url-pattern>/services/spmobile/MediaAction</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>FormServlet</servlet-name>
+    <servlet-class>com.silverpeas.mobile.server.servlets.FormServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>FormServlet</servlet-name>
+    <url-pattern>/services/spmobile/FormAction</url-pattern>
   </servlet-mapping>
 
   <servlet>

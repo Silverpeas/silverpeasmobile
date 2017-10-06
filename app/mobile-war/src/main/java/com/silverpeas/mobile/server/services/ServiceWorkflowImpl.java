@@ -26,7 +26,7 @@ package com.silverpeas.mobile.server.services;
 
 import com.silverpeas.mobile.server.services.helpers.UserHelper;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
-import com.silverpeas.mobile.shared.dto.KeyValueDTO;
+import com.silverpeas.mobile.shared.dto.workflow.FieldPresentationDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import com.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
@@ -40,32 +40,28 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.ProfileInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.content.form.DataRecord;
 import org.silverpeas.core.contribution.content.form.Field;
 import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.RecordTemplate;
 import org.silverpeas.core.contribution.content.form.field.MultipleUserField;
-import org.silverpeas.core.contribution.content.form.record.GenericDataRecord;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.workflow.api.Workflow;
-import org.silverpeas.core.workflow.api.event.TaskDoneEvent;
 import org.silverpeas.core.workflow.api.instance.ProcessInstance;
-import org.silverpeas.core.workflow.api.model.Action;
 import org.silverpeas.core.workflow.api.model.Input;
 import org.silverpeas.core.workflow.api.model.ProcessModel;
 import org.silverpeas.core.workflow.api.model.Role;
 import org.silverpeas.core.workflow.api.task.Task;
 import org.silverpeas.core.workflow.api.user.User;
-import org.silverpeas.core.workflow.engine.user.UserImpl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,100 +79,6 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
 
   static {
     SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
-  }
-
-  @Override
-  public void processAction(List<WorkflowFieldDTO> data, String instanceId, String actionName, String role, String state, String processId) throws WorkflowException, AuthenticationException {
-    checkUserInSession();
-    try {
-      ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
-      String kind = "";
-      if (actionName.equalsIgnoreCase("create")) {
-        kind = model.getCreateAction(role).getKind();
-      } else {
-        kind = model.getAction(actionName).getKind();
-      }
-
-      Action action = null;
-      TaskDoneEvent event = null;
-      if (kind.equals("create")) {
-        action = model.getCreateAction(role);
-        GenericDataRecord record = getGenericDataRecord(data, role, model, action);
-        event = getCreationTask(model, getUserInSession().getId(), role).buildTaskDoneEvent(action.getName(), record);
-      } else {
-        ProcessInstance processInstance = Workflow.getProcessInstanceManager().getProcessInstance(processId);
-        //User user = new UserImpl(UserDetail.getById(getUserInSession().getId()));
-        //processInstance.lock(model.getState(state), user);
-        action = model.getAction(actionName);
-        GenericDataRecord record = getGenericDataRecord(data, role, model, action);
-        event = getTask(model, processInstance, getUserInSession().getId(), role, state).buildTaskDoneEvent(action.getName(), record);
-      }
-      Workflow.getWorkflowEngine().process(event, true); //TODO : how to persiste lock on instance
-      Thread.sleep(1000); // Wait task creation
-
-      } catch (Exception e) {
-      throw  new WorkflowException(e);
-    }
-
-  }
-
-  private GenericDataRecord getGenericDataRecord(final List<WorkflowFieldDTO> data, final String role, final ProcessModel model, final Action action)  throws Exception {
-    Form form = model.getPublicationForm(action.getName(), role, getUserInSession().getUserPreferences().getLanguage());
-    GenericDataRecord record = (GenericDataRecord) model.getNewActionRecord(action.getName(), role, getUserInSession().getUserPreferences().getLanguage(), null);
-    for (WorkflowFieldDTO f : data) {
-      Field field = record.getField(f.getName());
-      if (f.getValue() == null) {
-        field.setNull();
-      } else {
-        if (field.getTypeName().equalsIgnoreCase("user")) {
-          UserDetail u = Administration.get().getUserDetail(f.getValue());
-          field.setObjectValue(u);
-        } else if (field.getTypeName().equalsIgnoreCase("group")) {
-          GroupDetail g = Administration.get().getGroup(f.getValue());
-          field.setObjectValue(g);
-        } else if (field.getTypeName().equalsIgnoreCase("multipleUser")) {
-          StringTokenizer stk = new StringTokenizer(f.getValue(), ",");
-          UserDetail[] users = new UserDetail[stk.countTokens()];
-          int i = 0;
-          while (stk.hasMoreTokens()) {
-            String id = stk.nextToken();
-            UserDetail u = Administration.get().getUserDetail(id);
-            users[i] = u;
-            i++;
-          }
-          field.setObjectValue(users);
-        } else if (field.getTypeName().equalsIgnoreCase("date")) {
-          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-          Date d = sdf.parse(f.getValue());
-          field.setValue(DateUtil.formatDate(d));
-        } else if (field.getTypeName().equalsIgnoreCase("wysiwyg")) {
-          //TODO
-          //WysiwygController.createFileAndAttachment();
-          //WysiwygController.updateFileAndAttachment();
-          //form.updateWysiwyg()
-        } else {
-          field.setValue(f.getValue());
-        }
-      }
-    }
-    return record;
-  }
-
-  private Task getCreationTask(ProcessModel processModel, String userId, String currentRole)  throws Exception {
-    User user = new UserImpl(UserDetail.getById(userId));
-    Task creationTask = Workflow.getTaskManager().getCreationTask(user, currentRole, processModel);
-    return creationTask;
-  }
-
-  private Task getTask(ProcessModel processModel, ProcessInstance processInstance, String userId, String currentRole, String stateName) throws Exception {
-    User user = new UserImpl(UserDetail.getById(userId));
-    Task[] tasks = Workflow.getTaskManager().getTasks(user, currentRole, processInstance);
-    for (final Task task : tasks) {
-      if (task.getState().getName().equals(stateName)) {
-        return task;
-      }
-    }
-    return null;
   }
 
   private List<GroupDetail> getGroups(List<String> ids) throws Exception {
@@ -299,7 +201,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
   public WorkflowInstancePresentationFormDTO getPresentationForm(String instanceId, String role) throws WorkflowException, AuthenticationException {
     checkUserInSession();
     WorkflowInstancePresentationFormDTO dto = new WorkflowInstancePresentationFormDTO();
-    List<KeyValueDTO> fields = new ArrayList<KeyValueDTO>();
+    List<FieldPresentationDTO> fields = new ArrayList<FieldPresentationDTO>();
     Map<String, String> mapActions = new TreeMap<String, String>();
     try {
       ProcessInstance instance = Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
@@ -318,25 +220,31 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
       for (FieldTemplate ft : form.getFieldTemplates()) {
         String label = ft.getLabel(getUserInSession().getUserPreferences().getLanguage());
         String value = data.getField(ft.getFieldName()).getStringValue();
-        if (ft.getTypeName().equalsIgnoreCase("user")) {
+        String id = "";
+        String type = ft.getTypeName();
+        if (type.equalsIgnoreCase("user")) {
           UserDetail u = Administration.get().getUserDetail(value);
           value = u.getDisplayedName();
-        } else if (ft.getTypeName().equalsIgnoreCase("multipleUser")) {
+        } else if (type.equalsIgnoreCase("multipleUser")) {
           StringTokenizer stk = new StringTokenizer(value, ",");
           value = "";
           while(stk.hasMoreTokens()) {
-            String id = stk.nextToken();
-            UserDetail u = Administration.get().getUserDetail(id);
+            String idUser = stk.nextToken();
+            UserDetail u = Administration.get().getUserDetail(idUser);
             value += u.getDisplayedName() + ", ";
           }
           if (!value.isEmpty()) value = value.substring(0, value.length()-2);
-        } else if(ft.getTypeName().equalsIgnoreCase("group")) {
+        } else if(type.equalsIgnoreCase("group")) {
           GroupDetail g = Administration.get().getGroup(value);
           value = g.getName();
-        } else if(ft.getTypeName().equalsIgnoreCase("date")) {
+        } else if(type.equalsIgnoreCase("date")) {
           value = DateUtil.getInputDate(value, getUserInSession().getUserPreferences().getLanguage());
+        } else if(type.equalsIgnoreCase("file")) {
+          SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(value), getUserInSession().getUserPreferences().getLanguage());
+          value = doc.getTitle();
+          id = doc.getId();
         }
-        fields.add(new KeyValueDTO(label, value));
+        fields.add(new FieldPresentationDTO(label, value, id, type));
       }
       dto.setTitle(form.getTitle());
     } catch (Exception e) {
@@ -359,11 +267,13 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
       if (action.equals("create")) {
         ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
         form = model.getCreateAction(role).getForm();
+        dto.setId(model.getModelId());
       } else {
         ProcessInstance instance = Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
         instanceId = instance.getModelId();
         form = instance.getProcessModel().getActionForm(action);
         data = instance.getFolder();
+        dto.setId(instance.getInstanceId());
       }
 
       for (Input input : form.getInputs()) {
@@ -403,6 +313,10 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
               GroupDetail g = (GroupDetail) f.getObjectValue();
               fdto.setValueId(g.getId());
               fdto.setValue(f.getValue());
+            } else if (input.getItem().getType().equalsIgnoreCase("file")){
+              SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(f.getValue()), getUserInSession().getUserPreferences().getLanguage());
+              fdto.setValue(doc.getTitle());
+              fdto.setValueId(doc.getId());
             } else {
               fdto.setValue(f.getValue());
             }
@@ -413,8 +327,6 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
         dto.addField(fdto);
       }
       dto.setTitle(form.getTitle(role, getUserInSession().getUserPreferences().getLanguage()));
-      dto.setId(instanceId);
-
     } catch (Exception e) {
       throw  new WorkflowException(e);
     }
