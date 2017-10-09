@@ -223,6 +223,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         if (publicationDetail.isDraft()) {
           if (publicationDetail.getUpdaterId().equals(getUserInSession().getId())) {
             dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.draft") + ")");
+          } else {
+            visible = false;
           }
         } else if (publicationDetail.isValid()) {
           dto.setName(publicationDetail.getName());
@@ -348,6 +350,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     attach.setOrderNum(attachment.getOrder());
     attach.setSize(attachment.getSize());
     attach.setCreationDate(attachment.getCreated());
+    attach.setDownloadAllowed(attachment.isDownloadAllowedForRolesFrom(getUserInSession()));
     return attach;
   }
 }

@@ -1003,6 +1003,11 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   display: block;
 }
 
+#attachments li a.not-downloadable {
+  background: transparent url(forbidden-download.png) right 10px no-repeat;
+  display: block;
+}
+
 /********** CONTACT *******/
 #btn-my-contacts, #btn-all-contacts, #btn-all-contactsext {
   padding-left: 5px;

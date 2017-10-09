@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
@@ -71,6 +72,9 @@ public class Attachment extends Composite {
     private void render() {
         Image img = null;
         String sizeValue;
+        if (!attachement.isDownloadAllowed()) {
+          link.setStylePrimaryName("not-downloadable");
+        }
         if (attachement.getSize() < 1024*1024) {
             sizeValue = String.valueOf(attachement.getSize()/1024);
             size.setInnerHTML(msg.sizeK(sizeValue));
@@ -97,7 +101,8 @@ public class Attachment extends Composite {
     }
 
     private void clickAction() {
-        try {
+        if (attachement.isDownloadAllowed()) {
+          try {
             String url = UrlUtils.getServicesLocation();
             url += "Attachment";
             url = url + "?id=" + attachement.getId() + "&lang=" + attachement.getLang();
@@ -105,8 +110,9 @@ public class Attachment extends Composite {
             link.setTarget("_self");
             link.fireEvent(new ClickEvent() {});
             link.getElement().setAttribute("download", attachement.getTitle());
-        } catch(JavaScriptException e) {
+          } catch (JavaScriptException e) {
             Notification.alert(e.getMessage());
+          }
         }
     }
 }
