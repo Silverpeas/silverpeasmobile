@@ -147,7 +147,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
               results.add(contact);
             } else if (result.getObjectType().equals("UserFull")) {
               UserDetail userDetail = organizationController.getUserDetail(objectId);
-              if (domainsIds.isEmpty() || domainsIds.contains(userDetail.getDomainId())) {
+              if ((domainsIds.isEmpty() || domainsIds.contains(userDetail.getDomainId())) && userDetail.isActivatedState()) {
                 results.add(userDetail);
               }
             }
