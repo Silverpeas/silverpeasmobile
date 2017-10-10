@@ -172,7 +172,8 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
         ArrayList<WorkflowInstanceDTO> instances = new ArrayList<WorkflowInstanceDTO>();
       User user = Workflow.getUserManager().getUser(getUserInSession().getId());
       Role[] roles = Workflow.getProcessModelManager().getProcessModel(instanceId).getRoles();
-      ProcessInstance[] processInstances = Workflow.getProcessInstanceManager().getProcessInstances(instanceId, user, roles[0].getName());
+      if (userRole == null || userRole.isEmpty()) userRole = roles[0].getName();
+      ProcessInstance[] processInstances = Workflow.getProcessInstanceManager().getProcessInstances(instanceId, user, userRole);
 
       if (userRole == null) {
         userRole = roles[0].getName();
