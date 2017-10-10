@@ -43,7 +43,7 @@ public class ContactItem extends Composite {
     } else {
       user.add(new Image(userData.getAvatar()));
     }
-    user.add(new HTML(userData.getFirstName() + " " + userData.getLastName()));
+    user.add(new HTML(userData.getFirstName() + " " + userData.getLastName() + " <span class='status'>" + userData.getStatus() + "</span>" ));
 
     mail.setText(userData.geteMail());
     if (userData.geteMail() == null || userData.geteMail().isEmpty()) {
