@@ -1,5 +1,6 @@
 package com.silverpeas.mobile.server.services;
 
+import com.silverpeas.mobile.server.helpers.DataURLHelper;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.GroupDTO;
 import com.silverpeas.mobile.shared.dto.UserDTO;
@@ -85,6 +86,9 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
                     u.setFirstName(userDetail.getFirstName());
                     u.setLastName(userDetail.getLastName());
                     u.seteMail(userDetail.geteMail());
+                  String avatar = DataURLHelper
+                      .convertAvatarToUrlData(userDetail.getAvatarFileName(), "24x");
+                    u.setAvatar(avatar);
                     usersAndGroups.add(u);
                 }
                 for (String groupId : profile.getAllGroups()) {

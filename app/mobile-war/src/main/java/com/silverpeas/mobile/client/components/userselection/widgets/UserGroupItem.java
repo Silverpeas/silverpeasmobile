@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.silverpeas.mobile.client.components.userselection.widgets.events.ChangeEvent;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -70,7 +71,7 @@ public class UserGroupItem extends ActionItem {
     this.data = data;
     if (data instanceof UserDTO) {
       UserDTO dataUser = (UserDTO) data;
-      if (dataUser.getAvatar() == null) {
+      if (dataUser.getAvatar() == null || dataUser.getAvatar().isEmpty()) {
         Image avatar = new Image(resources.avatar());
         avatar.getElement().removeAttribute("height");
         avatar.getElement().removeAttribute("width");
