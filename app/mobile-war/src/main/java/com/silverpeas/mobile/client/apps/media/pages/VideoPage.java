@@ -97,6 +97,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
       player.setAutoplay(false);
       player.setControls(true);
       player.setPreload("none");
+      player.setAttribute("controlsList", "nodownload");
       player.setPoster(video.getDataPoster());
       player.setHeight(200);
       player.setAttribute("style", "max-width:" + Window.getClientWidth() * 0.8 + "px");

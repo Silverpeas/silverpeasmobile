@@ -100,6 +100,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       player.setAutoplay(false);
       player.setControls(true);
       player.setPreload("none");
+      player.setAttribute("controlsList", "nodownload");
       player.setAttribute("type", sound.getMimeType());
 
       Image img = new Image(resources.sound());
