@@ -68,10 +68,14 @@ public class TaskItem extends Composite {
 
   @UiHandler("link")
   protected void edit(ClickEvent event) {
-    TaskPage page = new TaskPage();
-    page.setPageTitle(msg.edit());
-    page.setData(task);
-    page.show();
+    if (task.getExternalId().isEmpty()) {
+      TaskPage page = new TaskPage();
+      page.setPageTitle(msg.edit());
+      page.setData(task);
+      page.show();
+    } else {
+      //TODO : redirect on content
+    }
   }
 
   private void updateRange(final int value) {
