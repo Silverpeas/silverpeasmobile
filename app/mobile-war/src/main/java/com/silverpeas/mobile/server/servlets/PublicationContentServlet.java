@@ -53,7 +53,7 @@ import java.net.URLConnection;
 @SuppressWarnings("serial")
 public class PublicationContentServlet extends HttpServlet {
 
-  public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = "main_session_controller";
+  public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = AbstractAuthenticateService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME;
   public static final String USERKEY_ATTRIBUT_NAME = "key";
 
   private OrganizationController organizationController = OrganizationController.get();
@@ -404,16 +404,8 @@ public class PublicationContentServlet extends HttpServlet {
     return StringUtil.isDefined(getUsedXMLTemplate(request, instanceId));
   }
 
-  protected MainSessionController getMainSessionController(HttpServletRequest request)
-      throws Exception {
-    MainSessionController mainSessionController = (MainSessionController) request.getSession()
-        .getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
-    if (mainSessionController == null) {
-      mainSessionController =
-          new MainSessionController(getUserKeyInSession(request), request.getSession());
-      request.getSession().setAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME, mainSessionController);
-    }
-
+  protected MainSessionController getMainSessionController(HttpServletRequest request) throws Exception {
+    MainSessionController mainSessionController = (MainSessionController) request.getSession().getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
     return mainSessionController;
   }
 
