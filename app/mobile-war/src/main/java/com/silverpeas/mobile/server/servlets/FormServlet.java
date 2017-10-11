@@ -72,7 +72,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 @SuppressWarnings("serial")
-public class FormServlet extends HttpServlet {
+public class FormServlet extends AbstractSilverpeasMobileServlet {
 
   private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3;  // 3MB
   private static long MAX_FILE_SIZE = 1024 * 1024 * 100; // 100MB
@@ -152,7 +152,7 @@ public class FormServlet extends HttpServlet {
           fields.put(item.getFieldName(), file);
         }
       }
-      processAction(request, fields, instanceId, currentAction, currentRole, currentState,
+      processAction(request, response, fields, instanceId, currentAction, currentRole, currentState,
           processId);
     } catch (FileUploadBase.FileSizeLimitExceededException eu) {
       response.sendError(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
@@ -163,10 +163,10 @@ public class FormServlet extends HttpServlet {
     }
   }
 
-  private void processAction(HttpServletRequest request, Map<String, Object> data,
+  private void processAction(HttpServletRequest request, HttpServletResponse response, Map<String, Object> data,
       String instanceId, String actionName, String role, String state, String processId)
       throws Exception {
-    checkUserInSession(request);
+    checkUserInSession(request, response);
 
     ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
     String kind = "";
@@ -228,7 +228,8 @@ public class FormServlet extends HttpServlet {
       if (f.getValue() == null || f.getValue().equals("null")) {
         if (field.getTypeName().equalsIgnoreCase("file") && field.getValue() != null) {
           //TODO : make work delete file
-          SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(field.getValue()), getUserInSession(request).getUserPreferences().getLanguage());
+          SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(field.getValue()),
+              getUserInSession(request).getUserPreferences().getLanguage());
           AttachmentServiceProvider.getAttachmentService().deleteAttachment(doc);
         }
         field.setNull();
@@ -281,17 +282,4 @@ public class FormServlet extends HttpServlet {
     }
     return record;
   }
-
-  protected void checkUserInSession(HttpServletRequest request) throws AuthenticationException {
-    if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
-      throw new AuthenticationException(
-          AuthenticationException.AuthenticationError.NotAuthenticate);
-    }
-  }
-
-  protected UserDetail getUserInSession(HttpServletRequest request) {
-    return (UserDetail) request.getSession()
-        .getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
-  }
-
 }

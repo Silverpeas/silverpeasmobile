@@ -9,11 +9,14 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
+import org.silverpeas.components.gallery.constant.MediaResolution;
 import org.silverpeas.components.gallery.constant.MediaType;
 import org.silverpeas.components.gallery.delegate.MediaDataCreateDelegate;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.model.Photo;
+import org.silverpeas.components.gallery.model.Sound;
 import org.silverpeas.components.gallery.service.GalleryService;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.core.admin.user.model.UserDetail;
@@ -33,7 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("serial")
-public class MediaServlet extends HttpServlet {
+public class MediaServlet extends AbstractSilverpeasMobileServlet {
 
   private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
   private static long MAX_FILE_SIZE      = 1024 * 1024 * 100; // 100MB
@@ -52,14 +55,20 @@ public class MediaServlet extends HttpServlet {
       String id = request.getParameter("id");
       String instanceId = request.getParameter("instanceId");
       Photo photo = getPicture(id);
-      getFile(response, instanceId, photo);
-      ((OutputStream) response.getOutputStream()).flush();
+      if (photo.canBeAccessedBy(getUserInSession(request))) {
+        InputStream input = photo.getFile(MediaResolution.ORIGINAL).inputStream();
+        response.setContentType(((Photo) photo).getFileMimeType().getMimeType());
+        response.setHeader("content-disposition", "attachment; filename=" + photo.getName());
+        IOUtils.copy(input, response.getOutputStream());
+      } else {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      }
     }
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
-      checkUserInSession(request);
+      checkUserInSession(request, response);
       processRequest(request, response);
     } catch (Exception e) {
       e.printStackTrace();
@@ -128,43 +137,6 @@ public class MediaServlet extends HttpServlet {
     return photoDetail;
   }
 
-  protected void checkUserInSession(HttpServletRequest request) throws AuthenticationException {
-    if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
-      throw new AuthenticationException(AuthenticationException.AuthenticationError.NotAuthenticate);
-    }
-  }
-
-  public void getFile(HttpServletResponse response, String instanceId, Photo photo) {
-    InputStream input = null;
-
-    try {
-      SettingBundle gallerySettings = ResourceLocator.getSettingBundle("com.silverpeas.gallery.settings.gallerySettings");
-      String nomRep = gallerySettings.getString("imagesSubDirectory") + photo.getMediaPK().getId();
-      String[] rep = {nomRep};
-      String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
-      File f = new File(path+ photo.getFileName());
-
-
-      FileInputStream is = new FileInputStream(f);
-      byte[] binaryData = new byte[(int) f.length()];
-      is.read(binaryData);
-      is.close();
-
-      input = new ByteArrayInputStream(binaryData);
-      response.setContentType(photo.getFileMimeType().getMimeType());
-      response.setHeader("content-disposition", "attachment; filename=" + photo.getFileName());
-
-      byte[] buffer = new byte[1024];
-      int read;
-      while ((read = input.read(buffer)) > 0) {
-        ((OutputStream) response.getOutputStream()).write(buffer, 0, read);
-      }
-    } catch (IOException e) {
-      System.out.println("Error while trying to download the media.");
-      e.printStackTrace();
-    }
-  }
-
   private GalleryService getGalleryService() throws Exception {
     return MediaServiceProvider.getMediaService();
   }
@@ -212,9 +184,4 @@ public class MediaServlet extends HttpServlet {
 
     return newMedia.getId();
   }
-
-  protected UserDetail getUserInSession(HttpServletRequest request) {
-    return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
-  }
-
 }

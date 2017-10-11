@@ -51,7 +51,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 @SuppressWarnings("serial")
-public class PublicationContentServlet extends HttpServlet {
+public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
 
   public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = AbstractAuthenticateService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME;
   public static final String USERKEY_ATTRIBUT_NAME = "key";
@@ -83,17 +83,15 @@ public class PublicationContentServlet extends HttpServlet {
 
     String html = "";
     if (componentId != null && !componentId.isEmpty()) {
-
+      //TODO : verify user rights
       if (isXMLTemplateUsed(request, componentId)) {
         PagesContext context = new PagesContext("myForm", "0", getUserInSession(request).getUserPreferences().getLanguage(), false, componentId, "useless");
         context.setObjectId("0");
         context.setBorderPrinted(false);
-
         PublicationTemplate pubTemplate = getXMLTemplate(request, componentId);
         Method method = pubTemplate.getViewForm().getClass().getDeclaredMethod("display", PrintWriter.class, PagesContext.class, DataRecord.class);
         method.setAccessible(true);
         method.invoke(pubTemplate.getViewForm(), new PrintWriter(response.getOutputStream()), context, getDataRecord(request, componentId));
-
       } else {
         html = WysiwygController.loadForReadOnly(componentId, id,
             getUserInSession(request).getUserPreferences().getLanguage());
@@ -101,14 +99,18 @@ public class PublicationContentServlet extends HttpServlet {
       }
     } else {
       PublicationDetail pub = getKmeliaBm().getPublicationDetail(new PublicationPK(id));
-      if (pub.getInfoId().equals("0")) {
-        // wysiwyg
-        html = pub.getWysiwyg();
-        displayWysiwyg(html, request, response, pub.getInstanceId());
+      if (pub.canBeAccessedBy(getUserInSession(request))) {
+        if (pub.getInfoId().equals("0")) {
+          // wysiwyg
+          html = pub.getWysiwyg();
+          displayWysiwyg(html, request, response, pub.getInstanceId());
+        } else {
+          // form xml
+          displayFormView(new PrintWriter(response.getOutputStream()), pub, getUserInSession(request),
+              ua);
+        }
       } else {
-        // form xml
-        displayFormView(new PrintWriter(response.getOutputStream()), pub, getUserInSession(request),
-            ua);
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
       }
     }
 
@@ -368,23 +370,11 @@ public class PublicationContentServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
-      checkUserInSession(request);
+      checkUserInSession(request, response);
       processRequest(request, response);
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  protected void checkUserInSession(HttpServletRequest request) throws AuthenticationException {
-    if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
-      throw new AuthenticationException(
-          AuthenticationException.AuthenticationError.NotAuthenticate);
-    }
-  }
-
-  protected UserDetail getUserInSession(HttpServletRequest request) {
-    return (UserDetail) request.getSession()
-        .getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
   }
 
   private KmeliaService getKmeliaBm() {

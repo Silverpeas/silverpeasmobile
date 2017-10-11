@@ -180,6 +180,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
           url += "?action=view" + "&id=" + photo.getId() + "&instanceId=" + photo.getInstance();
           download.setHref(url);
           download.setTarget("_self");
+          download.getElement().setAttribute("download", photo.getTitle());
           download.fireEvent(new ClickEvent() {});
 
         } catch(JavaScriptException e) {

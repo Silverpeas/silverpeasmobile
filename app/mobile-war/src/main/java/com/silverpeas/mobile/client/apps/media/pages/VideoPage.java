@@ -1,11 +1,14 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptException;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -25,6 +28,7 @@ import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import com.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Html5Utils;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.app.View;
 import com.silverpeas.mobile.client.common.navigation.UrlUtils;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
@@ -128,11 +132,6 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
 
       lastUpdate.setInnerHTML(msg.lastUpdate(video.getUpdateDate(), video.getUpdater()));
 
-      if (video.isDownload()) {
-        download.setHref(url);
-        download.setTarget("_self");
-      }
-
       if (event.isCommentable()) {
         comments.init(video.getId(), video.getInstance(), CommentDTO.TYPE_VIDEO, getPageTitle(),
             video.getTitle(), video.getCommentsNumber());
@@ -143,6 +142,33 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
       if (event.isNotifiable()) {
         notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_VIDEO, video.getName(), getPageTitle());
         actionsMenu.addAction(notification);
+      }
+    }
+  }
+
+  @UiHandler("download")
+  void download(ClickEvent event) {
+    if (video.isDownload()) {
+      if (!clicked) {
+        clicked = true;
+        try {
+          String url = UrlUtils.getServicesLocation();
+          url += "VideoAction";
+          url = url + "?action=download&id=" + video.getId();
+          download.setHref(url);
+          download.setTarget("_self");
+          download.getElement().setAttribute("download", video.getTitle());
+          download.fireEvent(new ClickEvent() {});
+        } catch(JavaScriptException e) {
+          Notification.alert(e.getMessage());
+        }
+
+        Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+          @Override
+          public boolean execute() {
+            clicked = false;
+            return false;
+          }}, 400);
       }
     }
   }

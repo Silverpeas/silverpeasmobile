@@ -18,9 +18,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 @SuppressWarnings("serial")
-public class AttachmentServlet extends HttpServlet {
-
-    private UserDetail user;
+public class AttachmentServlet extends AbstractSilverpeasMobileServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getParameter("id");
@@ -28,7 +26,7 @@ public class AttachmentServlet extends HttpServlet {
 
         SimpleDocument attachment = AttachmentServiceProvider.getAttachmentService().
                 searchDocumentById(new SimpleDocumentPK(id), lang);
-        if (attachment.canBeAccessedBy(user)) {
+        if (attachment.canBeAccessedBy(getUserInSession(request))) {
             response.setContentType(attachment.getContentType());
             response.setHeader("content-disposition", "filename=" + attachment.getFilename());
             AttachmentServiceProvider.getAttachmentService().getBinaryContent(response.getOutputStream(), new SimpleDocumentPK(id), lang);
@@ -38,20 +36,13 @@ public class AttachmentServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            checkUserInSession(request);
-            processRequest(request, response);
-        } catch (Exception e) {
-          SilverLogger.getLogger(SpMobileLogModule.getName()).error("AttachmentServlet", e);
-          response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
 
-    protected void checkUserInSession(HttpServletRequest request) throws AuthenticationException {
-        if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
-            throw new AuthenticationException(AuthenticationException.AuthenticationError.NotAuthenticate);
-        } else {
-            user = (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
-        }
+      try {
+        checkUserInSession(request, response);
+        processRequest(request, response);
+      } catch (Exception e) {
+        SilverLogger.getLogger(SpMobileLogModule.getName()).error("AttachmentServlet", e);
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      }
     }
 }
