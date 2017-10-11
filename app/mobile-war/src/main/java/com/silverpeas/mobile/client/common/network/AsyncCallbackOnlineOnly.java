@@ -21,6 +21,7 @@ public abstract class AsyncCallbackOnlineOnly<T> implements AsyncCallback<T> {
 
     @Override
     public void onFailure(Throwable t) {
+        Notification.activityStop();
         if (t instanceof AuthenticationException) {
             SpMobil.getInstance().loadIds(new Command() {
                 @Override
@@ -42,6 +43,7 @@ public abstract class AsyncCallbackOnlineOnly<T> implements AsyncCallback<T> {
 
     @Override
     public void onSuccess(T result) {
-        OfflineHelper.hideOfflineIndicator();
+      OfflineHelper.hideOfflineIndicator();
+      Notification.activityStop();
     }
 }

@@ -88,6 +88,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         .getApp(content.getInstanceId(), content.getId(), content.getType(), new AsyncCallback<ApplicationInstanceDTO>() {
           @Override
           public void onFailure(final Throwable caught) {
+            Notification.activityStop();
             if (OfflineHelper.needToGoOffine(caught)) {
               Notification.alert(globalMsg.needToBeOnline());
             } else {
@@ -97,6 +98,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
           @Override
           public void onSuccess(final ApplicationInstanceDTO app) {
+            Notification.activityStop();
             commentable = app.isCommentable();
             notifiable = app.isNotifiable();
             displayContent(content);
@@ -203,11 +205,13 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           new AsyncCallback<ApplicationInstanceDTO>() {
             @Override
             public void onFailure(final Throwable caught) {
+              Notification.activityStop();
               EventBus.getInstance().fireEvent(new ErrorEvent(caught));
             }
 
             @Override
             public void onSuccess(final ApplicationInstanceDTO applicationInstanceDTO) {
+              Notification.activityStop();
               MediaNavigationPage page = new MediaNavigationPage();
               page.init(event.getContent().getInstanceId(), event.getContent().getId(), applicationInstanceDTO.getRights());
               page.show();

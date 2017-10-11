@@ -30,7 +30,7 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <b:ActionsMenu ui:field="actionsMenu"/>
     <h2 class="appHeader"></h2>
-    <g:ListBox ui:field="roles" styleName="workflow-roles"/>
+    <g:ListBox ui:field="roles" styleName="workflow-roles" visible="false"/>
     <g:FlexTable ui:field="instances" styleName="workflow-list"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

@@ -85,7 +85,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
         @Override
         public void onSuccess(final ApplicationInstanceDTO app) {
-          OfflineHelper.hideOfflineIndicator();
+          super.onSuccess(app);
           commentable = app.isCommentable();
           notifiable = app.isNotifiable();
           displayContent(content);
@@ -106,11 +106,13 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             ServicesLocator.getServiceDocuments().getAttachment(content.getId(), content.getInstanceId(), new AsyncCallback<AttachmentDTO>() {
                 @Override
                 public void onFailure(final Throwable caught) {
+                    Notification.activityStop();
                     EventBus.getInstance().fireEvent(new ErrorEvent(caught));
                 }
 
                 @Override
                 public void onSuccess(final AttachmentDTO attachement) {
+                    Notification.activityStop();
                     try {
                         String url = Window.Location.getPath() + "spmobil/Attachment";
                         url = url + "?id=" + attachement.getId() + "&instanceId=" + attachement.getInstanceId() + "&lang=" + attachement.getLang() + "&userId=" + attachement.getUserId();

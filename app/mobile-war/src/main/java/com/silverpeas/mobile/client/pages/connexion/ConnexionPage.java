@@ -121,6 +121,7 @@ public class ConnexionPage extends PageContent {
           ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
             @Override
             public void onFailure(Throwable t) {
+              Notification.activityStop();
               if (t instanceof AuthenticationException) {
                 Window.Location.reload();
               }

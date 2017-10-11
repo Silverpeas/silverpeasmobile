@@ -121,6 +121,7 @@ public class ServicesLocator {
   }
 
   private static void changeServiceEntryPoint(ServiceDefTarget service) {
+    Notification.activityStart();
     String serviceEntryPoint = service.getServiceEntryPoint();
     if (!serviceEntryPoint.contains("services")) {
       serviceEntryPoint = serviceEntryPoint.replace("spmobile", "services/spmobile");

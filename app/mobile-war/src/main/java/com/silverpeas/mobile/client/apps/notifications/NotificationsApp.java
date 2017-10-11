@@ -101,6 +101,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
                 // No storage in local storage
 
                 // Notify view
+                Notification.activityStop();
                 EventBus.getInstance().fireEvent(new NotificationSendedEvent());
             }
         };

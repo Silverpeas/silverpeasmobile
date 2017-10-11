@@ -42,6 +42,7 @@ public class StatusApp extends App {
                         }
 
                         public void onSuccess(String result) {
+                            super.onSuccess(result);
                             StatusDTO status = new StatusDTO();
                             status.setCreationDate(new Date());
                             status.setDescription(result);

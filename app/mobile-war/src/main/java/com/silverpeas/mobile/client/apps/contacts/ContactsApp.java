@@ -36,6 +36,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
         ServicesLocator.getServiceContact().hasContacts(new AsyncCallback<Boolean>() {
           @Override
           public void onFailure(final Throwable throwable) {
+            Notification.activityStop();
             ContactsPage page = new ContactsPage();
             page.setContactsVisible(true);
             setMainPage(page);
@@ -44,6 +45,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
 
           @Override
           public void onSuccess(final Boolean hasContacts) {
+            Notification.activityStop();
             ContactsPage page = new ContactsPage();
             page.setContactsVisible(hasContacts);
             setMainPage(page);
@@ -86,7 +88,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
 
             @Override
             public void execute() {
-                String key = "contact" + event.getFilter() + "_" + event.getPageSize() + "_" + event.getStartIndex();
+                String key = "contact" + event.getType() + "_" + event.getFilter() + "_" + event.getPageSize() + "_" + event.getStartIndex();
                 List<DetailUserDTO> result = LocalStorageHelper.load(key, List.class);
                 if (result == null) {
                     result = new ArrayList<DetailUserDTO>();
@@ -99,7 +101,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
     }
 
     private void storeInLocalStorage(final List<DetailUserDTO> result, final ContactsLoadEvent event) {
-        String key = "contact" + event.getFilter() + "_" + event.getPageSize() + "_" +
+        String key = "contact" + event.getType() + "_" + event.getFilter() + "_" + event.getPageSize() + "_" +
                 event.getStartIndex();
         LocalStorageHelper.store(key, List.class , result);
     }

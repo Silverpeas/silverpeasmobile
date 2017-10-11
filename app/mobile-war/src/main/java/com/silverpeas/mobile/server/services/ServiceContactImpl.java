@@ -217,6 +217,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       dto.setPhoneNumber(contactDetail.getPhone());
       dto.setFaxPhoneNumber(contactDetail.getFax());
       dto.setAvatar("");
+      dto.setStatus("");
       dto.setCellularPhoneNumber("");
       dto.setLanguage("");
 

@@ -97,6 +97,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       for (Map.Entry<String,String> role : data.getRoles().entrySet()) {
         roles.addItem(role.getValue(), role.getKey());
       }
+      roles.setVisible(true);
     } else {
       instances.clear();
       this.data = event.getData();

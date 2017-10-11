@@ -52,6 +52,7 @@ import com.silverpeas.mobile.client.apps.status.events.StatusEvents;
 
 import com.silverpeas.mobile.client.common.AuthentificationManager;
 import com.silverpeas.mobile.client.common.EventBus;
+import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
@@ -166,9 +167,12 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     PageHistory.getInstance().clear();
     ServicesLocator.getServiceNavigation().logout(new AsyncCallback<Void>() {
       @Override
-      public void onFailure(final Throwable throwable) {}
+      public void onFailure(final Throwable throwable) {
+        Notification.activityStop();
+      }
       @Override
       public void onSuccess(final Void aVoid) {
+        Notification.activityStop();
         ConnexionPage connexionPage = new ConnexionPage();
         RootPanel.get().clear();
         RootPanel.get().add(connexionPage);

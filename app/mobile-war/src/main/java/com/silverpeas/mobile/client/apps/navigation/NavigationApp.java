@@ -63,12 +63,12 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
 
         @Override
         public void attempt() {
-          Notification.activityStart();
           ServicesLocator.getServiceNavigation().getHomePageData(event.getRootSpaceId(), this);
         }
 
         @Override
         public void onSuccess(HomePageDTO result) {
+          Notification.activityStop();
           super.onSuccess(result);
           EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
           LocalStorageHelper.store(key, HomePageDTO.class, result);

@@ -164,10 +164,12 @@ public class SpMobil implements EntryPoint {
         ServicesLocator.getServiceNavigation().isUserSessionOpened(user, new AsyncCallback<Boolean>() {
           @Override
           public void onFailure(final Throwable throwable) {
+            Notification.activityStop();
           }
 
           @Override
           public void onSuccess(final Boolean open) {
+            Notification.activityStop();
             if (!open) {
               FormPanel form = new FormPanel();
               FlowPanel content = new FlowPanel();
@@ -193,6 +195,7 @@ public class SpMobil implements EntryPoint {
                     ServicesLocator.getServiceNavigation().isUserSessionOpened(user, new AsyncCallback<Boolean>() {
                       @Override
                       public void onFailure(final Throwable throwable) {
+                        Notification.activityStop();
                       }
 
                       @Override
@@ -236,7 +239,6 @@ public class SpMobil implements EntryPoint {
 
           @Override
           public void attempt() {
-            Notification.activityStart();
             ServicesLocator.getServiceNavigation().getHomePageData(null, this);
           }
 
@@ -290,10 +292,12 @@ public class SpMobil implements EntryPoint {
           ServicesLocator.getServiceNavigation().setTabletMode(new AsyncCallback<Boolean>() {
             @Override
             public void onFailure(final Throwable throwable) {
+              Notification.activityStop();
             }
 
             @Override
             public void onSuccess(final Boolean desktopMode) {
+              Notification.activityStop();
               if (desktopMode) {
                 String url = Window.Location.getHref();
                 url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());
@@ -305,10 +309,12 @@ public class SpMobil implements EntryPoint {
            ServicesLocator.getServiceConnection().setTabletMode(new AsyncCallback<Boolean>() {
               @Override
               public void onFailure(final Throwable throwable) {
+                Notification.activityStop();
               }
 
               @Override
               public void onSuccess(final Boolean desktopMode) {
+                Notification.activityStop();
                 if (desktopMode) {
                   String url = Window.Location.getHref();
                   url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());
