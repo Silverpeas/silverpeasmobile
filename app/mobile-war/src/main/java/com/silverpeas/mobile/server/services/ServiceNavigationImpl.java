@@ -207,7 +207,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         for (String appId : appsIds) {
           ComponentInstLight app = Administration.get().getComponentInstLight(appId);
           if (isSupportedApp(app) && app.getDomainFatherId().equals(rootSpaceId)) {
-            partialResults.add(populate(app));
+            if (!app.isHidden()) {
+              partialResults.add(populate(app));
+            }
           }
         }
         Collections.sort(partialResults);
