@@ -26,6 +26,8 @@ import org.silverpeas.core.util.logging.SilverLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +103,13 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
           }
         }
       }
-    } catch (Exception e) {
+      Collections.sort((List) listUsers, new Comparator<DetailUserDTO>() {
+        @Override
+        public int compare(final DetailUserDTO u1, final DetailUserDTO u2) {
+          return u1.getLastName().compareTo(u2.getLastName());
+        }
+      });
+    } catch (Throwable e) {
       SilverLogger.getLogger(SpMobileLogModule.getName())
           .error("ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
       throw new ContactException(e);
