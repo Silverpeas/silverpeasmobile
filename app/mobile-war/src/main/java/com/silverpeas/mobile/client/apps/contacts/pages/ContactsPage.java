@@ -51,9 +51,13 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   private static Scheduler.RepeatingCommand command = null;
 
   public void setContactsVisible(final boolean contactsVisible) {
-    allcontacts.setVisible(contactsVisible);
+    if (contactsVisible) {
+      allcontacts.removeStyleName("ui-last-child");
+    } else {
+      allcontacts.addStyleName("ui-last-child");
+    }
+    allextcontacts.setVisible(contactsVisible);
   }
-
 
   interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
   }
