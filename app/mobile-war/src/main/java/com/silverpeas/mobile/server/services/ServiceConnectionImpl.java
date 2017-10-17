@@ -9,9 +9,6 @@ import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import com.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import com.silverpeas.mobile.shared.exceptions.NavigationException;
 import com.silverpeas.mobile.shared.services.ServiceConnection;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -21,7 +18,6 @@ import org.silverpeas.core.security.authentication.AuthenticationServiceProvider
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +25,8 @@ import java.util.List;
  * Service de gestion des connexions.
  * @author svuillet
  */
-public class ServiceConnectionImpl extends AbstractAuthenticateService implements	ServiceConnection {
+public class ServiceConnectionImpl extends AbstractAuthenticateService
+    implements ServiceConnection {
 
   private static final long serialVersionUID = 1L;
 
@@ -37,7 +34,8 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
   private static boolean useGUImobileForTablets;
 
   static {
-    SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    SettingBundle mobileSettings =
+        ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
   }
 
@@ -45,28 +43,22 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
       throws AuthenticationException {
 
     // vérification
-    try {
-      //String key = getAuthenticationBm().authenticate(login, password, domainId);
 
-      AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(login)
-          .withAsPassword(password).withAsDomainId(domainId);
-      String key = AuthenticationServiceProvider.getService().authenticate(credential);
-      if (key == null || key.startsWith("Error_")) {
-        if (key.equals("Error_1")) {
-          throw new AuthenticationException(AuthenticationError.BadCredential);
-        } else if (key.equals("Error_2")) {
-          throw new AuthenticationException(AuthenticationError.Host);
-        } else if (key.equals("Error_5")) {
-          throw new AuthenticationException(
-              AuthenticationError.PwdNotAvailable);
-        }
-        else if (key.equals("Error_6")) {
-          throw new AuthenticationException(
-              AuthenticationError.LoginNotAvailable);
-        }
-        throw new AuthenticationException();
+
+    AuthenticationCredential credential =
+        AuthenticationCredential.newWithAsLogin(login).withAsPassword(password)
+            .withAsDomainId(domainId);
+    String key = AuthenticationServiceProvider.getService().authenticate(credential);
+    if (key == null || key.startsWith("Error_")) {
+      if (key.equals("Error_1")) {
+        throw new AuthenticationException(AuthenticationError.BadCredential);
+      } else if (key.equals("Error_2")) {
+        throw new AuthenticationException(AuthenticationError.Host);
+      } else if (key.equals("Error_5")) {
+        throw new AuthenticationException(AuthenticationError.PwdNotAvailable);
+      } else if (key.equals("Error_6")) {
+        throw new AuthenticationException(AuthenticationError.LoginNotAvailable);
       }
-    } catch (Exception e) {
       throw new AuthenticationException();
     }
 
@@ -90,7 +82,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
 
     try {
       userDTO.setStatus(new StatusDao().getStatus(Integer.parseInt(userId)).getDescription());
-    } catch(Exception e) {
+    } catch (Exception e) {
       userDTO.setStatus("");
     }
 
@@ -124,7 +116,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService implement
   }
 
   private DomainDTO populate(Domain domain) {
-    DomainDTO dto= new DomainDTO();
+    DomainDTO dto = new DomainDTO();
     dto.setName(domain.getName());
     dto.setId(domain.getId());
     return dto;

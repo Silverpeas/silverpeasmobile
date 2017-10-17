@@ -260,7 +260,8 @@ legend, .ui-input-text input, .ui-input-search input {
 	background-image:url(packPictos.png);
 	background-position:5px -577px ;
 	background-repeat:no-repeat;
-	width:92%
+	width:92%;
+  padding-left: 2em;
 }
 
 .ui-page-theme-a textarea.ui-body-inherit {

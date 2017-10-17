@@ -1,7 +1,6 @@
 package com.silverpeas.mobile.client.common;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.VideoElement;
 
 /**
  * @author: svu
@@ -33,5 +32,13 @@ public class Html5Utils {
   public static native boolean isVideoFullScreen() /*-{
       var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
       return fullscreenEnabled;
+  }-*/;
+
+  public static void vibrate() {
+    vibrate(300);
+  }
+
+  public static native void vibrate(int duration) /*-{
+    $wnd.navigator.vibrate(duration);
   }-*/;
 }

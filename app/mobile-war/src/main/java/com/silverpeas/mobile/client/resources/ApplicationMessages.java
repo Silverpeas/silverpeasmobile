@@ -84,6 +84,15 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Erreur système")
   String systemError();
 
+  @DefaultMessage("Login ou mot de passe incorrect")
+  String badLoginOrPassword();
+
+  @DefaultMessage("Mot de passe incorrect")
+  String badPassword();
+
+  @DefaultMessage("Problème d authentification")
+  String badAuthentification();
+
   @DefaultMessage("Espaces")
   String navigationTitle();
 

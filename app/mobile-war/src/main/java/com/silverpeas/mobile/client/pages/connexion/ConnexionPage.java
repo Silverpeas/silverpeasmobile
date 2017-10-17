@@ -122,9 +122,6 @@ public class ConnexionPage extends PageContent {
             @Override
             public void onFailure(Throwable t) {
               Notification.activityStop();
-              if (t instanceof AuthenticationException) {
-                Window.Location.reload();
-              }
               if (OfflineHelper.needToGoOffine(t)) {
                 Notification.alert(msg.needToBeOnline());
               } else {
@@ -144,6 +141,7 @@ public class ConnexionPage extends PageContent {
                   ServicesLocator.getServiceNavigation().initSession(new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(final Throwable throwable) {
+                      Window.alert("error1");
                       Notification.activityStop();
                     }
 
@@ -154,7 +152,8 @@ public class ConnexionPage extends PageContent {
                     }
                   });
                   if (submitCompleteEvent.getResults().toLowerCase().contains("error")) {
-                    Window.Location.reload();
+                    Window.alert("error2");
+                    //Window.Location.reload();
                   }
                 }
               });
