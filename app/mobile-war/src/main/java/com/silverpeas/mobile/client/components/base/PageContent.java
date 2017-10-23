@@ -33,12 +33,19 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.app.View;
+import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
+import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import com.silverpeas.mobile.client.common.resources.ResourcesManager;
 import com.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEvent;
@@ -50,6 +57,7 @@ public class PageContent extends Composite implements View, NativePreviewHandler
   protected boolean clicked = false;
   protected String pageTitle;
   private HandlerRegistration registration;
+  private SwipeRecognizer swipeRecognizer;
 
   public PageContent() {
     super();
@@ -135,4 +143,5 @@ public class PageContent extends Composite implements View, NativePreviewHandler
   public void receiveEvent(PageEvent event) {
     // for compatibility
   }
+
 }

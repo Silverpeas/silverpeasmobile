@@ -4,7 +4,7 @@
   <ui:style>
 
   </ui:style>
-  <g:HTMLPanel>
+  <g:HTMLPanel ui:field="container">
 
     <!-- Header -->
     <b:PageHeader ui:field="header"/>

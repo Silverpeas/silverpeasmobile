@@ -28,6 +28,7 @@ package com.silverpeas.mobile.client.pages.main;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.config.events.app.AbstractConfigAppEvent;
@@ -59,8 +60,6 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
 
   @UiField
   HomePageContent content;
-
-
 
   interface HomePageUiBinder extends UiBinder<Widget, HomePage> {
   }

@@ -1,6 +1,7 @@
 package com.silverpeas.mobile.client.apps.media.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,7 +33,8 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
 
   private static MediaNavigationPageUiBinder uiBinder = GWT.create(MediaNavigationPageUiBinder.class);
   @UiField UnorderedList list;
-  private AddMediaButton buttonImport= new AddMediaButton();
+  private AddMediaButton buttonImport = new AddMediaButton();
+  private AddMediaButton endline = new AddMediaButton();
   @UiField ActionsMenu actionsMenu;
 
   private String rootAlbumId, instanceId;
@@ -82,6 +84,8 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
           list.add(item);
         }
       }
+      endline.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+      list.add(endline);
 
       actionsMenu.addAction(favorite);
       if (root.getId() == null) {
