@@ -3,6 +3,7 @@ package com.silverpeas.mobile.shared.services;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.silverpeas.mobile.shared.StreamingList;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
@@ -20,8 +21,8 @@ public interface ServiceMediaAsync {
 
 	void getPreviewPicture(String instanceId, String pictureId, AsyncCallback<PhotoDTO> callback);
 
-  void getAlbumsAndPictures(String instanceId, String albumId,
-      final AsyncCallback<List<BaseDTO>> async);
+  void getAlbumsAndPictures(String instanceId, String albumId, int callNumber,
+      final AsyncCallback<StreamingList<BaseDTO>> async);
 
   void getSound(String instanceId, String soundId, final AsyncCallback<SoundDTO> async);
 

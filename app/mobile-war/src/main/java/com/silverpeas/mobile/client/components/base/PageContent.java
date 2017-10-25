@@ -97,6 +97,8 @@ public class PageContent extends Composite implements View, NativePreviewHandler
     PageHistory.getInstance().back();
   }
 
+  public void hide() {}
+
   public void clickGesture(Command call) {
     if (!clicked) {
       clicked = true;

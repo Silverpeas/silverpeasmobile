@@ -108,4 +108,6 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("pas encore ou plus visible")
   String notVisible();
 
+  @DefaultMessage("chargement...")
+  String loading();
 }

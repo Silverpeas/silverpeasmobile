@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.components.base.PageContent;
 
+import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -27,11 +28,13 @@ public class PageHistory implements ValueChangeHandler<String> {
   }
 
   public void gotoToFullScreen(String token) {
+    hideCallback();
     pages.push(null);
     browserGoto(""+token);
   }
 
   public void goTo(PageContent page) {
+    hideCallback();
     if (pages.isEmpty()) firstToken = "" + page.hashCode();
     pages.push(page);
     SpMobil.getMainPage().setContent(page);
@@ -39,7 +42,14 @@ public class PageHistory implements ValueChangeHandler<String> {
     //TODO : TODO : css3 transition
   }
 
+  private void hideCallback() {
+    PageContent currentPage = null;
+    try { currentPage = pages.peek(); } catch (EmptyStackException e) {}
+    if (currentPage != null) currentPage.hide();
+  }
+
   public PageContent back() {
+    hideCallback();
     PageContent page = pages.pop();
     page.stop();
     page = pages.peek();
@@ -59,6 +69,7 @@ public class PageHistory implements ValueChangeHandler<String> {
   }
 
   public void goBackToFirst() {
+    hideCallback();
     while(!pages.isEmpty()) {
       PageContent currentPage = pages.pop();
       if (pages.isEmpty()) {

@@ -6,19 +6,25 @@ import java.util.List;
 
 public class MediaItemsLoadedEvent extends AbstractMediaNavigationPagesEvent {
 
-	private List<BaseDTO> albumsAndMedias;
+  private List<BaseDTO> albumsAndMedias;
+  private String rootAlbumId;
 
-	public MediaItemsLoadedEvent(List<BaseDTO> albumsAndMedias) {
-		super();
-		this.albumsAndMedias = albumsAndMedias;
-	}
+  public MediaItemsLoadedEvent(List<BaseDTO> albumsAndMedias, String rootAlbumId) {
+    super();
+    this.albumsAndMedias = albumsAndMedias;
+    this.rootAlbumId = rootAlbumId;
+  }
 
-	@Override
-	protected void dispatch(MediaNavigationPagesEventHandler handler) {
-		handler.onLoadedAlbums(this);
-	}
+  public String getRootAlbumId() {
+    return rootAlbumId;
+  }
 
-	public List<BaseDTO> getAlbumsAndMedias() {
-		return albumsAndMedias;
-	}
+  @Override
+  protected void dispatch(MediaNavigationPagesEventHandler handler) {
+    handler.onLoadedAlbums(this);
+  }
+
+  public List<BaseDTO> getAlbumsAndMedias() {
+    return albumsAndMedias;
+  }
 }

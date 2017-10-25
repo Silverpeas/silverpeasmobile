@@ -79,8 +79,12 @@ public class ServicesLocator {
   }
 
   public static ServiceMediaAsync getServiceMedia() {
+    return getServiceMedia(true);
+  }
+
+  public static ServiceMediaAsync getServiceMedia(boolean guiWaiting) {
     ((ServiceDefTarget) serviceMedia).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceMedia);
+    changeServiceEntryPoint((ServiceDefTarget) serviceMedia, guiWaiting);
     return serviceMedia;
   }
 
@@ -121,7 +125,11 @@ public class ServicesLocator {
   }
 
   private static void changeServiceEntryPoint(ServiceDefTarget service) {
-    Notification.activityStart();
+    changeServiceEntryPoint(service, true);
+  }
+
+  private static void changeServiceEntryPoint(ServiceDefTarget service, boolean guiWaiting) {
+    if (guiWaiting) Notification.activityStart();
     String serviceEntryPoint = service.getServiceEntryPoint();
     if (!serviceEntryPoint.contains("services")) {
       serviceEntryPoint = serviceEntryPoint.replace("spmobile", "services/spmobile");

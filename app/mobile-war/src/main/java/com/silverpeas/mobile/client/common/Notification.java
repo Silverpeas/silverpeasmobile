@@ -2,6 +2,8 @@ package com.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
@@ -13,8 +15,19 @@ public class Notification {
 
   private static boolean activity = false;
 
+  static {
+    Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
+      public void onPreviewNativeEvent(Event.NativePreviewEvent pEvent) {
+        if (activity) {
+          pEvent.cancel();
+        }
+      }
+    });
+  }
+
   public static void activityStart() {
     activity = true;
+
     Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
       @Override
       public boolean execute() {

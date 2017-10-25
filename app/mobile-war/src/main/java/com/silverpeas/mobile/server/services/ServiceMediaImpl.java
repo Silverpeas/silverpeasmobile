@@ -9,6 +9,7 @@ import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
 import com.silverpeas.mobile.server.servlets.EasySSLProtocolSocketFactory;
+import com.silverpeas.mobile.shared.StreamingList;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import com.silverpeas.mobile.shared.dto.media.*;
@@ -261,13 +262,31 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     }
   }
 
-  public List<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId) throws
+  public StreamingList<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId, int callNumber) throws
                                                                                    MediaException, AuthenticationException {
     checkUserInSession();
-    ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();
-    list.addAll(getAlbums(instanceId, rootAlbumId));
-    list.addAll(getMedias(instanceId, rootAlbumId));
-    return list;
+    ArrayList<BaseDTO> list;
+    if (callNumber == 0) {
+      list = new ArrayList<BaseDTO>();
+      list.addAll(getAlbums(instanceId, rootAlbumId));
+      list.addAll(getMedias(instanceId, rootAlbumId));
+      getThreadLocalRequest().getSession().setAttribute(instanceId+rootAlbumId, list);
+    } else {
+      list = (ArrayList<BaseDTO>) getThreadLocalRequest().getSession().getAttribute(instanceId+rootAlbumId);
+    }
+    int callSize = 25;
+    int calledSize = 0;
+    boolean moreElements = true;
+    if (callNumber > 0) calledSize = callSize * callNumber; //TODO : extract constant
+
+    if ((calledSize + callSize) >= list.size()) {
+      moreElements = false;
+      callSize = list.size() - calledSize;
+      getThreadLocalRequest().getSession().removeAttribute(instanceId+rootAlbumId);
+    }
+    StreamingList<BaseDTO> streamingList = new StreamingList<BaseDTO>(list.subList(calledSize, calledSize + callSize), moreElements);
+
+    return streamingList;
   }
 
   /**

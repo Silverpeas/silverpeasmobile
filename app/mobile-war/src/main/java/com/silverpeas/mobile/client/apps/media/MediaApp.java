@@ -12,11 +12,14 @@ import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEv
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
+import com.silverpeas.mobile.client.apps.media.events.app.StopMediaLoadingEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.navigation.NoMoreMediaToLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
+import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MoreMediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
 import com.silverpeas.mobile.client.apps.media.pages.PhotoPage;
 import com.silverpeas.mobile.client.apps.media.pages.SoundPage;
@@ -37,10 +40,10 @@ import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
+import com.silverpeas.mobile.shared.StreamingList;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
 import com.silverpeas.mobile.shared.dto.ContentDTO;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
-import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.media.MediaDTO;
 import com.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import com.silverpeas.mobile.shared.dto.media.SoundDTO;
@@ -49,7 +52,6 @@ import com.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import com.silverpeas.mobile.shared.dto.navigation.Apps;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MediaApp extends App implements NavigationEventHandler, MediaAppEventHandler {
@@ -61,6 +63,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   // Model
   private boolean commentable, notifiable;
   private List<BaseDTO> currentAlbumsItems;
+  private boolean stopLoading = false;
 
   public MediaApp() {
     super();
@@ -176,6 +179,11 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   }
 
   @Override
+  public void stopLoadingAlbums(final StopMediaLoadingEvent stopMediaLoadingEvent) {
+    stopLoading = true;
+  }
+
+  @Override
   public void stop() {
     // never stop this app
   }
@@ -227,32 +235,63 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
       @Override
       public void execute() {
-        List<BaseDTO> result = LocalStorageHelper.load(key, List.class);
+        StreamingList<BaseDTO> result = LocalStorageHelper.load(key, StreamingList.class);
         if (result == null) {
-          result = new ArrayList<BaseDTO>();
+          result = new StreamingList<BaseDTO>();
         }
-        EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result));
+        EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result, event.getRootAlbumId()));
       }
     };
+    boolean moreElements = true;
+    int callNumber = 0;
 
+    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<StreamingList<BaseDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceMedia()
+            .getAlbumsAndPictures(event.getInstanceId(), event.getRootAlbumId(), callNumber, this);
+      }
 
-    AsyncCallbackOnlineOrOffline action =
-        new AsyncCallbackOnlineOrOffline<List<BaseDTO>>(offlineAction) {
-          @Override
-          public void attempt() {
-            ServicesLocator.getServiceMedia()
-                .getAlbumsAndPictures(event.getInstanceId(), event.getRootAlbumId(), this);
-          }
+      @Override
+      public void onSuccess(StreamingList<BaseDTO> result) {
+        super.onSuccess(result);
+        stopLoading = false;
+        LocalStorageHelper.store(key, List.class, result);
+        currentAlbumsItems = result;
+        EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result, event.getRootAlbumId()));
+        if (result.hasMoreElement() && !stopLoading) {
+          loadNextPartAlbums(event.getInstanceId(), event.getRootAlbumId(), 1, key);
+        } else {
+          EventBus.getInstance().fireEvent(new NoMoreMediaToLoadEvent());
+        }
+      }
 
-          @Override
-          public void onSuccess(List<BaseDTO> result) {
-            super.onSuccess(result);
-            LocalStorageHelper.store(key, List.class, result);
-            currentAlbumsItems = result;
-            EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result));
-          }
+    };
+    action.attempt();
+  }
 
-        };
+  private void loadNextPartAlbums(String instanceId, String rootAlbumId, final int callNumber, final String key) {
+    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<StreamingList<BaseDTO>>(null) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceMedia(false)
+            .getAlbumsAndPictures(instanceId, rootAlbumId, callNumber, this);
+      }
+
+      @Override
+      public void onSuccess(StreamingList<BaseDTO> result) {
+        super.onSuccess(result);
+        currentAlbumsItems.addAll(result);
+        LocalStorageHelper.store(key, List.class, currentAlbumsItems);
+        EventBus.getInstance().fireEvent(new MoreMediaItemsLoadedEvent(result, rootAlbumId));
+        if (result.hasMoreElement() && !stopLoading) {
+          loadNextPartAlbums(instanceId, rootAlbumId, callNumber+1, key);
+        } else {
+          EventBus.getInstance().fireEvent(new NoMoreMediaToLoadEvent());
+        }
+      }
+
+    };
     action.attempt();
   }
 
