@@ -32,6 +32,7 @@ import com.silverpeas.mobile.client.common.Notification;
 import com.silverpeas.mobile.client.common.ServicesLocator;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.event.ErrorEvent;
+import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
@@ -398,17 +399,8 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void loadMediaView(final MediaViewLoadEvent event) {
-    final String key = "picture_" + event.getMediaId();
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        PhotoDTO view = LocalStorageHelper.load(key, PhotoDTO.class);
-        EventBus.getInstance().fireEvent(new MediaViewLoadedEvent(view));
-      }
-    };
-
-    AsyncCallbackOnlineOrOffline action =
-        new AsyncCallbackOnlineOrOffline<PhotoDTO>(offlineAction) {
+    AsyncCallbackOnlineOnly action =
+        new AsyncCallbackOnlineOnly<PhotoDTO>() {
           @Override
           public void attempt() {
             ServicesLocator.getServiceMedia()
@@ -418,7 +410,6 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           @Override
           public void onSuccess(final PhotoDTO view) {
             super.onSuccess(view);
-            LocalStorageHelper.store(key, PhotoDTO.class, view);
             EventBus.getInstance().fireEvent(new MediaViewLoadedEvent(view));
           }
         };
