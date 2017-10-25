@@ -22,19 +22,23 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.media.events.app;
+package com.silverpeas.mobile.client.components.base.events.apps;
 
+public class StopLoadingDataEvent extends AbstractAppEvent {
 
-import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaNavigationPagesEventHandler;
+  private String appName;
 
-public class StopMediaLoadingEvent extends AbstractMediaAppEvent {
-
-  public StopMediaLoadingEvent() {
+  public StopLoadingDataEvent(String appName) {
     super();
+    this.appName = appName;
   }
 
   @Override
-  protected void dispatch(MediaAppEventHandler handler) {
-    handler.stopLoadingAlbums(this);
+  protected void dispatch(AppEventHandler handler) {
+    handler.stopLoadingDataEvent(this);
+  }
+
+  public String getAppName() {
+    return appName;
   }
 }

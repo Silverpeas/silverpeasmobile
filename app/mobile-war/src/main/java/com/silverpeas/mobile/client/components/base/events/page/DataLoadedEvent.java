@@ -22,18 +22,32 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.media.events.pages.navigation;
+package com.silverpeas.mobile.client.components.base.events.page;
 
-public class NoMoreMediaToLoadEvent extends AbstractMediaNavigationPagesEvent {
+import java.util.List;
 
+public class DataLoadedEvent extends AbstractPageEvent {
 
-  public NoMoreMediaToLoadEvent() {
+  private String locationId;
+
+  private List data;
+
+  public DataLoadedEvent(String locationId, List data) {
     super();
+    this.locationId = locationId;
+    this.data = data;
   }
 
   @Override
-  protected void dispatch(MediaNavigationPagesEventHandler handler) {
-    handler.noMoreMediaToLoad(this);
+  protected void dispatch(PageEventHandler handler) {
+    handler.loadedDataEvent(this);
   }
 
+  public String getLocationId() {
+    return locationId;
+  }
+
+  public List getData() {
+    return data;
+  }
 }

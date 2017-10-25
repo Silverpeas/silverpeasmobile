@@ -58,6 +58,9 @@ import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
 import com.silverpeas.mobile.client.common.resources.ResourcesManager;
 import com.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
+import com.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
+import com.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
+import com.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
 import com.silverpeas.mobile.client.pages.connexion.ConnexionPage;
@@ -102,6 +105,20 @@ public class NavigationMenu extends Composite implements PageEventHandler {
       StatusDTO newStatus = (StatusDTO) event.getData();
       status.setInnerHTML(newStatus.getDescription());
     }
+  }
+
+  @Override
+  public void finishLoadingData(final LoadingDataFinishEvent loadingDataFinishEvent) {
+  }
+
+  @Override
+  public void loadedDataEvent(final DataLoadedEvent dataLoadedEvent) {
+
+  }
+
+  @Override
+  public void loadedMoreDataEvent(final MoreDataLoadedEvent moreDataLoadedEvent) {
+
   }
 
   public void toogleMenu() {

@@ -35,23 +35,22 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.app.App;
 import com.silverpeas.mobile.client.common.app.View;
-import com.silverpeas.mobile.client.common.mobil.MobilUtils;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
-import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
-import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
-import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import com.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import com.silverpeas.mobile.client.common.resources.ResourcesManager;
+import com.silverpeas.mobile.client.components.base.events.apps.StopLoadingDataEvent;
 import com.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
+import com.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
+import com.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
+import com.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import com.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
 
-public class PageContent extends Composite implements View, NativePreviewHandler, PageEventHandler {
+public abstract class PageContent extends Composite implements View, NativePreviewHandler, PageEventHandler {
 
   private App app;
   protected boolean clicked = false;
@@ -97,7 +96,11 @@ public class PageContent extends Composite implements View, NativePreviewHandler
     PageHistory.getInstance().back();
   }
 
-  public void hide() {}
+  public void hide() {
+    String appName = "";
+    if (getApp() != null) appName = getApp().getAppName();
+    EventBus.getInstance().fireEvent(new StopLoadingDataEvent(appName));
+  }
 
   public void clickGesture(Command call) {
     if (!clicked) {
@@ -146,4 +149,18 @@ public class PageContent extends Composite implements View, NativePreviewHandler
     // for compatibility
   }
 
+  @Override
+  public void finishLoadingData(final LoadingDataFinishEvent loadingDataFinishEvent) {
+    // to be override if necessary
+  }
+
+  @Override
+  public void loadedDataEvent(final DataLoadedEvent dataLoadedEvent) {
+    // to be override if necessary
+  }
+
+  @Override
+  public void loadedMoreDataEvent(final MoreDataLoadedEvent moreDataLoadedEvent) {
+    // to be override if necessary
+  }
 }

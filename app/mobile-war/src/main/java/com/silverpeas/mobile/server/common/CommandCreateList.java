@@ -22,34 +22,14 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.media.events.pages.navigation;
-
-import com.silverpeas.mobile.shared.dto.BaseDTO;
+package com.silverpeas.mobile.server.common;
 
 import java.util.List;
 
-public class MoreMediaItemsLoadedEvent extends AbstractMediaNavigationPagesEvent {
+/**
+ * @author: svu
+ */
+public interface CommandCreateList {
 
-  private List<BaseDTO> albumsAndMedias;
-  private String rootAlbumId;
-
-  public String getRootAlbumId() {
-    return rootAlbumId;
-  }
-
-  public MoreMediaItemsLoadedEvent(List<BaseDTO> albumsAndMedias, String rootAlbumId) {
-    super();
-
-    this.albumsAndMedias = albumsAndMedias;
-    this.rootAlbumId = rootAlbumId;
-  }
-
-  @Override
-  protected void dispatch(MediaNavigationPagesEventHandler handler) {
-    handler.onMoreLoadedAlbums(this);
-  }
-
-  public List<BaseDTO> getAlbumsAndMedias() {
-    return albumsAndMedias;
-  }
+  public List execute() throws Exception;
 }

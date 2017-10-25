@@ -9,5 +9,4 @@ public interface MediaAppEventHandler extends EventHandler {
   void nextMediaView(MediaViewGetNextEvent mediaViewNextEvent);
   void prevMediaView(MediaViewGetPreviousEvent mediaViePreviousEvent);
   void loadMediaShow(MediaViewShowEvent mediaViewShowEvent);
-  void stopLoadingAlbums(StopMediaLoadingEvent stopMediaLoadingEvent);
 }

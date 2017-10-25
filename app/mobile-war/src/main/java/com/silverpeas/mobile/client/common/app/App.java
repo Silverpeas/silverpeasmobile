@@ -24,6 +24,7 @@
 
 package com.silverpeas.mobile.client.common.app;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.navigation.PageHistory;
@@ -31,14 +32,22 @@ import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.components.base.events.apps.AbstractAppEvent;
 import com.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import com.silverpeas.mobile.client.components.base.events.apps.AppEventHandler;
+import com.silverpeas.mobile.client.components.base.events.apps.StopLoadingDataEvent;
 import com.silverpeas.mobile.shared.dto.ContentDTO;
 
 public abstract class App implements AppEventHandler {
 
   private PageContent mainPage;
   protected SimplePanel container;
+  private boolean stopLoading = false;
+  private String appName = "";
 
   public App() {
+    EventBus.getInstance().addHandler(AbstractAppEvent.TYPE, this);
+  }
+
+  public App(String appName) {
+    this.appName = appName;
     EventBus.getInstance().addHandler(AbstractAppEvent.TYPE, this);
   }
 
@@ -46,9 +55,7 @@ public abstract class App implements AppEventHandler {
     PageHistory.getInstance().goTo(mainPage);
   }
 
-  public void startWithContent(ContentDTO content) {
-
-  }
+  public void startWithContent(ContentDTO content) {}
 
   public void stop() {
     EventBus.getInstance().removeHandler(AbstractAppEvent.TYPE, this);
@@ -61,7 +68,25 @@ public abstract class App implements AppEventHandler {
   protected void setMainPage(PageContent mainPage) {
     this.mainPage = mainPage;
     this.mainPage.setApp(this);
+  }
 
+  public String getAppName() {
+    return appName;
+  }
+
+  public void setStopLoading(final boolean stopLoading) {
+    this.stopLoading = stopLoading;
+  }
+
+  public boolean isStopLoading() {
+    return stopLoading;
+  }
+
+  @Override
+  public void stopLoadingDataEvent(final StopLoadingDataEvent stopLoadingDataEvent) {
+    if(getAppName().equals(stopLoadingDataEvent.getAppName())) {
+      stopLoading = true;
+    }
   }
 
   @Override

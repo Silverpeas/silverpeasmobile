@@ -22,29 +22,16 @@
  *
  */
 
-package com.silverpeas.mobile.client.apps.media.pages.widgets;
+package com.silverpeas.mobile.client.components.base;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.silverpeas.mobile.client.SpMobil;
-import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
-import com.silverpeas.mobile.client.apps.media.resources.MediaMessages;
-import com.silverpeas.mobile.client.common.EventBus;
-import com.silverpeas.mobile.client.common.Notification;
-import com.silverpeas.mobile.client.common.navigation.UrlUtils;
-import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 
 

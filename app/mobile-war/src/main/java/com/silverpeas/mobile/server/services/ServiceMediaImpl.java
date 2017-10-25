@@ -5,6 +5,8 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gwt.user.client.Command;
+import com.silverpeas.mobile.server.common.CommandCreateList;
 import com.silverpeas.mobile.server.common.LocalDiskFileItem;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.helpers.RotationSupport;
@@ -265,27 +267,26 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
   public StreamingList<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId, int callNumber) throws
                                                                                    MediaException, AuthenticationException {
     checkUserInSession();
-    ArrayList<BaseDTO> list;
-    if (callNumber == 0) {
-      list = new ArrayList<BaseDTO>();
-      list.addAll(getAlbums(instanceId, rootAlbumId));
-      list.addAll(getMedias(instanceId, rootAlbumId));
-      getThreadLocalRequest().getSession().setAttribute(instanceId+rootAlbumId, list);
-    } else {
-      list = (ArrayList<BaseDTO>) getThreadLocalRequest().getSession().getAttribute(instanceId+rootAlbumId);
-    }
     int callSize = 25;
-    int calledSize = 0;
-    boolean moreElements = true;
-    if (callNumber > 0) calledSize = callSize * callNumber; //TODO : extract constant
-
-    if ((calledSize + callSize) >= list.size()) {
-      moreElements = false;
-      callSize = list.size() - calledSize;
-      getThreadLocalRequest().getSession().removeAttribute(instanceId+rootAlbumId);
+    String cacheKey = instanceId+rootAlbumId;
+    CommandCreateList command = new CommandCreateList() {
+      @Override
+      public List execute() throws Exception {
+        List list = new ArrayList<BaseDTO>();
+        list.addAll(getAlbums(instanceId, rootAlbumId));
+        list.addAll(getMedias(instanceId, rootAlbumId));
+        return list;
+      }
+    };
+    StreamingList streamingList = null;
+    try {
+      streamingList = createStreamingList(command, callNumber, callSize, cacheKey);
+    } catch (AuthenticationException e) {
+      throw e;
+    } catch (Exception e) {
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getAlbumsAndPictures", "root.EX_NO_MESSAGE", e);
+      throw new MediaException(e);
     }
-    StreamingList<BaseDTO> streamingList = new StreamingList<BaseDTO>(list.subList(calledSize, calledSize + callSize), moreElements);
-
     return streamingList;
   }
 

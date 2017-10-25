@@ -12,14 +12,10 @@ import com.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEv
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import com.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
-import com.silverpeas.mobile.client.apps.media.events.app.StopMediaLoadingEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import com.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.navigation.NoMoreMediaToLoadEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemsLoadedEvent;
-import com.silverpeas.mobile.client.apps.media.events.pages.navigation.MoreMediaItemsLoadedEvent;
 import com.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
 import com.silverpeas.mobile.client.apps.media.pages.PhotoPage;
 import com.silverpeas.mobile.client.apps.media.pages.SoundPage;
@@ -39,6 +35,9 @@ import com.silverpeas.mobile.client.common.event.ErrorEvent;
 import com.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import com.silverpeas.mobile.client.common.network.OfflineHelper;
 import com.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import com.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
+import com.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
+import com.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.StreamingList;
 import com.silverpeas.mobile.shared.dto.BaseDTO;
@@ -58,15 +57,13 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   private MediaMessages msg;
   private ApplicationMessages globalMsg;
-  //private NavigationApp navApp = new NavigationApp();
 
   // Model
   private boolean commentable, notifiable;
   private List<BaseDTO> currentAlbumsItems;
-  private boolean stopLoading = false;
 
   public MediaApp() {
-    super();
+    super(Apps.gallery.name());
     msg = GWT.create(MediaMessages.class);
     globalMsg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaAppEvent.TYPE, this);
@@ -75,13 +72,6 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void start() {
-    //navApp.setTypeApp(Apps.gallery.name());
-    //navApp.setTitle(msg.title());
-    //navApp.start();
-
-    // apps main is navigation apps main page
-    //setMainPage(navApp.getMainPage());
-
     // no "super.start(lauchingPage);" this apps is used in another apps
   }
 
@@ -179,11 +169,6 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   }
 
   @Override
-  public void stopLoadingAlbums(final StopMediaLoadingEvent stopMediaLoadingEvent) {
-    stopLoading = true;
-  }
-
-  @Override
   public void stop() {
     // never stop this app
   }
@@ -194,6 +179,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       this.commentable = event.getInstance().isCommentable();
       this.notifiable = event.getInstance().isNotifiable();
       MediaNavigationPage page = new MediaNavigationPage();
+      page.setApp(this);
       page.setPageTitle(event.getInstance().getLabel());
       page.init(event.getInstance().getId(), null, event.getInstance().getRights());
       page.show();
@@ -221,6 +207,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
             public void onSuccess(final ApplicationInstanceDTO applicationInstanceDTO) {
               Notification.activityStop();
               MediaNavigationPage page = new MediaNavigationPage();
+              page.setApp(MediaApp.this);
               page.init(event.getContent().getInstanceId(), event.getContent().getId(), applicationInstanceDTO.getRights());
               page.show();
             }
@@ -239,7 +226,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         if (result == null) {
           result = new StreamingList<BaseDTO>();
         }
-        EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result, event.getRootAlbumId()));
+        EventBus.getInstance().fireEvent(new DataLoadedEvent(event.getRootAlbumId(), result));
       }
     };
     boolean moreElements = true;
@@ -255,17 +242,16 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       @Override
       public void onSuccess(StreamingList<BaseDTO> result) {
         super.onSuccess(result);
-        stopLoading = false;
+        setStopLoading(false);
         LocalStorageHelper.store(key, List.class, result);
         currentAlbumsItems = result;
-        EventBus.getInstance().fireEvent(new MediaItemsLoadedEvent(result, event.getRootAlbumId()));
-        if (result.hasMoreElement() && !stopLoading) {
+        EventBus.getInstance().fireEvent(new DataLoadedEvent(event.getRootAlbumId(), result));
+        if (result.hasMoreElement() && !isStopLoading()) {
           loadNextPartAlbums(event.getInstanceId(), event.getRootAlbumId(), 1, key);
         } else {
-          EventBus.getInstance().fireEvent(new NoMoreMediaToLoadEvent());
+          EventBus.getInstance().fireEvent(new LoadingDataFinishEvent());
         }
       }
-
     };
     action.attempt();
   }
@@ -283,11 +269,11 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         super.onSuccess(result);
         currentAlbumsItems.addAll(result);
         LocalStorageHelper.store(key, List.class, currentAlbumsItems);
-        EventBus.getInstance().fireEvent(new MoreMediaItemsLoadedEvent(result, rootAlbumId));
-        if (result.hasMoreElement() && !stopLoading) {
+        EventBus.getInstance().fireEvent(new MoreDataLoadedEvent(rootAlbumId, result));
+        if (result.hasMoreElement() && !isStopLoading()) {
           loadNextPartAlbums(instanceId, rootAlbumId, callNumber+1, key);
         } else {
-          EventBus.getInstance().fireEvent(new NoMoreMediaToLoadEvent());
+          EventBus.getInstance().fireEvent(new LoadingDataFinishEvent());
         }
       }
 
