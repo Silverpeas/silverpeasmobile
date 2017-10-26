@@ -217,17 +217,6 @@
     <url-pattern>/services/spmobile/SoundAction</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>VideoServlet</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.servlets.VideoServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>VideoServlet</servlet-name>
-    <url-pattern>/services/spmobile/VideoAction</url-pattern>
-  </servlet-mapping>
-
-
   <listener>
     <listener-class>com.silverpeas.mobile.server.servlets.SessionManager</listener-class>
   </listener>

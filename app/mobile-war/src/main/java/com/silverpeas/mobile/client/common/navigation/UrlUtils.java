@@ -13,6 +13,12 @@ public class UrlUtils {
     return url;
   }
 
+  public static String getSilverpeasServicesLocation() {
+    String url = Window.Location.getProtocol() + "//" + Window.Location.getHost();
+    url += "/silverpeas/services/";
+    return url;
+  }
+
   public static String getUploadLocation() {
     String url = Window.Location.getProtocol() + "//" + Window.Location.getHost();
     url += "/silverpeas/services/spmobile/";

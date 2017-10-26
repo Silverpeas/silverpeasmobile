@@ -90,9 +90,8 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
     if (isVisible()) {
       this.video = (VideoDTO) event.getPreview();
-      String url = UrlUtils.getServicesLocation();
-      url += "VideoAction?id=" + video.getId();
-      url += "&t=" + new Date().getTime();
+      String url = UrlUtils.getSilverpeasServicesLocation();
+      url += "gallery/" + video.getInstance() + "/videos/" + video.getId() + "/content";
       player.setSrc(url);
       player.setAutoplay(false);
       player.setControls(true);
@@ -153,9 +152,8 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
       if (!clicked) {
         clicked = true;
         try {
-          String url = UrlUtils.getServicesLocation();
-          url += "VideoAction";
-          url = url + "?action=download&id=" + video.getId();
+          String url = UrlUtils.getSilverpeasServicesLocation();
+          url += "gallery/" + video.getInstance() + "/videos/" + video.getId() + "/content";
           download.setHref(url);
           download.setTarget("_self");
           download.getElement().setAttribute("download", video.getTitle());
