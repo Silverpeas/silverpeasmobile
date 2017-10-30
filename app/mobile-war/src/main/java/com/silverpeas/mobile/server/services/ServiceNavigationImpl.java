@@ -23,6 +23,7 @@ import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
+import org.silverpeas.core.admin.component.model.WAComponent;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service de gestion de la navigation dans les espaces et apps.
@@ -170,8 +172,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   private boolean isSupportedApp(ComponentInstLight app) {
-    return EnumUtils.isValidEnum(Apps.class, app.getName()) || app.isWorkflow();
-    //return EnumUtils.isValidEnum(Apps.class, app.getName());
+    if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
+      return true;
+    }
+    return isWorkflowApp(app);  }
+
+  // still app.isWorkflow(); not working
+  private boolean isWorkflowApp(ComponentInstLight app) {
+    Optional<WAComponent> component = WAComponent.getByName(app.getName());
+    return (component.isPresent() && component.get().getRouter().equalsIgnoreCase("RprocessManager"));
   }
 
   //TODO : remove appType
@@ -278,7 +287,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     dto.setLabel(app.getLabel());
     dto.setType(app.getName());
     dto.setOrderNum(app.getOrderNum());
-    dto.setWorkflow(app.isWorkflow());
+    dto.setWorkflow(isWorkflowApp(app));
 
     RightDTO rights = new RightDTO();
     String[] roles = getUserRoles(app.getId(), getUserInSession().getId());
