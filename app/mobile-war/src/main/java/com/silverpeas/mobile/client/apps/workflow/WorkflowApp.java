@@ -28,7 +28,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.silverpeas.mobile.client.SpMobil;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import com.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -41,6 +40,7 @@ import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanc
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFieldEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowProcessFormEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowRoleChangeEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import com.silverpeas.mobile.client.apps.workflow.pages.WorkflowActionFormPage;
@@ -118,7 +118,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       public void onSuccess(WorkflowInstancesDTO dto) {
         super.onSuccess(dto);
         WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
-        currentRole = dto.getRoles().entrySet().iterator().next().getKey();
+        //currentRole = dto.getRoles().entrySet().iterator().next().getKey();
         event.setData(dto);
         event.setInstanceId(instance.getId());
         EventBus.getInstance().fireEvent(event);
@@ -129,7 +129,6 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstance(final WorkflowLoadInstanceEvent event) {
-    currentRole = event.getRole();
     AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<WorkflowInstancePresentationFormDTO>() {
       @Override
       public void attempt() {
@@ -186,7 +185,6 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void processForm(final WorkflowProcessFormEvent event) {
-    //TODO
     JavaScriptObject formData = createFormData();
     for (WorkflowFieldDTO f : event.getData()) {
       if (f.getType().equalsIgnoreCase("file")) {
@@ -200,6 +198,11 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
     String url = UrlUtils.getUploadLocation();
     url +=  "FormAction";
     processAction(this, url, formData, SpMobil.getUserToken(), instance.getId(), currentAction, currentRole, currentState, event.getProcessId());
+  }
+
+  @Override
+  public void roleChanged(final WorkflowRoleChangeEvent workflowRoleChangeEvent) {
+    this.currentRole = workflowRoleChangeEvent.getRole();
   }
 
   public void actionProcessed() {
@@ -229,7 +232,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
     return fd;
   }-*/;
 
-  private static native void processAction(WorkflowApp app, String url, JavaScriptObject fd, String token, String instanceId, String currentAction, String currentRole, String currentState, String processId) /*-{
+  private static native void processAction(WorkflowApp app, String url, JavaScriptObject fd, String token, String instanceId, String currentAction, final String currentRole, String currentState, String processId) /*-{
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, false);
     xhr.setRequestHeader("X-Silverpeas-Session", token);

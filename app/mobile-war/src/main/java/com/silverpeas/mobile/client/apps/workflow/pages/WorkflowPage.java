@@ -31,13 +31,17 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import com.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
+import com.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanceEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstancesEvent;
+import com.silverpeas.mobile.client.apps.workflow.events.app.WorkflowRoleChangeEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowPagesEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
 import com.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
@@ -98,6 +102,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
         roles.addItem(role.getValue(), role.getKey());
       }
       roles.setVisible(true);
+      EventBus.getInstance().fireEvent(new WorkflowRoleChangeEvent(roles.getSelectedValue()));
     } else {
       instances.clear();
       this.data = event.getData();
@@ -155,6 +160,11 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
     msg = GWT.create(WorkflowMessages.class);
     EventBus.getInstance().addHandler(AbstractWorkflowPagesEvent.TYPE, this);
     roles.addChangeHandler(this);
+  }
+
+  @UiHandler("roles")
+  void changeTask(ChangeEvent event)  {
+    EventBus.getInstance().fireEvent(new WorkflowRoleChangeEvent(roles.getSelectedValue()));
   }
 
   @Override

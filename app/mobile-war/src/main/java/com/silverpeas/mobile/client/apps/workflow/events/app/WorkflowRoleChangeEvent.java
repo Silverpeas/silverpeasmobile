@@ -24,14 +24,30 @@
 
 package com.silverpeas.mobile.client.apps.workflow.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface WorkflowAppEventHandler extends EventHandler {
-  void loadInstances(WorkflowLoadInstancesEvent event);
-  void loadInstance(WorkflowLoadInstanceEvent event);
-  void loadActionForm(WorkflowLoadActionFormEvent event);
-  void loadUserField(WorkflowLoadUserFieldEvent event);
-  void processForm(WorkflowProcessFormEvent event);
+import com.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 
-  void roleChanged(WorkflowRoleChangeEvent workflowRoleChangeEvent);
+import java.util.List;
+
+public class WorkflowRoleChangeEvent extends AbstractWorkflowAppEvent {
+
+  private String role;
+
+  public WorkflowRoleChangeEvent(String role) {
+    super();
+    this.role = role;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+
+
+  @Override
+  protected void dispatch(WorkflowAppEventHandler handler) {
+    handler.roleChanged(this);
+  }
+
+
 }
