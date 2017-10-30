@@ -151,10 +151,7 @@ public class ConnexionPage extends PageContent {
                       SpMobil.displayMainPage(user);
                     }
                   });
-                  if (submitCompleteEvent.getResults().toLowerCase().contains("error")) {
-                    Window.alert("error2");
-                    //Window.Location.reload();
-                  }
+                  GWT.log(submitCompleteEvent.getResults()); // for debug
                 }
               });
               form.submit();
