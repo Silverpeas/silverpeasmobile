@@ -175,12 +175,17 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
       return true;
     }
-    return isWorkflowApp(app);  }
+    return isWorkflowApp(app);
+  }
 
   // still app.isWorkflow(); not working
   private boolean isWorkflowApp(ComponentInstLight app) {
-    Optional<WAComponent> component = WAComponent.getByName(app.getName());
-    return (component.isPresent() && component.get().getRouter().equalsIgnoreCase("RprocessManager"));
+    try {
+      Optional<WAComponent> component = WAComponent.getByName(app.getName());
+      return (component.isPresent() && component.get().getRouter().equalsIgnoreCase("RprocessManager"));
+    } catch(Throwable t) {
+      return false;
+    }
   }
 
   //TODO : remove appType
