@@ -20,6 +20,7 @@ import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsPagesEventHandler;
+import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsStopPagesdEvent;
 import com.silverpeas.mobile.client.apps.contacts.pages.widgets.ContactItem;
 import com.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages;
 import com.silverpeas.mobile.client.common.EventBus;
@@ -181,6 +182,11 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       }
     }
     callingNexData = false;
+  }
+
+  @Override
+  public void onStopPage(final ContactsStopPagesdEvent contactsStopPagesdEvent) {
+    this.stop();
   }
 
   @Override

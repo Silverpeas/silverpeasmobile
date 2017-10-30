@@ -8,6 +8,7 @@ import com.silverpeas.mobile.client.apps.contacts.events.app.AbstractContactsApp
 import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsAppEventHandler;
 import com.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
 import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
+import com.silverpeas.mobile.client.apps.contacts.events.pages.ContactsStopPagesdEvent;
 import com.silverpeas.mobile.client.apps.contacts.pages.ContactsPage;
 import com.silverpeas.mobile.client.common.EventBus;
 import com.silverpeas.mobile.client.common.Notification;
@@ -32,6 +33,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
 
     public void start(){
         EventBus.getInstance().addHandler(AbstractContactsAppEvent.TYPE, this);
+        EventBus.getInstance().fireEvent(new ContactsStopPagesdEvent());
 
         ServicesLocator.getServiceContact().hasContacts(new AsyncCallback<Boolean>() {
           @Override
