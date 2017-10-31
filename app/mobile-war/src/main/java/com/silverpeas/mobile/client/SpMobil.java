@@ -227,6 +227,32 @@ public class SpMobil implements EntryPoint {
                   }
                 });
                 form.submit();
+
+                // not work on timeout session
+                /*AuthentificationManager.getInstance().authenticateOnSilverpeas(login, password,
+                    domainId, new Command() {
+                      @Override
+                      public void execute() {
+                        ServicesLocator.getServiceNavigation()
+                            .isUserSessionOpened(user, new AsyncCallback<Boolean>() {
+
+                              @Override
+                              public void onFailure(final Throwable throwable) {
+                                Notification.activityStop();
+                              }
+
+                              @Override
+                              public void onSuccess(final Boolean aBoolean) {
+                                Notification.activityStop();
+                                if (open) {
+                                  displayMainPage(user);
+                                } else {
+                                  displayLoginPage();
+                                }
+                              }
+                            });
+                      }
+                    });*/
               } else {
                 displayMainPage(user);
               }

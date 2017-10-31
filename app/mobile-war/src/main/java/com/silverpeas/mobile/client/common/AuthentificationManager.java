@@ -1,5 +1,13 @@
 package com.silverpeas.mobile.client.common;
 
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import com.silverpeas.mobile.client.SpMobil;
@@ -75,5 +83,42 @@ public class AuthentificationManager {
 
   public void clearUserStorage() {
     LocalStorageHelper.remove(USER_CONNECTED_KEY);
+  }
+
+  public void authenticateOnSilverpeas(String login, String password, String domainId, Command commandOnSuccess) {
+    StringBuilder data = new StringBuilder();
+    data.append("Login=" + login + "&");
+    data.append("Password=" + password + "&");
+    data.append("DomainId=" + domainId);
+    RequestBuilder
+        rb = new RequestBuilder(RequestBuilder.POST, "/silverpeas/AuthenticationServlet");
+    rb.setHeader("Content-type", "application/x-www-form-urlencoded");
+    try {
+      rb.sendRequest(data.toString(), new RequestCallback() {
+        @Override
+        public void onResponseReceived(final Request request, final Response response) {
+          ServicesLocator.getServiceNavigation().initSession(new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(final Throwable throwable) {
+              Window.alert("error1");
+              Notification.activityStop();
+            }
+
+            @Override
+            public void onSuccess(final Boolean init) {
+              Notification.activityStop();
+              commandOnSuccess.execute();
+            }
+          });
+        }
+
+        @Override
+        public void onError(final Request request, final Throwable t) {
+          EventBus.getInstance().fireEvent(new ErrorEvent(t));
+        }
+      });
+    } catch (RequestException e) {
+      EventBus.getInstance().fireEvent(new ErrorEvent(e));
+    }
   }
 }

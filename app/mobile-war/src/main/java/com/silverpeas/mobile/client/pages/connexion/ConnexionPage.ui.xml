@@ -6,7 +6,6 @@
            type='com.silverpeas.mobile.client.resources.ApplicationMessages' />
 
   <g:HTMLPanel>
-
     <div id="header">
       <h1 id="page-login-title"><ui:safehtml from="{msg.loginTitle}"/></h1>
     </div>

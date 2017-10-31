@@ -9,7 +9,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -31,7 +30,6 @@ import com.silverpeas.mobile.client.components.base.PageContent;
 import com.silverpeas.mobile.client.resources.ApplicationMessages;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.DomainDTO;
-import com.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,85 +38,91 @@ import java.util.List;
 
 public class ConnexionPage extends PageContent {
 
-    private static ConnexionPageUiBinder uiBinder = GWT.create(ConnexionPageUiBinder.class);
+  private static ConnexionPageUiBinder uiBinder = GWT.create(ConnexionPageUiBinder.class);
 
-    @UiField(provided = true) protected ApplicationMessages msg = null;
-    @UiField Anchor go;
-    @UiField TextBox loginField;
-    @UiField PasswordTextBox passwordField;
-    @UiField ListBox domains;
-    @UiField FormPanel form;
+  @UiField(provided = true)
+  protected ApplicationMessages msg = null;
+  @UiField
+  Anchor go;
+  @UiField
+  TextBox loginField;
+  @UiField
+  PasswordTextBox passwordField;
+  @UiField
+  ListBox domains;
+  @UiField
+  FormPanel form;
 
-    interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {
+  interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {}
+
+  public ConnexionPage() {
+    msg = GWT.create(ApplicationMessages.class);
+    loadDomains();
+    initWidget(uiBinder.createAndBindUi(this));
+    loginField.getElement().setId("Login");
+    loginField.getElement().setAttribute("autocapitalize", "off");
+    loginField.getElement().setAttribute("autocorrect", "off");
+    loginField.getElement().setAttribute("spellcheck", "off");
+
+    passwordField.getElement().setId("Password");
+    passwordField.getElement().setAttribute("autocapitalize", "off");
+    passwordField.getElement().setAttribute("autocorrect", "off");
+    passwordField.getElement().setAttribute("spellcheck", "off");
+    domains.getElement().setId("DomainId");
+    form.getElement().setId("formLogin");
+    form.setAction("/silverpeas/AuthenticationServlet");
+    form.setMethod("POST");
+    form.getElement().setAttribute("target", "auth");
+
+    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+      @Override
+      public void execute() {
+        DOM.getElementById("page-login-title")
+            .setInnerHTML(ResourcesManager.getLabel("login.title"));
+      }
+    });
+  }
+
+  /**
+   * Gestion du clique sur le bouton go.
+   * @param e
+   */
+  @UiHandler("go")
+  void connexion(ClickEvent e) {
+    loginField.setFocus(false);
+    passwordField.setFocus(false);
+    domains.setFocus(false);
+
+    String login = loginField.getText();
+    String password = passwordField.getText();
+    login(login, password, domains.getValue(domains.getSelectedIndex()));
+
+
+  }
+
+  /**
+   * Transition de la demande de connexion au serveur.
+   * @param login
+   * @param password
+   * @param domainId
+   */
+  private void login(final String login, final String password, final String domainId) {
+    Notification.activityStart();
+    if (login.isEmpty()) {
+      loginField.getElement().getStyle().setBackgroundColor("#ec9c01");
+    } else {
+      loginField.getElement().getStyle().clearBackgroundColor();
+    }
+    if (password.isEmpty()) {
+      passwordField.getElement().getStyle().setBackgroundColor("#ec9c01");
+    } else {
+      passwordField.getElement().getStyle().clearBackgroundColor();
     }
 
-    public ConnexionPage() {
-        msg = GWT.create(ApplicationMessages.class);
-        loadDomains();
-        initWidget(uiBinder.createAndBindUi(this));
-        loginField.getElement().setId("Login");
-        loginField.getElement().setAttribute("autocapitalize", "off");
-        loginField.getElement().setAttribute("autocorrect", "off");
-        loginField.getElement().setAttribute("spellcheck", "off");
+    if (!login.isEmpty() && !password.isEmpty()) {
 
-        passwordField.getElement().setId("Password");
-        passwordField.getElement().setAttribute("autocapitalize", "off");
-        passwordField.getElement().setAttribute("autocorrect", "off");
-        passwordField.getElement().setAttribute("spellcheck", "off");
-        domains.getElement().setId("DomainId");
-        form.getElement().setId("formLogin");
-        form.setAction("/silverpeas/AuthenticationServlet");
-        form.setMethod("POST");
-
-
-      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-        @Override
-        public void execute() {
-          DOM.getElementById("page-login-title").setInnerHTML(ResourcesManager.getLabel("login.title"));
-        }
-      });
-    }
-
-    /**
-     * Gestion du clique sur le bouton go.
-     * @param e
-     */
-    @UiHandler("go")
-    void connexion(ClickEvent e) {
-        loginField.setFocus(false);
-        passwordField.setFocus(false);
-        domains.setFocus(false);
-
-        String login = loginField.getText();
-        String password = passwordField.getText();
-        login(login, password, domains.getValue(domains.getSelectedIndex()));
-
-
-
-    }
-
-    /**
-     * Transition de la demande de connexion au serveur.
-     * @param login
-     * @param password
-     * @param domainId
-     */
-    private void login(final String login, final String password, final String domainId) {
-        Notification.activityStart();
-        if (login.isEmpty()) {
-            loginField.getElement().getStyle().setBackgroundColor("#ec9c01");
-        } else {
-            loginField.getElement().getStyle().clearBackgroundColor();
-        }
-        if (password.isEmpty()) {
-            passwordField.getElement().getStyle().setBackgroundColor("#ec9c01");
-        } else {
-            passwordField.getElement().getStyle().clearBackgroundColor();
-        }
-
-        if (!login.isEmpty() && !password.isEmpty()) {
-
-          ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+      ServicesLocator.getServiceConnection()
+          .login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
             @Override
             public void onFailure(Throwable t) {
               Notification.activityStop();
@@ -135,86 +139,76 @@ public class ConnexionPage extends PageContent {
               AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
                   domains.getValue(domains.getSelectedIndex()));
               SpMobil.setUserToken(user.getToken());
-              form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-                @Override
-                public void onSubmitComplete(final FormPanel.SubmitCompleteEvent submitCompleteEvent) {
-                  ServicesLocator.getServiceNavigation().initSession(new AsyncCallback<Boolean>() {
-                    @Override
-                    public void onFailure(final Throwable throwable) {
-                      Window.alert("error1");
-                      Notification.activityStop();
-                    }
 
-                    @Override
-                    public void onSuccess(final Boolean init) {
-                      Notification.activityStop();
-                      SpMobil.displayMainPage(user);
-                    }
-                  });
-                  GWT.log(submitCompleteEvent.getResults()); // for debug
-                }
-              });
-              form.submit();
+              AuthentificationManager.getInstance()
+                  .authenticateOnSilverpeas(loginField.getText(), passwordField.getText(),
+                      domains.getSelectedValue(), new Command() {
+                        @Override
+                        public void execute() {
+                          SpMobil.displayMainPage(user);
+                        }
+                      });
             }
           });
-        }
     }
+  }
 
-    /**
-     * Récupération de la liste des domaines.
-     */
-    private void loadDomains() {
-        Command offlineAction = new Command() {
+  /**
+   * Récupération de la liste des domaines.
+   */
+  private void loadDomains() {
+    Command offlineAction = new Command() {
 
-            @Override
-            public void execute() {
-                List<DomainDTO> result = loadInLocalStorage();
-                displayDomains(result);
-            }
-        };
+      @Override
+      public void execute() {
+        List<DomainDTO> result = loadInLocalStorage();
+        displayDomains(result);
+      }
+    };
 
-        AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<DomainDTO>>(offlineAction) {
-            @Override
-            public void attempt() {
-                ServicesLocator.getServiceConnection().getDomains(this);
-            }
-
-            @Override
-            public void onSuccess(List<DomainDTO> result) {
-                super.onSuccess(result);
-                storeInLocalStorage(result);
-                displayDomains(result);
-            }
-        };
-        action.attempt();
-    }
-
-    private void displayDomains(final List<DomainDTO> result) {
-        Iterator<DomainDTO> iDomains = result.iterator();
-        while (iDomains.hasNext()) {
-            DomainDTO domain = iDomains.next();
-            domains.addItem(domain.getName(), domain.getId());
-        }
-        String defaultDomainId = ResourcesManager.getParam("defaultDomainId");
-        for (int i = 0; i < domains.getItemCount(); i++) {
-          if (domains.getValue(i).equals(defaultDomainId)) {
-            domains.setSelectedIndex(i);
-            break;
+    AsyncCallbackOnlineOrOffline action =
+        new AsyncCallbackOnlineOrOffline<List<DomainDTO>>(offlineAction) {
+          @Override
+          public void attempt() {
+            ServicesLocator.getServiceConnection().getDomains(this);
           }
-        }
-    }
 
-    private List<DomainDTO> loadInLocalStorage() {
-        Storage storage = Storage.getLocalStorageIfSupported();
-        List<DomainDTO> result = LocalStorageHelper.load("domains", List.class);
-        if (result == null) {
-            result = new ArrayList<DomainDTO>();
-        }
-        return result;
-    }
+          @Override
+          public void onSuccess(List<DomainDTO> result) {
+            super.onSuccess(result);
+            storeInLocalStorage(result);
+            displayDomains(result);
+          }
+        };
+    action.attempt();
+  }
 
-    private void storeInLocalStorage(final List<DomainDTO> result) {
-        LocalStorageHelper.store("domains", List.class , result);
+  private void displayDomains(final List<DomainDTO> result) {
+    Iterator<DomainDTO> iDomains = result.iterator();
+    while (iDomains.hasNext()) {
+      DomainDTO domain = iDomains.next();
+      domains.addItem(domain.getName(), domain.getId());
     }
+    String defaultDomainId = ResourcesManager.getParam("defaultDomainId");
+    for (int i = 0; i < domains.getItemCount(); i++) {
+      if (domains.getValue(i).equals(defaultDomainId)) {
+        domains.setSelectedIndex(i);
+        break;
+      }
+    }
+  }
+
+  private List<DomainDTO> loadInLocalStorage() {
+    Storage storage = Storage.getLocalStorageIfSupported();
+    List<DomainDTO> result = LocalStorageHelper.load("domains", List.class);
+    if (result == null) {
+      result = new ArrayList<DomainDTO>();
+    }
+    return result;
+  }
+
+  private void storeInLocalStorage(final List<DomainDTO> result) {
+    LocalStorageHelper.store("domains", List.class, result);
+  }
 
 }
