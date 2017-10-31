@@ -67,8 +67,8 @@ public class ConnexionPage extends PageContent {
         passwordField.getElement().setAttribute("spellcheck", "off");
         domains.getElement().setId("DomainId");
         form.getElement().setId("formLogin");
-
         form.setAction("/silverpeas/AuthenticationServlet");
+        form.setMethod("POST");
 
 
       Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
@@ -194,6 +194,13 @@ public class ConnexionPage extends PageContent {
         while (iDomains.hasNext()) {
             DomainDTO domain = iDomains.next();
             domains.addItem(domain.getName(), domain.getId());
+        }
+        String defaultDomainId = ResourcesManager.getParam("defaultDomainId");
+        for (int i = 0; i < domains.getItemCount(); i++) {
+          if (domains.getValue(i).equals(defaultDomainId)) {
+            domains.setSelectedIndex(i);
+            break;
+          }
         }
     }
 

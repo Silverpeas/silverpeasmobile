@@ -38,7 +38,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -201,6 +200,7 @@ public class SpMobil implements EntryPoint {
                 content.add(pwd);
                 content.add(dom);
                 form.setAction("/silverpeas/AuthenticationServlet");
+                form.setMethod("POST");
                 form.setVisible(false);
                 RootPanel.get().add(form);
                 form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
