@@ -345,6 +345,8 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       componentId = url.substring(url.indexOf("kmelia"));
     } else if (url.indexOf("quickinfo") != -1) {
       componentId = url.substring(url.indexOf("quickinfo"));
+    } else if (url.indexOf("webPages") != -1) {
+      componentId = url.substring(url.indexOf("webPages"));
     }
     componentId = componentId.substring(0, componentId.indexOf("/"));
 
