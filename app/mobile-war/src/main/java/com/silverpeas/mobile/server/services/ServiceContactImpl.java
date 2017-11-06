@@ -97,7 +97,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
         for (int j = 0; j < contactsIds.size(); j++) {
           if (j >= startIndex && j < startIndex + pageSize) {
             String id = contactsIds.get(j);
-            UserDetail userDetail = getUserDetail(id);
+            UserDetail userDetail = organizationController.getUserDetail(id);
             DetailUserDTO userDTO = populate(userDetail);
             listUsers.add(userDTO);
           }
@@ -239,17 +239,5 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       return dto;
     }
     return null;
-  }
-
-  /**
-   * Return UserDetail with the id contact
-   * @param id
-   * @return UserDetail
-   * @throws ContactException
-   */
-  private UserDetail getUserDetail(String id) throws ContactException {
-    String ldapUserId = organizationController.getUserDetailByDBId(Integer.parseInt(id));
-    UserDetail User = organizationController.getUserDetail(ldapUserId);
-    return User;
   }
 }
