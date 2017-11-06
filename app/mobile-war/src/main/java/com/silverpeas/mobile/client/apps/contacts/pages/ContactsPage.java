@@ -205,7 +205,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   private ContactItem getWaitingItem() {
     if (itemWaiting == null) {
       itemWaiting = new ContactItem();
-      itemWaiting.setData(SpMobil.user);
+      itemWaiting.setData(SpMobil.getUser());
       itemWaiting.hideData();
       itemWaiting.setStyleName("csspinner traditional");
     }
@@ -219,7 +219,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 
       // compute item height
       ContactItem item = new ContactItem();
-      item.setData(SpMobil.user);
+      item.setData(SpMobil.getUser());
       item.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
       list.add(item);
       int itemHeight = item.getOffsetHeight();

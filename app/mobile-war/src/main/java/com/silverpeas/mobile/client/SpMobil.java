@@ -89,8 +89,8 @@ import java.util.List;
 public class SpMobil implements EntryPoint {
 
   private static Page mainPage = null;
-  public static DetailUserDTO user;
-  private static String userToken;
+  private static DetailUserDTO user;
+
   private static String viewport, bodyClass, bodyId;
   private static ApplicationMessages msg;
   private static String shortcutAppId;
@@ -99,6 +99,14 @@ public class SpMobil implements EntryPoint {
   private static SpMobil instance = null;
   private static Orientation orientation = null;
   private static List<App> apps = new ArrayList<App>();
+
+  public static DetailUserDTO getUser() {
+    return user;
+  }
+
+  public static void setUser(final DetailUserDTO user) {
+    SpMobil.user = user;
+  }
 
   /**
    * Init. spmobile.
@@ -153,7 +161,7 @@ public class SpMobil implements EntryPoint {
   }
 
   public static String getUserToken() {
-    return userToken;
+    return getUser().getToken();
   }
 
   public static SpMobil getInstance() {
@@ -162,112 +170,45 @@ public class SpMobil implements EntryPoint {
 
   /**
    * Auto login.
-   * @param login
+   * @param user
    * @param password
-   * @param domainId
    */
-  private void login(final String login, final String password, final String domainId,
-      final Command attempt) {
+  private void login(final FullUserDTO user, final String password, final Command attempt) {
     Notification.activityStart();
-    FullUserDTO user = AuthentificationManager.getInstance().loadUser();
-    SpMobil.setUserToken(user.getToken());
     if (user != null) {
+      ServicesLocator.getServiceNavigation().getUserToken(new AsyncCallback<String>() {
+        @Override
+        public void onFailure(final Throwable throwable) {
+          displayLoginPage();
+        }
 
-      ServicesLocator.getServiceNavigation()
-          .isUserSessionOpened(user, new AsyncCallback<Boolean>() {
-            @Override
-            public void onFailure(final Throwable throwable) {
-              Notification.activityStop();
-            }
-
-            @Override
-            public void onSuccess(final Boolean open) {
-              Notification.activityStop();
-              if (!open) {
-                FormPanel form = new FormPanel();
-                FlowPanel content = new FlowPanel();
-                form.add(content);
-                TextBox lg = new TextBox();
-                lg.setName("Login");
-                lg.setValue(login);
-                PasswordTextBox pwd = new PasswordTextBox();
-                pwd.setName("Password");
-                pwd.setValue(password);
-                ListBox dom = new ListBox();
-                dom.setName("DomainId");
-                dom.addItem("", domainId);
-                content.add(lg);
-                content.add(pwd);
-                content.add(dom);
-                form.setAction("/silverpeas/AuthenticationServlet");
-                form.setMethod("POST");
-                form.setVisible(false);
-                RootPanel.get().add(form);
-                form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+        @Override
+        public void onSuccess(final String token) {
+          if (token.equals(SpMobil.getUserToken())) {
+            displayMainPage();
+          } else {
+            AuthentificationManager.getInstance()
+                .authenticateOnSilverpeas(user.getLogin(), password, user.getDomainId(), new
+                    Command() {
                   @Override
-                  public void onSubmitComplete(
-                      final FormPanel.SubmitCompleteEvent submitCompleteEvent) {
-                    ServicesLocator.getServiceNavigation()
-                        .isUserSessionOpened(user, new AsyncCallback<Boolean>() {
-                          @Override
-                          public void onFailure(final Throwable throwable) {
-                            Notification.activityStop();
-                          }
-
-                          @Override
-                          public void onSuccess(final Boolean open) {
-                            Notification.activityStop();
-                            if (open) {
-                              displayMainPage(user);
-                            } else {
-                              displayLoginPage();
-                            }
-                          }
-                        });
+                  public void execute() {
+                    displayMainPage();
                   }
                 });
-                form.submit();
-
-                // not work on timeout session
-                /*AuthentificationManager.getInstance().authenticateOnSilverpeas(login, password,
-                    domainId, new Command() {
-                      @Override
-                      public void execute() {
-                        ServicesLocator.getServiceNavigation()
-                            .isUserSessionOpened(user, new AsyncCallback<Boolean>() {
-
-                              @Override
-                              public void onFailure(final Throwable throwable) {
-                                Notification.activityStop();
-                              }
-
-                              @Override
-                              public void onSuccess(final Boolean aBoolean) {
-                                Notification.activityStop();
-                                if (open) {
-                                  displayMainPage(user);
-                                } else {
-                                  displayLoginPage();
-                                }
-                              }
-                            });
-                      }
-                    });*/
-              } else {
-                displayMainPage(user);
-              }
-            }
-          });
+          }
+        }
+      });
+    } else {
+      displayLoginPage();
     }
   }
 
-  public static void displayMainPage(final DetailUserDTO user) {
+  public static void displayMainPage() {
 
     if (!Window.Location.getHref().contains("?locale=") &&
         !user.getLanguage().equalsIgnoreCase("fr")) {
       Window.Location.replace(Window.Location.getHref() + "?locale=" + user.getLanguage());
     }
-    SpMobil.user = user;
     getMainPage().setUser(user);
     RootPanel.get().clear();
     RootPanel.get().add(getMainPage());
@@ -320,8 +261,7 @@ public class SpMobil implements EntryPoint {
     if (user != null) {
       String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
       if (password != null) {
-        SpMobil.userToken = user.getToken();
-        login(user.getLogin(), password, user.getDomainId(), attempt);
+        login(user, password, attempt);
       }
     } else {
       tabletGesture(false);
@@ -449,9 +389,5 @@ public class SpMobil implements EntryPoint {
       conf = Config.getDefaultConfig();
     }
     return conf;
-  }
-
-  public static void setUserToken(final String token) {
-    SpMobil.userToken = token;
   }
 }

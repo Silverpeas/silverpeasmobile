@@ -39,7 +39,7 @@ public class AuthentificationManager {
     } catch (InvalidCipherTextException e) {
       EventBus.getInstance().fireEvent(new ErrorEvent(e));
     }
-    SpMobil.user = user;
+    SpMobil.setUser(user);
 
     FullUserDTO u = new FullUserDTO(login, encryptedPassword, domainId, user);
     LocalStorageHelper.store(USER_CONNECTED_KEY, FullUserDTO.class, u);
@@ -54,6 +54,7 @@ public class AuthentificationManager {
 
   public FullUserDTO loadUser() {
     FullUserDTO user = LocalStorageHelper.load(USER_CONNECTED_KEY, FullUserDTO.class);
+    SpMobil.setUser(user);
     return user;
   }
 
@@ -97,7 +98,7 @@ public class AuthentificationManager {
       rb.sendRequest(data.toString(), new RequestCallback() {
         @Override
         public void onResponseReceived(final Request request, final Response response) {
-          ServicesLocator.getServiceNavigation().initSession(new AsyncCallback<Boolean>() {
+          ServicesLocator.getServiceNavigation().initSession(SpMobil.getUser(), new AsyncCallback<DetailUserDTO>() {
             @Override
             public void onFailure(final Throwable throwable) {
               Window.alert("error1");
@@ -105,9 +106,10 @@ public class AuthentificationManager {
             }
 
             @Override
-            public void onSuccess(final Boolean init) {
+            public void onSuccess(final DetailUserDTO user) {
               Notification.activityStop();
               commandOnSuccess.execute();
+              SpMobil.setUser(user);
             }
           });
         }

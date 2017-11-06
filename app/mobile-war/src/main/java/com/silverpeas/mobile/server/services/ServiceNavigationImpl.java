@@ -3,7 +3,9 @@ package com.silverpeas.mobile.server.services;
 import com.silverpeas.mobile.server.common.SpMobileLogModule;
 import com.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import com.silverpeas.mobile.server.services.helpers.NewsHelper;
+import com.silverpeas.mobile.server.services.helpers.UserHelper;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
@@ -39,6 +41,7 @@ import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -97,23 +100,25 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   @Override
-  public boolean initSession() throws AuthenticationException {
+  public DetailUserDTO initSession(DetailUserDTO user) throws AuthenticationException {
     Object token = getThreadLocalRequest().getSession().getAttribute("X-STKN");
-    return (token != null);
+
+    if (user != null) {
+      UserDetail usr = organizationController.getUserDetail(user.getId());
+      setUserInSession(usr);
+      return UserHelper.getInstance().populate(usr);
+    } else {
+      return null;
+    }
   }
 
   @Override
-  public boolean isUserSessionOpened(FullUserDTO user) throws AuthenticationException {
-    Enumeration<String> n = getThreadLocalRequest().getSession().getAttributeNames();
-    while (n.hasMoreElements()) {
-      String v = n.nextElement();
-      if (v.equalsIgnoreCase("X-STKN")) {
-        UserDetail usr = organizationController.getUserDetail(user.getId());
-        setUserInSession(usr);
-        return true;
-      }
+  public String getUserToken() {
+    String token = "";
+    if (getUserInSession() != null) {
+      token = getUserInSession().getToken();
     }
-    return false;
+    return token;
   }
 
   @Override

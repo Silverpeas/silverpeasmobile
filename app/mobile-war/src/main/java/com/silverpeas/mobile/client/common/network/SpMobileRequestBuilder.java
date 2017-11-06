@@ -13,8 +13,8 @@ public class SpMobileRequestBuilder extends RequestBuilder {
   public SpMobileRequestBuilder(Method httpMethod, String url) {
     super(httpMethod, url);
     setTimeoutMillis(TIMEOUT);
-    if (SpMobil.user != null) {
-      setHeader("X-Silverpeas-Session", SpMobil.user.getToken());
+    if (SpMobil.getUser() != null) {
+      setHeader("X-Silverpeas-Session", SpMobil.getUser().getToken());
     }
   }
 }

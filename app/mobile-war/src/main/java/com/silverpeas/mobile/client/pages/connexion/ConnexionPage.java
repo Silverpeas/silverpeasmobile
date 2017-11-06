@@ -138,14 +138,12 @@ public class ConnexionPage extends PageContent {
               LocalStorageHelper.clear(); // clear offline data
               AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
                   domains.getValue(domains.getSelectedIndex()));
-              SpMobil.setUserToken(user.getToken());
-
               AuthentificationManager.getInstance()
                   .authenticateOnSilverpeas(loginField.getText(), passwordField.getText(),
                       domains.getSelectedValue(), new Command() {
                         @Override
                         public void execute() {
-                          SpMobil.displayMainPage(user);
+                          SpMobil.displayMainPage();
                         }
                       });
             }

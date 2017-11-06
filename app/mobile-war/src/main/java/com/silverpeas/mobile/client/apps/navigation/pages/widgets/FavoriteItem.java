@@ -96,7 +96,7 @@ public class FavoriteItem extends Composite {
         EventBus.getInstance().fireEvent(eventGoApp);
         return;
       }
-      ShortCutRouter.route(SpMobil.user, shortcutAppId, shortcutContentType, shortcutContentId);
+      ShortCutRouter.route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId);
     }
   }
 

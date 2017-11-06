@@ -217,7 +217,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         label.getElement().getStyle().setDisplay(Style.Display.INLINE);
         String url = UrlUtils.getServicesLocation();
         url += "Attachment";
-        url = url + "?id=" + data.getValueId() + "&lang=" + SpMobil.user.getLanguage();
+        url = url + "?id=" + data.getValueId() + "&lang=" + SpMobil.getUser().getLanguage();
         file.setHref(url);
         file.setTarget("_self");
         file.getElement().setAttribute("download", data.getValue());

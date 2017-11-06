@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.silverpeas.mobile.shared.dto.DetailUserDTO;
 import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -23,9 +24,9 @@ public interface ServiceNavigation extends RemoteService {
 
   void logout() throws AuthenticationException;
 
-  boolean initSession() throws AuthenticationException;
+  DetailUserDTO initSession(DetailUserDTO user) throws AuthenticationException;
 
-  boolean isUserSessionOpened(FullUserDTO user) throws AuthenticationException;
+  String getUserToken();
 
   HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException;
 }

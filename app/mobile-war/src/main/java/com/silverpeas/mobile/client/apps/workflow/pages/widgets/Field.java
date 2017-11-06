@@ -71,7 +71,7 @@ public class Field extends Composite {
       label.getElement().getStyle().setDisplay(Style.Display.INLINE);
       String url = UrlUtils.getServicesLocation();
       url += "Attachment";
-      url = url + "?id=" + data.getId() + "&lang=" + SpMobil.user.getLanguage();
+      url = url + "?id=" + data.getId() + "&lang=" + SpMobil.getUser().getLanguage();
       link.setHref(url);
       link.setTarget("_self");
       link.getElement().setAttribute("download", data.getValue());
