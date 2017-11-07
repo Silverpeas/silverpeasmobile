@@ -63,16 +63,14 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     }
 
     // récupération des informations de l'utilisateur
-    String userId, authKey;
+    String userId;
     try {
       userId = getUserId(login, domainId);
-      authKey = AuthenticationServiceProvider.getService().getAuthenticationKey(login, domainId);
     } catch (Exception e) {
       throw new AuthenticationException(AuthenticationError.Host);
     }
     UserDetail user = getUserDetail(userId);
     setUserInSession(user);
-    setUserkeyInSession(authKey);
 
     DetailUserDTO userDTO = new DetailUserDTO();
     userDTO = UserHelper.getInstance().populate(user);

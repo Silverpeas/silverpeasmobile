@@ -15,23 +15,14 @@ import java.util.List;
 @SuppressWarnings("serial")
 public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
   public static final String USER_ATTRIBUT_NAME = "user";
-  public static final String USERKEY_ATTRIBUT_NAME = "key";
   public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = "SilverSessionController";
 
   protected void setUserInSession(UserDetail user) {
     getThreadLocalRequest().getSession().setAttribute(USER_ATTRIBUT_NAME, user);
   }
 
-  protected void setUserkeyInSession(String key) {
-    getThreadLocalRequest().getSession().setAttribute(USERKEY_ATTRIBUT_NAME, key);
-  }
-
   protected UserDetail getUserInSession() {
     return (UserDetail) getThreadLocalRequest().getSession().getAttribute(USER_ATTRIBUT_NAME);
-  }
-
-  protected String getUserKeyInSession() {
-    return (String) getThreadLocalRequest().getSession().getAttribute(USERKEY_ATTRIBUT_NAME);
   }
 
   protected void checkUserInSession() throws AuthenticationException {

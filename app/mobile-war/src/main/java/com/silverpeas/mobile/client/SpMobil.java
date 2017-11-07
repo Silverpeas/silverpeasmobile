@@ -161,7 +161,11 @@ public class SpMobil implements EntryPoint {
   }
 
   public static String getUserToken() {
-    return getUser().getToken();
+    if (getUser() != null) {
+      return getUser().getToken();
+    } else {
+      return null;
+    }
   }
 
   public static SpMobil getInstance() {
@@ -192,7 +196,11 @@ public class SpMobil implements EntryPoint {
                     Command() {
                   @Override
                   public void execute() {
-                    displayMainPage();
+                    if (attempt == null) {
+                      displayMainPage();
+                    } else {
+                      attempt.execute();
+                    }
                   }
                 });
           }
