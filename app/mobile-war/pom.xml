@@ -79,10 +79,6 @@
       <version>6.2.4</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.sanselan</groupId>
-      <artifactId>sanselan</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.googlecode.gwt.crypto</groupId>
       <artifactId>gwt-crypto</artifactId>
       <version>1.0.3</version>
@@ -234,7 +230,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.6.3</version>
+      <version>2.7.4</version>
     </dependency>
 
     <dependency>
