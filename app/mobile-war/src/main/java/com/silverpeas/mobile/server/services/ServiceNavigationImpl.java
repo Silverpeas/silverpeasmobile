@@ -6,7 +6,6 @@ import com.silverpeas.mobile.server.services.helpers.NewsHelper;
 import com.silverpeas.mobile.server.services.helpers.UserHelper;
 import com.silverpeas.mobile.shared.dto.ContentsTypes;
 import com.silverpeas.mobile.shared.dto.DetailUserDTO;
-import com.silverpeas.mobile.shared.dto.FullUserDTO;
 import com.silverpeas.mobile.shared.dto.HomePageDTO;
 import com.silverpeas.mobile.shared.dto.RightDTO;
 import com.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -183,11 +182,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     return isWorkflowApp(app);
   }
 
-  // still app.isWorkflow(); not working
   private boolean isWorkflowApp(ComponentInstLight app) {
     try {
-      Optional<WAComponent> component = WAComponent.getByName(app.getName());
-      return (component.isPresent() && component.get().getRouter().equalsIgnoreCase("RprocessManager"));
+      return app.isWorkflow();
     } catch(Throwable t) {
       return false;
     }
