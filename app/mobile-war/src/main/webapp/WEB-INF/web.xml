@@ -4,7 +4,7 @@
 
   <filter>
     <filter-name>mobilFilter</filter-name>
-    <filter-class>com.silverpeas.bridge.MobilFilter</filter-class>
+    <filter-class>org.silverpeas.bridge.MobilFilter</filter-class>
     <async-supported>true</async-supported>
   </filter>
 
@@ -15,7 +15,7 @@
 
   <servlet>
     <servlet-name>manifestServlet</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.servlets.ManifestServlet</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.servlets.ManifestServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -25,7 +25,7 @@
 
   <servlet>
     <servlet-name>serviceWorkflowImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceWorkflowImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceWorkflowImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceWorkflowImpl</servlet-name>
@@ -34,7 +34,7 @@
 
   <servlet>
     <servlet-name>serviceBlogImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceBlogImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceBlogImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceBlogImpl</servlet-name>
@@ -43,7 +43,7 @@
 
   <servlet>
     <servlet-name>serviceFavoritesImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceFavoritesImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceFavoritesImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceFavoritesImpl</servlet-name>
@@ -52,7 +52,7 @@
 
   <servlet>
     <servlet-name>serviceNewsImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceNewsImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceNewsImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceNewsImpl</servlet-name>
@@ -61,7 +61,7 @@
 
   <servlet>
     <servlet-name>serviceTasksImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceTasksImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceTasksImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceTasksImpl</servlet-name>
@@ -70,7 +70,7 @@
 
   <servlet>
     <servlet-name>serviceSearchImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceSearchImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceSearchImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceSearchImpl</servlet-name>
@@ -79,7 +79,7 @@
 
   <servlet>
     <servlet-name>serviceRSEImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceRSEImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceRSEImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceRSEImpl</servlet-name>
@@ -88,7 +88,7 @@
 
   <servlet>
     <servlet-name>serviceNavigationImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceNavigationImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceNavigationImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceNavigationImpl</servlet-name>
@@ -97,7 +97,7 @@
 
   <servlet>
     <servlet-name>serviceMediaImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceMediaImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceMediaImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceMediaImpl</servlet-name>
@@ -106,7 +106,7 @@
 
   <servlet>
     <servlet-name>serviceDocumentsImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceDocumentsImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceDocumentsImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceDocumentsImpl</servlet-name>
@@ -115,7 +115,7 @@
 
   <servlet>
     <servlet-name>serviceCommentsImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceCommentsImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceCommentsImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceCommentsImpl</servlet-name>
@@ -124,7 +124,7 @@
 
   <servlet>
     <servlet-name>serviceConnectionImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceConnectionImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceConnectionImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceConnectionImpl</servlet-name>
@@ -133,7 +133,7 @@
 
   <servlet>
     <servlet-name>serviceContactImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceContactImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceContactImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceContactImpl</servlet-name>
@@ -142,7 +142,7 @@
 
   <servlet>
     <servlet-name>serviceDashboardImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceDashboardImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceDashboardImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceDashboardImpl</servlet-name>
@@ -151,7 +151,7 @@
 
   <servlet>
     <servlet-name>serviceAlmanachImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceAlmanachImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceAlmanachImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceAlmanachImpl</servlet-name>
@@ -160,7 +160,7 @@
 
   <servlet>
     <servlet-name>serviceNotificationsImpl</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.services.ServiceNotificationsImpl</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceNotificationsImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>serviceNotificationsImpl</servlet-name>
@@ -169,7 +169,7 @@
 
   <servlet>
     <servlet-name>AttachmentServlet</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.servlets.AttachmentServlet</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.servlets.AttachmentServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -179,7 +179,7 @@
 
   <servlet>
     <servlet-name>PublicationContentServlet</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.servlets.PublicationContentServlet</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.servlets.PublicationContentServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -189,7 +189,7 @@
 
   <servlet>
     <servlet-name>MediaServlet</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.servlets.MediaServlet</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.servlets.MediaServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -199,7 +199,7 @@
 
   <servlet>
     <servlet-name>FormServlet</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.servlets.FormServlet</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.servlets.FormServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -209,7 +209,7 @@
 
   <servlet>
     <servlet-name>SoundServlet</servlet-name>
-    <servlet-class>com.silverpeas.mobile.server.servlets.SoundServlet</servlet-class>
+    <servlet-class>org.silverpeas.mobile.server.servlets.SoundServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -218,7 +218,7 @@
   </servlet-mapping>
 
   <listener>
-    <listener-class>com.silverpeas.mobile.server.servlets.SessionManager</listener-class>
+    <listener-class>org.silverpeas.mobile.server.servlets.SessionManager</listener-class>
   </listener>
 
 </web-app>

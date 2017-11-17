@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2000 - 2017 Silverpeas
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ As a special exception to the terms and conditions of version 3.0 of
+  ~ the GPL, you may redistribute this Program in connection with Free/Libre
+  ~ Open Source Software ("FLOSS") applications as described in Silverpeas's
+  ~ FLOSS exception.  You should have received a copy of the text describing
+  ~ the FLOSS exception, and it is also available here:
+  ~ "http://www.silverpeas.org/docs/core/legal/floss_exception.html"
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<module rename-to="spmobile">
+
+  <stylesheet src="jquery.mobile.structure-1.4.2.min.css"/>
+  <stylesheet src="csspinner.min.css"/>
+  <stylesheet src="spmobile.css"/>
+
+  <inherits name="com.google.gwt.user.User"/>
+  <inherits name="com.google.gwt.json.JSON"/>
+
+  <inherits name="com.googlecode.gwt.crypto.Crypto"/>
+
+  <source path="client"/>
+  <source path="shared"/>
+  <entry-point class="org.silverpeas.mobile.client.SpMobil"/>
+  
+  <set-property name="compiler.emulatedStack" value="true"/>
+  <set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true"/>
+  <set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true"/>
+
+  <inherits name="org.realityforge.gwt.appcache.Appcache"/>
+  <inherits name="org.realityforge.gwt.appcache.linker.Linker"/>
+  <add-linker name="appcache"/>
+
+  <!-- configure all the static files not managed by the GWT compiler -->
+  <extend-configuration-property name="appcache_static_files" value="./"/>
+  <extend-configuration-property name="appcache_static_files" value="spmobil.jsp"/>
+  <extend-configuration-property name="appcache_static_files" value="nice-highres.png"/>
+  <extend-configuration-property name="appcache_static_files" value="niceicon.png"/>
+  <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone.png"/>
+  <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone4.png"/>
+
+  <!-- supported languages -->
+  <extend-property name="locale" values="en"/>
+
+  <!-- allow Super Dev Mode -->
+  <add-linker name="xsiframe"/>
+
+  <set-configuration-property name="devModeRedirectEnabled" value="true"/>
+  <set-property name="compiler.useSourceMaps" value="true"/>
+
+  <inherits name="com.seanchenxi.gwt.storage.Storage"/>
+  <set-property name="storage.cache" value="false" />
+  <set-configuration-property name="storage.type.finder" value="mix" />
+
+</module>

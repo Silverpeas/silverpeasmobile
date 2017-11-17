@@ -58,7 +58,7 @@
               <!-- style>OBF</style -->
               <style>DETAILED</style>
               <modules>
-                <module>com.silverpeas.mobile.SpMobil</module>
+                <module>org.silverpeas.mobile.SpMobil</module>
               </modules>
               <extraJvmArgs>-Xms768m -Xmx768m</extraJvmArgs>
               <localWorkers>3</localWorkers>

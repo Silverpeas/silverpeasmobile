@@ -1,8 +1,8 @@
-<%@ page import="org.silverpeas.core.util.ResourceLocator" %>
-<%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
-<%@ page import="org.silverpeas.core.util.URLUtil" %>
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
-<%@ page import="com.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
+<%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
+<%@ page import="org.silverpeas.core.util.ResourceLocator" %>
+<%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="org.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
 <%@ page import="java.util.Map" %>
 
 <!doctype html>

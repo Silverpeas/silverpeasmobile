@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright (C) 2000 - 2017 Silverpeas
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ As a special exception to the terms and conditions of version 3.0 of
+  ~ the GPL, you may redistribute this Program in connection with Free/Libre
+  ~ Open Source Software ("FLOSS") applications as described in Silverpeas's
+  ~ FLOSS exception.  You should have received a copy of the text describing
+  ~ the FLOSS exception, and it is also available here:
+  ~ "http://www.silverpeas.org/docs/core/legal/floss_exception.html"
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:components="urn:import:org.silverpeas.mobile.client.components">
+
+  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages' />
+
+
+  <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
+    <div class="ui-corner-all ui-controlgroup ui-controlgroup-horizontal">
+      <div class="ui-controlgroup-controls ">
+        <g:Anchor ui:field="mycontacts" styleName="ui-btn-active  ui-btn  ui-first-child">
+          <span class="ui-btn-inner ui-corner-left">
+            <span class="ui-btn-text"><ui:safehtml from="{msg.myContacts}"/></span>
+          </span>
+        </g:Anchor>
+        <g:Anchor ui:field="allcontacts" styleName="ui-btn ui-btn-up-c ">
+          <span class="ui-btn-inner">
+            <span class="ui-btn-text"><ui:safehtml from="{msg.allContacts}"/></span>
+          </span>
+        </g:Anchor>
+        <g:Anchor ui:field="allextcontacts" styleName="ui-btn ui-btn-up-c  ui-last-child">
+          <span class="ui-btn-inner ui-corner-right ui-controlgroup-last">
+            <span class="ui-btn-text"><ui:safehtml from="{msg.allExtContacts}"/></span>
+          </span>
+        </g:Anchor>
+        <g:TextBox ui:field="filter" styleName="ui-input-text ui-body-inherit filter-contacts"></g:TextBox>
+      </div>
+    </div>
+
+    <components:UnorderedList ui:field="list" styleName="list-contacts"></components:UnorderedList>
+
+  </g:HTMLPanel>
+</ui:UiBinder> 
