@@ -50,6 +50,8 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.logging.SilverLogger;
@@ -80,6 +82,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
 
   private OrganizationController organizationController = OrganizationController.get();
   private static String rootContext = "";
+  private SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -100,6 +103,13 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         .print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
     response.getOutputStream()
         .print("<link rel='stylesheet' href='/silverpeas/spmobile/spmobile.css'/>");
+
+
+    String urlCSS = mobileSettings.getString("styleSheet", "");
+    if (!urlCSS.isEmpty()) {
+      response.getOutputStream().print("<link rel=\"stylesheet\" href=\"" + urlCSS + "\">");
+    }
+
     response.getOutputStream().print("</head>");
     response.getOutputStream().print("<body>");
 

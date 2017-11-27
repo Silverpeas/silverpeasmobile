@@ -173,7 +173,7 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
       User user = Workflow.getUserManager().getUser(getUserInSession().getId());
       Role[] roles = Workflow.getProcessModelManager().getProcessModel(instanceId).getRoles();
       if (userRole == null || userRole.isEmpty()) userRole = roles[0].getName();
-      ProcessInstance[] processInstances = Workflow.getProcessInstanceManager().getProcessInstances(instanceId, user, userRole);
+      List<ProcessInstance> processInstances = Workflow.getProcessInstanceManager().getProcessInstances(instanceId, user, userRole);
 
       if (userRole == null) {
         userRole = roles[0].getName();
