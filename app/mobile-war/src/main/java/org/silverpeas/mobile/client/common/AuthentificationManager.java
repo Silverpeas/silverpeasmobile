@@ -29,6 +29,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -112,12 +113,15 @@ public class AuthentificationManager {
 
   public void authenticateOnSilverpeas(String login, String password, String domainId, Command commandOnSuccess) {
     StringBuilder data = new StringBuilder();
-    data.append("Login=" + login + "&");
-    data.append("Password=" + password + "&");
+
+
+
+    data.append("Login=" + URL.encode(login) + "&");
+    data.append("Password=" + URL.encode(password) + "&");
     data.append("DomainId=" + domainId);
     RequestBuilder
         rb = new RequestBuilder(RequestBuilder.POST, "/silverpeas/AuthenticationServlet");
-    rb.setHeader("Content-type", "application/x-www-form-urlencoded");
+    rb.setHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
     try {
       rb.sendRequest(data.toString(), new RequestCallback() {
         @Override
