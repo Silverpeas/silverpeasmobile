@@ -580,6 +580,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
     white-space: inherit;
 }
 
+#actus {
+	min-height:3em;
+}
+
 .carroussel-news {
 	padding:1em 0.75em 1em 0.5em;
 	margin:0;
@@ -863,7 +867,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .publiName, .mediaName, .title-instruction {
-  padding: 0 1em;
+  padding:0 2.1em 0 1em;
   margin: 0;
   font-size: 12pt;
   font-weight: normal;
@@ -876,7 +880,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-size: 12pt;
   font-weight: normal;
   height: 3em;
-  line-height: 3em;
+  line-height: 4em;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .comments .publiName, .comments .mediaName {
@@ -1209,6 +1215,8 @@ input.filter-contacts {
 #champs-statut textarea,
 #champs-message textarea {
   border-radius:10px;
+  height: 14em;
+  font-size: 13px;
 }
 
 .ui-page-theme-a .btn-validate {
@@ -1425,6 +1433,35 @@ textarea.ui-input-text {
   padding-left:1em;
 }
 
+.liste-news {
+	list-style-type:none;
+	padding:0;
+	margin:0;
+	border-top: 1px solid #ddd;
+}
+
+
+.liste-news li {
+	padding:0.2em 0.5em;
+	margin:0;
+}
+
+
+.liste-news li img{
+	float:left;
+	margin:1em;
+	margin-left:0;
+}
+
+.liste-news li h2{
+	padding:0;
+	margin:0;
+}
+
+.liste-news li p{
+    font-size: 13px;
+    color: #666;
+}
 
 #content {
   background-color: #FFF;
@@ -1588,6 +1625,12 @@ form .forms .fields > li:nth-child(even) {
 .content {
   position:relative;
 }
+
+.content > .ui-listview.ui-listview-inset {
+	padding-top:3em;
+}
+
+
 #action-button {
   border:0;
   position:absolute;
@@ -1598,26 +1641,32 @@ form .forms .fields > li:nth-child(even) {
   right:1em;
   background:transparent url("qvf.png") 0 0 no-repeat;
   outline: none;
+  z-index:1002;
 }
 
 #action-bloc {
   display:none;
   border:0;
   position:absolute;
-  top:3em;
+  top:2em;
   right:1em;
-  padding:1em;
+  padding:0em;
   margin:0;
   width:10em;
   background-color:#FFF;
-  z-index:100;
+  z-index:1003;
   list-style-type:none;
   box-shadow: 0  0 3px   rgba(0,0,0, 0.2) ;
+}
+
+#action-bloc li  {
+	padding:0.2em 0.5em;
 }
 
 #action-bloc a {
   color:#333;
   line-height:200%;
+  font-size:0.9em;
   display: block;
   width: 100%;
 }
@@ -1667,6 +1716,7 @@ form .forms .fields > li:nth-child(even) {
   text-align: center;
   border-spacing: 0px;
   width: 100%;
+  font-size: 0.8em;
 }
 
 .workflow-list tr {
@@ -1684,7 +1734,7 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .workflow-list  > tbody > tr:nth-child(even) {
-  background-color: #f6f6f6;
+  background-color: #efefef;
   border-bottom: 1px solid #ddd;
 }
 
@@ -1702,16 +1752,23 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .workflow-form li {
-  line-height: 3em;
+  line-height: 2em;
+  padding:1em;
 }
 
-.workflow-form li:nth-child(odd) {
+.workflow-form li:nth-child(odd),
+.liste-billet li:nth-child(odd) ,
+#action-bloc li:nth-child(odd),
+.liste-news li:nth-child(odd) {
   background-color: #f9f9f9;
   border-bottom: 1px solid #ddd;
 }
 
-.worflow-form li:nth-child(even) {
-  background-color: #f6f6f6;
+.worflow-form li:nth-child(even),
+.liste-billet li:nth-child(even) ,
+#action-bloc  li:nth-child(even),
+.liste-news li:nth-child(even)   {
+  background-color: #efefef;
   border-bottom: 1px solid #ddd;
 }
 
@@ -1728,4 +1785,34 @@ form .forms .fields > li:nth-child(even) {
   cursor: pointer !important;
   padding: 1em !important;
   font-size: 1em !important;
+}
+
+
+/* LE BLOG */
+.liste-billet {
+	list-style-type:none;
+	margin:0;
+	padding:0;
+	border-top: 1px solid #ddd;
+}
+.liste-billet li{
+	margin:0;
+	padding:1em;
+	line-height:0.5em;
+}
+.liste-billet h2 a,
+.liste-news li h2 a{
+	font-size:16px;
+	line-height:16px;
+	color:#555;
+	text-decoration:none;
+}
+.liste-billet {
+	font-size:0.9em;
+	color:#999;
+}
+
+/* GENERAL */
+.clear {
+	clear:both;
 }
