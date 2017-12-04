@@ -60,7 +60,6 @@ public class BlogItem extends Composite implements ClickHandler {
   public BlogItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
-    container.getElement().getStyle().setHeight(95, Style.Unit.PX);
   }
 
   public void setData(int index, int max, PostDTO data) {
