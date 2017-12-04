@@ -26,6 +26,8 @@ package org.silverpeas.mobile.server.services;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.shared.StreamingList;
@@ -53,6 +55,10 @@ public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
     if (getThreadLocalRequest().getSession().getAttribute(USER_ATTRIBUT_NAME) == null) {
       throw new AuthenticationException(AuthenticationError.NotAuthenticate);
     }
+  }
+
+  protected static SettingBundle getSettings() {
+    return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 
   protected MainSessionController getMainSessionController() throws Exception {

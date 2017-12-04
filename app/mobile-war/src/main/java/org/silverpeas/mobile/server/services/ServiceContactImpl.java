@@ -36,7 +36,6 @@ import org.silverpeas.core.index.search.model.MatchingIndexEntry;
 import org.silverpeas.core.index.search.model.ParseException;
 import org.silverpeas.core.index.search.model.QueryDescription;
 import org.silverpeas.core.socialnetwork.relationship.RelationShipService;
-import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
@@ -66,8 +65,9 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
   private static List<String> contactProperties = new ArrayList<String>();
 
   static {
-    SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    SettingBundle mobileSettings = getSettings();
     String domains = mobileSettings.getString("directory.domains", "");
+
     StringTokenizer stk = new StringTokenizer(domains,",");
     while(stk.hasMoreTokens()) {
       domainsIds.add(stk.nextToken());
@@ -227,7 +227,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       dto.setStatus(userFull.getStatus());
       dto.setAvatar(userFull.getAvatar());
       dto.setLanguage(userFull.getUserPreferences().getLanguage());
-      String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), "24x");
+      String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
       dto.setAvatar(avatar);
       if (userFull != null) {
         for (String prop : userProperties) {

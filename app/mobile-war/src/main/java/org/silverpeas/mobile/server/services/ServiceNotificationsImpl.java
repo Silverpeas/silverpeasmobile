@@ -46,6 +46,7 @@ import org.silverpeas.core.notification.user.client.NotificationSender;
 import org.silverpeas.core.notification.user.client.UserRecipient;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -58,6 +59,7 @@ import org.silverpeas.mobile.shared.services.ServiceNotifications;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Service de gestion des Notifications.
@@ -111,7 +113,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
                     u.setLastName(userDetail.getLastName());
                     u.seteMail(userDetail.geteMail());
                   String avatar = DataURLHelper
-                      .convertAvatarToUrlData(userDetail.getAvatarFileName(), "24x");
+                      .convertAvatarToUrlData(userDetail.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
                     u.setAvatar(avatar);
                     usersAndGroups.add(u);
                 }

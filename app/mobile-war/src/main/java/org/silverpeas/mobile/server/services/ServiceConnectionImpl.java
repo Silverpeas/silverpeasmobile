@@ -99,7 +99,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     DetailUserDTO userDTO = new DetailUserDTO();
     userDTO = UserHelper.getInstance().populate(user);
 
-    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), "40x");
+    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), getSettings().getString("big.avatar.size", "40x"));
     userDTO.setAvatar(avatar);
 
     try {
