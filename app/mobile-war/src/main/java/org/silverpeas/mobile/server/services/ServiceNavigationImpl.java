@@ -345,10 +345,10 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       }
       if (app.getName().equals("kmelia")) {
         value = getMainSessionController().getComponentParameterValue(app.getId(), "tabComments");
-
-      } else if (app.getName().equals("gallery")) {
+      } else if (app.getName().equals("gallery") || app.getName().equals("quickinfo")) {
         value = getMainSessionController().getComponentParameterValue(app.getId(), "comments");
       }
+
       if (app.getName().equals("kmelia")) {
         dto.setCommentable(value.equals("yes"));
       } else if (app.getName().equals("gallery")) {
@@ -357,7 +357,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       } else if (app.getName().equals("blog")) {
         dto.setCommentable(true);
         dto.setNotifiable(true);
-
+      } else if (app.getName().equals("quickinfo")) {
+        dto.setCommentable(value.equals("yes"));
+        dto.setNotifiable(true);
       }
     } catch (Exception e) {
       dto.setCommentable(false);
