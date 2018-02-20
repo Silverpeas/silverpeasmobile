@@ -4,12 +4,12 @@
 
   <parent>
     <groupId>org.silverpeas</groupId>
-    <artifactId>components</artifactId>
-    <version>6.0-SNAPSHOT</version>
+    <artifactId>silverpeas-project</artifactId>
+    <version>1.0</version>
   </parent>
 
   <properties>
-     <core.version>6.0-SNAPSHOT</core.version>
+    <core.version>6.0</core.version>
      <maven.compiler.source>1.7</maven.compiler.source>
      <maven.compiler.target>1.7</maven.compiler.target>
   </properties>

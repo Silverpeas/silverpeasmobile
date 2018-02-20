@@ -517,7 +517,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
       HttpClient client = new HttpClient();
       HttpMethod method = new GetMethod(url);
-      method.addRequestHeader("X-Silverpeas-Session", token);
+      method.addRequestHeader("Authorization", "Bearer " + token);
       client.executeMethod(method);
       input = method.getResponseBodyAsStream();
       byte[] binaryData = getBytesFromInputStream(input);

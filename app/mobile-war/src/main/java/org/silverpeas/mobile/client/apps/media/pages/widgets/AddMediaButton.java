@@ -32,6 +32,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -113,6 +114,7 @@ public class AddMediaButton extends Composite {
       var xhr = new XMLHttpRequest();
       var fd = new FormData();
       xhr.open("POST", url, false);
+      //xhr.setRequestHeader("Authorization", "Bearer " + token);
       xhr.setRequestHeader("X-Silverpeas-Session", token);
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
