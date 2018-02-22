@@ -39,7 +39,6 @@ public class SpMobileRequestBuilder extends RequestBuilder {
     setTimeoutMillis(TIMEOUT);
     if (SpMobil.getUser() != null) {
       setHeader("X-Silverpeas-Session", SpMobil.getUser().getToken());
-      //setHeader("Authorization", "Bearer " + SpMobil.getUser().getToken());
     }
   }
 }

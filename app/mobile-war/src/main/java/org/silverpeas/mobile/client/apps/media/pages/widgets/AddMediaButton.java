@@ -114,7 +114,6 @@ public class AddMediaButton extends Composite {
       var xhr = new XMLHttpRequest();
       var fd = new FormData();
       xhr.open("POST", url, false);
-      //xhr.setRequestHeader("Authorization", "Bearer " + token);
       xhr.setRequestHeader("X-Silverpeas-Session", token);
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {

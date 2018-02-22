@@ -236,7 +236,6 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, false);
     xhr.setRequestHeader("X-Silverpeas-Session", token);
-    //xhr.setRequestHeader("Authorization", "Bearer " + token);
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4 && xhr.status == 200) {
         // Every thing ok, file uploaded

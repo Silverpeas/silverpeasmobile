@@ -49,7 +49,6 @@ public class SpMobileRpcRequestBuilder extends RpcRequestBuilder {
     builder.setTimeoutMillis(this.timeout);
     if (SpMobil.getUserToken() != null) {
       builder.setHeader("X-Silverpeas-Session", SpMobil.getUserToken());
-      //builder.setHeader("Authorization", "Bearer " + SpMobil.getUserToken());
     }
 
     return builder;
