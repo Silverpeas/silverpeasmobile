@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.comments;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import org.silverpeas.mobile.client.apps.comments.events.app.AbstractCommentsAppEvent;
 import org.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
 import org.silverpeas.mobile.client.apps.comments.events.app.CommentsAppEventHandler;

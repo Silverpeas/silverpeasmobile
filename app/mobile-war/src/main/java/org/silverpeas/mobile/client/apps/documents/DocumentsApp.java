@@ -95,7 +95,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         page.show();
       }
 
-      if (content.getType().equals(ContentsTypes.Publication.toString())) {
+      if (content.getType().equals(ContentsTypes.Publication.toString()) || content.getType().equals(ContentsTypes.News.toString())) {
         ableToStoreContent = true;
       }
       AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
@@ -118,12 +118,13 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     }
 
     private void displayContent(final ContentDTO content) {
-        if (content.getType().equals(ContentsTypes.Publication.toString())) {
+        if (content.getType().equals(ContentsTypes.Publication.toString()) || content.getType().equals(ContentsTypes.News.toString())) {
             PublicationPage page = new PublicationPage();
             page.setPageTitle(msg.publicationTitle());
+            page.setContent(content);
             setMainPage(page);
             page.show();
-            EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content.getId()));
+            EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content.getId(), content.getType()));
         } else if(content.getType().equals(ContentsTypes.Attachment.toString())) {
             final DocumentsApp app = this;
             ServicesLocator.getServiceDocuments().getAttachment(content.getId(), content.getInstanceId(), new AsyncCallback<AttachmentDTO>() {
@@ -183,7 +184,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals(ContentsTypes.Publication.name()) || event.getContent().getType().equals(ContentsTypes.Attachment.name()) || event.getContent().getType().equals(ContentsTypes.Folder.name())) {
+    if (event.getContent().getType().equals(ContentsTypes.Publication.name()) || event.getContent().getType().equals(ContentsTypes.News.name()) || event.getContent().getType().equals(ContentsTypes.Attachment.name()) || event.getContent().getType().equals(ContentsTypes.Folder.name())) {
       startWithContent(event.getContent());
     }
   }
@@ -236,7 +237,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
                 if (result == null) {
                     result = new PublicationDTO();
                 }
-                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent, notifiable));
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent, notifiable, event.getType()));
             }
         };
 
@@ -250,7 +251,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             public void onSuccess(PublicationDTO result) {
                 super.onSuccess(result);
                 LocalStorageHelper.store(key, PublicationDTO.class, result);
-                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent, notifiable));
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent, notifiable, event.getType()));
             }
 
         };

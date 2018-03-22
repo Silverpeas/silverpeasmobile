@@ -32,6 +32,7 @@ public class NewsDTO extends BaseDTO implements Serializable {
 
   private static final long serialVersionUID = 2921606984249560882L;
 
+  private String idNews;
   private String title;
   private String description;
   private String updateDate;
@@ -48,6 +49,10 @@ public class NewsDTO extends BaseDTO implements Serializable {
   @Override
   public boolean equals(Object obj) {
     return ((NewsDTO) obj).getId().equals(getId());
+  }
+
+  public String getIdNews() {
+    return idNews;
   }
 
   public String getVignette() {
@@ -113,5 +118,9 @@ public class NewsDTO extends BaseDTO implements Serializable {
 
   public void setDraft(final boolean draft) {
     this.draft = draft;
+  }
+
+  public void setIdNews(final String idNews) {
+    this.idNews = idNews;
   }
 }

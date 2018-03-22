@@ -133,7 +133,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
         PublicationPage page = new PublicationPage();
         page.setPageTitle(msg.publicationTitle());
         page.show();
-        EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(((PublicationDTO) event.getGedItem()).getId()));
+        EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(((PublicationDTO) event.getGedItem()).getId(), ContentsTypes.Publication.toString()));
       }
     }
   }

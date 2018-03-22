@@ -55,6 +55,7 @@ import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
@@ -83,6 +84,8 @@ public class PublicationPage extends PageContent
 
   private NotifyButton notification = new NotifyButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private ContentDTO contentDTO = null;
+
 
   interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
   }
@@ -103,17 +106,21 @@ public class PublicationPage extends PageContent
     EventBus.getInstance().removeHandler(AbstractPublicationPagesEvent.TYPE, this);
   }
 
-  public void setPublicationId(String id) {
+  public void setContent(final ContentDTO content) {
+    this.contentDTO = content;
+  }
+
+  public void setPublicationId(String id, String type) {
     // send event to controler for retrieve pub infos
     Notification.activityStart();
-    EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(id));
+    EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(id, type));
   }
 
   @Override
   public void onLoadedPublication(PublicationLoadedEvent event) {
     Notification.activityStop();
     this.publication = event.getPublication();
-    display(event.isCommentable(), event.isAbleToStoreContent());
+    display(event.isCommentable(), event.isAbleToStoreContent(), event.getType());
     actionsMenu.addAction(favorite);
     if (event.isNotifiable()) {
       actionsMenu.addAction(notification);
@@ -124,7 +131,7 @@ public class PublicationPage extends PageContent
   /**
    * Refesh view informations.
    */
-  private void display(boolean commentable, boolean ableToStoreContent) {
+  private void display(boolean commentable, boolean ableToStoreContent, String type) {
     if (isVisible()) {
       title.setInnerHTML(publication.getName());
       desc.setInnerHTML(publication.getDescription());
@@ -136,7 +143,9 @@ public class PublicationPage extends PageContent
         attachments.add(a);
       }
       if (commentable) {
-        comments.init(publication.getId(), publication.getInstanceId(), CommentDTO.TYPE_PUBLICATION,
+        String id = publication.getId();
+        if (contentDTO != null && contentDTO.getContributionId() != null) id = contentDTO.getContributionId();
+        comments.init(id, publication.getInstanceId(), type,
             getPageTitle(), publication.getName(), publication.getCommentsNumber());
         comments.getElement().getStyle().clearDisplay();
       } else {

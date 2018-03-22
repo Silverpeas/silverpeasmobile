@@ -26,20 +26,26 @@ package org.silverpeas.mobile.client.apps.documents.events.app;
 
 
 public class DocumentsLoadPublicationEvent extends AbstractDocumentsAppEvent {
-	
-	private String pubId;
-	
-	public DocumentsLoadPublicationEvent(String pubId) {
-		super();
-		this.pubId = pubId;
-	}
 
-	@Override
-	protected void dispatch(DocumentsAppEventHandler handler) {
-		handler.loadPublication(this);
-	}
+  private String pubId;
+  private String type;
 
-	public String getPubId() {
-		return pubId;
-	}
+  public DocumentsLoadPublicationEvent(String pubId, String type) {
+    super();
+    this.pubId = pubId;
+    this.type = type;
+  }
+
+  @Override
+  protected void dispatch(DocumentsAppEventHandler handler) {
+    handler.loadPublication(this);
+  }
+
+  public String getPubId() {
+    return pubId;
+  }
+
+  public String getType() {
+    return type;
+  }
 }

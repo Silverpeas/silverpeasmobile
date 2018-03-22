@@ -30,13 +30,15 @@ public class PublicationLoadedEvent extends AbstractPublicationPagesEvent {
 
   private PublicationDTO publication;
   private boolean commentable, ableToStoreContent, notifiable;
+  private String type;
 
-  public PublicationLoadedEvent(PublicationDTO publication, boolean commentable, boolean ableToStoreContent, boolean notifiable) {
+  public PublicationLoadedEvent(PublicationDTO publication, boolean commentable, boolean ableToStoreContent, boolean notifiable, String type) {
     super();
     this.notifiable = notifiable;
     this.publication = publication;
     this.commentable = commentable;
     this.ableToStoreContent = ableToStoreContent;
+    this.type = type;
   }
 
   @Override
@@ -59,4 +61,6 @@ public class PublicationLoadedEvent extends AbstractPublicationPagesEvent {
   public boolean isNotifiable() {
     return notifiable;
   }
+
+  public String getType() { return type; }
 }

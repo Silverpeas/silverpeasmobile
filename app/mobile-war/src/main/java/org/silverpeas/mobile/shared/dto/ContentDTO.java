@@ -35,6 +35,7 @@ public class ContentDTO implements  Serializable {
   private String instanceId;
   private String type;
   private Anchor link;
+  private String contributionId;
 
   public String getId() {
     return id;
@@ -65,5 +66,13 @@ public class ContentDTO implements  Serializable {
 
   public  Anchor getLink() {
     return link;
+  }
+
+  public String getContributionId() {
+    return contributionId;
+  }
+
+  public void setContributionId(final String contributionId) {
+    this.contributionId = contributionId;
   }
 }

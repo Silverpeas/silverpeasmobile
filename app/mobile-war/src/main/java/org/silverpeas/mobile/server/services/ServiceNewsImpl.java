@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -52,9 +53,9 @@ public class ServiceNewsImpl extends AbstractAuthenticateService implements Serv
     checkUserInSession();
     try {
       boolean managerAccess = Administration.get().isComponentManageable(instanceId, getUserInSession().getId());
-      List<PublicationDetail> pubs = NewsHelper.getInstance().getNewsByComponentId(instanceId, managerAccess);
-      List<NewsDTO> news = NewsHelper.getInstance().populate(pubs, managerAccess);
-      return news;
+      List<News> news = NewsHelper.getInstance().getNewsByAppId(instanceId, managerAccess);
+      List<NewsDTO> newsDTO = NewsHelper.getInstance().populate(news, managerAccess);
+      return newsDTO;
     } catch (AdminException e) {
       throw new  NewsException(e);
     }

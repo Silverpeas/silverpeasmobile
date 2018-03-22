@@ -156,7 +156,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
     List<PublicationDetail> lastNews = NewsHelper
         .getInstance().getLastNews(getUserInSession().getId(), spaceId);
-    data.setNews(NewsHelper.getInstance().populate(lastNews, false));
+    data.setNews(NewsHelper.getInstance().populatePub(lastNews, false));
 
     if (spaceId == null || spaceId.isEmpty()) {
       List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPersoVisible(getUserInSession().getId());

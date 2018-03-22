@@ -132,7 +132,19 @@ public class NewsHelper {
     return news;
   }
 
-  public List<PublicationDetail> getNewsByComponentId(String appId, boolean managerAccess) {
+  public List<News> getNewsByAppId(String appId, boolean managerAccess) {
+    QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
+    List<News> news;
+    if (managerAccess) {
+      news = service.getAllNews(appId);
+    } else {
+      news = service.getVisibleNews(appId);
+    }
+
+    return news;
+  }
+
+  private List<PublicationDetail> getNewsByComponentId(String appId, boolean managerAccess) {
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
     List<PublicationDetail> allNews = new ArrayList<PublicationDetail>();
     List<News> news;
@@ -145,6 +157,34 @@ public class NewsHelper {
       allNews.add(aNews.getPublication());
     }
     return allNews;
+  }
+
+  public NewsDTO populate(News n) {
+    NewsDTO news = new NewsDTO();
+    news.setId(n.getPublication().getId());
+    news.setTitle(n.getPublication().getTitle());
+    news.setDescription(n.getPublication().getDescription());
+    news.setUpdateDate(sdf.format(n.getPublication().getUpdateDate()));
+    news.setDraft(n.getPublication().isDraft());
+    news.setVisible(n.getPublication().isVisible());
+    news.setIdNews(n.getId());
+    try {
+      news.setVignette(getBase64ImageData(n.getPublication().getInstanceId(), n.getPublication()));
+    } catch(Exception e) {e.printStackTrace();}
+    news.setInstanceId(n.getPublication().getInstanceId());
+    return news;
+  }
+
+  public List<NewsDTO> populate(List<News> news, boolean managerAccess) {
+    List<NewsDTO> dtos = new ArrayList<NewsDTO>();
+    if (news != null) {
+      for (News n : news) {
+        NewsDTO dto = populate(n);
+        dto.setManagable(managerAccess);
+        dtos.add(dto);
+      }
+    }
+    return dtos;
   }
 
   public NewsDTO populate(PublicationDetail pub) {
@@ -162,7 +202,7 @@ public class NewsHelper {
     return news;
   }
 
-  public List<NewsDTO> populate(List<PublicationDetail> pubs, boolean managerAccess) {
+  public List<NewsDTO> populatePub(List<PublicationDetail> pubs, boolean managerAccess) {
     List<NewsDTO> dtos = new ArrayList<NewsDTO>();
     if (pubs != null) {
       for (PublicationDetail pub : pubs) {
@@ -173,6 +213,7 @@ public class NewsHelper {
     }
     return dtos;
   }
+
 
   private String getBase64ImageData(String instanceId, PublicationDetail pub) throws Exception {
     String data = "";
