@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.blog.BlogApp;
 import org.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import org.silverpeas.mobile.client.apps.favorites.FavoritesApp;
+import org.silverpeas.mobile.client.apps.hyperlink.HyperLinkApp;
 import org.silverpeas.mobile.client.apps.media.MediaApp;
 import org.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import org.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
@@ -142,6 +143,7 @@ public class SpMobil implements EntryPoint {
     apps.add(new WebPageApp());
     apps.add(new BlogApp());
     apps.add(new WorkflowApp());
+    apps.add(new HyperLinkApp());
   }
 
   public static Page getMainPage() {

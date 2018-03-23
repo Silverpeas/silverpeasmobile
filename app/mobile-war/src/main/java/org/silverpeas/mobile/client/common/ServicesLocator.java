@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.common;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
+import org.silverpeas.mobile.server.services.ServiceHyperLinkImpl;
 import org.silverpeas.mobile.shared.services.*;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigationAsync;
@@ -59,6 +60,14 @@ public class ServicesLocator {
   private static ServiceBlogAsync serviceBlog = (ServiceBlogAsync) GWT.create(ServiceBlog.class);
   private static ServiceWorkflowAsync serviceWorkflow =
       (ServiceWorkflowAsync) GWT.create(ServiceWorkflow.class);
+  private static ServiceHyperLinkAsync serviceHyperLink =
+      (ServiceHyperLinkAsync) GWT.create(ServiceHyperLink.class);
+
+  public static ServiceHyperLinkAsync getServiceHyperLink() {
+    ((ServiceDefTarget) serviceHyperLink).setRpcRequestBuilder(builder);
+    changeServiceEntryPoint((ServiceDefTarget) serviceHyperLink);
+    return serviceHyperLink;
+  }
 
   public static ServiceWorkflowAsync getServiceWorkflow() {
     ((ServiceDefTarget) serviceWorkflow).setRpcRequestBuilder(builder);

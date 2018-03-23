@@ -77,6 +77,8 @@ public class NavigationItem extends Composite {
         setStyleName("app-blog");
       } else if (((ApplicationInstanceDTO) data).isWorkflow()) {
         setStyleName("app-workflow");
+      } else if (type.equalsIgnoreCase(Apps.hyperlink.name())) {
+        setStyleName("app-link");
       }
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");

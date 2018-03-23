@@ -197,6 +197,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.silverpeas.components.hyperlink</groupId>
+      <artifactId>silverpeas-hyperlink</artifactId>
+      <version>${core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
       <version>1.8.1</version>
