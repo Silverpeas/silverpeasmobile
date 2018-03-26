@@ -218,6 +218,9 @@ public class ConnexionPage extends PageContent {
         break;
       }
     }
+    if (domains.getItemCount() == 1) {
+      domains.setVisible(false);
+    }
   }
 
   private List<DomainDTO> loadInLocalStorage() {
