@@ -1734,3 +1734,12 @@ form .forms .fields > li:nth-child(even) {
   padding: 1em !important;
   font-size: 1em !important;
 }
+
+.connected {
+  background: rgb(66, 183, 42);
+  border-radius: 50%;
+  display: inline-block;
+  height: 6px;
+  margin-left: 4px;
+  width: 6px;
+}

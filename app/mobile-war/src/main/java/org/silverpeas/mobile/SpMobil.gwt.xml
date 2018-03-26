@@ -42,6 +42,7 @@
   <set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true"/>
   <set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true"/>
 
+  <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
   <inherits name="org.realityforge.gwt.appcache.Appcache"/>
   <inherits name="org.realityforge.gwt.appcache.linker.Linker"/>
   <add-linker name="appcache"/>
@@ -61,7 +62,8 @@
   <add-linker name="xsiframe"/>
 
   <set-configuration-property name="devModeRedirectEnabled" value="true"/>
-  <set-property name="compiler.useSourceMaps" value="true"/>
+  set-property name="compiler.useSourceMaps" value="true"/>
+
 
   <inherits name="com.seanchenxi.gwt.storage.Storage"/>
   <set-property name="storage.cache" value="false" />

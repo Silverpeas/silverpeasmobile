@@ -227,6 +227,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       dto.setStatus(userFull.getStatus());
       dto.setAvatar(userFull.getAvatar());
       dto.setLanguage(userFull.getUserPreferences().getLanguage());
+      dto.setConnected(userFull.isConnected());
       String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
       dto.setAvatar(avatar);
       if (userFull != null) {

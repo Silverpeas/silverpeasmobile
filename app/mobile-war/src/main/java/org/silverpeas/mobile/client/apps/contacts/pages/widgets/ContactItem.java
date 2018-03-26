@@ -64,8 +64,9 @@ public class ContactItem extends Composite {
     } else {
       user.add(new Image(userData.getAvatar()));
     }
-    user.add(new HTML(userData.getFirstName() + " " + userData.getLastName() + " <span class='status'>" + userData.getStatus() + "</span>" ));
-
+    String html = userData.getFirstName() + " " + userData.getLastName() + " <span class='status'>" + userData.getStatus() + "</span>";
+    if (userData.getConnected()) html += "<span class='connected'></span>";
+    user.add(new HTML(html));
     mail.setText(userData.geteMail());
     if (userData.geteMail() == null || userData.geteMail().isEmpty()) {
       mail.setHTML("&nbsp");
@@ -113,6 +114,7 @@ public class ContactItem extends Composite {
     if (nbTel == 0) {
       tel.add(new InlineHTML("&nbsp;"));
     }
+
     for (String prop :userData.getProperties()) {
 
       String value = userData.getPropertieValue(prop);

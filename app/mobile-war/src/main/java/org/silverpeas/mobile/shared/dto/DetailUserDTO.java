@@ -42,6 +42,7 @@ public class DetailUserDTO implements Serializable{
   private String status;
   private String language;
   private String token;
+  private boolean connected;
   private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
 
   public void addProperty(String key, String value) {
@@ -143,4 +144,8 @@ public class DetailUserDTO implements Serializable{
   public void setToken(String token) {
     this.token = token;
   }
+
+  public void setConnected(final boolean connected) { this.connected = connected; }
+
+  public boolean getConnected() { return connected; }
 }

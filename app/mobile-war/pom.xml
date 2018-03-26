@@ -235,6 +235,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.realityforge.gwt.websockets</groupId>
+      <artifactId>gwt-websockets</artifactId>
+      <version>1.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>2.7.4</version>
