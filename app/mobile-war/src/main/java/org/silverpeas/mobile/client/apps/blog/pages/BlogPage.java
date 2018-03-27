@@ -77,7 +77,7 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractBlogPagesEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new BlogLoadEvent(null));
+    EventBus.getInstance().fireEvent(new BlogLoadEvent("all"));
   }
 
   @Override

@@ -54,7 +54,7 @@ public class ServiceBlogImpl extends AbstractAuthenticateService implements Serv
     List<PostDTO> postsDTO = null;
     Collection<PostDetail> posts = null;
 
-    if (categoryId == null || categoryId.equalsIgnoreCase("all")) {
+    if (categoryId.equalsIgnoreCase("all")) {
       posts = BlogServiceFactory.getBlogService().getAllPosts(instanceId);
     } else {
       posts = BlogServiceFactory.getBlogService().getPostsByCategory(categoryId, instanceId);

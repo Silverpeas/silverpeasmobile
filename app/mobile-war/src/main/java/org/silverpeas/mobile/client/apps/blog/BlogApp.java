@@ -71,7 +71,7 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
 
   @Override
   public void loadBlog(final BlogLoadEvent event) {
-    final String key = "posts_" + instance.getId();
+    final String key = "posts_" + instance.getId() + event.getCategoryId();
     Command offlineAction = new Command() {
       @Override
       public void execute() {
