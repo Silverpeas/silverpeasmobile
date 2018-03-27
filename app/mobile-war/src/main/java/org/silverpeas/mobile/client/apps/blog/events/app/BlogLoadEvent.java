@@ -26,12 +26,23 @@ package org.silverpeas.mobile.client.apps.blog.events.app;
 
 public class BlogLoadEvent extends AbstractBlogAppEvent {
 
-  public BlogLoadEvent(){
+  private String categoryId;
+
+  public BlogLoadEvent(String categoryId) {
     super();
+    this.categoryId = categoryId;
   }
 
   @Override
   protected void dispatch(BlogAppEventHandler handler) {
     handler.loadBlog(this);
+  }
+
+  public String getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(final String categoryId) {
+    this.categoryId = categoryId;
   }
 }

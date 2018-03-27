@@ -48,11 +48,18 @@ public class ServiceBlogImpl extends AbstractAuthenticateService implements Serv
   private OrganizationController organizationController = OrganizationController.get();
 
   @Override
-  public List<PostDTO> getPosts(String instanceId) throws BlogException, AuthenticationException {
+  public List<PostDTO> getPosts(String instanceId, String categoryId) throws BlogException, AuthenticationException {
     checkUserInSession();
 
     List<PostDTO> postsDTO = null;
-    Collection<PostDetail> posts = BlogServiceFactory.getBlogService().getAllPosts(instanceId);
+    Collection<PostDetail> posts = null;
+
+    if (categoryId == null || categoryId.equalsIgnoreCase("all")) {
+      posts = BlogServiceFactory.getBlogService().getAllPosts(instanceId);
+    } else {
+      posts = BlogServiceFactory.getBlogService().getPostsByCategory(categoryId, instanceId);
+    }
+
     postsDTO = populate(posts);
 
     return postsDTO;

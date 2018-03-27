@@ -26,15 +26,12 @@ package org.silverpeas.mobile.client.apps.blog.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.blog.events.app.BlogFilterEvent;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
 import org.silverpeas.mobile.client.apps.blog.events.pages.AbstractBlogPagesEvent;
 import org.silverpeas.mobile.client.apps.blog.events.pages.BlogLoadedEvent;
@@ -80,7 +77,7 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractBlogPagesEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new BlogLoadEvent());
+    EventBus.getInstance().fireEvent(new BlogLoadEvent(null));
   }
 
   @Override
@@ -92,6 +89,7 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
   @Override
   public void onBlogLoad(final BlogLoadedEvent event) {
     news.clear();
+    String selectedCat = categories.getSelectedItemText();
     categories.clear();
     List<PostDTO> postsDTOList = event.getPosts();
     HashMap<String, String> cats = new HashMap<>();
@@ -117,14 +115,19 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
     });
 
     categories.addItem(msg.allCategories(), "all");
+    int indexCat = 0;
+    int oldSelection = 0;
     for (HashMap.Entry cat : list) {
       String v = (String) cat.getValue();
-      if (v.isEmpty()) {
-        categories.addItem(msg.withoutCategory(), "none");
-      } else {
+      if (!v.isEmpty()) {
         categories.addItem(v, (String) cat.getKey());
+        indexCat++;
+        if (v.equals(selectedCat)) {
+          oldSelection = indexCat;
+        }
       }
     }
+    categories.setSelectedIndex(oldSelection);
 
     actionsMenu.addAction(favorite);
     favorite.init(instanceId, null, ContentsTypes.App.name(), getPageTitle());
@@ -132,6 +135,6 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
 
   @UiHandler("categories")
   protected void onChanged(ChangeEvent event) {
-    EventBus.getInstance().fireEvent(new BlogFilterEvent(((ListBox)event.getSource()).getSelectedValue()));
+    EventBus.getInstance().fireEvent(new BlogLoadEvent(((ListBox)event.getSource()).getSelectedValue()));
   }
 }

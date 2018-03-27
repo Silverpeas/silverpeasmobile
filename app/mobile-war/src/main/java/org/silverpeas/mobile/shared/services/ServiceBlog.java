@@ -34,5 +34,5 @@ import java.util.List;
 
 @RemoteServiceRelativePath("Blog")
 public interface ServiceBlog extends RemoteService {
-  public List<PostDTO> getPosts(String instanceId) throws BlogException, AuthenticationException;
+  public List<PostDTO> getPosts(String instanceId, String categoryId) throws BlogException, AuthenticationException;
 }

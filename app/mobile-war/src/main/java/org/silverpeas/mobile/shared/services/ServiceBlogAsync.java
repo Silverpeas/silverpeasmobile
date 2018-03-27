@@ -30,5 +30,5 @@ import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import java.util.List;
 
 public interface ServiceBlogAsync {
-  void getPosts(String instanceId, final AsyncCallback<List<PostDTO>> async);
+  void getPosts(String instanceId, String categoryId, final AsyncCallback<List<PostDTO>> async);
 }
