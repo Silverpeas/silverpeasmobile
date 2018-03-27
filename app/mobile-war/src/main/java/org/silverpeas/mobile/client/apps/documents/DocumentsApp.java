@@ -244,7 +244,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<PublicationDTO>(offlineAction) {
             @Override
             public void attempt() {
-                ServicesLocator.getServiceDocuments().getPublication(event.getPubId(), this);
+                ServicesLocator.getServiceDocuments().getPublication(event.getPubId(), event.getType(), this);
             }
 
             @Override

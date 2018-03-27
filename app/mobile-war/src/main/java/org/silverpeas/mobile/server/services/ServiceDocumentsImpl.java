@@ -301,7 +301,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   }
 
   @Override
-  public PublicationDTO getPublication(String pubId) throws DocumentsException, AuthenticationException {
+  public PublicationDTO getPublication(String pubId, String contentType) throws DocumentsException, AuthenticationException {
     SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
     checkUserInSession();
     try {
@@ -317,7 +317,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setVersion(pub.getVersion());
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
-      dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication("Publication", new PublicationPK(pubId)));
+      dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(contentType, new PublicationPK(pubId)));
       dto.setInstanceId(pub.getInstanceId());
       if (pub.getWysiwyg() == null|| !pub.getWysiwyg().trim().isEmpty() || !pub.getInfoId().equals("0")) {
         dto.setContent(true);

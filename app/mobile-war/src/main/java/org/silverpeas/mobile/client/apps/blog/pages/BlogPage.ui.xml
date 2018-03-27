@@ -33,6 +33,7 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <base:ActionsMenu ui:field="actionsMenu"/>
     <h2 class="appHeader"></h2>
+    <g:ListBox ui:field="categories"/>
     <components:UnorderedList ui:field="news" styleName="carroussel-news"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

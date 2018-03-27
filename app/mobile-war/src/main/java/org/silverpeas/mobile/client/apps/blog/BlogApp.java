@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import org.silverpeas.mobile.client.apps.blog.events.app.AbstractBlogAppEvent;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogAppEventHandler;
+import org.silverpeas.mobile.client.apps.blog.events.app.BlogFilterEvent;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
 import org.silverpeas.mobile.client.apps.blog.events.pages.BlogLoadedEvent;
 import org.silverpeas.mobile.client.apps.blog.pages.BlogPage;
@@ -97,6 +98,11 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
       }
     };
     action.attempt();
+  }
+
+  @Override
+  public void filterBlog(final BlogFilterEvent event) {
+    //TODO
   }
 
   public void updateDisplay() {

@@ -63,8 +63,13 @@ public class ServiceBlogImpl extends AbstractAuthenticateService implements Serv
     dto.setId(post.getId());
     dto.setTitle(post.getTitle());
     dto.setDescription(post.getDescription());
-    dto.setCategoryId(post.getCategoryId());
-    if (post.getCategory() != null) dto.setCategoryName(post.getCategory().getName());
+    if (post.getCategory() != null) {
+      dto.setCategoryName(post.getCategory().getName());
+      dto.setCategoryId(String.valueOf(post.getCategory().getId()));
+    } else {
+      dto.setCategoryId("");
+      dto.setCategoryName("");
+    }
     dto.setCreatorName(post.getCreatorName());
     dto.setCreationDate(sdf.format(post.getCreationDate()));
     dto.setDateEvent(sdf.format(post.getDateEvent()));

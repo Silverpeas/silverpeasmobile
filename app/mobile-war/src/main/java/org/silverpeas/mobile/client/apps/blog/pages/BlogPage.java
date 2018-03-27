@@ -25,9 +25,16 @@
 package org.silverpeas.mobile.client.apps.blog.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.blog.events.app.BlogFilterEvent;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
 import org.silverpeas.mobile.client.apps.blog.events.pages.AbstractBlogPagesEvent;
 import org.silverpeas.mobile.client.apps.blog.events.pages.BlogLoadedEvent;
@@ -42,7 +49,13 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class BlogPage extends PageContent implements BlogPagesEventHandler {
 
@@ -53,6 +66,8 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
   UnorderedList news;
   @UiField
   ActionsMenu actionsMenu;
+  @UiField
+  ListBox categories;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
@@ -77,7 +92,9 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
   @Override
   public void onBlogLoad(final BlogLoadedEvent event) {
     news.clear();
+    categories.clear();
     List<PostDTO> postsDTOList = event.getPosts();
+    HashMap<String, String> cats = new HashMap<>();
     int i = 1;
     int max = postsDTOList.size();
     for (PostDTO postDTO : postsDTOList) {
@@ -85,10 +102,36 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
       item.setData(i, max, postDTO);
       news.add(item);
       instanceId = postDTO.getInstanceId();
+      cats.put(postDTO.getCategoryId(), postDTO.getCategoryName());
       i++;
     }
+
+    // sort categories
+    Set<Map.Entry<String, String>> set = cats.entrySet();
+    List<Map.Entry<String, String>> list = new ArrayList<>(set);
+    Collections.sort(list, new Comparator<Map.Entry<String, String>>() {
+      public int compare(Map.Entry<String, String> o1,
+          Map.Entry<String, String> o2) {
+        return o2.getKey().compareTo(o1.getKey());
+      }
+    });
+
+    categories.addItem(msg.allCategories(), "all");
+    for (HashMap.Entry cat : list) {
+      String v = (String) cat.getValue();
+      if (v.isEmpty()) {
+        categories.addItem(msg.withoutCategory(), "none");
+      } else {
+        categories.addItem(v, (String) cat.getKey());
+      }
+    }
+
     actionsMenu.addAction(favorite);
     favorite.init(instanceId, null, ContentsTypes.App.name(), getPageTitle());
   }
 
+  @UiHandler("categories")
+  protected void onChanged(ChangeEvent event) {
+    EventBus.getInstance().fireEvent(new BlogFilterEvent(((ListBox)event.getSource()).getSelectedValue()));
+  }
 }

@@ -28,4 +28,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface BlogAppEventHandler extends EventHandler{
   void loadBlog(BlogLoadEvent event);
+  void filterBlog(BlogFilterEvent event);
 }

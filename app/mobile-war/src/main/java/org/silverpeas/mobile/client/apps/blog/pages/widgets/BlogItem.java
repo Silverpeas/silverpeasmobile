@@ -67,7 +67,7 @@ public class BlogItem extends Composite implements ClickHandler {
     this.index = index;
     this.max = max;
     this.data = data;
-    content.setHTML("<p>" + data.getDateEvent() + "</p><h2><a href='#'>" + data.getTitle() + "</a></h2>");
+    content.setHTML("<p>" + data.getDateEvent() + "</p><h2><a href='#'>" + data.getTitle() + "</a></h2><h2>" + data.getCategoryName() + "</h2>");
     content.addClickHandler(this);
   }
 

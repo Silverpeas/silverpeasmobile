@@ -29,5 +29,7 @@ import com.google.gwt.i18n.client.Messages;
 public interface BlogMessages extends Messages {
   String more();
   String title();
+  String allCategories();
+  String withoutCategory();
 
 }
