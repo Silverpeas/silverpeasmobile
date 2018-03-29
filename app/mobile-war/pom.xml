@@ -22,13 +22,6 @@
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>gwt-crypto repo</id>
-      <url>http://gwt-crypto.googlecode.com/svn/trunk/repo/</url>
-    </repository>
-  </repositories>
-
   <build>
     <finalName>spmobile</finalName>
     <resources>
@@ -79,9 +72,9 @@
       <version>6.2.4</version>
     </dependency>
     <dependency>
-      <groupId>com.googlecode.gwt.crypto</groupId>
+      <groupId>com.googlecode.gwt-crypto</groupId>
       <artifactId>gwt-crypto</artifactId>
-      <version>1.0.3</version>
+      <version>2.3.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
