@@ -9,10 +9,10 @@
   </parent>
 
   <properties>
-    <core.version>6.0</core.version>
+    <core.version>6.1-build180328</core.version>
      <maven.compiler.source>1.7</maven.compiler.source>
      <maven.compiler.target>1.7</maven.compiler.target>
-     <next.release>6.0</next.release>
+     <next.release>6.1</next.release>
   </properties>
 
   <repositories>
@@ -33,7 +33,7 @@
   <groupId>com.silverpeas.components</groupId>
   <artifactId>mobile</artifactId>
   <packaging>pom</packaging>
-  <version>6.0</version>
+  <version>6.1-SNAPSHOT</version>
   <name>Silverpeas Mobile component</name>
 
   <modules>
