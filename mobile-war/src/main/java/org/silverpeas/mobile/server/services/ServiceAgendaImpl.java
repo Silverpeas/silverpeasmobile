@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2017 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -19,24 +19,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.mobile.shared.dto.EventDetailDTO;
-import org.silverpeas.mobile.shared.exceptions.AlmanachException;
+import org.silverpeas.mobile.shared.exceptions.AgendaException;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.services.ServiceAlmanach;
+import org.silverpeas.mobile.shared.services.ServiceAgenda;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceAlmanachImpl extends AbstractAuthenticateService implements ServiceAlmanach {
+public class ServiceAgendaImpl extends AbstractAuthenticateService implements ServiceAgenda {
 
   private static final long serialVersionUID = 1L;
 
-  public List<EventDetailDTO> getAlmanach(String instanceId) throws AlmanachException, AuthenticationException {
+  public List<EventDetailDTO> getAgenda(String instanceId) throws AgendaException, AuthenticationException {
     checkUserInSession();
     List<EventDetailDTO> listEventDetailDTO = new ArrayList<>();
     //TODO

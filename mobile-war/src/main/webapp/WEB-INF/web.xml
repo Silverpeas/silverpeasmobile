@@ -159,12 +159,12 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceAlmanachImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceAlmanachImpl</servlet-class>
+    <servlet-name>serviceAgendaImpl</servlet-name>
+    <servlet-class>org.silverpeas.mobile.server.services.ServiceAgendaImpl</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>serviceAlmanachImpl</servlet-name>
-    <url-pattern>/services/spmobile/Almanach</url-pattern>
+    <servlet-name>serviceAgendaImpl</servlet-name>
+    <url-pattern>/services/spmobile/Agenda</url-pattern>
   </servlet-mapping>
 
   <servlet>

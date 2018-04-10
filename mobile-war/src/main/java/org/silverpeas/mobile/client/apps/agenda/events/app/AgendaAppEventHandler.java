@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2017 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -19,20 +19,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.client.apps.agenda.events.app;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import org.silverpeas.mobile.shared.dto.EventDetailDTO;
-import org.silverpeas.mobile.shared.exceptions.AlmanachException;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import com.google.gwt.event.shared.EventHandler;
 
-import java.util.List;
-
-@RemoteServiceRelativePath("Almanach")
-public interface ServiceAlmanach extends RemoteService{
-	List<EventDetailDTO> getAlmanach(String instanceId) throws AlmanachException, AuthenticationException;
+public interface AgendaAppEventHandler extends EventHandler{
+  void loadAgenda(AgendaLoadEvent event);
 }

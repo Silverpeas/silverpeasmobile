@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2017 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -19,31 +19,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-package org.silverpeas.mobile.shared.exceptions;
+package org.silverpeas.mobile.client.apps.agenda.resources;
 
-public class AlmanachException extends Exception{
+import com.google.gwt.i18n.client.Messages;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1720039965391260361L;
-
-	public AlmanachException() {
-		super();
-	}
-
-	public AlmanachException(String message, Throwable caught) {
-		super(message, caught);
-	}
-
-	public AlmanachException(String message) {
-		super(message);
-	}
-
-	public AlmanachException(Throwable caught) {
-		super(caught);
-	}
+public interface AgendaMessages extends Messages {
+  String title();
 }
