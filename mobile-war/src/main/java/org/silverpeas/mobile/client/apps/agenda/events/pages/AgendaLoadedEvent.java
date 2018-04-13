@@ -23,18 +23,30 @@
 
 package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
+import org.silverpeas.mobile.shared.dto.EventDetailDTO;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 
 import java.util.List;
 
 public class AgendaLoadedEvent extends AbstractAgendaPagesEvent {
 
-  public AgendaLoadedEvent(){
+  private List<EventDetailDTO> events;
+
+  public AgendaLoadedEvent(List<EventDetailDTO> events){
     super();
+    this.events = events;
   }
 
   @Override
   protected void dispatch(AgendaPagesEventHandler handler) {
     handler.onAgendaLoad(this);
+  }
+
+  public List<EventDetailDTO> getEvents() {
+    return events;
+  }
+
+  public void setEvents(final List<EventDetailDTO> events) {
+    this.events = events;
   }
 }

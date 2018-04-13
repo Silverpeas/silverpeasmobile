@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.agenda.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AgendaLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractAgendaPagesEvent;
@@ -53,6 +54,8 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   @Override
   public void onAgendaLoad(final AgendaLoadedEvent event) {
     //TODO
+    event.getEvents();
+    Window.alert("display events " + event.getEvents().size());
   }
 
   interface AgendaPageUiBinder extends UiBinder<Widget, AgendaPage> {

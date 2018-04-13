@@ -23,22 +23,53 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.silverpeas.core.calendar.CalendarEventOccurrence;
+import org.silverpeas.core.webapi.calendar.CalendarWebManager;
 import org.silverpeas.mobile.shared.dto.EventDetailDTO;
 import org.silverpeas.mobile.shared.exceptions.AgendaException;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.services.ServiceAgenda;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ServiceAgendaImpl extends AbstractAuthenticateService implements ServiceAgenda {
 
   private static final long serialVersionUID = 1L;
 
-  public List<EventDetailDTO> getAgenda(String instanceId) throws AgendaException, AuthenticationException {
+  public List<EventDetailDTO> getTodayEvents(String instanceId) throws AgendaException, AuthenticationException {
     checkUserInSession();
     List<EventDetailDTO> listEventDetailDTO = new ArrayList<>();
-    //TODO
+
+    org.silverpeas.core.calendar.Calendar c = org.silverpeas.core.calendar.Calendar.getByComponentInstanceId(instanceId).getMainCalendar().get();
+    List<CalendarEventOccurrence> occurrences = CalendarWebManager.get(instanceId).getEventOccurrencesOf(LocalDate.now(), LocalDate.now(), Collections
+        .singletonList(c));
+
+    for (CalendarEventOccurrence occurrence : occurrences) {
+      listEventDetailDTO.add(populate(occurrence));
+    }
+
     return listEventDetailDTO;
   }
+
+  private EventDetailDTO populate(final CalendarEventOccurrence occurrence) {
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    EventDetailDTO dto = new EventDetailDTO();
+    dto.setTitle(occurrence.getTitle());
+    dto.setLocation(occurrence.getLocation());
+    dto.setPriority(occurrence.getPriority().getICalLevel());
+
+    dto.setStartDate(dtf.format(occurrence.getStartDate()));
+    dto.setEndDate(dtf.format(occurrence.getEndDate()));
+
+    dto.setAllDay(occurrence.isOnAllDay());
+    dto.setDescription(occurrence.getDescription());
+    dto.setVisibilityLevel(occurrence.getVisibilityLevel().name());
+
+    return dto;
+  }
+
 }

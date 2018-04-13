@@ -46,6 +46,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.shared.dto.EventDetailDTO;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -91,8 +92,32 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void loadAgenda(final AgendaLoadEvent event) {
-    //TODO
 
-    EventBus.getInstance().fireEvent(new AgendaLoadedEvent());
+    final String key = "events_" + instance.getId();
+    Command offlineAction = new Command() {
+      @Override
+      public void execute() {
+        List<EventDetailDTO> result = LocalStorageHelper.load(key, List.class);
+        if (result == null) {
+          result = new ArrayList<EventDetailDTO>();
+        }
+        EventBus.getInstance().fireEvent(new AgendaLoadedEvent(result));
+      }
+    };
+
+    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<EventDetailDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceAgenda().getTodayEvents(instance.getId(), this);
+      }
+
+      @Override
+      public void onSuccess(List<EventDetailDTO> result) {
+        super.onSuccess(result);
+        LocalStorageHelper.store(key, List.class, result);
+        EventBus.getInstance().fireEvent(new AgendaLoadedEvent(result));
+      }
+    };
+    action.attempt();
   }
 }

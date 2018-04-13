@@ -29,5 +29,5 @@ import org.silverpeas.mobile.shared.dto.EventDetailDTO;
 import java.util.List;
 
 public interface ServiceAgendaAsync {
-	void getAgenda(String instanceId, AsyncCallback<List<EventDetailDTO>> callback);
+  void getTodayEvents(String instanceId, final AsyncCallback<List<EventDetailDTO>> async);
 }

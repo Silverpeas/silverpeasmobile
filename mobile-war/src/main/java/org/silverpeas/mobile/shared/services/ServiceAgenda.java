@@ -33,5 +33,5 @@ import java.util.List;
 
 @RemoteServiceRelativePath("Agenda")
 public interface ServiceAgenda extends RemoteService{
-  List<EventDetailDTO> getAgenda(String instanceId) throws AgendaException, AuthenticationException;
+  List<EventDetailDTO> getTodayEvents(String instanceId) throws AgendaException, AuthenticationException;
 }
