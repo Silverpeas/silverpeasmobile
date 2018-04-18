@@ -718,6 +718,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url(packPictos.png) 8px -63px no-repeat;
 }
 
+#silverpeas-navmenu-panel #navmenu-panel li#menu-tchat a {
+  background: transparent url(packPictos.png) 8px -276px no-repeat;
+}
+
 #menu-principal li a strong {
   color: #333333;
 }

@@ -70,7 +70,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
   @UiField HTMLPanel container, user;
-  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config;
+  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, tchat;
   @UiField SpanElement status;
   @UiField TextBox search;
 
@@ -92,6 +92,8 @@ public class NavigationMenu extends Composite implements PageEventHandler {
       help.setHref(url);
       help.setTarget("_blank");
     }
+    tchat.setVisible(Boolean.parseBoolean(ResourcesManager.getParam("chat.enable")));
+
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
 

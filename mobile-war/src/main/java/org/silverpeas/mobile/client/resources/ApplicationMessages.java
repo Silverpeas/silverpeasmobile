@@ -55,6 +55,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Accueil")
   String home();
 
+  @DefaultMessage("Discussions")
+  String tchat();
+
   @DefaultMessage("Go")
   String search();
 
