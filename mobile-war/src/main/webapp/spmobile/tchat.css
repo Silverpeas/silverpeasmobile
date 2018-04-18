@@ -4,7 +4,7 @@ body {
   min-height: 220px;
   padding-right: 130px;
   padding-left: 1em;
-  color: #333;	
+  color: #333;
   font-family: 'Ubuntu', cursive, Helvetica,Arial,sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -16,5 +16,13 @@ body {
 }
 
 .logout {
-   display: none;
+  display: none;
+}
+
+#jsxc_toggleRoster {
+  background-color: rgba(153, 153, 153, 0.5);
+}
+
+.jsxc_onlineHelp, .jsxc_settings, .jsxc_about, .jsxc_addBuddy, .jsxc_joinChat {
+  display: none;
 }
