@@ -53,6 +53,8 @@ public class UserHelper {
     dto.setAvatar(user.getAvatar());
     dto.setLanguage(user.getUserPreferences().getLanguage());
     dto.setToken(user.getToken());
+    dto.setZone(user.getUserPreferences().getZoneId().getId());
+
     return dto;
   }
 

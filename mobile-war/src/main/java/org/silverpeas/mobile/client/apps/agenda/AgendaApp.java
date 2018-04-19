@@ -25,6 +25,10 @@ package org.silverpeas.mobile.client.apps.agenda;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AbstractAgendaAppEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AgendaAppEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AgendaLoadEvent;
@@ -45,8 +49,11 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.EventDetailDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -58,6 +65,8 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   private AgendaMessages msg;
   private ApplicationInstanceDTO instance;
+
+  private List<CalendarDTO> calendars;
 
   public AgendaApp(){
     super();
@@ -90,9 +99,74 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   }
 
+  //TODO : integrate
+  public void getCalendars() {
+    ServicesLocator.getServiceAlmanach().getCalendars(instance.getId(), new MethodCallback<List
+        <CalendarDTO>>() {
+      @Override
+      public void onFailure(final Method method, final Throwable throwable) {
+
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<CalendarDTO> calendars) {
+        AgendaApp.this.calendars = calendars;
+      }
+    });
+  }
+
+
+  //TODO : integrate
+  public void loadTodaysEvents() {
+
+    final String key = "events_" + instance.getId();
+    Command offlineAction = new Command() {
+      @Override
+      public void execute() {
+        List<CalendarEventDTO> result = LocalStorageHelper.load(key, List.class);
+        if (result == null) {
+          result = new ArrayList<CalendarEventDTO>();
+        }
+        //EventBus.getInstance().fireEvent(new AgendaLoadedEvent(result));
+      }
+    };
+
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CalendarEventDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceAlmanach().getOccurences(instance.getId(), "75a2d08c-e9e3-466f-be7f-acb6be48af1e", "2018-03-24T23:00:00.000Z", "2018-05-14T21:59:59.999Z", SpMobil.getUser().getZone(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<CalendarEventDTO> calendarEvents) {
+        super.onSuccess(method, calendarEvents);
+        LocalStorageHelper.store(key, List.class, calendarEvents);
+        //EventBus.getInstance().fireEvent(new AgendaLoadedEvent(calendarEvents));
+      }
+    };
+    action.attempt();
+
+
+    /*ServicesLocator.getServiceAlmanach().getOccurences(instance.getId(), "75a2d08c-e9e3-466f-be7f-acb6be48af1e", "2018-03-24T23:00:00.000Z", "2018-05-14T21:59:59.999Z", SpMobil.getUser().getZone(), new MethodCallback
+        <List<CalendarEventDTO>>() {
+      @Override
+      public void onFailure(final Method method, final Throwable throwable) {
+        Window.alert("error");
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<CalendarEventDTO> calendarEventDTOS) {
+        for (CalendarEventDTO cal : calendarEventDTOS) {
+          Window.alert(cal.getTitle());
+        }
+      }
+    });*/
+  }
+
   @Override
   public void loadAgenda(final AgendaLoadEvent event) {
 
+    // With RPC call
     final String key = "events_" + instance.getId();
     Command offlineAction = new Command() {
       @Override

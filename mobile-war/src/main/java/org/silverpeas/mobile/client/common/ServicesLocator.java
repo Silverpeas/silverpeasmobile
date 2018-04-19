@@ -24,7 +24,11 @@
 package org.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import org.fusesource.restygwt.client.Defaults;
+import org.silverpeas.mobile.client.common.network.RestDispatcher;
+import org.silverpeas.mobile.client.common.network.SpMobileRequestBuilder;
 import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
 import org.silverpeas.mobile.server.services.ServiceHyperLinkImpl;
 import org.silverpeas.mobile.shared.services.*;
@@ -33,6 +37,7 @@ import org.silverpeas.mobile.shared.services.navigation.ServiceNavigationAsync;
 
 public class ServicesLocator {
   private static SpMobileRpcRequestBuilder builder = new SpMobileRpcRequestBuilder();
+  private static RestDispatcher dispatcher = new RestDispatcher();
 
   private static ServiceAgendaAsync serviceAgenda =
       (ServiceAgendaAsync) GWT.create(ServiceAgenda.class);
@@ -63,6 +68,21 @@ public class ServicesLocator {
       (ServiceWorkflowAsync) GWT.create(ServiceWorkflow.class);
   private static ServiceHyperLinkAsync serviceHyperLink =
       (ServiceHyperLinkAsync) GWT.create(ServiceHyperLink.class);
+
+  private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
+
+  private static void initRestContext() {
+    Defaults.setServiceRoot("/silverpeas/services");
+    Defaults.setDispatcher(dispatcher);
+    //Defaults.setTimeZone(TimeZone.createTimeZone());
+    //Defaults.setDateFormat();
+  }
+
+
+  public static ServiceAlmanach getServiceAlmanach() {
+    initRestContext();
+    return serviceAlmanach;
+  }
 
   public static ServiceAgendaAsync getServiceAgenda() {
     ((ServiceDefTarget) serviceAgenda).setRpcRequestBuilder(builder);
