@@ -39,8 +39,6 @@ public class ServicesLocator {
   private static SpMobileRpcRequestBuilder builder = new SpMobileRpcRequestBuilder();
   private static RestDispatcher dispatcher = new RestDispatcher();
 
-  private static ServiceAgendaAsync serviceAgenda =
-      (ServiceAgendaAsync) GWT.create(ServiceAgenda.class);
   private static ServiceConnectionAsync serviceConnection =
       (ServiceConnectionAsync) GWT.create(ServiceConnection.class);
   private static ServiceContactAsync serviceContact =
@@ -82,12 +80,6 @@ public class ServicesLocator {
   public static ServiceAlmanach getServiceAlmanach() {
     initRestContext();
     return serviceAlmanach;
-  }
-
-  public static ServiceAgendaAsync getServiceAgenda() {
-    ((ServiceDefTarget) serviceAgenda).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceAgenda);
-    return serviceAgenda;
   }
 
   public static ServiceHyperLinkAsync getServiceHyperLink() {

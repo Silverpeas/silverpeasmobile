@@ -23,17 +23,19 @@
 
 package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import org.silverpeas.mobile.shared.dto.EventDetailDTO;
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
 import java.util.List;
 
 public class AgendaLoadedEvent extends AbstractAgendaPagesEvent {
 
-  private List<EventDetailDTO> events;
+  private List<CalendarDTO> calendars;
+  private List<CalendarEventDTO> events;
 
-  public AgendaLoadedEvent(List<EventDetailDTO> events){
+  public AgendaLoadedEvent(List<CalendarDTO> calendars, List<CalendarEventDTO> events){
     super();
+    this.calendars = calendars;
     this.events = events;
   }
 
@@ -42,11 +44,15 @@ public class AgendaLoadedEvent extends AbstractAgendaPagesEvent {
     handler.onAgendaLoad(this);
   }
 
-  public List<EventDetailDTO> getEvents() {
+  public List<CalendarEventDTO> getEvents() {
     return events;
   }
 
-  public void setEvents(final List<EventDetailDTO> events) {
+  public void setEvents(final List<CalendarEventDTO> events) {
     this.events = events;
   }
+
+  public List<CalendarDTO> getCalendars() { return calendars; }
+
+  public void setCalendars(final List<CalendarDTO> calendars) { this.calendars = calendars; }
 }
