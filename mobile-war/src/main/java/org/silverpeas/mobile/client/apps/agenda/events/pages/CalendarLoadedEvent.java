@@ -21,17 +21,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.events.app;
+package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-public class AgendaLoadEvent extends AbstractAgendaAppEvent {
+import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
-  public AgendaLoadEvent() {
+import java.util.List;
+
+public class CalendarLoadedEvent extends AbstractAgendaPagesEvent {
+
+  private List<CalendarEventDTO> events;
+
+  public CalendarLoadedEvent(List<CalendarEventDTO> events){
     super();
+    this.events = events;
   }
 
   @Override
-  protected void dispatch(AgendaAppEventHandler handler) {
-    handler.loadAgenda(this);
+  protected void dispatch(AgendaPagesEventHandler handler) {
+    handler.onCalendarEventsLoaded(this);
   }
 
+  public List<CalendarEventDTO> getEvents() {
+    return events;
+  }
+
+  public void setEvents(final List<CalendarEventDTO> events) {
+    this.events = events;
+  }
 }

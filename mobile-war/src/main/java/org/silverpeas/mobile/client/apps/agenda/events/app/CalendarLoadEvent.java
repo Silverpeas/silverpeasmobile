@@ -21,38 +21,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.events.pages;
+package org.silverpeas.mobile.client.apps.agenda.events.app;
 
+import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
-import java.util.List;
+public class CalendarLoadEvent extends AbstractAgendaAppEvent {
 
-public class AgendaLoadedEvent extends AbstractAgendaPagesEvent {
+  private CalendarDTO calendar;
 
-  private List<CalendarDTO> calendars;
-  private List<CalendarEventDTO> events;
+  private TimeRange range;
 
-  public AgendaLoadedEvent(List<CalendarDTO> calendars, List<CalendarEventDTO> events){
+  public CalendarLoadEvent(CalendarDTO calendar, TimeRange range) {
     super();
-    this.calendars = calendars;
-    this.events = events;
   }
 
   @Override
-  protected void dispatch(AgendaPagesEventHandler handler) {
-    handler.onAgendaLoad(this);
+  protected void dispatch(AgendaAppEventHandler handler) {
+    handler.loadCalendarEvents(this);
   }
 
-  public List<CalendarEventDTO> getEvents() {
-    return events;
+  public CalendarDTO getCalendar() {
+    return calendar;
   }
 
-  public void setEvents(final List<CalendarEventDTO> events) {
-    this.events = events;
+  public void setCalendar(final CalendarDTO calendar) {
+    this.calendar = calendar;
   }
 
-  public List<CalendarDTO> getCalendars() { return calendars; }
+  public TimeRange getRange() {
+    return range;
+  }
 
-  public void setCalendars(final List<CalendarDTO> calendars) { this.calendars = calendars; }
+  public void setRange(final TimeRange range) {
+    this.range = range;
+  }
+
 }

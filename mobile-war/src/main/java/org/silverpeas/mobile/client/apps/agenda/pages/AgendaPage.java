@@ -28,9 +28,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.agenda.events.app.AgendaLoadEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
+import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractAgendaPagesEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.AgendaLoadedEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.CalendarLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AgendaPagesEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.apps.blog.resources.BlogMessages;
@@ -38,10 +39,14 @@ import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesB
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+
+import java.util.List;
 
 public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
   private static AgendaPageUiBinder uiBinder = GWT.create(AgendaPageUiBinder.class);
+  private List<CalendarDTO> calendars = null;
 
   @UiField(provided = true) protected AgendaMessages msg = null;
 
@@ -51,8 +56,13 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
 
+  public void setCalendars(final List<CalendarDTO> calendars) {
+    this.calendars = calendars;
+    EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendars.get(0), TimeRange.weeks));
+  }
+
   @Override
-  public void onAgendaLoad(final AgendaLoadedEvent event) {
+  public void onCalendarEventsLoaded(final CalendarLoadedEvent event) {
     //TODO
     event.getEvents();
     Window.alert("display events " + event.getEvents().size());
@@ -66,7 +76,6 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractAgendaPagesEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new AgendaLoadEvent());
   }
 
   @Override

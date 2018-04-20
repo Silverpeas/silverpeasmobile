@@ -26,5 +26,5 @@ package org.silverpeas.mobile.client.apps.agenda.events.app;
 import com.google.gwt.event.shared.EventHandler;
 
 public interface AgendaAppEventHandler extends EventHandler{
-  void loadAgenda(AgendaLoadEvent event);
+  void loadCalendarEvents(CalendarLoadEvent event);
 }
