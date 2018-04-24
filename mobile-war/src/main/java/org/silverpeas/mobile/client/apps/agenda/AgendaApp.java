@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.agenda;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
@@ -139,12 +140,13 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CalendarEventDTO>>(offlineAction) {
       @Override
       public void attempt() {
-        String startDateOfWindowTime = "2018-03-24T23:00:00.000Z";
-        String endDateOfWindowTime = "2018-05-14T21:59:59.999Z";
+        // Date format sample : 2018-03-24T23:00:00.000Z
+        String startDateOfWindowTime;
+        String endDateOfWindowTime;
 
         Date today = new Date();
-        DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        startDateOfWindowTime = dtf.format(today);
+        DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        startDateOfWindowTime = dtf.format(today) + "Z";
         Date end = new Date();
         if (event.getRange().equals(TimeRange.weeks)) {
           CalendarUtil.addDaysToDate(end, 7*4+1); // for include last day
@@ -152,7 +154,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
           CalendarUtil.addMonthsToDate(end,12);
           CalendarUtil.addDaysToDate(end,1); // for inclusde last day
         }
-        endDateOfWindowTime = dtf.format(end);
+        endDateOfWindowTime = dtf.format(end) + "Z";
         ServicesLocator.getServiceAlmanach()
             .getOccurences(instance.getId(), event.getCalendar().getId(),
                 startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);

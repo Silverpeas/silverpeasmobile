@@ -78,7 +78,10 @@ public class NavigationItem extends Composite {
         setStyleName("app-workflow");
       } else if (type.equalsIgnoreCase(Apps.hyperlink.name())) {
         setStyleName("app-link");
+      } else if (type.equalsIgnoreCase(Apps.almanach.name())) {
+        setStyleName("app-almanach");
       }
+
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
   }

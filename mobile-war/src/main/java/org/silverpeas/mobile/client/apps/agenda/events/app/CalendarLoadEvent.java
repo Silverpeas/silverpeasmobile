@@ -34,6 +34,8 @@ public class CalendarLoadEvent extends AbstractAgendaAppEvent {
 
   public CalendarLoadEvent(CalendarDTO calendar, TimeRange range) {
     super();
+    this.calendar = calendar;
+    this.range = range;
   }
 
   @Override
