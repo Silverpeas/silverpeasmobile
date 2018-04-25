@@ -24,7 +24,6 @@
 package org.silverpeas.mobile.client.apps.agenda.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -35,18 +34,13 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.pages.EventPage;
-import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.ContentDTO;
-import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 
-public class EventItem extends Composite implements ClickHandler {
+public class HeaderItem extends Composite implements ClickHandler {
 
   private CalendarEventDTO data;
-  private static EventItemUiBinder uiBinder = GWT.create(EventItemUiBinder.class);
+  private static HeaderItemUiBinder uiBinder = GWT.create(HeaderItemUiBinder.class);
   @UiField
   Anchor picto;
   @UiField
@@ -55,20 +49,16 @@ public class EventItem extends Composite implements ClickHandler {
   HTMLPanel container;
   protected ApplicationMessages msg = null;
 
-  interface EventItemUiBinder extends UiBinder<Widget, EventItem> {}
+  interface HeaderItemUiBinder extends UiBinder<Widget, HeaderItem> {}
 
-  public EventItem() {
+  public HeaderItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
   }
 
   public void setData(CalendarEventDTO data) {
     this.data = data;
-    String attendee = "";
-    if (!data.getAttendees().isEmpty()) {
-      attendee = data.getAttendees().get(0).getFullName();
-    }
-    content.setHTML("<span>"+data.getTitle()+"</span><span>"+data.getStartDate()+"</span>" + attendee);
+    content.setHTML("<span>"+data.getTitle()+"</span><span>"+data.getStartDate()+"</span>");
     content.addClickHandler(this);
   }
 

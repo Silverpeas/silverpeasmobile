@@ -21,31 +21,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.events.pages;
+package org.silverpeas.mobile.shared.dto.almanach;
 
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import java.io.Serializable;
 
-import java.util.List;
+/**
+ * @author svu
+ */
+public class CalendarEventAttendeeDTO implements Serializable {
+  private String id;
+  private String fullName;
+  private ParticipationStatusDTO participationStatus;
+  private PresenceStatusDTO presenceStatus;
 
-public class CalendarLoadedEvent extends AbstractAgendaPagesEvent {
-
-  private List<CalendarEventDTO> events;
-
-  public CalendarLoadedEvent(List<CalendarEventDTO> events){
-    super();
-    this.events = events;
+  public String getId() {
+    return id;
   }
 
-  @Override
-  protected void dispatch(AgendaPagesEventHandler handler) {
-    handler.onCalendarEventsLoaded(this);
+  public void setId(final String id) {
+    this.id = id;
   }
 
-  public List<CalendarEventDTO> getEvents() {
-    return events;
+  public String getFullName() {
+    return fullName;
   }
 
-  public void setEvents(final List<CalendarEventDTO> events) {
-    this.events = events;
+  public void setFullName(final String fullName) {
+    this.fullName = fullName;
+  }
+
+  public ParticipationStatusDTO getParticipationStatus() {
+    return participationStatus;
+  }
+
+  public void setParticipationStatus(final ParticipationStatusDTO participationStatus) {
+    this.participationStatus = participationStatus;
+  }
+
+  public PresenceStatusDTO getPresenceStatus() {
+    return presenceStatus;
+  }
+
+  public void setPresenceStatus(final PresenceStatusDTO presenceStatus) {
+    this.presenceStatus = presenceStatus;
   }
 }

@@ -21,31 +21,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.events.pages;
+package org.silverpeas.mobile.shared.dto.almanach;
 
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import java.io.Serializable;
 
-import java.util.List;
+/**
+ * @author svu
+ */
+public class AttachmentParameterDTO implements Serializable {
+  private String name;
+  private String value;
 
-public class CalendarLoadedEvent extends AbstractAgendaPagesEvent {
-
-  private List<CalendarEventDTO> events;
-
-  public CalendarLoadedEvent(List<CalendarEventDTO> events){
-    super();
-    this.events = events;
+  public String getName() {
+    return name;
   }
 
-  @Override
-  protected void dispatch(AgendaPagesEventHandler handler) {
-    handler.onCalendarEventsLoaded(this);
+  public void setName(final String name) {
+    this.name = name;
   }
 
-  public List<CalendarEventDTO> getEvents() {
-    return events;
+  public String getValue() {
+    return value;
   }
 
-  public void setEvents(final List<CalendarEventDTO> events) {
-    this.events = events;
+  public void setValue(final String value) {
+    this.value = value;
   }
 }

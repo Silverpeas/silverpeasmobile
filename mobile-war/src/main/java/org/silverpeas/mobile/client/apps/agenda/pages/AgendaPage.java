@@ -24,9 +24,9 @@
 package org.silverpeas.mobile.client.apps.agenda.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
@@ -35,9 +35,10 @@ import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractAgendaPages
 import org.silverpeas.mobile.client.apps.agenda.events.pages.CalendarLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AgendaPagesEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.pages.widgets.EventItem;
+import org.silverpeas.mobile.client.apps.agenda.pages.widgets.GroupItem;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
-import org.silverpeas.mobile.client.apps.blog.resources.BlogMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import org.silverpeas.mobile.client.common.DateUtil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
@@ -45,13 +46,16 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
   private static AgendaPageUiBinder uiBinder = GWT.create(AgendaPageUiBinder.class);
   private List<CalendarDTO> calendars = null;
-  private TimeRange currentTimeRange = TimeRange.weeks;
+  private TimeRange currentTimeRange = TimeRange.months;
+  private List<GroupItem> groups = new ArrayList<>();
 
   @UiField(provided = true) protected AgendaMessages msg = null;
 
@@ -71,11 +75,78 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
   @Override
   public void onCalendarEventsLoaded(final CalendarLoadedEvent event) {
-    //TODO : events groupments
-    for (CalendarEventDTO dto : event.getEvents()) {
-      EventItem item = new EventItem();
-      item.setData(dto);
-      events.add(item);
+    if (!event.getEvents().isEmpty()) {
+      groups.clear();
+      DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mmZZZ");
+      DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
+      if (currentTimeRange.equals(TimeRange.weeks)) {
+        int weekNumber = DateUtil.getWeek(new Date());
+        for (int i = 0; i <= 3; i++) {
+          GroupItem groupItem = new GroupItem(TimeRange.weeks);
+          groupItem.setNumber(weekNumber+i);
+          groups.add(groupItem);
+        }
+        for (CalendarEventDTO dto : event.getEvents()) {
+          Date startDate;
+          Date endDate;
+          if (dto.isOnAllDay()) {
+            startDate = df.parse(dto.getStartDate());
+            endDate = df.parse(dto.getEndDate());
+          } else {
+            startDate = dtf.parse(dto.getStartDate());
+            endDate = dtf.parse(dto.getEndDate());
+          }
+
+          int startWeek = DateUtil.getWeek(startDate);
+          int endWeek = DateUtil.getWeek(endDate);
+          for (GroupItem groupItem : groups) {
+            if (groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) {
+              EventItem item = new EventItem();
+              item.setData(dto);
+              groupItem.addItem(item);
+            }
+          }
+        }
+      } else if (currentTimeRange.equals(TimeRange.months)) {
+        int monthNumber = new Date().getMonth();
+        int number = monthNumber;
+        for (int i = 0; i < 12; i++) {
+          GroupItem groupItem = new GroupItem(TimeRange.months);
+          number++;
+          if (number > 12) number = 1;
+          groupItem.setNumber(number);
+          groups.add(groupItem);
+        }
+
+        for (CalendarEventDTO dto : event.getEvents()) {
+          Date startDate;
+          Date endDate;
+          if (dto.isOnAllDay()) {
+            startDate = df.parse(dto.getStartDate());
+            endDate = df.parse(dto.getEndDate());
+          } else {
+            startDate = dtf.parse(dto.getStartDate());
+            endDate = dtf.parse(dto.getEndDate());
+          }
+          int startMonth = startDate.getMonth() + 1;
+          int endMonth = endDate.getMonth() + 1;
+          for (GroupItem groupItem : groups) {
+            if (groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) {
+              EventItem item = new EventItem();
+              item.setData(dto);
+              groupItem.addItem(item);
+            }
+          }
+        }
+      }
+
+      // render list
+      for (GroupItem groupItem : groups) {
+        events.add(groupItem.getHeaderItem());
+        for (EventItem item : groupItem.getItems()) {
+          events.add(item);
+        }
+      }
     }
   }
 

@@ -21,31 +21,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.events.pages;
+package org.silverpeas.mobile.client.apps.agenda.pages.widgets;
 
+import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CalendarLoadedEvent extends AbstractAgendaPagesEvent {
+/**
+ * @author svu
+ */
+public class GroupItem {
 
-  private List<CalendarEventDTO> events;
+  private List<EventItem> items = new ArrayList<>();
+  private HeaderItem header = new HeaderItem();
+  private int number;
+  private TimeRange timeRange;
 
-  public CalendarLoadedEvent(List<CalendarEventDTO> events){
-    super();
-    this.events = events;
+  public GroupItem(final TimeRange timeRange) {
+    this.timeRange = timeRange;
   }
 
-  @Override
-  protected void dispatch(AgendaPagesEventHandler handler) {
-    handler.onCalendarEventsLoaded(this);
+  public List<EventItem> getItems() {
+    return items;
   }
 
-  public List<CalendarEventDTO> getEvents() {
-    return events;
+  public void addItem(EventItem item) {
+    items.add(item);
   }
 
-  public void setEvents(final List<CalendarEventDTO> events) {
-    this.events = events;
+  public void setNumber(final int number) {
+    this.number = number;
+  }
+
+  public long getNumber() {
+    return number;
+  }
+
+  public HeaderItem getHeaderItem() {
+    CalendarEventDTO dto = new CalendarEventDTO();
+
+    if (timeRange.equals(TimeRange.weeks)) {
+      dto.setTitle("Semaine " + number);
+    } else if (timeRange.equals(TimeRange.months)) {
+      dto.setTitle("Mois " + number);
+    }
+    header.setData(dto);
+    return header;
   }
 }

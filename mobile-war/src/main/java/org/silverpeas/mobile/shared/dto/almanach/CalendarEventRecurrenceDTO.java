@@ -28,70 +28,55 @@ import java.io.Serializable;
 /**
  * @author svu
  */
-public class CalendarDTO implements Serializable {
-  private String id;
-  private String title;
-  private String zoneId;
+public class CalendarEventRecurrenceDTO implements Serializable {
+  private CalendarEventRecurrenceDTO.FrequencyDTO frequency;
+  private int count = 0;
+  private String endDate = null;
+  //private List<CalendarEventRecurrenceEntity.DayOfWeekOccurrenceEntity> daysOfWeek = new ArrayList(7);
 
-  private boolean main;
-  private boolean userMainPersonal;
-  private boolean userPersonal;
-  private String ownerName;
-
-
-  public String getId() {
-    return id;
+  public FrequencyDTO getFrequency() {
+    return frequency;
   }
 
-  public void setId(final String id) {
-    this.id = id;
+  public void setFrequency(final FrequencyDTO frequency) {
+    this.frequency = frequency;
   }
 
-  public String getTitle() {
-    return title;
+  public int getCount() {
+    return count;
   }
 
-  public void setTitle(final String title) {
-    this.title = title;
+  public void setCount(final int count) {
+    this.count = count;
   }
 
-  public String getZoneId() {
-    return zoneId;
+  public String getEndDate() {
+    return endDate;
   }
 
-  public void setZoneId(final String zoneId) {
-    this.zoneId = zoneId;
+  public void setEndDate(final String endDate) {
+    this.endDate = endDate;
   }
 
-  public boolean isMain() {
-    return main;
-  }
 
-  public void setMain(final boolean main) {
-    this.main = main;
-  }
+  public static class FrequencyDTO implements Serializable {
+    private int interval;
+    private TimeUnitDTO timeUnit;
 
-  public boolean isUserMainPersonal() {
-    return userMainPersonal;
-  }
+    public int getInterval() {
+      return this.interval;
+    }
 
-  public void setUserMainPersonal(final boolean userMainPersonal) {
-    this.userMainPersonal = userMainPersonal;
-  }
+    public void setInterval(int interval) {
+      this.interval = interval;
+    }
 
-  public boolean isUserPersonal() {
-    return userPersonal;
-  }
+    public TimeUnitDTO getTimeUnit() {
+      return this.timeUnit;
+    }
 
-  public void setUserPersonal(final boolean userPersonal) {
-    this.userPersonal = userPersonal;
-  }
-
-  public String getOwnerName() {
-    return ownerName;
-  }
-
-  public void setOwnerName(final String ownerName) {
-    this.ownerName = ownerName;
+    public void setTimeUnit(TimeUnitDTO timeUnit) {
+      this.timeUnit = timeUnit;
+    }
   }
 }

@@ -145,16 +145,16 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         String endDateOfWindowTime;
 
         Date today = new Date();
-        DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        startDateOfWindowTime = dtf.format(today) + "Z";
+        DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        startDateOfWindowTime = dtf.format(today);
         Date end = new Date();
         if (event.getRange().equals(TimeRange.weeks)) {
           CalendarUtil.addDaysToDate(end, 7*4+1); // for include last day
         } else if (event.getRange().equals(TimeRange.months)) {
           CalendarUtil.addMonthsToDate(end,12);
-          CalendarUtil.addDaysToDate(end,1); // for inclusde last day
+          CalendarUtil.addDaysToDate(end,1); // for include last day
         }
-        endDateOfWindowTime = dtf.format(end) + "Z";
+        endDateOfWindowTime = dtf.format(end);
         ServicesLocator.getServiceAlmanach()
             .getOccurences(instance.getId(), event.getCalendar().getId(),
                 startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);
@@ -171,3 +171,4 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   }
 }
+

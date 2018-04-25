@@ -21,31 +21,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.events.pages;
+package org.silverpeas.mobile.client.common;
 
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import java.util.Date;
 
-import java.util.List;
+/**
+ * @author svu
+ */
+public class DateUtil {
 
-public class CalendarLoadedEvent extends AbstractAgendaPagesEvent {
+  private static final int ISO_THURSDAY = 4;
+  private static final int MAX_DAY_OF_WEEK = 6;
+  private static final int DAYS_IN_WEEK = 7;
+  private static final long MILLIS_DAY = 86400000;
 
-  private List<CalendarEventDTO> events;
-
-  public CalendarLoadedEvent(List<CalendarEventDTO> events){
-    super();
-    this.events = events;
+  public static int getWeek(Date date) {
+    final int dayOfWeek = 1 + (date.getDay() + MAX_DAY_OF_WEEK) % DAYS_IN_WEEK;
+    final Date nearestThu = addDays(date, ISO_THURSDAY - dayOfWeek);
+    final int year = nearestThu.getYear();
+    final Date jan1 = new Date(year, 0, 1);
+    return 1 + dayDiff(nearestThu, jan1) / DAYS_IN_WEEK;
   }
 
-  @Override
-  protected void dispatch(AgendaPagesEventHandler handler) {
-    handler.onCalendarEventsLoaded(this);
+  public static Date addDays(final Date sourceDate, final long days) {
+    return new Date(sourceDate.getTime() + (days * MILLIS_DAY));
   }
 
-  public List<CalendarEventDTO> getEvents() {
-    return events;
-  }
-
-  public void setEvents(final List<CalendarEventDTO> events) {
-    this.events = events;
+  public static int dayDiff(final Date firstDate, final Date secondDate) {
+    return (int) ((firstDate.getTime() - secondDate.getTime()) / MILLIS_DAY);
   }
 }

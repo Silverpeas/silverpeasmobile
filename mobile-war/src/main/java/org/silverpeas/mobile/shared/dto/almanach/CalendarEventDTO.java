@@ -24,6 +24,8 @@
 package org.silverpeas.mobile.shared.dto.almanach;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author svu
@@ -40,15 +42,18 @@ public class CalendarEventDTO implements Serializable {
   private boolean onAllDay;
   private String startDate;
   private String endDate;
-  //private VisibilityLevel visibility;
-  //private Priority priority;
-  //private CalendarEventRecurrenceEntity recurrence;
-  //private List<CalendarEventAttendeeEntity> attendees = new ArrayList<>();
+  private VisibilityLevelDTO visibility;
+  private PriorityDTO priority;
+  private CalendarEventRecurrenceDTO recurrence;
+  private List<CalendarEventAttendeeDTO> attendees = new ArrayList<>();
   //private List<CalendarEventAttributeEntity> attributes = new ArrayList<>();
+  //private PdcClassificationEntity pdcClassification;
+  private List<AttachmentParameterDTO> attachmentParameters = new ArrayList<>();
+  private ReminderDTO reminder;
   private String ownerName;
-  //private Date createDate;
+  private String createDate;
   private String createdById;
-  //private Date lastUpdateDate;
+  private String lastUpdateDate;
   private String lastUpdatedById;
   private boolean canBeAccessed;
   private boolean canBeModified;
@@ -181,7 +186,69 @@ public class CalendarEventDTO implements Serializable {
   public void setCanBeDeleted(final boolean canBeDeleted) {
     this.canBeDeleted = canBeDeleted;
   }
-  //private List<AttachmentParameterEntity> attachmentParameters = new ArrayList<>();
-  //private ReminderEntity reminder;
-  //private PdcClassificationEntity pdcClassification;
+
+  public VisibilityLevelDTO getVisibility() {
+    return visibility;
+  }
+
+  public void setVisibility(final VisibilityLevelDTO visibility) {
+    this.visibility = visibility;
+  }
+
+
+  public PriorityDTO getPriority() {
+    return priority;
+  }
+
+  public void setPriority(final PriorityDTO priority) {
+    this.priority = priority;
+  }
+
+  public CalendarEventRecurrenceDTO getRecurrence() {
+    return recurrence;
+  }
+
+  public void setRecurrence(final CalendarEventRecurrenceDTO recurrence) {
+    this.recurrence = recurrence;
+  }
+
+  public String getCreateDate() {
+    return createDate;
+  }
+
+  public void setCreateDate(final String createDate) {
+    this.createDate = createDate;
+  }
+
+  public String getLastUpdateDate() {
+    return lastUpdateDate;
+  }
+
+  public void setLastUpdateDate(final String lastUpdateDate) {
+    this.lastUpdateDate = lastUpdateDate;
+  }
+
+  public List<CalendarEventAttendeeDTO> getAttendees() {
+    return attendees;
+  }
+
+  public void setAttendees(final List<CalendarEventAttendeeDTO> attendees) {
+    this.attendees = attendees;
+  }
+
+  public ReminderDTO getReminder() {
+    return reminder;
+  }
+
+  public void setReminder(final ReminderDTO reminder) {
+    this.reminder = reminder;
+  }
+
+  public List<AttachmentParameterDTO> getAttachmentParameters() {
+    return attachmentParameters;
+  }
+
+  public void setAttachmentParameters(final List<AttachmentParameterDTO> attachmentParameters) {
+    this.attachmentParameters = attachmentParameters;
+  }
 }
