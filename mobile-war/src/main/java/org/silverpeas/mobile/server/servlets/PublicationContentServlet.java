@@ -133,7 +133,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       if (pub.canBeAccessedBy(getUserInSession(request))) {
         if (pub.getInfoId().equals("0")) {
           // wysiwyg
-          html = pub.getWysiwyg();
+          html = pub.getContent().getRenderer().renderView();
           displayWysiwyg(html, request, response, pub.getInstanceId());
         } else {
           // form xml

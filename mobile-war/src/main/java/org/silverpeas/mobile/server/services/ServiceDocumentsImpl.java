@@ -318,7 +318,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
       dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(contentType, new PublicationPK(pubId)));
       dto.setInstanceId(pub.getInstanceId());
-      if (pub.getWysiwyg() == null|| !pub.getWysiwyg().trim().isEmpty() || !pub.getInfoId().equals("0")) {
+      String wysiwyg = pub.getContent().getRenderer().renderView();
+      if (wysiwyg == null|| !wysiwyg.trim().isEmpty() || !pub.getInfoId().equals("0")) {
         dto.setContent(true);
       }
 

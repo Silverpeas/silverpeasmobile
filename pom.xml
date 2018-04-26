@@ -9,7 +9,7 @@
   </parent>
 
   <properties>
-    <core.version>6.1-build180328</core.version>
+    <core.version>6.1-build180415</core.version>
      <maven.compiler.source>1.7</maven.compiler.source>
      <maven.compiler.target>1.7</maven.compiler.target>
      <next.release>6.1</next.release>
