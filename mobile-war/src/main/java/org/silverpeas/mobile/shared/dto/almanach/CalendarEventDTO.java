@@ -23,6 +23,8 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
+import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

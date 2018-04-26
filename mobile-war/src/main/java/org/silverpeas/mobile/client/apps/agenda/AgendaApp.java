@@ -170,5 +170,12 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     action.attempt();
 
   }
+
+  public void getReminders() {
+
+    //ServicesLocator
+
+
+  }
 }
 

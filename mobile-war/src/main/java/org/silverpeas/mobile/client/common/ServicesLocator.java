@@ -68,6 +68,7 @@ public class ServicesLocator {
       (ServiceHyperLinkAsync) GWT.create(ServiceHyperLink.class);
 
   private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
+  private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
 
   private static void initRestContext() {
     Defaults.setServiceRoot("/silverpeas/services");
@@ -76,6 +77,10 @@ public class ServicesLocator {
     //Defaults.setDateFormat();
   }
 
+  public static ServiceReminder getServiceReminder() {
+    initRestContext();
+    return serviceReminder;
+  }
 
   public static ServiceAlmanach getServiceAlmanach() {
     initRestContext();

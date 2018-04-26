@@ -21,7 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.almanach;
+package org.silverpeas.mobile.shared.dto.reminder;
+
+import org.silverpeas.mobile.shared.dto.almanach.TimeUnitDTO;
 
 import java.io.Serializable;
 
@@ -39,7 +41,6 @@ public class ReminderDTO implements Serializable {
   private String text;
   private boolean canBeModified;
   private boolean canBeDeleted;
-
 
   public String getId() {
     return id;
