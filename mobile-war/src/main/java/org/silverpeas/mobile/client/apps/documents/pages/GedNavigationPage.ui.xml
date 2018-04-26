@@ -29,7 +29,7 @@
 
   <g:HTMLPanel styleName="content">
     <base:ActionsMenu ui:field="actionsMenu"/>
-    <h2 class="appHeader"></h2>
+    <!--<h2 class="appHeader"></h2>-->
     <components:UnorderedList ui:field="list" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

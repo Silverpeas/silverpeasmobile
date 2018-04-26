@@ -59,7 +59,6 @@ public class NewsItem extends Composite implements ClickHandler {
   public NewsItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
-    container.getElement().getStyle().setHeight(95, Style.Unit.PX);
   }
 
   public void setData(int index, int max, NewsDTO data) {
@@ -74,11 +73,10 @@ public class NewsItem extends Composite implements ClickHandler {
         status = " ("+msg.notVisible()+")";
       }
     }
-    picto.setHTML("<img src='" + data.getVignette() + "'/>");
-    picto.getElement().getStyle().setWidth(150, Style.Unit.PX);
+    picto.setHTML("<h2><a href='#'>" + data.getTitle() + status + "</a></h2><img src='" + data.getVignette() + "'/>");
     picto.addClickHandler(this);
     content.setHTML(
-        "<h2><a href='#'>" + data.getTitle() + status + "</a></h2><p>" + data.getDescription() + "</p>");
+         "<p>" + data.getDescription() + "</p><br class='clear'/>");
     content.addClickHandler(this);
   }
 
