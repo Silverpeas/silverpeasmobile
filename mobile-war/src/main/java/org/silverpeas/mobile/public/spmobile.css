@@ -36,7 +36,7 @@ body {
 }
 
 body, input, select, textarea, button, .ui-btn {
-  font-size: 1em;
+  font-size: 10pt;
   line-height: 1em;
   font-family: Open Sans,sans-serif
 }
@@ -459,7 +459,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #header h1 {
   color: #fff;
-  font-size: 0.8em;
+  font-size: 0.9em;
   font-weight: normal;
   left: 60px;
   line-height: 44px;
@@ -506,7 +506,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   height: 28px;
   line-height: 28px;
   padding: 0 1em;
-  font-size:0.8em;
+  font-size:0.9em;
 }
 
 /* HOME */
@@ -552,18 +552,18 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	color:#686868;
 	font-weight:normal;
 	padding:0.5em 1em 0 1em;
-	font-size:0.8em;
+	font-size:0.9em;
 }
 
 .favoris-bloc a{
 	padding-left:2.5em;
-	font-size:0.8em;
+	font-size:0.9em;
 	background:transparent url(packImagesNavigation.png) 0.5em -1186px no-repeat;
 }
 
 .last-publication-bloc li a {
 	padding-left:4em;
-	font-size:0.8em;
+	font-size:0.9em;
 }
 
 .last-publication-bloc li a .date{    
@@ -583,6 +583,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	padding:1em 0.75em 1em 0.5em;
 	margin:0;
 	list-style-type:none;
+	min-height: 1em;
 }
 
 .carroussel-news li > a:first-child {
@@ -606,9 +607,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	overflow:hidden;
 }
 .carroussel-news h2  {
-	font-size:0.75em;
-	padding:0;
-	margin:0 0 0.25em 0;
+    font-size: 1em;
+    padding: 0;
+    margin: 0 0 0.5em 0;
 }
 .carroussel-news h2 a {
 	font-size:1em;
@@ -616,7 +617,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	text-decoration:none;
 }
 .carroussel-news p {
-	font-size:0.75em;
+	font-size:0.9em;
 	line-height:1em;
 	color:#666666;
 	padding:0;
@@ -638,7 +639,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	background-color: #f4f4f4;
 	text-shadow:none;
 	position: fixed;
-	font-size:0.8em;
+	font-size:0.9em;
 }
 
 #silverpeas-navmenu-panel .ui-panel-inner {
@@ -745,6 +746,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /***** NAVIGATION ****/
+
+
 .folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a, .app-actuality a,
 .publication.ui-input-text, .app-blog a, .app-pageWeb a, .app-workflow a, .app-link a, .app-almanach a {
   background-image: url(packImagesNavigation.png);
@@ -752,32 +755,50 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-repeat: no-repeat;
   padding-left: 2.056em
 }
+
+.add-media,
+.add-task{    
+	background-color: #FDF4EF;
+    border-bottom: 1px solid #EDBCBB;
+    border-top: 1px solid #EDBCBB;
+}
+
+.ui-listview > li.add-media a ,
+.ui-listview > li.add-task a { 
+	background:#FDF4EF none;
+	padding-left: 1em
+}
+.ui-listview > li.add-media a::after,
+.ui-listview > li.add-task a::after{  
+	background-position: right -599px;
+    width: 3em;
+}
 .publication.ui-input-text{
 	background-position: 0.5625em 0.3em;
 }
 
 .app-link a {
-  background-position:0.65em -1684px;
+  background-position:0.5em -1686px;
 }
 
 .app-actuality a {
-  background-position:0.5em -1022px;
+  background-position:0.3em -1025px;
 }
 
 .folder-ged a {
-  background-position:0.5em 0.5625em;
+  background-position:0.3em 0.5625em;
 }
 
 .app-pageWeb a {
-  background-position: 0.7em -1393px;
+  background-position:0.5em -1394px;
 }
 
 .app-blog a {
-  background-position: 0.65em -1506px;
+  background-position: 0.5em -1508px;
 }
 
 .app-workflow a {
-  background-position: 0.65em -1595px;
+  background-position: 0.5em -1598px;
 }
 
 .app-almanach a {
@@ -785,15 +806,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .folder-galery a {
-  background-position: 0.5em -89px;
+  background-position: 0.3em -94px;
 }
 
 .publication a {
-  background-position:0.5em -184px;
+  background-position:0.3em -189px;
 }
 
 .trash a {
-  background-position: 0.5em -490px;
+  background-position: 0.3em -495px;
 }
 
 .media a {
@@ -828,7 +849,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .media-thumb .ui-thumb span {
-  font-size: 0.6em;
+  font-size: 0.8em;
   height: 2.4em;
   display: inline-block;
   overflow: hidden;
@@ -858,7 +879,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /**** Publication - media ***********/
-#publication, #contacts, #update-statut, #a-media , #notification, #edit-notification {
+#publication, #contacts, #update-statut, #a-media , #notification, #edit-notification, #event {
   background-color: #ECECEC;
   padding: 1em 0;
 } 
@@ -870,16 +891,22 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #848484;
   padding: 1em;
   margin: 0;
-  font-size: 12pt;
+  font-size: 10pt;
+}
+
+
+.publiDesc {
+  padding-top: 0em;
 
 }
 
 .publiName, .mediaName, .title-instruction {
-  padding: 0 1em;
+  padding:0 1em 0.5em;
   margin: 0;
-  font-size: 12pt;
+  font-size: 11pt;
   font-weight: normal;
-  height: 2em;
+  min-height: 1.5em;
+  line-height:1.2em
 }
 
 .appHeader {
@@ -909,7 +936,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   max-width: 100%;
 }
 
-#attachments, .list-contacts, .list-comments, .list-notifications {
+#attachments, .list-contacts, .list-comments, .list-notifications, .list-detail-event{
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -919,13 +946,18 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 #attachments li,
 .list-contacts li,
 .list-comments li,
-.list-notifications li {
+.list-notifications li,
+.list-detail-event{
   background-color: #FFF;
   border-bottom: 1px solid #e0e0e0;
   padding: 1em;
   margin: 0;
 }
  
+.list-detail-event{
+  border-bottom:0;
+}
+
  .ui-listview.list-comments > li p {
   line-height: 100%;
   white-space: normal;
@@ -936,9 +968,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #848484;
 }
 
-#comments {
+#comments, .elts-pub {
   background-color: #FFF;
-  border-top: 1px solid #e0e0e0;
+								
   padding: 0;
   margin: 0;
 }
@@ -947,8 +979,81 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border: 0 none;
   margin: 0;
   text-align: left;
-  background: #fff url(packImagesNavigation.png) 0.5625em -386px no-repeat;
+  background: #fff url(packImagesNavigation.png) 0.5625em -390px no-repeat;
   padding-left: 2.5625em;
+}
+
+#info-event, .elts-pub{
+	padding:.7em 1em .7em 1em;
+}
+
+#event #content a{
+	padding:.7em 1em .7em 1em;
+}
+
+#event .list-detail-event .label {
+	clear:left;
+}
+
+#event .list-detail-event .field {
+	color:#666
+}
+
+#event .reccurence { 
+	background: #fff url(packImagesNavigation.png) 1em  -1946px no-repeat;
+	padding-left: 2.5625em;
+	line-height:1.15em;
+}
+
+#event #participation{
+	line-height:1.25em;
+	}
+#event #participation .label { 
+    background: #fff url(packImagesNavigation.png) 0.15em -1870px no-repeat;
+    padding-left: 1.5625em;
+    line-height: 1.15em;
+    padding-bottom: 0.5em;
+    display: block;
+}
+
+#event #participation ul {
+	list-style-type:none;
+	padding:0;
+	margin:0;
+}
+#event #participation ul .pending {
+	color:#8c8c8c;
+}
+#info-extra-event {
+	line-height:1.8em;
+}
+#info-extra-event > div {
+	display:inline;
+}
+
+#info-extra-event div:nth-child(2n)::before{
+	content:' - ';
+}
+
+#info-extra-event .location {
+  background: transparent url(packImagesNavigation.png) 0em -1779px no-repeat;
+  padding-left:1.5em;
+}
+
+#event .rappel-event {
+	padding:0 1em 1em 1em;
+}
+
+#event .actions-rappel {
+	display:inline-block;
+}
+#event .actions-rappel .delete {
+	text-indent:-300em;
+	display:inline-block;
+	width:20px;
+	height:20px;
+	padding:0 !important;
+	background: transparent url(packImagesNavigation.png) 0em -2054px no-repeat;
 }
 
 #comments .link-add-comment {
@@ -1019,6 +1124,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url(download.png) right 10px no-repeat;
   display: block;
 }
+#attachments li a span {
+	display:inline-block;
+}
 
 #attachments li a.not-downloadable {
   background: transparent url(forbidden-download.png) right 10px no-repeat;
@@ -1031,7 +1139,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #list-contacts .user-name .status {
-  font-size: 0.75em;
+  font-size: 0.9em;5em;
   font-style: italic;
 }
 
@@ -1041,7 +1149,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   display: block;
   line-height: 0.8em;
   text-align: left;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 #btn-all-contactsext > span {
@@ -1050,7 +1158,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   display: block;
   line-height: 0.8em;
   text-align: left;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 .actions {
@@ -1437,6 +1545,35 @@ textarea.ui-input-text {
   padding-left:1em;
 }
 
+.liste-news {
+	list-style-type:none;
+	padding:0;
+	margin:0;
+	border-top: 1px solid #ddd;
+}
+
+
+.liste-news li {
+	padding:0.2em 0.5em;
+	margin:0;
+}
+
+
+.liste-news li img{
+	float:left;
+	margin:1em;
+	margin-left:0;
+}
+
+.liste-news li h2{
+	padding:0;
+	margin:0;
+}
+
+.liste-news li p{
+    font-size: 11px;
+    color: #666;
+}
 
 #content {
   background-color: #FFF;
@@ -1556,6 +1693,7 @@ form .forms .fields > li:nth-child(even) {
 
 .percentCompleted {
   line-height:2em;
+  float: left;
 }
 
 .ui-listview input[type="range"] {
@@ -1592,13 +1730,29 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .create.task-percent-range {
-  width: 100%;
-  margin-bottom: 2em;
+	width: 100%;
+	margin-bottom: 2em;
+	float: none;
+	margin: 0;
+	padding: 0;
+}
+
+#update-statut .label-percent {
+	padding:0.5em;
+	text-align:center
 }
 
 /** Actions ****/
 .content {
   position:relative;
+}
+
+.content > .ui-listview.ui-listview-inset {
+	padding-top:3em;
+}
+
+.content-navigation  {
+	padding:1em;
 }
 #action-button {
   border:0;
@@ -1610,6 +1764,7 @@ form .forms .fields > li:nth-child(even) {
   right:1em;
   background:transparent url("qvf.png") 0 0 no-repeat;
   outline: none;
+  z-index:1002;
 }
 
 #action-bloc {
@@ -1618,7 +1773,7 @@ form .forms .fields > li:nth-child(even) {
   position:absolute;
   top:3em;
   right:1em;
-  padding:1em;
+  padding:0;
   margin:0;
   width:10em;
   background-color:#FFF;
@@ -1627,12 +1782,18 @@ form .forms .fields > li:nth-child(even) {
   box-shadow: 0  0 3px   rgba(0,0,0, 0.2) ;
 }
 
+#action-bloc li  {
+	padding:0.2em 0.5em;
+}
+
 #action-bloc a {
   color:#333;
   line-height:200%;
+  font-size:0.9em;
   display: block;
   width: 100%;
 }
+
 
 .config .actuality a {
   background-image: url(packImagesNavigation.png);
@@ -1679,6 +1840,7 @@ form .forms .fields > li:nth-child(even) {
   text-align: center;
   border-spacing: 0px;
   width: 100%;
+  font-size: 0.9em;
 }
 
 .workflow-list tr {
@@ -1696,7 +1858,7 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .workflow-list  > tbody > tr:nth-child(even) {
-  background-color: #f6f6f6;
+  background-color: #efefef;
   border-bottom: 1px solid #ddd;
 }
 
@@ -1714,16 +1876,23 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .workflow-form li {
-  line-height: 3em;
+  line-height: 2em;
+  padding:1em;		  
 }
 
-.workflow-form li:nth-child(odd) {
+.workflow-form li:nth-child(odd),
+.liste-billet li:nth-child(odd) ,
+#action-bloc li:nth-child(odd),
+.liste-news li:nth-child(odd) {
   background-color: #f9f9f9;
   border-bottom: 1px solid #ddd;
 }
 
-.worflow-form li:nth-child(even) {
-  background-color: #f6f6f6;
+.worflow-form li:nth-child(even),
+.liste-billet li:nth-child(even) ,
+#action-bloc  li:nth-child(even),
+.liste-news li:nth-child(even)   {
+  background-color: #efefef;
   border-bottom: 1px solid #ddd;
 }
 
@@ -1749,4 +1918,60 @@ form .forms .fields > li:nth-child(even) {
   height: 6px;
   margin-left: 4px;
   width: 6px;
+}
+
+
+/* LE BLOG */
+.liste-billet {
+	list-style-type:none;
+	margin:0;
+	padding:0;
+	border-top: 1px solid #ddd;
+}
+.liste-billet li{
+	margin:0;
+	padding:1em;
+	line-height:0.5em;
+}
+.liste-billet li > a.gwt-Anchor{
+	display:inline;
+	width:0;
+	height:0;
+	
+}
+
+.liste-billet span.category {
+	display:inline-block;
+	border-radius:4px;
+	background-color:#f4f4f4;
+	border:1px solid #CCC;
+	color:#4c4c4c;
+	padding:0.5em;
+}
+.liste-billet p.date {
+	float:right;
+	padding-top:0;
+	margin-top:0;
+	line-height:16px
+}
+.liste-billet h2 ,
+.liste-news li h2 {
+	padding-top:0;
+	margin-top:0;
+}
+.liste-billet h2 a,
+.liste-news li h2 a{
+	font-size:14px;
+	line-height:16px;
+	color:#555;
+	text-decoration:none;
+}
+.liste-billet {
+	font-size:0.9em;
+	color:#999;
+}
+
+/* GENERAL */
+.clear {
+	clear:both;
 }

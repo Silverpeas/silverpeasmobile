@@ -59,14 +59,13 @@ public class BlogItem extends Composite implements ClickHandler {
   public BlogItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
-    container.getElement().getStyle().setHeight(95, Style.Unit.PX);
   }
 
   public void setData(int index, int max, PostDTO data) {
     this.index = index;
     this.max = max;
     this.data = data;
-    content.setHTML("<p>" + data.getDateEvent() + "</p><h2><a href='#'>" + data.getTitle() + "</a></h2><h2>" + data.getCategoryName() + "</h2>");
+    content.setHTML("<p class='date'>" + data.getDateEvent() + "</p><h2 class='title'><a href='#'>" + data.getTitle() + "</a></h2><span class='category'>" + data.getCategoryName() + "</span>");
     content.addClickHandler(this);
   }
 

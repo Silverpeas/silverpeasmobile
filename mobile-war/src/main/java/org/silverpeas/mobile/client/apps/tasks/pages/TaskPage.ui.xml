@@ -34,7 +34,7 @@
       <g:TextArea ui:field="name" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
     </div>
     <g:TextBox ui:field="range" styleName="create task-percent-range"></g:TextBox>
-    <g:Label ui:field="percent"></g:Label>
+    <g:Label ui:field="percent" styleName="label-percent"></g:Label>
     <div class=" ui-controlgroup ui-controlgroup-horizontal">
       <div class="ui-controlgroup-controls ">
         <g:Anchor ui:field="submit" styleName="btn-validate ui-link">
