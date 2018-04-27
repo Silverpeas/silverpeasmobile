@@ -21,18 +21,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.resources;
+package org.silverpeas.mobile.shared.dto.almanach;
 
-import com.google.gwt.i18n.client.Messages;
+import java.io.Serializable;
 
-public interface AgendaMessages extends Messages {
-  String title();
-  String titleEvent();
+/**
+ * @author svu
+ */
+public class CalendarEventAttributeDTO implements Serializable {
+  private String name;
+  private String value;
 
-  String to();
-  String toDay();
-  String from();
+  public String getName() {
+    return name;
+  }
 
-  String content();
-  String delete();
+  public void setName(final String name) {
+    this.name = name;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(final String value) {
+    this.value = value;
+  }
 }

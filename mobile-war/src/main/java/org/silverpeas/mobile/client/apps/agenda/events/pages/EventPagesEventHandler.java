@@ -21,18 +21,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.resources;
+package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.event.shared.EventHandler;
 
-public interface AgendaMessages extends Messages {
-  String title();
-  String titleEvent();
-
-  String to();
-  String toDay();
-  String from();
-
-  String content();
-  String delete();
+public interface EventPagesEventHandler extends EventHandler{
+  void onRemindersLoaded(RemindersLoadedEvent event);
 }

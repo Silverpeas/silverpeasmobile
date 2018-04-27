@@ -21,18 +21,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.resources;
+package org.silverpeas.mobile.client.apps.agenda.events.app;
 
-import com.google.gwt.i18n.client.Messages;
+import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
-public interface AgendaMessages extends Messages {
-  String title();
-  String titleEvent();
+public class RemindersLoadEvent extends AbstractAgendaAppEvent {
 
-  String to();
-  String toDay();
-  String from();
+  private CalendarEventDTO event;
 
-  String content();
-  String delete();
+  public RemindersLoadEvent(CalendarEventDTO event) {
+    super();
+    this.event = event;
+  }
+
+  @Override
+  protected void dispatch(AgendaAppEventHandler handler) {
+    handler.loadReminders(this);
+  }
+
+  public CalendarEventDTO getEvent() {
+    return event;
+  }
 }

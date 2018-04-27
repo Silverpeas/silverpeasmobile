@@ -57,7 +57,7 @@ public interface ServiceReminder extends RestService {
   @POST
   @Path("/{componentInstanceId}/{type}/{localId}")
   public void createReminder(@PathParam("componentInstanceId") String componentInstanceId,
-      @PathParam("type") String type, @PathParam("localId") String localId, MethodCallback<ReminderDTO> callback);
+      @PathParam("type") String type, @PathParam("localId") String localId, ReminderDTO dto, MethodCallback<ReminderDTO> callback);
 
   @DELETE
   @Path("/{componentInstanceId}/{type}/{localId}/{id}")
@@ -68,6 +68,6 @@ public interface ServiceReminder extends RestService {
   @PUT
   @Path("/{componentInstanceId}/{type}/{localId}/{id}")
   public void updateReminder(@PathParam("componentInstanceId") String componentInstanceId,
-      @PathParam("type") String type, @PathParam("localId") String localId, @PathParam("id") String id, MethodCallback<ReminderDTO> callback);
+      @PathParam("type") String type, @PathParam("localId") String localId, @PathParam("id") String id, ReminderDTO dto, MethodCallback<ReminderDTO> callback);
 
 }

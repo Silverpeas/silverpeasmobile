@@ -27,7 +27,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
@@ -68,6 +67,16 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
 
+  interface AgendaPageUiBinder extends UiBinder<Widget, AgendaPage> {
+  }
+
+  public AgendaPage() {
+    msg = GWT.create(AgendaMessages.class);
+    setPageTitle(msg.title());
+    initWidget(uiBinder.createAndBindUi(this));
+    EventBus.getInstance().addHandler(AbstractAgendaPagesEvent.TYPE, this);
+  }
+
   public void setCalendars(final List<CalendarDTO> calendars) {
     this.calendars = calendars;
     EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendars.get(0), currentTimeRange));
@@ -102,7 +111,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           for (GroupItem groupItem : groups) {
             if (groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) {
               EventItem item = new EventItem();
-              item.setData(dto);
+              item.setData(dto, getCalendar(dto.getCalendarId()));
               groupItem.addItem(item);
             }
           }
@@ -133,7 +142,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           for (GroupItem groupItem : groups) {
             if (groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) {
               EventItem item = new EventItem();
-              item.setData(dto);
+              item.setData(dto, getCalendar(dto.getCalendarId()));
               groupItem.addItem(item);
             }
           }
@@ -150,14 +159,11 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     }
   }
 
-  interface AgendaPageUiBinder extends UiBinder<Widget, AgendaPage> {
-  }
-
-  public AgendaPage() {
-    msg = GWT.create(AgendaMessages.class);
-    setPageTitle(msg.title());
-    initWidget(uiBinder.createAndBindUi(this));
-    EventBus.getInstance().addHandler(AbstractAgendaPagesEvent.TYPE, this);
+  private CalendarDTO getCalendar(final String calendarId) {
+    for (CalendarDTO calendar : calendars) {
+      if (calendar.getId().equals(calendarId)) return calendar;
+    }
+    return null;
   }
 
   @Override

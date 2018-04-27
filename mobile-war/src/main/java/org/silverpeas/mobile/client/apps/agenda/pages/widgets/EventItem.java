@@ -40,12 +40,14 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 
 public class EventItem extends Composite implements ClickHandler {
 
-  private CalendarEventDTO data;
+  private CalendarEventDTO event;
+  private CalendarDTO calendar;
   private static EventItemUiBinder uiBinder = GWT.create(EventItemUiBinder.class);
   @UiField
   Anchor picto;
@@ -62,20 +64,21 @@ public class EventItem extends Composite implements ClickHandler {
     msg = GWT.create(ApplicationMessages.class);
   }
 
-  public void setData(CalendarEventDTO data) {
-    this.data = data;
+  public void setData(CalendarEventDTO event, CalendarDTO calendar) {
+    this.event = event;
+    this.calendar = calendar;
     String attendee = "";
-    if (!data.getAttendees().isEmpty()) {
-      attendee = data.getAttendees().get(0).getFullName();
+    if (!event.getAttendees().isEmpty()) {
+      attendee = event.getAttendees().get(0).getFullName();
     }
-    content.setHTML("<span>"+data.getTitle()+"</span><span>"+data.getStartDate()+"</span>" + attendee);
+    content.setHTML("<span>"+event.getTitle()+"</span><span>"+event.getStartDate()+"</span>" + event.getEndDate());
     content.addClickHandler(this);
   }
 
   @Override
   public void onClick(final ClickEvent event) {
     EventPage page = new EventPage();
-    page.setData(data);
+    page.setData(this.event, calendar);
     page.show();
   }
 }

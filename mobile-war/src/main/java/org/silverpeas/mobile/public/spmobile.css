@@ -459,7 +459,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #header h1 {
   color: #fff;
-  font-size: 0.9em;
+  font-size: 0.8em;
   font-weight: normal;
   left: 60px;
   line-height: 44px;
@@ -506,7 +506,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   height: 28px;
   line-height: 28px;
   padding: 0 1em;
-  font-size:0.9em;
+  font-size:0.8em;
 }
 
 /* HOME */
@@ -552,18 +552,18 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	color:#686868;
 	font-weight:normal;
 	padding:0.5em 1em 0 1em;
-	font-size:0.9em;
+	font-size:0.8em;
 }
 
 .favoris-bloc a{
 	padding-left:2.5em;
-	font-size:0.9em;
+	font-size:0.8em;
 	background:transparent url(packImagesNavigation.png) 0.5em -1186px no-repeat;
 }
 
 .last-publication-bloc li a {
 	padding-left:4em;
-	font-size:0.9em;
+	font-size:0.8em;
 }
 
 .last-publication-bloc li a .date{    
@@ -607,9 +607,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	overflow:hidden;
 }
 .carroussel-news h2  {
-    font-size: 1em;
-    padding: 0;
-    margin: 0 0 0.5em 0;
+	font-size:0.75em;
+	padding:0;
+	margin:0 0 0.25em 0;
 }
 .carroussel-news h2 a {
 	font-size:1em;
@@ -617,7 +617,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	text-decoration:none;
 }
 .carroussel-news p {
-	font-size:0.9em;
+	font-size:0.75em;
 	line-height:1em;
 	color:#666666;
 	padding:0;
@@ -639,7 +639,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	background-color: #f4f4f4;
 	text-shadow:none;
 	position: fixed;
-	font-size:0.9em;
+	font-size:0.8em;
 }
 
 #silverpeas-navmenu-panel .ui-panel-inner {
@@ -777,44 +777,44 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	background-position: 0.5625em 0.3em;
 }
 
+.app-almanach a {
+  background-position:0.65em -2113px;
+}
+
 .app-link a {
-  background-position:0.5em -1686px;
+  background-position:0.65em -1684px;
 }
 
 .app-actuality a {
-  background-position:0.3em -1025px;
+  background-position:0.5em -1022px;
 }
 
 .folder-ged a {
-  background-position:0.3em 0.5625em;
+  background-position:0.5em 0.5625em;
 }
 
 .app-pageWeb a {
-  background-position:0.5em -1394px;
+  background-position: 0.7em -1393px;
 }
 
 .app-blog a {
-  background-position: 0.5em -1508px;
+  background-position: 0.65em -1506px;
 }
 
 .app-workflow a {
-  background-position: 0.5em -1598px;
-}
-
-.app-almanach a {
-  background-position: 0.65em -1757px;
+  background-position: 0.65em -1595px;
 }
 
 .folder-galery a {
-  background-position: 0.3em -94px;
+  background-position: 0.5em -89px;
 }
 
 .publication a {
-  background-position:0.3em -189px;
+  background-position:0.5em -184px;
 }
 
 .trash a {
-  background-position: 0.3em -495px;
+  background-position: 0.5em -490px;
 }
 
 .media a {
@@ -849,7 +849,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .media-thumb .ui-thumb span {
-  font-size: 0.8em;
+  font-size: 0.6em;
   height: 2.4em;
   display: inline-block;
   overflow: hidden;
@@ -901,12 +901,11 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .publiName, .mediaName, .title-instruction {
-  padding:0 1em 0.5em;
+  padding: 0 1em;
   margin: 0;
-  font-size: 11pt;
+  font-size: 12pt;
   font-weight: normal;
-  min-height: 1.5em;
-  line-height:1.2em
+  height: 1.5em;
 }
 
 .appHeader {
@@ -979,7 +978,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border: 0 none;
   margin: 0;
   text-align: left;
-  background: #fff url(packImagesNavigation.png) 0.5625em -390px no-repeat;
+  background: #fff url(packImagesNavigation.png) 0.5625em -386px no-repeat;
   padding-left: 2.5625em;
 }
 
@@ -1139,7 +1138,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #list-contacts .user-name .status {
-  font-size: 0.9em;5em;
+  font-size: 0.75em;
   font-style: italic;
 }
 
@@ -1149,7 +1148,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   display: block;
   line-height: 0.8em;
   text-align: left;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 #btn-all-contactsext > span {
@@ -1158,7 +1157,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   display: block;
   line-height: 0.8em;
   text-align: left;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 .actions {
@@ -1773,7 +1772,7 @@ form .forms .fields > li:nth-child(even) {
   position:absolute;
   top:3em;
   right:1em;
-  padding:0;
+  padding:1em;
   margin:0;
   width:10em;
   background-color:#FFF;
@@ -1858,7 +1857,7 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .workflow-list  > tbody > tr:nth-child(even) {
-  background-color: #efefef;
+  background-color: #f6f6f6;
   border-bottom: 1px solid #ddd;
 }
 
@@ -1876,8 +1875,7 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .workflow-form li {
-  line-height: 2em;
-  padding:1em;		  
+  line-height: 3em;
 }
 
 .workflow-form li:nth-child(odd),
@@ -1892,7 +1890,7 @@ form .forms .fields > li:nth-child(even) {
 .liste-billet li:nth-child(even) ,
 #action-bloc  li:nth-child(even),
 .liste-news li:nth-child(even)   {
-  background-color: #efefef;
+  background-color: #f6f6f6;
   border-bottom: 1px solid #ddd;
 }
 

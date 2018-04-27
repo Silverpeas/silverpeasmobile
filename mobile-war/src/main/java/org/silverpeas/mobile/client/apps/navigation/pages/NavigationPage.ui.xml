@@ -29,7 +29,6 @@
 
   <g:HTMLPanel styleName="content">
     <base:ActionsMenu ui:field="actionsMenu"/>
-    <!--<h2 class="appHeader"></h2>-->
     <homepage:HomePageContent ui:field="content"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

@@ -34,6 +34,9 @@ import java.util.List;
  */
 public class CalendarEventDTO implements Serializable {
 
+  private String eventUri;
+  private String calendarUri;
+  private String eventPermalinkUrl;
   private String eventId;
   private String calendarId;
   private String calendarZoneId;
@@ -48,7 +51,7 @@ public class CalendarEventDTO implements Serializable {
   private PriorityDTO priority;
   private CalendarEventRecurrenceDTO recurrence;
   private List<CalendarEventAttendeeDTO> attendees = new ArrayList<>();
-  //private List<CalendarEventAttributeEntity> attributes = new ArrayList<>();
+  private List<CalendarEventAttributeDTO> attributes = new ArrayList<>();
   //private PdcClassificationEntity pdcClassification;
   private List<AttachmentParameterDTO> attachmentParameters = new ArrayList<>();
   private ReminderDTO reminder;
@@ -252,5 +255,37 @@ public class CalendarEventDTO implements Serializable {
 
   public void setAttachmentParameters(final List<AttachmentParameterDTO> attachmentParameters) {
     this.attachmentParameters = attachmentParameters;
+  }
+
+  public String getEventUri() {
+    return eventUri;
+  }
+
+  public void setEventUri(final String eventUri) {
+    this.eventUri = eventUri;
+  }
+
+  public String getCalendarUri() {
+    return calendarUri;
+  }
+
+  public void setCalendarUri(final String calendarUri) {
+    this.calendarUri = calendarUri;
+  }
+
+  public String getEventPermalinkUrl() {
+    return eventPermalinkUrl;
+  }
+
+  public void setEventPermalinkUrl(final String eventPermalinkUrl) {
+    this.eventPermalinkUrl = eventPermalinkUrl;
+  }
+
+  public List<CalendarEventAttributeDTO> getAttributes() {
+    return attributes;
+  }
+
+  public void setAttributes(final List<CalendarEventAttributeDTO> attributes) {
+    this.attributes = attributes;
   }
 }

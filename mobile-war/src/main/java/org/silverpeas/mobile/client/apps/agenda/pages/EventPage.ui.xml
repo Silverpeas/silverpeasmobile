@@ -30,7 +30,44 @@
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <base:ActionsMenu ui:field="actionsMenu"/>
-    <h2 class="appHeader"></h2>
+    <h2 ui:field="header" class="appHeader"></h2>
+    <p ui:field="description" class="publiDesc"></p>
+
+    <div ui:field="reminder" class="rappel-event">
+      <g:ListBox ui:field="reminderDurations"/>
+      <div class="actions-rappel">
+        <g:Anchor ui:field="delete" styleName="delete"><ui:text from="{msg.delete}" /></g:Anchor>
+      </div>
+    </div>
+    <div id="info-event" class="elts-pub">
+      <div ui:field="dateEvent"></div>
+      <div id="info-extra-event">
+        <div ui:field="location" class="location"></div>
+        <div class="link"><g:Anchor ui:field="link" target="_blank"></g:Anchor></div>
+      </div>
+    </div>
+
+    <div id="content"><g:Anchor ui:field="content" styleName="ui-btn ui-btn-icon-right"><ui:text from="{msg.content}" /></g:Anchor></div>
+
+    <div class="list-detail-event reccurence">
+      <div><span class="label">Périodicité : </span><span class="field">Tous les ans</span></div>
+      <div><span class="label">Fréquence  : </span><span class="field">1 ans</span></div>
+      <div><span class="label">Fin Après : </span><span class="field">10 répétitions </span></div>
+    </div>
+
+    <ul id="attachments">
+      <li> <a class="downloadable" href="#"><img src="../../util/icons/fileType/oo_spreadsheet.gif" alt="oo_spreadsheet"/>FacturationLocationSP.ods <span class="weight">16 Ko</span></a></li>
+      <li> <a class="downloadable" href="#"><img src="../../util/icons/fileType/oo_spreadsheet.gif" alt="oo_spreadsheet"/>FacturationLocationSP.ods <span class="weight">16 Ko</span></a></li>
+    </ul>
+
+    <div id="participation" class=" elts-pub "> <span class="label">Participants :</span>
+      <ul>
+        <li class="pending">Aurore Allibe ( en attente de réponse )</li>
+        <li>Yohann Chastagnier </li>
+        <li class="pending">Nicolas Eysseric ( en attente de réponse )</li>
+      </ul>
+    </div>
+
 
   </g:HTMLPanel>
 </ui:UiBinder>

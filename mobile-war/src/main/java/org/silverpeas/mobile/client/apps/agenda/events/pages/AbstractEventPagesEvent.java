@@ -21,18 +21,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.resources;
+package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.event.shared.GwtEvent;
 
-public interface AgendaMessages extends Messages {
-  String title();
-  String titleEvent();
+public abstract class AbstractEventPagesEvent extends GwtEvent<EventPagesEventHandler> {
 
-  String to();
-  String toDay();
-  String from();
+  public static Type<EventPagesEventHandler> TYPE = new Type<EventPagesEventHandler>();
 
-  String content();
-  String delete();
+  public AbstractEventPagesEvent() {
+  }
+
+  public static Type<EventPagesEventHandler> getTYPE() {
+    return TYPE;
+  }
+
+  @Override
+  public Type<EventPagesEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 }

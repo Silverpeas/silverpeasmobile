@@ -27,4 +27,10 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface AgendaAppEventHandler extends EventHandler{
   void loadCalendarEvents(CalendarLoadEvent event);
+
+  void loadReminders(RemindersLoadEvent event);
+  void updateReminder(ReminderUpdateEvent event);
+  void createReminder(ReminderCreateEvent event);
+  void deleteReminder(ReminderDeleteEvent event);
+
 }

@@ -29,12 +29,18 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AbstractAgendaAppEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AgendaAppEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderUpdateEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.CalendarLoadedEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.pages.AgendaPage;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -42,14 +48,17 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
+import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,6 +70,8 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   private ApplicationInstanceDTO instance;
   private String key;
   private String keyCalendars;
+
+  public static final String EVENT_REMINDER_TYPE = "CalendarEvent";
 
   public AgendaApp(){
     super();
@@ -171,11 +182,80 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   }
 
-  public void getReminders() {
+  @Override
+  public void loadReminders(final RemindersLoadEvent event) {
+    //TODO : use offline mode
+    ServicesLocator.getServiceReminder().getReminders(instance.getId(), EVENT_REMINDER_TYPE, event.getEvent().getEventId(), new MethodCallback<List<ReminderDTO>>() {
+      @Override
+      public void onFailure(final Method method, final Throwable throwable) {
+        Window.alert("error");
+      }
 
-    //ServicesLocator
-
-
+      @Override
+      public void onSuccess(final Method method, final List<ReminderDTO> result) {
+        EventBus.getInstance().fireEvent(new RemindersLoadedEvent(result));
+      }
+    });
   }
+
+  @Override
+  public void updateReminder(final ReminderUpdateEvent event) {
+    Notification.activityStart();
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceReminder().updateReminder(instance.getId(), EVENT_REMINDER_TYPE,
+            event.getEvent().getEventId(), event.getReminder().getId(), event.getReminder(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final ReminderDTO result) {
+        super.onSuccess(method, result);
+        //TODO : send event on page
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void createReminder(final ReminderCreateEvent event) {
+    Notification.activityStart();
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceReminder().createReminder(instance.getId(), EVENT_REMINDER_TYPE,
+            event.getEvent().getEventId(), event.getReminder(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final ReminderDTO result) {
+        super.onSuccess(method, result);
+        //TODO : send event on page
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void deleteReminder(final ReminderDeleteEvent event) {
+    Notification.activityStart();
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceReminder().deleteReminder(instance.getId(), EVENT_REMINDER_TYPE,
+            event.getEvent().getEventId(), event.getReminder().getId(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final Void result) {
+        super.onSuccess(method, result);
+        //TODO : send event on page
+      }
+    };
+    action.attempt();
+  }
+
+
+
 }
 

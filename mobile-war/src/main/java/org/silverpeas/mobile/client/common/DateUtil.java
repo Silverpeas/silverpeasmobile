@@ -50,4 +50,11 @@ public class DateUtil {
   public static int dayDiff(final Date firstDate, final Date secondDate) {
     return (int) ((firstDate.getTime() - secondDate.getTime()) / MILLIS_DAY);
   }
+
+  public static boolean isSameDate(Date date0, Date date1) {
+    assert date0 != null : "date0 cannot be null";
+    assert date1 != null : "date1 cannot be null";
+    return date0.getYear() == date1.getYear() && date0.getMonth() == date1.getMonth() &&
+        date0.getDate() == date1.getDate();
+  }
 }
