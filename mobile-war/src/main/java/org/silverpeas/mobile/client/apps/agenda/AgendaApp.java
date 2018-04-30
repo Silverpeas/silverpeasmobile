@@ -144,7 +144,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         if (events == null) {
           events = new ArrayList<CalendarEventDTO>();
         }
-        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(events));
+        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(instance, events));
       }
     };
 
@@ -175,7 +175,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       public void onSuccess(final Method method, final List<CalendarEventDTO> events) {
         super.onSuccess(method, events);
         LocalStorageHelper.store(key + event.getCalendar().getId(), List.class, events);
-        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(events));
+        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(instance, events));
       }
     };
     action.attempt();
@@ -192,8 +192,19 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final List<ReminderDTO> result) {
-        EventBus.getInstance().fireEvent(new RemindersLoadedEvent(result));
+      public void onSuccess(final Method method, final List<ReminderDTO> reminders) {
+        ServicesLocator.getServiceReminder().getPossibleDurations(instance.getId(),
+            EVENT_REMINDER_TYPE, event.getEvent().getEventId(), "NEXT_START_DATE_TIME", new MethodCallback<List<String>>() {
+              @Override
+              public void onFailure(final Method method, final Throwable throwable) {
+                Window.alert("error");
+              }
+
+              @Override
+              public void onSuccess(final Method method, final List<String> durations) {
+                EventBus.getInstance().fireEvent(new RemindersLoadedEvent(reminders, durations));
+              }
+            });
       }
     });
   }
@@ -254,8 +265,5 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     };
     action.attempt();
   }
-
-
-
 }
 

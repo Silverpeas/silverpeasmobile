@@ -111,7 +111,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           for (GroupItem groupItem : groups) {
             if (groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) {
               EventItem item = new EventItem();
-              item.setData(dto, getCalendar(dto.getCalendarId()));
+              item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
               groupItem.addItem(item);
             }
           }
@@ -142,7 +142,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           for (GroupItem groupItem : groups) {
             if (groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) {
               EventItem item = new EventItem();
-              item.setData(dto, getCalendar(dto.getCalendarId()));
+              item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
               groupItem.addItem(item);
             }
           }

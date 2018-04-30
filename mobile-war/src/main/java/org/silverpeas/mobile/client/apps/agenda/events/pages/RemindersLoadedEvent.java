@@ -31,15 +31,21 @@ import java.util.List;
 public class RemindersLoadedEvent extends AbstractEventPagesEvent {
 
   private List<ReminderDTO> reminders;
+  private List<String> durations;
 
-  public RemindersLoadedEvent(List<ReminderDTO> reminders){
+  public RemindersLoadedEvent(List<ReminderDTO> reminders, List<String> durations){
     super();
     this.reminders = reminders;
+    this.durations = durations;
   }
 
   @Override
   protected void dispatch(EventPagesEventHandler handler) {
     handler.onRemindersLoaded(this);
+  }
+
+  public List<String> getDurations() {
+    return durations;
   }
 
   public List<ReminderDTO> getReminders() {

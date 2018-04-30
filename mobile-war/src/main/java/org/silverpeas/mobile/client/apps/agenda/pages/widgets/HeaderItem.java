@@ -65,7 +65,7 @@ public class HeaderItem extends Composite implements ClickHandler {
   @Override
   public void onClick(final ClickEvent event) {
     EventPage page = new EventPage();
-    page.setData(data, null);
+    page.setData(null, data, null);
     page.show();
   }
 }

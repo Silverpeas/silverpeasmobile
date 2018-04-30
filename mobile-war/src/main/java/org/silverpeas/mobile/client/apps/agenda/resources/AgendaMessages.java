@@ -35,4 +35,23 @@ public interface AgendaMessages extends Messages {
 
   String content();
   String delete();
+
+  String DAY();
+  String WEEK();
+  String MONTH();
+  String YEAR();
+
+  String NEVER();
+
+
+  String AWAITING();
+  String ACCEPTED();
+  String DECLINED();
+  String TENTATIVE();
+
+  String ATTIME();
+
+  String HOUR();
+  String HOURS(String number);
+  String MINUTES(String number);
 }

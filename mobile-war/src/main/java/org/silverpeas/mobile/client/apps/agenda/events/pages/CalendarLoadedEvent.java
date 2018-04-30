@@ -24,6 +24,7 @@
 package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.List;
 
@@ -31,8 +32,11 @@ public class CalendarLoadedEvent extends AbstractAgendaPagesEvent {
 
   private List<CalendarEventDTO> events;
 
-  public CalendarLoadedEvent(List<CalendarEventDTO> events){
+  private ApplicationInstanceDTO instance;
+
+  public CalendarLoadedEvent(ApplicationInstanceDTO instance, List<CalendarEventDTO> events){
     super();
+    this.instance = instance;
     this.events = events;
   }
 
@@ -47,5 +51,9 @@ public class CalendarLoadedEvent extends AbstractAgendaPagesEvent {
 
   public void setEvents(final List<CalendarEventDTO> events) {
     this.events = events;
+  }
+
+  public ApplicationInstanceDTO getInstance() {
+    return instance;
   }
 }

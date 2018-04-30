@@ -43,9 +43,11 @@ import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public class EventItem extends Composite implements ClickHandler {
 
+  private ApplicationInstanceDTO instance;
   private CalendarEventDTO event;
   private CalendarDTO calendar;
   private static EventItemUiBinder uiBinder = GWT.create(EventItemUiBinder.class);
@@ -64,7 +66,8 @@ public class EventItem extends Composite implements ClickHandler {
     msg = GWT.create(ApplicationMessages.class);
   }
 
-  public void setData(CalendarEventDTO event, CalendarDTO calendar) {
+  public void setData(ApplicationInstanceDTO instance, CalendarEventDTO event, CalendarDTO calendar) {
+    this.instance = instance;
     this.event = event;
     this.calendar = calendar;
     String attendee = "";
@@ -78,7 +81,7 @@ public class EventItem extends Composite implements ClickHandler {
   @Override
   public void onClick(final ClickEvent event) {
     EventPage page = new EventPage();
-    page.setData(this.event, calendar);
+    page.setData(this.instance, this.event, calendar);
     page.show();
   }
 }
