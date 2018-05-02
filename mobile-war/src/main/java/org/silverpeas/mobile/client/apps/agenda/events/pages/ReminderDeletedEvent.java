@@ -21,41 +21,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.resources;
+package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import com.google.gwt.i18n.client.Messages;
+import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-public interface AgendaMessages extends Messages {
-  String title();
-  String titleEvent();
+import java.util.List;
 
-  String to();
-  String toDay();
-  String from();
+public class ReminderDeletedEvent extends AbstractEventPagesEvent {
 
-  String content();
-  String delete();
+  public ReminderDeletedEvent(){
+    super();
+  }
 
-  String DAY();
-  String WEEK();
-  String MONTH();
-  String YEAR();
+  @Override
+  protected void dispatch(EventPagesEventHandler handler) {
+    handler.onRemindersDeleted(this);
+  }
 
-  String NEVER();
-
-
-  String AWAITING();
-  String ACCEPTED();
-  String DECLINED();
-  String TENTATIVE();
-
-  String ATTIME();
-
-  String HOUR();
-  String HOURS(String number);
-  String MINUTES(String number);
-  String OneDAY();
-  String TwoDay();
-  String OneWeek();
 
 }

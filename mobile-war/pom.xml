@@ -76,7 +76,7 @@
               <modules>
                 <module>org.silverpeas.mobile.SpMobil</module>
               </modules>
-              <extraJvmArgs>-Xms768m -Xmx768m</extraJvmArgs>
+              <extraJvmArgs>-Xms1024m -Xmx1024m</extraJvmArgs>
               <localWorkers>3</localWorkers>
             </configuration>
             <goals>

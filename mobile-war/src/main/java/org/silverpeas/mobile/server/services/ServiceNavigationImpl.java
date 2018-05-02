@@ -39,6 +39,7 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.mylinks.model.LinkDetail;
+import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.logging.SilverLogger;
@@ -119,12 +120,14 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
   @Override
   public DetailUserDTO initSession(DetailUserDTO user) throws AuthenticationException {
-    Object token = getThreadLocalRequest().getSession().getAttribute("X-STKN");
+    SynchronizerToken token = (SynchronizerToken) getThreadLocalRequest().getSession().getAttribute("X-STKN");
 
     if (user != null) {
       UserDetail usr = organizationController.getUserDetail(user.getId());
       setUserInSession(usr);
-      return UserHelper.getInstance().populate(usr);
+      DetailUserDTO dto = UserHelper.getInstance().populate(usr);
+      dto.setSessionKey(token.getValue());
+      return dto;
     } else {
       return null;
     }

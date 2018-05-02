@@ -27,4 +27,6 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface EventPagesEventHandler extends EventHandler{
   void onRemindersLoaded(RemindersLoadedEvent event);
+  void onRemindersDeleted(ReminderDeletedEvent event);
+  void onAttachmentLoaded(AttachmentsLoadedEvent event);
 }

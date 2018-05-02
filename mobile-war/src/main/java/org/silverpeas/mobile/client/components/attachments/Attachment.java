@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.documents.pages.widgets;
+package org.silverpeas.mobile.client.components.attachments;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptException;
@@ -32,6 +32,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
@@ -43,6 +44,7 @@ import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 
 public class Attachment extends Composite {
 
@@ -55,7 +57,8 @@ public class Attachment extends Composite {
     private DocumentsMessages msg = null;
     private ApplicationMessages globalMsg = null;
     private boolean clicked = false;
-    private AttachmentDTO attachement;
+    private AttachmentDTO attachement = null;
+    private SimpleDocumentDTO data = null;
 
     interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {
     }
@@ -76,7 +79,12 @@ public class Attachment extends Composite {
         }
         if (!clicked) {
             clicked = true;
-            clickAction();
+            if (attachement != null) {
+              clickActionRPC();
+            } else {
+              clickAction();
+            }
+
             Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
                 @Override
                 public boolean execute() {
@@ -86,12 +94,53 @@ public class Attachment extends Composite {
         }
     }
 
-    public void setAttachment(AttachmentDTO attachmentDTO) {
+    public void setAttachment(SimpleDocumentDTO data) {
+      this.data = data;
+      render();
+    }
+
+    @Deprecated
+    public void setAttachmentFromRPC(AttachmentDTO attachmentDTO) {
         this.attachement = attachmentDTO;
-        render();
+        renderFromRPC();
     }
 
     private void render() {
+      Image img = null;
+      String sizeValue;
+      /*if (!data..isDownloadAllowed()) {
+        link.setStylePrimaryName("not-downloadable");
+      }*/
+      if (data.getSize() < 1024*1024) {
+        sizeValue = String.valueOf(data.getSize()/1024);
+        size.setInnerHTML(msg.sizeK(sizeValue));
+      } else {
+        sizeValue = String.valueOf(data.getSize()/(1024*1024));
+        size.setInnerHTML(msg.sizeM(sizeValue));
+      }
+      String title = data.getFileName();
+      if (!data.getTitle().isEmpty()) title = data.getTitle();
+      name.setInnerHTML(title);
+
+      if (data.getContentType().contains("msword")) {
+        img = new Image(ressources.msword());
+      } else if (data.getContentType().contains("sheet")) {
+        img = new Image(ressources.msexcel());
+      } else if (data.getContentType().contains("pdf")) {
+        img = new Image(ressources.pdf());
+      } else if (data.getContentType().contains("image")) {
+        img = new Image(ressources.image());
+      } else if (data.getContentType().contains("presentation")) {
+        img = new Image(ressources.mspowerpoint());
+      }
+      else {
+        img = new Image(ressources.unknown());
+      }
+      icon.getParentElement().replaceChild(img.getElement(), icon);
+    }
+
+    @Deprecated
+    private void renderFromRPC() {
         Image img = null;
         String sizeValue;
         if (!attachement.isDownloadAllowed()) {
@@ -122,7 +171,8 @@ public class Attachment extends Composite {
         icon.getParentElement().replaceChild(img.getElement(), icon);
     }
 
-    private void clickAction() {
+    @Deprecated
+    private void clickActionRPC() {
         if (attachement.isDownloadAllowed()) {
           try {
             String url = UrlUtils.getServicesLocation();
@@ -137,4 +187,20 @@ public class Attachment extends Composite {
           }
         }
     }
+
+    private void clickAction() {
+    //if (attachement.isDownloadAllowed()) {
+      try {
+        String url = UrlUtils.getServicesLocation();
+        url += "Attachment";
+        url = url + "?id=" + data.getId() + "&lang=" + data.getLang();
+        link.setHref(url);
+        link.setTarget("_self");
+        link.fireEvent(new ClickEvent() {});
+        link.getElement().setAttribute("download", data.getTitle());
+      } catch (JavaScriptException e) {
+        Notification.alert(e.getMessage());
+      }
+    //}
+  }
 }

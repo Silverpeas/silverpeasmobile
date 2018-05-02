@@ -42,7 +42,7 @@ import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPubli
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
-import org.silverpeas.mobile.client.apps.documents.pages.widgets.Attachment;
+import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
@@ -56,7 +56,6 @@ import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
-import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
@@ -138,7 +137,7 @@ public class PublicationPage extends PageContent
 
       for (AttachmentDTO attachment : publication.getAttachments()) {
         Attachment a = new Attachment();
-        a.setAttachment(attachment);
+        a.setAttachmentFromRPC(attachment);
         attachments.add(a);
       }
       if (commentable) {

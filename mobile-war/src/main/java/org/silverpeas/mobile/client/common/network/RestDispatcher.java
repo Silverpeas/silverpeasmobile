@@ -23,9 +23,11 @@
 
 package org.silverpeas.mobile.client.common.network;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
@@ -40,6 +42,11 @@ public class RestDispatcher implements Dispatcher {
       throws RequestException {
     builder.setTimeoutMillis(SpMobileRequestBuilder.TIMEOUT);
     builder.setHeader("Authorization", "Bearer " + SpMobil.getUser().getToken());
+    if (SpMobil.getUser().getSessionKey() != null) {
+      builder.setHeader("X-STKN", SpMobil.getUser().getSessionKey()); // mandatory for PUT,POST,DELETE
+    } else {
+      GWT.log("User session key is null !");
+    }
     return builder.send();
   }
 }

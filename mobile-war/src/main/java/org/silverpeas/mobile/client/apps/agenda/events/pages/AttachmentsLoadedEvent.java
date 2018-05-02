@@ -21,41 +21,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.resources;
+package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import com.google.gwt.i18n.client.Messages;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 
-public interface AgendaMessages extends Messages {
-  String title();
-  String titleEvent();
+import java.util.List;
 
-  String to();
-  String toDay();
-  String from();
+public class AttachmentsLoadedEvent extends AbstractEventPagesEvent {
 
-  String content();
-  String delete();
+  private List<SimpleDocumentDTO> attachments;
 
-  String DAY();
-  String WEEK();
-  String MONTH();
-  String YEAR();
+  public AttachmentsLoadedEvent(List<SimpleDocumentDTO> attachments){
+    super();
+    this.attachments = attachments;
+  }
 
-  String NEVER();
+  @Override
+  protected void dispatch(EventPagesEventHandler handler) {
+    handler.onAttachmentLoaded(this);
+  }
 
 
-  String AWAITING();
-  String ACCEPTED();
-  String DECLINED();
-  String TENTATIVE();
-
-  String ATTIME();
-
-  String HOUR();
-  String HOURS(String number);
-  String MINUTES(String number);
-  String OneDAY();
-  String TwoDay();
-  String OneWeek();
-
+  public List<SimpleDocumentDTO> getAttachments() {
+    return attachments;
+  }
 }

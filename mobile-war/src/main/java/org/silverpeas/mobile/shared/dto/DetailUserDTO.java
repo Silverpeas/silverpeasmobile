@@ -42,6 +42,7 @@ public class DetailUserDTO implements Serializable{
   private String language;
   private String token;
   private String zone;
+  private String sessionKey;
   private boolean connected;
   private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
 
@@ -155,5 +156,13 @@ public class DetailUserDTO implements Serializable{
 
   public String getZone() {
     return zone;
+  }
+
+  public void setSessionKey(final String sessionKey) {
+    this.sessionKey = sessionKey;
+  }
+
+  public String getSessionKey() {
+    return sessionKey;
   }
 }

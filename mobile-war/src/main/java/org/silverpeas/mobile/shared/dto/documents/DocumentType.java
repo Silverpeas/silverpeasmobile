@@ -21,41 +21,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.resources;
+package org.silverpeas.mobile.shared.dto.documents;
 
-import com.google.gwt.i18n.client.Messages;
-
-public interface AgendaMessages extends Messages {
-  String title();
-  String titleEvent();
-
-  String to();
-  String toDay();
-  String from();
-
-  String content();
-  String delete();
-
-  String DAY();
-  String WEEK();
-  String MONTH();
-  String YEAR();
-
-  String NEVER();
-
-
-  String AWAITING();
-  String ACCEPTED();
-  String DECLINED();
-  String TENTATIVE();
-
-  String ATTIME();
-
-  String HOUR();
-  String HOURS(String number);
-  String MINUTES(String number);
-  String OneDAY();
-  String TwoDay();
-  String OneWeek();
-
+/**
+ * @author svu
+ */
+public enum DocumentType {
+    attachment, form, wysiwyg, image, video,
+    node;
 }

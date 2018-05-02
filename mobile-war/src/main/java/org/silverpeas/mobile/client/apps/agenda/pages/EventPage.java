@@ -32,6 +32,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -41,9 +43,14 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
+import org.silverpeas.mobile.client.apps.agenda.events.app.AttachmentsLoadEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderUpdateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractEventPagesEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.EventPagesEventHandler;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.pages.widgets.AttendeeItem;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
@@ -53,12 +60,15 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.components.UnorderedList;
+import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttributeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import org.silverpeas.mobile.shared.dto.almanach.TimeUnitDTO;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
@@ -123,6 +133,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
   public void setData(ApplicationInstanceDTO instance, CalendarEventDTO event, CalendarDTO calendar) {
     EventBus.getInstance().fireEvent(new RemindersLoadEvent(event));
+    EventBus.getInstance().fireEvent(new AttachmentsLoadEvent(event));
     this.event = event;
     this.calendar = calendar;
     setPageTitle(calendar.getTitle());
@@ -182,16 +193,6 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
       }
     }
 
-    //TODO : attachment
-    /*for (AttachmentParameterDTO attachment : event.getAttachmentParameters()) {
-      //AttachmentDTO dto = new AttachmentDTO();
-      Window.alert(attachment.getName() + " " + attachment.getValue());
-      //dto.setTitle("");
-      //AttendeeItem att = new AttendeeItem();
-      //att.setAttachment(dto);
-      //attachments.add(att);
-    }*/
-
     for (CalendarEventAttendeeDTO attendee : event.getAttendees()) {
       AttendeeItem item = new AttendeeItem();
       item.setData(attendee);
@@ -217,6 +218,12 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
           durationLabel = msg.HOUR();
         } else if(duration.equals("2HOUR")) {
           durationLabel = msg.HOURS(r.getDuration().toString());
+        } else if(duration.equals("1DAY")) {
+          durationLabel = msg.OneDAY();
+        } else if(duration.equals("2DAY")) {
+          durationLabel = msg.TwoDay();
+        } else if(duration.equals("1WEEK")) {
+          durationLabel = msg.OneWeek();
         }
         reminderDurations.addItem(durationLabel, duration);
       }
@@ -233,6 +240,24 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     }
   }
 
+  @Override
+  public void onRemindersDeleted(final ReminderDeletedEvent event) {
+    this.reminderDTO = null;
+    reminder.getStyle().setDisplay(Style.Display.NONE);
+    //TODO : prepare for create
+    delete.setVisible(false);
+    reminderDurations.setSelectedIndex(0);
+  }
+
+  @Override
+  public void onAttachmentLoaded(final AttachmentsLoadedEvent event) {
+    for (SimpleDocumentDTO attachment : event.getAttachments()) {
+      Attachment item = new Attachment();
+      item.setAttachment(attachment);
+      attachments.add(item);
+    }
+  }
+
   @UiHandler("content")
   protected void showContent(ClickEvent event) {
     //TODO : use content return by rest service
@@ -241,14 +266,18 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
   @UiHandler("delete")
   protected void deleteReminder(ClickEvent event) {
-    //TODO : delete
-    Window.alert("TODO");
+    EventBus.getInstance().fireEvent(new ReminderDeleteEvent(this.event, this.reminderDTO));
   }
 
   @UiHandler("reminderDurations")
   protected  void changeReminderDuration(ChangeEvent event) {
-    //TODO : change duration
-    Window.alert("TODO");
+    RegExp regExp = RegExp.compile("(\\d+)(.*)$");
+    MatchResult r = regExp.exec(reminderDurations.getSelectedValue());
+    String d = r.getGroup(1);
+    String u = r.getGroup(2);
+    this.reminderDTO.setDuration(Integer.parseInt(d));
+    this.reminderDTO.setTimeUnit(TimeUnitDTO.valueOf(u));
+    EventBus.getInstance().fireEvent(new ReminderUpdateEvent(this.event, this.reminderDTO));
   }
 
   public static void showContent(String eventId, String componentId, String title) {

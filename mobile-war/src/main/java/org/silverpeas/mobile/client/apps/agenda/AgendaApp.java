@@ -34,12 +34,15 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AbstractAgendaAppEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AgendaAppEventHandler;
+import org.silverpeas.mobile.client.apps.agenda.events.app.AttachmentsLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderUpdateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.CalendarLoadedEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.pages.AgendaPage;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
@@ -56,6 +59,8 @@ import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import org.silverpeas.mobile.shared.dto.documents.DocumentType;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
@@ -260,10 +265,27 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       @Override
       public void onSuccess(final Method method, final Void result) {
         super.onSuccess(method, result);
-        //TODO : send event on page
+        EventBus.getInstance().fireEvent(new ReminderDeletedEvent());
       }
     };
     action.attempt();
+  }
+
+  @Override
+  public void loadAttachments(final AttachmentsLoadEvent event) {
+    ServicesLocator.getRestServiceDocuments().getDocumentsByType(instance.getId(), event.getEvent().getEventId(),
+        DocumentType.attachment.name(), SpMobil.getUser().getLanguage(),
+        new MethodCallback<List<SimpleDocumentDTO>>() {
+          @Override
+          public void onFailure(final Method method, final Throwable throwable) {
+            Window.alert("error");
+          }
+
+          @Override
+          public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
+            EventBus.getInstance().fireEvent(new AttachmentsLoadedEvent(attachments));
+          }
+        });
   }
 }
 

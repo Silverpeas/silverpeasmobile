@@ -27,6 +27,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
@@ -53,7 +54,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
   private static AgendaPageUiBinder uiBinder = GWT.create(AgendaPageUiBinder.class);
   private List<CalendarDTO> calendars = null;
-  private TimeRange currentTimeRange = TimeRange.months;
+  private TimeRange currentTimeRange = TimeRange.weeks;
   private List<GroupItem> groups = new ArrayList<>();
 
   @UiField(provided = true) protected AgendaMessages msg = null;

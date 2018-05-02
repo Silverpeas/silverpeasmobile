@@ -58,12 +58,6 @@
 
     <components:UnorderedList ui:field="attachments"/>
 
-
-    <ul id="attachments">
-      <li> <a class="downloadable" href="#"><img src="../../util/icons/fileType/oo_spreadsheet.gif" alt="oo_spreadsheet"/>FacturationLocationSP.ods <span class="weight">16 Ko</span></a></li>
-      <li> <a class="downloadable" href="#"><img src="../../util/icons/fileType/oo_spreadsheet.gif" alt="oo_spreadsheet"/>FacturationLocationSP.ods <span class="weight">16 Ko</span></a></li>
-    </ul>
-
     <div id="participation" class=" elts-pub "> <span class="label">Participants :</span>
       <components:UnorderedList ui:field="attendees"/>
     </div>

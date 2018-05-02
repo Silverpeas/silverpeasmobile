@@ -24,16 +24,15 @@
 package org.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import org.fusesource.restygwt.client.Defaults;
 import org.silverpeas.mobile.client.common.network.RestDispatcher;
-import org.silverpeas.mobile.client.common.network.SpMobileRequestBuilder;
 import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
-import org.silverpeas.mobile.server.services.ServiceHyperLinkImpl;
 import org.silverpeas.mobile.shared.services.*;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigationAsync;
+import org.silverpeas.mobile.shared.services.rest.ServiceAlmanach;
+import org.silverpeas.mobile.shared.services.rest.ServiceRestDocuments;
 
 public class ServicesLocator {
   private static SpMobileRpcRequestBuilder builder = new SpMobileRpcRequestBuilder();
@@ -69,12 +68,21 @@ public class ServicesLocator {
 
   private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
   private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
+  private static ServiceRestDocuments serviceRestDocuments = GWT.create(
+      ServiceRestDocuments.class);
 
   private static void initRestContext() {
-    Defaults.setServiceRoot("/silverpeas/services");
-    Defaults.setDispatcher(dispatcher);
+    if (!Defaults.getServiceRoot().equals("/silverpeas/services")) {
+      Defaults.setServiceRoot("/silverpeas/services");
+      Defaults.setDispatcher(dispatcher);
+    }
     //Defaults.setTimeZone(TimeZone.createTimeZone());
     //Defaults.setDateFormat();
+  }
+
+  public static ServiceRestDocuments getRestServiceDocuments() {
+    initRestContext();
+    return serviceRestDocuments;
   }
 
   public static ServiceReminder getServiceReminder() {

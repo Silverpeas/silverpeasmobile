@@ -21,37 +21,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.core.webapi.calendar.CalendarResourceURIs;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/almanach")
-public interface ServiceAlmanach extends RestService {
+@Path("/documents")
+public interface ServiceRestDocuments extends RestService {
 
   @GET
-  @Path("{componentInstanceId}/")
-  public void getCalendars(@PathParam("componentInstanceId") String componentInstanceId, MethodCallback<List<CalendarDTO>> callback);
-
-  @GET
-  @Path("{componentInstanceId}/{calendarId}/events/occurrences/")
-  public void getOccurences(@PathParam("componentInstanceId") String componentInstanceId, @PathParam("calendarId") String calendarId, @QueryParam("startDateOfWindowTime") String startDateOfWindowTime, @QueryParam("endDateOfWindowTime") String endDateOfWindowTime, @QueryParam("zoneid") String zoneid, MethodCallback<List<CalendarEventDTO>> callback);
-
-  @GET
-  @Path("{calendarId}/events/{eventId}")
-  public void getEvent(@PathParam("calendarId") String calendarId, @PathParam("eventId") String eventId, MethodCallback<CalendarEventDTO> callback);
-
+  @Path("{componentId}/resource/{resourceId}/types/{type}/{lang}/")
+  public void getDocumentsByType(@PathParam("componentId") String componentId,
+      @PathParam("resourceId") String resourceId, @PathParam("type") String type,
+      @PathParam("lang") String lang, MethodCallback<List<SimpleDocumentDTO>> callback);
 }
