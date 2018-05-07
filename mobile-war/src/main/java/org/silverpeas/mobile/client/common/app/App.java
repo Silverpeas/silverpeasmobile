@@ -32,6 +32,7 @@ import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEventHandler;
 import org.silverpeas.mobile.client.components.base.events.apps.StopLoadingDataEvent;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 public abstract class App implements AppEventHandler {
 
@@ -39,6 +40,7 @@ public abstract class App implements AppEventHandler {
   protected SimplePanel container;
   private boolean stopLoading = false;
   private String appName = "";
+  private ApplicationInstanceDTO instance = null;
 
   public App() {
     EventBus.getInstance().addHandler(AbstractAppEvent.TYPE, this);
@@ -90,5 +92,13 @@ public abstract class App implements AppEventHandler {
   @Override
   public void receiveEvent(AppEvent event) {
     // for compatibility
+  }
+
+  public ApplicationInstanceDTO getApplicationInstance() {
+    return instance;
+  }
+
+  protected void setApplicationInstance (ApplicationInstanceDTO instance) {
+    this.instance = instance;
   }
 }

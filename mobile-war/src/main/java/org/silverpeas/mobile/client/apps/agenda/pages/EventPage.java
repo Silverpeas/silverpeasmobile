@@ -109,6 +109,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
   private CalendarEventDTO event;
   private CalendarDTO calendar;
   private ReminderDTO reminderDTO;
+  private ApplicationInstanceDTO instance;
 
   private DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mmZZZ");
   private DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
@@ -136,6 +137,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     EventBus.getInstance().fireEvent(new AttachmentsLoadEvent(event));
     this.event = event;
     this.calendar = calendar;
+    this.instance = instance;
     setPageTitle(calendar.getTitle());
     header.setInnerText(event.getTitle());
     description.setInnerText(event.getDescription());
@@ -197,6 +199,10 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
       AttendeeItem item = new AttendeeItem();
       item.setData(attendee);
       attendees.add(item);
+    }
+
+    if (this.event.getContent() == null || this.event.getContent().isEmpty()) {
+      content.getElement().getParentElement().getStyle().setDisplay(Style.Display.NONE);
     }
   }
 
@@ -261,7 +267,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
   @UiHandler("content")
   protected void showContent(ClickEvent event) {
     //TODO : use content return by rest service
-    showContent(this.event.getEventId(), "almanach4", this.event.getTitle());
+    showContent(this.event.getEventId(), this.instance.getId(), this.event.getTitle());
   }
 
   @UiHandler("delete")

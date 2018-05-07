@@ -26,10 +26,8 @@ package org.silverpeas.mobile.client.apps.agenda;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AbstractAgendaAppEvent;
@@ -61,7 +59,6 @@ import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.DocumentType;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
-import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
@@ -72,7 +69,6 @@ import java.util.List;
 public class AgendaApp extends App implements AgendaAppEventHandler, NavigationEventHandler {
 
   private AgendaMessages msg;
-  private ApplicationInstanceDTO instance;
   private String key;
   private String keyCalendars;
 
@@ -97,9 +93,9 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.almanach.name())) {
-      this.instance = event.getInstance();
-      key = "events_" + instance.getId();
-      keyCalendars = "calendars_" + instance.getId();
+      setApplicationInstance(event.getInstance());
+      key = "events_" + getApplicationInstance().getId();
+      keyCalendars = "calendars_" + getApplicationInstance().getId();
 
       AgendaPage page = new AgendaPage();
       page.setPageTitle(event.getInstance().getLabel());
@@ -111,6 +107,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
           if (calendars == null) {
             calendars = new ArrayList<CalendarDTO>();
           }
+          page.setApp(AgendaApp.this);
           page.setCalendars(calendars);
           page.show();
         }
@@ -119,12 +116,13 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CalendarDTO>>(offlineAction) {
         @Override
         public void attempt() {
-          ServicesLocator.getServiceAlmanach().getCalendars(instance.getId(), this);
+          ServicesLocator.getServiceAlmanach().getCalendars(getApplicationInstance().getId(), this);
         }
 
         @Override
         public void onSuccess(final Method method, final List<CalendarDTO> calendars) {
           super.onSuccess(method, calendars);
+          page.setApp(AgendaApp.this);
           page.setCalendars(calendars);
           page.show();
         }
@@ -149,7 +147,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         if (events == null) {
           events = new ArrayList<CalendarEventDTO>();
         }
-        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(instance, events));
+        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(getApplicationInstance(), events));
       }
     };
 
@@ -172,7 +170,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         }
         endDateOfWindowTime = dtf.format(end);
         ServicesLocator.getServiceAlmanach()
-            .getOccurences(instance.getId(), event.getCalendar().getId(),
+            .getOccurences(getApplicationInstance().getId(), event.getCalendar().getId(),
                 startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);
       }
 
@@ -180,7 +178,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       public void onSuccess(final Method method, final List<CalendarEventDTO> events) {
         super.onSuccess(method, events);
         LocalStorageHelper.store(key + event.getCalendar().getId(), List.class, events);
-        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(instance, events));
+        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(getApplicationInstance(), events));
       }
     };
     action.attempt();
@@ -189,29 +187,63 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void loadReminders(final RemindersLoadEvent event) {
-    //TODO : use offline mode
-    ServicesLocator.getServiceReminder().getReminders(instance.getId(), EVENT_REMINDER_TYPE, event.getEvent().getEventId(), new MethodCallback<List<ReminderDTO>>() {
+    Command offlineAction = new Command() {
       @Override
-      public void onFailure(final Method method, final Throwable throwable) {
-        Window.alert("error");
+      public void execute() {
+        List<String> durations = LocalStorageHelper.load("durations", List.class);
+        if (durations == null) {
+          durations = new ArrayList<String>();
+        }
+
+        List<ReminderDTO> reminders = LocalStorageHelper.load("reminders"+event.getEvent().getEventId() , List.class);
+        if (reminders == null) {
+          reminders = new ArrayList<ReminderDTO>();
+        }
+
+        EventBus.getInstance().fireEvent(new RemindersLoadedEvent(reminders, durations));
+      }
+    };
+
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<ReminderDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceReminder()
+            .getReminders(getApplicationInstance().getId(), EVENT_REMINDER_TYPE, event.getEvent().getEventId(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<ReminderDTO> reminders) {
-        ServicesLocator.getServiceReminder().getPossibleDurations(instance.getId(),
-            EVENT_REMINDER_TYPE, event.getEvent().getEventId(), "NEXT_START_DATE_TIME", new MethodCallback<List<String>>() {
-              @Override
-              public void onFailure(final Method method, final Throwable throwable) {
-                Window.alert("error");
-              }
+        super.onSuccess(method, reminders);
+        LocalStorageHelper.store("reminders" + event.getEvent().getEventId(), List.class, reminders);
 
-              @Override
-              public void onSuccess(final Method method, final List<String> durations) {
-                EventBus.getInstance().fireEvent(new RemindersLoadedEvent(reminders, durations));
-              }
-            });
+        Command offlineAction2 = new Command() {
+          @Override
+          public void execute() {
+            List<String> durations = LocalStorageHelper.load("durations", List.class);
+            if (durations == null) {
+              durations = new ArrayList<String>();
+            }
+            EventBus.getInstance().fireEvent(new RemindersLoadedEvent(reminders, durations));
+          }
+        };
+
+        MethodCallbackOnlineOrOffline action2 = new MethodCallbackOnlineOrOffline<List<String>>(offlineAction2) {
+          @Override
+          public void attempt() {
+            ServicesLocator.getServiceReminder().getPossibleDurations(getApplicationInstance().getId(),
+                EVENT_REMINDER_TYPE, event.getEvent().getEventId(), "NEXT_START_DATE_TIME", this);
+          }
+
+          @Override
+          public void onSuccess(final Method method, final List<String> durations) {
+            super.onSuccess(method, durations);
+            EventBus.getInstance().fireEvent(new RemindersLoadedEvent(reminders, durations));
+          }
+        };
+        action2.attempt();
       }
-    });
+    };
+    action.attempt();
   }
 
   @Override
@@ -220,14 +252,13 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceReminder().updateReminder(instance.getId(), EVENT_REMINDER_TYPE,
+        ServicesLocator.getServiceReminder().updateReminder(getApplicationInstance().getId(), EVENT_REMINDER_TYPE,
             event.getEvent().getEventId(), event.getReminder().getId(), event.getReminder(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final ReminderDTO result) {
         super.onSuccess(method, result);
-        //TODO : send event on page
       }
     };
     action.attempt();
@@ -239,7 +270,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceReminder().createReminder(instance.getId(), EVENT_REMINDER_TYPE,
+        ServicesLocator.getServiceReminder().createReminder(getApplicationInstance().getId(), EVENT_REMINDER_TYPE,
             event.getEvent().getEventId(), event.getReminder(), this);
       }
 
@@ -258,7 +289,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceReminder().deleteReminder(instance.getId(), EVENT_REMINDER_TYPE,
+        ServicesLocator.getServiceReminder().deleteReminder(getApplicationInstance().getId(), EVENT_REMINDER_TYPE,
             event.getEvent().getEventId(), event.getReminder().getId(), this);
       }
 
@@ -273,19 +304,32 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void loadAttachments(final AttachmentsLoadEvent event) {
-    ServicesLocator.getRestServiceDocuments().getDocumentsByType(instance.getId(), event.getEvent().getEventId(),
-        DocumentType.attachment.name(), SpMobil.getUser().getLanguage(),
-        new MethodCallback<List<SimpleDocumentDTO>>() {
-          @Override
-          public void onFailure(final Method method, final Throwable throwable) {
-            Window.alert("error");
-          }
+    Command offlineAction = new Command() {
+      @Override
+      public void execute() {
+        List<SimpleDocumentDTO> attachments = LocalStorageHelper.load("event_attachments_"+event.getEvent().getEventId(), List.class);
+        if (attachments == null) {
+          attachments = new ArrayList<SimpleDocumentDTO>();
+        }
+        EventBus.getInstance().fireEvent(new AttachmentsLoadedEvent(attachments));
+      }
+    };
 
-          @Override
-          public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
-            EventBus.getInstance().fireEvent(new AttachmentsLoadedEvent(attachments));
-          }
-        });
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<SimpleDocumentDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getRestServiceDocuments().getDocumentsByType(getApplicationInstance().getId(), event.getEvent().getEventId(),
+            DocumentType.attachment.name(), SpMobil.getUser().getLanguage(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
+        super.onSuccess(method, attachments);
+        LocalStorageHelper.store("event_attachments_" + event.getEvent().getEventId(), List.class, attachments);
+        EventBus.getInstance().fireEvent(new AttachmentsLoadedEvent(attachments));
+      }
+    };
+    action.attempt();
   }
 }
 
