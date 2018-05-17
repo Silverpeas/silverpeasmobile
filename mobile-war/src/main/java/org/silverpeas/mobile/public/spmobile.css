@@ -757,7 +757,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .add-media,
-.add-task{    
+.add-task {
 	background-color: #FDF4EF;
     border-bottom: 1px solid #EDBCBB;
     border-top: 1px solid #EDBCBB;
@@ -773,6 +773,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	background-position: right -599px;
     width: 3em;
 }
+
 .publication.ui-input-text{
 	background-position: 0.5625em 0.3em;
 }

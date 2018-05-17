@@ -35,6 +35,7 @@ public interface AgendaMessages extends Messages {
 
   String content();
   String delete();
+  String add();
 
   String DAY();
   String WEEK();
@@ -57,5 +58,7 @@ public interface AgendaMessages extends Messages {
   String OneDAY();
   String TwoDay();
   String OneWeek();
+
+  String addReminder();
 
 }

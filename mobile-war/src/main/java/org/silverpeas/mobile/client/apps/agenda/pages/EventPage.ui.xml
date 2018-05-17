@@ -34,7 +34,7 @@
     <h2 ui:field="header" class="appHeader"></h2>
     <p ui:field="description" class="publiDesc"></p>
 
-    <div ui:field="reminder" class="rappel-event">
+    <div ui:field="reminder" class="rappel-event" style="display:none;">
       <g:ListBox ui:field="reminderDurations"/>
       <div class="actions-rappel">
         <g:Anchor ui:field="delete" styleName="delete"><ui:text from="{msg.delete}" /></g:Anchor>

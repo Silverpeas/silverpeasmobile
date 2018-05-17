@@ -184,13 +184,14 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
             }
 
             if (notification.getContentType().equals(NotificationDTO.TYPE_PUBLICATION)) {
-
-
                 String url = silverpeasServerUrl + "/Publication/" + notification.getContentId();
                 metaData.setLink(url);
             } else if (notification.getContentType().equals(NotificationDTO.TYPE_PHOTO) || notification.getContentType().equals(NotificationDTO.TYPE_SOUND) || notification.getContentType().equals(NotificationDTO.TYPE_VIDEO) || notification.getContentType().equals(NotificationDTO.TYPE_STREAMING)) {
                 String url = silverpeasServerUrl + "/Media/" + notification.getContentId();
                 metaData.setLink(url);
+            } else if (notification.getContentType().equals(NotificationDTO.TYPE_EVENT)) {
+              String url = silverpeasServerUrl + "/Contribution/" + notification.getContentId();
+              metaData.setLink(url);
             }
             metaData.setAnswerAllowed(false);
             metaData.setContent(notification.getMessage());

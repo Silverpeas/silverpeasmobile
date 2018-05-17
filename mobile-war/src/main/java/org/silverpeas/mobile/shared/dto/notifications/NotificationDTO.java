@@ -37,6 +37,7 @@ public class NotificationDTO extends BaseDTO implements Serializable {
   public final static String TYPE_VIDEO = "Video";
   public final static String TYPE_SOUND = "Sound";
   public final static String TYPE_STREAMING = "Streaming";
+  public final static String TYPE_EVENT = "Event";
 
   private String contentId;
   private String contentType;

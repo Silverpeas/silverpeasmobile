@@ -44,6 +44,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AttachmentsLoadEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderUpdateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
@@ -51,10 +52,12 @@ import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractEventPagesE
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.EventPagesEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersAddingEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
+import org.silverpeas.mobile.client.apps.agenda.pages.widgets.AddReminderButton;
 import org.silverpeas.mobile.client.apps.agenda.pages.widgets.AttendeeItem;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
-import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.DateUtil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
@@ -70,6 +73,7 @@ import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.almanach.TimeUnitDTO;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
 import java.util.Date;
@@ -117,7 +121,8 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
   private DateTimeFormat displayDf = DateTimeFormat.getFormat("dd/MM/yyyy");
   private DateTimeFormat displayDtf = DateTimeFormat.getFormat("HH:mm");
 
-  private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private NotifyButton notification = new NotifyButton();
+  private AddReminderButton addReminder = new AddReminderButton();
 
   interface EventPageUiBinder extends UiBinder<Widget, EventPage> {
   }
@@ -141,8 +146,14 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     setPageTitle(calendar.getTitle());
     header.setInnerText(event.getTitle());
     description.setInnerText(event.getDescription());
-    location.setInnerText(event.getLocation());
 
+
+    if (event.getLocation() == null || event.getLocation().isEmpty()) {
+      location.getStyle().setDisplay(Style.Display.NONE);
+    } else {
+      location.getStyle().setDisplay(Style.Display.BLOCK);
+      location.setInnerText(event.getLocation());
+    }
     if (event.isOnAllDay()) {
       Date start = df.parse(event.getStartDate());
       Date end = df.parse(event.getEndDate());
@@ -204,35 +215,41 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     if (this.event.getContent() == null || this.event.getContent().isEmpty()) {
       content.getElement().getParentElement().getStyle().setDisplay(Style.Display.NONE);
     }
+
+    // actions
+    notification.init(instance.getId(), event.getEventId(), NotificationDTO.TYPE_EVENT, event.getTitle(), getPageTitle());
+    actionsMenu.addAction(notification);
   }
 
   @Override
   public void onRemindersLoaded(final RemindersLoadedEvent event) {
+
+    for (String duration : event.getDurations()) {
+      String durationLabel = "";
+      if (duration.equals("0MINUTE")) {
+        durationLabel = msg.ATTIME();
+      } else if(duration.equals("15MINUTE")) {
+        durationLabel = msg.MINUTES("15");
+      } else if(duration.equals("30MINUTE")) {
+        durationLabel = msg.MINUTES("30");
+      } else if(duration.equals("1HOUR")) {
+        durationLabel = msg.HOUR();
+      } else if(duration.equals("2HOUR")) {
+        durationLabel = msg.HOURS("2");
+      } else if(duration.equals("1DAY")) {
+        durationLabel = msg.OneDAY();
+      } else if(duration.equals("2DAY")) {
+        durationLabel = msg.TwoDay();
+      } else if(duration.equals("1WEEK")) {
+        durationLabel = msg.OneWeek();
+      }
+      reminderDurations.addItem(durationLabel, duration);
+    }
+
+
     if (!event.getReminders().isEmpty()) {
       ReminderDTO r = event.getReminders().get(0);
       this.reminderDTO = r;
-      for (String duration : event.getDurations()) {
-
-        String durationLabel = "";
-        if (duration.equals("0MINUTE")) {
-          durationLabel = msg.ATTIME();
-        } else if(duration.equals("15MINUTE")) {
-          durationLabel = msg.MINUTES("15");
-        } else if(duration.equals("30MINUTE")) {
-          durationLabel = msg.MINUTES("30");
-        } else if(duration.equals("1HOUR")) {
-          durationLabel = msg.HOUR();
-        } else if(duration.equals("2HOUR")) {
-          durationLabel = msg.HOURS(r.getDuration().toString());
-        } else if(duration.equals("1DAY")) {
-          durationLabel = msg.OneDAY();
-        } else if(duration.equals("2DAY")) {
-          durationLabel = msg.TwoDay();
-        } else if(duration.equals("1WEEK")) {
-          durationLabel = msg.OneWeek();
-        }
-        reminderDurations.addItem(durationLabel, duration);
-      }
 
       String duration = r.getDuration() + r.getTimeUnit().name();
       for (int i = 0; i < reminderDurations.getItemCount(); i++) {
@@ -241,8 +258,10 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
           break;
         }
       }
+      reminder.getStyle().setDisplay(Style.Display.BLOCK);
     } else {
       reminder.getStyle().setDisplay(Style.Display.NONE);
+      actionsMenu.addAction(addReminder);
     }
   }
 
@@ -250,9 +269,9 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
   public void onRemindersDeleted(final ReminderDeletedEvent event) {
     this.reminderDTO = null;
     reminder.getStyle().setDisplay(Style.Display.NONE);
-    //TODO : prepare for create
     delete.setVisible(false);
     reminderDurations.setSelectedIndex(0);
+    actionsMenu.addAction(addReminder);
   }
 
   @Override
@@ -262,6 +281,26 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
       item.setAttachment(attachment);
       attachments.add(item);
     }
+  }
+
+  @Override
+  public void onRemindersAdding(final RemindersAddingEvent remindersAddingEvent) {
+    reminder.getStyle().setDisplay(Style.Display.BLOCK);
+
+    reminderDurations.setSelectedIndex(1);
+    String[] d = decodeDuration();
+    ReminderDTO dto = new ReminderDTO();
+    dto.setDuration(Integer.parseInt(d[0]));
+    dto.setTimeUnit(TimeUnitDTO.valueOf(d[1]));
+    dto.setCanBeDeleted(true);
+    dto.setCanBeModified(true);
+    dto.setcProperty("NEXT_START_DATE_TIME");
+    dto.setcId(instance.getId() + ":CalendarEvent:" + this.event.getEventId());
+
+    this.reminderDTO = dto;
+    EventBus.getInstance().fireEvent(new ReminderCreateEvent(this.event, this.reminderDTO));
+    actionsMenu.removeAction(AddReminderButton.ID);
+    delete.setVisible(true);
   }
 
   @UiHandler("content")
@@ -277,13 +316,19 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
   @UiHandler("reminderDurations")
   protected  void changeReminderDuration(ChangeEvent event) {
+    String[] d = decodeDuration();
+    this.reminderDTO.setDuration(Integer.parseInt(d[0]));
+    this.reminderDTO.setTimeUnit(TimeUnitDTO.valueOf(d[1]));
+    EventBus.getInstance().fireEvent(new ReminderUpdateEvent(this.event, this.reminderDTO));
+  }
+
+  private String[] decodeDuration() {
+    String[] result = new String[2];
     RegExp regExp = RegExp.compile("(\\d+)(.*)$");
     MatchResult r = regExp.exec(reminderDurations.getSelectedValue());
-    String d = r.getGroup(1);
-    String u = r.getGroup(2);
-    this.reminderDTO.setDuration(Integer.parseInt(d));
-    this.reminderDTO.setTimeUnit(TimeUnitDTO.valueOf(u));
-    EventBus.getInstance().fireEvent(new ReminderUpdateEvent(this.event, this.reminderDTO));
+    result[0] = r.getGroup(1);
+    result[1] = r.getGroup(2);
+    return result;
   }
 
   public static void showContent(String eventId, String componentId, String title) {
