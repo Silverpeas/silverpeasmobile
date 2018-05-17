@@ -26,12 +26,14 @@ package org.silverpeas.mobile.client.common;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import org.fusesource.restygwt.client.Defaults;
+import org.silverpeas.mobile.client.common.network.RestAuthenticationDispatcher;
 import org.silverpeas.mobile.client.common.network.RestDispatcher;
 import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
 import org.silverpeas.mobile.shared.services.*;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigationAsync;
 import org.silverpeas.mobile.shared.services.rest.ServiceAlmanach;
+import org.silverpeas.mobile.shared.services.rest.ServiceAuthentication;
 import org.silverpeas.mobile.shared.services.rest.ServiceRestDocuments;
 
 public class ServicesLocator {
@@ -66,18 +68,28 @@ public class ServicesLocator {
   private static ServiceHyperLinkAsync serviceHyperLink =
       (ServiceHyperLinkAsync) GWT.create(ServiceHyperLink.class);
 
+  private static ServiceAuthentication serviceRestAuthentication = GWT.create(ServiceAuthentication.class);
   private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
   private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
   private static ServiceRestDocuments serviceRestDocuments = GWT.create(
       ServiceRestDocuments.class);
 
   private static void initRestContext() {
-    if (!Defaults.getServiceRoot().equals("/silverpeas/services")) {
+      Defaults.getServiceRoot().equals("/silverpeas/services");
       Defaults.setServiceRoot("/silverpeas/services");
       Defaults.setDispatcher(dispatcher);
-    }
-    //Defaults.setTimeZone(TimeZone.createTimeZone());
-    //Defaults.setDateFormat();
+  }
+
+  private static void initRestContext(String login, String password, String domainId) {
+    RestAuthenticationDispatcher disp = new RestAuthenticationDispatcher(login, password, domainId);
+    Defaults.getServiceRoot().equals("/silverpeas/services");
+    Defaults.setServiceRoot("/silverpeas/services");
+    Defaults.setDispatcher(disp);
+  }
+
+  public static ServiceAuthentication getRestServiceAuthentication(String login, String password, String domainId) {
+    initRestContext(login, password, domainId);
+    return serviceRestAuthentication;
   }
 
   public static ServiceRestDocuments getRestServiceDocuments() {
