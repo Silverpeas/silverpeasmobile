@@ -23,6 +23,7 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -66,8 +67,6 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
       throws AuthenticationException {
 
     // vérification
-
-
     AuthenticationCredential credential =
         AuthenticationCredential.newWithAsLogin(login).withAsPassword(password)
             .withAsDomainId(domainId);
@@ -94,6 +93,12 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     }
     UserDetail user = getUserDetail(userId);
     setUserInSession(user);
+
+    try {
+      setMainsessioncontroller(login, password, domainId);
+    } catch (SilverpeasException e) {
+      throw new AuthenticationException(AuthenticationError.CanCreateMainSessionController);
+    }
 
     DetailUserDTO userDTO = new DetailUserDTO();
     userDTO = UserHelper.getInstance().populate(user);

@@ -37,6 +37,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.apps.agenda.AgendaApp;
 import org.silverpeas.mobile.client.apps.blog.BlogApp;
 import org.silverpeas.mobile.client.apps.documents.DocumentsApp;
@@ -57,6 +59,8 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.ShortCutRouter;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ExceptionEvent;
+import org.silverpeas.mobile.client.common.event.authentication.AbstractAuthenticationErrorEvent;
+import org.silverpeas.mobile.client.common.event.authentication.AuthenticationEventHandler;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.mobil.Orientation;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
@@ -72,16 +76,18 @@ import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
+import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpMobil implements EntryPoint {
+public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   private static Page mainPage = null;
   private static DetailUserDTO user;
+  private static UserProfileDTO userProfile;
 
   private static String viewport, bodyClass, bodyId;
   private static ApplicationMessages msg;
@@ -94,6 +100,10 @@ public class SpMobil implements EntryPoint {
 
   public static DetailUserDTO getUser() {
     return user;
+  }
+
+  public static void setUserProfile(final UserProfileDTO userProfile) {
+    SpMobil.userProfile = userProfile;
   }
 
   public static void setUser(final DetailUserDTO user) {
@@ -110,6 +120,8 @@ public class SpMobil implements EntryPoint {
     shortcutContentId = Window.Location.getParameter("shortcutContentId");
     msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
+    EventBus.getInstance().addHandler(AbstractAuthenticationErrorEvent.TYPE, this);
+
     loadIds(null);
 
     NodeList<Element> tags = Document.get().getElementsByTagName("meta");
@@ -157,6 +169,8 @@ public class SpMobil implements EntryPoint {
   public static String getUserToken() {
     if (getUser() != null) {
       return getUser().getToken();
+    } else if (userProfile != null) {
+      return userProfile.getApiToken();
     } else {
       return null;
     }
@@ -171,38 +185,10 @@ public class SpMobil implements EntryPoint {
    * @param user
    * @param password
    */
-  private void login(final FullUserDTO user, final String password, final Command attempt) {
+  private static void login(final FullUserDTO user, final String password, Command attempt) {
     Notification.activityStart();
-    if (user != null) {
-      ServicesLocator.getServiceNavigation().getUserToken(new AsyncCallback<String>() {
-        @Override
-        public void onFailure(final Throwable throwable) {
-          displayLoginPage();
-        }
-
-        @Override
-        public void onSuccess(final String token) {
-          if (token.equals(SpMobil.getUserToken())) {
-            displayMainPage();
-          } else {
-            AuthentificationManager.getInstance()
-                .authenticateOnSilverpeas(user.getLogin(), password, user.getDomainId(), new
-                    Command() {
-                  @Override
-                  public void execute() {
-                    if (attempt == null) {
-                      displayMainPage();
-                    } else {
-                      attempt.execute();
-                    }
-                  }
-                });
-          }
-        }
-      });
-    } else {
-      displayLoginPage();
-    }
+    AuthentificationManager.getInstance()
+        .authenticateOnSilverpeas(user.getLogin(), password, user.getDomainId(), attempt);
   }
 
   public static void displayMainPage() {
@@ -267,11 +253,11 @@ public class SpMobil implements EntryPoint {
       }
     } else {
       tabletGesture(false);
-      displayLoginPage();
+      displayLoginPage(false);
     }
   }
 
-  private void tabletGesture(boolean connected) {
+  private static void tabletGesture(boolean connected) {
     if (MobilUtils.isTablet()) {
       if (connected) {
         ServicesLocator.getServiceNavigation().setTabletMode(new AsyncCallback<Boolean>() {
@@ -311,9 +297,9 @@ public class SpMobil implements EntryPoint {
     }
   }
 
-  private void displayLoginPage() {
-    AuthentificationManager.getInstance().clearUserStorage();
+  private static void displayLoginPage(boolean authenticateError) {
     ConnexionPage connexionPage = new ConnexionPage();
+    connexionPage.setAuthenticateError(authenticateError);
     RootPanel.get().clear();
     RootPanel.get().add(connexionPage);
   }
@@ -391,5 +377,10 @@ public class SpMobil implements EntryPoint {
       conf = Config.getDefaultConfig();
     }
     return conf;
+  }
+
+  @Override
+  public void onAuthenticationError(final AbstractAuthenticationErrorEvent event) {
+    displayLoginPage(true);
   }
 }

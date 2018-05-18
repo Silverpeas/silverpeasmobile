@@ -51,18 +51,13 @@ public abstract class MethodCallbackOnlineOrOffline<T> implements MethodCallback
   @Override
   public void onFailure(final Method method, final Throwable t) {
     Notification.activityStop();
-    if (t instanceof AuthenticationException) {
+    if (method.getResponse().getStatusCode() == 403 || method.getResponse().getStatusCode() == 401) {
       SpMobil.getInstance().loadIds(new Command() {
         @Override
         public void execute() {
           attempt();
         }
       });
-      if (OfflineHelper.needToGoOffine(t)) {
-        if (offlineAction != null) {
-          offlineAction.execute();
-        }
-      }
     } else {
       if (OfflineHelper.needToGoOffine(t)) {
         if (offlineAction != null) {
@@ -79,6 +74,5 @@ public abstract class MethodCallbackOnlineOrOffline<T> implements MethodCallback
     Notification.activityStop();
     OfflineHelper.hideOfflineIndicator();
   }
-
 
 }

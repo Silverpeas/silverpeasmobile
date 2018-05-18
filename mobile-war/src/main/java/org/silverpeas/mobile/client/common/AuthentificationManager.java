@@ -23,22 +23,24 @@
 
 package org.silverpeas.mobile.client.common;
 
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.common.event.authentication.AuthenticationErrorEvent;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
+import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
+import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author: svu
@@ -49,11 +51,22 @@ public class AuthentificationManager {
   private static final String USER_CONNECTED_KEY = "userConnected";
   private static final String DES_KEY = "LagTegshyeecnoc^";
 
+  public static final String XSTKN = "X-STKN";
+  public static final String XSilverpeasSession = "X-Silverpeas-Session";
+
   public static AuthentificationManager getInstance() {
     if (instance == null) {
       instance = new AuthentificationManager();
     }
     return instance;
+  }
+
+  public void addHeader(String key, String value) {
+    LocalStorageHelper.store(key, String.class, value);
+  }
+
+  public String getHeader(String key) {
+    return LocalStorageHelper.load(key, String.class);
   }
 
   public void storeUser(final DetailUserDTO user, String login, String password, String domainId) {
@@ -106,48 +119,63 @@ public class AuthentificationManager {
     return encryptedPassword;
   }
 
-  public void clearUserStorage() {
-    LocalStorageHelper.remove(USER_CONNECTED_KEY);
-  }
+  public void authenticateOnSilverpeas(String login, String password, String domainId, Command attempt) {
+    Notification.activityStart();
+    ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
 
-  public void authenticateOnSilverpeas(String login, String password, String domainId, Command commandOnSuccess) {
-    StringBuilder data = new StringBuilder();
-
-
-
-    data.append("Login=" + URL.encode(login) + "&");
-    data.append("Password=" + URL.encode(password) + "&");
-    data.append("DomainId=" + domainId);
-    RequestBuilder
-        rb = new RequestBuilder(RequestBuilder.POST, "/silverpeas/AuthenticationServlet");
-    rb.setHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-    try {
-      rb.sendRequest(data.toString(), new RequestCallback() {
-        @Override
-        public void onResponseReceived(final Request request, final Response response) {
-          ServicesLocator.getServiceNavigation().initSession(SpMobil.getUser(), new AsyncCallback<DetailUserDTO>() {
-            @Override
-            public void onFailure(final Throwable throwable) {
-              Window.alert("error1");
+        new MethodCallback<UserProfileDTO>() {
+          @Override
+          public void onFailure(final Method method, final Throwable throwable) {
+            if (method.getResponse().getStatusCode() == 403) {
               Notification.activityStop();
+              SpMobil.displayMainPage();
+            } else if (method.getResponse().getStatusCode() == 401) {
+              EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
             }
+          }
 
-            @Override
-            public void onSuccess(final DetailUserDTO user) {
-              Notification.activityStop();
-              commandOnSuccess.execute();
-              SpMobil.setUser(user);
-            }
-          });
-        }
+          @Override
+          public void onSuccess(final Method method, final UserProfileDTO userProfile) {
+            LocalStorageHelper.clear(); // clear offline data
+            AuthentificationManager.getInstance().clearLocalStorage();
 
-        @Override
-        public void onError(final Request request, final Throwable t) {
-          EventBus.getInstance().fireEvent(new ErrorEvent(t));
-        }
-      });
-    } catch (RequestException e) {
-      EventBus.getInstance().fireEvent(new ErrorEvent(e));
-    }
+            AuthentificationManager.getInstance().addHeader("X-STKN", method.getResponse().getHeader("X-STKN"));
+            AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session", method.getResponse().getHeader("X-Silverpeas-Session"));
+
+
+            Cookies.removeCookie("JSESSIONID");
+            Cookies.setCookie("JSESSIONID", method.getResponse().getHeader("X-Silverpeas-Session"));
+
+            SpMobil.setUserProfile(userProfile);
+            ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+
+              @Override
+              public void onFailure(final Throwable throwable) {
+                if (throwable instanceof AuthenticationException) {
+                  EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+                } else {
+                  EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                }
+              }
+
+              @Override
+              public void onSuccess(final DetailUserDTO user) {
+                SpMobil.setUser(user);
+
+                Notification.activityStop();
+                AuthentificationManager.getInstance().storeUser(user, login, password,
+                    domainId);
+
+                if (attempt == null) {
+                  SpMobil.displayMainPage();
+                } else {
+                  attempt.execute();
+                }
+              }
+            });
+          }
+        });
   }
 }

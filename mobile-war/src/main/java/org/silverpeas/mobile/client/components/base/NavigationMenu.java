@@ -178,8 +178,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   @UiHandler("disconnect")
   protected void disconnect(ClickEvent event) {
     closeMenu();
-    AuthentificationManager.getInstance().clearLocalStorage();
-    PageHistory.getInstance().clear();
     ServicesLocator.getServiceNavigation().logout(new AsyncCallback<Void>() {
       @Override
       public void onFailure(final Throwable throwable) {
@@ -187,6 +185,8 @@ public class NavigationMenu extends Composite implements PageEventHandler {
       }
       @Override
       public void onSuccess(final Void aVoid) {
+        AuthentificationManager.getInstance().clearLocalStorage();
+        PageHistory.getInstance().clear();
         Notification.activityStop();
         ConnexionPage connexionPage = new ConnexionPage();
         RootPanel.get().clear();

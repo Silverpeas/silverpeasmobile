@@ -24,9 +24,8 @@
 package org.silverpeas.mobile.client.common.network;
 
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.RpcRequestBuilder;
-import org.silverpeas.mobile.client.SpMobil;
+import org.silverpeas.mobile.client.common.AuthentificationManager;
 
 /**
  * @author: svu
@@ -46,9 +45,26 @@ public class SpMobileRpcRequestBuilder extends RpcRequestBuilder {
   protected RequestBuilder doCreate(String serviceEntryPoint) {
     RequestBuilder builder = super.doCreate(serviceEntryPoint);
     builder.setTimeoutMillis(this.timeout);
-    if (SpMobil.getUserToken() != null) {
-      builder.setHeader("X-Silverpeas-Session", SpMobil.getUserToken());
+
+
+    if (AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN) != null) {
+      builder.setHeader(AuthentificationManager.XSTKN,
+          AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
     }
+    if (AuthentificationManager.getInstance()
+        .getHeader(AuthentificationManager.XSilverpeasSession) != null) {
+      builder.setHeader(AuthentificationManager.XSilverpeasSession,
+          AuthentificationManager.getInstance()
+              .getHeader(AuthentificationManager.XSilverpeasSession));
+      builder.setHeader("Cookie", "JSESSIONID=" + AuthentificationManager.getInstance()
+          .getHeader(AuthentificationManager.XSilverpeasSession));
+    }
+
+    /*if (SpMobil.getUserToken() != null) {
+      builder.setHeader("X-Silverpeas-Session", SpMobil.getUserToken());
+      builder.setHeader("X-STKN", AuthentificationManager.getInstance().getHeaders().get("X-STKN"));
+    }*/
+
 
     return builder;
   }

@@ -23,14 +23,12 @@
 
 package org.silverpeas.mobile.client.common.network;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import org.fusesource.restygwt.client.Dispatcher;
 import org.fusesource.restygwt.client.Method;
-import org.silverpeas.mobile.client.SpMobil;
 
 /**
  * @author svu
@@ -51,10 +49,17 @@ public class RestAuthenticationDispatcher implements Dispatcher {
       throws RequestException {
     String credentials = login + "@domain" + domainId + ":" + password;
     byte[] credentialsEncoded = Base64.encode(credentials.getBytes());
-
     builder.setTimeoutMillis(SpMobileRequestBuilder.TIMEOUT);
-    builder.setHeader("Authorization", "Basic " + credentialsEncoded);
+    builder.setHeader("Authorization", "Basic " + convertByteArrayToString(credentialsEncoded));
 
     return builder.send();
+  }
+
+  private static String convertByteArrayToString(byte[] byteArray) {
+    String s = "";
+    for (int i = 0; i < byteArray.length; i++) {
+      s += (char) (byteArray[i]);
+    }
+    return s;
   }
 }

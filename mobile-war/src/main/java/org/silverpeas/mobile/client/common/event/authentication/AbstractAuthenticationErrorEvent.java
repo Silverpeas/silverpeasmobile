@@ -21,31 +21,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.exceptions;
+package org.silverpeas.mobile.client.common.event.authentication;
 
-public class AuthenticationException extends Exception {
+import com.google.gwt.event.shared.GwtEvent;
 
-  private static final long serialVersionUID = -1322336397375722938L;
-  private AuthenticationError error;
+public abstract class AbstractAuthenticationErrorEvent
+    extends GwtEvent<AuthenticationEventHandler> {
 
-  public enum AuthenticationError {
-    BadCredential, Host, PwdNotAvailable, NotAuthenticate, LoginNotAvailable, CanCreateMainSessionController;
+  public static Type<AuthenticationEventHandler> TYPE = new Type<AuthenticationEventHandler>();
+
+  private final Throwable caught;
+
+  public AbstractAuthenticationErrorEvent(Throwable caught) {
+    this.caught = caught;
   }
 
-  public AuthenticationException() {
-    super();
+  @Override
+  public Type<AuthenticationEventHandler> getAssociatedType() {
+    return TYPE;
   }
 
-  public AuthenticationException(final Throwable throwable) {
-    super(throwable);
+  public Throwable getException() {
+    return caught;
   }
 
-  public AuthenticationException(AuthenticationError error) {
-    super();
-    this.error = error;
-  }
-
-  public AuthenticationError getError() {
-    return error;
-  }
 }

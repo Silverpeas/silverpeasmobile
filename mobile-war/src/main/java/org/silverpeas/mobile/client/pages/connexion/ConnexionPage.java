@@ -32,26 +32,20 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
-import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
 
 import java.util.ArrayList;
@@ -76,6 +70,10 @@ public class ConnexionPage extends PageContent {
   @UiField
   FormPanel form;
 
+  public void setAuthenticateError(final boolean authenticateError) {
+    //TODO
+  }
+
   interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {}
 
   public ConnexionPage() {
@@ -93,9 +91,6 @@ public class ConnexionPage extends PageContent {
     passwordField.getElement().setAttribute("spellcheck", "off");
     domains.getElement().setId("DomainId");
     form.getElement().setId("formLogin");
-    form.setAction("/silverpeas/AuthenticationServlet");
-    form.setMethod("POST");
-    form.getElement().setAttribute("target", "auth");
 
     Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
@@ -143,34 +138,9 @@ public class ConnexionPage extends PageContent {
     }
 
     if (!login.isEmpty() && !password.isEmpty()) {
-
-      ServicesLocator.getServiceConnection()
-          .login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
-            @Override
-            public void onFailure(Throwable t) {
-              Notification.activityStop();
-              if (OfflineHelper.needToGoOffine(t)) {
-                Notification.alert(msg.needToBeOnline());
-              } else {
-                EventBus.getInstance().fireEvent(new ErrorEvent(t));
-              }
-            }
-
-            @Override
-            public void onSuccess(DetailUserDTO user) {
-              LocalStorageHelper.clear(); // clear offline data
-              AuthentificationManager.getInstance().storeUser(user, loginField.getText(), password,
-                  domains.getValue(domains.getSelectedIndex()));
-              AuthentificationManager.getInstance()
-                  .authenticateOnSilverpeas(loginField.getText(), passwordField.getText(),
-                      domains.getSelectedValue(), new Command() {
-                        @Override
-                        public void execute() {
-                          SpMobil.displayMainPage();
-                        }
-                      });
-            }
-          });
+      AuthentificationManager.getInstance()
+          .authenticateOnSilverpeas(loginField.getText(), passwordField.getText(),
+              domains.getSelectedValue(), null);
     }
   }
 

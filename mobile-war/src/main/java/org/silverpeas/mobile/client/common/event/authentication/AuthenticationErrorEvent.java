@@ -21,31 +21,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.exceptions;
+package org.silverpeas.mobile.client.common.event.authentication;
 
-public class AuthenticationException extends Exception {
 
-  private static final long serialVersionUID = -1322336397375722938L;
-  private AuthenticationError error;
+public class AuthenticationErrorEvent extends AbstractAuthenticationErrorEvent {
 
-  public enum AuthenticationError {
-    BadCredential, Host, PwdNotAvailable, NotAuthenticate, LoginNotAvailable, CanCreateMainSessionController;
+  public AuthenticationErrorEvent(Throwable caught) {
+    super(caught);
   }
 
-  public AuthenticationException() {
-    super();
-  }
-
-  public AuthenticationException(final Throwable throwable) {
-    super(throwable);
-  }
-
-  public AuthenticationException(AuthenticationError error) {
-    super();
-    this.error = error;
-  }
-
-  public AuthenticationError getError() {
-    return error;
+  @Override
+  protected void dispatch(AuthenticationEventHandler handler) {
+    handler.onAuthenticationError(this);
   }
 }

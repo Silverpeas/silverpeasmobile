@@ -24,7 +24,11 @@
 package org.silverpeas.mobile.server.services;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.security.authentication.AuthenticationCredential;
+import org.silverpeas.core.security.authentication.AuthenticationService;
+import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
@@ -58,6 +62,15 @@ public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
 
   protected static SettingBundle getSettings() {
     return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+  }
+
+  protected void setMainsessioncontroller(String login, String password, String domainId) throws SilverpeasException {
+    AuthenticationService authService = AuthenticationServiceProvider.getService();
+    AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(login);
+    String key = authService.authenticate(credential
+        .withAsPassword(password)
+        .withAsDomainId(domainId));
+    MainSessionController mainSessionController = new MainSessionController(key, getThreadLocalRequest().getSession());
   }
 
   protected MainSessionController getMainSessionController() throws Exception {
