@@ -40,6 +40,7 @@ import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderUpdateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.CalendarLoadedEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderAddedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.pages.AgendaPage;
@@ -277,7 +278,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       @Override
       public void onSuccess(final Method method, final ReminderDTO result) {
         super.onSuccess(method, result);
-        //TODO : send event on page
+        EventBus.getInstance().fireEvent(new ReminderAddedEvent(result));
       }
     };
     action.attempt();

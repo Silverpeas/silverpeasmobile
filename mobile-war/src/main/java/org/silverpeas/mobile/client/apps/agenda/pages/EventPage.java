@@ -51,6 +51,7 @@ import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractEventPagesEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.EventPagesEventHandler;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderAddedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersAddingEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
@@ -98,7 +99,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
   SpanElement repeat, duration, frequency;
 
   @UiField
-  DivElement reminder, location, dateEvent, reccurence;
+  DivElement reminder, location, dateEvent, reccurence, linkContainer;
   @UiField
   Anchor delete, link, content;
   @UiField
@@ -143,17 +144,22 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     this.event = event;
     this.calendar = calendar;
     this.instance = instance;
+
+    // title and description
     setPageTitle(calendar.getTitle());
     header.setInnerText(event.getTitle());
     description.setInnerText(event.getDescription());
 
-
+    // location
     if (event.getLocation() == null || event.getLocation().isEmpty()) {
       location.getStyle().setDisplay(Style.Display.NONE);
     } else {
       location.getStyle().setDisplay(Style.Display.BLOCK);
       location.setInnerText(event.getLocation());
     }
+
+
+
     if (event.isOnAllDay()) {
       Date start = df.parse(event.getStartDate());
       Date end = df.parse(event.getEndDate());
@@ -169,10 +175,12 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
       dateEvent.setInnerText(displayDf.format(start)+ " - " + displayDtf.format(start) + " " + msg.to() + " " + displayDtf.format(end));
     }
 
+    // link
     for (CalendarEventAttributeDTO attr : event.getAttributes()) {
       if (attr.getName().equalsIgnoreCase("externalUrl")) {
         link.setHref(attr.getValue());
         link.setText(attr.getValue());
+        linkContainer.getStyle().setDisplay(Style.Display.BLOCK);
         break;
       }
     }
@@ -217,6 +225,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     }
 
     // actions
+    actionsMenu.addAction(addReminder);
     notification.init(instance.getId(), event.getEventId(), NotificationDTO.TYPE_EVENT, event.getTitle(), getPageTitle());
     actionsMenu.addAction(notification);
   }
@@ -261,7 +270,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
       reminder.getStyle().setDisplay(Style.Display.BLOCK);
     } else {
       reminder.getStyle().setDisplay(Style.Display.NONE);
-      actionsMenu.addAction(addReminder);
+      addReminder.setVisible(true);
     }
   }
 
@@ -271,7 +280,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     reminder.getStyle().setDisplay(Style.Display.NONE);
     delete.setVisible(false);
     reminderDurations.setSelectedIndex(0);
-    actionsMenu.addAction(addReminder);
+    addReminder.setVisible(true);
   }
 
   @Override
@@ -299,8 +308,13 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
     this.reminderDTO = dto;
     EventBus.getInstance().fireEvent(new ReminderCreateEvent(this.event, this.reminderDTO));
-    actionsMenu.removeAction(AddReminderButton.ID);
+    addReminder.setVisible(false);
     delete.setVisible(true);
+  }
+
+  @Override
+  public void onReminderAdded(final ReminderAddedEvent event) {
+    this.reminderDTO = event.getReminder();
   }
 
   @UiHandler("content")

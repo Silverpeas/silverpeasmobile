@@ -58,10 +58,11 @@ public class AddReminderButton extends ActionItem {
     msg = GWT.create(AgendaMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     setId(ID);
+    setVisible(false);
   }
 
   @UiHandler("action")
-  void displayNotificationPage(ClickEvent event) {
+  void addReminder(ClickEvent event) {
     EventBus.getInstance().fireEvent(new RemindersAddingEvent());
 
     // hide menu

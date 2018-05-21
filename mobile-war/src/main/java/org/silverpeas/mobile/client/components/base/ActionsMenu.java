@@ -85,6 +85,7 @@ public class ActionsMenu  extends Composite {
         ActionItem act = (ActionItem) listActions.getWidget(i);
         if (act.getId().equals(id)) {
           listActions.remove(act);
+          showActions(null);
           break;
         }
       }

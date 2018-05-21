@@ -23,12 +23,23 @@
 
 package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-public interface EventPagesEventHandler extends EventHandler{
-  void onRemindersLoaded(RemindersLoadedEvent event);
-  void onRemindersDeleted(ReminderDeletedEvent event);
-  void onAttachmentLoaded(AttachmentsLoadedEvent event);
-  void onRemindersAdding(RemindersAddingEvent event);
-  void onReminderAdded(ReminderAddedEvent event);
+public class ReminderAddedEvent extends AbstractEventPagesEvent {
+
+  private ReminderDTO reminder;
+
+  public ReminderAddedEvent(ReminderDTO reminder){
+    super();
+    this.reminder = reminder;
+  }
+
+  @Override
+  protected void dispatch(EventPagesEventHandler handler) {
+    handler.onReminderAdded(this);
+  }
+
+  public ReminderDTO getReminder() {
+    return reminder;
+  }
 }

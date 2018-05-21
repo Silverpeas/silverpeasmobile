@@ -44,7 +44,7 @@
       <div ui:field="dateEvent"></div>
       <div id="info-extra-event">
         <div ui:field="location" class="location"></div>
-        <div class="link"><g:Anchor ui:field="link" target="_blank"></g:Anchor></div>
+        <div class="link" style="display:none;" ui:field="linkContainer"><g:Anchor ui:field="link" target="_blank"></g:Anchor></div>
       </div>
     </div>
 
