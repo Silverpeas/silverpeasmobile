@@ -32,6 +32,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -71,7 +72,9 @@ public class ConnexionPage extends PageContent {
   FormPanel form;
 
   public void setAuthenticateError(final boolean authenticateError) {
-    //TODO
+    if (authenticateError) {
+      checkCredentials("","");
+    }
   }
 
   interface ConnexionPageUiBinder extends UiBinder<Widget, ConnexionPage> {}
@@ -84,11 +87,13 @@ public class ConnexionPage extends PageContent {
     loginField.getElement().setAttribute("autocapitalize", "off");
     loginField.getElement().setAttribute("autocorrect", "off");
     loginField.getElement().setAttribute("spellcheck", "off");
+    loginField.getElement().setAttribute("autocomplete", "off");
 
     passwordField.getElement().setId("Password");
     passwordField.getElement().setAttribute("autocapitalize", "off");
     passwordField.getElement().setAttribute("autocorrect", "off");
     passwordField.getElement().setAttribute("spellcheck", "off");
+    passwordField.getElement().setAttribute("autocomplete", "off");
     domains.getElement().setId("DomainId");
     form.getElement().setId("formLogin");
 
@@ -125,7 +130,18 @@ public class ConnexionPage extends PageContent {
    * @param domainId
    */
   private void login(final String login, final String password, final String domainId) {
-    Notification.activityStart();
+    checkCredentials(login, password);
+
+    if (!login.isEmpty() && !password.isEmpty()) {
+      Notification.activityStart();
+      AuthentificationManager.getInstance()
+          .authenticateOnSilverpeas(loginField.getText(), passwordField.getText(),
+              domains.getSelectedValue(), null);
+    }
+  }
+
+  private void checkCredentials(final String login, final String password) {
+
     if (login.isEmpty()) {
       loginField.getElement().getStyle().setBackgroundColor("#ec9c01");
     } else {
@@ -135,12 +151,6 @@ public class ConnexionPage extends PageContent {
       passwordField.getElement().getStyle().setBackgroundColor("#ec9c01");
     } else {
       passwordField.getElement().getStyle().clearBackgroundColor();
-    }
-
-    if (!login.isEmpty() && !password.isEmpty()) {
-      AuthentificationManager.getInstance()
-          .authenticateOnSilverpeas(loginField.getText(), passwordField.getText(),
-              domains.getSelectedValue(), null);
     }
   }
 
