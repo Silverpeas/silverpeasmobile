@@ -67,6 +67,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.media.VideoDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
@@ -165,6 +166,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
+      favorite.init(video.getInstance(), video.getId(), ContentsTypes.Media.name(), video.getTitle());
       actionsMenu.addAction(favorite);
       if (event.isNotifiable()) {
         notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_VIDEO, video.getName(), getPageTitle());

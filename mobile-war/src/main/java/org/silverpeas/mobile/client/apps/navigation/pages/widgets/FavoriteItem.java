@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -83,7 +84,7 @@ public class FavoriteItem extends Composite {
         shortcutContentType = ContentsTypes.Folder.name();
         shortcutAppId = shortcutContentId.substring(shortcutContentId.lastIndexOf("=") + 1);
         shortcutContentId = shortcutContentId.substring(0, shortcutContentId.indexOf("?"));
-      } else if (data.getUrl().contains("/Rgallery/")){
+      } else if (data.getUrl().contains("/Rgallery/")) {
         shortcutContentType = ContentsTypes.Album.name();
         shortcutContentId = data.getUrl().substring(data.getUrl().lastIndexOf("=") + 1);
         shortcutAppId = data.getUrl().substring("/Rgallery/".length(), data.getUrl().lastIndexOf("/"));

@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.services;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.media.MediaDTO;
 import org.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import org.silverpeas.mobile.shared.dto.media.SoundDTO;
 import org.silverpeas.mobile.shared.dto.media.VideoDTO;
@@ -53,4 +54,6 @@ public interface ServiceMediaAsync {
 
   void getVideoStreaming(final String instanceId, final String videoId,
       final AsyncCallback<VideoStreamingDTO> async);
+
+  void getMedia(String id, final AsyncCallback<MediaDTO> async);
 }

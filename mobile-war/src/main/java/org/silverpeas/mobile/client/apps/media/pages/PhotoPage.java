@@ -64,6 +64,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
@@ -164,6 +165,8 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
+
+      favorite.init(photo.getInstance(), photo.getId(), ContentsTypes.Media.name(), photo.getTitle());
       actionsMenu.addAction(favorite);
       if (event.isNotifiable()) {
         notification.init(photo.getInstance(), photo.getId(), NotificationDTO.TYPE_PHOTO, photo.getName(), getPageTitle());

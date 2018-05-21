@@ -75,7 +75,10 @@ public class FavoritesHelper {
       url = "/Component/" + instanceId;
     } else if (objectType.equals(ContentsTypes.Album.name())) {
       url = "/Rgallery/" + instanceId + "/ViewAlbum?Id=" + objectId;
+    } else if (objectType.equals(ContentsTypes.Media.name())) {
+      url = "/Media/" + objectId;
     }
+
     link.setUrl(url);
     link.setName(description);
     link.setHasPosition(false);

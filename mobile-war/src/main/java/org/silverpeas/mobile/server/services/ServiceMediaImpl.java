@@ -288,19 +288,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       Iterator<Media> iMedias = medias.iterator();
       while (iMedias.hasNext()) {
         Media media = (Media) iMedias.next();
-        if (media.getType().isPhoto()) {
-          PhotoDTO photo = getPhoto(media.getInstanceId(), media.getId(), MediaResolution.SMALL);
-          results.add(photo);
-        } else if (media.getType().isSound()) {
-          SoundDTO sound = getSound(media);
-          results.add(sound);
-        } else if (media.getType().isStreaming()) {
-          VideoStreamingDTO video = getVideoStreaming(media);
-          results.add(video);
-        } else if (media.getType().isVideo()) {
-          VideoDTO video = getVideo(media);
-          results.add(video);
-        }
+        results.add(getMedia(media));
       }
       return results;
 
@@ -308,6 +296,36 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getAllMedias", "root.EX_NO_MESSAGE", e);
       throw new MediaException(e);
     }
+  }
+
+  @Override
+  public MediaDTO getMedia(String id) throws MediaException, AuthenticationException {
+    MediaDTO dto = null;
+    try {
+      Media media = getGalleryService().getMedia(new MediaPK(id));
+      dto = getMedia(media);
+    } catch (Exception e) {
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getMedia", "root.EX_NO_MESSAGE", e);
+      throw new MediaException(e);
+    }
+    return dto;
+  }
+
+  private MediaDTO getMedia(Media media) throws Exception {
+    if (media.getType().isPhoto()) {
+      PhotoDTO photo = getPhoto(media.getInstanceId(), media.getId(), MediaResolution.SMALL);
+      return photo;
+    } else if (media.getType().isSound()) {
+      SoundDTO sound = getSound(media);
+      return sound;
+    } else if (media.getType().isStreaming()) {
+      VideoStreamingDTO video = getVideoStreaming(media);
+      return video;
+    } else if (media.getType().isVideo()) {
+      VideoDTO video = getVideo(media);
+      return video;
+    }
+    return null;
   }
 
   public StreamingList<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId, int callNumber) throws

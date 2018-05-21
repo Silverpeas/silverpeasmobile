@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.media;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
@@ -123,20 +124,17 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   }
 
   private void displayContent(ContentDTO contentSource) {
-    MediaDTO content = null;
+    ServicesLocator.getServiceMedia().getMedia(contentSource.getId(), new AsyncCallbackOnlineOnly
+        <MediaDTO>() {
+      @Override
+      public void attempt() {}
 
-    if (contentSource.getType().equals(ContentsTypes.Photo.toString())) {
-      content = new PhotoDTO();
-    } else if (contentSource.getType().equals(ContentsTypes.Sound.toString())) {
-      content = new SoundDTO();
-    } else if (contentSource.getType().equals(ContentsTypes.Video.toString())) {
-      content = new VideoDTO();
-    } else if (contentSource.getType().equals(ContentsTypes.Streaming.toString())) {
-      content = new VideoStreamingDTO();
-    }
-    content.setInstance(contentSource.getId());
-    content.setInstance(contentSource.getInstanceId());
-    displayContent(content);
+      @Override
+      public void onSuccess(final MediaDTO media) {
+        super.onSuccess(media);
+        displayContent(media);
+      }
+    });
   }
 
   private void displayContent(final MediaDTO item) {

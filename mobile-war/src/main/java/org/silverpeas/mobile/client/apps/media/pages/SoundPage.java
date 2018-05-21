@@ -64,6 +64,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.media.SoundDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
@@ -147,6 +148,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
+      favorite.init(sound.getInstance(), sound.getId(), ContentsTypes.Media.name(), sound.getTitle());
       actionsMenu.addAction(favorite);
       if (event.isNotifiable()) {
         notification.init(sound.getInstance(), sound.getId(), NotificationDTO.TYPE_SOUND, sound.getName(), getPageTitle());

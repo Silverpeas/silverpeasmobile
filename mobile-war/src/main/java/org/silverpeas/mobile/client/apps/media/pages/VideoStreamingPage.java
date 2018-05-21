@@ -37,6 +37,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
+import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
@@ -57,6 +58,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
@@ -83,6 +85,7 @@ public class VideoStreamingPage extends PageContent
   ActionsMenu actionsMenu;
 
   private NotifyButton notification = new NotifyButton();
+  private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private static VideoStreamingPageUiBinder uiBinder = GWT.create(VideoStreamingPageUiBinder.class);
   private VideoStreamingDTO video;
   private MediaMessages msg;
@@ -125,6 +128,8 @@ public class VideoStreamingPage extends PageContent
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
+      favorite.init(video.getInstance(), video.getId(), ContentsTypes.Media.name(), video.getTitle());
+      actionsMenu.addAction(favorite);
       if (event.isNotifiable()) {
         notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_STREAMING, video.getName(), getPageTitle());
         actionsMenu.addAction(notification);
