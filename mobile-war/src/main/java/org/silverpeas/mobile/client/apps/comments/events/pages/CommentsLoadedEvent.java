@@ -29,19 +29,19 @@ import java.util.List;
 
 public class CommentsLoadedEvent extends AbstractCommentsPagesEvent {
 
-	private List<CommentDTO> comments;
-	
-	public CommentsLoadedEvent(List<CommentDTO> comments) {
-		super();
-		this.comments = comments;
-	}
+  private List<CommentDTO> comments;
 
-	@Override
-	protected void dispatch(CommentsPagesEventHandler handler) {
-		handler.onLoadedComments(this);
-	}
+  public CommentsLoadedEvent(List<CommentDTO> comments) {
+    super();
+    this.comments = comments;
+  }
 
-	public List<CommentDTO> getComments() {
-		return comments;
-	}	
+  @Override
+  protected void dispatch(CommentsPagesEventHandler handler) {
+    handler.onLoadedComments(this);
+  }
+
+  public List<CommentDTO> getComments() {
+    return comments;
+  }
 }

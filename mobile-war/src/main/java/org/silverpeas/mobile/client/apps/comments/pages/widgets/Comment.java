@@ -59,9 +59,14 @@ public class Comment extends Composite {
   }
 
   private void render() {
-    content.setInnerHTML(comment.getContent());
-    date.setInnerHTML(" - " + comment.getDate());
-    userName.setInnerHTML(comment.getUserName());
-    avatar.setUrl(comment.getAvatar());
+    content.setInnerHTML(comment.getTextForHtml());
+
+    if (comment.getModificationDate().isEmpty()) {
+      date.setInnerHTML(" - " + comment.getCreationDate());
+    } else {
+      date.setInnerHTML(" - " + comment.getModificationDate());
+    }
+    userName.setInnerHTML(comment.getAuthor().getFullName());
+    avatar.setUrl(comment.getAuthor().getAvatar());
   }
 }

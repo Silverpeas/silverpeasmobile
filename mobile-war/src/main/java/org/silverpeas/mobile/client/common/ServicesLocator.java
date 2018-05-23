@@ -34,6 +34,7 @@ import org.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigationAsync;
 import org.silverpeas.mobile.shared.services.rest.ServiceAlmanach;
 import org.silverpeas.mobile.shared.services.rest.ServiceAuthentication;
+import org.silverpeas.mobile.shared.services.rest.ServiceComment;
 import org.silverpeas.mobile.shared.services.rest.ServiceRestDocuments;
 
 public class ServicesLocator {
@@ -55,8 +56,6 @@ public class ServicesLocator {
       (ServiceMediaAsync) GWT.create(ServiceMedia.class);
   private static ServiceSearchAsync serviceSearch =
       (ServiceSearchAsync) GWT.create(ServiceSearch.class);
-  private static ServiceCommentsAsync serviceComments =
-      (ServiceCommentsAsync) GWT.create(ServiceComments.class);
   private static ServiceNotificationsAsync serviceNotifications =
       (ServiceNotificationsAsync) GWT.create(ServiceNotifications.class);
   private static ServiceNewsAsync serviceNews = (ServiceNewsAsync) GWT.create(ServiceNews.class);
@@ -73,6 +72,7 @@ public class ServicesLocator {
   private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
   private static ServiceRestDocuments serviceRestDocuments = GWT.create(
       ServiceRestDocuments.class);
+  private static ServiceComment serviceRestComment = GWT.create(ServiceComment.class);
 
   private static void initRestContext() {
       Defaults.getServiceRoot().equals("/silverpeas/services");
@@ -90,6 +90,11 @@ public class ServicesLocator {
   public static ServiceAuthentication getRestServiceAuthentication(String login, String password, String domainId) {
     initRestContext(login, password, domainId);
     return serviceRestAuthentication;
+  }
+
+  public static ServiceComment getRestServiceComment() {
+    initRestContext();
+    return serviceRestComment;
   }
 
   public static ServiceRestDocuments getRestServiceDocuments() {
@@ -141,12 +146,6 @@ public class ServicesLocator {
     ((ServiceDefTarget) serviceNotifications).setRpcRequestBuilder(builder);
     changeServiceEntryPoint((ServiceDefTarget) serviceNotifications);
     return serviceNotifications;
-  }
-
-  public static ServiceCommentsAsync getServiceComments() {
-    ((ServiceDefTarget) serviceComments).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceComments);
-    return serviceComments;
   }
 
   public static ServiceSearchAsync getServiceSearch() {

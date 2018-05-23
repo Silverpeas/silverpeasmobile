@@ -23,7 +23,6 @@
 
 package org.silverpeas.mobile.client.apps.agenda.pages.widgets;
 
-import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
@@ -62,6 +61,7 @@ public class GroupItem {
 
   public HeaderItem getHeaderItem() {
     CalendarEventDTO dto = new CalendarEventDTO();
+    dto.setCanBeAccessed(false);
 
     if (timeRange.equals(TimeRange.weeks)) {
       dto.setTitle("Semaine " + number);

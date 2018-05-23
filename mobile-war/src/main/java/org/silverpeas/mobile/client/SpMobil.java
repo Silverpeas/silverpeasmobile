@@ -106,6 +106,10 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     SpMobil.userProfile = userProfile;
   }
 
+  public static UserProfileDTO getUserProfile() {
+    return userProfile;
+  }
+
   public static void setUser(final DetailUserDTO user) {
     SpMobil.user = user;
   }

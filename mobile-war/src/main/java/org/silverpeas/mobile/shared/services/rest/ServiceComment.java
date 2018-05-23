@@ -21,16 +21,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import java.util.List;
 
-public interface ServiceCommentsAsync {
-  void getComments(String id, String type, final AsyncCallback<List<CommentDTO>> async);
+/**
+ * @author svu
+ */
+@Path("/comments")
+public interface ServiceComment extends RestService {
 
-  void addComment(String id, String instanceId, String type, String message,
-      final AsyncCallback<CommentDTO> async);
+
+  @POST
+  @Path("{componentId}/{contentType}/{contentId}/")
+  public void saveNewComment(@PathParam("componentId") String componentId,
+      @PathParam("contentType") String contentType, @PathParam("contentId") String contentId,
+      CommentDTO commentToSave, MethodCallback<CommentDTO> callback);
+
+  @GET
+  @Path("{componentId}/{contentType}/{contentId}/")
+  public void getAllComments(@PathParam("componentId") String componentId,
+      @PathParam("contentType") String contentType, @PathParam("contentId") String contentId,
+      MethodCallback<List<CommentDTO>> callback);
+
 }

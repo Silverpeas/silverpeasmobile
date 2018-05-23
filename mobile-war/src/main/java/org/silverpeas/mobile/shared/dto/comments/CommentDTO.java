@@ -23,14 +23,14 @@
 
 package org.silverpeas.mobile.shared.dto.comments;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 
 import java.io.Serializable;
 
 /**
- * @author: svu
+ * @author svu
  */
-public class CommentDTO extends BaseDTO implements Serializable {
+public class CommentDTO implements Serializable {
 
   public final static String TYPE_PUBLICATION = "Publication";
   public final static String TYPE_PHOTO = "Photo";
@@ -38,40 +38,112 @@ public class CommentDTO extends BaseDTO implements Serializable {
   public final static String TYPE_SOUND = "Sound";
   public final static String TYPE_STREAMING = "Streaming";
 
-  private String content;
-  private String avatar;
-  private String date;
-  private String userName;
+  private String uri = "";
+  private String id = "";
+  private String componentId = "";
+  private String resourceType = "";
+  private String resourceId = "";
+  private String text = "";
+  private String textForHtml = "";
+  private UserProfileDTO author;
+  private String currentUserLanguage = "";
+  private String creationDate = ""; //date in the format displayed for the current user
+  private String modificationDate = ""; //date in the format displayed for the current user
+  private boolean indexed = false;
 
-  public String getContent() {
-    return content;
+  public String getUri() {
+    return uri;
   }
 
-  public void setContent(final String content) {
-    this.content = content;
+  public void setUri(final String uri) {
+    this.uri = uri;
   }
 
-  public String getAvatar() {
-    return avatar;
+  public String getId() {
+    return id;
   }
 
-  public void setAvatar(final String avatar) {
-    this.avatar = avatar;
+  public void setId(final String id) {
+    this.id = id;
   }
 
-  public String getDate() {
-    return date;
+  public String getComponentId() {
+    return componentId;
   }
 
-  public void setDate(final String date) {
-    this.date = date;
+  public void setComponentId(final String componentId) {
+    this.componentId = componentId;
   }
 
-  public String getUserName() {
-    return userName;
+  public String getResourceType() {
+    return resourceType;
   }
 
-  public void setUserName(final String userName) {
-    this.userName = userName;
+  public void setResourceType(final String resourceType) {
+    this.resourceType = resourceType;
+  }
+
+  public String getResourceId() {
+    return resourceId;
+  }
+
+  public void setResourceId(final String resourceId) {
+    this.resourceId = resourceId;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public void setText(final String text) {
+    this.text = text;
+  }
+
+  public String getTextForHtml() {
+    return textForHtml;
+  }
+
+  public void setTextForHtml(final String textForHtml) {
+    this.textForHtml = textForHtml;
+  }
+
+  public UserProfileDTO getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(final UserProfileDTO author) {
+    this.author = author;
+  }
+
+  public String getCurrentUserLanguage() {
+    return currentUserLanguage;
+  }
+
+  public void setCurrentUserLanguage(final String currentUserLanguage) {
+    this.currentUserLanguage = currentUserLanguage;
+  }
+
+  public String getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(final String creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public String getModificationDate() {
+    return modificationDate;
+  }
+
+  public void setModificationDate(final String modificationDate) {
+    this.modificationDate = modificationDate;
+  }
+
+  public boolean isIndexed() {
+    return indexed;
+  }
+
+  public void setIndexed(final boolean indexed) {
+    this.indexed = indexed;
   }
 }

@@ -24,7 +24,8 @@
 package org.silverpeas.mobile.client.apps.comments;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
+import org.fusesource.restygwt.client.Method;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.comments.events.app.AbstractCommentsAppEvent;
 import org.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
 import org.silverpeas.mobile.client.apps.comments.events.app.CommentsAppEventHandler;
@@ -35,8 +36,8 @@ import org.silverpeas.mobile.client.apps.comments.pages.CommentsPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
@@ -49,9 +50,11 @@ import java.util.List;
 public class CommentsApp extends App implements CommentsAppEventHandler {
 
     private CommentsPage mainPage = new CommentsPage();
+    private String instanceId;
 
     public CommentsApp(String contentId, String instanceId, String contentType, String pageTitle, String title) {
         super();
+        this.instanceId = instanceId;
         EventBus.getInstance().addHandler(AbstractCommentsAppEvent.TYPE, this);
         mainPage.setTitle(title);
         mainPage.setPageTitle(pageTitle);
@@ -72,18 +75,19 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
     @Override
     public void loadComments(final CommentsLoadEvent event) {
         final String key = "comments" + event.getContentType() + "_" + event.getContentId();
-        AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<CommentDTO>>(getOfflineAction(event, key)) {
-            @Override
-            public void onSuccess(List<CommentDTO> result) {
-                super.onSuccess(result);
-                LocalStorageHelper.store(key, List.class, result);
-                EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));
-            }
+        MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CommentDTO>>(getOfflineAction(event, key)) {
+          @Override
+          public void attempt() {
+            ServicesLocator.getRestServiceComment().getAllComments(instanceId,
+                event.getContentType(), event.getContentId(), this);
+          }
 
-            @Override
-            public void attempt() {
-                ServicesLocator.getServiceComments().getComments(event.getContentId(), event.getContentType(), this);
-            }
+          @Override
+          public void onSuccess(final Method method, final List<CommentDTO> result) {
+            super.onSuccess(method, result);
+            LocalStorageHelper.store(key, List.class, result);
+            EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));
+          }
         };
         action.attempt();
     }
@@ -106,18 +110,26 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
     @Override
     public void addComment(final AddCommentEvent event) {
-        AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<CommentDTO>() {
-            @Override
-            public void attempt() {
-                ServicesLocator.getServiceComments().addComment(event.getContentId(), event.getInstanceId(), event.getContentType(), event.getMessage(), this);
-            }
+      CommentDTO dto = new CommentDTO();
+      dto.setText(event.getMessage());
+      dto.setAuthor(SpMobil.getUserProfile());
+      dto.setComponentId(event.getInstanceId());
+      dto.setResourceId(event.getContentId());
+      dto.setResourceType(event.getContentType());
+      dto.setTextForHtml(event.getMessage());
 
-            @Override
-            public void onSuccess(final CommentDTO result) {
-                super.onSuccess(result);
-                EventBus.getInstance().fireEvent(new CommentAddedEvent(result));
-            }
-        };
-        action.attempt();
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
+        @Override
+        public void attempt() {
+          ServicesLocator.getRestServiceComment().saveNewComment(event.getInstanceId(), event.getContentType(), event.getContentId(), dto, this);
+        }
+
+        @Override
+        public void onSuccess(final Method method, final CommentDTO result) {
+          super.onSuccess(method, result);
+          EventBus.getInstance().fireEvent(new CommentAddedEvent(result));
+        }
+      };
+      action.attempt();
     }
 }

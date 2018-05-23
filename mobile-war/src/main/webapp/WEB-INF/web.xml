@@ -146,15 +146,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceCommentsImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceCommentsImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceCommentsImpl</servlet-name>
-    <url-pattern>/services/spmobile/Comments</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceConnectionImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceConnectionImpl</servlet-class>
   </servlet>

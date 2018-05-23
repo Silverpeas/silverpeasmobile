@@ -39,9 +39,6 @@ import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author: svu
  */
@@ -49,6 +46,7 @@ public class AuthentificationManager {
 
   private static AuthentificationManager instance = null;
   private static final String USER_CONNECTED_KEY = "userConnected";
+  private static final String USER_PROFIL = "userProfil";
   private static final String DES_KEY = "LagTegshyeecnoc^";
 
   public static final String XSTKN = "X-STKN";
@@ -69,7 +67,7 @@ public class AuthentificationManager {
     return LocalStorageHelper.load(key, String.class);
   }
 
-  public void storeUser(final DetailUserDTO user, String login, String password, String domainId) {
+  public void storeUser(final DetailUserDTO user, final UserProfileDTO profil, String login, String password, String domainId) {
     String encryptedPassword = null;
     try {
       encryptedPassword = encryptPassword(password);
@@ -80,6 +78,7 @@ public class AuthentificationManager {
 
     FullUserDTO u = new FullUserDTO(login, encryptedPassword, domainId, user);
     LocalStorageHelper.store(USER_CONNECTED_KEY, FullUserDTO.class, u);
+    LocalStorageHelper.store(USER_PROFIL, UserProfileDTO.class, profil);
   }
 
   /**
@@ -92,6 +91,8 @@ public class AuthentificationManager {
   public FullUserDTO loadUser() {
     FullUserDTO user = LocalStorageHelper.load(USER_CONNECTED_KEY, FullUserDTO.class);
     SpMobil.setUser(user);
+    UserProfileDTO profil = LocalStorageHelper.load(USER_PROFIL, UserProfileDTO.class);
+    SpMobil.setUserProfile(profil);
     return user;
   }
 
@@ -165,7 +166,7 @@ public class AuthentificationManager {
                 SpMobil.setUser(user);
 
                 Notification.activityStop();
-                AuthentificationManager.getInstance().storeUser(user, login, password,
+                AuthentificationManager.getInstance().storeUser(user, userProfile, login, password,
                     domainId);
 
                 if (attempt == null) {
