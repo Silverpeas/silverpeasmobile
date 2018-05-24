@@ -111,7 +111,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
       actionsMenu.addAction(favorite);
 
       if (root.getId() == null) {
-        favorite.init(instanceId, null, ContentsTypes.App.name(), root.getName());
+        favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
       } else {
         favorite.init(instanceId, root.getId(), ContentsTypes.Folder.name(), root.getName());
       }

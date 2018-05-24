@@ -37,6 +37,7 @@ import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.FavoriteDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
 import java.util.List;
 
@@ -68,8 +69,8 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
   @Override
   public void onFavoritesLoaded(final FavoritesLoadedEvent event) {
 
-    List<FavoriteDTO> favoritesList = event.getFavorites();
-    for (FavoriteDTO favoriteDTO : favoritesList) {
+    List<MyLinkDTO> favoritesList = event.getFavorites();
+    for (MyLinkDTO favoriteDTO : favoritesList) {
       FavoriteItem item = new FavoriteItem();
       item.setData(favoriteDTO);
       favorites.add(item);

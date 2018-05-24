@@ -39,10 +39,11 @@ import org.silverpeas.mobile.client.common.ShortCutRouter;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.FavoriteDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
 public class FavoriteItem extends Composite {
 
-  private FavoriteDTO data;
+  private MyLinkDTO data;
   private static FavoriteItemUiBinder uiBinder = GWT.create(FavoriteItemUiBinder.class);
   @UiField Anchor link;
   protected ApplicationMessages msg = null;
@@ -56,7 +57,7 @@ public class FavoriteItem extends Composite {
     msg = GWT.create(ApplicationMessages.class);
   }
 
-  public void setData(FavoriteDTO data) {
+  public void setData(MyLinkDTO data) {
     this.data = data;
     link.setText(data.getName());
 

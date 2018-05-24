@@ -21,19 +21,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import org.silverpeas.mobile.shared.dto.FavoriteDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.FavoritesException;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
+import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import java.util.List;
 
-@RemoteServiceRelativePath("Favorites")
-public interface ServiceFavorites extends RemoteService {
-  public List<FavoriteDTO> getFavorites() throws FavoritesException, AuthenticationException;
+/**
+ * @author svu
+ */
+@Path("/mylinks")
+public interface ServiceMyLinks extends RestService {
 
-  void addFavorite(String instanceId, String objectId, String objectType, String description) throws FavoritesException, AuthenticationException;
+
+  @POST
+  @Path("/")
+  public void addLink(MyLinkDTO newLink, MethodCallback<MyLinkDTO> callback);
+
+  @GET
+  @Path("/")
+  public void getMyLinks(MethodCallback<List<MyLinkDTO>> callback);
+
 }

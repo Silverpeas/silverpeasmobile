@@ -129,7 +129,7 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
     categories.setSelectedIndex(oldSelection);
 
     actionsMenu.addAction(favorite);
-    favorite.init(instanceId, null, ContentsTypes.App.name(), getPageTitle());
+    favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), getPageTitle());
   }
 
   @UiHandler("categories")

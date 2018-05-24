@@ -48,6 +48,7 @@ import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.FavoriteDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
@@ -117,9 +118,9 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
 
 
     favoris.clear();
-    List<FavoriteDTO> favoritesList = data.getFavorites();
+    List<MyLinkDTO> favoritesList = data.getFavorites();
     favorisSection.setVisible(!favoritesList.isEmpty() && config.isFavoritesDisplay());
-    for (FavoriteDTO favoriteDTO : favoritesList) {
+    for (MyLinkDTO favoriteDTO : favoritesList) {
       FavoriteItem item = new FavoriteItem();
       item.setData(favoriteDTO);
       favoris.add(item);

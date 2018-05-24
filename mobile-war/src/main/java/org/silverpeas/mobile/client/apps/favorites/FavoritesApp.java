@@ -25,7 +25,9 @@ package org.silverpeas.mobile.client.apps.favorites;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.app.AddFavoriteEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesAppEventHandler;
@@ -44,10 +46,13 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.FavoriteDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.ArrayList;
@@ -80,25 +85,26 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
         @Override
         public void execute() {
-          List<FavoriteDTO> result = LocalStorageHelper.load(key, List.class);
+          List<MyLinkDTO> result = LocalStorageHelper.load(key, List.class);
           if (result == null) {
-            result = new ArrayList<FavoriteDTO>();
+            result = new ArrayList<MyLinkDTO>();
           }
           EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(result));
         }
       };
 
-      AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<FavoriteDTO>>(offlineAction) {
+
+      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<MyLinkDTO>>(offlineAction) {
         @Override
-        public void attempt() {
-          ServicesLocator.getServiceFavorites().getFavorites(this);
+        public void onSuccess(final Method method, final List<MyLinkDTO> result) {
+          super.onSuccess(method, result);
+          LocalStorageHelper.store(key, List.class, result);
+          EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(result));
         }
 
         @Override
-        public void onSuccess(List<FavoriteDTO> result) {
-          super.onSuccess(result);
-          LocalStorageHelper.store(key, List.class, result);
-          EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(result));
+        public void attempt() {
+          ServicesLocator.getServiceMyLinks().getMyLinks(this);
         }
       };
       action.attempt();
@@ -106,16 +112,24 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
   @Override
   public void addFavorite(final AddFavoriteEvent event) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<MyLinkDTO>() {
       @Override
-      public void attempt() {
-        ServicesLocator.getServiceFavorites().addFavorite(event.getInstanceId(), event.getObjectId(), event.getObjectType(), event.getDescription(), this);
-      }
-
-      public void onSuccess(Void result) {
-        super.onSuccess(result);
+      public void onSuccess(final Method method, final MyLinkDTO myLinkDTO) {
+        super.onSuccess(method, myLinkDTO);
         //TODO : message ?
       }
+
+      @Override
+      public void attempt() {
+        MyLinkDTO dto = new MyLinkDTO();
+        dto.setName(event.getDescription());
+        dto.setUrl("/" + event.getObjectType() + "/" + event.getObjectId());
+        dto.setVisible(true);
+        dto.setPopup(false);
+        dto.setDescription(event.getDescription());
+        ServicesLocator.getServiceMyLinks().addLink(dto, this);
+      }
+
     };
     action.attempt();
   }

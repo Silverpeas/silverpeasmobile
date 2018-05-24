@@ -23,25 +23,25 @@
 
 package org.silverpeas.mobile.client.apps.favorites.events.pages;
 
-import org.silverpeas.mobile.shared.dto.FavoriteDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
 import java.util.List;
 
 public class FavoritesLoadedEvent extends AbstractFavoritesPagesEvent {
 
-	List<FavoriteDTO> favorites;
+  List<MyLinkDTO> favorites;
 
-	public FavoritesLoadedEvent(List<FavoriteDTO> favorites){
-		super();
-		this.favorites = favorites;
-	}
+  public FavoritesLoadedEvent(List<MyLinkDTO> favorites) {
+    super();
+    this.favorites = favorites;
+  }
 
-	@Override
-	protected void dispatch(FavoritesPagesEventHandler handler) {
-		handler.onFavoritesLoaded(this);
-	}
-	
-	public List<FavoriteDTO> getFavorites(){
-		return favorites;
-	}
+  @Override
+  protected void dispatch(FavoritesPagesEventHandler handler) {
+    handler.onFavoritesLoaded(this);
+  }
+
+  public List<MyLinkDTO> getFavorites() {
+    return favorites;
+  }
 }

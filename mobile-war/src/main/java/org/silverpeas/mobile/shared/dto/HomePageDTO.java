@@ -39,7 +39,7 @@ public class HomePageDTO extends BaseDTO implements Serializable{
 
   private List<SilverpeasObjectDTO> spacesAndApps;
   private List<NewsDTO> news = new ArrayList<NewsDTO>();
-  private List<FavoriteDTO> favorites = new ArrayList<FavoriteDTO>();
+  private List<MyLinkDTO> favorites = new ArrayList<MyLinkDTO>();
   private List<PublicationDTO> lastPublications = new ArrayList<PublicationDTO>();
 
   public List<PublicationDTO> getLastPublications() {
@@ -58,11 +58,11 @@ public class HomePageDTO extends BaseDTO implements Serializable{
     this.news = news;
   }
 
-  public List<FavoriteDTO> getFavorites() {
+  public List<MyLinkDTO> getFavorites() {
     return favorites;
   }
 
-  public void setFavorites(final List<FavoriteDTO> favorites) {
+  public void setFavorites(final List<MyLinkDTO> favorites) {
     this.favorites = favorites;
   }
 

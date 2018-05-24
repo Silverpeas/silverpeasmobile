@@ -85,7 +85,7 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
       i++;
     }
     actionsMenu.addAction(favorite);
-    favorite.init(instanceId, null, ContentsTypes.App.name(), getPageTitle());
+    favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), getPageTitle());
   }
 
 }

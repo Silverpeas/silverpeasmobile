@@ -100,7 +100,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
 
       actionsMenu.addAction(favorite);
       if (root.getId() == null) {
-        favorite.init(instanceId, null, ContentsTypes.App.name(), root.getName());
+        favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
       } else {
         favorite.init(instanceId, root.getId(), ContentsTypes.Album.name(), root.getName());
       }

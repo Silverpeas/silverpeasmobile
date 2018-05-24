@@ -28,6 +28,7 @@ import org.silverpeas.core.mylinks.service.MyLinksService;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.FavoriteDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,21 +94,20 @@ public class FavoritesHelper {
     return ServiceProvider.getService(MyLinksService.class);
   }
 
-  public FavoriteDTO populate(LinkDetail link) {
-    FavoriteDTO dto = new FavoriteDTO();
+  public MyLinkDTO populate(LinkDetail link) {
+    MyLinkDTO dto = new MyLinkDTO();
     dto.setName(link.getName());
     dto.setDescription(link.getDescription());
-    dto.setHasPosition(link.hasPosition());
     dto.setPosition(link.getPosition());
     dto.setUrl(link.getUrl());
     return dto;
   }
 
-  public List<FavoriteDTO> populate(List<LinkDetail> links) {
-    List<FavoriteDTO> dtos = new ArrayList<FavoriteDTO>();
+  public List<MyLinkDTO> populate(List<LinkDetail> links) {
+    List<MyLinkDTO> dtos = new ArrayList<MyLinkDTO>();
     if (links != null) {
       for (LinkDetail link : links) {
-        FavoriteDTO dto = populate(link);
+        MyLinkDTO dto = populate(link);
         dtos.add(dto);
       }
     }
