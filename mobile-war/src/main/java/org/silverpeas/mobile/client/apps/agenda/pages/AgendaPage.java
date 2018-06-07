@@ -24,9 +24,14 @@
 package org.silverpeas.mobile.client.apps.agenda.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
@@ -42,6 +47,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
@@ -64,8 +70,16 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   @UiField
   UnorderedList events;
 
+  @UiField
+  HTMLPanel container;
+
+  @UiField
+  ListBox calendarsList;
+
+  @UiField
+  Anchor week, mouth;
+
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
-  private String instanceId;
 
   interface AgendaPageUiBinder extends UiBinder<Widget, AgendaPage> {
   }
@@ -74,11 +88,19 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     msg = GWT.create(AgendaMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
+    container.getElement().setId("list-events");
+    week.getElement().setId("btn-week");
+    mouth.getElement().setId("btn-month");
     EventBus.getInstance().addHandler(AbstractAgendaPagesEvent.TYPE, this);
   }
 
-  public void setCalendars(final List<CalendarDTO> calendars) {
-    this.calendars = calendars;
+  public void setCalendars(final List<CalendarDTO> cals) {
+    this.calendars = cals;
+    calendarsList.addItem("Tous", "all");
+    for (CalendarDTO cal : cals) {
+      calendarsList.addItem(cal.getTitle(), cal.getId());
+    }
+
     EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendars.get(0), currentTimeRange));
   }
 
@@ -151,12 +173,16 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
       // render list
       for (GroupItem groupItem : groups) {
-        events.add(groupItem.getHeaderItem());
-        for (EventItem item : groupItem.getItems()) {
-          events.add(item);
+        if (!groupItem.getItems().isEmpty()) {
+          events.add(groupItem.getHeaderItem());
+          for (EventItem item : groupItem.getItems()) {
+            events.add(item);
+          }
         }
       }
     }
+    actionsMenu.addAction(favorite);
+    favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
   }
 
   private CalendarDTO getCalendar(final String calendarId) {
@@ -170,5 +196,17 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractAgendaPagesEvent.TYPE, this);
+  }
+
+  @UiHandler("week")
+  protected void week(ClickEvent event) {
+    currentTimeRange = TimeRange.weeks;
+    //TODO : render
+  }
+
+  @UiHandler("mouth")
+  protected void mouth(ClickEvent event) {
+    currentTimeRange = TimeRange.months;
+    //TODO : render
   }
 }

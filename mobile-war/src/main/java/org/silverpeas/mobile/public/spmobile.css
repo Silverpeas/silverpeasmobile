@@ -779,7 +779,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .app-almanach a {
-  background-position:0.65em -2113px;
+  background-position:-20px -2167px;
 }
 
 .app-link a {
@@ -1890,8 +1890,8 @@ form .forms .fields > li:nth-child(even) {
 .worflow-form li:nth-child(even),
 .liste-billet li:nth-child(even) ,
 #action-bloc  li:nth-child(even),
-.liste-news li:nth-child(even)   {
-  background-color: #f6f6f6;
+.liste-news li:nth-child(even){
+  background-color: #efefef;
   border-bottom: 1px solid #ddd;
 }
 
@@ -1973,4 +1973,142 @@ form .forms .fields > li:nth-child(even) {
 /* GENERAL */
 .clear {
 	clear:both;
+}
+
+
+/* EVENT LIST */
+.ui-control-controls a {
+	display:inline-block;
+	padding:8px;
+	font-size:0.9em
+}
+
+.ui-control-controls a:first-child {
+	border-radius:6px 0 0 6px;
+}
+
+.ui-control-controls a:last-child {
+	border-radius:0 6px 6px 0;
+}
+
+.ui-control-horizontal .ui-control-controls{
+	display:inline-block;
+}
+
+.ui-control-horizontal .select-calendar {
+	float:right;
+	text-align:right;
+}
+
+.ui-control-horizontal .select-calendar select {
+	max-width:13em;
+	font-size:0.9em;
+	font-weight:500;
+	padding:.4em 0.5em;
+	text-align:left;
+}
+
+#list-events .ui-control-horizontal {
+	padding:0.5em;
+}
+
+.ui-list-graduate {
+	list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid #ddd;
+}
+
+.ui-list-graduate > li {
+    background: #f4f4f4 url(packImagesNavigation.png) right -2104px no-repeat;
+    border-bottom: 1px solid #ddd;
+	position:relative;
+}
+.ui-list-graduate li .label{
+	padding: 0.4em 0.7em;
+    margin: 0;
+	display:inline-block
+}
+.ui-list-graduate li .nb-event {
+	position:absolute;
+	right:1.5em;
+	top:0.4em;
+ 	background:transparent url(packImagesNavigation.png) right -2176px no-repeat;
+	padding-right: 2em;
+	line-height: 14px;	
+}
+
+.ui-list-graduate li.open .nb-event {
+	display:none;
+}
+
+
+.ui-list-graduate > li:nth-child(odd) {
+    background-color: #ececec;
+}
+
+.ui-list-graduate  li.open {
+    background: #4c4c4c url(packImagesNavigation.png) right -2133px no-repeat;
+	text-shadow:none;
+	border:0;
+}
+
+.ui-list-graduate  li.open	.label{
+	color:#FFF;
+}
+
+.ui-list-graduate  li ul {
+		display:none;
+}
+
+.ui-list-graduate  li.open ul {
+    background-color: #4c4c4c;
+	display:block;
+}
+
+#list-events .open .ui-listview  {
+	display:table;
+	width:100%
+}
+
+#list-events .ui-listview  li{
+	background-color:#FFF;
+	display:table-row;
+}
+
+
+#list-events .ui-listview .event-info {
+	display:table-cell;
+	vertical-align:top;
+	padding: 0.5em 0.7em;
+	border-bottom:1px solid #ccc;
+}
+
+#list-events .ui-listview .date-event {
+	display:table-cell;
+	padding: 0.5em 0.7em;
+	vertical-align: top;
+	font-size:0.95em;
+	color:#999;
+	text-align:right;
+	border-bottom:1px solid #ccc;
+}
+#list-events .ui-listview .date-event strong{
+	font-weight:500;
+	color:#000;
+	white-space:nowrap;
+}
+#list-events .ui-listview .date-event span{
+	white-space:nowrap;
+}
+
+.ui-listview .event-calendar {
+	font-size:0.9em;
+	padding:0.5em;
+	margin-top:0.5em;
+	mmax-width: 80%;
+	text-overflow: ellipsis;
+	height: 1em;
+	overflow: hidden;
+	white-space: nowrap;
 }

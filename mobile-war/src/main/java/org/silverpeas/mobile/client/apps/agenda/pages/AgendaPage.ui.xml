@@ -32,6 +32,73 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <base:ActionsMenu ui:field="actionsMenu"/>
     <h2 class="appHeader"></h2>
-    <components:UnorderedList ui:field="events" styleName="carroussel-news"/>
+
+    <div class="ui-corner-all ui-control-horizontal">
+      <div class="ui-control-controls"> <g:Anchor styleName="ui-btn-active  ui-btn  ui-first-child" ui:field="week"><span class="ui-btn-inner ui-corner-left"><span class="ui-btn-text">Semaine</span></span></g:Anchor><g:Anchor styleName="ui-btn ui-btn-up-c ui-last-child" ui:field="mouth"><span class="ui-btn-inner"><span class="ui-btn-text">Mois</span></span></g:Anchor> </div>
+      <div class="select-calendar">
+        <g:ListBox ui:field="calendarsList" styleName="ui-btn"/>
+      </div>
+    </div>
+
+    <components:UnorderedList ui:field="events" styleName="ui-list-graduate"/>
+
+    <!--ul class="ui-list-graduate">
+      <li class="graduate-time open"><span class="label">Avril 2018</span><span class="nb-event">2</span>
+        <ul class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+          <li onClick="lienVersEvenement">
+            <div class="event-info">
+              <div class="event-name">David</div>
+              <div class="event-calendar">Dates annniversaires Support</div>
+            </div>
+            <div class="date-event"><span>Du <strong>dimanche 01 Avril </strong></span> <span>au vendredi  20 Avril</span></div>
+          </li>
+          <li onClick="lienVersEvenement">
+            <div class="event-info">
+              <div class="event-name">David</div>
+              <div class="event-calendar">Dates annniversaires Support</div>
+            </div>
+            <div class="date-event"><span>Du <strong>dimanche 01 Avril </strong></span> <span>au vendredi 20 Avril</span></div>
+          </li>
+        </ul>
+      </li>
+      <li class="graduate-time"><span class="label">Mai 2018</span><span class="nb-event">3</span>
+        <ul class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+          <li onClick="lienVersEvenement">
+            <div class="event-info">
+              <div class="event-name">David</div>
+              <div class="event-calendar">Dates annniversaires Support</div>
+            </div>
+            <div class="date-event"><span>Du <strong>dimanche 01 Avril </strong></span> <span>au vendredi  20 Avril</span></div>
+          </li>
+          <li onClick="lienVersEvenement">
+            <div class="event-info">
+              <div class="event-name">David</div>
+              <div class="event-calendar">Dates annniversaires Support</div>
+            </div>
+            <div class="date-event"><span>Du <strong>dimanche 01 Avril </strong></span> <span>au vendredi 20 Avril</span></div>
+          </li>
+        </ul>
+      </li>
+
+      <li class="graduate-time"><span class="label">Juin 2018</span><span class="nb-event">9</span>
+        <ul class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+          <li onClick="lienVersEvenement">
+            <div class="event-info">
+              <div class="event-name">David</div>
+              <div class="event-calendar">Dates annniversaires Support</div>
+            </div>
+            <div class="date-event"><span>Du <strong>dimanche 01 Avril </strong></span> <span>au vendredi  20 Avril</span></div>
+          </li>
+          <li onClick="lienVersEvenement">
+            <div class="event-info">
+              <div class="event-name">David</div>
+              <div class="event-calendar">Dates annniversaires Support</div>
+            </div>
+            <div class="date-event"><span>Du <strong>dimanche 01 Avril </strong></span> <span>au vendredi 20 Avril</span></div>
+          </li>
+        </ul>
+      </li>
+    </ul-->
+
   </g:HTMLPanel>
 </ui:UiBinder> 
