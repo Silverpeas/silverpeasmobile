@@ -28,13 +28,13 @@ import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 
 public class CalendarLoadEvent extends AbstractAgendaAppEvent {
 
-  private CalendarDTO calendar;
+  private String calendarId;
 
   private TimeRange range;
 
-  public CalendarLoadEvent(CalendarDTO calendar, TimeRange range) {
+  public CalendarLoadEvent(String calendarId, TimeRange range) {
     super();
-    this.calendar = calendar;
+    this.calendarId = calendarId;
     this.range = range;
   }
 
@@ -43,12 +43,12 @@ public class CalendarLoadEvent extends AbstractAgendaAppEvent {
     handler.loadCalendarEvents(this);
   }
 
-  public CalendarDTO getCalendar() {
-    return calendar;
+  public String getCalendarId() {
+    return calendarId;
   }
 
-  public void setCalendar(final CalendarDTO calendar) {
-    this.calendar = calendar;
+  public void setCalendar(final String calendarId) {
+    this.calendarId = calendarId;
   }
 
   public TimeRange getRange() {

@@ -72,6 +72,10 @@ public class UnorderedList extends ComplexPanel {
     return (count == 0);
   }
 
+  public int getCount() {
+    return count;
+  }
+
   @Override
   public void setStyleName(String style) {
     list.setClassName(style);

@@ -23,7 +23,28 @@
 
 package org.silverpeas.mobile.client.apps.agenda.pages.widgets;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
+import org.silverpeas.mobile.client.components.UnorderedList;
+import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
 import java.util.ArrayList;
@@ -32,23 +53,36 @@ import java.util.List;
 /**
  * @author svu
  */
-public class GroupItem {
+public class GroupItem extends Composite {
 
-  private List<EventItem> items = new ArrayList<>();
-  private HeaderItem header = new HeaderItem();
   private int number;
   private TimeRange timeRange;
+  private static GroupItem.GroupItemUiBinder uiBinder = GWT.create(GroupItem.GroupItemUiBinder.class);
 
-  public GroupItem(final TimeRange timeRange) {
+  interface GroupItemUiBinder extends UiBinder<Widget, GroupItem> {}
+
+  @UiField
+  SpanElement groupTitle, eventCount;
+
+  @UiField
+  UnorderedList events;
+
+  @UiField
+  HTMLPanel container;
+
+  @UiField
+  HTML group;
+
+  public GroupItem() {
+    initWidget(uiBinder.createAndBindUi(this));
+  }
+
+  public void setTimeRange(final TimeRange timeRange) {
     this.timeRange = timeRange;
   }
 
-  public List<EventItem> getItems() {
-    return items;
-  }
-
-  public void addItem(EventItem item) {
-    items.add(item);
+  public void addEvent(EventItem item) {
+    events.add(item);
   }
 
   public void setNumber(final int number) {
@@ -59,16 +93,21 @@ public class GroupItem {
     return number;
   }
 
-  public HeaderItem getHeaderItem() {
-    CalendarEventDTO dto = new CalendarEventDTO();
-    dto.setCanBeAccessed(false);
-
+  public void render() {
     if (timeRange.equals(TimeRange.weeks)) {
-      dto.setTitle("Semaine " + number);
+      groupTitle.setInnerText("Semaine " + number);
     } else if (timeRange.equals(TimeRange.months)) {
-      dto.setTitle("Mois " + number);
+      groupTitle.setInnerText("Mois " + number);
     }
-    header.setData(dto);
-    return header;
+    eventCount.setInnerText(""+events.getCount());
+  }
+
+  @UiHandler("group")
+  void open(ClickEvent event) {
+    container.getElement().toggleClassName("open");
+  }
+
+  public boolean isEmpty() {
+    return (events.getCount() <= 0);
   }
 }

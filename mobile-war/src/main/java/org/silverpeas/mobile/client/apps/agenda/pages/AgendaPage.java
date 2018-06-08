@@ -24,11 +24,13 @@
 package org.silverpeas.mobile.client.apps.agenda.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -96,24 +98,29 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
   public void setCalendars(final List<CalendarDTO> cals) {
     this.calendars = cals;
-    calendarsList.addItem("Tous", "all");
+    if (cals.size() == 1) {
+      calendarsList.setVisible(false);
+    } else {
+      calendarsList.addItem("Tous", "all");
+    }
     for (CalendarDTO cal : cals) {
       calendarsList.addItem(cal.getTitle(), cal.getId());
     }
-
-    EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendars.get(0), currentTimeRange));
+    EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendars.get(0).getId(), currentTimeRange));
   }
 
   @Override
   public void onCalendarEventsLoaded(final CalendarLoadedEvent event) {
     if (!event.getEvents().isEmpty()) {
+      events.clear();
       groups.clear();
       DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mmZZZ");
       DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
       if (currentTimeRange.equals(TimeRange.weeks)) {
         int weekNumber = DateUtil.getWeek(new Date());
         for (int i = 0; i <= 3; i++) {
-          GroupItem groupItem = new GroupItem(TimeRange.weeks);
+          GroupItem groupItem = new GroupItem();
+          groupItem.setTimeRange(TimeRange.weeks);
           groupItem.setNumber(weekNumber+i);
           groups.add(groupItem);
         }
@@ -134,7 +141,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
             if (groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) {
               EventItem item = new EventItem();
               item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
-              groupItem.addItem(item);
+              groupItem.addEvent(item);
             }
           }
         }
@@ -142,7 +149,8 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
         int monthNumber = new Date().getMonth();
         int number = monthNumber;
         for (int i = 0; i < 12; i++) {
-          GroupItem groupItem = new GroupItem(TimeRange.months);
+          GroupItem groupItem = new GroupItem();
+          groupItem.setTimeRange(TimeRange.months);
           number++;
           if (number > 12) number = 1;
           groupItem.setNumber(number);
@@ -165,7 +173,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
             if (groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) {
               EventItem item = new EventItem();
               item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
-              groupItem.addItem(item);
+              groupItem.addEvent(item);
             }
           }
         }
@@ -173,11 +181,9 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
       // render list
       for (GroupItem groupItem : groups) {
-        if (!groupItem.getItems().isEmpty()) {
-          events.add(groupItem.getHeaderItem());
-          for (EventItem item : groupItem.getItems()) {
-            events.add(item);
-          }
+        if (!groupItem.isEmpty()) {
+          groupItem.render();
+          events.add(groupItem);
         }
       }
     }
@@ -201,12 +207,23 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   @UiHandler("week")
   protected void week(ClickEvent event) {
     currentTimeRange = TimeRange.weeks;
-    //TODO : render
+    changeGroupSelector();
   }
 
   @UiHandler("mouth")
   protected void mouth(ClickEvent event) {
     currentTimeRange = TimeRange.months;
-    //TODO : render
+    changeGroupSelector();
+  }
+
+  private void changeGroupSelector() {
+    week.getElement().toggleClassName("ui-btn-active");
+    mouth.getElement().toggleClassName("ui-btn-active");
+    EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendarsList.getSelectedValue(), currentTimeRange));
+  }
+
+  @UiHandler("calendarsList")
+  protected void changeCalendar(ChangeEvent event) {
+    EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendarsList.getSelectedValue(), currentTimeRange));
   }
 }

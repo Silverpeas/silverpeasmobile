@@ -61,4 +61,7 @@ public interface AgendaMessages extends Messages {
 
   String addReminder();
 
+  String weekFilter();
+  String mouthFilter();
+
 }

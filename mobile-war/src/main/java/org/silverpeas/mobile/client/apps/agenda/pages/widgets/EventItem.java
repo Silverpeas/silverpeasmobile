@@ -24,11 +24,13 @@
 package org.silverpeas.mobile.client.apps.agenda.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -45,18 +47,21 @@ import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
-public class EventItem extends Composite implements ClickHandler {
+public class EventItem extends Composite {
 
   private ApplicationInstanceDTO instance;
   private CalendarEventDTO event;
   private CalendarDTO calendar;
   private static EventItemUiBinder uiBinder = GWT.create(EventItemUiBinder.class);
   @UiField
-  Anchor picto;
-  @UiField
-  HTML content;
+  DivElement eventName, calendarName, eventDate;
+
   @UiField
   HTMLPanel container;
+
+  @UiField
+  HTML infos;
+
   protected ApplicationMessages msg = null;
 
   interface EventItemUiBinder extends UiBinder<Widget, EventItem> {}
@@ -74,12 +79,15 @@ public class EventItem extends Composite implements ClickHandler {
     if (!event.getAttendees().isEmpty()) {
       attendee = event.getAttendees().get(0).getFullName();
     }
-    content.setHTML("<span>"+event.getTitle()+"</span><span>"+event.getStartDate()+"</span>" + event.getEndDate());
-    content.addClickHandler(this);
+    eventName.setInnerText(event.getTitle());
+    calendarName.setInnerText(calendar.getTitle());
+
+    String date = "<span>Du <strong>"+event.getStartDate()+"</strong></span> <span>au "+event.getEndDate()+"</span>";
+    eventDate.setInnerHTML(date);
   }
 
-  @Override
-  public void onClick(final ClickEvent event) {
+  @UiHandler("infos")
+  void openEvent(ClickEvent event) {
     EventPage page = new EventPage();
     page.setData(this.instance, this.event, calendar);
     page.show();

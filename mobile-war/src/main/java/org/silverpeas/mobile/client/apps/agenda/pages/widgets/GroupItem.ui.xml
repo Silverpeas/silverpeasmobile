@@ -23,9 +23,13 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <g:HTMLPanel tag="li" ui:field="container">
-    <g:Anchor ui:field="picto"></g:Anchor>
-    <g:HTML stylePrimaryName="caption" ui:field="content"></g:HTML>
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:components="urn:import:org.silverpeas.mobile.client.components">
+  <g:HTMLPanel tag="li" ui:field="container" styleName="graduate-time">
+    <g:HTML ui:field="group">
+    <span class="label" ui:field="groupTitle"></span><span class="nb-event" ui:field="eventCount"></span>
+
+    </g:HTML>
+    <components:UnorderedList ui:field="events" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

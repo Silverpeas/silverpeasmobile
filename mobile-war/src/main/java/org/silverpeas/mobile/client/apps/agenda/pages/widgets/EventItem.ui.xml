@@ -25,7 +25,13 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <g:HTMLPanel tag="li" ui:field="container">
-    <g:Anchor ui:field="picto"></g:Anchor>
-    <g:HTML stylePrimaryName="caption" ui:field="content"></g:HTML>
+      <g:HTML styleName="event-info" ui:field="infos">
+        <div class="event-name" ui:field="eventName"></div>
+        <div class="event-calendar" ui:field="calendarName"></div>
+      </g:HTML>
+      <div class="date-event" ui:field="eventDate"></div>
   </g:HTMLPanel>
+
+
+
 </ui:UiBinder> 

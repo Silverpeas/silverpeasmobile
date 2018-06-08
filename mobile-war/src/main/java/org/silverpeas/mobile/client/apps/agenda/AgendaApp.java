@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.agenda;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
@@ -140,11 +141,10 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void loadCalendarEvents(final CalendarLoadEvent event) {
 
-
     Command offlineAction = new Command() {
       @Override
       public void execute() {
-        List<CalendarEventDTO> events = LocalStorageHelper.load(key+event.getCalendar().getId(), List.class);
+        List<CalendarEventDTO> events = LocalStorageHelper.load(key+getApplicationInstance().getId()+event.getCalendarId(), List.class);
         if (events == null) {
           events = new ArrayList<CalendarEventDTO>();
         }
@@ -170,15 +170,18 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
           CalendarUtil.addDaysToDate(end,1); // for include last day
         }
         endDateOfWindowTime = dtf.format(end);
-        ServicesLocator.getServiceAlmanach()
-            .getOccurences(getApplicationInstance().getId(), event.getCalendar().getId(),
-                startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+        if (!event.getCalendarId().equals("all")) {
+          ServicesLocator.getServiceAlmanach().getOccurences(getApplicationInstance().getId(), event.getCalendarId(),
+              startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+        } else {
+          //TODO
+        }
       }
 
       @Override
       public void onSuccess(final Method method, final List<CalendarEventDTO> events) {
         super.onSuccess(method, events);
-        LocalStorageHelper.store(key + event.getCalendar().getId(), List.class, events);
+        LocalStorageHelper.store(key + getApplicationInstance().getId() + event.getCalendarId(), List.class, events);
         EventBus.getInstance().fireEvent(new CalendarLoadedEvent(getApplicationInstance(), events));
       }
     };
