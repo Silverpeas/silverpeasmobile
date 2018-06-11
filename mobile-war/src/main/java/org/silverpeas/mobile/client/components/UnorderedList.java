@@ -44,7 +44,6 @@ public class UnorderedList extends ComplexPanel {
   @Override
   public void add(Widget child) {
     add(child, "");
-    count++;
   }
 
   public void add(Widget child, String styleName) {

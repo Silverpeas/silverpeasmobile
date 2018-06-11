@@ -73,6 +73,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   private AgendaMessages msg;
   private String key;
   private String keyCalendars;
+  private List<CalendarDTO> calendars = null;
 
   public static final String EVENT_REMINDER_TYPE = "CalendarEvent";
 
@@ -124,6 +125,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         @Override
         public void onSuccess(final Method method, final List<CalendarDTO> calendars) {
           super.onSuccess(method, calendars);
+          AgendaApp.this.calendars = calendars;
           page.setApp(AgendaApp.this);
           page.setCalendars(calendars);
           page.show();
@@ -144,7 +146,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     Command offlineAction = new Command() {
       @Override
       public void execute() {
-        List<CalendarEventDTO> events = LocalStorageHelper.load(key+getApplicationInstance().getId()+event.getCalendarId(), List.class);
+        List<CalendarEventDTO> events = LocalStorageHelper.load(key+getApplicationInstance().getId()+event.getCalendar().getId(), List.class);
         if (events == null) {
           events = new ArrayList<CalendarEventDTO>();
         }
@@ -153,6 +155,12 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     };
 
     MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CalendarEventDTO>>(offlineAction) {
+
+      private int retainUntil = 1;
+      private int callNumber = 0;
+      private String currentAppId;
+      private List<CalendarEventDTO> allEvents = new ArrayList<>();
+
       @Override
       public void attempt() {
         // Date format sample : 2018-03-24T23:00:00.000Z
@@ -170,23 +178,41 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
           CalendarUtil.addDaysToDate(end,1); // for include last day
         }
         endDateOfWindowTime = dtf.format(end);
-        if (!event.getCalendarId().equals("all")) {
-          ServicesLocator.getServiceAlmanach().getOccurences(getApplicationInstance().getId(), event.getCalendarId(),
+        if (event.getCalendar() != null) {
+          currentAppId = getCalendarInstanceId(event.getCalendar());
+          ServicesLocator.getServiceAlmanach().getOccurences(currentAppId, event.getCalendar().getId(),
               startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);
         } else {
-          //TODO
+          //request all calendars on instance
+          retainUntil = calendars.size();
+          for (CalendarDTO cal : calendars) {
+            currentAppId = getCalendarInstanceId(cal);
+            ServicesLocator.getServiceAlmanach().getOccurences(currentAppId, cal.getId(),
+                startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+          }
         }
       }
 
       @Override
       public void onSuccess(final Method method, final List<CalendarEventDTO> events) {
         super.onSuccess(method, events);
-        LocalStorageHelper.store(key + getApplicationInstance().getId() + event.getCalendarId(), List.class, events);
-        EventBus.getInstance().fireEvent(new CalendarLoadedEvent(getApplicationInstance(), events));
+        LocalStorageHelper.store(key + getApplicationInstance().getId() + currentAppId, List.class, events);
+        allEvents.addAll(events);
+        callNumber++;
+        if (callNumber == retainUntil) {
+          EventBus.getInstance().fireEvent(new CalendarLoadedEvent(getApplicationInstance(), allEvents));
+        }
       }
     };
     action.attempt();
 
+  }
+
+  private String getCalendarInstanceId(CalendarDTO cal) {
+    String appId = cal.getUri();
+    appId = appId.replace("/silverpeas/services/almanach/","");
+    appId = appId.substring(0, appId.indexOf("/"));
+    return appId;
   }
 
   @Override

@@ -32,6 +32,7 @@ public class CalendarDTO implements Serializable {
   private String id;
   private String title;
   private String zoneId;
+  private String uri;
 
   private boolean main;
   private boolean userMainPersonal;
@@ -94,4 +95,13 @@ public class CalendarDTO implements Serializable {
   public void setOwnerName(final String ownerName) {
     this.ownerName = ownerName;
   }
+
+  public String getUri() {
+    return uri;
+  }
+
+  public void setUri(final String uri) {
+    this.uri = uri;
+  }
+
 }

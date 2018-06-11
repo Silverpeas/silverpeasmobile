@@ -106,7 +106,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     for (CalendarDTO cal : cals) {
       calendarsList.addItem(cal.getTitle(), cal.getId());
     }
-    EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendars.get(0).getId(), currentTimeRange));
+    EventBus.getInstance().fireEvent(new CalendarLoadEvent(null, currentTimeRange));
   }
 
   @Override
@@ -219,11 +219,22 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   private void changeGroupSelector() {
     week.getElement().toggleClassName("ui-btn-active");
     mouth.getElement().toggleClassName("ui-btn-active");
-    EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendarsList.getSelectedValue(), currentTimeRange));
+    EventBus.getInstance().fireEvent(new CalendarLoadEvent(getSelectedCalendar(), currentTimeRange));
   }
 
   @UiHandler("calendarsList")
   protected void changeCalendar(ChangeEvent event) {
-    EventBus.getInstance().fireEvent(new CalendarLoadEvent(calendarsList.getSelectedValue(), currentTimeRange));
+    EventBus.getInstance().fireEvent(new CalendarLoadEvent(getSelectedCalendar(), currentTimeRange));
+  }
+
+
+  private CalendarDTO getSelectedCalendar() {
+    String id = calendarsList.getSelectedValue();
+    for (CalendarDTO cal : calendars) {
+      if (cal.getId().equals(id)) {
+        return cal;
+      }
+    }
+    return null;
   }
 }
