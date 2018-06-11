@@ -25,6 +25,9 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:components="urn:import:org.silverpeas.mobile.client.components">
+
+  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages' />
+
   <g:HTMLPanel tag="li" ui:field="container" styleName="graduate-time">
     <g:HTML ui:field="group">
     <span class="label" ui:field="groupTitle"></span><span class="nb-event" ui:field="eventCount"></span>

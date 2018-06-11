@@ -136,4 +136,5 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("chargement...")
   String loading();
+
 }

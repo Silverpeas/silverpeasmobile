@@ -25,27 +25,22 @@ package org.silverpeas.mobile.client.apps.agenda.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.pages.EventPage;
-import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.ContentDTO;
-import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+
+import java.util.Date;
 
 public class EventItem extends Composite {
 
@@ -62,13 +57,13 @@ public class EventItem extends Composite {
   @UiField
   HTML infos;
 
-  protected ApplicationMessages msg = null;
+  protected AgendaMessages msg = null;
 
   interface EventItemUiBinder extends UiBinder<Widget, EventItem> {}
 
   public EventItem() {
     initWidget(uiBinder.createAndBindUi(this));
-    msg = GWT.create(ApplicationMessages.class);
+    msg = GWT.create(AgendaMessages.class);
   }
 
   public void setData(ApplicationInstanceDTO instance, CalendarEventDTO event, CalendarDTO calendar) {
@@ -82,8 +77,26 @@ public class EventItem extends Composite {
     eventName.setInnerText(event.getTitle());
     calendarName.setInnerText(calendar.getTitle());
 
-    String date = "<span>Du <strong>"+event.getStartDate()+"</strong></span> <span>au "+event.getEndDate()+"</span>";
+    DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd");
+    DateTimeFormat df = DateTimeFormat.getFormat(msg.dateFormat());
+
+
+
+    String start = df.format(dtf.parse(event.getStartDate())) ;
+    String end = df.format(dtf.parse(event.getEndDate()));
+
+
+    String date = "<span>" + msg.from() + " <strong>"+start+"</strong></span> <span>" + msg.toDay() + " "+end+"</span>";
     eventDate.setInnerHTML(date);
+  }
+
+  public String getYear() {
+    String year;
+    DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
+    Date d = df.parse(event.getStartDate());
+    DateTimeFormat yf = DateTimeFormat.getFormat("yyyy");
+    year = yf.format(d);
+    return year;
   }
 
   @UiHandler("infos")

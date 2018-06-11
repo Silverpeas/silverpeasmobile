@@ -64,4 +64,20 @@ public interface AgendaMessages extends Messages {
   String weekFilter();
   String mouthFilter();
 
+  String weekTitle(String number);
+
+  String january();
+  String february();
+  String march();
+  String april();
+  String may();
+  String june();
+  String july();
+  String august();
+  String september();
+  String october();
+  String november();
+  String december();
+
+  String dateFormat();
 }

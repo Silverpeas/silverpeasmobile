@@ -142,6 +142,9 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
               EventItem item = new EventItem();
               item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
               groupItem.addEvent(item);
+              if (!groupItem.hasYear()) {
+                groupItem.setYear(item.getYear());
+              }
             }
           }
         }
@@ -174,6 +177,9 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
               EventItem item = new EventItem();
               item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
               groupItem.addEvent(item);
+              if (!groupItem.hasYear()) {
+                groupItem.setYear(item.getYear());
+              }
             }
           }
         }

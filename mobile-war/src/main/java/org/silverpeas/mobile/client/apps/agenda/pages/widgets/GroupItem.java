@@ -29,6 +29,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -43,11 +44,13 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
+import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,6 +61,17 @@ public class GroupItem extends Composite {
   private int number;
   private TimeRange timeRange;
   private static GroupItem.GroupItemUiBinder uiBinder = GWT.create(GroupItem.GroupItemUiBinder.class);
+  private String year = null;
+
+  @UiField(provided = true) protected AgendaMessages msg = null;
+
+  public void setYear(final String year) {
+    this.year = year;
+  }
+
+  public boolean hasYear() {
+    return (year != null);
+  }
 
   interface GroupItemUiBinder extends UiBinder<Widget, GroupItem> {}
 
@@ -74,6 +88,7 @@ public class GroupItem extends Composite {
   HTML group;
 
   public GroupItem() {
+    msg = GWT.create(AgendaMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
   }
 
@@ -95,11 +110,55 @@ public class GroupItem extends Composite {
 
   public void render() {
     if (timeRange.equals(TimeRange.weeks)) {
-      groupTitle.setInnerText("Semaine " + number);
+      groupTitle.setInnerText(msg.weekTitle(String.valueOf(number)) + " (" + year + ")");
     } else if (timeRange.equals(TimeRange.months)) {
-      groupTitle.setInnerText("Mois " + number);
+      String mouth = "";
+      mouth = getMouthLabel(mouth);
+      groupTitle.setInnerText(mouth + " " + year);
     }
     eventCount.setInnerText(""+events.getCount());
+  }
+
+  private String getMouthLabel(String mouth) {
+    switch (number) {
+      case 1 :
+        mouth = msg.january();
+        break;
+      case 2:
+        mouth = msg.february();
+        break;
+      case 3:
+        mouth = msg.march();
+        break;
+      case 4:
+        mouth = msg.april();
+        break;
+      case 5:
+        mouth = msg.may();
+        break;
+      case 6:
+        mouth = msg.june();
+        break;
+      case 7 :
+        mouth = msg.july();
+        break;
+      case 8:
+        mouth = msg.august();
+        break;
+      case 9:
+        mouth = msg.september();
+        break;
+      case 10:
+        mouth = msg.october();
+        break;
+      case 11:
+        mouth = msg.november();
+        break;
+      case 12:
+        mouth = msg.december();
+        break;
+    }
+    return mouth;
   }
 
   @UiHandler("group")
