@@ -79,5 +79,11 @@ public interface AgendaMessages extends Messages {
   String november();
   String december();
 
-  String dateFormat();
+  String monday();
+  String tuesday();
+  String wednesday();
+  String thursday();
+  String friday();
+  String saturday();
+  String sunday();
 }

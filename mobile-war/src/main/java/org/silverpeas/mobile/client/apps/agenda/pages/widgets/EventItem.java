@@ -78,16 +78,74 @@ public class EventItem extends Composite {
     calendarName.setInnerText(calendar.getTitle());
 
     DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd");
-    DateTimeFormat df = DateTimeFormat.getFormat(msg.dateFormat());
+    Date startDate = dtf.parse(event.getStartDate());
+    Date endDate = dtf.parse(event.getEndDate());
+
+    DateTimeFormat dayformat = DateTimeFormat.getFormat("EEEE");
+    DateTimeFormat mouthformat = DateTimeFormat.getFormat("MMMM");
+    DateTimeFormat df = DateTimeFormat.getFormat("dd");
 
 
 
-    String start = df.format(dtf.parse(event.getStartDate())) ;
-    String end = df.format(dtf.parse(event.getEndDate()));
+
+    String start = getDay(dayformat.format(startDate)) + " " + df.format(startDate) + " " + getMouth(mouthformat.format(startDate));
+    String end = getDay(dayformat.format(endDate)) + " " + df.format(endDate) + " " + getMouth(mouthformat.format(endDate));
 
 
     String date = "<span>" + msg.from() + " <strong>"+start+"</strong></span> <span>" + msg.toDay() + " "+end+"</span>";
     eventDate.setInnerHTML(date);
+  }
+
+  public String getDay(String value) {
+    String day = "";
+    if (value.equalsIgnoreCase("monday")) {
+      day = msg.monday();
+    } else if (value.equalsIgnoreCase("tuesday")) {
+      day = msg.tuesday();
+    } else if (value.equalsIgnoreCase("wednesday")) {
+      day = msg.wednesday();
+    }  else if (value.equalsIgnoreCase("thursday")) {
+      day = msg.thursday();
+    } else if (value.equalsIgnoreCase("friday")) {
+      day = msg.friday();
+    } else if (value.equalsIgnoreCase("saturday")) {
+      day = msg.saturday();
+    } else if (value.equalsIgnoreCase("sunday")) {
+      day = msg.sunday();
+    }
+
+    return day;
+  }
+
+  public String getMouth(String value) {
+    String mouth = "";
+    if (value.equalsIgnoreCase("january")) {
+      mouth = msg.january();
+    } else if(value.equalsIgnoreCase("february")) {
+      mouth = msg.february();
+    } else if(value.equalsIgnoreCase("march")) {
+      mouth = msg.march();
+    } else if(value.equalsIgnoreCase("april")) {
+      mouth = msg.april();
+    } else if(value.equalsIgnoreCase("may")) {
+      mouth = msg.may();
+    } else if(value.equalsIgnoreCase("june")) {
+      mouth = msg.june();
+    } else if(value.equalsIgnoreCase("july")) {
+      mouth = msg.july();
+    } else if(value.equalsIgnoreCase("august")) {
+      mouth = msg.august();
+    } else if(value.equalsIgnoreCase("september")) {
+      mouth = msg.september();
+    } else if(value.equalsIgnoreCase("october")) {
+      mouth = msg.october();
+    } else if(value.equalsIgnoreCase("november")) {
+      mouth = msg.november();
+    } else if(value.equalsIgnoreCase("december")) {
+      mouth = msg.december();
+    }
+
+    return mouth;
   }
 
   public String getYear() {
