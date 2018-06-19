@@ -44,6 +44,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.config.ConfigApp;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external
+    .NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.status.StatusApp;
 import org.silverpeas.mobile.client.apps.status.events.StatusEvents;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
@@ -64,13 +66,15 @@ import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 public class NavigationMenu extends Composite implements PageEventHandler {
 
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
   @UiField HTMLPanel container, user;
-  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, tchat;
+  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, tchat, calendar;
   @UiField SpanElement status;
   @UiField TextBox search;
 
@@ -194,6 +198,16 @@ public class NavigationMenu extends Composite implements PageEventHandler {
         SpMobil.destroyMainPage();
       }
     });
+  }
+
+  @UiHandler("calendar")
+  protected void calendar(ClickEvent event) {
+    //TODO : send appchanged event
+    ApplicationInstanceDTO app = new ApplicationInstanceDTO();
+    app.setId("userCalendar" + SpMobil.getUser().getId() + "_PCI");
+    app.setType(Apps.userCalendar.name());
+    EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(app));
+    closeMenu();
   }
 
   public void setUser(DetailUserDTO currentUser) {

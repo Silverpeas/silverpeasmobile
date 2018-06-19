@@ -37,6 +37,7 @@ import org.silverpeas.mobile.shared.services.rest.ServiceAuthentication;
 import org.silverpeas.mobile.shared.services.rest.ServiceComment;
 import org.silverpeas.mobile.shared.services.rest.ServiceMyLinks;
 import org.silverpeas.mobile.shared.services.rest.ServiceRestDocuments;
+import org.silverpeas.mobile.shared.services.rest.ServiceUserCalendar;
 
 public class ServicesLocator {
   private static SpMobileRpcRequestBuilder builder = new SpMobileRpcRequestBuilder();
@@ -68,6 +69,7 @@ public class ServicesLocator {
 
   private static ServiceAuthentication serviceRestAuthentication = GWT.create(ServiceAuthentication.class);
   private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
+  private static ServiceUserCalendar serviceUserCalendar = GWT.create(ServiceUserCalendar.class);
   private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
   private static ServiceRestDocuments serviceRestDocuments = GWT.create(
       ServiceRestDocuments.class);
@@ -110,6 +112,11 @@ public class ServicesLocator {
   public static ServiceReminder getServiceReminder() {
     initRestContext();
     return serviceReminder;
+  }
+
+  public static ServiceUserCalendar getServiceUserCalendar() {
+    initRestContext();
+    return serviceUserCalendar;
   }
 
   public static ServiceAlmanach getServiceAlmanach() {

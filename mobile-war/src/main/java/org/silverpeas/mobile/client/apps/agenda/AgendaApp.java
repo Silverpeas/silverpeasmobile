@@ -95,7 +95,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
-    if (event.getInstance().getType().equals(Apps.almanach.name())) {
+    if (event.getInstance().getType().equals(Apps.almanach.name()) || event.getInstance().getType().equals(Apps.userCalendar.name())) {
       setApplicationInstance(event.getInstance());
       key = "events_" + getApplicationInstance().getId();
       keyCalendars = "calendars_" + getApplicationInstance().getId();
@@ -119,7 +119,11 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CalendarDTO>>(offlineAction) {
         @Override
         public void attempt() {
-          ServicesLocator.getServiceAlmanach().getCalendars(getApplicationInstance().getId(), this);
+          if (getApplicationInstance().getType().equals(Apps.userCalendar.name())) {
+            ServicesLocator.getServiceUserCalendar().getCalendars(getApplicationInstance().getId(), this);
+          } else {
+            ServicesLocator.getServiceAlmanach().getCalendars(getApplicationInstance().getId(), this);
+          }
         }
 
         @Override
@@ -180,15 +184,29 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         endDateOfWindowTime = dtf.format(end);
         if (event.getCalendar() != null) {
           currentAppId = getCalendarInstanceId(event.getCalendar());
-          ServicesLocator.getServiceAlmanach().getOccurences(currentAppId, event.getCalendar().getId(),
-              startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+          if (getApplicationInstance().getType().equals(Apps.userCalendar.name())) {
+            ServicesLocator.getServiceUserCalendar()
+                .getOccurences(currentAppId, event.getCalendar().getId(), startDateOfWindowTime,
+                    endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+          } else {
+            ServicesLocator.getServiceAlmanach()
+                .getOccurences(currentAppId, event.getCalendar().getId(), startDateOfWindowTime,
+                    endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+          }
         } else {
           //request all calendars on instance
           retainUntil = calendars.size();
           for (CalendarDTO cal : calendars) {
             currentAppId = getCalendarInstanceId(cal);
-            ServicesLocator.getServiceAlmanach().getOccurences(currentAppId, cal.getId(),
-                startDateOfWindowTime, endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+            if (getApplicationInstance().getType().equals(Apps.userCalendar.name())) {
+              ServicesLocator.getServiceUserCalendar()
+                  .getOccurences(currentAppId, cal.getId(), startDateOfWindowTime,
+                      endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+            } else {
+              ServicesLocator.getServiceAlmanach()
+                  .getOccurences(currentAppId, cal.getId(), startDateOfWindowTime,
+                      endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+            }
           }
         }
       }
@@ -210,8 +228,13 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   private String getCalendarInstanceId(CalendarDTO cal) {
     String appId = cal.getUri();
-    appId = appId.replace("/silverpeas/services/almanach/","");
-    appId = appId.substring(0, appId.indexOf("/"));
+    if (getApplicationInstance().getType().equals(Apps.userCalendar.name())) {
+      appId = appId.replace("/silverpeas/services/usercalendar/", "");
+      appId = appId.substring(0, appId.indexOf("/"));
+    } else {
+      appId = appId.replace("/silverpeas/services/almanach/", "");
+      appId = appId.substring(0, appId.indexOf("/"));
+    }
     return appId;
   }
 

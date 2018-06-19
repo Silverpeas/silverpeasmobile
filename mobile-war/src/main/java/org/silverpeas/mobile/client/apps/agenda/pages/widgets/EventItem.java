@@ -30,6 +30,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -78,6 +79,9 @@ public class EventItem extends Composite {
     calendarName.setInnerText(calendar.getTitle());
 
     DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd");
+    if(event.getStartDate().contains("T")) {
+      dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mmZZZ");
+    }
     Date startDate = dtf.parse(event.getStartDate());
     Date endDate = dtf.parse(event.getEndDate());
 
@@ -85,12 +89,8 @@ public class EventItem extends Composite {
     DateTimeFormat mouthformat = DateTimeFormat.getFormat("MMMM");
     DateTimeFormat df = DateTimeFormat.getFormat("dd");
 
-
-
-
     String start = getDay(dayformat.format(startDate)) + " " + df.format(startDate) + " " + getMouth(mouthformat.format(startDate));
     String end = getDay(dayformat.format(endDate)) + " " + df.format(endDate) + " " + getMouth(mouthformat.format(endDate));
-
 
     String date = "<span>" + msg.from() + " <strong>"+start+"</strong></span> <span>" + msg.toDay() + " "+end+"</span>";
     eventDate.setInnerHTML(date);
@@ -151,6 +151,9 @@ public class EventItem extends Composite {
   public String getYear() {
     String year;
     DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
+    if (event.getStartDate().contains("T")) {
+      df = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mmZZZ");
+    }
     Date d = df.parse(event.getStartDate());
     DateTimeFormat yf = DateTimeFormat.getFormat("yyyy");
     year = yf.format(d);

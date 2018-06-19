@@ -726,6 +726,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url(packPictos.png) 8px -276px no-repeat;
 }
 
+#silverpeas-navmenu-panel #navmenu-panel li#menu-usercalendar a {
+  background: transparent url(packImagesNavigation.png) -20px -2171px no-repeat;
+}
+
 #menu-principal li a strong {
   color: #333333;
 }
