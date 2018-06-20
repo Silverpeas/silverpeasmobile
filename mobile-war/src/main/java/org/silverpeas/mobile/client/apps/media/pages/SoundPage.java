@@ -116,9 +116,8 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       mediaPreview.setSrc(resources.sound().getSafeUri().asString());
       SoundDTO sound = (SoundDTO) event.getPreview();
       this.sound = sound;
-      String url = UrlUtils.getServicesLocation();
-      url += "SoundAction";
-      url = url + "?id=" + sound.getId();
+      String url = UrlUtils.getSilverpeasServicesLocation();
+      url += "gallery/" + sound.getInstance() + "/sounds/" + sound.getId() + "/content";
       player.setSrc(url);
       player.setAutoplay(false);
       player.setControls(true);
@@ -163,9 +162,8 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       if (!clicked) {
         clicked = true;
         try {
-          String url = UrlUtils.getServicesLocation();
-          url += "SoundAction";
-          url = url + "?action=download&id=" + sound.getId();
+          String url = UrlUtils.getSilverpeasServicesLocation();
+          url += "gallery/" + sound.getInstance() + "/sounds/" + sound.getId() + "/content";
           download.setHref(url);
           download.setTarget("_self");
           download.getElement().setAttribute("download", sound.getTitle());

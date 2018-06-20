@@ -212,16 +212,6 @@
     <url-pattern>/services/spmobile/FormAction</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>SoundServlet</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.servlets.SoundServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>SoundServlet</servlet-name>
-    <url-pattern>/services/spmobile/SoundAction</url-pattern>
-  </servlet-mapping>
-
   <listener>
     <listener-class>org.silverpeas.mobile.server.servlets.SessionManager</listener-class>
   </listener>
