@@ -30,7 +30,7 @@
     </repository>
    </repositories>
 
-  <groupId>com.silverpeas.components</groupId>
+  <groupId>org.silverpeas.components</groupId>
   <artifactId>mobile</artifactId>
   <packaging>pom</packaging>
   <version>6.1-SNAPSHOT</version>
