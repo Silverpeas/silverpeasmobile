@@ -26,11 +26,8 @@ package org.silverpeas.mobile.shared.services;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
 
-import java.util.List;
-
 public interface ServiceRSEAsync {
-	void updateStatus(String status, AsyncCallback<String> callback);
-	void getStatus(int step, AsyncCallback<List<StatusDTO>> callback);
+  void updateStatus(String status, AsyncCallback<String> callback);
 
   void getStatus(final AsyncCallback<StatusDTO> async);
 }

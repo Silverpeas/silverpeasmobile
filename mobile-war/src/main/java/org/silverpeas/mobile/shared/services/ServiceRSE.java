@@ -34,6 +34,5 @@ import java.util.List;
 @RemoteServiceRelativePath("RSE")
 public interface ServiceRSE extends RemoteService {
   public String updateStatus(String status) throws RSEexception, AuthenticationException;
-  public List<StatusDTO> getStatus(int step) throws RSEexception, AuthenticationException;
   public StatusDTO getStatus() throws RSEexception, AuthenticationException;
 }

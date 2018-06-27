@@ -29,14 +29,12 @@ import org.silverpeas.core.socialnetwork.status.StatusService;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
-import org.silverpeas.mobile.server.dao.StatusDao;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.RSEexception;
 import org.silverpeas.mobile.shared.services.ServiceRSE;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Service de gestion du réseau social.
@@ -45,7 +43,6 @@ import java.util.List;
 public class ServiceRSEImpl extends AbstractAuthenticateService implements ServiceRSE {
 
   private static final long serialVersionUID = 1L;
-  private StatusDao statusDao = new StatusDao();
 
   @Override
   public String updateStatus(String textStatus) throws RSEexception, AuthenticationException {
@@ -56,23 +53,17 @@ public class ServiceRSEImpl extends AbstractAuthenticateService implements Servi
   }
 
   @Override
-  public List<StatusDTO> getStatus(int step) throws RSEexception, AuthenticationException {
-    checkUserInSession();
-    UserDetail user = getUserInSession();
-    try {
-      return statusDao.getAllStatus(Integer.parseInt(user.getId()), step);
-    } catch (Exception ex) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceRSEImpl.getAllStatus", ex);
-      throw new RSEexception(ex);
-    }
-  }
-
-  @Override
   public StatusDTO getStatus() throws RSEexception, AuthenticationException {
     checkUserInSession();
     UserDetail user = getUserInSession();
     try {
-      return statusDao.getStatus(Integer.parseInt(user.getId()));
+      Status status = getStatusService().getLastStatus(Integer.parseInt(user.getId()));
+      StatusDTO dto = new StatusDTO();
+      dto.setId(status.getId());
+      dto.setCreationDate(status.getCreationDate());
+      dto.setUserId(status.getUserId());
+      dto.setDescription(status.getDescription());
+      return dto;
     } catch (Exception ex) {
       SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceRSEImpl.getStatus", ex);
       throw new RSEexception(ex);
