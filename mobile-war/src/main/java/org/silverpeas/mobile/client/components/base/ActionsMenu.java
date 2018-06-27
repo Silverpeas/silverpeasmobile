@@ -80,12 +80,12 @@ public class ActionsMenu  extends Composite {
         container.getElement().getStyle().setDisplay(Style.Display.BLOCK);
     }
 
-    public void removeAction(String id) {
+    public void removeAction(String id, boolean silently) {
       for (int i = 0; i < listActions.getWidgetCount(); i++) {
         ActionItem act = (ActionItem) listActions.getWidget(i);
         if (act.getId().equals(id)) {
           listActions.remove(act);
-          showActions(null);
+          if (!silently) showActions(null);
           break;
         }
       }

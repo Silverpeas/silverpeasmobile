@@ -146,7 +146,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       act.init(instanceId, "create", msg.create(), null);
       actionsMenu.addAction(act);
     } else {
-      actionsMenu.removeAction(ACTION_CREATE);
+      actionsMenu.removeAction(ACTION_CREATE, false);
     }
   }
 

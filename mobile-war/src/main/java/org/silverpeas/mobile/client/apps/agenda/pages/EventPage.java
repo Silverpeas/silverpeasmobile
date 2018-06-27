@@ -232,7 +232,9 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
   @Override
   public void onRemindersLoaded(final RemindersLoadedEvent event) {
-
+    if (event.getDurations().isEmpty()) {
+      actionsMenu.removeAction(addReminder.getId(), true);
+    }
     for (String duration : event.getDurations()) {
       String durationLabel = "";
       if (duration.equals("0MINUTE")) {
@@ -298,13 +300,18 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
     reminderDurations.setSelectedIndex(1);
     String[] d = decodeDuration();
+
     ReminderDTO dto = new ReminderDTO();
     dto.setDuration(Integer.parseInt(d[0]));
     dto.setTimeUnit(TimeUnitDTO.valueOf(d[1]));
+
+
+
     dto.setCanBeDeleted(true);
     dto.setCanBeModified(true);
     dto.setcProperty("NEXT_START_DATE_TIME");
     dto.setcId(instance.getId() + ":CalendarEvent:" + this.event.getEventId());
+
 
     this.reminderDTO = dto;
     EventBus.getInstance().fireEvent(new ReminderCreateEvent(this.event, this.reminderDTO));
