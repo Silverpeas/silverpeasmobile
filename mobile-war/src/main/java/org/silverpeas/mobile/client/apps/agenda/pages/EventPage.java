@@ -296,27 +296,28 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
   @Override
   public void onRemindersAdding(final RemindersAddingEvent remindersAddingEvent) {
-    reminder.getStyle().setDisplay(Style.Display.BLOCK);
+    if (this.isVisible()) {
+      reminder.getStyle().setDisplay(Style.Display.BLOCK);
 
-    reminderDurations.setSelectedIndex(1);
-    String[] d = decodeDuration();
+      reminderDurations.setSelectedIndex(1);
+      String[] d = decodeDuration();
 
-    ReminderDTO dto = new ReminderDTO();
-    dto.setDuration(Integer.parseInt(d[0]));
-    dto.setTimeUnit(TimeUnitDTO.valueOf(d[1]));
-
-
-
-    dto.setCanBeDeleted(true);
-    dto.setCanBeModified(true);
-    dto.setcProperty("NEXT_START_DATE_TIME");
-    dto.setcId(instance.getId() + ":CalendarEvent:" + this.event.getEventId());
+      ReminderDTO dto = new ReminderDTO();
+      dto.setDuration(Integer.parseInt(d[0]));
+      dto.setTimeUnit(TimeUnitDTO.valueOf(d[1]));
 
 
-    this.reminderDTO = dto;
-    EventBus.getInstance().fireEvent(new ReminderCreateEvent(this.event, this.reminderDTO));
-    addReminder.setVisible(false);
-    delete.setVisible(true);
+      dto.setCanBeDeleted(true);
+      dto.setCanBeModified(true);
+      dto.setcProperty("NEXT_START_DATE_TIME");
+      dto.setcId(instance.getId() + ":CalendarEvent:" + this.event.getEventId());
+
+
+      this.reminderDTO = dto;
+      EventBus.getInstance().fireEvent(new ReminderCreateEvent(this.event, this.reminderDTO));
+      addReminder.setVisible(false);
+      delete.setVisible(true);
+    }
   }
 
   @Override
@@ -365,6 +366,13 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     page.setSize(widthAvailable + "px", heightAvailable + "px");
     page.setPageTitle(title);
     page.show();
+  }
+
+
+  @Override
+  public void stop() {
+    EventBus.getInstance().removeHandler(AbstractEventPagesEvent.TYPE, this);
+    super.stop();
   }
 
 }
