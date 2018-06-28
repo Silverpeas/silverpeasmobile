@@ -30,7 +30,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -140,6 +139,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           for (GroupItem groupItem : groups) {
             if (groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) {
               EventItem item = new EventItem();
+              item.showCalendarName(isMultiCalendar());
               item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
               groupItem.addEvent(item);
               if (!groupItem.hasYear()) {
@@ -175,6 +175,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           for (GroupItem groupItem : groups) {
             if (groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) {
               EventItem item = new EventItem();
+              item.showCalendarName(isMultiCalendar());
               item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
               groupItem.addEvent(item);
               if (!groupItem.hasYear()) {
@@ -233,6 +234,9 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     EventBus.getInstance().fireEvent(new CalendarLoadEvent(getSelectedCalendar(), currentTimeRange));
   }
 
+  private boolean isMultiCalendar() {
+    return calendars != null && !calendars.isEmpty() && calendars.size() > 1;
+  }
 
   private CalendarDTO getSelectedCalendar() {
     String id = calendarsList.getSelectedValue();
