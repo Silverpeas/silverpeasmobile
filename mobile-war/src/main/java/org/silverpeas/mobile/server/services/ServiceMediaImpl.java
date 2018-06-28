@@ -538,7 +538,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       client.executeMethod(method);
       input = method.getResponseBodyAsStream();
       byte[] binaryData = getBytesFromInputStream(input);
-      data = "data:" + method.getResponseHeader("Content-Type").getValue() + ";base64," + new String(Base64.encodeBase64(binaryData));
+      data = "data:" + "img/*" + ";base64," + new String(Base64.encodeBase64(binaryData));
       method.releaseConnection();
 
     } catch (IOException e) {
