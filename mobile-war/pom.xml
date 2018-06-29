@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.silverpeas.components</groupId>
+    <groupId>org.silverpeas.components</groupId>
     <artifactId>mobile</artifactId>
-    <version>6.0</version>
+    <version>6.0.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.silverpeas.components.mobile</groupId>
-  <artifactId>mobile-war</artifactId>
+  <groupId>org.silverpeas.components.mobile</groupId>
+  <artifactId>silverpeas-mobile-war</artifactId>
   <packaging>war</packaging>
-  <name>Silverpeas mobile</name>
+  <name>Silverpeas Mobile Web Application</name>
 
 
   <properties>
@@ -32,11 +32,9 @@
     </resources>
 
     <plugins>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.2</version>
         <configuration>
           <warName>spmobile</warName>
         </configuration>
@@ -98,101 +96,101 @@
     <dependency>
       <groupId>org.silverpeas.components.delegatednews</groupId>
       <artifactId>silverpeas-delegatednews</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.components.quickinfo</groupId>
       <artifactId>silverpeas-quickinfo</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core</groupId>
       <artifactId>silverpeas-core-web</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core</groupId>
       <artifactId>silverpeas-core-api</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core.services</groupId>
       <artifactId>silverpeas-core-contact</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core</groupId>
       <artifactId>silverpeas-core</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core.services</groupId>
       <artifactId>silverpeas-core-comment</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core.services</groupId>
       <artifactId>silverpeas-core-mylinks</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core.services</groupId>
       <artifactId>silverpeas-core-personalorganizer</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.components.kmelia</groupId>
       <artifactId>silverpeas-kmelia</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.components.almanach</groupId>
       <artifactId>silverpeas-almanach</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.components.yellowpages</groupId>
       <artifactId>silverpeas-yellowpages</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.silverpeas.components.gallery</groupId>
       <artifactId>silverpeas-gallery</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.silverpeas.components.blog</groupId>
       <artifactId>silverpeas-blog</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.silverpeas.core.services</groupId>
       <artifactId>silverpeas-core-workflow</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.silverpeas.components.hyperlink</groupId>
       <artifactId>silverpeas-hyperlink</artifactId>
-      <version>${core.version}</version>
+      <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -258,8 +256,6 @@
       <version>3.1</version>
     </dependency>
 
-
   </dependencies>
-
 
 </project>

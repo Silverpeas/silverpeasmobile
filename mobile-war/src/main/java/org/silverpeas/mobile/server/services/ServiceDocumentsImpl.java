@@ -319,11 +319,12 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
       dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(contentType, new PublicationPK(pubId)));
       dto.setInstanceId(pub.getInstanceId());
-      if (pub.getWysiwyg() == null|| !pub.getWysiwyg().trim().isEmpty() || !pub.getInfoId().equals("0")) {
+      final String content = pub.getContent().getRenderer().renderView();
+      if (content == null|| !content.trim().isEmpty() || !pub.getInfoId().equals("0")) {
         dto.setContent(true);
       }
 
-      ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
+      ArrayList<AttachmentDTO> attachments = new ArrayList<>();
       SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Get attachments");
 
       List<SimpleDocument> pubAttachments = AttachmentServiceProvider.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
