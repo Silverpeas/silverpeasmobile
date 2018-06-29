@@ -47,4 +47,8 @@ public class UrlUtils {
     url += "/silverpeas/services/spmobile/";
     return url;
   }
+
+  public static String getAttachedFileLocation() {
+    return "/silverpeas/attached_file/";
+  }
 }

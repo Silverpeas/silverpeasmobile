@@ -238,8 +238,18 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     return appId;
   }
 
+  private String getCalendarInstanceId(String calendarId) {
+    for (CalendarDTO cal : calendars) {
+      if (cal.getId().equals(calendarId)) {
+        return getCalendarInstanceId(cal);
+      }
+    }
+    return null;
+  }
+
   @Override
   public void loadReminders(final RemindersLoadEvent event) {
+    String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
     Command offlineAction = new Command() {
       @Override
       public void execute() {
@@ -261,7 +271,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       @Override
       public void attempt() {
         ServicesLocator.getServiceReminder()
-            .getReminders(getApplicationInstance().getId(), EVENT_REMINDER_TYPE, event.getEvent().getEventId(), this);
+            .getReminders(currentAppId, EVENT_REMINDER_TYPE, event.getEvent().getEventId(), this);
       }
 
       @Override
@@ -283,7 +293,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         MethodCallbackOnlineOrOffline action2 = new MethodCallbackOnlineOrOffline<List<String>>(offlineAction2) {
           @Override
           public void attempt() {
-            ServicesLocator.getServiceReminder().getPossibleDurations(getApplicationInstance().getId(),
+            ServicesLocator.getServiceReminder().getPossibleDurations(currentAppId,
                 EVENT_REMINDER_TYPE, event.getEvent().getEventId(), "NEXT_START_DATE_TIME", this);
           }
 
@@ -302,10 +312,11 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void updateReminder(final ReminderUpdateEvent event) {
     Notification.activityStart();
+    String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceReminder().updateReminder(getApplicationInstance().getId(), EVENT_REMINDER_TYPE,
+        ServicesLocator.getServiceReminder().updateReminder(currentAppId, EVENT_REMINDER_TYPE,
             event.getEvent().getEventId(), event.getReminder().getId(), event.getReminder(), this);
       }
 
@@ -320,10 +331,11 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void createReminder(final ReminderCreateEvent event) {
     Notification.activityStart();
+    String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceReminder().createReminder(getApplicationInstance().getId(), EVENT_REMINDER_TYPE,
+        ServicesLocator.getServiceReminder().createReminder(currentAppId, EVENT_REMINDER_TYPE,
             event.getEvent().getEventId(), event.getReminder(), this);
       }
 
@@ -339,10 +351,11 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void deleteReminder(final ReminderDeleteEvent event) {
     Notification.activityStart();
+    String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceReminder().deleteReminder(getApplicationInstance().getId(), EVENT_REMINDER_TYPE,
+        ServicesLocator.getServiceReminder().deleteReminder(currentAppId, EVENT_REMINDER_TYPE,
             event.getEvent().getEventId(), event.getReminder().getId(), this);
       }
 
@@ -357,6 +370,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void loadAttachments(final AttachmentsLoadEvent event) {
+    String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
     Command offlineAction = new Command() {
       @Override
       public void execute() {
@@ -371,7 +385,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<SimpleDocumentDTO>>(offlineAction) {
       @Override
       public void attempt() {
-        ServicesLocator.getRestServiceDocuments().getDocumentsByType(getApplicationInstance().getId(), event.getEvent().getEventId(),
+        ServicesLocator.getRestServiceDocuments().getDocumentsByType(currentAppId, event.getEvent().getEventId(),
             DocumentType.attachment.name(), SpMobil.getUser().getLanguage(), this);
       }
 

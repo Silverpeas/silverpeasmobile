@@ -71,29 +71,6 @@ public class Attachment extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
     }
 
-    @UiHandler("link")
-    protected void onClick(ClickEvent event) {
-        if (OfflineHelper.isOffLine()) {
-            Notification.alert(globalMsg.needToBeOnline());
-            return;
-        }
-        if (!clicked) {
-            clicked = true;
-            if (attachement != null) {
-              clickActionRPC();
-            } else {
-              clickAction();
-            }
-
-            Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-                @Override
-                public boolean execute() {
-                    clicked = false;
-                    return false;
-                }}, 400);
-        }
-    }
-
     public void setAttachment(SimpleDocumentDTO data) {
       this.data = data;
       render();
@@ -137,8 +114,31 @@ public class Attachment extends Composite {
         img = new Image(ressources.unknown());
       }
       icon.getParentElement().replaceChild(img.getElement(), icon);
+
+
+      // link generation
+      try {
+        String url = UrlUtils.getAttachedFileLocation();
+        url += "componentId/";
+        url += data.getInstanceId();
+        url += "/attachmentId/";
+        url += data.getId();
+        url += "/lang/";
+        url += data.getLang();
+        url += "/name/";
+        url += data.getFileName();
+
+        link.setHref(url);
+        link.setTarget("_self");
+        link.fireEvent(new ClickEvent() {});
+        link.getElement().setAttribute("download", data.getFileName());
+      } catch (JavaScriptException e) {
+        Notification.alert(e.getMessage());
+      }
+
     }
 
+    // still used by kmelia
     @Deprecated
     private void renderFromRPC() {
         Image img = null;
@@ -169,15 +169,18 @@ public class Attachment extends Composite {
             img = new Image(ressources.unknown());
         }
         icon.getParentElement().replaceChild(img.getElement(), icon);
-    }
-
-    @Deprecated
-    private void clickActionRPC() {
         if (attachement.isDownloadAllowed()) {
           try {
-            String url = UrlUtils.getServicesLocation();
-            url += "Attachment";
-            url = url + "?id=" + attachement.getId() + "&lang=" + attachement.getLang();
+            String url = UrlUtils.getAttachedFileLocation();
+            url += "componentId/";
+            url += attachement.getInstanceId();
+            url += "/attachmentId/";
+            url += attachement.getId();
+            url += "/lang/";
+            url += attachement.getLang();
+            url += "/name/";
+            url += attachement.getTitle();
+
             link.setHref(url);
             link.setTarget("_self");
             link.fireEvent(new ClickEvent() {});
@@ -187,20 +190,4 @@ public class Attachment extends Composite {
           }
         }
     }
-
-    private void clickAction() {
-    //if (attachement.isDownloadAllowed()) {
-      try {
-        String url = UrlUtils.getServicesLocation();
-        url += "Attachment";
-        url = url + "?id=" + data.getId() + "&lang=" + data.getLang();
-        link.setHref(url);
-        link.setTarget("_self");
-        link.fireEvent(new ClickEvent() {});
-        link.getElement().setAttribute("download", data.getTitle());
-      } catch (JavaScriptException e) {
-        Notification.alert(e.getMessage());
-      }
-    //}
-  }
 }

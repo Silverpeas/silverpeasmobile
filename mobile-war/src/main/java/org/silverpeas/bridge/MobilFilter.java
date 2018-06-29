@@ -65,7 +65,7 @@ public class MobilFilter implements Filter {
       if (tablet == null) tablet = new Boolean(false);
 
       String url = ((HttpServletRequest) req).getRequestURL().toString();
-      if (isMobile && !url.contains("services") && !url.contains("spmobile") && (!tablet)) {
+      if (isMobile && !url.contains("services") && !url.contains("spmobile") && (!tablet) && !url.contains("attached_file")) {
         String params = "";
         if (url.contains("Publication")) {
           String id = url.substring(url.lastIndexOf("/") + 1);
