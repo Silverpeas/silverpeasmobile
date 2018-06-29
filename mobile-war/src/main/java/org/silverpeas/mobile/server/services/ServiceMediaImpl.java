@@ -28,12 +28,11 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.protocol.Protocol;
 import org.silverpeas.components.gallery.constant.MediaResolution;
 import org.silverpeas.components.gallery.constant.MediaType;
 import org.silverpeas.components.gallery.delegate.MediaDataCreateDelegate;
@@ -61,7 +60,6 @@ import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.server.helpers.RotationSupport;
-import org.silverpeas.mobile.server.servlets.EasySSLProtocolSocketFactory;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -448,11 +446,14 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       String id = media.getStreaming().getProvider().extractStreamingId(urlVideo);
       video.setUrl("https://player.vimeo.com/video/" + id);
       String urlJson = "http://vimeo.com/api/v2/video/"+id+".json";
-      HttpClient client = new HttpClient();
-      HttpMethod method = new GetMethod(urlJson);
+
+
+      Client client = Client.create();
+      WebResource webResource = client.resource(urlJson);
+      ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
+      String json = response.getEntity(String.class);
+
       try {
-        client.executeMethod(method);
-        String json = method.getResponseBodyAsString();
         json = json.substring(1, json.length()-1);
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String,String> map = objectMapper.readValue(json, HashMap.class);
@@ -522,28 +523,25 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     if (!silverpeasServerUrl.contains("silverpeas")) {
       silverpeasServerUrl = silverpeasServerUrl + "/silverpeas";
     }
-
-    String url = silverpeasServerUrl + "/services/gallery/" + video.getInstanceId() + "/videos/" + video.getId() + "/thumbnail/" + t;
     String data = "";
-    InputStream input = null;
-    String token = organizationController.getUserFull(getUserInSession().getId()).getToken();
+    String url = silverpeasServerUrl + "/services/gallery/" + video.getInstanceId() + "/videos/" + video.getId() + "/thumbnail/" + t;
 
+    Client client = Client.create();
+    WebResource webResource = client.resource(url);
+
+    ClientResponse response = webResource.accept("application/octet-stream")
+        .header("Authorization", "Bearer " + getUserInSession().getToken())
+        .header("X-STKN", getUserInSession().getToken())
+        .get(ClientResponse.class);
+
+    InputStream input = response.getEntityInputStream();
     try {
-      Protocol
-          .registerProtocol("https", new Protocol("https", new EasySSLProtocolSocketFactory(), 443));
-
-      HttpClient client = new HttpClient();
-      HttpMethod method = new GetMethod(url);
-      method.addRequestHeader("Authorization", "Bearer " + token);
-      client.executeMethod(method);
-      input = method.getResponseBodyAsStream();
       byte[] binaryData = getBytesFromInputStream(input);
       data = "data:" + "img/*" + ";base64," + new String(Base64.encodeBase64(binaryData));
-      method.releaseConnection();
-
-    } catch (IOException e) {
+    } catch (Exception e) {
       SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getVideoPoster", "root.EX_NO_MESSAGE", e);
     }
+
     return data;
   }
 
