@@ -27,6 +27,7 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -445,20 +446,19 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     if (urlVideo.contains("vimeo")) {
       String id = media.getStreaming().getProvider().extractStreamingId(urlVideo);
       video.setUrl("https://player.vimeo.com/video/" + id);
-      String urlJson = "http://vimeo.com/api/v2/video/"+id+".json";
 
-
+      String urlJson = "https://vimeo.com/api/oembed.json?url=" + urlVideo;
       Client client = Client.create();
       WebResource webResource = client.resource(urlJson);
       ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
-      String json = response.getEntity(String.class);
-
       try {
-        json = json.substring(1, json.length()-1);
+        String json = response.getEntity(String.class);
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Map<String,String> map = objectMapper.readValue(json, HashMap.class);
-        video.setUrlPoster(map.get("thumbnail_medium"));
-      } catch (IOException e) {
+        video.setUrlPoster(map.get("thumbnail_url"));
+
+      } catch (Exception e) {
         SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
         video.setUrlPoster("");
       }
