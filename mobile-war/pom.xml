@@ -33,9 +33,9 @@
   </parent>
 
   <groupId>org.silverpeas.components.mobile</groupId>
-  <artifactId>mobile-war</artifactId>
+  <artifactId>silverpeas-mobile-war</artifactId>
   <packaging>war</packaging>
-  <name>Silverpeas mobile</name>
+  <name>Silverpeas Mobile Web Application</name>
 
 
   <properties>
@@ -59,7 +59,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.2</version>
         <configuration>
           <warName>spmobile</warName>
         </configuration>
