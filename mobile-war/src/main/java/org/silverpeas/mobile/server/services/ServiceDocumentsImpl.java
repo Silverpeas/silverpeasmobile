@@ -24,6 +24,8 @@
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.kmelia.service.KmeliaService;
+import org.silverpeas.core.ResourceReference;
+import org.silverpeas.core.silverstatistics.access.service.StatisticService;
 import org.silverpeas.core.admin.ObjectType;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
@@ -41,6 +43,7 @@ import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
@@ -299,10 +302,13 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     return NodeService.get();
   }
 
+  private StatisticService getStatisticService() { return ServiceProvider.getService(StatisticService.class); }
+
   @Override
   public PublicationDTO getPublication(String pubId, String contentType) throws DocumentsException, AuthenticationException {
     SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
     checkUserInSession();
+
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -334,6 +340,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         attachments.add(populate(attachment));
       }
       dto.setAttachments(attachments);
+
+      ResourceReference resourceReference = new ResourceReference(pubId, pub.getComponentInstanceId());
+      getStatisticService().addStat(getUserInSession().getId(), resourceReference, 1, "Publication");
 
       return dto;
     } catch (Throwable e) {

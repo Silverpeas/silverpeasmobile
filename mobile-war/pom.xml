@@ -167,6 +167,12 @@
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core.services</groupId>
+      <artifactId>silverpeas-core-silverstatistics</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core.services</groupId>
       <artifactId>silverpeas-core-personalorganizer</artifactId>
       <version>${silverpeas.version}</version>
       <scope>provided</scope>
