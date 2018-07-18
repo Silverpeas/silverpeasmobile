@@ -29,6 +29,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
+import org.silverpeas.components.gallery.GalleryComponentSettings;
 import org.silverpeas.components.gallery.constant.MediaResolution;
 import org.silverpeas.components.gallery.constant.MediaType;
 import org.silverpeas.components.gallery.delegate.MediaDataCreateDelegate;
@@ -198,7 +199,7 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
       return null;
     }
 
-    Media newMedia = getGalleryService().createMedia(getUserInSession(request), componentId, watermark, watermarkHD, watermarkOther, delegate);
+    Media newMedia = getGalleryService().createMedia(getUserInSession(request), componentId, GalleryComponentSettings.getWatermark(componentId), delegate);
 
     return newMedia.getId();
   }

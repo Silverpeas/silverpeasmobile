@@ -34,6 +34,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
+import org.silverpeas.components.gallery.GalleryComponentSettings;
 import org.silverpeas.components.gallery.constant.MediaResolution;
 import org.silverpeas.components.gallery.constant.MediaType;
 import org.silverpeas.components.gallery.delegate.MediaDataCreateDelegate;
@@ -175,7 +176,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     MediaDataCreateDelegate
         delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
 
-    Media newMedia = getGalleryService().createMedia(getUserInSession(), componentId, watermark, watermarkHD, watermarkOther, delegate);
+    Media newMedia = getGalleryService().createMedia(getUserInSession(), componentId, GalleryComponentSettings.getWatermark(componentId), delegate);
 
     return newMedia.getId();
   }

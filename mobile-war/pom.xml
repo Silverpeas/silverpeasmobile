@@ -292,6 +292,12 @@
       <version>2.2.3</version>
     </dependency>
 
+    <dependency>
+      <groupId>nl.martijndwars</groupId>
+      <artifactId>web-push</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+
   </dependencies>
 
 
