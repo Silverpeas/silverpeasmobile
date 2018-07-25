@@ -23,10 +23,6 @@
 
 package org.silverpeas.mobile.server.services;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.ExifIFD0Directory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
@@ -61,7 +57,6 @@ import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
-import org.silverpeas.mobile.server.helpers.RotationSupport;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -77,10 +72,6 @@ import org.silverpeas.mobile.shared.exceptions.MediaException;
 import org.silverpeas.mobile.shared.services.ServiceMedia;
 
 import javax.activation.MimetypesFileTypeMap;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -119,28 +110,16 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       extension = "jpg";
     }
 
-    byte [] dataDecoded = org.apache.commons.codec.binary.Base64.decodeBase64(data.getBytes());
-
     try {
-      // rotation de l'image si nécessaire
-      Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(dataDecoded)));
-      Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
-      InputStream in = new ByteArrayInputStream(dataDecoded);
-      BufferedImage bi = ImageIO.read(in);
-      if (directory != null) {
-        int existingOrientation = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
-        bi = RotationSupport.adjustOrientation(bi, existingOrientation);
-      }
+
       // stockage temporaire de la photo upload
       String tempDir = System.getProperty("java.io.tmpdir");
       String filename = tempDir + File.separator + name + "." + extension;
       OutputStream outputStream = new FileOutputStream(filename);
 
-      ImageIO.write(bi, extension, outputStream);
       outputStream.close();
 
       File file = new File(filename);
-      RotationSupport.setOrientation(RotationSupport.NOT_ROTATED, file);
 
       // récupération de la configuration de la gallery
       boolean watermark = "yes".equalsIgnoreCase(organizationController.getComponentParameterValue(idGallery, "watermark"));
