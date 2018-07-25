@@ -158,6 +158,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   protected void goHome(ClickEvent event) {
     PageHistory.getInstance().goBackToFirst();
     closeMenu();
+    Notification.notifyMessage("","test","message");
   }
 
   @UiHandler("help")
