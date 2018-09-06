@@ -25,7 +25,6 @@ package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.ResourceReference;
-import org.silverpeas.core.silverstatistics.access.service.StatisticService;
 import org.silverpeas.core.admin.ObjectType;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
@@ -41,6 +40,7 @@ import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
+import org.silverpeas.core.silverstatistics.access.service.StatisticService;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
@@ -332,7 +332,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
       SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Get attachments");
 
-      List<SimpleDocument> pubAttachments = AttachmentServiceProvider.getAttachmentService().listDocumentsByForeignKeyAndType(pub.getPK(), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
+      List<SimpleDocument> pubAttachments = AttachmentServiceProvider.getAttachmentService().listDocumentsByForeignKeyAndType(new ResourceReference(pub.getPK()), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
 
       SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 
