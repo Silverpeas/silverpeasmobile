@@ -126,7 +126,7 @@ public class ContactItem extends Composite {
         field.add(tel);
 
         Anchor sms = new Anchor();
-        sms.setHref("sms:" + userData.getCellularPhoneNumber());
+        sms.setHref("sms:" + value);
         Image smsImg = new Image(resourcesContact.sms());
         sms.getElement().appendChild(smsImg.getElement());
         field.add(sms);
