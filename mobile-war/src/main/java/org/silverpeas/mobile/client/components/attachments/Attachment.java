@@ -40,6 +40,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import org.silverpeas.mobile.client.common.Notification;
+import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -48,146 +49,155 @@ import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 
 public class Attachment extends Composite {
 
-    private static AttachmentUiBinder uiBinder = GWT.create(AttachmentUiBinder.class);
-    @UiField Anchor link;
-    @UiField SpanElement size, name;
-    @UiField ImageElement icon;
+  private static AttachmentUiBinder uiBinder = GWT.create(AttachmentUiBinder.class);
+  @UiField Anchor link;
+  @UiField SpanElement size, name;
+  @UiField ImageElement icon;
 
-    protected DocumentsResources ressources = null;
-    private DocumentsMessages msg = null;
-    private ApplicationMessages globalMsg = null;
-    private boolean clicked = false;
-    private AttachmentDTO attachement = null;
-    private SimpleDocumentDTO data = null;
+  protected DocumentsResources ressources = null;
+  private DocumentsMessages msg = null;
+  private ApplicationMessages globalMsg = null;
+  private boolean clicked = false;
+  private AttachmentDTO attachement = null;
+  private SimpleDocumentDTO data = null;
 
-    interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {
-    }
+  interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {
+  }
 
-    public Attachment() {
-        msg = GWT.create(DocumentsMessages.class);
-        globalMsg = GWT.create(ApplicationMessages.class);
-        ressources = GWT.create(DocumentsResources.class);
-        ressources.css().ensureInjected();
-        initWidget(uiBinder.createAndBindUi(this));
-    }
+  public Attachment() {
+    msg = GWT.create(DocumentsMessages.class);
+    globalMsg = GWT.create(ApplicationMessages.class);
+    ressources = GWT.create(DocumentsResources.class);
+    ressources.css().ensureInjected();
+    initWidget(uiBinder.createAndBindUi(this));
+  }
 
-    public void setAttachment(SimpleDocumentDTO data) {
-      this.data = data;
-      render();
-    }
+  public void setAttachment(SimpleDocumentDTO data) {
+    this.data = data;
+    render();
+  }
 
-    @Deprecated
-    public void setAttachmentFromRPC(AttachmentDTO attachmentDTO) {
-        this.attachement = attachmentDTO;
-        renderFromRPC();
-    }
+  @Deprecated
+  public void setAttachmentFromRPC(AttachmentDTO attachmentDTO) {
+    this.attachement = attachmentDTO;
+    renderFromRPC();
+  }
 
-    private void render() {
-      Image img = null;
-      String sizeValue;
+  private void render() {
+    Image img = null;
+    String sizeValue;
       /*if (!data..isDownloadAllowed()) {
         link.setStylePrimaryName("not-downloadable");
       }*/
-      if (data.getSize() < 1024*1024) {
-        sizeValue = String.valueOf(data.getSize()/1024);
-        size.setInnerHTML(msg.sizeK(sizeValue));
+    if (data.getSize() < 1024*1024) {
+      sizeValue = String.valueOf(data.getSize()/1024);
+      size.setInnerHTML(msg.sizeK(sizeValue));
+    } else {
+      sizeValue = String.valueOf(data.getSize()/(1024*1024));
+      size.setInnerHTML(msg.sizeM(sizeValue));
+    }
+    String title = data.getFileName();
+    if (!data.getTitle().isEmpty()) title = data.getTitle();
+    name.setInnerHTML(title);
+
+    if (data.getContentType().contains("msword")) {
+      img = new Image(ressources.msword());
+    } else if (data.getContentType().contains("sheet")) {
+      img = new Image(ressources.msexcel());
+    } else if (data.getContentType().contains("pdf")) {
+      img = new Image(ressources.pdf());
+    } else if (data.getContentType().contains("image")) {
+      img = new Image(ressources.image());
+    } else if (data.getContentType().contains("presentation")) {
+      img = new Image(ressources.mspowerpoint());
+    }
+    else {
+      img = new Image(ressources.unknown());
+    }
+    icon.getParentElement().replaceChild(img.getElement(), icon);
+
+
+    // link generation
+    try {
+      String url = UrlUtils.getAttachedFileLocation();
+      url += "componentId/";
+      url += data.getInstanceId();
+      url += "/attachmentId/";
+      url += data.getId();
+      url += "/lang/";
+      url += data.getLang();
+      url += "/name/";
+      url += data.getFileName();
+
+      link.setHref(url);
+      //link.fireEvent(new ClickEvent() {});
+      if (MobilUtils.isIOS()) {
+        link.setTarget("_blank");
       } else {
-        sizeValue = String.valueOf(data.getSize()/(1024*1024));
-        size.setInnerHTML(msg.sizeM(sizeValue));
+        link.setTarget("_self");
+        link.getElement().setAttribute("download", data.getFileName());
       }
-      String title = data.getFileName();
-      if (!data.getTitle().isEmpty()) title = data.getTitle();
-      name.setInnerHTML(title);
+    } catch (JavaScriptException e) {
+      Notification.alert(e.getMessage());
+    }
 
-      if (data.getContentType().contains("msword")) {
-        img = new Image(ressources.msword());
-      } else if (data.getContentType().contains("sheet")) {
-        img = new Image(ressources.msexcel());
-      } else if (data.getContentType().contains("pdf")) {
-        img = new Image(ressources.pdf());
-      } else if (data.getContentType().contains("image")) {
-        img = new Image(ressources.image());
-      } else if (data.getContentType().contains("presentation")) {
-        img = new Image(ressources.mspowerpoint());
-      }
-      else {
-        img = new Image(ressources.unknown());
-      }
-      icon.getParentElement().replaceChild(img.getElement(), icon);
+  }
 
-
-      // link generation
+  // still used by kmelia
+  @Deprecated
+  private void renderFromRPC() {
+    Image img = null;
+    String sizeValue;
+    if (!attachement.isDownloadAllowed()) {
+      link.setStylePrimaryName("not-downloadable");
+    }
+    if (attachement.getSize() < 1024*1024) {
+      sizeValue = String.valueOf(attachement.getSize()/1024);
+      size.setInnerHTML(msg.sizeK(sizeValue));
+    } else {
+      sizeValue = String.valueOf(attachement.getSize()/(1024*1024));
+      size.setInnerHTML(msg.sizeM(sizeValue));
+    }
+    name.setInnerHTML(attachement.getTitle());
+    if (attachement.getType().contains("msword")) {
+      img = new Image(ressources.msword());
+    } else if (attachement.getType().contains("sheet")) {
+      img = new Image(ressources.msexcel());
+    } else if (attachement.getType().contains("pdf")) {
+      img = new Image(ressources.pdf());
+    } else if (attachement.getType().contains("image")) {
+      img = new Image(ressources.image());
+    } else if (attachement.getType().contains("presentation")) {
+      img = new Image(ressources.mspowerpoint());
+    }
+    else {
+      img = new Image(ressources.unknown());
+    }
+    icon.getParentElement().replaceChild(img.getElement(), icon);
+    if (attachement.isDownloadAllowed()) {
       try {
         String url = UrlUtils.getAttachedFileLocation();
         url += "componentId/";
-        url += data.getInstanceId();
+        url += attachement.getInstanceId();
         url += "/attachmentId/";
-        url += data.getId();
+        url += attachement.getId();
         url += "/lang/";
-        url += data.getLang();
+        url += attachement.getLang();
         url += "/name/";
-        url += data.getFileName();
+        url += attachement.getTitle();
 
         link.setHref(url);
-        link.setTarget("_self");
-        link.fireEvent(new ClickEvent() {});
-        link.getElement().setAttribute("download", data.getFileName());
+
+        //link.fireEvent(new ClickEvent() {});
+        if (MobilUtils.isIOS()) {
+          link.setTarget("_blank");
+        } else {
+          link.setTarget("_self");
+          link.getElement().setAttribute("download", attachement.getTitle());
+        }
       } catch (JavaScriptException e) {
         Notification.alert(e.getMessage());
       }
-
     }
-
-    // still used by kmelia
-    @Deprecated
-    private void renderFromRPC() {
-        Image img = null;
-        String sizeValue;
-        if (!attachement.isDownloadAllowed()) {
-          link.setStylePrimaryName("not-downloadable");
-        }
-        if (attachement.getSize() < 1024*1024) {
-            sizeValue = String.valueOf(attachement.getSize()/1024);
-            size.setInnerHTML(msg.sizeK(sizeValue));
-        } else {
-            sizeValue = String.valueOf(attachement.getSize()/(1024*1024));
-            size.setInnerHTML(msg.sizeM(sizeValue));
-        }
-        name.setInnerHTML(attachement.getTitle());
-        if (attachement.getType().contains("msword")) {
-            img = new Image(ressources.msword());
-        } else if (attachement.getType().contains("sheet")) {
-            img = new Image(ressources.msexcel());
-        } else if (attachement.getType().contains("pdf")) {
-            img = new Image(ressources.pdf());
-        } else if (attachement.getType().contains("image")) {
-            img = new Image(ressources.image());
-        } else if (attachement.getType().contains("presentation")) {
-            img = new Image(ressources.mspowerpoint());
-        }
-        else {
-            img = new Image(ressources.unknown());
-        }
-        icon.getParentElement().replaceChild(img.getElement(), icon);
-        if (attachement.isDownloadAllowed()) {
-          try {
-            String url = UrlUtils.getAttachedFileLocation();
-            url += "componentId/";
-            url += attachement.getInstanceId();
-            url += "/attachmentId/";
-            url += attachement.getId();
-            url += "/lang/";
-            url += attachement.getLang();
-            url += "/name/";
-            url += attachement.getTitle();
-
-            link.setHref(url);
-            link.setTarget("_self");
-            link.fireEvent(new ClickEvent() {});
-            link.getElement().setAttribute("download", attachement.getTitle());
-          } catch (JavaScriptException e) {
-            Notification.alert(e.getMessage());
-          }
-        }
-    }
+  }
 }
