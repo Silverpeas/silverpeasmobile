@@ -28,7 +28,7 @@ body {
   padding-right: 130px;
   padding-left: 1em;
   color: #333;
-  font-family: 'Ubuntu', cursive, Helvetica,Arial,sans-serif;
+  font-family: 'Ubuntu', cursive, Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
 
@@ -47,5 +47,17 @@ body {
 }
 
 .jsxc_onlineHelp, .jsxc_settings, .jsxc_about, .jsxc_addBuddy, .jsxc_joinChat {
+  display: none;
+}
+
+.jsxc_more {
+  display: none;
+}
+
+#jsxc_roster, #jsxc_buddylist {
+  width: 100%;
+}
+
+.jsxc_rosteritem.jsxc_bookmarked {
   display: none;
 }

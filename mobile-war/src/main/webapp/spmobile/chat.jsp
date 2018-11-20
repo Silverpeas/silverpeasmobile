@@ -33,7 +33,7 @@
 %>
 
 <head>
-  <title>Spmobile tchat</title>
+  <title>Spmobile chat</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
@@ -43,7 +43,7 @@
   <link href="jsxc/css/jsxc.css" media="all" rel="stylesheet" type="text/css" />
   <!--  endrequire -->
 
-  <link href="tchat.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="chat.css" media="all" rel="stylesheet" type="text/css" />
 
   <!-- require:dependencies -->
   <script src="jsxc/lib/jquery.min.js"></script>
@@ -59,11 +59,11 @@
   <script src="jsxc/jsxc.min.js"></script>
 
   <!-- init script -->
-  <script src="tchat.js"></script>
+  <script src="chat.js"></script>
 </head>
 
 <body class="page-tchat">
-<h1 class="tchat-header">Spmobile tchat</h1>
+<h1 class="tchat-header">Spmobile chat</h1>
 <input type="hidden" id="xmpp-domain" name="xmpp-domain" class="form-control" value='<%=configChat.getString("chat.xmpp.domain.0")%>' />
 <input type="hidden" id="bosh-url" name="bosh-url" class="form-control" value='<%=configChat.getString("chat.xmpp.httpBindUrl")%>' />
 <input type="hidden" id="username" class="form-control" value='<%=user.getLogin()%>'/>
