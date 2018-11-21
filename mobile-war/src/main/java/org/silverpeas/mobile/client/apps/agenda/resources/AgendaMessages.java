@@ -86,4 +86,6 @@ public interface AgendaMessages extends Messages {
   String friday();
   String saturday();
   String sunday();
+
+  String noEvent();
 }

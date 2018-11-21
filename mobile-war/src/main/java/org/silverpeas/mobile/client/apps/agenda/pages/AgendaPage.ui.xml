@@ -40,5 +40,6 @@
       </div>
     </div>
     <components:UnorderedList ui:field="events" styleName="ui-list-graduate"/>
+    <span ui:field="message" class="message"></span>
   </g:HTMLPanel>
 </ui:UiBinder> 

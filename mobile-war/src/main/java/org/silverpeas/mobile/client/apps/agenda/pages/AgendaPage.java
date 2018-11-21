@@ -24,6 +24,7 @@
 package org.silverpeas.mobile.client.apps.agenda.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -79,6 +80,9 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
   @UiField
   Anchor week, mouth;
+
+  @UiField
+  SpanElement message;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
@@ -193,6 +197,8 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           events.add(groupItem);
         }
       }
+    } else {
+      message.setInnerText(msg.noEvent());
     }
     actionsMenu.addAction(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());

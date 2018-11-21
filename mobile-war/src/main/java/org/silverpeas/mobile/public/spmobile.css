@@ -2136,3 +2136,9 @@ form .forms .fields > li:nth-child(even) {
   overflow: hidden;
   white-space: nowrap;
 }
+
+#list-events .message {
+  padding-top: 2em;
+  display: inline-block;
+  padding-left: 1em;
+}
