@@ -81,6 +81,7 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     newsDisplay.setValue(config.isNewsDisplay());
     lastPublicationsDisplay.setValue(config.isLastPublicationsDisplay());
     favoritesDisplay.setValue(config.isFavoritesDisplay());
+    lastEventsDisplay.setValue(config.isLastEventsDisplay());
   }
 
   private void save() {
