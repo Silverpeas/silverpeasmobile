@@ -23,6 +23,7 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
@@ -41,6 +42,7 @@ public class HomePageDTO extends BaseDTO implements Serializable{
   private List<NewsDTO> news = new ArrayList<NewsDTO>();
   private List<MyLinkDTO> favorites = new ArrayList<MyLinkDTO>();
   private List<PublicationDTO> lastPublications = new ArrayList<PublicationDTO>();
+  private List<CalendarEventDTO> lastEvents = new ArrayList<CalendarEventDTO>();
 
   public List<PublicationDTO> getLastPublications() {
     return lastPublications;
@@ -80,5 +82,12 @@ public class HomePageDTO extends BaseDTO implements Serializable{
 
   public void setSpaceName(final String spaceName) {
     this.spaceName = spaceName;
+  }
+
+  public void setLastEvents(final List<CalendarEventDTO> lastEvents) {
+    this.lastEvents = lastEvents;
+  }
+  public List<CalendarEventDTO> getLastEvents() {
+    return lastEvents;
   }
 }

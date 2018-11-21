@@ -50,7 +50,7 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
   @UiField
   CheckBox newsDisplay;
   @UiField
-  CheckBox lastPublicationsDisplay;
+  CheckBox lastPublicationsDisplay, lastEventsDisplay;
   @UiField
   CheckBox favoritesDisplay;
   private Config config;
@@ -87,6 +87,7 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     config.setNewsDisplay(newsDisplay.getValue());
     config.setFavoritesDisplay(favoritesDisplay.getValue());
     config.setLastPublicationsDisplay(lastPublicationsDisplay.getValue());
+    config.setLastEventsDisplay(lastEventsDisplay.getValue());
     EventBus.getInstance().fireEvent(new UpdateConfigEvent(config));
   }
 

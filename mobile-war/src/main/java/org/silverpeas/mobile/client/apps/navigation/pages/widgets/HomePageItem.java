@@ -36,22 +36,27 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
-public class PublicationItem extends Composite {
+public class HomePageItem extends Composite {
 
   private PublicationDTO data;
-  private static PublicationItemUiBinder uiBinder = GWT.create(PublicationItemUiBinder.class);
+  private static HomePageItemUiBinder uiBinder = GWT.create(HomePageItemUiBinder.class);
   @UiField Anchor link;
   protected ApplicationMessages msg = null;
 
 
-  interface PublicationItemUiBinder extends UiBinder<Widget, PublicationItem> {
+  interface HomePageItemUiBinder extends UiBinder<Widget, HomePageItem> {
   }
 
-  public PublicationItem() {
+  public HomePageItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
+  }
+
+  public void setData(CalendarEventDTO data) {
+    //TODO
   }
 
   public void setData(PublicationDTO data) {

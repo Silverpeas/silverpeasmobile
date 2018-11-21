@@ -32,6 +32,7 @@ public class Config extends BaseDTO implements Serializable {
   private int newsNumber;
   private boolean newsDisplay;
   private boolean lastPublicationsDisplay;
+  private boolean lastEventsDisplay;
   private boolean favoritesDisplay;
 
   public Config() {
@@ -41,6 +42,7 @@ public class Config extends BaseDTO implements Serializable {
     Config c = new Config();
     c.setNewsDisplay(true);
     c.setLastPublicationsDisplay(true);
+    c.setLastEventsDisplay(true);
     c.setFavoritesDisplay(true);
     return c;
   }
@@ -61,11 +63,19 @@ public class Config extends BaseDTO implements Serializable {
     this.lastPublicationsDisplay = lastPublicationsDisplay;
   }
 
+  public void setLastEventsDisplay(final boolean lastEventsDisplay) {
+    this.lastEventsDisplay = lastEventsDisplay;
+  }
+
   public boolean isFavoritesDisplay() {
     return favoritesDisplay;
   }
 
   public void setFavoritesDisplay(final boolean favoritesDisplay) {
     this.favoritesDisplay = favoritesDisplay;
+  }
+
+  public boolean isLastEventsDisplay() {
+    return lastEventsDisplay;
   }
 }

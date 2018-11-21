@@ -48,6 +48,11 @@
         <components:UnorderedList ui:field="lastPublications" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
+      <g:HTMLPanel stylePrimaryName="last-event-bloc bloc" ui:field="lastEventsSection">
+        <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.lastEvents}"/></h3>
+        <components:UnorderedList ui:field="lastEvents" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+      </g:HTMLPanel>
+
   </g:HTMLPanel>
 
 </ui:UiBinder> 

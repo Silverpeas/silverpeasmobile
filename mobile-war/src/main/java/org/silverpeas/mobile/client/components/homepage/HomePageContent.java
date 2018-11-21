@@ -36,7 +36,7 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.NavigationItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.NewsItem;
-import org.silverpeas.mobile.client.apps.navigation.pages.widgets.PublicationItem;
+import org.silverpeas.mobile.client.apps.navigation.pages.widgets.HomePageItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
@@ -46,9 +46,9 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.FavoriteDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
@@ -68,9 +68,9 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   protected ApplicationMessages msg = null;
 
   @UiField
-  UnorderedList favoris, lastPublications, spaces, news;
+  UnorderedList favoris, lastPublications, spaces, news, lastEvents;
   @UiField
-  HTMLPanel lastPublicationsSection, favorisSection;
+  HTMLPanel lastPublicationsSection, lastEventsSection, favorisSection;
 
   interface HomePageUiBinder extends UiBinder<Widget, HomePageContent> {}
 
@@ -131,11 +131,19 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     List<PublicationDTO> publicationsList = data.getLastPublications();
     lastPublicationsSection.setVisible(!publicationsList.isEmpty() && config.isLastPublicationsDisplay());
     for (PublicationDTO publicationDTO : publicationsList) {
-      PublicationItem item = new PublicationItem();
+      HomePageItem item = new HomePageItem();
       item.setData(publicationDTO);
       lastPublications.add(item);
     }
 
+    lastEvents.clear();
+    List<CalendarEventDTO> eventsList = data.getLastEvents();
+    lastEventsSection.setVisible(!eventsList.isEmpty() && config.isLastEventsDisplay());
+    for (CalendarEventDTO eventDTO : eventsList) {
+      HomePageItem item = new HomePageItem();
+      item.setData(eventDTO);
+      lastEvents.add(item);
+    }
 
     if (MobilUtils.isMobil()) {
       Element e = Document.get().getElementById("actus");

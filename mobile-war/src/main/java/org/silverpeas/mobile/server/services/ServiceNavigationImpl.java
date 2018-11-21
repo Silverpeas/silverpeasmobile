@@ -78,6 +78,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private static final long serialVersionUID = 1L;
   private static boolean showLastPublicationsOnHomePage;
   private static boolean showLastPublicationsOnSpaceHomePage;
+  private static boolean showLastEventsOnHomePage;
+  private static boolean showLastEventsOnSpaceHomePage;
   private static boolean useGUImobileForTablets;
   private OrganizationController organizationController = OrganizationController.get();
 
@@ -85,6 +87,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
     showLastPublicationsOnHomePage = mobileSettings.getBoolean("homepage.lastpublications", true);
     showLastPublicationsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastpublications", true);
+    showLastEventsOnHomePage = mobileSettings.getBoolean("homepage.lastevents", true);
+    showLastEventsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastevents", true);
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
   }
 
@@ -167,7 +171,6 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     data.setSpacesAndApps(getSpacesAndApps(spaceId));
 
     // last publications
-
     if ((spaceId == null && showLastPublicationsOnHomePage) || (spaceId != null && showLastPublicationsOnSpaceHomePage)) {
       try {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
@@ -193,6 +196,11 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       } catch (Exception e) {
         e.printStackTrace();
       }
+    }
+
+    // upcomming events
+    if ((spaceId == null && showLastEventsOnHomePage) || (spaceId != null && showLastEventsOnSpaceHomePage)) {
+      //TODO
     }
 
     return data;

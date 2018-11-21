@@ -39,6 +39,11 @@
           <g:CheckBox ui:field="lastPublicationsDisplay" text="Afficher les dernières publications"></g:CheckBox>
         </a>
       </li>
+      <li class="event">
+        <a class="ui-btn">
+          <g:CheckBox ui:field="lastEventsDisplay" text="Afficher les prochains événements"></g:CheckBox>
+        </a>
+      </li>
       <li class="favoris">
         <a class="ui-btn">
           <g:CheckBox ui:field="favoritesDisplay" text="Afficher les favoris"></g:CheckBox>

@@ -131,6 +131,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Les dernières publications")
   SafeHtml lastPublications();
 
+  @DefaultMessage("Prochains événements")
+  SafeHtml lastEvents();
+
   @DefaultMessage("brouillon")
   String draft();
 
