@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function avatar() {
+function avatars() {
 
   $(".jsxc_avatar").each(function() {
 
@@ -36,6 +36,23 @@ function avatar() {
       $(this).css("background-image", "url('/silverpeas/display/avatar/60x//" + login + ".jpg')");
 
     }
+  });
+
+}
+
+function avatar() {
+
+  $(".jsxc_windowItem").each(function() {
+
+    var bid = $(this).attr("data-bid");
+
+    var login = bid.substr(0, bid.indexOf("@"));
+
+    $(".jsxc_avatar").each(function() {
+      $(this).text("");
+      $(this).css("background-image", "url('/silverpeas/display/avatar/60x//" + login + ".jpg')");
+    });
+
   });
 
 }
@@ -62,7 +79,7 @@ jsxc.gui.window.close = function(bid) {
   /* Patch */
   $('#jsxc_roster').width('100%');
   jsxc.gui.roster.toggle();
-  avatar();
+  avatars();
 }
 
 jsxc.gui.window.hide = function(bid) {
@@ -78,6 +95,7 @@ jsxc.gui.window.fullsize = function(bid) {
   jsxc.gui.window.resize(win, {
     size : size
   });
+  avatar();
 }
 
 jsxc.gui.scrollWindowListBy = function(offset) {
@@ -150,13 +168,13 @@ $(document).ready(function() {
   });
 
   $(document).on('cloaded.roster.jsxc', function() {
-    avatar();
+    avatars();
   });
 
   $(document).on('show.window.jsxc', function() {
     $('#jsxc_roster').width('0px');
     $('.jsxc_windowItem jsxc_normal').width('100%');
-    avatar();
+    avatars();
   });
 
   $(document).on('hidden.window.jsxc', function() {
@@ -166,6 +184,5 @@ $(document).ready(function() {
   jsxc.start(username + '@' + settings.xmpp.domain, password);
   $('#password').val('');
 });
-
 
 
