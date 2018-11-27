@@ -122,6 +122,8 @@ public class AuthentificationManager {
 
   public void authenticateOnSilverpeas(String login, String password, String domainId, Command attempt) {
     Notification.activityStart();
+    Cookies.removeCookie("JSESSIONID", "/silverpeas");
+    Cookies.removeCookie("JSESSIONID", "/silverpeas/spmobile");
     ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
 
         new MethodCallback<UserProfileDTO>() {
@@ -146,7 +148,8 @@ public class AuthentificationManager {
             AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session", method.getResponse().getHeader("X-Silverpeas-Session"));
 
 
-            Cookies.removeCookie("JSESSIONID");
+            Cookies.removeCookie("JSESSIONID", "/silverpeas");
+            Cookies.removeCookie("JSESSIONID", "/silverpeas/spmobile");
             Cookies.setCookie("JSESSIONID", method.getResponse().getHeader("X-Silverpeas-Session"));
 
             SpMobil.setUserProfile(userProfile);
