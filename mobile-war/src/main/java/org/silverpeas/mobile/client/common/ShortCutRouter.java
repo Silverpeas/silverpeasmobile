@@ -31,11 +31,12 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
  * @author: svu
  */
 public class ShortCutRouter {
-  public static void route(final DetailUserDTO user, String shortcutAppId, String shortcutContentType, String shortcutContentId) {
+  public static void route(final DetailUserDTO user, String shortcutAppId, String shortcutContentType, String shortcutContentId, String contributionId) {
     if (!shortcutContentType.isEmpty() && !shortcutContentId.isEmpty()) {
       ContentDTO content = new ContentDTO();
       content.setId(shortcutContentId);
       content.setType(shortcutContentType);
+      content.setContributionId(contributionId);
       content.setInstanceId(shortcutAppId);
       EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
     }

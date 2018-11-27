@@ -94,6 +94,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static String shortcutAppId;
   private static String shortcutContentType;
   private static String shortcutContentId;
+  private static String shortcutContributionId;
   private static SpMobil instance = null;
   private static Orientation orientation = null;
   private static List<App> apps = new ArrayList<App>();
@@ -122,6 +123,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     shortcutAppId = Window.Location.getParameter("shortcutAppId");
     shortcutContentType = Window.Location.getParameter("shortcutContentType");
     shortcutContentId = Window.Location.getParameter("shortcutContentId");
+    shortcutContributionId = Window.Location.getParameter("shortcutContributionId");
     msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
     EventBus.getInstance().addHandler(AbstractAuthenticationErrorEvent.TYPE, this);
@@ -207,7 +209,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     PageHistory.getInstance().goTo(new HomePage());
 
     if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
-      ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId);
+      ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId, shortcutContributionId);
     } else {
       final String key = "MainHomePage_";
       AsyncCallbackOnlineOrOffline action =

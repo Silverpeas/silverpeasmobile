@@ -27,6 +27,9 @@ import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.GalleryService;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.components.quickinfo.model.News;
+import org.silverpeas.components.quickinfo.model.QuickInfoService;
+import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
@@ -78,6 +81,15 @@ public class MobilFilter implements Filter {
           Media media = getGalleryService().getMedia(new MediaPK(id));
           String appId = media.getInstanceId();
           params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+        } else if (url.contains("autoRedirect.jsp")) {
+          QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
+          String appId = ((HttpServletRequest) req).getParameter("goto");
+          appId = appId.replace("/Rquickinfo/","");
+          appId = appId.replace("/searchResult","");
+          String contributionId = ((HttpServletRequest) req).getParameter("Id");
+          News n = service.getNews(contributionId);
+          String id = n.getPublicationId();
+          params = "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId + "&shortcutContributionId=" + contributionId;
         } else if(!url.contains("AuthenticationServlet") && (url.endsWith("silverpeas") || url.endsWith("silverpeas/") || url.contains("/silverpeas/"))) {
           // simple redirection on mobile login page
           params = "";
