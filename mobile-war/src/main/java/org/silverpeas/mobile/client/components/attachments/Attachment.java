@@ -25,13 +25,12 @@ package org.silverpeas.mobile.client.components.attachments;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptException;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -42,7 +41,6 @@ import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
-import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
@@ -130,9 +128,15 @@ public class Attachment extends Composite {
       url += data.getFileName();
 
       link.setHref(url);
-      //link.fireEvent(new ClickEvent() {});
       if (MobilUtils.isIOS()) {
-        link.setTarget("_blank");
+        //link.setTarget("_blank");
+        link.addClickHandler(new ClickHandler() {
+          @Override
+          public void onClick(final ClickEvent clickEvent) {
+            String u =((Anchor)clickEvent.getSource()).getHref();
+            Window.open(u,"_blank","fullscreen=yes");
+          }
+        });
       } else {
         link.setTarget("_self");
         link.getElement().setAttribute("download", data.getFileName());
@@ -187,10 +191,15 @@ public class Attachment extends Composite {
         url += attachement.getTitle();
 
         link.setHref(url);
-
-        //link.fireEvent(new ClickEvent() {});
         if (MobilUtils.isIOS()) {
-          link.setTarget("_blank");
+          //link.setTarget("_blank");
+          link.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(final ClickEvent clickEvent) {
+              String u =((Anchor)clickEvent.getSource()).getHref();
+              Window.open(u,"_blank","fullscreen=yes");
+            }
+          });
         } else {
           link.setTarget("_self");
           link.getElement().setAttribute("download", attachement.getTitle());
