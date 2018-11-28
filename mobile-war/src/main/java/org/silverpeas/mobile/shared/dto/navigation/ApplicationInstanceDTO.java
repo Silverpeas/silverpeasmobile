@@ -37,6 +37,7 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   private boolean notifiable;
   private boolean ableToStoreContent;
   private boolean workflow;
+  private String extraId;
 
   public String getType(){
 		return type;
@@ -84,4 +85,8 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   public boolean isWorkflow() {
     return workflow;
   }
+
+  public void setExtraId(final String extraId) { this.extraId = extraId; }
+
+  public String getExtraId() { return extraId; }
 }

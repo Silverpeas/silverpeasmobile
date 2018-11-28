@@ -37,8 +37,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.apps.agenda.AgendaApp;
 import org.silverpeas.mobile.client.apps.blog.BlogApp;
 import org.silverpeas.mobile.client.apps.documents.DocumentsApp;
@@ -208,7 +206,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     RootPanel.get().add(getMainPage());
     PageHistory.getInstance().goTo(new HomePage());
 
-    if (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) {
+    if ((shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) || shortcutContributionId != null) {
       ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId, shortcutContributionId);
     } else {
       final String key = "MainHomePage_";

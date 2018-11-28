@@ -39,12 +39,15 @@ import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderUpdateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractAgendaPagesEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.AgendaPagesEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.CalendarLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderAddedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.pages.AgendaPage;
+import org.silverpeas.mobile.client.apps.agenda.pages.EventPage;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -54,13 +57,16 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.DocumentType;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
@@ -70,10 +76,44 @@ import java.util.List;
 
 public class AgendaApp extends App implements AgendaAppEventHandler, NavigationEventHandler {
 
+  class ShowContent implements AgendaPagesEventHandler {
+
+    private String contributionId;
+
+    public ShowContent(String contributionId) {
+      EventBus.getInstance().addHandler(AbstractAgendaPagesEvent.TYPE, this);
+      this.contributionId = contributionId;
+    }
+
+    @Override
+    public void onCalendarEventsLoaded(final CalendarLoadedEvent event) {
+      contributionId = contributionId.substring(0,contributionId.indexOf("@"));
+      Window.alert(contributionId);
+      for (CalendarEventDTO ev : getAppEvents()) {
+        if (ev.getEventId().equals(contributionId)) {
+          CalendarDTO cal = null;
+          for (CalendarDTO ca : calendars) {
+            if (ca.getId().equals(ev.getCalendarId())) {
+              cal = ca;
+              break;
+            }
+          }
+          EventPage page = new EventPage();
+          page.setData(getApplicationInstance(), ev, cal);
+          page.show();
+          break;
+        }
+      }
+    }
+  }
+
+
   private AgendaMessages msg;
   private String key;
   private String keyCalendars;
   private List<CalendarDTO> calendars = null;
+
+  private List<CalendarEventDTO> appEvents = new ArrayList<>();
 
   public static final String EVENT_REMINDER_TYPE = "CalendarEvent";
 
@@ -82,6 +122,10 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     msg = GWT.create(AgendaMessages.class);
     EventBus.getInstance().addHandler(AbstractAgendaAppEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
+  }
+
+  public List<CalendarEventDTO> getAppEvents() {
+    return appEvents;
   }
 
   public void start(){
@@ -142,17 +186,37 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void showContent(final NavigationShowContentEvent event) {
 
+    final String contributionId = event.getContent().getContributionId();
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
+
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNavigation()
+            .getApp(null, contributionId,  ContentsTypes.Event.name() , this);
+      }
+
+      @Override
+      public void onSuccess(final ApplicationInstanceDTO app) {
+        super.onSuccess(app);
+        setApplicationInstance(app);
+        NavigationAppInstanceChangedEvent e1 = new NavigationAppInstanceChangedEvent(getApplicationInstance());
+        appInstanceChanged(e1);
+        ShowContent sc = new ShowContent(getApplicationInstance().getExtraId());
+      }
+    };
+    action.attempt();
   }
 
   @Override
   public void loadCalendarEvents(final CalendarLoadEvent event) {
-
+    getAppEvents().clear();
     Command offlineAction = new Command() {
       @Override
       public void execute() {
         List<CalendarEventDTO> events = LocalStorageHelper.load(key+getApplicationInstance().getId()+event.getCalendar().getId(), List.class);
         if (events == null) {
           events = new ArrayList<CalendarEventDTO>();
+          getAppEvents().addAll(events);
         }
         EventBus.getInstance().fireEvent(new CalendarLoadedEvent(getApplicationInstance(), events));
       }
@@ -216,6 +280,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         super.onSuccess(method, events);
         LocalStorageHelper.store(key + getApplicationInstance().getId() + currentAppId, List.class, events);
         allEvents.addAll(events);
+        getAppEvents().addAll(events);
         callNumber++;
         if (callNumber == retainUntil) {
           EventBus.getInstance().fireEvent(new CalendarLoadedEvent(getApplicationInstance(), allEvents));

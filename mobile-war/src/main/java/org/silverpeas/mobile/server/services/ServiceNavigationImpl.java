@@ -35,16 +35,21 @@ import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.calendar.Priority;
+import org.silverpeas.core.contribution.model.ContributionIdentifier;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
+import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
+import org.silverpeas.core.webapi.calendar.CalendarEventOccurrenceEntity;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
@@ -67,6 +72,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -200,11 +206,21 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
     // upcomming events
     if ((spaceId == null && showLastEventsOnHomePage) || (spaceId != null && showLastEventsOnSpaceHomePage)) {
+      SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+
+      /*home.events.appId = almanach878
+      home.events.maxDays = 3
+      home.events.importantOnly = true
+      home.events.today.include = true*/
+
+      //space.homepage.events = true
+
       //TODO
     }
 
     return data;
   }
+
 
   private boolean isSupportedApp(ComponentInstLight app) {
     if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
@@ -271,6 +287,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
   @Override
   public ApplicationInstanceDTO getApp(String instanceId, String contentId, String contentType) throws NavigationException, AuthenticationException {
+    String localId = "";
     if (instanceId == null) {
       if (contentType.equals(ContentsTypes.Publication.name())) {
         PublicationDetail pub = PublicationService.get().getDetail(new PublicationPK(contentId));
@@ -278,9 +295,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       } else if(contentType.equals(ContentsTypes.Media.name())) {
         Media media = MediaServiceProvider.getMediaService().getMedia(new MediaPK(contentId));
         instanceId = media.getInstanceId();
+      } else if (contentType.equals(ContentsTypes.Event.name())) {
+        ContributionIdentifier contributionId = ContributionIdentifier.decode(new String(StringUtil.fromBase64(contentId)));
+        localId = contributionId.getLocalId();
+        instanceId = contributionId.getComponentInstanceId();
       }
     }
-    return getApplicationInstanceDTO(instanceId);
+    ApplicationInstanceDTO dto = getApplicationInstanceDTO(instanceId);
+    dto.setExtraId(localId);
+    return dto;
   }
 
   private ApplicationInstanceDTO getApplicationInstanceDTO(final String instanceId) {

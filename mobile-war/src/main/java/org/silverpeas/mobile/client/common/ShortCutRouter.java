@@ -32,7 +32,7 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
  */
 public class ShortCutRouter {
   public static void route(final DetailUserDTO user, String shortcutAppId, String shortcutContentType, String shortcutContentId, String contributionId) {
-    if (!shortcutContentType.isEmpty() && !shortcutContentId.isEmpty()) {
+    if (!shortcutContentType.isEmpty()) {
       ContentDTO content = new ContentDTO();
       content.setId(shortcutContentId);
       content.setType(shortcutContentType);

@@ -84,12 +84,16 @@ public class MobilFilter implements Filter {
         } else if (url.contains("autoRedirect.jsp")) {
           QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
           String appId = ((HttpServletRequest) req).getParameter("goto");
-          appId = appId.replace("/Rquickinfo/","");
-          appId = appId.replace("/searchResult","");
+          appId = appId.replace("/Rquickinfo/", "");
+          appId = appId.replace("/searchResult", "");
           String contributionId = ((HttpServletRequest) req).getParameter("Id");
           News n = service.getNews(contributionId);
           String id = n.getPublicationId();
-          params = "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId + "&shortcutContributionId=" + contributionId;
+          params = "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId +
+              "&shortcutContributionId=" + contributionId;
+        } else if (url.contains("Contribution")) {
+          String contributionId = url.substring(url.lastIndexOf("/") + 1);
+          params = "?shortcutContentType=Event&shortcutContributionId=" + contributionId;
         } else if(!url.contains("AuthenticationServlet") && (url.endsWith("silverpeas") || url.endsWith("silverpeas/") || url.contains("/silverpeas/"))) {
           // simple redirection on mobile login page
           params = "";
