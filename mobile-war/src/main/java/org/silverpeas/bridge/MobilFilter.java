@@ -83,14 +83,26 @@ public class MobilFilter implements Filter {
           params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
         } else if (url.contains("autoRedirect.jsp")) {
           QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
-          String appId = ((HttpServletRequest) req).getParameter("goto");
-          appId = appId.replace("/Rquickinfo/", "");
-          appId = appId.replace("/searchResult", "");
-          String contributionId = ((HttpServletRequest) req).getParameter("Id");
-          News n = service.getNews(contributionId);
-          String id = n.getPublicationId();
-          params = "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId +
-              "&shortcutContributionId=" + contributionId;
+          String subUrl = ((HttpServletRequest) req).getParameter("goto");
+          if (subUrl.contains("Rquickinfo")) {
+            String appId = subUrl.replace("/Rquickinfo/", "");
+            appId = appId.substring(0, appId.indexOf("/"));
+            String contributionId = subUrl.substring(subUrl.indexOf("Id=")+3);
+            News n = service.getNews(contributionId);
+            String id = n.getPublicationId();
+            params = "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId +
+                "&shortcutContributionId=" + contributionId;
+          } else if (subUrl.contains("Rblog")) {
+            String appId = subUrl.replace("/Rblog/", "");
+            appId = appId.substring(0, appId.indexOf("/"));
+            String id = subUrl.substring(subUrl.indexOf("Id=")+3);
+            params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+          } else if(subUrl.contains("Rgallery")) {
+            String appId = subUrl.replace("/Rgallery/", "");
+            appId = appId.substring(0, appId.indexOf("/"));
+            String id = subUrl.substring(subUrl.indexOf("Id=")+3);
+            params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+          }
         } else if (url.contains("Contribution")) {
           String contributionId = url.substring(url.lastIndexOf("/") + 1);
           params = "?shortcutContentType=Event&shortcutContributionId=" + contributionId;

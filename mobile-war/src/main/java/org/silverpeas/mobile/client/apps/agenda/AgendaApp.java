@@ -185,26 +185,27 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
+    if (event.getContent().getType().equals(ContentsTypes.Event.name())) {
+      final String contributionId = event.getContent().getContributionId();
+      AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
-    final String contributionId = event.getContent().getContributionId();
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
+        @Override
+        public void attempt() {
+          ServicesLocator.getServiceNavigation()
+              .getApp(null, contributionId, ContentsTypes.Event.name(), this);
+        }
 
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceNavigation()
-            .getApp(null, contributionId,  ContentsTypes.Event.name() , this);
-      }
-
-      @Override
-      public void onSuccess(final ApplicationInstanceDTO app) {
-        super.onSuccess(app);
-        setApplicationInstance(app);
-        NavigationAppInstanceChangedEvent e1 = new NavigationAppInstanceChangedEvent(getApplicationInstance());
-        appInstanceChanged(e1);
-        ShowContent sc = new ShowContent(getApplicationInstance().getExtraId());
-      }
-    };
-    action.attempt();
+        @Override
+        public void onSuccess(final ApplicationInstanceDTO app) {
+          super.onSuccess(app);
+          setApplicationInstance(app);
+          NavigationAppInstanceChangedEvent e1 = new NavigationAppInstanceChangedEvent(getApplicationInstance());
+          appInstanceChanged(e1);
+          ShowContent sc = new ShowContent(getApplicationInstance().getExtraId());
+        }
+      };
+      action.attempt();
+    }
   }
 
   @Override
