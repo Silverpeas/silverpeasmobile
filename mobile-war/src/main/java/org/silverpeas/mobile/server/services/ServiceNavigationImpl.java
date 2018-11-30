@@ -51,10 +51,16 @@ import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
+import org.silverpeas.mobile.server.services.helpers.events.Event;
+import org.silverpeas.mobile.server.services.helpers.events.EventsHelper;
+import org.silverpeas.mobile.server.services.helpers.events.NextEvents;
+import org.silverpeas.mobile.server.services.helpers.events.NextEventsDate;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
 import org.silverpeas.mobile.shared.dto.RightDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -68,9 +74,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Service de gestion de la navigation dans les espaces et apps.
@@ -152,6 +159,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   @Override
   public HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException {
     checkUserInSession();
+    SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
     HomePageDTO data = new HomePageDTO();
     data.setId(spaceId);
     try {
@@ -178,7 +186,6 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       try {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
         ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
-        SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
         int max;
         if (spaceId == null) {
           max = settings.getInteger("home.publications.nb", 3);
@@ -202,22 +209,64 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     }
 
     // upcomming events
-    if ((spaceId == null && showLastEventsOnHomePage) || (spaceId != null && showLastEventsOnSpaceHomePage)) {
-      SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+    NextEvents events = null;
+    List<CalendarEventDTO> eventsToDisplay = null;
+    String lang = getUserInSession().getUserPreferences().getLanguage();
+    if ((spaceId == null && showLastEventsOnHomePage)) {
+      boolean includeToday = settings.getBoolean("home.events.today.include", true);
+      List<String> allowedComponentIds = Arrays.asList(getAllowedComponentIds(settings, "home.events.appId"));
+      int nbDays = settings.getInteger("home.events.maxDays", 3);
+      boolean onlyImportant = settings.getBoolean("home.events.importantOnly", false);
+      events = EventsHelper.getInstance().getNextEvents(allowedComponentIds, includeToday, nbDays, onlyImportant);
 
-      /*home.events.appId = almanach878
-      home.events.maxDays = 3
-      home.events.importantOnly = true
-      home.events.today.include = true*/
-
-      //space.homepage.events = true
-
-      //TODO
+    } else if (spaceId != null && showLastEventsOnSpaceHomePage) {
+      List<String> allowedAppIds = new ArrayList<>();
+      List<ComponentInstLight> components = getAllowedComponents(false, "almanach", spaceId);
+      for (ComponentInstLight component : components) {
+        allowedAppIds.add(component.getId());
+      }
+      events = EventsHelper.getInstance().getNextEvents(allowedAppIds, true, 5, false);
     }
+    eventsToDisplay = EventsHelper.getInstance().populate(events, lang);
+    data.setLastEvents(eventsToDisplay);
 
     return data;
   }
 
+  private List<ComponentInstLight> getAllowedComponents(boolean visibleOnly, String name, String spaceId) {
+    OrganizationController oc = OrganizationController.get();
+    String[] appIds = oc.getAvailCompoIdsAtRoot(spaceId, getUserInSession().getId());
+    List<ComponentInstLight> components = new ArrayList<>();
+    Predicate<ComponentInstLight> canBeGet = c -> !visibleOnly || !c.isHidden();
+    Predicate<ComponentInstLight> matchesName =
+        c -> StringUtil.isNotDefined(name) || c.getName().equals(name);
+    for (String appId : appIds) {
+      ComponentInstLight component = oc.getComponentInstLight(appId);
+      if (canBeGet.test(component) && matchesName.test(component)) {
+        components.add(component);
+      }
+    }
+    return components;
+  }
+
+  private String[] getAllowedComponentIds(SettingBundle settings, String param) {
+    String[] appIds = StringUtil.split(settings.getString(param, ""), ' ');
+    return getAllowedComponents(appIds).toArray(new String[0]);
+  }
+
+  private List<String> getAllowedComponents(String... componentIds) {
+    List<String> allowedComponentIds = new ArrayList<>();
+    for (String componentId : componentIds) {
+      if (isComponentAvailable(componentId)) {
+        allowedComponentIds.add(componentId);
+      }
+    }
+    return allowedComponentIds;
+  }
+
+  private boolean isComponentAvailable(String componentId) {
+    return organizationController.isComponentAvailable(componentId, getUserInSession().getId());
+  }
 
   private boolean isSupportedApp(ComponentInstLight app) {
     if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
