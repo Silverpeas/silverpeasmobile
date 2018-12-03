@@ -41,6 +41,7 @@ import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
 public class HomePageItem extends Composite {
 
+  private CalendarEventDTO eventData;
   private PublicationDTO data;
   private static HomePageItemUiBinder uiBinder = GWT.create(HomePageItemUiBinder.class);
   @UiField Anchor link;
@@ -56,7 +57,9 @@ public class HomePageItem extends Composite {
   }
 
   public void setData(CalendarEventDTO data) {
-    //TODO
+    this.eventData = data;
+    link.setHTML(data.getTitle() + "&nbsp;<span class='date'>"+data.getStartDate() + " - " + data.getEndDate() +"</span>");
+    link.setStyleName("ui-btn ui-icon-carat-r");
   }
 
   public void setData(PublicationDTO data) {
@@ -67,10 +70,19 @@ public class HomePageItem extends Composite {
 
   @UiHandler("link")
   protected void onClick(ClickEvent event) {
-    ContentDTO content = new ContentDTO();
-    content.setId(data.getId());
-    content.setType(ContentsTypes.Publication.name());
-    content.setInstanceId(data.getInstanceId());
-    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+    if (data != null) {
+      ContentDTO content = new ContentDTO();
+      content.setId(data.getId());
+      content.setType(ContentsTypes.Publication.name());
+      content.setInstanceId(data.getInstanceId());
+      EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+    } else if (eventData != null) {
+      ContentDTO content = new ContentDTO();
+      content.setInstanceId(eventData.getCalendarId());
+      content.setContributionId(eventData.getEventId());
+      content.setType(ContentsTypes.Event.name());
+      content.setInstanceId(eventData.getCalendarId());
+      EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+    }
   }
 }

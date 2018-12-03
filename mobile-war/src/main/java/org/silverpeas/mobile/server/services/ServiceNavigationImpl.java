@@ -218,7 +218,6 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       int nbDays = settings.getInteger("home.events.maxDays", 3);
       boolean onlyImportant = settings.getBoolean("home.events.importantOnly", false);
       events = EventsHelper.getInstance().getNextEvents(allowedComponentIds, includeToday, nbDays, onlyImportant);
-
     } else if (spaceId != null && showLastEventsOnSpaceHomePage) {
       List<String> allowedAppIds = new ArrayList<>();
       List<ComponentInstLight> components = getAllowedComponents(false, "almanach", spaceId);

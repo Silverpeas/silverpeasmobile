@@ -112,6 +112,11 @@ public class EventsHelper {
         if (lang.equalsIgnoreCase("fr")) {
           fmt = new SimpleDateFormat("dd/MM/yyyy");
         }
+
+        String u = event.getDetail().getOccurrencePermalinkUrl().getPath();
+        u = u.substring(u.lastIndexOf("/")+1);
+        dto.setEventId(u);
+        dto.setCalendarId(event.getDetail().getInstanceId());
         dto.setStartDate(fmt.format(event.getDetail().getStartDateAsDate()));
         dto.setEndDate(fmt.format(event.getDetail().getEndDateAsDate()));
         eventsToDisplay.add(dto);
