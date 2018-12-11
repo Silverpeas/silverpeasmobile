@@ -178,7 +178,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     }
     List<PublicationDetail> lastNews = NewsHelper
         .getInstance().getLastNews(getUserInSession().getId(), spaceId);
-    if (lastNews.size() > maxNews) {
+    if (lastNews != null && lastNews.size() > maxNews) {
       lastNews = lastNews.subList(0, maxNews);
     }
     data.setNews(NewsHelper.getInstance().populatePub(lastNews, false));
