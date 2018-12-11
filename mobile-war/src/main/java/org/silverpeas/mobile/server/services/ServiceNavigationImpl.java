@@ -170,9 +170,17 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     } catch (Exception e) {
       throw new NavigationException(e);
     }
-
+    int maxNews;
+    if (spaceId == null) {
+      maxNews = settings.getInteger("home.news.size", 3);
+    } else {
+      maxNews = settings.getInteger("home.news.size", 3);
+    }
     List<PublicationDetail> lastNews = NewsHelper
         .getInstance().getLastNews(getUserInSession().getId(), spaceId);
+    if (lastNews.size() > maxNews) {
+      lastNews = lastNews.subList(0, maxNews);
+    }
     data.setNews(NewsHelper.getInstance().populatePub(lastNews, false));
 
     if (spaceId == null || spaceId.isEmpty()) {
