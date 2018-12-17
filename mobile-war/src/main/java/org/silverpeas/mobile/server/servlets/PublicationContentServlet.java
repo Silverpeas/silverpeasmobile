@@ -70,6 +70,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
+import java.net.FileNameMap;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -354,6 +355,11 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         URLConnection connection = urlObject.openConnection();
         connection.connect();
         String contentType = connection.getContentType();
+        if (contentType == null) {
+          FileNameMap fileNameMap = URLConnection.getFileNameMap();
+          contentType = fileNameMap.getContentTypeFor(url);
+        }
+
         byte[] binaryData = new byte[(int) connection.getInputStream().available()];
         connection.getInputStream().read(binaryData);
         data = "data:" + contentType + ";base64," + new String(Base64.encodeBase64(binaryData));
