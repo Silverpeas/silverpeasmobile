@@ -132,8 +132,11 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
         }
       });
     } catch (Throwable e) {
+      e.printStackTrace();
+      SilverLogger.getLogger(this).error(e);
       SilverLogger.getLogger(SpMobileLogModule.getName())
           .error("ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
+
       throw new ContactException(e);
     }
 
@@ -177,7 +180,8 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
               results.add(contact);
             } else if (result.getObjectType().equals("UserFull")) {
               UserDetail userDetail = organizationController.getUserDetail(objectId);
-              if ((domainsIds.isEmpty() || domainsIds.contains(userDetail.getDomainId())) && userDetail.isActivatedState()) {
+              // if userDetail is null than mean user was deleted but is still in index
+              if (userDetail!= null && (domainsIds.isEmpty() || domainsIds.contains(userDetail.getDomainId())) && userDetail.isActivatedState()) {
                 results.add(userDetail);
               }
             }
