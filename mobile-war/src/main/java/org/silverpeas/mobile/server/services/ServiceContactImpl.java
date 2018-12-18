@@ -132,11 +132,8 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
         }
       });
     } catch (Throwable e) {
-      e.printStackTrace();
-      SilverLogger.getLogger(this).error(e);
       SilverLogger.getLogger(SpMobileLogModule.getName())
           .error("ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
-
       throw new ContactException(e);
     }
 
