@@ -88,9 +88,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       throws Exception {
 
     if (rootContext.isEmpty()) {
-      String url = request.getRequestURL().toString();
-      String uri = request.getRequestURI();
-      rootContext = url.substring(0, url.indexOf(uri));
+      rootContext= "http://127.0.0.1:8000";
     }
 
     String id = request.getParameter("id");
