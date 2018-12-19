@@ -83,6 +83,10 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     allextcontacts.setVisible(contactsVisible);
   }
 
+  public void setPersonnalContactsVisible(final boolean personnalContactsVisible) {
+    mycontacts.setVisible(personnalContactsVisible);
+  }
+
   interface ContactsPageUiBinder extends UiBinder<Widget, ContactsPage> {
   }
 
@@ -97,8 +101,24 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     allextcontacts.getElement().setId("btn-all-contactsext");
     EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractScrollEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndexMy));
+
     list.getElement().setId("list-contacts");
+  }
+
+  public void init() {
+    if (mycontacts.isVisible()) {
+      EventBus.getInstance().fireEvent(
+          new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndexMy));
+    } else {
+      EventBus.getInstance().fireEvent(
+          new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(), startIndexMy));
+      allcontacts.addStyleName("ui-btn-active");
+      allcontacts.addStyleName("ui-first-child");
+    }
+    if (!mycontacts.isVisible() && !allextcontacts.isVisible()) {
+      allcontacts.setVisible(false);
+      filter.setVisible(true);
+    }
   }
 
   @Override
@@ -158,14 +178,6 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     pageSize = 0;
     startIndexAll = 0;
     EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexAll));
-  }
-
-  @UiHandler("filter")
-  protected void filterChosen(FocusEvent event) {
-    mycontacts.removeStyleName("ui-btn-active");
-    mycontacts.addStyleName("ui-btn");
-    allcontacts.removeStyleName("ui-btn-active");
-    allcontacts.addStyleName("ui-btn");
   }
 
   @UiHandler("filter")

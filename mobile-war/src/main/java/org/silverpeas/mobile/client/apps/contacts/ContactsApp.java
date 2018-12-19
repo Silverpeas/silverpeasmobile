@@ -40,6 +40,7 @@ import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
+import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,21 +58,24 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
         EventBus.getInstance().addHandler(AbstractContactsAppEvent.TYPE, this);
         EventBus.getInstance().fireEvent(new ContactsStopPagesdEvent());
 
-        ServicesLocator.getServiceContact().hasContacts(new AsyncCallback<Boolean>() {
+        ServicesLocator.getServiceContact().hasContacts(new AsyncCallback<ContactFilters>() {
           @Override
           public void onFailure(final Throwable throwable) {
             Notification.activityStop();
             ContactsPage page = new ContactsPage();
             page.setContactsVisible(true);
+            page.init();
             setMainPage(page);
             ContactsApp.super.start();
           }
 
           @Override
-          public void onSuccess(final Boolean hasContacts) {
+          public void onSuccess(final ContactFilters result) {
             Notification.activityStop();
             ContactsPage page = new ContactsPage();
-            page.setContactsVisible(hasContacts);
+            page.setContactsVisible(result.hasContacts());
+            page.setPersonnalContactsVisible(result.hasPersonnalContacts());
+            page.init();
             setMainPage(page);
             ContactsApp.super.start();
           }

@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
+import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.ContactException;
 
@@ -35,5 +36,5 @@ import java.util.List;
 public interface ServiceContact extends RemoteService {
   List<DetailUserDTO> getContacts(String type, String filter, int pageSize, int startIndex) throws
                                                                                             ContactException, AuthenticationException;
-  boolean hasContacts() throws ContactException, AuthenticationException;
+  ContactFilters hasContacts() throws ContactException, AuthenticationException;
 }

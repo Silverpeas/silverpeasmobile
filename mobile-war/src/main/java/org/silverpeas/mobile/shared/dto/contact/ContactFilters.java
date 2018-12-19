@@ -27,9 +27,30 @@ import java.io.Serializable;
 
 public class ContactFilters implements Serializable {
 
-	private static final long serialVersionUID = -2505309587384249007L;
+  private static final long serialVersionUID = -2505309587384249007L;
 
   public static final String ALL_EXT = "ALL_EXT&";
-	public static final String ALL = "ALL&";
-	public static final String MY = "MY&";
+  public static final String ALL = "ALL&";
+  public static final String MY = "MY&";
+
+
+  private boolean hasContacts;
+  private boolean hasPersonnalContacts;
+
+  public boolean hasContacts() {
+    return hasContacts;
+  }
+
+  public void setHasContacts(final boolean hasContacts) {
+    this.hasContacts = hasContacts;
+  }
+
+  public boolean hasPersonnalContacts() {
+    return hasPersonnalContacts;
+  }
+
+  public void setHasPersonnalContacts(final boolean hasPersonnalContacts) {
+    this.hasPersonnalContacts = hasPersonnalContacts;
+  }
+
 }

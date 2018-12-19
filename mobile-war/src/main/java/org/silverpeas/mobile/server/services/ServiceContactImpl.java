@@ -140,9 +140,16 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
     return listUsers;
   }
 
-  public boolean hasContacts() {
+  public ContactFilters hasContacts() {
+    ContactFilters result = new ContactFilters();
     List tabUserDetail = getUsersByQuery("","Contact");
-    return !tabUserDetail.isEmpty();
+    result.setHasContacts(!tabUserDetail.isEmpty());
+    List<String> contactsIds = new ArrayList<>();
+    try {
+      contactsIds = relationShipService.getMyContactsIds(Integer.parseInt(getUserInSession().getId()));
+    } catch (Exception e) {}
+    result.setHasPersonnalContacts(!contactsIds.isEmpty());
+    return result;
   }
 
   private List getFilteredUserList(final String filter, String type) {

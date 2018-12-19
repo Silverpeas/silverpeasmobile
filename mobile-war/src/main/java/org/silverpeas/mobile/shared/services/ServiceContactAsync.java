@@ -25,12 +25,12 @@ package org.silverpeas.mobile.shared.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
+import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
 import java.util.List;
 
 public interface ServiceContactAsync {
   void getContacts(String type, String filter, int pageSize, int startIndex, final AsyncCallback<List<DetailUserDTO>> async);
 
-
-  void hasContacts(final AsyncCallback<Boolean> async);
+  void hasContacts(final AsyncCallback<ContactFilters> async);
 }
