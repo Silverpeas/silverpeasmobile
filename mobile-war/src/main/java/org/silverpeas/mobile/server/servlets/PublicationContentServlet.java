@@ -64,6 +64,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -73,6 +74,7 @@ import java.lang.reflect.Method;
 import java.net.FileNameMap;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Properties;
 
 @SuppressWarnings("serial")
 public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
@@ -88,7 +90,14 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       throws Exception {
 
     if (rootContext.isEmpty()) {
-      rootContext= "http://127.0.0.1:8000";
+      String confPath = System.getenv("SILVERPEAS_HOME") + File.separator + "configuration" + File.separator + "config.properties";
+      Properties conf = new Properties();
+      InputStream input = new FileInputStream(confPath);
+      conf.load(input);
+      String port = conf.getProperty("SERVER_PORT");
+      if (port == null) port = "8000";
+      rootContext= "http://127.0.0.1:"+ port;
+      input.close();
     }
 
     String id = request.getParameter("id");
