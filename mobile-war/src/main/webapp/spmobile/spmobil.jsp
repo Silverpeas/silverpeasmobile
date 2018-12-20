@@ -4,6 +4,9 @@
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
 <%@ page import="org.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="org.silverpeas.core.admin.domain.DomainType" %>
+<%@ page import="org.silverpeas.core.admin.domain.DomainTypeRegistry" %>
+<%@ page import="org.silverpeas.core.security.token.synchronizer.SynchronizerToken" %>
 
 <%--
   ~ Copyright (C) 2000 - 2018 Silverpeas
@@ -51,6 +54,14 @@
       }
     } else {
       l = "en";
+    }
+
+    // SSO case
+    SynchronizerToken token = (SynchronizerToken) request.getSession().getAttribute("X-STKN");
+    if (token != null && (DomainTypeRegistry.get().exists(DomainType.GOOGLE) || DomainTypeRegistry.get().exists(DomainType.SCIM))) {
+      LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.lookAndFeel.generalLook", l);
+      String ssoPath = appUrl + resource.getString("login.sso.path");
+      response.sendRedirect(ssoPath);
     }
 
     LocalizationBundle resourceLabels = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", l);
