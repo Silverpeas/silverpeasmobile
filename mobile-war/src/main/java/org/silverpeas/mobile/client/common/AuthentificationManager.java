@@ -39,6 +39,8 @@ import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
+import java.util.Date;
+
 /**
  * @author: svu
  */
@@ -150,7 +152,8 @@ public class AuthentificationManager {
 
             Cookies.removeCookie("JSESSIONID", "/silverpeas");
             Cookies.removeCookie("JSESSIONID", "/silverpeas/spmobile");
-            Cookies.setCookie("JSESSIONID", method.getResponse().getHeader("X-Silverpeas-Session"));
+            Cookies.setCookie("JSESSIONID", method.getResponse().getHeader("X-Silverpeas-Session"), new Date(),"/silverpeas","/silverpeas",true);
+
 
             SpMobil.setUserProfile(userProfile);
             ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {

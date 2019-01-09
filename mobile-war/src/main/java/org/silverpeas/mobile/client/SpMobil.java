@@ -128,6 +128,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     token = Cookies.getCookie("X-STKN");
     if (token != null && !token.isEmpty()) {
       AuthentificationManager.getInstance().addHeader("X-STKN", token);
+      Cookies.removeCookie("X-STKN");
     }
 
     msg = GWT.create(ApplicationMessages.class);
@@ -284,7 +285,9 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
 
     } else {
-
+      //Login
+      tabletGesture(false);
+      displayLoginPage(false);
     }
   }
 
