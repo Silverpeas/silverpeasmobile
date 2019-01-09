@@ -31,6 +31,7 @@ import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
+import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
@@ -48,18 +49,16 @@ import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
+import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
-import org.silverpeas.mobile.server.services.helpers.events.Event;
 import org.silverpeas.mobile.server.services.helpers.events.EventsHelper;
 import org.silverpeas.mobile.server.services.helpers.events.NextEvents;
-import org.silverpeas.mobile.server.services.helpers.events.NextEventsDate;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
 import org.silverpeas.mobile.shared.dto.RightDTO;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -100,6 +99,24 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     showLastEventsOnHomePage = mobileSettings.getBoolean("homepage.lastevents", true);
     showLastEventsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastevents", true);
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
+  }
+
+  @Override
+  public DetailUserDTO getUser(String login, String domainId) throws NavigationException, AuthenticationException {
+
+    String id = null;
+    try {
+      id = Administration.get().getUserIdByLoginAndDomain(login,domainId);
+      UserDetail user = Administration.get().getUserDetail(id);
+      DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
+      userDTO = initSession(userDTO);
+      String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), getSettings().getString("big.avatar.size", "40x"));
+      userDTO.setAvatar(avatar);
+      return userDTO;
+
+    } catch (AdminException e) {
+      throw new NavigationException(e);
+    }
   }
 
   @Override

@@ -46,4 +46,6 @@ public interface ServiceNavigationAsync {
   void initSession(DetailUserDTO user, final AsyncCallback<DetailUserDTO> async);
 
   void getUserToken(final AsyncCallback<String> async);
+
+  void getUser(String login, String domainId, final AsyncCallback<DetailUserDTO> async);
 }

@@ -33,6 +33,7 @@ import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
+import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -40,6 +41,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -113,7 +115,23 @@ public class MobilFilter implements Filter {
           chain.doFilter(req, res);
           return;
         }
-        ((HttpServletResponse) res).sendRedirect("/silverpeas/spmobile/spmobil.jsp" + params);
+
+        Object token = ((HttpServletRequest) req).getSession().getAttribute("X-STKN");
+        if (token != null) {
+          Cookie userCookie = new Cookie("X-STKN", ((SynchronizerToken) token).getValue());
+          userCookie.setPath("/silverpeas");
+          userCookie.setMaxAge(60*60*24*365);
+          ((HttpServletResponse) res).addCookie(userCookie);
+        }
+
+        String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
+
+
+        String urlWithSessionID = ((HttpServletResponse)res).encodeRedirectURL(aDestinationPage.toString());
+        ((HttpServletResponse) res).sendRedirect(urlWithSessionID);
+
+        //req.getRequestDispatcher(urlWithSessionID).forward(req, res);
+
         return;
       } else {
         chain.doFilter(req, res);

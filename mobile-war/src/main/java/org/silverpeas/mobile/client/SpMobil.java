@@ -33,6 +33,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -93,6 +94,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static String shortcutContentType;
   private static String shortcutContentId;
   private static String shortcutContributionId;
+  private static String token;
   private static SpMobil instance = null;
   private static Orientation orientation = null;
   private static List<App> apps = new ArrayList<App>();
@@ -122,6 +124,12 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     shortcutContentType = Window.Location.getParameter("shortcutContentType");
     shortcutContentId = Window.Location.getParameter("shortcutContentId");
     shortcutContributionId = Window.Location.getParameter("shortcutContributionId");
+
+    token = Cookies.getCookie("X-STKN");
+    if (token != null && !token.isEmpty()) {
+      AuthentificationManager.getInstance().addHeader("X-STKN", token);
+    }
+
     msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
     EventBus.getInstance().addHandler(AbstractAuthenticationErrorEvent.TYPE, this);
@@ -249,15 +257,34 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
    * Load ids in SQL Web Storage.
    */
   public void loadIds(Command attempt) {
-    FullUserDTO user = AuthentificationManager.getInstance().loadUser();
-    if (user != null) {
-      String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
-      if (password != null) {
-        login(user, password, attempt);
-      }
+    if (token != null) {
+      ServicesLocator.getServiceNavigation().getUser(Cookies.getCookie("svpLogin"), Cookies.getCookie("defaultDomain"), new AsyncCallback
+          <DetailUserDTO>() {
+        @Override
+        public void onFailure(final Throwable throwable) {
+          FullUserDTO user = AuthentificationManager.getInstance().loadUser();
+          if (user != null) {
+            String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
+            if (password != null) {
+              login(user, password, attempt);
+            }
+          } else {
+            //Login
+            tabletGesture(false);
+            displayLoginPage(false);
+          }
+        }
+
+        @Override
+        public void onSuccess(final DetailUserDTO detailUserDTO) {
+          user = detailUserDTO;
+          SpMobil.displayMainPage();
+        }
+      });
+
+
     } else {
-      tabletGesture(false);
-      displayLoginPage(false);
+
     }
   }
 
