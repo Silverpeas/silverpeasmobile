@@ -125,12 +125,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
           }
         }
       }
-      Collections.sort((List) listUsers, new Comparator<DetailUserDTO>() {
-        @Override
-        public int compare(final DetailUserDTO u1, final DetailUserDTO u2) {
-          return u1.getLastName().compareTo(u2.getLastName());
-        }
-      });
+      defaultSortContacts(listUsers);
     } catch (Throwable e) {
       SilverLogger.getLogger(SpMobileLogModule.getName())
           .error("ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
@@ -138,6 +133,15 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
     }
 
     return listUsers;
+  }
+
+  private void defaultSortContacts(final List listUsers) {
+    Collections.sort(listUsers, new Comparator<DetailUserDTO>() {
+      @Override
+      public int compare(final DetailUserDTO u1, final DetailUserDTO u2) {
+        return u1.getLastName().compareTo(u2.getLastName());
+      }
+    });
   }
 
   public ContactFilters hasContacts() {

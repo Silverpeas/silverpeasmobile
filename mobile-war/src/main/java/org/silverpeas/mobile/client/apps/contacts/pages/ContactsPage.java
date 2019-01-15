@@ -106,19 +106,25 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   }
 
   public void init() {
-    if (mycontacts.isVisible()) {
-      EventBus.getInstance().fireEvent(
-          new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndexMy));
-    } else {
-      EventBus.getInstance().fireEvent(
-          new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(), startIndexMy));
-      allcontacts.addStyleName("ui-btn-active");
-      allcontacts.addStyleName("ui-first-child");
-    }
-    if (!mycontacts.isVisible() && !allextcontacts.isVisible()) {
-      allcontacts.setVisible(false);
-      filter.setVisible(true);
-    }
+    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+      @Override
+      public void execute() {
+
+        if (mycontacts.isVisible()) {
+          EventBus.getInstance().fireEvent(
+              new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndexMy));
+        } else {
+          EventBus.getInstance().fireEvent(
+              new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(), startIndexMy));
+          allcontacts.addStyleName("ui-btn-active");
+          allcontacts.addStyleName("ui-first-child");
+        }
+        if (!mycontacts.isVisible() && !allextcontacts.isVisible()) {
+          allcontacts.setVisible(false);
+          filter.setVisible(true);
+        }
+      }
+    });
   }
 
   @Override
@@ -207,9 +213,8 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   public void onContactsLoaded(ContactsLoadedEvent event) {
     noMoreData = event.getListUserDetailDTO().isEmpty();
     list.remove(getWaitingItem());
-    Iterator<DetailUserDTO> i = event.getListUserDetailDTO().iterator();
-    while (i.hasNext()) {
-      DetailUserDTO user = i.next();
+
+    for (DetailUserDTO user : event.getListUserDetailDTO()) {
       if (user != null) {
         ContactItem item = new ContactItem();
         item.setData(user);
@@ -258,10 +263,11 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       item.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
       list.add(item);
       int itemHeight = item.getOffsetHeight();
-      list.remove(item);
 
       pageSize =  (available / itemHeight) + 1; // add one for scroll
+      list.remove(item);
     }
+
     return pageSize;
   }
 }

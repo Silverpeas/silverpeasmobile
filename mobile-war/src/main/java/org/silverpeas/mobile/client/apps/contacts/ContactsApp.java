@@ -64,8 +64,8 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
             Notification.activityStop();
             ContactsPage page = new ContactsPage();
             page.setContactsVisible(true);
-            page.init();
             setMainPage(page);
+            page.init();
             ContactsApp.super.start();
           }
 
@@ -75,8 +75,8 @@ public class ContactsApp extends App implements ContactsAppEventHandler {
             ContactsPage page = new ContactsPage();
             page.setContactsVisible(result.hasContacts());
             page.setPersonnalContactsVisible(result.hasPersonnalContacts());
-            page.init();
             setMainPage(page);
+            page.init();
             ContactsApp.super.start();
           }
         });
