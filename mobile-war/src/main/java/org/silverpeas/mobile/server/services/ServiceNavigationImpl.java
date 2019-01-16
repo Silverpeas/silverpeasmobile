@@ -235,23 +235,25 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     }
 
     // aurora shortcuts
-    int i = 1;
     List<ShortCutLinkDTO> shortCutLinkDTOList = new ArrayList<>();
-    while (i > 0) {
-      String url = settings.getString("Shortcut.home." + i + ".Url", "");
-      if (!url.isEmpty()) {
-        String text = settings.getString("Shortcut.home." + i + ".AltText", "");
-        String icon = settings.getString("Shortcut.home." + i + ".IconUrl", "");
-        ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
-        shortCutLinkDTO.setUrl(url);
-        shortCutLinkDTO.setText(text);
-        shortCutLinkDTO.setIcon(icon);
-        shortCutLinkDTOList.add(shortCutLinkDTO);
-      } else {
-        i = 0;
-        break;
+    if (spaceId == null || spaceId.isEmpty()) {
+      int i = 1;
+      while (i > 0) {
+        String url = settings.getString("Shortcut.home." + i + ".Url", "");
+        if (!url.isEmpty()) {
+          String text = settings.getString("Shortcut.home." + i + ".AltText", "");
+          String icon = settings.getString("Shortcut.home." + i + ".IconUrl", "");
+          ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
+          shortCutLinkDTO.setUrl(url);
+          shortCutLinkDTO.setText(text);
+          shortCutLinkDTO.setIcon(icon);
+          shortCutLinkDTOList.add(shortCutLinkDTO);
+        } else {
+          i = 0;
+          break;
+        }
+        i++;
       }
-      i++;
     }
     data.setShortCuts(shortCutLinkDTOList);
 
