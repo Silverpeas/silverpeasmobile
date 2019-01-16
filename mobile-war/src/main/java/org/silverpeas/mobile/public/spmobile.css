@@ -557,6 +557,16 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url(packImagesNavigation.png) 0.5em -1186px no-repeat;
 }
 
+.racourcis-bloc a {
+  padding-left: 2.5em;
+  font-size: 0.8em;
+}
+
+.racourcis-bloc img {
+  max-width: 25px;
+  float: left;
+}
+
 .last-publication-bloc li a {
   padding-left: 4em;
   font-size: 0.8em;

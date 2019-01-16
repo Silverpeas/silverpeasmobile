@@ -29,29 +29,32 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.MyLinkDTO;
+import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 
-public class FavoriteItem extends LinkItem {
+public class ShortCutItem extends LinkItem {
 
-  private MyLinkDTO data;
-  private static FavoriteItemUiBinder uiBinder = GWT.create(FavoriteItemUiBinder.class);
+  private ShortCutLinkDTO data;
+  private static ShortCutItemUiBinder uiBinder = GWT.create(ShortCutItemUiBinder.class);
   @UiField Anchor link;
+  @UiField Image icon;
   protected ApplicationMessages msg = null;
 
 
-  interface FavoriteItemUiBinder extends UiBinder<Widget, FavoriteItem> {
+  interface ShortCutItemUiBinder extends UiBinder<Widget, ShortCutItem> {
   }
 
-  public FavoriteItem() {
+  public ShortCutItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
   }
 
-  public void setData(MyLinkDTO data) {
+  public void setData(ShortCutLinkDTO data) {
     this.data = data;
-    link.setText(data.getName());
+    link.setText(data.getText());
+    icon.setUrl(data.getIcon());
 
     if(data.getUrl().startsWith("/")) {
       // internal link

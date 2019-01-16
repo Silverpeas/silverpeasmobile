@@ -43,6 +43,7 @@ public class HomePageDTO extends BaseDTO implements Serializable{
   private List<MyLinkDTO> favorites = new ArrayList<MyLinkDTO>();
   private List<PublicationDTO> lastPublications = new ArrayList<PublicationDTO>();
   private List<CalendarEventDTO> lastEvents = new ArrayList<CalendarEventDTO>();
+  private List<ShortCutLinkDTO> shortCuts = new ArrayList<>();
 
   public List<PublicationDTO> getLastPublications() {
     return lastPublications;
@@ -90,4 +91,13 @@ public class HomePageDTO extends BaseDTO implements Serializable{
   public List<CalendarEventDTO> getLastEvents() {
     return lastEvents;
   }
+
+  public List<ShortCutLinkDTO> getShortCuts() {
+    return shortCuts;
+  }
+
+  public void setShortCuts(final List<ShortCutLinkDTO> shortCuts) {
+    this.shortCuts = shortCuts;
+  }
+
 }

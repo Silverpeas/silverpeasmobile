@@ -34,6 +34,7 @@ public class Config extends BaseDTO implements Serializable {
   private boolean lastPublicationsDisplay;
   private boolean lastEventsDisplay;
   private boolean favoritesDisplay;
+  private boolean shortCutsDisplay;
 
   public Config() {
   }
@@ -44,6 +45,7 @@ public class Config extends BaseDTO implements Serializable {
     c.setLastPublicationsDisplay(true);
     c.setLastEventsDisplay(true);
     c.setFavoritesDisplay(true);
+    c.setShortCutsDisplay(true);
     return c;
   }
 
@@ -78,4 +80,13 @@ public class Config extends BaseDTO implements Serializable {
   public boolean isLastEventsDisplay() {
     return lastEventsDisplay;
   }
+
+  public boolean isShortCutsDisplay() {
+    return shortCutsDisplay;
+  }
+
+  public void setShortCutsDisplay(final boolean shortCutsDisplay) {
+    this.shortCutsDisplay = shortCutsDisplay;
+  }
 }
+

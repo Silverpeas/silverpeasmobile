@@ -128,6 +128,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Mes favoris")
   SafeHtml favorites();
 
+  @DefaultMessage("Raccourcis")
+  SafeHtml shortcuts();
+
   @DefaultMessage("Les dernières publications")
   SafeHtml lastPublications();
 

@@ -37,6 +37,7 @@ import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.NavigationItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.NewsItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.HomePageItem;
+import org.silverpeas.mobile.client.apps.navigation.pages.widgets.ShortCutItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
@@ -48,6 +49,7 @@ import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
+import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -68,9 +70,9 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   protected ApplicationMessages msg = null;
 
   @UiField
-  UnorderedList favoris, lastPublications, spaces, news, lastEvents;
+  UnorderedList favoris, lastPublications, spaces, news, lastEvents, shortcuts;
   @UiField
-  HTMLPanel lastPublicationsSection, lastEventsSection, favorisSection;
+  HTMLPanel lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection;
 
   interface HomePageUiBinder extends UiBinder<Widget, HomePageContent> {}
 
@@ -126,6 +128,14 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
       favoris.add(item);
     }
 
+    shortcuts.clear();
+    List<ShortCutLinkDTO> shortCutLinkList = data.getShortCuts();
+    shortCutsSection.setVisible(!shortCutLinkList.isEmpty() && config.isShortCutsDisplay());
+    for (ShortCutLinkDTO shortCutLinkDTO : shortCutLinkList) {
+      ShortCutItem item = new ShortCutItem();
+      item.setData(shortCutLinkDTO);
+      shortcuts.add(item);
+    }
 
     lastPublications.clear();
     List<PublicationDTO> publicationsList = data.getLastPublications();

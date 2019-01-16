@@ -59,6 +59,7 @@ import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
 import org.silverpeas.mobile.shared.dto.RightDTO;
+import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -232,6 +233,27 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         e.printStackTrace();
       }
     }
+
+    // aurora shortcuts
+    int i = 1;
+    List<ShortCutLinkDTO> shortCutLinkDTOList = new ArrayList<>();
+    while (i > 0) {
+      String url = settings.getString("Shortcut.home." + i + ".Url", "");
+      if (!url.isEmpty()) {
+        String text = settings.getString("Shortcut.home." + i + ".AltText", "");
+        String icon = settings.getString("Shortcut.home." + i + ".IconUrl", "");
+        ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
+        shortCutLinkDTO.setUrl(url);
+        shortCutLinkDTO.setText(text);
+        shortCutLinkDTO.setIcon(icon);
+        shortCutLinkDTOList.add(shortCutLinkDTO);
+      } else {
+        i = 0;
+        break;
+      }
+      i++;
+    }
+    data.setShortCuts(shortCutLinkDTOList);
 
     // upcomming events
     NextEvents events = null;
