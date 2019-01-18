@@ -58,9 +58,13 @@
 
     // SSO case
     SynchronizerToken token = (SynchronizerToken) request.getSession().getAttribute("X-STKN");
-    if (token == null && (DomainTypeRegistry.get().exists(DomainType.GOOGLE) || DomainTypeRegistry.get().exists(DomainType.SCIM))) {
-      LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.lookAndFeel.generalLook", l);
-      String ssoPath = appUrl + resource.getString("login.sso.path");
+    LocalizationBundle resourceGeneralLook = ResourceLocator.getLocalizationBundle("org.silverpeas.lookAndFeel.generalLook", l);
+    String ssoPath = resourceGeneralLook.getString("login.sso.path");
+    if (token == null && (DomainTypeRegistry.get().exists(DomainType.GOOGLE) || DomainTypeRegistry.get().exists(DomainType.SCIM)) && (ssoPath != null && !ssoPath.isEmpty())) {
+      if (!ssoPath.startsWith("/")) {
+        ssoPath = "/" + ssoPath;
+      }
+      ssoPath = appUrl + ssoPath;
       response.sendRedirect(ssoPath);
     }
 
