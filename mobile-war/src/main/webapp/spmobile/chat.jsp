@@ -1,4 +1,3 @@
-<%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
 <%@ page import="org.silverpeas.core.util.ResourceLocator" %>
 <%@ page import="org.silverpeas.core.util.SettingBundle" %>
 <%@ page import="org.silverpeas.core.admin.user.model.UserDetail" %><%--
@@ -30,6 +29,9 @@
   SettingBundle
       configChat = ResourceLocator.getSettingBundle("org.silverpeas.chat.settings.chat");
   UserDetail user = (UserDetail) session.getAttribute("user");
+  String login = user.getLogin();
+  int i = login.indexOf("@");
+  if (i != -1) login.substring(i);
 %>
 
 <head>
@@ -66,7 +68,7 @@
 <h1 class="tchat-header">Spmobile chat</h1>
 <input type="hidden" id="xmpp-domain" name="xmpp-domain" class="form-control" value='<%=configChat.getString("chat.xmpp.domain.0")%>' />
 <input type="hidden" id="bosh-url" name="bosh-url" class="form-control" value='<%=configChat.getString("chat.xmpp.httpBindUrl")%>' />
-<input type="hidden" id="username" class="form-control" value='<%=user.getLogin()%>'/>
+<input type="hidden" id="username" class="form-control" value='<%=login%>'/>
 <input type="hidden" id="password" class="form-control" value='<%=user.getToken()%>'/>
 </body>
 
