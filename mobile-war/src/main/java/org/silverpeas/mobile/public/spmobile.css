@@ -612,6 +612,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .carroussel-news .caption {
   height: 5em;
   overflow: hidden;
+  padding-right: 2em;
 }
 
 .carroussel-news h2 {
