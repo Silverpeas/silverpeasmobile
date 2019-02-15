@@ -34,6 +34,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -125,10 +126,16 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     shortcutContentId = Window.Location.getParameter("shortcutContentId");
     shortcutContributionId = Window.Location.getParameter("shortcutContributionId");
 
-    token = Cookies.getCookie("X-STKN");
+    NodeList<Element> node = Document.get().getElementsByTagName("meta");
+    for (int i = 0; i < node.getLength(); i++) {
+      if (node.getItem(i).getAttribute("name").equalsIgnoreCase("sp_token")) {
+        token = node.getItem(i).getAttribute("content");
+        break;
+      }
+    }
+
     if (token != null && !token.isEmpty()) {
       AuthentificationManager.getInstance().addHeader("X-STKN", token);
-      Cookies.removeCookie("X-STKN");
     }
 
     msg = GWT.create(ApplicationMessages.class);
@@ -282,8 +289,6 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           SpMobil.displayMainPage();
         }
       });
-
-
     } else {
       //Login
       tabletGesture(false);

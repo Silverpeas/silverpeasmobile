@@ -116,22 +116,9 @@ public class MobilFilter implements Filter {
           return;
         }
 
-        Object token = ((HttpServletRequest) req).getSession().getAttribute("X-STKN");
-        if (token != null) {
-          Cookie userCookie = new Cookie("X-STKN", ((SynchronizerToken) token).getValue());
-          userCookie.setPath("/silverpeas");
-          userCookie.setMaxAge(60*60*24*365);
-          ((HttpServletResponse) res).addCookie(userCookie);
-        }
-
         String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
-
-
         String urlWithSessionID = ((HttpServletResponse)res).encodeRedirectURL(aDestinationPage.toString());
         ((HttpServletResponse) res).sendRedirect(urlWithSessionID);
-
-        //req.getRequestDispatcher(urlWithSessionID).forward(req, res);
-
         return;
       } else {
         chain.doFilter(req, res);
