@@ -33,7 +33,12 @@ import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
+import org.silverpeas.core.security.session.SessionInfo;
+import org.silverpeas.core.security.session.SessionManagement;
+import org.silverpeas.core.security.session.SessionManagementProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
+import org.silverpeas.core.web.mvc.controller.MainSessionController;
+import org.silverpeas.core.web.token.SynchronizerTokenService;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -41,7 +46,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -117,21 +121,21 @@ public class MobilFilter implements Filter {
           return;
         }
 
-
-        //String sessionId = ((HttpServletRequest) req).getRequestedSessionId();
         HttpSession session = ((HttpServletRequest) req).getSession(false);
-        if (session != null) {
-          String sessionId = session.getId();
-          if (params.isEmpty()) {
-            params += "?jsessionid=" + sessionId;
-          } else {
-            params += "&jsessionid=" + sessionId;
-          }
+        SynchronizerToken token = (SynchronizerToken) session.getAttribute("X-STKN");
+        MainSessionController controller = (MainSessionController) session.getAttribute("SilverSessionController");
+        if (controller != null && token == null) {
+          SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
+          SessionInfo sessionInfo = sessionManagement.validateSession(session.getId());
+          sessionInfo = sessionManagement.openSession(controller.getCurrentUserDetail(), (HttpServletRequest) req);
+          SynchronizerTokenService.getInstance().setUpSessionTokens(sessionInfo);
         }
+
         String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
         String urlWithSessionID = ((HttpServletResponse) res).encodeRedirectURL(aDestinationPage.toString());
         ((HttpServletResponse) res).sendRedirect(urlWithSessionID);
         return;
+
       } else {
         chain.doFilter(req, res);
         return;

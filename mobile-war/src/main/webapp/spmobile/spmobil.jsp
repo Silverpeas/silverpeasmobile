@@ -58,7 +58,6 @@
 
     // SSO case
     SynchronizerToken token = (SynchronizerToken) ((HttpServletRequest) request).getSession().getAttribute("X-STKN");
-    if (token != null) out.print("<meta name='sp_token' content='" + token.getValue() + "'/>");
     LocalizationBundle resourceGeneralLook = ResourceLocator.getLocalizationBundle("org.silverpeas.lookAndFeel.generalLook", l);
     String ssoPath = resourceGeneralLook.getString("login.sso.path");
     if (token == null && (DomainTypeRegistry.get().exists(DomainType.GOOGLE) || DomainTypeRegistry.get().exists(DomainType.SCIM)) && (ssoPath != null && !ssoPath.isEmpty())) {
@@ -69,6 +68,10 @@
       response.sendRedirect(ssoPath);
     }
 
+    if (token != null) {
+      out.print("<meta name='sp_token' content='" + token.getValue() + "'/>");
+    }
+
     LocalizationBundle resourceLabels = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", l);
     Map<String, String> map = ResourceBundleHelper.convertResourceBundleToMap(resourceLabels);
     String jsonLabels = new ObjectMapper().writeValueAsString(map);
@@ -76,6 +79,7 @@
     LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.mobileSettings", l);
     Map<String, String> mapConfig = ResourceBundleHelper.convertResourceBundleToMap(resource);
     String jsonParams = new ObjectMapper().writeValueAsString(mapConfig);
+
   %>
 
   <meta name="gwt:property" content="locale=<%=l%>">
