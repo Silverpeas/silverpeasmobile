@@ -57,7 +57,7 @@
     }
 
     // SSO case
-    SynchronizerToken token = (SynchronizerToken) request.getSession().getAttribute("X-STKN");
+    SynchronizerToken token = (SynchronizerToken) ((HttpServletRequest) request).getSession().getAttribute("X-STKN");
     if (token != null) out.print("<meta name='sp_token' content='" + token.getValue() + "'/>");
     LocalizationBundle resourceGeneralLook = ResourceLocator.getLocalizationBundle("org.silverpeas.lookAndFeel.generalLook", l);
     String ssoPath = resourceGeneralLook.getString("login.sso.path");

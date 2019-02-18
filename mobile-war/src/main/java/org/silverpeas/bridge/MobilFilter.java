@@ -44,6 +44,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class MobilFilter implements Filter {
@@ -117,15 +118,18 @@ public class MobilFilter implements Filter {
         }
 
 
-        String sessionId = ((HttpServletRequest) req).getRequestedSessionId();
-        if (params.isEmpty()) {
-          params += "?jsessionid=" + sessionId;
-        } else {
-          params += "&jsessionid=" + sessionId;
+        //String sessionId = ((HttpServletRequest) req).getRequestedSessionId();
+        HttpSession session = ((HttpServletRequest) req).getSession(false);
+        if (session != null) {
+          String sessionId = session.getId();
+          if (params.isEmpty()) {
+            params += "?jsessionid=" + sessionId;
+          } else {
+            params += "&jsessionid=" + sessionId;
+          }
         }
-
         String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
-        String urlWithSessionID = ((HttpServletResponse)res).encodeRedirectURL(aDestinationPage.toString());
+        String urlWithSessionID = ((HttpServletResponse) res).encodeRedirectURL(aDestinationPage.toString());
         ((HttpServletResponse) res).sendRedirect(urlWithSessionID);
         return;
       } else {
