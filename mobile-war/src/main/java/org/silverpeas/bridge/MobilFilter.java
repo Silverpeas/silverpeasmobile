@@ -116,6 +116,14 @@ public class MobilFilter implements Filter {
           return;
         }
 
+
+        String sessionId = ((HttpServletRequest) req).getRequestedSessionId();
+        if (params.isEmpty()) {
+          params += "?jsessionid=" + sessionId;
+        } else {
+          params += "&jsessionid=" + sessionId;
+        }
+
         String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
         String urlWithSessionID = ((HttpServletResponse)res).encodeRedirectURL(aDestinationPage.toString());
         ((HttpServletResponse) res).sendRedirect(urlWithSessionID);
