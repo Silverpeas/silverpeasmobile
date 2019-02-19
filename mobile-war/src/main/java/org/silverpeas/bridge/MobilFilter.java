@@ -33,12 +33,11 @@ import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
-import org.silverpeas.core.security.session.SessionInfo;
-import org.silverpeas.core.security.session.SessionManagement;
-import org.silverpeas.core.security.session.SessionManagementProvider;
+import org.silverpeas.core.security.token.TokenGenerator;
+import org.silverpeas.core.security.token.TokenGeneratorProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
-import org.silverpeas.core.web.token.SynchronizerTokenService;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -52,6 +51,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class MobilFilter implements Filter {
+
+  private static final SilverLogger logger = SilverLogger.getLogger("silverpeas.core.security");
+  public static final String SESSION_TOKEN_KEY = "X-STKN";
 
   @Override
   public void destroy() {
@@ -122,13 +124,14 @@ public class MobilFilter implements Filter {
         }
 
         HttpSession session = ((HttpServletRequest) req).getSession(false);
-        SynchronizerToken token = (SynchronizerToken) session.getAttribute("X-STKN");
+        SynchronizerToken token = (SynchronizerToken) session.getAttribute(SESSION_TOKEN_KEY);
         MainSessionController controller = (MainSessionController) session.getAttribute("SilverSessionController");
         if (controller != null && token == null) {
-          SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
-          SessionInfo sessionInfo = sessionManagement.validateSession(session.getId());
-          sessionInfo = sessionManagement.openSession(controller.getCurrentUserDetail(), (HttpServletRequest) req);
-          SynchronizerTokenService.getInstance().setUpSessionTokens(sessionInfo);
+          logger.warn("security.web.protection.token is disable");
+          // generate fake token for auto login without token security
+          TokenGenerator generator = TokenGeneratorProvider.getTokenGenerator(SynchronizerToken.class);
+          token = generator.generate();
+          session.setAttribute(SESSION_TOKEN_KEY, token);
         }
 
         String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
