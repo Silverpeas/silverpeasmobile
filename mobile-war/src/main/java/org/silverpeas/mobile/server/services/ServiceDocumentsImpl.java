@@ -97,7 +97,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         rootTopic.setName(app.getLabel());
       }
       topicsList.add(rootTopic);
-      ArrayList<NodeDetail> nodes = getNodeBm().getSubTreeByLevel(pk, rootNode.getLevel() + 1);
+      List<NodeDetail> nodes = getNodeBm().getSubTreeByLevel(pk, rootNode.getLevel() + 1);
       TopicDTO trash = null;
       for (NodeDetail nodeDetail : nodes) {
         if (rootTopicId.equals(nodeDetail.getFatherPK().getId())) {
