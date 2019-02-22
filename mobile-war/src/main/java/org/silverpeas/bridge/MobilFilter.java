@@ -77,7 +77,11 @@ public class MobilFilter implements Filter {
       if (tablet == null) tablet = new Boolean(false);
 
       String url = ((HttpServletRequest) req).getRequestURL().toString();
-      if (isMobile && !url.contains("sso") && !url.contains("services") && !url.contains("spmobile") && (!tablet) && !url.contains("attached_file")) {
+
+      boolean redirect = isRedirect(url);
+
+      if (isMobile && !url.contains("sso") && !url.contains("services") && !url.contains("spmobile")
+          && (!tablet) && !url.contains("attached_file") && !url.contains("Ticket") && redirect) {
         String params = "";
         if (url.contains("Publication")) {
           String id = url.substring(url.lastIndexOf("/") + 1);
@@ -147,6 +151,17 @@ public class MobilFilter implements Filter {
       chain.doFilter(req, res);
       return;
     }
+  }
+
+  private boolean isRedirect(final String url) {
+    String urlRes = url.toLowerCase();
+    if (urlRes.contains("weblib")) return false;
+    if (urlRes.toLowerCase().endsWith(".css")) return false;
+    if (urlRes.toLowerCase().endsWith(".gif")) return false;
+    if (urlRes.toLowerCase().endsWith(".jpg")) return false;
+    if (urlRes.toLowerCase().endsWith(".png")) return false;
+
+    return true;
   }
 
   @Override
