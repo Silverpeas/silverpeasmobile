@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Widget;
+import org.apache.tools.ant.taskdefs.condition.Not;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import org.silverpeas.mobile.client.apps.media.resources.MediaMessages;
@@ -79,7 +80,7 @@ public class AddMediaButton extends Composite {
 
     @UiHandler("file")
     void upload(ChangeEvent event) {
-      Notification.activityStart();
+      Notification.activityStartImmediately();
       String url = UrlUtils.getUploadLocation();
       url +=  "MediaAction";
       upload(this, file.getElement(), instanceIdValue, albumIdValue, url, SpMobil.getUserToken());
