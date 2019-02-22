@@ -187,7 +187,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService implem
                 String url = silverpeasServerUrl + "/Publication/" + notification.getContentId();
                 metaData.setLink(url);
             } else if (notification.getContentType().equals(NotificationDTO.TYPE_PHOTO) || notification.getContentType().equals(NotificationDTO.TYPE_SOUND) || notification.getContentType().equals(NotificationDTO.TYPE_VIDEO) || notification.getContentType().equals(NotificationDTO.TYPE_STREAMING)) {
-                String url = silverpeasServerUrl + "/Media/" + notification.getContentId();
+                String url = silverpeasServerUrl + "/autoRedirect.jsp?goto=%2FRgallery%2F" + notification.getInstanceId() + "%2FsearchResult%3FType%3D"+notification.getContentType()+"%26Id%3D" + notification.getContentId();
                 metaData.setLink(url);
             } else if (notification.getContentType().equals(NotificationDTO.TYPE_EVENT)) {
               String url = silverpeasServerUrl + "/Contribution/" + notification.getContentId();
