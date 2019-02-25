@@ -52,13 +52,18 @@ public class Notification {
       @Override
       public boolean execute() {
         if (activity) {
-          RootPanel.getBodyElement().getStyle().setProperty("cursor", "wait");
-          RootPanel.get().setHeight(Window.getClientHeight() + "px");
-          RootPanel.getBodyElement().addClassName("csspinner traditional");
+          activityStartImmediately();
         }
         return false;
       }
     }, 1000);
+  }
+
+  public static void activityStartImmediately() {
+    activity = true;
+    RootPanel.getBodyElement().getStyle().setProperty("cursor", "wait");
+    RootPanel.get().setHeight(Window.getClientHeight() + "px");
+    RootPanel.getBodyElement().addClassName("csspinner traditional");
   }
 
   public static void activityStop() {
