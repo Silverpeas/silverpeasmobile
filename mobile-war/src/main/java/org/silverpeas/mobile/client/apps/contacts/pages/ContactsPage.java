@@ -113,11 +113,13 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
         if (mycontacts.isVisible()) {
           EventBus.getInstance().fireEvent(
               new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndexMy));
+          currentType = ContactFilters.MY;
         } else {
           EventBus.getInstance().fireEvent(
               new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(), startIndexMy));
           allcontacts.addStyleName("ui-btn-active");
           allcontacts.addStyleName("ui-first-child");
+          currentType = ContactFilters.ALL;
         }
         if (!mycontacts.isVisible() && !allextcontacts.isVisible()) {
           allcontacts.setVisible(false);
