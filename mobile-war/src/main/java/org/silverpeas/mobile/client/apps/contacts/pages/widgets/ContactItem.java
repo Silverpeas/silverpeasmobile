@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.contacts.resources.ContactsResources;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 
@@ -63,7 +64,16 @@ public class ContactItem extends Composite {
     } else {
       user.add(new Image(userData.getAvatar()));
     }
-    String html = userData.getFirstName() + " " + userData.getLastName() + " <span class='status'>" + userData.getStatus() + "</span>";
+
+    Boolean firstnameAtFirst = Boolean.parseBoolean(ResourcesManager.getParam("directory.display.firstname.at.first"));
+    String html;
+    if (firstnameAtFirst) {
+      html = userData.getFirstName() + " " + userData.getLastName();
+    } else {
+      html = userData.getLastName() + " " + userData.getFirstName();
+    }
+    html += " <span class='status'>" + userData.getStatus() + "</span>";
+
     if (userData.getConnected()) html += "<span class='connected'></span>";
     user.add(new HTML(html));
     mail.setText(userData.geteMail());
