@@ -66,7 +66,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   @UiField Anchor mycontacts, allcontacts, allextcontacts;
   @UiField UnorderedList list;
   @UiField TextBox filter;
-  private int startIndexAll, startIndexMy, startIndex, pageSize = 0;
+  private int startIndex, pageSize = 0;
   private String currentFilter = "";
   private String currentType = ContactFilters.MY;
   private ContactItem itemWaiting;
@@ -112,11 +112,11 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 
         if (mycontacts.isVisible()) {
           EventBus.getInstance().fireEvent(
-              new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndexMy));
+              new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndex));
           currentType = ContactFilters.MY;
         } else {
           EventBus.getInstance().fireEvent(
-              new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(), startIndexMy));
+              new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(), startIndex));
           allcontacts.addStyleName("ui-btn-active");
           allcontacts.addStyleName("ui-first-child");
           currentType = ContactFilters.ALL;
@@ -149,8 +149,8 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     currentFilter = "";
     list.clear();
     pageSize = 0;
-    startIndexMy = 0;
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexMy));
+    startIndex = 0;
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
   }
 
   @UiHandler("allcontacts")
@@ -166,8 +166,8 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     currentFilter = "";
     list.clear();
     pageSize = 0;
-    startIndexAll = 0;
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexAll));
+    startIndex = 0;
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
   }
 
   @UiHandler("allextcontacts")
@@ -184,8 +184,8 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     currentFilter = "";
     list.clear();
     pageSize = 0;
-    startIndexAll = 0;
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexAll));
+    startIndex = 0;
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
   }
 
   @UiHandler("filter")
@@ -224,6 +224,8 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       }
     }
     callingNexData = false;
+
+
   }
 
   @Override
@@ -238,9 +240,9 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       list.add(getWaitingItem());
       Window.scrollTo(0, Document.get().getScrollHeight());
 
-      startIndexAll += computePageSize();
+      startIndex += computePageSize();
       EventBus.getInstance()
-          .fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndexAll));
+          .fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
     }
   }
 

@@ -198,7 +198,8 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       }
 
     } catch (ParseException e) {
-      e.printStackTrace();
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error(SpMobileLogModule.getName(), "ServiceContactImpl.getUsersByQuery", e);
     }
 
     return results;
