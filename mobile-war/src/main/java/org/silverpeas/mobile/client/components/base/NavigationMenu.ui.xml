@@ -22,14 +22,14 @@
   -->
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:w="urn:import:org.silverpeas.mobile.client.components.base.widgets">
 
   <ui:with field='msg' type='org.silverpeas.mobile.client.resources.ApplicationMessages'/>
 
   <g:HTMLPanel ui:field="container" styleName="ui-panel ui-panel-position-left ui-panel-display-push ui-body-inherit ui-panel-animate ui-panel-close">
     <div class="ui-panel-inner">
       <g:HTMLPanel ui:field="user">
-        <img src="" id="avatar"/>
+        <w:AvatarUpload ui:field="avatar"/>
         <span id="userName"></span>
         <br /><span class="statut"><span ui:field="status"></span><g:Anchor  ui:field="updateStatus" styleName="edit-my-statut" text="{msg.editStatus}"></g:Anchor></span>
       </g:HTMLPanel>

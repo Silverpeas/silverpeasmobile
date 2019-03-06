@@ -83,6 +83,15 @@ public class AuthentificationManager {
     LocalStorageHelper.store(USER_PROFIL, UserProfileDTO.class, profil);
   }
 
+  public void updateAvatarInCache(final String avatarData) {
+    SpMobil.getUser().setAvatar(avatarData);
+    SpMobil.getUserProfile().setAvatar(avatarData);
+    FullUserDTO user = LocalStorageHelper.load(USER_CONNECTED_KEY, FullUserDTO.class);
+    user.setAvatar(avatarData);
+    LocalStorageHelper.store(USER_CONNECTED_KEY, FullUserDTO.class, user);
+    LocalStorageHelper.store(USER_PROFIL, UserProfileDTO.class, SpMobil.getUserProfile());
+  }
+
   /**
    * Clean data in local storage.
    */
@@ -185,4 +194,6 @@ public class AuthentificationManager {
           }
         });
   }
+
+
 }

@@ -146,4 +146,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("chargement...")
   String loading();
 
+  @DefaultMessage("Média trop volumineux")
+  String maxUploadError();
+
+  @DefaultMessage("Format non pris en charge")
+  String mediaNotSupportedError();
 }

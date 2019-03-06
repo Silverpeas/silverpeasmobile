@@ -24,6 +24,8 @@
 package org.silverpeas.mobile.server.servlets;
 
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
@@ -46,5 +48,9 @@ public abstract  class AbstractSilverpeasMobileServlet extends HttpServlet {
   protected MainSessionController getMainSessionController(HttpServletRequest request) throws Exception {
     MainSessionController mainSessionController = (MainSessionController) request.getSession().getAttribute(AbstractAuthenticateService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
     return mainSessionController;
+  }
+
+  protected static SettingBundle getSettings() {
+    return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 }

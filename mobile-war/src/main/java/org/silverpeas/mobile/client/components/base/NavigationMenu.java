@@ -27,6 +27,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -61,6 +62,7 @@ import org.silverpeas.mobile.client.components.base.events.page.LoadingDataFinis
 import org.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
+import org.silverpeas.mobile.client.components.base.widgets.AvatarUpload;
 import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
@@ -77,6 +79,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, tchat, calendar;
   @UiField SpanElement status;
   @UiField TextBox search;
+  @UiField AvatarUpload avatar;
 
   @UiField(provided = true) protected ApplicationMessages msg = null;
 
@@ -202,7 +205,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   @UiHandler("calendar")
   protected void calendar(ClickEvent event) {
-    //TODO : send appchanged event
     ApplicationInstanceDTO app = new ApplicationInstanceDTO();
     app.setId("userCalendar" + SpMobil.getUser().getId() + "_PCI");
     app.setType(Apps.userCalendar.name());
@@ -211,17 +213,12 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   }
 
   public void setUser(DetailUserDTO currentUser) {
-    if (currentUser.getAvatar().isEmpty()) {
-      Image avatar = new Image(resources.avatar());
-      avatar.getElement().removeAttribute("height");
-      avatar.getElement().removeAttribute("width");
-      user.addAndReplaceElement(avatar, "avatar");
-    } else {
-      user.addAndReplaceElement(new Image(currentUser.getAvatar()), "avatar");
-    }
+    avatar.setUser(currentUser,resources);
     user.addAndReplaceElement(
         new InlineHTML(" " + currentUser.getFirstName() + " " + currentUser.getLastName()),
         "userName");
     status.setInnerHTML(currentUser.getStatus());
+
+
   }
 }
