@@ -116,6 +116,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       return userDTO;
 
     } catch (AdminException e) {
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getUser", "root.EX_NO_MESSAGE", e);
       throw new NavigationException(e);
     }
   }
@@ -137,7 +138,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       Connection c = Jsoup.connect(url);
       Document d = c.get();
     } catch (IOException e) {
-
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.logout", "root.EX_NO_MESSAGE", e);
     }
     getThreadLocalRequest().getSession().invalidate();
   }
@@ -186,6 +187,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         data.setSpaceName(space.getName(getUserInSession().getUserPreferences().getLanguage()));
       }
     } catch (Exception e) {
+      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
       throw new NavigationException(e);
     }
     int maxNews;
@@ -230,7 +232,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         data.setLastPublications(lastPubs);
 
       } catch (Exception e) {
-        e.printStackTrace();
+        SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
       }
     }
 
