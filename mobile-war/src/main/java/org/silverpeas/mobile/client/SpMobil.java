@@ -96,6 +96,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static String shortcutContentId;
   private static String shortcutContributionId;
   private static String token;
+  private static String XSession;
   private static SpMobil instance = null;
   private static Orientation orientation = null;
   private static List<App> apps = new ArrayList<App>();
@@ -130,12 +131,17 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     for (int i = 0; i < node.getLength(); i++) {
       if (node.getItem(i).getAttribute("name").equalsIgnoreCase("sp_token")) {
         token = node.getItem(i).getAttribute("content");
-        break;
+      } else if (node.getItem(i).getAttribute("name").equalsIgnoreCase("sp_session")) {
+        XSession = node.getItem(i).getAttribute("content");
       }
     }
 
     if (token != null && !token.isEmpty()) {
       AuthentificationManager.getInstance().addHeader("X-STKN", token);
+    }
+
+    if (XSession != null && !XSession.isEmpty()) {
+      AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session", XSession);
     }
 
     msg = GWT.create(ApplicationMessages.class);

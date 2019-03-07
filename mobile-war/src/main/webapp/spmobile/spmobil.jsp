@@ -7,6 +7,10 @@
 <%@ page import="org.silverpeas.core.admin.domain.DomainType" %>
 <%@ page import="org.silverpeas.core.admin.domain.DomainTypeRegistry" %>
 <%@ page import="org.silverpeas.core.security.token.synchronizer.SynchronizerToken" %>
+<%@ page import="org.silverpeas.core.security.session.SessionManagementProvider" %>
+<%@ page import="org.silverpeas.core.security.session.SessionManagement" %>
+<%@ page import="org.silverpeas.core.web.token.SynchronizerTokenService" %>
+<%@ page import="org.silverpeas.core.security.session.SessionInfo" %>
 
 <%--
   ~ Copyright (C) 2000 - 2018 Silverpeas
@@ -70,6 +74,11 @@
 
     if (token != null) {
       out.print("<meta name='sp_token' content='" + token.getValue() + "'/>");
+
+      SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
+      SessionInfo sessionInfo = sessionManagement.validateSession(session.getId());
+      out.print("<meta name='sp_session' content='" + sessionInfo.getSessionId() + "'/>");
+
     }
 
     LocalizationBundle resourceLabels = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", l);
