@@ -214,9 +214,9 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   public void setUser(DetailUserDTO currentUser) {
     avatar.setUser(currentUser,resources);
-    user.addAndReplaceElement(
-        new InlineHTML(" " + currentUser.getFirstName() + " " + currentUser.getLastName()),
-        "userName");
+    InlineHTML html = new InlineHTML(" " + currentUser.getFirstName() + " " + currentUser.getLastName());
+    html.getElement().setId("userName");
+    user.addAndReplaceElement(html, "userName");
     status.setInnerHTML(currentUser.getStatus());
 
 
