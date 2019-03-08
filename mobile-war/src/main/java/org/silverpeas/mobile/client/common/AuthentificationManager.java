@@ -25,7 +25,6 @@ package org.silverpeas.mobile.client.common;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
@@ -134,8 +133,6 @@ public class AuthentificationManager {
 
   public void authenticateOnSilverpeas(String login, String password, String domainId, Command attempt) {
     Notification.activityStart();
-    Cookies.removeCookie("JSESSIONID", "/silverpeas");
-    Cookies.removeCookie("JSESSIONID", "/silverpeas/spmobile");
     ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
 
         new MethodCallback<UserProfileDTO>() {
@@ -158,12 +155,6 @@ public class AuthentificationManager {
 
             AuthentificationManager.getInstance().addHeader("X-STKN", method.getResponse().getHeader("X-STKN"));
             AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session", method.getResponse().getHeader("X-Silverpeas-Session"));
-
-
-            Cookies.removeCookie("JSESSIONID", "/silverpeas");
-            Cookies.removeCookie("JSESSIONID", "/silverpeas/spmobile");
-            Cookies.setCookie("JSESSIONID", method.getResponse().getHeader("X-Silverpeas-Session"), new Date(),"/silverpeas","/silverpeas",true);
-
 
             SpMobil.setUserProfile(userProfile);
             ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
@@ -197,15 +188,11 @@ public class AuthentificationManager {
   }
 
   public void injectAuthenticationHttpHeaders(RequestBuilder builder) {
-    if (AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN) != null) {
-      builder.setHeader(AuthentificationManager.XSTKN,
-          AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
+    if (getHeader(AuthentificationManager.XSTKN) != null) {
+      builder.setHeader(AuthentificationManager.XSTKN, getHeader(AuthentificationManager.XSTKN));
     }
-    if (AuthentificationManager.getInstance()
-        .getHeader(AuthentificationManager.XSilverpeasSession) != null) {
-      builder.setHeader(AuthentificationManager.XSilverpeasSession,
-          AuthentificationManager.getInstance()
-              .getHeader(AuthentificationManager.XSilverpeasSession));
+    if (getHeader(AuthentificationManager.XSilverpeasSession) != null) {
+      builder.setHeader(AuthentificationManager.XSilverpeasSession, getHeader(AuthentificationManager.XSilverpeasSession));
     }
   }
 
