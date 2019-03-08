@@ -36,7 +36,7 @@
   --%>
 
 <!doctype html>
-<html manifest="spmobil.appcache">
+<html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
   <meta name="robots" content="noindex">
