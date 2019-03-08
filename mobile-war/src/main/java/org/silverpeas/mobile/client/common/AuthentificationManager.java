@@ -23,6 +23,7 @@
 
 package org.silverpeas.mobile.client.common;
 
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -195,5 +196,19 @@ public class AuthentificationManager {
         });
   }
 
+  public void injectAuthenticationHttpHeaders(RequestBuilder builder) {
+    if (AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN) != null) {
+      builder.setHeader(AuthentificationManager.XSTKN,
+          AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
+    }
+    if (AuthentificationManager.getInstance()
+        .getHeader(AuthentificationManager.XSilverpeasSession) != null) {
+      builder.setHeader(AuthentificationManager.XSilverpeasSession,
+          AuthentificationManager.getInstance()
+              .getHeader(AuthentificationManager.XSilverpeasSession));
+      builder.setHeader("Cookie", "JSESSIONID=" + AuthentificationManager.getInstance()
+          .getHeader(AuthentificationManager.XSilverpeasSession));
+    }
+  }
 
 }

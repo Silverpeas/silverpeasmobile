@@ -45,27 +45,7 @@ public class SpMobileRpcRequestBuilder extends RpcRequestBuilder {
   protected RequestBuilder doCreate(String serviceEntryPoint) {
     RequestBuilder builder = super.doCreate(serviceEntryPoint);
     builder.setTimeoutMillis(this.timeout);
-
-
-    if (AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN) != null) {
-      builder.setHeader(AuthentificationManager.XSTKN,
-          AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
-    }
-    if (AuthentificationManager.getInstance()
-        .getHeader(AuthentificationManager.XSilverpeasSession) != null) {
-      builder.setHeader(AuthentificationManager.XSilverpeasSession,
-          AuthentificationManager.getInstance()
-              .getHeader(AuthentificationManager.XSilverpeasSession));
-      builder.setHeader("Cookie", "JSESSIONID=" + AuthentificationManager.getInstance()
-          .getHeader(AuthentificationManager.XSilverpeasSession));
-    }
-
-    /*if (SpMobil.getUserToken() != null) {
-      builder.setHeader("X-Silverpeas-Session", SpMobil.getUserToken());
-      builder.setHeader("X-STKN", AuthentificationManager.getInstance().getHeaders().get("X-STKN"));
-    }*/
-
-
+    AuthentificationManager.getInstance().injectAuthenticationHttpHeaders(builder);
     return builder;
   }
 }

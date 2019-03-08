@@ -24,7 +24,7 @@
 package org.silverpeas.mobile.client.common.network;
 
 import com.google.gwt.http.client.RequestBuilder;
-import org.silverpeas.mobile.client.SpMobil;
+import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 
 /**
@@ -36,8 +36,6 @@ public class SpMobileRequestBuilder extends RequestBuilder {
   public SpMobileRequestBuilder(Method httpMethod, String url) {
     super(httpMethod, url);
     setTimeoutMillis(TIMEOUT);
-    if (SpMobil.getUser() != null) {
-      setHeader("X-Silverpeas-Session", SpMobil.getUser().getToken());
-    }
+    AuthentificationManager.getInstance().injectAuthenticationHttpHeaders(this);
   }
 }
