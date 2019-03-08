@@ -40,20 +40,7 @@ public class RestDispatcher implements Dispatcher {
   public Request send(final Method method, final RequestBuilder builder) throws RequestException {
     builder.setTimeoutMillis(SpMobileRequestBuilder.TIMEOUT);
     builder.setHeader("Authorization", "Bearer " + SpMobil.getUser().getToken());
-
-    if (AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN) != null) {
-      builder.setHeader(AuthentificationManager.XSTKN,
-          AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
-    }
-    if (AuthentificationManager.getInstance()
-        .getHeader(AuthentificationManager.XSilverpeasSession) != null) {
-      builder.setHeader(AuthentificationManager.XSilverpeasSession,
-          AuthentificationManager.getInstance()
-              .getHeader(AuthentificationManager.XSilverpeasSession));
-      builder.setHeader("Cookie", "JSESSIONID=" + AuthentificationManager.getInstance()
-          .getHeader(AuthentificationManager.XSilverpeasSession));
-    }
-
+    AuthentificationManager.getInstance().injectAuthenticationHttpHeaders(builder);
     return builder.send();
   }
 }

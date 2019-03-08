@@ -206,8 +206,6 @@ public class AuthentificationManager {
       builder.setHeader(AuthentificationManager.XSilverpeasSession,
           AuthentificationManager.getInstance()
               .getHeader(AuthentificationManager.XSilverpeasSession));
-      builder.setHeader("Cookie", "JSESSIONID=" + AuthentificationManager.getInstance()
-          .getHeader(AuthentificationManager.XSilverpeasSession));
     }
   }
 
