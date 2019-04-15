@@ -222,7 +222,9 @@ public class NewsHelper {
     byte[] binaryData = new byte[(int) f.length()];
     is.read(binaryData);
     is.close();
-    data = "data:" + pub.getImageMimeType() + ";base64," + new String(Base64.encodeBase64(binaryData));
+    String type = pub.getImageMimeType();
+    if (type.equalsIgnoreCase("jpeg")) type = "jpg";
+    data = "data:" + type + ";base64," + new String(Base64.encodeBase64(binaryData));
 
     return data;
   }
