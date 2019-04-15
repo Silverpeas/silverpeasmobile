@@ -23,18 +23,8 @@
 
 package org.silverpeas.mobile.client.apps.hyperlink;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import org.silverpeas.mobile.client.apps.blog.events.app.AbstractBlogAppEvent;
-import org.silverpeas.mobile.client.apps.blog.events.app.BlogAppEventHandler;
-import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
-import org.silverpeas.mobile.client.apps.blog.events.pages.BlogLoadedEvent;
-import org.silverpeas.mobile.client.apps.blog.pages.BlogPage;
-import org.silverpeas.mobile.client.apps.blog.resources.BlogMessages;
-import org.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
-import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -43,15 +33,11 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
-import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HyperLinkApp extends App implements NavigationEventHandler {
 
@@ -96,7 +82,12 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
 
   private void openLink(String url) {
     Notification.activityStop();
-    Window.open(url,"_blank","");
+
+    if (MobilUtils.isIOS()) {
+      Window.Location.assign(url);
+    } else {
+      Window.open(url, "_blank", "");
+    }
   }
 
   private Command getOfflineAction(final NavigationAppInstanceChangedEvent event, final String key) {
