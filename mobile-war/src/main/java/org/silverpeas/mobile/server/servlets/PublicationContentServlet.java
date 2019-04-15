@@ -104,6 +104,9 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     String componentId = request.getParameter("componentId");
     String ua = request.getHeader("User-Agent");
 
+    response.setContentType("text/html; charset=UTF-8");
+    response.setCharacterEncoding("UTF-8");
+
     response.getOutputStream().print("<html>");
     response.getOutputStream().print("<head>");
     response.getOutputStream()
