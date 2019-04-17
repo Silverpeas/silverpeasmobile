@@ -64,7 +64,12 @@ public class DataURLHelper {
 
       byte[] binaryData = IOUtils.toByteArray(image.inputStream());
       MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-      data = "data:" + mimeTypesMap.getContentType(originalImage) + ";base64," + new String(
+      String typeMime = mimeTypesMap.getContentType(originalImage);
+      if (typeMime.equalsIgnoreCase("jpeg")) {
+        typeMime = "jpg";
+      }
+
+      data = "data:" + typeMime + ";base64," + new String(
           Base64.encodeBase64(binaryData));
     } catch (Exception e) {
       SilverLogger.getLogger(SpMobileLogModule.getName()).error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
