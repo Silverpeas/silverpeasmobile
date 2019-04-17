@@ -80,6 +80,8 @@ public class NavigationItem extends Composite {
         setStyleName("app-link");
       } else if (type.equalsIgnoreCase(Apps.almanach.name())) {
         setStyleName("app-almanach");
+      } else if (type.equalsIgnoreCase(Apps.formsOnline.name())) {
+        setStyleName("app-formsOnline");
       }
 
     }

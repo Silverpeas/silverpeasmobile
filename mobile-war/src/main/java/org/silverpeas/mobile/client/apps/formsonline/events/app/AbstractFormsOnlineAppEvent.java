@@ -21,8 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline;
+import com.google.gwt.event.shared.GwtEvent;
+
+public abstract class AbstractFormsOnlineAppEvent extends GwtEvent<FormsOnlineAppEventHandler>{
+
+  public static Type<FormsOnlineAppEventHandler> TYPE = new Type<FormsOnlineAppEventHandler>();
+
+  public AbstractFormsOnlineAppEvent(){
+  }
+
+  @Override
+  public Type<FormsOnlineAppEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 }

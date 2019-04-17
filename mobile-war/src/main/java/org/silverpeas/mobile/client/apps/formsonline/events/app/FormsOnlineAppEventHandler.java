@@ -21,8 +21,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline;
+import com.google.gwt.event.shared.EventHandler;
+
+public interface FormsOnlineAppEventHandler extends EventHandler{
+  void loadFormsOnline(FormsOnlineLoadEvent event);
 }

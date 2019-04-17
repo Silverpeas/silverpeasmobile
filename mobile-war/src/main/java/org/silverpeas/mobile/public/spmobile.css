@@ -766,7 +766,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 /***** NAVIGATION ****/
 
 .folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a, .app-actuality a,
-.publication.ui-input-text, .app-blog a, .app-pageWeb a, .app-workflow a, .app-link a, .app-almanach a {
+.publication.ui-input-text, .app-blog a, .app-pageWeb a, .app-workflow a, .app-link a, .app-almanach a, .app-formsOnline a {
   background-image: url(packImagesNavigation.png);
   background-position: 0.5625em 0.5625em;
   background-repeat: no-repeat;
@@ -794,6 +794,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .publication.ui-input-text {
   background-position: 0.5625em 0.3em;
+}
+
+/* TODO : remove at release */
+.app-formsOnline {
+  display: none !important;
+}
+
+.app-formsOnline a {
+  background-position: 0.65em -2208px;
 }
 
 .app-almanach a {
