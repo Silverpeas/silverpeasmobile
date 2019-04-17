@@ -9,7 +9,6 @@
 <%@ page import="org.silverpeas.core.security.token.synchronizer.SynchronizerToken" %>
 <%@ page import="org.silverpeas.core.security.session.SessionManagementProvider" %>
 <%@ page import="org.silverpeas.core.security.session.SessionManagement" %>
-<%@ page import="org.silverpeas.core.web.token.SynchronizerTokenService" %>
 <%@ page import="org.silverpeas.core.security.session.SessionInfo" %>
 
 <%--
