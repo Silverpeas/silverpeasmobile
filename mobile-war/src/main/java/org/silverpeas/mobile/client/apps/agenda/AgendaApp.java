@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2018 Silverpeas
+ * Copyright (C) 2000 - 2019 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -231,7 +231,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
       @Override
       public void attempt() {
-        // Date format sample : 2018-03-24T23:00:00.000Z
+        // Date format sample : 2019-03-24T23:00:00.000Z
         String startDateOfWindowTime;
         String endDateOfWindowTime;
 
