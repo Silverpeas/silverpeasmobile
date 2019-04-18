@@ -26,6 +26,9 @@ package org.silverpeas.mobile.server.services.helpers;
 import org.apache.commons.codec.binary.Base64;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsServiceProvider;
+import org.silverpeas.components.gallery.model.MediaPK;
+import org.silverpeas.components.gallery.model.Photo;
+import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
@@ -40,8 +43,10 @@ import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationUpdateDateComparator;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
+import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.io.File;
@@ -215,29 +220,63 @@ public class NewsHelper {
 
 
   private String getBase64ImageData(String instanceId, PublicationDetail pub) throws Exception {
-    String data = "";
-    File f = getActuThumb(instanceId, pub);
-
-    FileInputStream is = new FileInputStream(f);
-    byte[] binaryData = new byte[(int) f.length()];
-    is.read(binaryData);
-    is.close();
-    String type = pub.getImageMimeType();
-    if (type.equalsIgnoreCase("jpeg")) type = "jpg";
-    data = "data:" + type + ";base64," + new String(Base64.encodeBase64(binaryData));
-
-    return data;
+    if (pub.getImage().contains("GalleryInWysiwyg")) {
+      return convertSpImageUrlToDataUrl(pub.getImage());
+    } else {
+      File f = getActuThumb(instanceId, pub);
+      FileInputStream is = new FileInputStream(f);
+      byte[] binaryData = new byte[(int) f.length()];
+      is.read(binaryData);
+      is.close();
+      String type = pub.getImageMimeType();
+      String data = "data:" + type + ";base64," + new String(Base64.encodeBase64(binaryData));
+      return data;
+    }
   }
 
   private File getActuThumb(String componentId,	PublicationDetail pub) throws IOException {
-      String path = FileRepositoryManager.getAbsolutePath(componentId) + publicationSettings.getString("imagesSubDirectory", "fr") + File.separatorChar;
-      path += pub.getImage();
-      File originalFile = new File(path);
-      String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), "x90");
-      path = processor.processBefore(askedPath, SilverpeasFileProcessor.ProcessingContext.GETTING);
-      File file = new File(path);
-      return file;
+    String path = FileRepositoryManager.getAbsolutePath(componentId) + publicationSettings.getString("imagesSubDirectory", "fr") + File.separatorChar;
+    path += pub.getImage();
+    File originalFile = new File(path);
+    return resizeImage(originalFile);
   }
+
+  private File resizeImage(final File originalFile) {
+    final String path;
+    String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), "x90");
+    path = processor.processBefore(askedPath, SilverpeasFileProcessor.ProcessingContext.GETTING);
+    return new File(path);
+  }
+
+  private String convertSpImageUrlToDataUrl(String url) {
+    String data = url;
+    if (url.contains("GalleryInWysiwyg")) {
+      try {
+        String instanceId = url.substring(url.indexOf("ComponentId") + "ComponentId".length() + 1);
+        instanceId = instanceId.substring(0, instanceId.indexOf("&"));
+        String imageId = url.substring(url.indexOf("ImageId") + "ImageId".length() + 1);
+        imageId = imageId.substring(0, imageId.indexOf("&"));
+        Photo photo = MediaServiceProvider.getMediaService().getPhoto(new MediaPK(imageId));
+        String[] rep = {"image" + imageId};
+
+        String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
+        File f = new File(path + photo.getFileName());
+
+        File fResized = resizeImage(f);
+        FileInputStream is = new FileInputStream(fResized);
+        byte[] binaryData = new byte[(int) f.length()];
+        is.read(binaryData);
+        is.close();
+        data = "data:" + photo.getFileMimeType().getMimeType().toLowerCase() + ";base64," +
+            new String(Base64.encodeBase64(binaryData));
+      } catch (Exception e) {
+        SilverLogger.getLogger(SpMobileLogModule.getName())
+            .error("NewsHelper.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+      }
+    }
+    return data;
+  }
+
 
   private String pathForOriginalImageSize(File originalImage,String name, String size) {
     return originalImage.getParent() + File.separator + size + File.separator + name;

@@ -42,8 +42,9 @@ public class LocalStorageHelper {
       String data = null;
       try {
         data = serializer.serialize(cBean , bean);
+        storage.setItem(key, data);
       } catch (Throwable t) {GWT.log("error store", t);}
-      storage.setItem(key, data);
+
     }
   }
 
