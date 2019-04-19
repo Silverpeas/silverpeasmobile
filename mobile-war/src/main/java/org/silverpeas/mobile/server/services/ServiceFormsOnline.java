@@ -23,10 +23,15 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.silverpeas.components.formsonline.model.FormDetail;
+import org.silverpeas.components.formsonline.model.FormsOnlineDatabaseException;
+import org.silverpeas.components.formsonline.model.FormsOnlineService;
 import org.silverpeas.core.annotation.RequestScoped;
 import org.silverpeas.core.annotation.Service;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.webapi.base.RESTWebService;
 import org.silverpeas.core.webapi.base.annotation.Authorized;
+import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -35,6 +40,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Copyright (C) 2000 - 2019 Silverpeas
@@ -70,11 +77,36 @@ public class ServiceFormsOnline extends RESTWebService {
   static final String PATH = "formsOnline";
 
 
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("forms/sendables/{appId}")
+  public List<FormDTO> getSendablesForms(@PathParam("appId") String appId) {
+    List<FormDTO> dtos = new ArrayList<>();
+    try {
+      List<FormDetail> forms = FormsOnlineService.get().getAllForms(appId, getUser().getId(), true);
+      for (FormDetail form : forms) {
+        FormDTO dto = new FormDTO();
+        if (form.isSendable() && form.isPublished()) {
+          dto.setId(String.valueOf(form.getId()));
+          dto.setTitle(form.getTitle());
+          dto.setDescription(form.getDescription());
+          dtos.add(dto);
+        }
+      }
+
+
+    } catch (FormsOnlineDatabaseException e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return dtos;
+  }
+
   /*@GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("forms/{appId}")
-  public List<Form> getForms(@PathParam("appId") String appId) {
+  @Path("forms/{appId}/myrequests")
+  public List<FormDTO> getMyRequests(@PathParam("appId") String appId) {
 
+    //FormsOnlineService.get().getAllUserRequests()
 
 
   }*/

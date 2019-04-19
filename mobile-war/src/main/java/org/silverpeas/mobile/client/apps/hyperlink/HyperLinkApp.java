@@ -82,10 +82,9 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
 
   private void openLink(String url) {
     Notification.activityStop();
-
     if (MobilUtils.isIOS()) {
       //Window.Location.assign(url);
-      Window.open(url, "_system", "");
+      Window.open(url, "_self", "");
     } else {
       Window.open(url, "_blank", "");
     }

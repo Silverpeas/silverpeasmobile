@@ -192,6 +192,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.silverpeas.components.formsonline</groupId>
+      <artifactId>silverpeas-formsonline</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.silverpeas.components.gallery</groupId>
       <artifactId>silverpeas-gallery</artifactId>
       <version>${silverpeas.version}</version>
