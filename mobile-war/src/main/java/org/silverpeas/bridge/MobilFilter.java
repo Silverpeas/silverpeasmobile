@@ -62,6 +62,16 @@ public class MobilFilter implements Filter {
   @Override
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
+    String url = ((HttpServletRequest) req).getRequestURL().toString();
+
+    if (url.contains("spmobile") && res != null) {
+      String csp = ((HttpServletResponse) res).getHeader("Content-Security-Policy");
+      if (csp != null && !csp.contains("img-src")) {
+        csp += "; img-src * data: blob:;";
+        ((HttpServletResponse) res).setHeader("Content-Security-Policy", csp);
+      }
+    }
+
     Boolean mob = (Boolean) ((HttpServletRequest) req).getSession().getAttribute("isMobile");
     if (mob != null && !mob) {
       chain.doFilter(req, res);
@@ -75,8 +85,6 @@ public class MobilFilter implements Filter {
 
       Boolean tablet = (Boolean) ((HttpServletRequest) req).getSession().getAttribute("tablet");
       if (tablet == null) tablet = new Boolean(false);
-
-      String url = ((HttpServletRequest) req).getRequestURL().toString();
 
       boolean redirect = isRedirect(url);
 
