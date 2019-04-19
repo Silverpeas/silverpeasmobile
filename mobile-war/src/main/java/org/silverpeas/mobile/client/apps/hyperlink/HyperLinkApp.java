@@ -84,7 +84,8 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
     Notification.activityStop();
 
     if (MobilUtils.isIOS()) {
-      Window.Location.assign(url);
+      //Window.Location.assign(url);
+      Window.open(url, "_system", "");
     } else {
       Window.open(url, "_blank", "");
     }
