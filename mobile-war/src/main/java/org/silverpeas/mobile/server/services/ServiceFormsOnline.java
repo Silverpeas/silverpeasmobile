@@ -26,12 +26,14 @@ package org.silverpeas.mobile.server.services;
 import org.silverpeas.components.formsonline.model.FormDetail;
 import org.silverpeas.components.formsonline.model.FormsOnlineDatabaseException;
 import org.silverpeas.components.formsonline.model.FormsOnlineService;
+import org.silverpeas.components.formsonline.model.RequestsByStatus;
 import org.silverpeas.core.annotation.RequestScoped;
 import org.silverpeas.core.annotation.Service;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.webapi.base.RESTWebService;
 import org.silverpeas.core.webapi.base.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -79,7 +81,7 @@ public class ServiceFormsOnline extends RESTWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("forms/sendables/{appId}")
+  @Path(ServiceFormsOnline.PATH + "/sendables/{appId}")
   public List<FormDTO> getSendablesForms(@PathParam("appId") String appId) {
     List<FormDTO> dtos = new ArrayList<>();
     try {
@@ -101,15 +103,23 @@ public class ServiceFormsOnline extends RESTWebService {
     return dtos;
   }
 
-  /*@GET
+  @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("forms/{appId}/myrequests")
-  public List<FormDTO> getMyRequests(@PathParam("appId") String appId) {
+  @Path(ServiceFormsOnline.PATH + "/{appId}/myrequests")
+  public List<FormRequestDTO> getMyRequests(@PathParam("appId") String appId) {
+    List<FormRequestDTO> requestDTOS = new ArrayList<>();
 
-    //FormsOnlineService.get().getAllUserRequests()
+    try {
+      RequestsByStatus reqs = FormsOnlineService.get().getAllUserRequests(appId, getUser().getId(), null);
+      reqs.getAll();
+      //TODO
 
+    } catch (FormsOnlineDatabaseException e) {
+      SilverLogger.getLogger(this).error(e);
+    }
 
-  }*/
+    return requestDTOS;
+  }
 
   @Override
   protected String getResourceBasePath() {

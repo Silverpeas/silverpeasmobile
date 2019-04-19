@@ -26,18 +26,14 @@ package org.silverpeas.mobile.client.apps.formsonline.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
-import org.silverpeas.mobile.client.apps.blog.events.pages.AbstractBlogPagesEvent;
-import org.silverpeas.mobile.client.apps.blog.resources.BlogMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 
@@ -65,6 +61,10 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
+
+
+    EventBus.getInstance().fireEvent(new FormsOnlineLoadEvent());
+
   }
 
   @Override
