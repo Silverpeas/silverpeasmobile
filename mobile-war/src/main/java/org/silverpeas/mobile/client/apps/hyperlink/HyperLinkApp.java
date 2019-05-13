@@ -35,13 +35,17 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 public class HyperLinkApp extends App implements NavigationEventHandler {
 
   private ApplicationInstanceDTO instance;
+
+  private Boolean iosShowIframe = Boolean.parseBoolean(ResourcesManager.getParam("ios.link.open.in.iframe"));
 
   public HyperLinkApp(){
     super();
@@ -83,8 +87,14 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
   private void openLink(String url) {
     Notification.activityStop();
     if (MobilUtils.isIOS()) {
-      //Window.Location.assign(url);
-      Window.open(url, "_self", "");
+      if (iosShowIframe) {
+        IframePage page = new IframePage(url);
+        page.setPageTitle("");
+        page.show();
+      } else {
+        //Window.Location.assign(url);
+        Window.open(url, "_self", "");
+      }
     } else {
       Window.open(url, "_blank", "");
     }
