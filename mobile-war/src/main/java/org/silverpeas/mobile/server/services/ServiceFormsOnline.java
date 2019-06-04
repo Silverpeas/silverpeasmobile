@@ -81,7 +81,7 @@ public class ServiceFormsOnline extends RESTWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path(ServiceFormsOnline.PATH + "/sendables/{appId}")
+  @Path("sendables/{appId}")
   public List<FormDTO> getSendablesForms(@PathParam("appId") String appId) {
     List<FormDTO> dtos = new ArrayList<>();
     try {
@@ -96,7 +96,6 @@ public class ServiceFormsOnline extends RESTWebService {
         }
       }
 
-
     } catch (FormsOnlineDatabaseException e) {
       SilverLogger.getLogger(this).error(e);
     }
@@ -105,7 +104,7 @@ public class ServiceFormsOnline extends RESTWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path(ServiceFormsOnline.PATH + "/{appId}/myrequests")
+  @Path("myrequests/{appId}")
   public List<FormRequestDTO> getMyRequests(@PathParam("appId") String appId) {
     List<FormRequestDTO> requestDTOS = new ArrayList<>();
 
