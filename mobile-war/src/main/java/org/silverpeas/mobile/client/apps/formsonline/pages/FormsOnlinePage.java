@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.formsonline.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
@@ -50,7 +51,7 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
 
   @Override
   public void onFormsOnlineLoad(final FormsOnlineLoadedEvent event) {
-
+    Window.alert("Forms number = " + event.getForms().size());
   }
 
   interface FormsOnlinePageUiBinder extends UiBinder<Widget, FormsOnlinePage> {

@@ -31,6 +31,7 @@ import org.silverpeas.mobile.client.apps.agenda.AgendaApp;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.AbstractFormsOnlineAppEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAppEventHandler;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormsOnlinePage;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -96,8 +97,10 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
       @Override
       public void onSuccess(final Method method, final List<FormDTO> forms) {
         super.onSuccess(method, forms);
-        //TODO
-        Window.alert("Forms number = " + forms.size());
+        LocalStorageHelper.store(keyForms, List.class, forms);
+        FormsOnlineLoadedEvent event = new FormsOnlineLoadedEvent();
+        event.setForms(forms);
+        EventBus.getInstance().fireEvent(event);
       }
     };
     action.attempt();

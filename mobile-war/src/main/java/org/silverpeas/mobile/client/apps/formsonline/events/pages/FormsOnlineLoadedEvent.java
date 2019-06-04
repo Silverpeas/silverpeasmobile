@@ -23,12 +23,27 @@
 
 package org.silverpeas.mobile.client.apps.formsonline.events.pages;
 
+import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+
+import java.util.List;
+
 public class FormsOnlineLoadedEvent extends AbstractFormsOnlinePagesEvent {
 
 
   public FormsOnlineLoadedEvent(){
     super();
   }
+
+  public List<FormDTO> getForms() {
+    return forms;
+  }
+
+  public void setForms(final List<FormDTO> forms) {
+    this.forms = forms;
+  }
+
+  private List<FormDTO> forms;
+
 
   @Override
   protected void dispatch(FormsOnlinePagesEventHandler handler) {
