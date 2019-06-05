@@ -23,25 +23,43 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.apache.jasper.runtime.JspWriterImpl;
+import org.apache.jasper.runtime.PageContextImpl;
 import org.silverpeas.components.formsonline.model.FormDetail;
 import org.silverpeas.components.formsonline.model.FormsOnlineDatabaseException;
 import org.silverpeas.components.formsonline.model.FormsOnlineService;
 import org.silverpeas.components.formsonline.model.RequestsByStatus;
+import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.annotation.RequestScoped;
 import org.silverpeas.core.annotation.Service;
+import org.silverpeas.core.contribution.content.form.FieldTemplate;
+import org.silverpeas.core.contribution.content.form.Form;
+import org.silverpeas.core.contribution.content.form.PagesContext;
+import org.silverpeas.core.contribution.content.form.RecordSet;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplateException;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.webapi.base.RESTWebService;
 import org.silverpeas.core.webapi.base.annotation.Authorized;
+import org.silverpeas.mobile.shared.dto.formsonline.FormContentDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +110,7 @@ public class ServiceFormsOnline extends RESTWebService {
           dto.setId(String.valueOf(form.getId()));
           dto.setTitle(form.getTitle());
           dto.setDescription(form.getDescription());
+          dto.setXmlFormName(form.getXmlFormName());
           dtos.add(dto);
         }
       }
@@ -118,6 +137,69 @@ public class ServiceFormsOnline extends RESTWebService {
     }
 
     return requestDTOS;
+  }
+
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("form/{appId}/{formName}")
+  public FormContentDTO getForm(@PathParam("appId") String appId, @PathParam("formName") String formName) {
+
+    //TODO
+    FormContentDTO form = new FormContentDTO();
+    List<FormFieldDTO> fields = new ArrayList<>();
+
+    try {
+      PublicationTemplate template = getPublicationTemplate(formName, true);
+      Form formUpdate = getEmptyForm(template);
+
+      for(FieldTemplate field : formUpdate.getFieldTemplates()) {
+        FormFieldDTO f = new FormFieldDTO();
+        f.setDisplayName(field.getDisplayerName());
+        f.setLabel(field.getLabel(getUser().getUserPreferences().getLanguage()));
+        f.setName(field.getFieldName());
+        f.setTypeName(field.getTypeName());
+        fields.add(f);
+      }
+      form.setFields(fields);
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+
+    return form;
+
+  }
+
+  private PublicationTemplate getPublicationTemplate(String xmlFormName, boolean registerIt)
+      throws SilverpeasException {
+    try {
+      String xmlFormShortName = xmlFormName.substring(xmlFormName.indexOf('/') + 1, xmlFormName.indexOf('.'));
+      if (registerIt) {
+        getPublicationTemplateManager()
+            .addDynamicPublicationTemplate(getComponentId() + ":" + xmlFormShortName, xmlFormName);
+      }
+      return getPublicationTemplateManager()
+          .getPublicationTemplate(getComponentId()+":"+xmlFormShortName, xmlFormName);
+    } catch (Exception e) {
+      throw new SilverpeasException("Can't load form '"+xmlFormName+"'", e);
+    }
+  }
+
+  private PublicationTemplateManager getPublicationTemplateManager() {
+    return PublicationTemplateManager.getInstance();
+  }
+
+  private Form getEmptyForm(PublicationTemplate template) throws SilverpeasException {
+    Form form;
+    try {
+      // form and DataRecord creation
+      form = template.getUpdateForm();
+      RecordSet recordSet = template.getRecordSet();
+      form.setData(recordSet.getEmptyRecord());
+    } catch (Exception e) {
+      throw new SilverpeasException("Can't load form ", e);
+    }
+    return form;
   }
 
   @Override

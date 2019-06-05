@@ -43,9 +43,11 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormContentDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -117,7 +119,23 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     page.setPageTitle(event.getForm().getTitle());
     page.show();
 
-    //TODO
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<FormContentDTO>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceFormsOnline().getForm(instance.getId(),
+            event.getForm().getXmlFormName(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final FormContentDTO formContentDTO) {
+        super.onSuccess(method, formContentDTO);
+        //TODO : send event to page
+
+      }
+    };
+    action.attempt();
+
+
   }
 
   @Override

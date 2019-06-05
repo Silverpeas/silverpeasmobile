@@ -21,36 +21,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services.rest;
+package org.silverpeas.mobile.shared.dto.formsonline;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.mobile.shared.dto.formsonline.FormContentDTO;
-import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * @author svu
  */
-@Path("/formsOnline")
-public interface ServiceFormsOnline extends RestService {
+public class FormFieldDTO implements Serializable {
 
+  private String name;
+  private String label;
+  private String typeName;
+  private String displayName;
 
-  @GET
-  @Path("sendables/{appId}")
-  public void getSendablesForms(@PathParam("appId") String appId,
-      MethodCallback<List<FormDTO>> callback);
+  public String getName() {
+    return name;
+  }
 
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-  @GET
-  @Path("form/{appId}/{formName}")
-  public void getForm(@PathParam("appId") String appId, @PathParam("formName") String formName,
-      MethodCallback<FormContentDTO> callback);
+  public String getLabel() {
+    return label;
+  }
 
+  public void setLabel(final String label) {
+    this.label = label;
+  }
 
+  public String getTypeName() {
+    return typeName;
+  }
+
+  public void setTypeName(final String typeName) {
+    this.typeName = typeName;
+  }
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+  public void setDisplayName(final String displayName) {
+    this.displayName = displayName;
+  }
 }

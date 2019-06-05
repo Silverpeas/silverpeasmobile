@@ -21,36 +21,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services.rest;
+package org.silverpeas.mobile.shared.dto.formsonline;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.mobile.shared.dto.formsonline.FormContentDTO;
-import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/formsOnline")
-public interface ServiceFormsOnline extends RestService {
+public class FormContentDTO implements Serializable {
 
+  private List<FormFieldDTO> fields;
 
-  @GET
-  @Path("sendables/{appId}")
-  public void getSendablesForms(@PathParam("appId") String appId,
-      MethodCallback<List<FormDTO>> callback);
+  public List<FormFieldDTO> getFields() {
+    return fields;
+  }
 
-
-  @GET
-  @Path("form/{appId}/{formName}")
-  public void getForm(@PathParam("appId") String appId, @PathParam("formName") String formName,
-      MethodCallback<FormContentDTO> callback);
-
-
+  public void setFields(final List<FormFieldDTO> fields) {
+    this.fields = fields;
+  }
 }

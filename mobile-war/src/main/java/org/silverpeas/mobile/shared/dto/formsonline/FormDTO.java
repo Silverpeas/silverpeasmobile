@@ -33,6 +33,8 @@ public class FormDTO implements Serializable {
   private String title;
   private String description;
 
+  private String xmlFormName;
+
   public String getId() {
     return id;
   }
@@ -56,4 +58,8 @@ public class FormDTO implements Serializable {
   public void setTitle(final String title) {
     this.title = title;
   }
+
+  public void setXmlFormName(final String xmlFormName) { this.xmlFormName = xmlFormName; }
+
+  public String getXmlFormName() { return xmlFormName; }
 }
