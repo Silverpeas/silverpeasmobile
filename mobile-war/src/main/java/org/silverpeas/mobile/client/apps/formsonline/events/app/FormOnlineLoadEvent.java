@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -23,9 +23,31 @@
 
 package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 
-public interface FormsOnlineAppEventHandler extends EventHandler{
-  void loadFormsOnline(FormsOnlineLoadEvent event);
-  void loadFormOnline(FormOnlineLoadEvent event);
+public class FormOnlineLoadEvent extends AbstractFormsOnlineAppEvent {
+
+  private FormDTO form;
+
+  public FormOnlineLoadEvent() {
+    super();
+  }
+
+  public FormOnlineLoadEvent(FormDTO form) {
+    super();
+    this.form = form;
+  }
+
+  @Override
+  protected void dispatch(FormsOnlineAppEventHandler handler) {
+    handler.loadFormOnline(this);
+  }
+
+  public FormDTO getForm() {
+    return form;
+  }
+
+  public void setForm(final FormDTO form) {
+    this.form = form;
+  }
 }

@@ -797,9 +797,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /* TODO : remove at release */
-.app-formsOnline {
+/*.app-formsOnline {
   display: none !important;
-}
+}*/
 
 .app-formsOnline a {
   background-position: 0.65em -2208px;
@@ -1924,6 +1924,7 @@ form .forms .fields > li:nth-child(even) {
 
 .workflow-form li:nth-child(odd),
 .liste-billet li:nth-child(odd),
+.forms-list li:nth-child(odd),
 #action-bloc li:nth-child(odd),
 .liste-news li:nth-child(odd) {
   background-color: #f9f9f9;
@@ -1932,6 +1933,7 @@ form .forms .fields > li:nth-child(even) {
 
 .worflow-form li:nth-child(even),
 .liste-billet li:nth-child(even),
+.forms-list li:nth-child(even),
 #action-bloc li:nth-child(even),
 .liste-news li:nth-child(even) {
   background-color: #efefef;
@@ -1961,6 +1963,29 @@ form .forms .fields > li:nth-child(even) {
   margin-left: 4px;
   width: 6px;
 }
+
+/* FormsOnline */
+
+.forms-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #ddd;
+}
+
+.forms-list li {
+  margin: 0;
+  padding: 1em;
+  line-height: 0.5em;
+}
+
+.forms-list li > a.gwt-Anchor {
+  display: inline;
+  width: 0;
+  height: 0;
+
+}
+
 
 /* LE BLOG */
 .liste-billet {
@@ -2001,12 +2026,14 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .liste-billet h2,
+.forms-list h2,
 .liste-news li h2 {
   padding-top: 0;
   margin-top: 0;
 }
 
 .liste-billet h2 a,
+.forms-list h2 a,
 .liste-news li h2 a {
   font-size: 14px;
   line-height: 16px;
@@ -2014,7 +2041,7 @@ form .forms .fields > li:nth-child(even) {
   text-decoration: none;
 }
 
-.liste-billet {
+.liste-billet, .forms-list {
   font-size: 0.9em;
   color: #999;
 }

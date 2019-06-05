@@ -29,9 +29,11 @@ import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.agenda.AgendaApp;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.AbstractFormsOnlineAppEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAppEventHandler;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.pages.FormOnlineEditPage;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormsOnlinePage;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -83,8 +85,9 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
         if (forms == null) {
           forms = new ArrayList<FormDTO>();
         }
-        //TODO
-        Window.alert("Forms number = " + forms.size());
+        FormsOnlineLoadedEvent event = new FormsOnlineLoadedEvent();
+        event.setForms(forms);
+        EventBus.getInstance().fireEvent(event);
       }
     };
 
@@ -105,6 +108,16 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     };
     action.attempt();
 
+  }
+
+  @Override
+  public void loadFormOnline(final FormOnlineLoadEvent event) {
+
+    FormOnlineEditPage page = new FormOnlineEditPage();
+    page.setPageTitle(event.getForm().getTitle());
+    page.show();
+
+    //TODO
   }
 
   @Override

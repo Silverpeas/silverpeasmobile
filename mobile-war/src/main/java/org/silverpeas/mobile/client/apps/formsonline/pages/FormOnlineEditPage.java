@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -40,41 +40,28 @@ import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 
-public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEventHandler {
+public class FormOnlineEditPage extends PageContent implements FormsOnlinePagesEventHandler {
 
-  private static FormsOnlinePageUiBinder uiBinder = GWT.create(FormsOnlinePageUiBinder.class);
+  private static FormOnlineEditPageUiBinder uiBinder = GWT.create(FormOnlineEditPageUiBinder.class);
 
   @UiField(provided = true) protected FormsOnlineMessages msg = null;
   @UiField
   ActionsMenu actionsMenu;
 
-  @UiField
-  UnorderedList forms;
-
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
 
   @Override
-  public void onFormsOnlineLoad(final FormsOnlineLoadedEvent event) {
-    for (FormDTO form : event.getForms()) {
-      FormOnlineItem item = new FormOnlineItem();
-      item.setData(form);
-      forms.add(item);
-    }
+  public void onFormsOnlineLoad(final FormsOnlineLoadedEvent event) {}
+
+  interface FormOnlineEditPageUiBinder extends UiBinder<Widget, FormOnlineEditPage> {
   }
 
-  interface FormsOnlinePageUiBinder extends UiBinder<Widget, FormsOnlinePage> {
-  }
-
-  public FormsOnlinePage() {
+  public FormOnlineEditPage() {
     msg = GWT.create(FormsOnlineMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
-
-
-    EventBus.getInstance().fireEvent(new FormsOnlineLoadEvent());
-
   }
 
   @Override
@@ -82,6 +69,4 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
     super.stop();
     EventBus.getInstance().removeHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
   }
-
-
 }

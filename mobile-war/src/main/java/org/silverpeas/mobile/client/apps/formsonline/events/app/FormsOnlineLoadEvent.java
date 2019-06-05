@@ -23,11 +23,14 @@
 
 package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
+import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+
 public class FormsOnlineLoadEvent extends AbstractFormsOnlineAppEvent {
 
   public FormsOnlineLoadEvent() {
     super();
   }
+
 
   @Override
   protected void dispatch(FormsOnlineAppEventHandler handler) {
