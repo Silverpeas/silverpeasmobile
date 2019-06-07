@@ -28,4 +28,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface FormsOnlineAppEventHandler extends EventHandler{
   void loadFormsOnline(FormsOnlineLoadEvent event);
   void loadFormOnline(FormOnlineLoadEvent event);
+
+  void saveForm(FormSaveEvent formSaveEvent);
 }

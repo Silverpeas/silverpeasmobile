@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.workflow.pages.widgets;
+package org.silverpeas.mobile.client.components.forms;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
@@ -46,6 +46,7 @@ import org.silverpeas.mobile.client.components.userselection.events.components.U
 import org.silverpeas.mobile.client.components.userselection.events.components.UsersAndGroupsSelectedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
@@ -66,7 +67,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
 
   private Widget w;
   protected ApplicationMessages msg = null;
-  private WorkflowFieldDTO data;
+  private FormFieldDTO data;
 
   @Override
   public void onChange(final ChangeEvent changeEvent) {
@@ -150,7 +151,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
   }
 
   //TODO : manage displayer : wysiwyg, sequence, jdbc, ldap, accessPath, pdc, explorer
-  public void setData(WorkflowFieldDTO data) {
+  public void setData(FormFieldDTO data) {
     this.data = data;
     label.setText(data.getLabel());
     String type = getType();
@@ -276,12 +277,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
             ids.add(ls.getValue(i));
           }
           page.setPreSelectedIds(ids);
-
-          WorkflowLoadUserFieldEvent event = new WorkflowLoadUserFieldEvent();
-          event.setFieldName(data.getName());
-          event.setInstanceId(data.getId());
-          event.setActionName(data.getActionName());
-          EventBus.getInstance().fireEvent(event);
+          sendEventToGetPossibleUsers();
           page.show();
         }
       });
@@ -303,7 +299,15 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
     }
   }
 
-  public WorkflowFieldDTO getData() {
+  protected void sendEventToGetPossibleUsers() {
+    /*FormLoadUserFieldEvent event = new FormLoadUserFieldEvent();
+    event.setFieldName(data.getName());
+    event.setInstanceId(data.getId());
+    EventBus.getInstance().fireEvent(event);*/
+    //TODO : for XmlForms
+  }
+
+  public FormFieldDTO getData() {
     return data;
   }
 

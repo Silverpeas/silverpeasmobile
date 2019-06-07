@@ -27,4 +27,9 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface FormsOnlineMessages extends Messages {
   String title();
+  String validate();
+  String cancel();
+  String mandatory();
+  String mandatoryOneField();
+
 }

@@ -21,25 +21,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.workflow;
+package org.silverpeas.mobile.client.apps.workflow.pages.widgets;
 
+import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFieldEvent;
+import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.components.forms.FieldEditable;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 
-import java.io.Serializable;
 
-public class WorkflowFieldDTO extends FormFieldDTO implements Serializable {
+public class WorkflowFieldEditable extends FieldEditable {
 
-  private String actionName;
-
-  public WorkflowFieldDTO() {
+  @Override
+  protected void sendEventToGetPossibleUsers() {
+    WorkflowLoadUserFieldEvent event = new WorkflowLoadUserFieldEvent();
+    event.setFieldName(getData().getName());
+    event.setInstanceId(getData().getId());
+    event.setActionName(((WorkflowFieldDTO)getData()).getActionName());
+    EventBus.getInstance().fireEvent(event);
   }
 
-  public String getActionName() {
-    return actionName;
+  @Override
+  public void setData(final FormFieldDTO data) {
+    if (data instanceof WorkflowFieldDTO) {
+      super.setData(data);
+    } else {
+      EventBus.getInstance().fireEvent(new ErrorEvent(new ClassCastException()));
+    }
   }
-
-  public void setActionName(final String actionName) {
-    this.actionName = actionName;
-  }
-
 }

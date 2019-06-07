@@ -23,6 +23,8 @@
 
 package org.silverpeas.mobile.shared.dto.formsonline;
 
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -30,8 +32,23 @@ import java.util.List;
  * @author svu
  */
 public class FormContentDTO implements Serializable {
+  private String id;
+
+  private String xmlFormName;
 
   private List<FormFieldDTO> fields;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
+
+  public void setXmlFormName(final String xmlFormName) { this.xmlFormName = xmlFormName; }
+
+  public String getXmlFormName() { return xmlFormName; }
 
   public List<FormFieldDTO> getFields() {
     return fields;

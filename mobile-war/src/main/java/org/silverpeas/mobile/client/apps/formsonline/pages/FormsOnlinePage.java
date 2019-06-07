@@ -30,6 +30,8 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
 import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.FormOnlineItem;
@@ -62,6 +64,12 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
       forms.add(item);
     }
   }
+
+  @Override
+  public void onFormLoaded(final FormLoadedEvent formLoadedEvent) {}
+
+  @Override
+  public void onFormSaved(final FormSavedEvent formSavedEvent) {}
 
   interface FormsOnlinePageUiBinder extends UiBinder<Widget, FormsOnlinePage> {
   }

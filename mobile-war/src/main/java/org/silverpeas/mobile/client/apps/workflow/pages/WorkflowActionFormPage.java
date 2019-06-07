@@ -37,7 +37,7 @@ import org.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowP
 import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
-import org.silverpeas.mobile.client.apps.workflow.pages.widgets.FieldEditable;
+import org.silverpeas.mobile.client.apps.workflow.pages.widgets.WorkflowFieldEditable;
 import org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
@@ -74,7 +74,7 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
     this.data = data;
     header.setInnerText(data.getTitle());
     for (WorkflowFieldDTO field : data.getFields()) {
-      FieldEditable f = new FieldEditable();
+      WorkflowFieldEditable f = new WorkflowFieldEditable();
       f.setData(field);
       fields.add(f);
     }
@@ -164,7 +164,7 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
   }
   private void stopAllFields() {
     for (int i = 0; i < fields.getWidgetCount(); i++) {
-      ((FieldEditable) fields.getWidget(i)).stop();
+      ((WorkflowFieldEditable) fields.getWidget(i)).stop();
     }
   }
 

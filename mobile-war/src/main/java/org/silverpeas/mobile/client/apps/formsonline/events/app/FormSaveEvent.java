@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,25 +21,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.workflow;
+package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
-import java.io.Serializable;
+import java.util.List;
 
-public class WorkflowFieldDTO extends FormFieldDTO implements Serializable {
+public class FormSaveEvent extends AbstractFormsOnlineAppEvent {
 
-  private String actionName;
+  private List<FormFieldDTO> data;
 
-  public WorkflowFieldDTO() {
+  public FormSaveEvent() {
+    super();
   }
 
-  public String getActionName() {
-    return actionName;
+  @Override
+  protected void dispatch(FormsOnlineAppEventHandler handler) {
+    handler.saveForm(this);
   }
 
-  public void setActionName(final String actionName) {
-    this.actionName = actionName;
+  public List<FormFieldDTO> getData() {
+    return data;
   }
 
+  public void setData(final List<FormFieldDTO> data) {
+    this.data = data;
+  }
 }

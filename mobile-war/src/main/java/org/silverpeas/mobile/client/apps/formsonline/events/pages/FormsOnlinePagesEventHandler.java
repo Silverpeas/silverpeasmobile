@@ -27,4 +27,8 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface FormsOnlinePagesEventHandler extends EventHandler{
 	void onFormsOnlineLoad(FormsOnlineLoadedEvent event);
+
+  void onFormLoaded(FormLoadedEvent formLoadedEvent);
+
+  void onFormSaved(FormSavedEvent formSavedEvent);
 }

@@ -46,6 +46,7 @@ import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowActionFormPage;
 import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowPage;
 import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowPresentationPage;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
@@ -184,14 +185,14 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void processForm(final WorkflowProcessFormEvent event) {
-    JavaScriptObject formData = createFormData();
+    JavaScriptObject formData = FormsHelper.createFormData();
     for (WorkflowFieldDTO f : event.getData()) {
       if (f.getType().equalsIgnoreCase("file")) {
-        formData = populateFormData(formData, f.getName(), f.getObjectValue());
+        formData = FormsHelper.populateFormData(formData, f.getName(), f.getObjectValue());
       } else if(f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") || f.getType().equalsIgnoreCase("group")) {
-        formData = populateFormData(formData, f.getName(), f.getValueId());
+        formData = FormsHelper.populateFormData(formData, f.getName(), f.getValueId());
       } else {
-        formData = populateFormData(formData, f.getName(), f.getValue());
+        formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
       }
     }
     String url = UrlUtils.getUploadLocation();
@@ -211,25 +212,6 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   public void actionNotProcessed(int error) {
     EventBus.getInstance().fireEvent(new ErrorEvent(new RequestException("Error " + error)));
   }
-
-  private static native JavaScriptObject populateFormData(JavaScriptObject formData, String name, Element value) /*-{
-    if (value == null) {
-      formData.append(name, null);
-    } else {
-      formData.append(name, value.files[0]);
-    }
-    return formData;
-  }-*/;
-
-  private static native JavaScriptObject populateFormData(JavaScriptObject formData, String name, String value) /*-{
-    formData.append(name, value);
-    return formData;
-  }-*/;
-
-  private static native JavaScriptObject createFormData() /*-{
-    var fd = new FormData();
-    return fd;
-  }-*/;
 
   private static native void processAction(WorkflowApp app, String url, JavaScriptObject fd, String token, String instanceId, String currentAction, final String currentRole, String currentState, String processId) /*-{
     var xhr = new XMLHttpRequest();

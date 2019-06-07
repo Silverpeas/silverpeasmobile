@@ -23,9 +23,9 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.apache.jasper.runtime.JspWriterImpl;
-import org.apache.jasper.runtime.PageContextImpl;
+import org.apache.commons.fileupload.FileItem;
 import org.silverpeas.components.formsonline.model.FormDetail;
+import org.silverpeas.components.formsonline.model.FormPK;
 import org.silverpeas.components.formsonline.model.FormsOnlineDatabaseException;
 import org.silverpeas.components.formsonline.model.FormsOnlineService;
 import org.silverpeas.components.formsonline.model.RequestsByStatus;
@@ -34,7 +34,7 @@ import org.silverpeas.core.annotation.RequestScoped;
 import org.silverpeas.core.annotation.Service;
 import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
-import org.silverpeas.core.contribution.content.form.PagesContext;
+import org.silverpeas.core.contribution.content.form.FormException;
 import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateException;
@@ -42,24 +42,19 @@ import org.silverpeas.core.contribution.template.publication.PublicationTemplate
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.webapi.base.RESTWebService;
 import org.silverpeas.core.webapi.base.annotation.Authorized;
-import org.silverpeas.mobile.shared.dto.formsonline.FormContentDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
-import org.silverpeas.mobile.shared.dto.formsonline.FormFieldDTO;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +96,7 @@ public class ServiceFormsOnline extends RESTWebService {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("sendables/{appId}")
   public List<FormDTO> getSendablesForms(@PathParam("appId") String appId) {
-    List<FormDTO> dtos = new ArrayList<>();
+      List<FormDTO> dtos = new ArrayList<>();
     try {
       List<FormDetail> forms = FormsOnlineService.get().getAllForms(appId, getUser().getId(), true);
       for (FormDetail form : forms) {
@@ -139,14 +134,53 @@ public class ServiceFormsOnline extends RESTWebService {
     return requestDTOS;
   }
 
+  @POST
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("saveForm")
+  public Boolean saveForm() {
+
+
+
+    String instanceId = "formsOnline16";
+    String formId = "1";
+
+    List<FileItem> items = this.getHttpRequest().getFileItems();
+    int i = 0;
+    for (FileItem item : items) {
+      if (item.getFieldName().equalsIgnoreCase("instanceId")) {
+        instanceId = item.getString();
+        items.remove(i);
+        break;
+      }
+      i++;
+    }
+
+    i = 0;
+    for (FileItem item : items) {
+      if (item.getFieldName().equalsIgnoreCase("formId")) {
+        formId = item.getString();
+        items.remove(i);
+        break;
+      }
+      i++;
+    }
+
+    FormPK pk = new FormPK(formId, instanceId);
+    try {
+      FormsOnlineService.get().saveRequest(pk, getUser().getId(), items);
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return Boolean.TRUE;
+  }
+
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("form/{appId}/{formName}")
-  public FormContentDTO getForm(@PathParam("appId") String appId, @PathParam("formName") String formName) {
+  public List<FormFieldDTO> getForm(@PathParam("appId") String appId, @PathParam("formName") String formName) {
 
-    //TODO
-    FormContentDTO form = new FormContentDTO();
     List<FormFieldDTO> fields = new ArrayList<>();
 
     try {
@@ -155,18 +189,21 @@ public class ServiceFormsOnline extends RESTWebService {
 
       for(FieldTemplate field : formUpdate.getFieldTemplates()) {
         FormFieldDTO f = new FormFieldDTO();
-        f.setDisplayName(field.getDisplayerName());
-        f.setLabel(field.getLabel(getUser().getUserPreferences().getLanguage()));
+        f.setDisplayerName(field.getDisplayerName());
+        String label = field.getLabel(getUser().getUserPreferences().getLanguage());
+        if (label == null || label.isEmpty()) label = field.getLabel();
+        f.setLabel(label);
         f.setName(field.getFieldName());
-        f.setTypeName(field.getTypeName());
+        f.setType(field.getTypeName());
+        f.setMandatory(field.isMandatory());
+        f.setReadOnly(field.isReadOnly());
         fields.add(f);
       }
-      form.setFields(fields);
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
 
-    return form;
+    return fields;
 
   }
 

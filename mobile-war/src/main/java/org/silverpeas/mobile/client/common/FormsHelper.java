@@ -21,49 +21,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.formsonline;
+package org.silverpeas.mobile.client.common;
 
-import java.io.Serializable;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Element;
 
 /**
  * @author svu
  */
-public class FormFieldDTO implements Serializable {
+public class FormsHelper {
 
-  private String name;
-  private String label;
-  private String typeName;
-  private String displayName;
+  public static native JavaScriptObject populateFormData(JavaScriptObject formData, String name, Element value) /*-{
+    if (value == null) {
+      formData.append(name, null);
+    } else {
+      formData.append(name, value.files[0]);
+    }
+    return formData;
+  }-*/;
 
-  public String getName() {
-    return name;
-  }
+  public static native JavaScriptObject populateFormData(JavaScriptObject formData, String name, String value) /*-{
+    formData.append(name, value);
+    return formData;
+  }-*/;
 
-  public void setName(final String name) {
-    this.name = name;
-  }
-
-  public String getLabel() {
-    return label;
-  }
-
-  public void setLabel(final String label) {
-    this.label = label;
-  }
-
-  public String getTypeName() {
-    return typeName;
-  }
-
-  public void setTypeName(final String typeName) {
-    this.typeName = typeName;
-  }
-
-  public String getDisplayName() {
-    return displayName;
-  }
-
-  public void setDisplayName(final String displayName) {
-    this.displayName = displayName;
-  }
+  public static native JavaScriptObject createFormData() /*-{
+    var fd = new FormData();
+    return fd;
+  }-*/;
 }
