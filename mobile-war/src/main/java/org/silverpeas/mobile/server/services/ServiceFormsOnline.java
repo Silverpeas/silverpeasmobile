@@ -36,6 +36,7 @@ import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.FormException;
 import org.silverpeas.core.contribution.content.form.RecordSet;
+import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateException;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
@@ -56,7 +57,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright (C) 2000 - 2019 Silverpeas
@@ -197,6 +200,7 @@ public class ServiceFormsOnline extends RESTWebService {
         f.setType(field.getTypeName());
         f.setMandatory(field.isMandatory());
         f.setReadOnly(field.isReadOnly());
+        f.setValues(((GenericFieldTemplate) field).getKeyValuePairs(getUserPreferences().getLanguage()));
         fields.add(f);
       }
     } catch (Exception e) {

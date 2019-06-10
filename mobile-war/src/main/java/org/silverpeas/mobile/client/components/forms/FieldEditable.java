@@ -150,7 +150,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
     return type;
   }
 
-  //TODO : manage displayer : wysiwyg, sequence, jdbc, ldap, accessPath, pdc, explorer
+  //TODO : manage displayer : sequence, jdbc, ldap, accessPath, pdc, explorer, address
   public void setData(FormFieldDTO data) {
     this.data = data;
     label.setText(data.getLabel());
@@ -179,16 +179,16 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         panel.add(rb0);
       }
       w = panel;
-    /*} else if(type.equalsIgnoreCase("checkbox")) {
+    } else if(type.equalsIgnoreCase("checkbox")) {
       FlowPanel panel = new FlowPanel();
       panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
       for(Map.Entry<String,String> v : data.getValues().entrySet()) {
-        CheckBox chk = new CheckBox(v.getLabel());
+        CheckBox chk = new CheckBox(v.getValue());
         chk.setName(v.getValue());
         chk.addValueChangeHandler(this);
         panel.add(chk);
       }
-      w = panel;*/
+      w = panel;
     } else if(type.equalsIgnoreCase("listbox")) {
       ListBox l = new ListBox();
       int i = 0;
@@ -205,9 +205,14 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       l.setSelectedIndex(i);
       data.setValue(l.getSelectedValue());
       w = l;
-    } else if(type.equalsIgnoreCase("file")) {
+    } else if(type.equalsIgnoreCase("file") || type.equalsIgnoreCase("image") || type.equalsIgnoreCase("video")) {
       TextBox t = new TextBox();
       t.getElement().setAttribute("type", "file");
+      if (type.equalsIgnoreCase("image")) {
+        t.getElement().setAttribute("accept", ".gif,.jpg,.jpeg,.png,.bmp,.tiff,.tif");
+      } else if (type.equalsIgnoreCase("video")) {
+        t.getElement().setAttribute("accept", ".mp4");
+      }
       t.setReadOnly(data.isReadOnly());
       t.addChangeHandler(this);
       w = t;
