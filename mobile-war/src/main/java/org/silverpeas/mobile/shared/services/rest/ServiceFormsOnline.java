@@ -25,16 +25,15 @@ package org.silverpeas.mobile.shared.services.rest;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-import org.silverpeas.mobile.shared.dto.formsonline.FormContentDTO;
+import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -58,5 +57,11 @@ public interface ServiceFormsOnline extends RestService {
   @POST
   @Path("saveForm")
   public void saveForm(MethodCallback<Boolean> callback);
+
+  @GET
+  @Path("form/{appId}/{formName}/{fieldName}")
+  public void getUserField(@PathParam("appId") String appId, @PathParam("formName") String formName,
+      @PathParam("fieldName") String fieldName, MethodCallback<List<BaseDTO>> callback);
+
 
 }

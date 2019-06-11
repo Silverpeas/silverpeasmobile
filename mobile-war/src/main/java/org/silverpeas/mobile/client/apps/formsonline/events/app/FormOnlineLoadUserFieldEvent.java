@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,30 +21,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto;
+package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+public class FormOnlineLoadUserFieldEvent extends AbstractFormsOnlineAppEvent {
 
-import java.io.Serializable;
 
-/**
- * @author: svu
- */
-@JsonSubTypes({@JsonSubTypes.Type(value=UserDTO.class, name="UserDTO"), @JsonSubTypes.Type(value=GroupDTO.class,name="GroupeDTO")})
-@JsonTypeInfo(use= JsonTypeInfo.Id.NAME, include= JsonTypeInfo.As.PROPERTY, property="@class")
-public abstract class BaseDTO implements Serializable {
+  private String fieldName;
 
-  private static final long serialVersionUID = 8186851689918190659L;
-
-  public String getId() {
-    return id;
+  public FormOnlineLoadUserFieldEvent(){
+    super();
   }
 
-  public void setId(final String id) {
-    this.id = id;
+  @Override
+  protected void dispatch(FormsOnlineAppEventHandler handler) {
+    handler.loadUserField(this);
   }
 
-  private String id;
+  public String getFieldName() {
+    return fieldName;
+  }
 
+  public void setFieldName(final String fieldName) {
+    this.fieldName = fieldName;
+  }
 }

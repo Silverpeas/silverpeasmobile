@@ -36,4 +36,5 @@ public class FormsOnlineLoadEvent extends AbstractFormsOnlineAppEvent {
   protected void dispatch(FormsOnlineAppEventHandler handler) {
     handler.loadFormsOnline(this);
   }
+
 }

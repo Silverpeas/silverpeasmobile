@@ -28,7 +28,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Command;
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.AbstractFormsOnlineAppEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadEvent;
@@ -36,6 +35,7 @@ import org.silverpeas.mobile.client.apps.formsonline.events.app.FormSaveEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAppEventHandler;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadUserFieldEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormOnlineEditPage;
@@ -45,23 +45,23 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Abstract
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.apps.workflow.WorkflowApp;
-import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-import org.silverpeas.mobile.shared.dto.formsonline.FormContentDTO;
+import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
   private FormsOnlineMessages msg;
   private ApplicationInstanceDTO instance;
   private String keyForms;
-  private String currentFormId;
+  private FormDTO currentForm;
 
   public FormsOnlineApp(){
     super();
@@ -127,7 +127,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
   @Override
   public void loadFormOnline(final FormOnlineLoadEvent event) {
 
-    currentFormId = event.getForm().getId();
+    currentForm = event.getForm();
 
     FormOnlineEditPage page = new FormOnlineEditPage();
     page.setPageTitle(event.getForm().getTitle());
@@ -165,7 +165,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
       }
     }
-    saveForm(this, formData, SpMobil.getUserToken(), AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN), instance.getId(), currentFormId);
+    saveForm(this, formData, SpMobil.getUserToken(), AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN), instance.getId(), currentForm.getId());
   }
 
   private static native void saveForm(FormsOnlineApp app, JavaScriptObject fd, String token, String stkn, String instanceId, String formId) /*-{
@@ -198,6 +198,28 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
 
   public void formNotSaved(int error) {
     EventBus.getInstance().fireEvent(new ErrorEvent(new RequestException("Error " + error)));
+  }
+
+  @Override
+  public void loadUserField(final FormOnlineLoadUserFieldEvent event) {
+
+
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceFormsOnline().getUserField(instance.getId(), currentForm.getXmlFormName(), event.getFieldName(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<BaseDTO> users) {
+        super.onSuccess(method, users);
+
+
+        AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users);
+        EventBus.getInstance().fireEvent(ev);
+      }
+    };
+    action.attempt();
   }
 
   @Override

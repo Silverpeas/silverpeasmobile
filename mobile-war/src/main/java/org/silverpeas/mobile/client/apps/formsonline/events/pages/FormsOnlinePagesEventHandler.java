@@ -31,4 +31,5 @@ public interface FormsOnlinePagesEventHandler extends EventHandler{
   void onFormLoaded(FormLoadedEvent formLoadedEvent);
 
   void onFormSaved(FormSavedEvent formSavedEvent);
+
 }

@@ -23,8 +23,11 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import java.io.Serializable;
 
+@JsonTypeName("GroupDTO")
 public class GroupDTO extends BaseDTO implements Serializable{
 
   private static final long serialVersionUID = 5388415881024885835L;

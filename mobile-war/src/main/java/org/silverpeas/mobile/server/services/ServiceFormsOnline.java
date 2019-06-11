@@ -30,19 +30,28 @@ import org.silverpeas.components.formsonline.model.FormsOnlineDatabaseException;
 import org.silverpeas.components.formsonline.model.FormsOnlineService;
 import org.silverpeas.components.formsonline.model.RequestsByStatus;
 import org.silverpeas.core.SilverpeasException;
+import org.silverpeas.core.admin.service.AdminController;
+import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.user.model.GroupDetail;
+import org.silverpeas.core.admin.user.model.ProfileInst;
+import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.annotation.RequestScoped;
 import org.silverpeas.core.annotation.Service;
 import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
-import org.silverpeas.core.contribution.content.form.FormException;
 import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
-import org.silverpeas.core.contribution.template.publication.PublicationTemplateException;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.webapi.base.RESTWebService;
 import org.silverpeas.core.webapi.base.annotation.Authorized;
+import org.silverpeas.mobile.server.helpers.DataURLHelper;
+import org.silverpeas.mobile.server.services.helpers.UserHelper;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
@@ -57,7 +66,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -206,9 +214,51 @@ public class ServiceFormsOnline extends RESTWebService {
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
-
     return fields;
+  }
 
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("form/{appId}/{formName}/{fieldName}")
+  public List<BaseDTO> getUserField(@PathParam("appId") String appId, @PathParam("formName") String formName, @PathParam("fieldName") String fieldName) {
+
+    List<BaseDTO> result = new ArrayList<>();
+    try {
+      PublicationTemplate template = getPublicationTemplate(formName, true);
+      List<FieldTemplate> fields = template.getUpdateForm().getFieldTemplates();
+      for (FieldTemplate field : fields) {
+        if (field.getFieldName().equals(fieldName)) {
+          //TODO
+          Map<String,String> limited = field.getParameters("usersOfInstanceOnly");
+          Map<String,String> limitedToRoles = field.getParameters("roles");
+          if (field.getTypeName().equalsIgnoreCase("user") || field.getTypeName().equalsIgnoreCase("multipleUser")) {
+            List<UserDetail> users = Administration.get().getAllUsers();
+            for (UserDetail usr : users) {
+              UserDTO user = UserHelper.getInstance().populateUserDTO(usr);
+              String avatar = DataURLHelper
+                  .convertAvatarToUrlData(usr.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
+              user.setAvatar(avatar);
+              result.add(user);
+            }
+
+          } else if(field.getTypeName().equalsIgnoreCase("group")) {
+            List<GroupDetail> groups = Administration.get().getAllGroups();
+            for (GroupDetail gp : groups) {
+              result.add(UserHelper.getInstance().populateGroupDTO(gp));
+            }
+          }
+          break;
+        }
+      }
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+
+    return result;
+  }
+
+  protected static SettingBundle getSettings() {
+    return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 
   private PublicationTemplate getPublicationTemplate(String xmlFormName, boolean registerIt)

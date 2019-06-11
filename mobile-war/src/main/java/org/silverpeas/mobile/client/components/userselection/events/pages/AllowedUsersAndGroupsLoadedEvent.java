@@ -29,19 +29,19 @@ import java.util.List;
 
 public class AllowedUsersAndGroupsLoadedEvent extends AbstractUserSelectionPagesEvent {
 
-	List<BaseDTO> list;
+  List<BaseDTO> list;
 
-	public AllowedUsersAndGroupsLoadedEvent(List<BaseDTO> list){
-		super();
-		this.list = list;
-	}
-	
-	@Override
-	protected void dispatch(UserSelectionPagesEventHandler handler) {
-		handler.onAllowedUsersAndGroupsLoaded(this);
-	}
-	
-	public List<BaseDTO> getListAllowedUsersAndGroups(){
-		return list;
-	}
+  public AllowedUsersAndGroupsLoadedEvent(List<BaseDTO> list) {
+    super();
+    this.list = list;
+  }
+
+  @Override
+  protected void dispatch(UserSelectionPagesEventHandler handler) {
+    handler.onAllowedUsersAndGroupsLoaded(this);
+  }
+
+  public List<BaseDTO> getListAllowedUsersAndGroups() {
+    return list;
+  }
 }

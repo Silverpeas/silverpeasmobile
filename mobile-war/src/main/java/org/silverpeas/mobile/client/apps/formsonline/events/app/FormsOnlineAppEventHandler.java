@@ -30,4 +30,6 @@ public interface FormsOnlineAppEventHandler extends EventHandler{
   void loadFormOnline(FormOnlineLoadEvent event);
 
   void saveForm(FormSaveEvent formSaveEvent);
+
+  void loadUserField(FormOnlineLoadUserFieldEvent formOnlineLoadUserFieldEvent);
 }

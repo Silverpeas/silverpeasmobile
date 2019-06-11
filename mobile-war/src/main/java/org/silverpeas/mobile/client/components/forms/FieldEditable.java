@@ -36,7 +36,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.SpMobil;
-import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFieldEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadUserFieldEvent;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
@@ -49,7 +49,6 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,7 +193,8 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       int i = 0;
       int index = 0;
       for(Map.Entry<String,String> v : data.getValues().entrySet()) {
-        l.addItem(v.getKey(),v.getValue());
+        l.addItem(v.getValue(), v.getKey());
+
         if (data.getValue() != null && v.getValue().equals(data.getValue())) {
           i = index;
         }
@@ -305,11 +305,9 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
   }
 
   protected void sendEventToGetPossibleUsers() {
-    /*FormLoadUserFieldEvent event = new FormLoadUserFieldEvent();
+    FormOnlineLoadUserFieldEvent event = new FormOnlineLoadUserFieldEvent();
     event.setFieldName(data.getName());
-    event.setInstanceId(data.getId());
-    EventBus.getInstance().fireEvent(event);*/
-    //TODO : for XmlForms
+    EventBus.getInstance().fireEvent(event);
   }
 
   public FormFieldDTO getData() {
