@@ -66,6 +66,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -228,16 +229,30 @@ public class ServiceFormsOnline extends RESTWebService {
       List<FieldTemplate> fields = template.getUpdateForm().getFieldTemplates();
       for (FieldTemplate field : fields) {
         if (field.getFieldName().equals(fieldName)) {
-          //TODO
-          Map<String,String> limited = field.getParameters("usersOfInstanceOnly");
-          Map<String,String> limitedToRoles = field.getParameters("roles");
+          Map<String, String> parameters = field.getParameters(getUserPreferences().getLanguage());
           if (field.getTypeName().equalsIgnoreCase("user") || field.getTypeName().equalsIgnoreCase("multipleUser")) {
-            List<UserDetail> users = Administration.get().getAllUsers();
-            for (UserDetail usr : users) {
+            List<String> users = new ArrayList<>();
+
+            if (parameters.containsKey("usersOfInstanceOnly")) {
+              List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(appId).getAllProfilesInst();
+              for (ProfileInst profileInst : allProfilesInst) {
+                users.addAll(profileInst.getAllUsers());
+              }
+            } else if (parameters.containsKey("roles")) {
+              List<String> roles = Arrays.asList(parameters.get("roles").split(","));
+              List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(appId).getAllProfilesInst();
+              for (ProfileInst profileInst : allProfilesInst) {
+                if (roles.contains(profileInst.getName())) {
+                  users.addAll(profileInst.getAllUsers());
+                }
+              }
+            } else {
+              users.addAll(Arrays.asList(Administration.get().getAllUsersIds()));
+            }
+
+            for (String usrId : users) {
+              UserDetail usr = Administration.get().getUserDetail(usrId);
               UserDTO user = UserHelper.getInstance().populateUserDTO(usr);
-              String avatar = DataURLHelper
-                  .convertAvatarToUrlData(usr.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
-              user.setAvatar(avatar);
               result.add(user);
             }
 
@@ -255,10 +270,6 @@ public class ServiceFormsOnline extends RESTWebService {
     }
 
     return result;
-  }
-
-  protected static SettingBundle getSettings() {
-    return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 
   private PublicationTemplate getPublicationTemplate(String xmlFormName, boolean registerIt)

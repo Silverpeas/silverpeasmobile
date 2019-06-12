@@ -25,6 +25,9 @@ package org.silverpeas.mobile.server.services.helpers;
 
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
@@ -41,6 +44,10 @@ public class UserHelper {
       instance = new UserHelper();
     }
     return instance;
+  }
+
+  private static SettingBundle getSettings() {
+    return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 
   public DetailUserDTO populate(UserDetail user) {
@@ -64,7 +71,9 @@ public class UserHelper {
     dto.setFirstName(user.getFirstName());
     dto.setLastName(user.getLastName());
     dto.seteMail(user.geteMail());
-    dto.setAvatar(user.getAvatar());
+    String avatar = DataURLHelper
+        .convertAvatarToUrlData(user.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
+    dto.setAvatar(avatar);
     return dto;
   }
 
