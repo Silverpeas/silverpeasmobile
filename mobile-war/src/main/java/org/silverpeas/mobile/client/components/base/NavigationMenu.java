@@ -159,8 +159,18 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   @UiHandler("home")
   protected void goHome(ClickEvent event) {
-    PageHistory.getInstance().goBackToFirst();
+    goHome();
     closeMenu();
+  }
+
+  static void goHome() {
+    String url = Window.Location.getHref();
+    if (url.contains("shortcutContentType")) {
+      String homeUrl = url.substring(0,url.indexOf("?"));
+      Window.Location.replace(homeUrl);
+    } else {
+      PageHistory.getInstance().goBackToFirst();
+    }
   }
 
   @UiHandler("help")

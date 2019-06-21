@@ -66,7 +66,7 @@ public class PageFooter extends Composite {
 
   @UiHandler("browse")
   protected void browse(ClickEvent event) {
-    PageHistory.getInstance().goBackToFirst();
+    NavigationMenu.goHome();
   }
 
   @UiHandler("favoris")
