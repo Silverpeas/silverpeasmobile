@@ -144,6 +144,10 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
       AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session", XSession);
     }
 
+    if (token == null) {
+      token = AuthentificationManager.getInstance().getHeader("X-STKN");
+    }
+
     msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
     EventBus.getInstance().addHandler(AbstractAuthenticationErrorEvent.TYPE, this);
