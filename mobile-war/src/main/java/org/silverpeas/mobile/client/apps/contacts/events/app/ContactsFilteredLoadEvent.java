@@ -23,10 +23,27 @@
 
 package org.silverpeas.mobile.client.apps.contacts.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface ContactsAppEventHandler extends EventHandler{
-	void loadContacts(ContactsLoadEvent event);
+public class ContactsFilteredLoadEvent extends AbstractContactsAppEvent{
 
-  void loadContactsFiltered(ContactsFilteredLoadEvent contactsFilteredLoadEvent);
+  private String filter, type;
+
+  public ContactsFilteredLoadEvent(String type, String filter){
+    super();
+    this.type = type;
+    this.filter = filter;
+  }
+
+  @Override
+  protected void dispatch(ContactsAppEventHandler handler) {
+    handler.loadContactsFiltered(this);
+  }
+
+  public String getFilter(){
+    return filter;
+  }
+
+  public String getType() {
+    return type;
+  }
 }

@@ -52,7 +52,7 @@ import java.io.IOException;
 
 public class MobilFilter implements Filter {
 
-  private static final SilverLogger logger = SilverLogger.getLogger("silverpeas.core.security");
+  //private static final SilverLogger logger = SilverLogger.getLogger("silverpeas.core.security");
   public static final String SESSION_TOKEN_KEY = "X-STKN";
 
   @Override
@@ -139,7 +139,7 @@ public class MobilFilter implements Filter {
         SynchronizerToken token = (SynchronizerToken) session.getAttribute(SESSION_TOKEN_KEY);
         MainSessionController controller = (MainSessionController) session.getAttribute("SilverSessionController");
         if (controller != null && token == null) {
-          logger.warn("security.web.protection.token is disable");
+          //logger.warn("security.web.protection.token is disable");
           // generate fake token for auto login without token security
           TokenGenerator generator = TokenGeneratorProvider.getTokenGenerator(SynchronizerToken.class);
           token = generator.generate();

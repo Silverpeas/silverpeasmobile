@@ -34,7 +34,11 @@ import java.util.List;
 
 @RemoteServiceRelativePath("Contact")
 public interface ServiceContact extends RemoteService {
-  List<DetailUserDTO> getContacts(String type, String filter, int pageSize, int startIndex) throws
-                                                                                            ContactException, AuthenticationException;
+  List<DetailUserDTO> getContacts(String type, String filter, int pageSize, int startIndex)
+      throws ContactException, AuthenticationException;
+
   ContactFilters hasContacts() throws ContactException, AuthenticationException;
+
+  List<DetailUserDTO> getContactsFiltered(String type, String filter)
+      throws ContactException, AuthenticationException;
 }

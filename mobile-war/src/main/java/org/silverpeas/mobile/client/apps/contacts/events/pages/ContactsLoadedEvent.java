@@ -27,21 +27,21 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 import java.util.List;
 
-public class ContactsLoadedEvent extends AbstractContactsPagesEvent{
-	
-	List<DetailUserDTO> listDetailUserDTO;
-	
-	public ContactsLoadedEvent(List<DetailUserDTO> listDetailUserDTO){
-		super();
-		this.listDetailUserDTO = listDetailUserDTO;
-	}
-	
-	@Override
-	protected void dispatch(ContactsPagesEventHandler handler) {
-		handler.onContactsLoaded(this);
-	}
-	
-	public List<DetailUserDTO> getListUserDetailDTO(){
-		return listDetailUserDTO;
-	}
+public class ContactsLoadedEvent extends AbstractContactsPagesEvent {
+
+  List<DetailUserDTO> listDetailUserDTO;
+
+  public ContactsLoadedEvent(List<DetailUserDTO> listDetailUserDTO) {
+    super();
+    this.listDetailUserDTO = listDetailUserDTO;
+  }
+
+  @Override
+  protected void dispatch(ContactsPagesEventHandler handler) {
+    handler.onContactsLoaded(this);
+  }
+
+  public List<DetailUserDTO> getListUserDetailDTO() {
+    return listDetailUserDTO;
+  }
 }

@@ -105,28 +105,35 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     list.getElement().setId("list-contacts");
   }
 
-  public void init() {
-    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-      @Override
-      public void execute() {
-
-        if (mycontacts.isVisible()) {
-          EventBus.getInstance().fireEvent(
-              new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(), startIndex));
-          currentType = ContactFilters.MY;
-        } else {
-          EventBus.getInstance().fireEvent(
-              new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(), startIndex));
-          allcontacts.addStyleName("ui-btn-active");
-          allcontacts.addStyleName("ui-first-child");
-          currentType = ContactFilters.ALL;
+  public void init(boolean limited) {
+    list.clear();
+    if (!limited) {
+      allcontacts.setVisible(true);
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+        @Override
+        public void execute() {
+          if (mycontacts.isVisible()) {
+            EventBus.getInstance().fireEvent(
+                new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(),
+                    startIndex));
+            currentType = ContactFilters.MY;
+          } else {
+            EventBus.getInstance().fireEvent(
+                new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(),
+                    startIndex));
+            allcontacts.addStyleName("ui-btn-active");
+            allcontacts.addStyleName("ui-first-child");
+            currentType = ContactFilters.ALL;
+          }
+          if (!mycontacts.isVisible() && !allextcontacts.isVisible()) {
+            allcontacts.setVisible(false);
+            filter.setVisible(true);
+          }
         }
-        if (!mycontacts.isVisible() && !allextcontacts.isVisible()) {
-          allcontacts.setVisible(false);
-          filter.setVisible(true);
-        }
-      }
-    });
+      });
+    } else {
+      allcontacts.setVisible(false);
+    }
   }
 
   @Override
@@ -224,8 +231,6 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       }
     }
     callingNexData = false;
-
-
   }
 
   @Override

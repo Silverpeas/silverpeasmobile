@@ -33,4 +33,7 @@ public interface ServiceContactAsync {
   void getContacts(String type, String filter, int pageSize, int startIndex, final AsyncCallback<List<DetailUserDTO>> async);
 
   void hasContacts(final AsyncCallback<ContactFilters> async);
+
+  void getContactsFiltered(String type, String filter,
+      final AsyncCallback<List<DetailUserDTO>> async);
 }

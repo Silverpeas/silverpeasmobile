@@ -40,6 +40,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.AgendaApp;
 import org.silverpeas.mobile.client.apps.blog.BlogApp;
+import org.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import org.silverpeas.mobile.client.apps.documents.DocumentsApp;
 import org.silverpeas.mobile.client.apps.favorites.FavoritesApp;
 import org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp;
@@ -188,6 +189,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     apps.add(new HyperLinkApp());
     apps.add(new AgendaApp());
     apps.add(new FormsOnlineApp());
+    apps.add(new ContactsApp());
   }
 
   public static Page getMainPage() {

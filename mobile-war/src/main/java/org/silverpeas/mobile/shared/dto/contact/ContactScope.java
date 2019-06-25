@@ -21,12 +21,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.contacts.events.app;
+package org.silverpeas.mobile.shared.dto.contact;
 
-import com.google.gwt.event.shared.EventHandler;
-
-public interface ContactsAppEventHandler extends EventHandler{
-	void loadContacts(ContactsLoadEvent event);
-
-  void loadContactsFiltered(ContactsFilteredLoadEvent contactsFilteredLoadEvent);
+/**
+ * @author svu
+ */
+public enum ContactScope {
+  group, domain;
 }

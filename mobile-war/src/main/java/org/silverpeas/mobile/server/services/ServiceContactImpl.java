@@ -24,7 +24,9 @@
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.yellowpages.service.YellowpagesService;
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.contact.model.CompleteContact;
@@ -42,6 +44,7 @@ import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
+import org.silverpeas.mobile.shared.dto.contact.ContactScope;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.ContactException;
 import org.silverpeas.mobile.shared.services.ServiceContact;
@@ -129,6 +132,32 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
     } catch (Throwable e) {
       SilverLogger.getLogger(SpMobileLogModule.getName())
           .error("ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
+      throw new ContactException(e);
+    }
+
+    return listUsers;
+  }
+
+  public List<DetailUserDTO> getContactsFiltered(String type, String filter) throws ContactException, AuthenticationException {
+    ArrayList<DetailUserDTO> listUsers = new ArrayList<DetailUserDTO>();
+    checkUserInSession();
+    try {
+      if (type.equals(ContactScope.group.name())) {
+        List<User>  users = Administration.get().getGroup(filter).getAllUsers();
+        for (User user : users) {
+          DetailUserDTO userDTO = populate(user);
+          listUsers.add(userDTO);
+        }
+      } else if (type.equals(ContactScope.domain.name())) {
+        UserDetail[]  users = Administration.get().getUsersOfDomain(filter);
+        for (User user : users) {
+          DetailUserDTO userDTO = populate(user);
+          listUsers.add(userDTO);
+        }
+      }
+    } catch (Throwable e) {
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error("ServiceContactImpl.getContactsFiltered", "root.EX_NO_MESSAGE", e);
       throw new ContactException(e);
     }
 

@@ -91,8 +91,9 @@ public class PageFooter extends Composite {
 
   @UiHandler("contact")
   void contacts(ClickEvent e) {
-    App app = new ContactsApp();
-    app.start();
+    ContentDTO content = new ContentDTO();
+    content.setType(ContentsTypes.Contacts.toString());
+    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
   }
 
   public int getHeight() {
