@@ -72,6 +72,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   private ContactItem itemWaiting;
   private boolean callingNexData = false;
   private boolean noMoreData = false;
+  private boolean limited = false;
   private static Scheduler.RepeatingCommand command = null;
 
   public void setContactsVisible(final boolean contactsVisible) {
@@ -106,6 +107,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   }
 
   public void init(boolean limited) {
+    this.limited = limited;
     list.clear();
     if (!limited) {
       allcontacts.setVisible(true);
@@ -240,7 +242,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
 
   @Override
   public void onScrollEndPage(final EndPageEvent event) {
-    if (callingNexData == false && noMoreData == false) {
+    if (!limited && callingNexData == false && noMoreData == false) {
       callingNexData = true;
       list.add(getWaitingItem());
       Window.scrollTo(0, Document.get().getScrollHeight());
