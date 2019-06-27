@@ -181,7 +181,11 @@ $(document).ready(function() {
 
   });
 
-  jsxc.start(username + '@' + settings.xmpp.domain, password);
+  if (username.includes('@' + settings.xmpp.domain)) {
+    jsxc.start(username, password);
+  } else {
+    jsxc.start(username + '@' + settings.xmpp.domain, password);
+  }
   $('#password').val('');
 });
 
