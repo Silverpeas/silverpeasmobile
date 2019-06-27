@@ -181,10 +181,11 @@ $(document).ready(function() {
 
   });
 
-  if (username.includes('@' + settings.xmpp.domain)) {
+  var maindomain = '@' + settings.xmpp.domain.split('.').reverse().splice(0,2).reverse().join('.');
+  if (username.includes(maindomain)) {
     jsxc.start(username, password);
   } else {
-    jsxc.start(username + '@' + settings.xmpp.domain, password);
+    jsxc.start(username + maindomain, password);
   }
   $('#password').val('');
 });
