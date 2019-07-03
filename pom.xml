@@ -39,10 +39,10 @@
   <name>Silverpeas Mobile component</name>
 
   <properties>
-    <silverpeas.version>6.1-SNAPSHOT</silverpeas.version>
+    <silverpeas.version>${project.version}</silverpeas.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-     <next.release>6.1</next.release>
+     <next.release>6.1-rc1</next.release>
   </properties>
 
   <repositories>
