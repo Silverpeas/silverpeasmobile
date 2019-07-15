@@ -32,6 +32,7 @@ import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
@@ -78,7 +79,7 @@ public class NewsHelper {
     return instance;
   }
 
-  public List<PublicationDetail> getLastNews(String userId, String spaceId) {
+  public List<PublicationDetail> getLastNews(String userId, String spaceId) throws Exception {
     if(spaceId != null) {
       List<String> appIds = new ArrayList<String>();
       String[] cIds = organizationController.getAvailCompoIds(spaceId, userId);
@@ -110,9 +111,9 @@ public class NewsHelper {
       } catch (MissingResourceException e) {}
       if (newsSource != null && newsSource.isEmpty() == false) {
           if (newsSource.startsWith("quickinfo")) {
-            return getNewsByComponentId(newsSource, false);
+            return getNewsByComponentId(newsSource, false, userId);
           } else {
-            return getDelegatedNews();
+            return getDelegatedNews(userId);
           }
       }
       return null;
@@ -123,14 +124,17 @@ public class NewsHelper {
     return news.isValid() && news.getVisibilityPeriod().contains(new Date());
   }
 
-  private List<PublicationDetail> getDelegatedNews() {
+  private List<PublicationDetail> getDelegatedNews(String userId) throws Exception {
     List<PublicationDetail> news = new ArrayList<PublicationDetail>();
     List<DelegatedNews> delegatedNews = DelegatedNewsServiceProvider.getDelegatedNewsService().getAllValidDelegatedNews();
 
     for (DelegatedNews delegated : delegatedNews) {
-      News aNews = new News(delegated.getPublicationDetail());
-      aNews.setPublicationId(delegated.getPublicationDetail().getId());
-      news.add(aNews.getPublication());
+      PublicationDetail pub = delegated.getPublicationDetail();
+      if (pub.canBeAccessedBy(Administration.get().getUserDetail(userId))) {
+        News aNews = new News(pub);
+        aNews.setPublicationId(delegated.getPublicationDetail().getId());
+        news.add(aNews.getPublication());
+      }
     }
 
     return news;
@@ -148,17 +152,19 @@ public class NewsHelper {
     return news;
   }
 
-  private List<PublicationDetail> getNewsByComponentId(String appId, boolean managerAccess) {
+  private List<PublicationDetail> getNewsByComponentId(String appId, boolean managerAccess, String userId) {
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
     List<PublicationDetail> allNews = new ArrayList<PublicationDetail>();
     List<News> news;
-    if (managerAccess) {
-      news = service.getAllNews(appId);
-    } else {
-      news = service.getVisibleNews(appId);
-    }
-    for (News aNews: news) {
-      allNews.add(aNews.getPublication());
+    if (organizationController.isComponentAvailable(appId, userId)) {
+      if (managerAccess) {
+        news = service.getAllNews(appId);
+      } else {
+        news = service.getVisibleNews(appId);
+      }
+      for (News aNews : news) {
+        allNews.add(aNews.getPublication());
+      }
     }
     return allNews;
   }

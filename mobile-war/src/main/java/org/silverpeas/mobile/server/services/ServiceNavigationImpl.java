@@ -186,28 +186,29 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
         data.setSpaceName(space.getName(getUserInSession().getUserPreferences().getLanguage()));
       }
+
+      int maxNews;
+      if (spaceId == null) {
+        maxNews = settings.getInteger("home.news.size", 3);
+      } else {
+        maxNews = settings.getInteger("home.news.size", 3);
+      }
+      List<PublicationDetail> lastNews = NewsHelper
+          .getInstance().getLastNews(getUserInSession().getId(), spaceId);
+      if (lastNews != null && lastNews.size() > maxNews) {
+        lastNews = lastNews.subList(0, maxNews);
+      }
+      data.setNews(NewsHelper.getInstance().populatePub(lastNews, false));
+
+      if (spaceId == null || spaceId.isEmpty()) {
+        List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPersoVisible(getUserInSession().getId());
+        data.setFavorites(FavoritesHelper.getInstance().populate(links));
+      }
+      data.setSpacesAndApps(getSpacesAndApps(spaceId));
     } catch (Exception e) {
       SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
       throw new NavigationException(e);
     }
-    int maxNews;
-    if (spaceId == null) {
-      maxNews = settings.getInteger("home.news.size", 3);
-    } else {
-      maxNews = settings.getInteger("home.news.size", 3);
-    }
-    List<PublicationDetail> lastNews = NewsHelper
-        .getInstance().getLastNews(getUserInSession().getId(), spaceId);
-    if (lastNews != null && lastNews.size() > maxNews) {
-      lastNews = lastNews.subList(0, maxNews);
-    }
-    data.setNews(NewsHelper.getInstance().populatePub(lastNews, false));
-
-    if (spaceId == null || spaceId.isEmpty()) {
-      List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPersoVisible(getUserInSession().getId());
-      data.setFavorites(FavoritesHelper.getInstance().populate(links));
-    }
-    data.setSpacesAndApps(getSpacesAndApps(spaceId));
 
     // last publications
     if ((spaceId == null && showLastPublicationsOnHomePage) || (spaceId != null && showLastPublicationsOnSpaceHomePage)) {
@@ -222,12 +223,14 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         }
         List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
         for (PublicationDetail pub : pubs) {
-          PublicationDTO dto = new PublicationDTO();
-          dto.setId(pub.getId());
-          dto.setName(pub.getName());
-          dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
-          dto.setInstanceId(pub.getInstanceId());
-          lastPubs.add(dto);
+          if (pub.canBeAccessedBy(getUserInSession())) {
+            PublicationDTO dto = new PublicationDTO();
+            dto.setId(pub.getId());
+            dto.setName(pub.getName());
+            dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
+            dto.setInstanceId(pub.getInstanceId());
+            lastPubs.add(dto);
+          }
         }
         data.setLastPublications(lastPubs);
 
