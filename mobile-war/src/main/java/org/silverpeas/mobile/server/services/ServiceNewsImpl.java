@@ -24,10 +24,7 @@
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.quickinfo.model.News;
-import org.silverpeas.core.admin.service.AdminException;
-import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -39,6 +36,7 @@ import java.util.List;
 
 /**
  * Service de gestion des news.
+ *
  * @author svu
  */
 public class ServiceNewsImpl extends AbstractAuthenticateService implements ServiceNews {
@@ -50,13 +48,24 @@ public class ServiceNewsImpl extends AbstractAuthenticateService implements Serv
   @Override
   public List<NewsDTO> getNews(String instanceId) throws NewsException, AuthenticationException {
     checkUserInSession();
-    try {
-      boolean managerAccess = Administration.get().isComponentManageable(instanceId, getUserInSession().getId());
-      List<News> news = NewsHelper.getInstance().getNewsByAppId(instanceId, managerAccess);
-      List<NewsDTO> newsDTO = NewsHelper.getInstance().populate(news, managerAccess);
-      return newsDTO;
-    } catch (AdminException e) {
-      throw new  NewsException(e);
+
+    String[] profiles =
+        OrganizationController.get().getUserProfiles(getUserInSession().getId(), instanceId);
+    boolean managerAccess = isManagerOrPublisher(profiles);
+    List<News> news = NewsHelper.getInstance().getNewsByAppId(instanceId, managerAccess);
+    List<NewsDTO> newsDTO = NewsHelper.getInstance().populate(news, managerAccess);
+    return newsDTO;
+  }
+
+  private boolean isManagerOrPublisher(final String[] profiles) {
+    for (String profile : profiles) {
+      if (profile.equals("admin")) {
+        return true;
+      }
+      if (profile.equals("publisher")) {
+        return true;
+      }
     }
+    return false;
   }
 }

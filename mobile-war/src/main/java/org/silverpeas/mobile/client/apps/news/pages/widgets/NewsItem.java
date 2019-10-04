@@ -69,7 +69,7 @@ public class NewsItem extends Composite implements ClickHandler {
     if (data.isManagable()) {
       if (data.isDraft()) {
         status = " ("+msg.draft()+")";
-      } else if (data.isVisible()) {
+      } else if (!data.isVisible()) {
         status = " ("+msg.notVisible()+")";
       }
     }
