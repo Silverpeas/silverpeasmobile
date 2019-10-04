@@ -797,9 +797,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /* TODO : remove at release */
-/*.app-formsOnline {
+.app-formsOnline {
   display: none !important;
-}*/
+}
 
 .app-formsOnline a {
   background-position: 0.65em -2208px;
