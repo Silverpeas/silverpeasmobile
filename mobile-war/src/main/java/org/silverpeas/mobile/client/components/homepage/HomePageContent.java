@@ -72,7 +72,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   @UiField
   UnorderedList favoris, lastPublications, spaces, news, lastEvents, shortcuts;
   @UiField
-  HTMLPanel lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection;
+  HTMLPanel lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection, freeZoneSection;
 
   interface HomePageUiBinder extends UiBinder<Widget, HomePageContent> {}
 
@@ -89,6 +89,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     favorisSection.setVisible(config.isFavoritesDisplay());
     lastPublicationsSection.setVisible(config.isLastPublicationsDisplay());
     news.setVisible(config.isNewsDisplay());
+    freeZoneSection.setVisible(config.isFreeZoneDisplay());
   }
 
   public void setData(HomePageDTO data) {
@@ -154,6 +155,10 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
       item.setData(eventDTO);
       lastEvents.add(item);
     }
+
+    freeZoneSection.clear();
+    HTML html = new HTML(data.getHtmlFreeZone());
+    freeZoneSection.add(html);
 
     if (MobilUtils.isMobil()) {
       Element e = Document.get().getElementById("actus");

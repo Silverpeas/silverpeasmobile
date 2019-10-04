@@ -58,6 +58,9 @@
         <components:UnorderedList ui:field="lastEvents" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
+      <g:HTMLPanel stylePrimaryName="free-zone-bloc bloc" ui:field="freeZoneSection">
+      </g:HTMLPanel>
+
   </g:HTMLPanel>
 
 </ui:UiBinder> 

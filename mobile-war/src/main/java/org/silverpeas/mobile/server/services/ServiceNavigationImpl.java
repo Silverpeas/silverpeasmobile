@@ -36,6 +36,7 @@ import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
 import org.silverpeas.core.contribution.model.ContributionIdentifier;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
@@ -90,6 +91,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private static boolean showLastPublicationsOnSpaceHomePage;
   private static boolean showLastEventsOnHomePage;
   private static boolean showLastEventsOnSpaceHomePage;
+  private static boolean showFreeZoneOnSpaceHomePage;
   private static boolean useGUImobileForTablets;
   private OrganizationController organizationController = OrganizationController.get();
 
@@ -99,6 +101,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     showLastPublicationsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastpublications", true);
     showLastEventsOnHomePage = mobileSettings.getBoolean("homepage.lastevents", true);
     showLastEventsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastevents", true);
+    showFreeZoneOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.freezone", true);
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
   }
 
@@ -282,6 +285,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     }
     eventsToDisplay = EventsHelper.getInstance().populate(events, lang);
     data.setLastEvents(eventsToDisplay);
+
+    // freezone
+    if ((spaceId == null && showFreeZoneOnSpaceHomePage)) {
+      String pageWebAppId = settings.getString("home.freezone.appId");
+      if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
+        String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
+        data.setHtmlFreeZone(html);
+      }
+    }
 
     return data;
   }
