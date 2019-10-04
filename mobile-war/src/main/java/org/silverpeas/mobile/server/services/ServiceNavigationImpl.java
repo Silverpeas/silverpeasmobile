@@ -30,6 +30,7 @@ import org.jsoup.nodes.Document;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
@@ -42,12 +43,16 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.mylinks.model.LinkDetail;
+import org.silverpeas.core.security.session.SessionInfo;
+import org.silverpeas.core.security.session.SessionManagement;
+import org.silverpeas.core.security.session.SessionManagementProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationHelper;
+import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
@@ -157,7 +162,6 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   @Override
   public DetailUserDTO initSession(DetailUserDTO user) throws AuthenticationException {
     SynchronizerToken token = (SynchronizerToken) getThreadLocalRequest().getSession().getAttribute("X-STKN");
-
     if (user != null) {
       UserDetail usr = organizationController.getUserDetail(user.getId());
       setUserInSession(usr);
@@ -166,6 +170,30 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       return dto;
     } else {
       return null;
+    }
+  }
+
+  private void initSilverpeasSession() {
+    MainSessionController controller = (MainSessionController) getThreadLocalRequest().getSession()
+        .getAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
+    if (controller == null) {
+      SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
+      SessionInfo
+          sessionInfo = sessionManagement.validateSession(getThreadLocalRequest().getSession().getId());
+
+      try {
+        controller = new MainSessionController(sessionInfo, getThreadLocalRequest().getSession());
+      } catch (SilverpeasException e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+      getThreadLocalRequest().getSession().setAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT, controller);
+    }
+
+    GraphicElementFactory gef = (GraphicElementFactory) getThreadLocalRequest().getSession().getAttribute(
+        GraphicElementFactory.GE_FACTORY_SESSION_ATT);
+    if (gef == null) {
+      gef = new GraphicElementFactory(controller);
+      getThreadLocalRequest().getSession().setAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT, gef);
     }
   }
 
@@ -181,6 +209,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   @Override
   public HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException {
     checkUserInSession();
+    initSilverpeasSession();
     SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
     HomePageDTO data = new HomePageDTO();
     data.setId(spaceId);
