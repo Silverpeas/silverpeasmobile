@@ -29,12 +29,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 
-public class ShortCutItem extends LinkItem {
+public class ShortCutItem extends Composite {
 
   private ShortCutLinkDTO data;
   private static ShortCutItemUiBinder uiBinder = GWT.create(ShortCutItemUiBinder.class);
@@ -68,7 +70,7 @@ public class ShortCutItem extends LinkItem {
 
   @UiHandler("link")
   protected void onClick(ClickEvent event) {
-    processLink(data.getUrl());
+    LinksManager.processLink(data.getUrl());
   }
 
 }

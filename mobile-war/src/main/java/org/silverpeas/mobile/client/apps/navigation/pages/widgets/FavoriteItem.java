@@ -29,11 +29,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
-public class FavoriteItem extends LinkItem {
+public class FavoriteItem extends Composite {
 
   private MyLinkDTO data;
   private static FavoriteItemUiBinder uiBinder = GWT.create(FavoriteItemUiBinder.class);
@@ -65,7 +67,7 @@ public class FavoriteItem extends LinkItem {
 
   @UiHandler("link")
   protected void onClick(ClickEvent event) {
-    processLink(data.getUrl());
+    LinksManager.processLink(data.getUrl());
   }
 
 }

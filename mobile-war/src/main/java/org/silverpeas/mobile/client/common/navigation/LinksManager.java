@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,22 +21,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.navigation.pages.widgets;
+package org.silverpeas.mobile.client.common.navigation;
 
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.Window;
 import org.silverpeas.mobile.client.SpMobil;
+import org.silverpeas.mobile.client.apps.contacts.events.app.ContactsFilteredLoadEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.app.GotoAppEvent;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ShortCutRouter;
+import org.silverpeas.mobile.client.common.mobil.MobilUtils;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
+import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.contact.ContactScope;
 
 /**
  * @author svu
  */
-public abstract class LinkItem extends Composite {
+public class LinksManager {
 
-  protected void processLink(String url) {
-    if(url.startsWith("/")) {
+  private static Boolean iosShowIframe = Boolean.parseBoolean(ResourcesManager.getParam("ios.link.open.in.iframe"));
+
+  public static void processLink(String url) {
+    if(sameContext(url)) {
       String shortcutContentType = "";
       String shortcutAppId = null;
       String shortcutContentId = url.substring(url.lastIndexOf("/") + 1);
@@ -59,11 +66,53 @@ public abstract class LinkItem extends Composite {
         eventGoApp.setInstanceId(shortcutContentId);
         EventBus.getInstance().fireEvent(eventGoApp);
         return;
+      } else if (url.contains("/silverpeas/Rdirectory/jsp/Main")) {
+        String type = "";
+        String filter = "";
+        if (url.contains("GroupId=")) {
+          type = ContactScope.group.name();
+          filter = url.substring(url.indexOf("GroupId=") + "GroupId=".length());
+        } else if (url.contains("DomainId=")) {
+          type = ContactScope.domain.name();
+          filter = url.substring(url.indexOf("DomainId=") + "DomainId=".length());
+        }
+        EventBus.getInstance().fireEvent(new ContactsFilteredLoadEvent(type, filter));
+      } else {
+        openExternalLink(url);
+        return;
       }
+
       ShortCutRouter
           .route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId, null);
+      return;
     }
-    
+    openExternalLink(url);
   }
-  
+
+  private static boolean sameContext(String url) {
+    String context = Window.Location.getHref();
+    int i = context.indexOf("#");
+    if (i >= 0) {
+      context = context.substring(0, i);
+    }
+    context = context.replaceAll(Window.Location.getPath(), "") + "/silverpeas";
+
+    return ((url.startsWith("/") || url.startsWith(context)));
+  }
+
+  public static void openExternalLink(String url) {
+    if (MobilUtils.isIOS()) {
+      if (iosShowIframe) {
+        IframePage page = new IframePage(url);
+        page.setPageTitle("");
+        page.show();
+      } else {
+        //Window.Location.assign(url);
+        Window.open(url, "_self", "");
+      }
+    } else {
+      Window.open(url, "_blank", "");
+    }
+  }
+
 }

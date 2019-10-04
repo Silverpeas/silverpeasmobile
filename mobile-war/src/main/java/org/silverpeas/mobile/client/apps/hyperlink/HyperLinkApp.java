@@ -24,8 +24,6 @@
 package org.silverpeas.mobile.client.apps.hyperlink;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
-import org.silverpeas.mobile.client.apps.contacts.events.app.ContactsFilteredLoadEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -34,20 +32,15 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.mobil.MobilUtils;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
-import org.silverpeas.mobile.client.components.IframePage;
-import org.silverpeas.mobile.shared.dto.contact.ContactScope;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 public class HyperLinkApp extends App implements NavigationEventHandler {
 
   private ApplicationInstanceDTO instance;
-
-  private Boolean iosShowIframe = Boolean.parseBoolean(ResourcesManager.getParam("ios.link.open.in.iframe"));
 
   public HyperLinkApp(){
     super();
@@ -88,32 +81,7 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
 
   private void openLink(String url) {
     Notification.activityStop();
-
-    if (url.contains("/silverpeas/Rdirectory/jsp/Main")) {
-      String type = "";
-      String filter = "";
-      if (url.contains("GroupId=")) {
-        type = ContactScope.group.name();
-        filter = url.substring(url.indexOf("GroupId=") + "GroupId=".length());
-      } else if (url.contains("DomainId=")) {
-        type = ContactScope.domain.name();
-        filter = url.substring(url.indexOf("DomainId=") + "DomainId=".length());
-      }
-      EventBus.getInstance().fireEvent(new ContactsFilteredLoadEvent(type, filter));
-    } else {
-      if (MobilUtils.isIOS()) {
-        if (iosShowIframe) {
-          IframePage page = new IframePage(url);
-          page.setPageTitle("");
-          page.show();
-        } else {
-          //Window.Location.assign(url);
-          Window.open(url, "_self", "");
-        }
-      } else {
-        Window.open(url, "_blank", "");
-      }
-    }
+    LinksManager.processLink(url);
   }
 
   private Command getOfflineAction(final NavigationAppInstanceChangedEvent event, final String key) {
