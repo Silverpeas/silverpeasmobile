@@ -53,7 +53,7 @@ public class ShortCutItem extends LinkItem {
 
   public void setData(ShortCutLinkDTO data) {
     this.data = data;
-    link.setText(data.getText());
+    link.setHTML(data.getText());
     icon.setUrl(data.getIcon());
 
     if(data.getUrl().startsWith("/")) {
