@@ -25,19 +25,24 @@ package org.silverpeas.mobile.client.apps.navigation.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
+import org.silverpeas.mobile.client.common.DateUtil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+
+import java.util.Date;
 
 public class HomePageItem extends Composite {
 
@@ -58,8 +63,31 @@ public class HomePageItem extends Composite {
 
   public void setData(CalendarEventDTO data) {
     this.eventData = data;
-    link.setHTML(data.getTitle() + "&nbsp;<span class='date'>"+data.getStartDate() + " - " + data.getEndDate() +"</span>");
+    if (data.getStartDate().equals(data.getEndDate()) || (data.isOnAllDay() && isOnOneDay())) {
+      link.setHTML(data.getTitle() + "&nbsp;<span class='date'>" + data.getStartDate() + "</span>");
+    } else {
+      link.setHTML(data.getTitle() + "&nbsp;<span class='date'>" + data.getStartDate() + " - " +
+          data.getEndDate() + "</span>");
+    }
     link.setStyleName("ui-btn ui-icon-carat-r");
+  }
+
+  private boolean isOnOneDay() {
+
+    DateTimeFormat df = DateTimeFormat.getFormat("dd/MM/yyyy");
+    DateTimeFormat df2 = DateTimeFormat.getFormat("MM/dd/yyyy");
+    Date start = null;
+    Date end = null;
+    try {
+      start = df2.parse(eventData.getStartDate());
+      end = df2.parse(eventData.getEndDate());
+    } catch(Exception e) {
+      start = df.parse(eventData.getStartDate());
+      end = df.parse(eventData.getEndDate());
+    }
+
+    end = DateUtil.addDays(end, -1);
+    return (DateUtil.isSameDate(start, end));
   }
 
   public void setData(PublicationDTO data) {

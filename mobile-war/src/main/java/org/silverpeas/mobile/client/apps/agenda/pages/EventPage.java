@@ -172,7 +172,15 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     } else {
       Date start = dtf.parse(event.getStartDate());
       Date end = dtf.parse(event.getEndDate());
-      dateEvent.setInnerText(displayDf.format(start)+ " - " + displayDtf.format(start) + " " + msg.to() + " " + displayDtf.format(end));
+      String st = displayDf.format(start);
+      String en = displayDf.format(end);
+      if (st.equals(en)) {
+        dateEvent.setInnerText(
+            st + " " + msg.to() + " " + displayDtf.format(start) + " - " + displayDtf.format(end));
+      } else {
+        dateEvent.setInnerText(
+            st + " " + msg.to() + " " + displayDtf.format(start) + " " + msg.toDay() + " " + en + " " + msg.to() + " " + displayDtf.format(end));
+      }
     }
 
     // link

@@ -119,6 +119,7 @@ public class EventsHelper {
         dto.setCalendarId(event.getDetail().getInstanceId());
         dto.setStartDate(fmt.format(event.getDetail().getStartDateAsDate()));
         dto.setEndDate(fmt.format(event.getDetail().getEndDateAsDate()));
+        dto.setOnAllDay(event.getDetail().isOnAllDay());
         eventsToDisplay.add(dto);
       }
     }
