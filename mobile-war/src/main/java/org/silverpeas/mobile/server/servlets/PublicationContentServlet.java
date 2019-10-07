@@ -341,7 +341,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         Photo photo = getGalleryService().getPhoto(new MediaPK(imageId));
         String[] rep = {"image" + imageId};
 
-        String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
+        String path = FileRepositoryManager.getAbsolutePath(instanceId, rep);
         File f = new File(path + photo.getFileName());
 
         FileInputStream is = new FileInputStream(f);

@@ -92,7 +92,7 @@ public class NewsHelper {
       List<PublicationDetail> news = new ArrayList<PublicationDetail>();
       for (String appId : appIds) {
         Collection<PublicationDetail> someNews =
-            PublicationService.get().getOrphanPublications(new PublicationPK("", appId));
+            PublicationService.get().getOrphanPublications(appId);
         for (PublicationDetail aNews : someNews) {
           if (isVisibleNews(aNews)) {
             news.add(aNews);
@@ -265,7 +265,7 @@ public class NewsHelper {
         Photo photo = MediaServiceProvider.getMediaService().getPhoto(new MediaPK(imageId));
         String[] rep = {"image" + imageId};
 
-        String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
+        String path = FileRepositoryManager.getAbsolutePath(instanceId, rep);
         File f = new File(path + photo.getFileName());
 
         File fResized = resizeImage(f);

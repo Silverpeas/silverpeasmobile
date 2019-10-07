@@ -107,8 +107,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
             if (isCurrentTopicAvailable(nodeDetail)) {
               topic.setId(String.valueOf(nodeDetail.getId()));
               topic.setName(nodeDetail.getName());
-              int childrenNumber = getNodeBm()
-                  .getChildrenNumber(new NodePK(String.valueOf(nodeDetail.getId()), instanceId));
+              int childrenNumber = nodeDetail.getChildrenNumber();
 
               // count publications
               Collection<NodePK> pks = getAllSubNodePKs(nodeDetail.getNodePK());
@@ -128,7 +127,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
                 }
               }
               PublicationPK pubPK = new PublicationPK("useless", instanceId);
-              List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(ids, pubPK, "pubname");
+              List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(ids, pubPK.getInstanceId(), false);
               int nbPubNotVisible = 0;
               for (PublicationDetail publication : publications) {
                 if (coWriting) {
@@ -230,8 +229,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       ArrayList<String> nodeIds = new ArrayList<String>();
       nodeIds.add(nodePK.getId());
 
-      List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(nodeIds, pubPK, "pubname");
-
+      List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(nodeIds, pubPK.getInstanceId(), false);
       String[] profiles;
 
       if (isRightsOnTopicsEnabled(instanceId)) {

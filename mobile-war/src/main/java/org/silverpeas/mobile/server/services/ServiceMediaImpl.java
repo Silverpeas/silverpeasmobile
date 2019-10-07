@@ -635,7 +635,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
     String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getMediaPK().getId();
     String[] rep = {nomRep};
-    String path = FileRepositoryManager.getAbsolutePath(null, instanceId, rep);
+    String path = FileRepositoryManager.getAbsolutePath(instanceId, rep);
 
     Media media = getGalleryService().getMedia(new MediaPK(photoDetail.getId(), instanceId));
     SilverpeasFile f = media.getFile(size);
