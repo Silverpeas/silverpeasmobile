@@ -796,11 +796,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-position: 0.5625em 0.3em;
 }
 
-/* TODO : remove at release */
-.app-formsOnline {
-  display: none !important;
-}
-
 .app-formsOnline a {
   background-position: 0.65em -2208px;
 }

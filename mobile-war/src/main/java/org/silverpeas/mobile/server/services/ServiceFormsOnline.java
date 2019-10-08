@@ -94,8 +94,8 @@ import java.util.Map;
  */
 @Service
 @RequestScoped
-@Path(ServiceFormsOnline.PATH)
 @Authorized
+@Path(ServiceFormsOnline.PATH + "/{appId}")
 public class ServiceFormsOnline extends RESTWebService {
 
   @Context
@@ -103,14 +103,17 @@ public class ServiceFormsOnline extends RESTWebService {
 
   static final String PATH = "formsOnline";
 
+  @PathParam("appId")
+  private String componentId;
+
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("sendables/{appId}")
-  public List<FormDTO> getSendablesForms(@PathParam("appId") String appId) {
+  @Path("sendables")
+  public List<FormDTO> getSendablesForms() {
       List<FormDTO> dtos = new ArrayList<>();
     try {
-      List<FormDetail> forms = FormsOnlineService.get().getAllForms(appId, getUser().getId(), true);
+      List<FormDetail> forms = FormsOnlineService.get().getAllForms(getComponentId(), getUser().getId(), true);
       for (FormDetail form : forms) {
         FormDTO dto = new FormDTO();
         if (form.isSendable() && form.isPublished()) {
@@ -130,12 +133,12 @@ public class ServiceFormsOnline extends RESTWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("myrequests/{appId}")
-  public List<FormRequestDTO> getMyRequests(@PathParam("appId") String appId) {
+  @Path("myrequests")
+  public List<FormRequestDTO> getMyRequests() {
     List<FormRequestDTO> requestDTOS = new ArrayList<>();
 
     try {
-      RequestsByStatus reqs = FormsOnlineService.get().getAllUserRequests(appId, getUser().getId(), null);
+      RequestsByStatus reqs = FormsOnlineService.get().getAllUserRequests(getComponentId(), getUser().getId(), null);
       reqs.getAll();
       //TODO
 
@@ -149,35 +152,10 @@ public class ServiceFormsOnline extends RESTWebService {
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("saveForm")
-  public Boolean saveForm() {
-
-
-
-    String instanceId = "formsOnline16";
-    String formId = "1";
-
+  @Path("saveForm/{formId}")
+  public Boolean saveForm(@PathParam("formId") String formId) {
+    String instanceId = getComponentId();
     List<FileItem> items = this.getHttpRequest().getFileItems();
-    int i = 0;
-    for (FileItem item : items) {
-      if (item.getFieldName().equalsIgnoreCase("instanceId")) {
-        instanceId = item.getString();
-        items.remove(i);
-        break;
-      }
-      i++;
-    }
-
-    i = 0;
-    for (FileItem item : items) {
-      if (item.getFieldName().equalsIgnoreCase("formId")) {
-        formId = item.getString();
-        items.remove(i);
-        break;
-      }
-      i++;
-    }
-
     FormPK pk = new FormPK(formId, instanceId);
     try {
       FormsOnlineService.get().saveRequest(pk, getUser().getId(), items);
@@ -190,8 +168,8 @@ public class ServiceFormsOnline extends RESTWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("form/{appId}/{formName}")
-  public List<FormFieldDTO> getForm(@PathParam("appId") String appId, @PathParam("formName") String formName) {
+  @Path("form/{formName}")
+  public List<FormFieldDTO> getForm(@PathParam("formName") String formName) {
 
     List<FormFieldDTO> fields = new ArrayList<>();
 
@@ -220,8 +198,8 @@ public class ServiceFormsOnline extends RESTWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("form/{appId}/{formName}/{fieldName}")
-  public List<BaseDTO> getUserField(@PathParam("appId") String appId, @PathParam("formName") String formName, @PathParam("fieldName") String fieldName) {
+  @Path("form/{formName}/{fieldName}")
+  public List<BaseDTO> getUserField(@PathParam("formName") String formName, @PathParam("fieldName") String fieldName) {
 
     List<BaseDTO> result = new ArrayList<>();
     try {
@@ -234,13 +212,13 @@ public class ServiceFormsOnline extends RESTWebService {
             List<String> users = new ArrayList<>();
 
             if (parameters.containsKey("usersOfInstanceOnly")) {
-              List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(appId).getAllProfilesInst();
+              List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(getComponentId()).getAllProfilesInst();
               for (ProfileInst profileInst : allProfilesInst) {
                 users.addAll(profileInst.getAllUsers());
               }
             } else if (parameters.containsKey("roles")) {
               List<String> roles = Arrays.asList(parameters.get("roles").split(","));
-              List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(appId).getAllProfilesInst();
+              List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(getComponentId()).getAllProfilesInst();
               for (ProfileInst profileInst : allProfilesInst) {
                 if (roles.contains(profileInst.getName())) {
                   users.addAll(profileInst.getAllUsers());
@@ -311,6 +289,6 @@ public class ServiceFormsOnline extends RESTWebService {
 
   @Override
   public String getComponentId() {
-    return null;
+    return this.componentId;
   }
 }

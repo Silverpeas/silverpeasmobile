@@ -44,22 +44,22 @@ public interface ServiceFormsOnline extends RestService {
 
 
   @GET
-  @Path("sendables/{appId}")
+  @Path("{appId}/sendables")
   public void getSendablesForms(@PathParam("appId") String appId,
       MethodCallback<List<FormDTO>> callback);
 
 
   @GET
-  @Path("form/{appId}/{formName}")
+  @Path("{appId}/form/{formName}")
   public void getForm(@PathParam("appId") String appId, @PathParam("formName") String formName,
       MethodCallback<List<FormFieldDTO>> callback);
 
   @POST
-  @Path("saveForm")
-  public void saveForm(MethodCallback<Boolean> callback);
+  @Path("{appId}/saveForm/{formId}")
+  public void saveForm(@PathParam("appId") String appId, @PathParam("formId") String formId, MethodCallback<Boolean> callback);
 
   @GET
-  @Path("form/{appId}/{formName}/{fieldName}")
+  @Path("{appId}/form/{formName}/{fieldName}")
   public void getUserField(@PathParam("appId") String appId, @PathParam("formName") String formName,
       @PathParam("fieldName") String fieldName, MethodCallback<List<BaseDTO>> callback);
 
