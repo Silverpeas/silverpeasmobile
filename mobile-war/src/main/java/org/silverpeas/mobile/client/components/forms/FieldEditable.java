@@ -295,12 +295,17 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       t.setReadOnly(data.isReadOnly());
       t.addChangeHandler(this);
       w = t;
+    } else {
+      // not supported field
     }
-    inputContainer.add(w);
-    if (data.isMandatory()) {
-      Image im = new Image();
-      im.setStylePrimaryName("mandatory");
-      inputContainer.add(im);
+
+    if (w != null) {
+      inputContainer.add(w);
+      if (data.isMandatory()) {
+        Image im = new Image();
+        im.setStylePrimaryName("mandatory");
+        inputContainer.add(im);
+      }
     }
   }
 
