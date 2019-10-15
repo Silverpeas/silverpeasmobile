@@ -29,6 +29,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,7 +44,7 @@ public class Field extends Composite {
   private FieldPresentationDTO data;
 
   @UiField
-  Label label;
+  HTML label;
   @UiField
   Anchor link;
   @UiField
@@ -76,7 +77,7 @@ public class Field extends Composite {
       link.getElement().setAttribute("download", data.getValue());
       //link.fireEvent(new ClickEvent() {});
     } else {
-      label.setText(data.getLabel() + " : " + value);
+      label.setHTML(data.getLabel() + " : " + value);
     }
   }
 }

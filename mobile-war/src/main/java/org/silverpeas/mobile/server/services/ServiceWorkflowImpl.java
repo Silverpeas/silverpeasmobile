@@ -37,9 +37,12 @@ import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.RecordTemplate;
 import org.silverpeas.core.contribution.content.form.field.MultipleUserField;
+import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.workflow.api.Workflow;
 import org.silverpeas.core.workflow.api.instance.ProcessInstance;
 import org.silverpeas.core.workflow.api.model.Input;
@@ -59,6 +62,10 @@ import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.WorkflowException;
 import org.silverpeas.mobile.shared.services.ServiceWorkflow;
 
+import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -222,9 +229,16 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
         String value = data.getField(ft.getFieldName()).getStringValue();
         String id = "";
         String type = ft.getTypeName();
+        String displayerName = ft.getDisplayerName();
+        value = getDisplayValue(ft, value, instance);
+
         if (type.equalsIgnoreCase("user")) {
-          UserDetail u = Administration.get().getUserDetail(value);
-          value = u.getDisplayedName();
+          if (value.isEmpty()) {
+            value = null;
+          } else {
+            UserDetail u = Administration.get().getUserDetail(value);
+            value = u.getDisplayedName();
+          }
         } else if (type.equalsIgnoreCase("multipleUser")) {
           StringTokenizer stk = new StringTokenizer(value, ",");
           value = "";
@@ -240,11 +254,14 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
         } else if(type.equalsIgnoreCase("date")) {
           value = DateUtil.getInputDate(value, getUserInSession().getUserPreferences().getLanguage());
         } else if(type.equalsIgnoreCase("file")) {
-          SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(value), getUserInSession().getUserPreferences().getLanguage());
-          value = doc.getTitle();
-          id = doc.getId();
+          if (value != null) {
+            SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(value),
+                getUserInSession().getUserPreferences().getLanguage());
+            value = doc.getTitle();
+            id = doc.getId();
+          }
         }
-        fields.add(new FieldPresentationDTO(label, value, id, type));
+        if (value != null) fields.add(new FieldPresentationDTO(label, value, id, type, displayerName));
       }
       dto.setTitle(form.getTitle());
     } catch (Exception e) {
@@ -255,6 +272,34 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
     dto.setFields(fields);
 
     return dto;
+  }
+
+  private String getDisplayValue(final FieldTemplate ft, String value, ProcessInstance instance) {
+    Map<String, String> params = ft.getParameters(getUserInSession().getUserPreferences().getLanguage());
+    String keys = params.get("keys");
+    String values = params.get("values");
+    if (keys != null && values != null) {
+      String[] k = keys.split("##");
+      String[] v = values.split("##");
+      for (int i = 0; i < k.length; i++) {
+        if (k[i].equals(value)) {
+          return v[i];
+        }
+      }
+    }
+
+    if (value != null && value.startsWith("xmlWysiwygField")) {
+      String wysiwygFile = value.substring(value.indexOf('_') + 1);
+      try {
+        String path = FileRepositoryManager.getAbsolutePath(instance.getModelId()) +
+            "xmlWysiwyg" + File.separator + wysiwygFile;
+        value = new String(Files.readAllBytes(Paths.get(path)));
+      } catch (Exception e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+    }
+
+    return value;
   }
 
   @Override
@@ -354,8 +399,8 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
     FieldTemplate[] headers = template.getFieldTemplates();
 
     for (FieldTemplate header : headers) {
-      String value = processInstance
-          .getRowDataRecord(role, getUserInSession().getUserPreferences().getLanguage()).getField(header.getFieldName()).getStringValue();
+      Field fd = processInstance.getRowDataRecord(role, getUserInSession().getUserPreferences().getLanguage()).getField(header.getFieldName());
+      String value = getDisplayValue(header, fd.getStringValue(), processInstance);
       dto.addHeaderField(value);
     }
 

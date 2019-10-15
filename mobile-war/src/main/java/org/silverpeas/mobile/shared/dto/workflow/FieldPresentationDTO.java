@@ -34,15 +34,17 @@ public class FieldPresentationDTO extends BaseDTO implements Serializable{
   private String label;
   private String value;
   private String type;
+  private String displayerName;
 
   public FieldPresentationDTO() {
   }
 
-  public FieldPresentationDTO(final String key, final String value, final String id, final String type) {
+  public FieldPresentationDTO(final String key, final String value, final String id, final String type, String displayerName) {
     this.label = key;
     this.value = value;
     setId(id);
     this.type = type;
+    this.displayerName = displayerName;
   }
 
   public String getLabel() {
@@ -88,5 +90,13 @@ public class FieldPresentationDTO extends BaseDTO implements Serializable{
 
   public void setType(final String type) {
     this.type = type;
+  }
+
+  public String getDisplayerName() {
+    return displayerName;
+  }
+
+  public void setDisplayerName(final String displayerName) {
+    this.displayerName = displayerName;
   }
 }
