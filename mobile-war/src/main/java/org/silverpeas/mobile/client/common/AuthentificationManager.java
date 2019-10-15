@@ -138,10 +138,11 @@ public class AuthentificationManager {
         new MethodCallback<UserProfileDTO>() {
           @Override
           public void onFailure(final Method method, final Throwable throwable) {
-            if (method.getResponse().getStatusCode() == 403) {
+            int statusError = method.getResponse().getStatusCode();
+            if (statusError == 403) {
               Notification.activityStop();
               SpMobil.displayMainPage();
-            } else if (method.getResponse().getStatusCode() == 401) {
+            } else if (statusError == 401 || statusError == 500) {
               EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
             } else {
               EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
