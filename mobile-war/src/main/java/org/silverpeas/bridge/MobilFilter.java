@@ -127,6 +127,9 @@ public class MobilFilter implements Filter {
         } else if (url.contains("Contribution")) {
           String contributionId = url.substring(url.lastIndexOf("/") + 1);
           params = "?shortcutContentType=Event&shortcutContributionId=" + contributionId;
+        } else if (url.contains("Component")) {
+          String appId = url.substring(url.lastIndexOf("/") + 1);
+          params = "?shortcutContentType=Component&shortcutAppId=" + appId;
         } else if(!url.contains("AuthenticationServlet") && (url.endsWith("silverpeas") || url.endsWith("silverpeas/") || url.contains("/silverpeas/"))) {
           // simple redirection on mobile login page
           params = "";

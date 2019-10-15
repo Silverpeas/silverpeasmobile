@@ -233,7 +233,9 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-
+    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.formsOnline.name())) {
+      super.showContent(event);
+    }
   }
 
 }

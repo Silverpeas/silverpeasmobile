@@ -110,6 +110,10 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-
+    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.blog.name())) {
+      super.showContent(event);
+    } else {
+      //TODO
+    }
   }
 }

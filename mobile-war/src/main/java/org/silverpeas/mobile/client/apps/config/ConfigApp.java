@@ -30,6 +30,7 @@ import org.silverpeas.mobile.client.apps.config.events.app.LoadConfigEvent;
 import org.silverpeas.mobile.client.apps.config.events.app.UpdateConfigEvent;
 import org.silverpeas.mobile.client.apps.config.events.pages.ConfigLoadedEvent;
 import org.silverpeas.mobile.client.apps.config.pages.ConfigPage;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
@@ -74,5 +75,10 @@ public class ConfigApp extends App implements ConfigAppEventHandler {
   public void loadConfig(LoadConfigEvent event) {
     Config conf = SpMobil.getConfiguration();
     EventBus.getInstance().fireEvent(new ConfigLoadedEvent(conf));
+  }
+
+  @Override
+  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+
   }
 }

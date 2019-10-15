@@ -33,6 +33,7 @@ import org.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
 import org.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent;
 import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.comments.pages.CommentsPage;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
@@ -132,4 +133,9 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
       };
       action.attempt();
     }
+
+  @Override
+  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+
+  }
 }

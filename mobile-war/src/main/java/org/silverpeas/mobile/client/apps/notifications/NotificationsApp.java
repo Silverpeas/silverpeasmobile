@@ -24,6 +24,7 @@
 package org.silverpeas.mobile.client.apps.notifications;
 
 import com.google.gwt.core.client.GWT;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.notifications.events.app.AbstractNotificationsAppEvent;
 import org.silverpeas.mobile.client.apps.notifications.events.app.NotificationsAppEventHandler;
 import org.silverpeas.mobile.client.apps.notifications.events.app.SendNotificationEvent;
@@ -131,4 +132,9 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
         };
         action.attempt();
     }
+
+  @Override
+  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+
+  }
 }

@@ -115,6 +115,10 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    // actually manage by document app
+    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.quickinfo.name())) {
+      super.showContent(event);
+    } else {
+      // actually manage by document app
+    }
   }
 }

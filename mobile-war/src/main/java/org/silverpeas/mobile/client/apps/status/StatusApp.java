@@ -24,6 +24,7 @@
 package org.silverpeas.mobile.client.apps.status;
 
 import com.google.gwt.core.client.GWT;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.status.events.StatusEvents;
 import org.silverpeas.mobile.client.apps.status.pages.StatusPage;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -77,4 +78,9 @@ public class StatusApp extends App {
             }
         }
     }
+
+  @Override
+  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+
+  }
 }

@@ -23,8 +23,14 @@
 
 package org.silverpeas.mobile.client.common.app;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.ServicesLocator;
+import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.events.apps.AbstractAppEvent;
@@ -34,12 +40,13 @@ import org.silverpeas.mobile.client.components.base.events.apps.StopLoadingDataE
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
-public abstract class App implements AppEventHandler {
+public abstract class App implements AppEventHandler, NavigationEventHandler {
 
   private PageContent mainPage;
   protected SimplePanel container;
   private boolean stopLoading = false;
   private String appName = "";
+
   private ApplicationInstanceDTO instance = null;
 
   public App() {
@@ -100,5 +107,22 @@ public abstract class App implements AppEventHandler {
 
   protected void setApplicationInstance (ApplicationInstanceDTO instance) {
     this.instance = instance;
+  }
+
+  @Override
+  public void showContent(final NavigationShowContentEvent event) {
+    ServicesLocator.getServiceNavigation().getApp(event.getContent().getInstanceId(), null, null,
+        new AsyncCallback<ApplicationInstanceDTO>() {
+          @Override
+          public void onFailure(final Throwable throwable) {
+            EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+          }
+
+          @Override
+          public void onSuccess(final ApplicationInstanceDTO instance) {
+            NavigationAppInstanceChangedEvent evt = new NavigationAppInstanceChangedEvent(instance);
+            appInstanceChanged(evt);
+          }
+    });
   }
 }

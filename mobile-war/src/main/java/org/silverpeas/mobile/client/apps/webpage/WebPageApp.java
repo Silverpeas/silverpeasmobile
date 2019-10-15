@@ -65,5 +65,12 @@ public class WebPageApp extends App implements NavigationEventHandler {
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
+    if (event.getContent().getType().equals("Component")) {
+      String instanceId = event.getContent().getInstanceId();
+      if (instanceId.startsWith(Apps.webPages.name())) {
+        PublicationPage
+            .showWebPageContent(instanceId, instanceId, msg.title());
+      }
+    }
   }
 }

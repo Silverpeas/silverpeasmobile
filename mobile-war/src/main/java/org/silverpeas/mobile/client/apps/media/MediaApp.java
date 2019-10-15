@@ -209,7 +209,9 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals(ContentsTypes.Media.name()) ||
+    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.gallery.name())) {
+      super.showContent(event);
+    } else if (event.getContent().getType().equals(ContentsTypes.Media.name()) ||
         event.getContent().getType().equals(ContentsTypes.Photo.name()) ||
         event.getContent().getType().equals(ContentsTypes.Sound.name()) ||
         event.getContent().getType().equals(ContentsTypes.Video.name()) ||

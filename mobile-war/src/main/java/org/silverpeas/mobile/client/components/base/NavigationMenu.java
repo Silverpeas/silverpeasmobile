@@ -97,7 +97,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     String url = ResourcesManager.getParam("help.url");
     if (url != null && !url.isEmpty()) {
       help.setHref(url);
-      help.setTarget("_blank");
+      help.setTarget("_self");
     }
     tchat.setVisible(Boolean.parseBoolean(ResourcesManager.getParam("chat.enable")));
 
