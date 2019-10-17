@@ -166,7 +166,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       UserDetail usr = organizationController.getUserDetail(user.getId());
       setUserInSession(usr);
       DetailUserDTO dto = UserHelper.getInstance().populate(usr);
-      dto.setSessionKey(token.getValue());
+
+      if (token == null) {
+        // web security turn off
+        try {
+          dto.setSessionKey(Administration.get().getUserFull(usr.getId()).getToken());
+        }catch (Exception e) { SilverLogger.getLogger(this).error(e); }
+      } else {
+        dto.setSessionKey(token.getValue());
+      }
       return dto;
     } else {
       return null;
