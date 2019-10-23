@@ -188,6 +188,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
       SessionInfo
           sessionInfo = sessionManagement.validateSession(getThreadLocalRequest().getSession().getId());
+      if (sessionInfo.getSessionId() == null) {
+        sessionInfo = sessionManagement.openSession(getUserInSession());
+      }
 
       try {
         controller = new MainSessionController(sessionInfo, getThreadLocalRequest().getSession());
@@ -199,7 +202,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
     GraphicElementFactory gef = (GraphicElementFactory) getThreadLocalRequest().getSession().getAttribute(
         GraphicElementFactory.GE_FACTORY_SESSION_ATT);
-    if (gef == null) {
+    if (gef == null && controller != null) {
       gef = new GraphicElementFactory(controller);
       getThreadLocalRequest().getSession().setAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT, gef);
     }

@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.common.navigation;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.components.base.PageContent;
 
@@ -71,15 +72,21 @@ public class PageHistory implements ValueChangeHandler<String> {
   }
 
   public PageContent back() {
-    hideCallback();
-    PageContent page = pages.pop();
-    page.stop();
-    page = pages.peek();
-    SpMobil.getMainPage().setContent(page);
-    browserBack();
-    //TODO : css3 transition
-
-    return page;
+    String url = Window.Location.getHref();
+    String query = Window.Location.getQueryString();
+    if (url.contains("?")) {
+      Window.Location.assign(url.replace(query, ""));
+      return null;
+    } else {
+      hideCallback();
+      PageContent page = pages.pop();
+      page.stop();
+      page = pages.peek();
+      SpMobil.getMainPage().setContent(page);
+      browserBack();
+      //TODO : css3 transition
+      return page;
+    }
   }
 
   public PageContent getCurrent() {
@@ -118,20 +125,26 @@ public class PageHistory implements ValueChangeHandler<String> {
   }
 
   private void back(String token) {
-    boolean back = false;
-    if (token.isEmpty()) {
-      // prevent exit
-      browserGoto(firstToken);
+    String url = Window.Location.getHref();
+    String query = Window.Location.getQueryString();
+    if (url.contains("?")) {
+      Window.Location.assign(url.replace(query, ""));
     } else {
-      back = isBackAction(token);
-      if (back) {
-        PageContent page = pages.pop();
-        if (page != null) {
-          page.stop();
-          page = pages.peek();
-          SpMobil.getMainPage().setContent(page);
-        } else {
-          SpMobil.restoreMainPage();
+      boolean back = false;
+      if (token.isEmpty()) {
+        // prevent exit
+        browserGoto(firstToken);
+      } else {
+        back = isBackAction(token);
+        if (back) {
+          PageContent page = pages.pop();
+          if (page != null) {
+            page.stop();
+            page = pages.peek();
+            SpMobil.getMainPage().setContent(page);
+          } else {
+            SpMobil.restoreMainPage();
+          }
         }
       }
     }
