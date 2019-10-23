@@ -36,6 +36,8 @@ import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.security.token.TokenGenerator;
 import org.silverpeas.core.security.token.TokenGeneratorProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 
@@ -49,11 +51,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MobilFilter implements Filter {
 
   //private static final SilverLogger logger = SilverLogger.getLogger("silverpeas.core.security");
   public static final String SESSION_TOKEN_KEY = "X-STKN";
+  private static String [] urlsAllowed = null;
 
   @Override
   public void destroy() {
@@ -166,6 +171,15 @@ public class MobilFilter implements Filter {
 
   private boolean isRedirect(final String url) {
     String urlRes = url.toLowerCase();
+
+    if (urlsAllowed != null) {
+      for (int i = 0; i < urlsAllowed.length; i++) {
+        if (!urlsAllowed[i].isEmpty() && urlRes.contains(urlsAllowed[i].toLowerCase())) {
+          return false;
+        }
+      }
+    }
+
     if (urlRes.contains("weblib")) return false;
     if (urlRes.toLowerCase().endsWith(".css")) return false;
     if (urlRes.toLowerCase().endsWith(".gif")) return false;
@@ -177,6 +191,10 @@ public class MobilFilter implements Filter {
 
   @Override
   public void init(FilterConfig arg0) throws ServletException {
+
+    SettingBundle config = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    String urls = config.getString("mobile.redirection.disabled.urls");
+    urlsAllowed = urls.split(",");
   }
 
   private PublicationService getPubBm() {
