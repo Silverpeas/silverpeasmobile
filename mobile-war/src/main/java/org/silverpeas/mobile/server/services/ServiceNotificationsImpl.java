@@ -33,6 +33,7 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInst;
 import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.ProfileInst;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
@@ -45,7 +46,6 @@ import org.silverpeas.core.notification.user.client.NotificationSender;
 import org.silverpeas.core.notification.user.client.UserRecipient;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -57,164 +57,228 @@ import org.silverpeas.mobile.shared.exceptions.NotificationsException;
 import org.silverpeas.mobile.shared.services.ServiceNotifications;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Service de gestion des Notifications.
  *
  * @author svuillet
  */
-public class ServiceNotificationsImpl extends AbstractAuthenticateService implements ServiceNotifications {
+public class ServiceNotificationsImpl extends AbstractAuthenticateService
+    implements ServiceNotifications {
 
-    private static final long serialVersionUID = 1L;
-    private OrganizationController organizationController = OrganizationController.get();
+  private static final long serialVersionUID = 1L;
+  private OrganizationController organizationController = OrganizationController.get();
 
-    @Override
-    public List<BaseDTO> getAllowedUsersAndGroups(String componentId, String contentId) throws NotificationsException, AuthenticationException {
-        ArrayList<BaseDTO> usersAndGroups = new ArrayList<BaseDTO>();
+  @Override
+  public List<BaseDTO> getAllowedUsersAndGroups(String componentId, String contentId)
+      throws NotificationsException, AuthenticationException {
+    ArrayList<BaseDTO> usersAndGroups = new ArrayList<>();
+    ArrayList<UserDTO> users = new ArrayList<>();
+    ArrayList<GroupDTO> groups = new ArrayList<>();
 
-        try {
-            ComponentInst componentInst = Administration.get().getComponentInst(componentId);
-            List<ProfileInst> profiles = new ArrayList<ProfileInst>();
+    try {
+      ComponentInst componentInst = Administration.get().getComponentInst(componentId);
+      List<ProfileInst> profiles = new ArrayList<ProfileInst>();
 
-                if (componentId.toLowerCase().startsWith("kmelia") && isRightsOnTopicsEnabled(componentId)) {
-                    TopicDetail topic = getKmeliaService().getPublicationFather(new PublicationPK(contentId, componentId), true, getUserInSession().getId(), true);
-                    if (topic != null){
-                        NodePK pk = topic.getNodePK();
-                        NodeDetail node = getNodeService().getDetail(pk);
-                        if (node.haveRights()) {
-                            if (node.haveLocalRights()) {
-                                profiles.addAll(getTopicProfiles(pk.getId(), componentId));
-                            } else if (node.haveInheritedRights()) {
-                                profiles.addAll(getTopicProfiles(String.valueOf(node.getRightsDependsOn()), componentId));
-                            }
-
-                        } else {
-                            profiles.addAll(componentInst.getInheritedProfiles());
-                            profiles.addAll(componentInst.getProfiles());
-                        }
-                    } else {
-                        profiles.addAll(componentInst.getInheritedProfiles());
-                        profiles.addAll(componentInst.getProfiles());
-                    }
-                } else {
-                    profiles.addAll(componentInst.getInheritedProfiles());
-                    profiles.addAll(componentInst.getProfiles());
-                }
-
-            for (ProfileInst profile : profiles) {
-                for (String userId : profile.getAllUsers()) {
-                    UserDetail userDetail = organizationController.getUserDetail(userId);
-                    UserDTO u = new UserDTO();
-                    u.setId(userDetail.getId());
-                    u.setFirstName(userDetail.getFirstName());
-                    u.setLastName(userDetail.getLastName());
-                    u.seteMail(userDetail.geteMail());
-                  String avatar = DataURLHelper
-                      .convertAvatarToUrlData(userDetail.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
-                    u.setAvatar(avatar);
-                    usersAndGroups.add(u);
-                }
-                for (String groupId : profile.getAllGroups()) {
-                    Group group = organizationController.getGroup(groupId);
-                    GroupDTO g = new GroupDTO();
-                    g.setId(group.getId());
-                    g.setName(group.getName());
-                    usersAndGroups.add(g);
-                }
+      if (componentId.toLowerCase().startsWith("kmelia") && isRightsOnTopicsEnabled(componentId)) {
+        TopicDetail topic = getKmeliaService()
+            .getPublicationFather(new PublicationPK(contentId, componentId), true,
+                getUserInSession().getId(), true);
+        if (topic != null) {
+          NodePK pk = topic.getNodePK();
+          NodeDetail node = getNodeService().getDetail(pk);
+          if (node.haveRights()) {
+            if (node.haveLocalRights()) {
+              profiles.addAll(getTopicProfiles(pk.getId(), componentId));
+            } else if (node.haveInheritedRights()) {
+              profiles
+                  .addAll(getTopicProfiles(String.valueOf(node.getRightsDependsOn()), componentId));
             }
-        } catch (Exception e) {
-            throw new NotificationsException(e);
+
+          } else {
+            profiles.addAll(componentInst.getInheritedProfiles());
+            profiles.addAll(componentInst.getProfiles());
+          }
+        } else {
+          profiles.addAll(componentInst.getInheritedProfiles());
+          profiles.addAll(componentInst.getProfiles());
         }
-        return usersAndGroups;
+      } else {
+        profiles.addAll(componentInst.getInheritedProfiles());
+        profiles.addAll(componentInst.getProfiles());
+      }
+
+      for (ProfileInst profile : profiles) {
+        for (String groupId : profile.getAllGroups()) {
+          if (!isGroupPresent(groups, groupId)) {
+            Group group = organizationController.getGroup(groupId);
+            GroupDTO g = new GroupDTO();
+            g.setId(group.getId());
+            g.setName(group.getName());
+            groups.add(g);
+          }
+        }
+      }
+
+      for (ProfileInst profile : profiles) {
+        for (String userId : profile.getAllUsers()) {
+          if (!isUserPresent(users, userId)) {
+            UserDTO u = populate(userId);
+            users.add(u);
+          }
+        }
+        for (String groupId : profile.getAllGroups()) {
+          Group group = organizationController.getGroup(groupId);
+          for (User user : group.getAllUsers()) {
+            if (!isUserPresent(users, user.getId())) {
+              UserDTO u = populate(user.getId());
+              users.add(u);
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new NotificationsException(e);
     }
 
-    private List<ProfileInst> getTopicProfiles(String topicId, String componentId)  throws AdminException {
-        List<ProfileInst> alShowProfile = new ArrayList<ProfileInst>();
-        String[] asAvailProfileNames = Administration.get().getAllProfilesNames("kmelia");
-        for (String asAvailProfileName : asAvailProfileNames) {
-            ProfileInst profile = getTopicProfile(asAvailProfileName, topicId, componentId);
-            profile.setLabel(Administration.get().getProfileLabelfromName("kmelia", asAvailProfileName,
-                    getUserInSession().getUserPreferences().getLanguage()));
-            alShowProfile.add(profile);
-        }
+    users.sort(Comparator.comparing(UserDTO::getLastName, String.CASE_INSENSITIVE_ORDER));
+    groups.sort(Comparator.comparing(GroupDTO::getName, String.CASE_INSENSITIVE_ORDER));
+    usersAndGroups.addAll(groups);
+    usersAndGroups.addAll(users);
+    return usersAndGroups;
+  }
 
-        return alShowProfile;
+  private boolean isGroupPresent(List<GroupDTO> groups, String id) {
+    for (GroupDTO dto : groups) {
+        if (dto.getId().equals(id)) {
+          return true;
+        }
+    }
+    return false;
+  }
+
+  private boolean isUserPresent(List<UserDTO> users, String id) {
+    for (UserDTO dto : users) {
+      if (dto.getId().equals(id)) {
+          return true;
+        }
+    }
+    return false;
+  }
+
+  private UserDTO populate(final String userId) {
+    UserDetail userDetail = organizationController.getUserDetail(userId);
+    UserDTO u = new UserDTO();
+    u.setId(userDetail.getId());
+    u.setFirstName(userDetail.getFirstName());
+    u.setLastName(userDetail.getLastName());
+    u.seteMail(userDetail.geteMail());
+    String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
+        getSettings().getString("avatar.size", "24x"));
+    u.setAvatar(avatar);
+    return u;
+  }
+
+  private List<ProfileInst> getTopicProfiles(String topicId, String componentId)
+      throws AdminException {
+    List<ProfileInst> alShowProfile = new ArrayList<ProfileInst>();
+    String[] asAvailProfileNames = Administration.get().getAllProfilesNames("kmelia");
+    for (String asAvailProfileName : asAvailProfileNames) {
+      ProfileInst profile = getTopicProfile(asAvailProfileName, topicId, componentId);
+      profile.setLabel(Administration.get().getProfileLabelfromName("kmelia", asAvailProfileName,
+          getUserInSession().getUserPreferences().getLanguage()));
+      alShowProfile.add(profile);
     }
 
-    private ProfileInst getTopicProfile(String role, String topicId, String componentId) throws AdminException {
-        List<ProfileInst> profiles = Administration.get().getProfilesByObject(topicId, ObjectType.NODE.getCode(), componentId);
-        for (int p = 0; profiles != null && p < profiles.size(); p++) {
-            ProfileInst profile = profiles.get(p);
-            if (profile.getName().equals(role)) {
-                return profile;
-            }
-        }
-        ProfileInst profile = new ProfileInst();
-        profile.setName(role);
+    return alShowProfile;
+  }
+
+  private ProfileInst getTopicProfile(String role, String topicId, String componentId)
+      throws AdminException {
+    List<ProfileInst> profiles =
+        Administration.get().getProfilesByObject(topicId, ObjectType.NODE.getCode(), componentId);
+    for (int p = 0; profiles != null && p < profiles.size(); p++) {
+      ProfileInst profile = profiles.get(p);
+      if (profile.getName().equals(role)) {
         return profile;
+      }
     }
+    ProfileInst profile = new ProfileInst();
+    profile.setName(role);
+    return profile;
+  }
 
-    private boolean isRightsOnTopicsEnabled(String instanceId) throws Exception {
-        String value = getMainSessionController().getComponentParameterValue(instanceId, "rightsOnTopics");
-        return StringUtil.getBooleanValue(value);
-    }
+  private boolean isRightsOnTopicsEnabled(String instanceId) throws Exception {
+    String value =
+        getMainSessionController().getComponentParameterValue(instanceId, "rightsOnTopics");
+    return StringUtil.getBooleanValue(value);
+  }
 
-    @Override
-    public void send(NotificationDTO notification, List<BaseDTO> receivers, String subject) throws NotificationsException, AuthenticationException {
-        try {
-            LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", getUserInSession().getUserPreferences().getLanguage());
-            NotificationSender notificationSender = new NotificationSender(notification.getInstanceId());
-            NotificationMetaData metaData = new NotificationMetaData();
+  @Override
+  public void send(NotificationDTO notification, List<BaseDTO> receivers, String subject)
+      throws NotificationsException, AuthenticationException {
+    try {
+      LocalizationBundle resource = ResourceLocator
+          .getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle",
+              getUserInSession().getUserPreferences().getLanguage());
+      NotificationSender notificationSender = new NotificationSender(notification.getInstanceId());
+      NotificationMetaData metaData = new NotificationMetaData();
 
-            for (BaseDTO receiver : receivers) {
-                if (receiver instanceof UserDTO) {
-                    metaData.addUserRecipient(new UserRecipient((receiver).getId()));
-                } else if (receiver instanceof GroupDTO) {
-                    metaData.addGroupRecipient(new GroupRecipient((receiver).getId()));
-                }
-            }
-
-            metaData.setSendImmediately(true);
-
-            String silverpeasServerUrl = getUserInSession().getDomain().getSilverpeasServerURL();
-            if (!silverpeasServerUrl.contains("silverpeas")) {
-              silverpeasServerUrl = silverpeasServerUrl + "/silverpeas";
-            }
-
-            if (notification.getContentType().equals(NotificationDTO.TYPE_PUBLICATION)) {
-                String url = silverpeasServerUrl + "/Publication/" + notification.getContentId();
-                metaData.setLink(url);
-            } else if (notification.getContentType().equals(NotificationDTO.TYPE_PHOTO) || notification.getContentType().equals(NotificationDTO.TYPE_SOUND) || notification.getContentType().equals(NotificationDTO.TYPE_VIDEO) || notification.getContentType().equals(NotificationDTO.TYPE_STREAMING)) {
-                String url = silverpeasServerUrl + "/autoRedirect.jsp?goto=%2FRgallery%2F" + notification.getInstanceId() + "%2FsearchResult%3FType%3D"+notification.getContentType()+"%26Id%3D" + notification.getContentId();
-                metaData.setLink(url);
-            } else if (notification.getContentType().equals(NotificationDTO.TYPE_EVENT)) {
-              String url = silverpeasServerUrl + "/Contribution/" + notification.getContentId();
-              metaData.setLink(url);
-            }
-            metaData.setAnswerAllowed(false);
-            metaData.setContent(notification.getMessage());
-            metaData.setSender(getUserInSession().geteMail());
-
-            ComponentInst app = Administration.get().getComponentInst(notification.getInstanceId());
-            SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
-            metaData.setTitle(subject);
-            notificationSender.notifyUser(metaData);
-        } catch (Exception e) {
-            throw new NotificationsException();
+      for (BaseDTO receiver : receivers) {
+        if (receiver instanceof UserDTO) {
+          metaData.addUserRecipient(new UserRecipient((receiver).getId()));
+        } else if (receiver instanceof GroupDTO) {
+          metaData.addGroupRecipient(new GroupRecipient((receiver).getId()));
         }
-    }
+      }
 
-    private PublicationService getPublicationService() {
-        return PublicationService.get();
-    }
+      metaData.setSendImmediately(true);
 
-    private KmeliaService getKmeliaService() {
-        return KmeliaService.get();
-    }
+      String silverpeasServerUrl = getUserInSession().getDomain().getSilverpeasServerURL();
+      if (!silverpeasServerUrl.contains("silverpeas")) {
+        silverpeasServerUrl = silverpeasServerUrl + "/silverpeas";
+      }
 
-    private NodeService getNodeService() {
-        return NodeService.get();
+      if (notification.getContentType().equals(NotificationDTO.TYPE_PUBLICATION)) {
+        String url = silverpeasServerUrl + "/Publication/" + notification.getContentId();
+        metaData.setLink(url);
+      } else if (notification.getContentType().equals(NotificationDTO.TYPE_PHOTO) ||
+          notification.getContentType().equals(NotificationDTO.TYPE_SOUND) ||
+          notification.getContentType().equals(NotificationDTO.TYPE_VIDEO) ||
+          notification.getContentType().equals(NotificationDTO.TYPE_STREAMING)) {
+        String url = silverpeasServerUrl + "/autoRedirect.jsp?goto=%2FRgallery%2F" +
+            notification.getInstanceId() + "%2FsearchResult%3FType%3D" +
+            notification.getContentType() + "%26Id%3D" + notification.getContentId();
+        metaData.setLink(url);
+      } else if (notification.getContentType().equals(NotificationDTO.TYPE_EVENT)) {
+        String url = silverpeasServerUrl + "/Contribution/" + notification.getContentId();
+        metaData.setLink(url);
+      }
+      metaData.setAnswerAllowed(false);
+      metaData.setContent(notification.getMessage());
+      metaData.setSender(getUserInSession().geteMail());
+
+      ComponentInst app = Administration.get().getComponentInst(notification.getInstanceId());
+      SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
+      metaData.setTitle(subject);
+      notificationSender.notifyUser(metaData);
+    } catch (Exception e) {
+      throw new NotificationsException();
     }
+  }
+
+  private PublicationService getPublicationService() {
+    return PublicationService.get();
+  }
+
+  private KmeliaService getKmeliaService() {
+    return KmeliaService.get();
+  }
+
+  private NodeService getNodeService() {
+    return NodeService.get();
+  }
 }
