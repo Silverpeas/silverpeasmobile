@@ -96,7 +96,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private static boolean showLastPublicationsOnSpaceHomePage;
   private static boolean showLastEventsOnHomePage;
   private static boolean showLastEventsOnSpaceHomePage;
-  private static boolean showFreeZoneOnSpaceHomePage;
+  private static boolean showFreeZoneOnHomePage;
   private static boolean useGUImobileForTablets;
   private OrganizationController organizationController = OrganizationController.get();
 
@@ -106,7 +106,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     showLastPublicationsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastpublications", true);
     showLastEventsOnHomePage = mobileSettings.getBoolean("homepage.lastevents", true);
     showLastEventsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastevents", true);
-    showFreeZoneOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.freezone", true);
+    showFreeZoneOnHomePage = mobileSettings.getBoolean("homepage.freezone", true);
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
   }
 
@@ -327,7 +327,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     data.setLastEvents(eventsToDisplay);
 
     // freezone
-    if ((spaceId == null && showFreeZoneOnSpaceHomePage)) {
+    if ((spaceId == null && showFreeZoneOnHomePage)) {
       String pageWebAppId = settings.getString("home.freezone.appId");
       if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
         String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
