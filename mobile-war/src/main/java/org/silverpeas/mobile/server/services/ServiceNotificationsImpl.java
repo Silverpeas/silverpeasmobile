@@ -25,7 +25,7 @@ package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.kmelia.model.TopicDetail;
 import org.silverpeas.components.kmelia.service.KmeliaService;
-import org.silverpeas.core.admin.ObjectType;
+import org.silverpeas.core.admin.ProfiledObjectId;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
@@ -57,7 +57,6 @@ import org.silverpeas.mobile.shared.exceptions.NotificationsException;
 import org.silverpeas.mobile.shared.services.ServiceNotifications;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -198,8 +197,11 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
 
   private ProfileInst getTopicProfile(String role, String topicId, String componentId)
       throws AdminException {
+    NodePK f = new NodePK(topicId, componentId);
+    NodeDetail node = NodeService.get().getHeader(f, false);
+    ProfiledObjectId profiledObjectId = ProfiledObjectId.fromNode(node.getRightsDependsOn());
     List<ProfileInst> profiles =
-        Administration.get().getProfilesByObject(topicId, ObjectType.NODE.getCode(), componentId);
+        Administration.get().getProfilesByObject(profiledObjectId, componentId);
     for (int p = 0; profiles != null && p < profiles.size(); p++) {
       ProfileInst profile = profiles.get(p);
       if (profile.getName().equals(role)) {

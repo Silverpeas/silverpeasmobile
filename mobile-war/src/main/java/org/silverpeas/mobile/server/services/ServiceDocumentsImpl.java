@@ -25,7 +25,7 @@ package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.ResourceReference;
-import org.silverpeas.core.admin.ObjectType;
+import org.silverpeas.core.admin.ProfiledObjectId;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -55,6 +55,7 @@ import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.DocumentsException;
 import org.silverpeas.mobile.shared.services.ServiceDocuments;
 
+import javax.xml.soap.Node;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -134,9 +135,10 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
                   if (isRightsOnTopicsEnabled(instanceId)) {
                     NodePK f = getKmeliaBm().getPublicationFatherPK(publication.getPK(), true,
                         getUserInSession().getId(), isRightsOnTopicsEnabled(instanceId));
+                    NodeDetail node = NodeService.get().getHeader(f, false);
+                    ProfiledObjectId profiledObjectId = ProfiledObjectId.fromNode(node.getRightsDependsOn());
                     String[] profiles = organizationController
-                        .getUserProfiles(getUserInSession().getId(), instanceId, Integer.valueOf
-                            (f.getId()), ObjectType.NODE);
+                        .getUserProfiles(getUserInSession().getId(), instanceId, profiledObjectId);
                     if (isSingleReader(profiles) && publication.isDraft()) {
                       nbPubNotVisible++;
                     }
@@ -233,7 +235,9 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       String[] profiles;
 
       if (isRightsOnTopicsEnabled(instanceId)) {
-        profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId, Integer.valueOf(topicId), ObjectType.NODE);
+        NodeDetail node = NodeService.get().getHeader(nodePK, false);
+        ProfiledObjectId nodeRef = ProfiledObjectId.fromNode(node.getRightsDependsOn());
+        profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId, nodeRef);
       } else {
         profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId);
       }
@@ -272,7 +276,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     if (isRightsOnTopicsEnabled(node.getNodePK().getInstanceId())) {
       if (node.haveRights()) {
         int rightsDependsOn = node.getRightsDependsOn();
-        return organizationController.isObjectAvailable(rightsDependsOn, ObjectType.NODE, node.getNodePK().getInstanceId(), getUserInSession().getId());
+        ProfiledObjectId nodeRef = ProfiledObjectId.fromNode(rightsDependsOn);
+        return organizationController.isObjectAvailableToUser(nodeRef, node.getNodePK().getId(), getUserInSession().getId());
       }
     }
     return true;
