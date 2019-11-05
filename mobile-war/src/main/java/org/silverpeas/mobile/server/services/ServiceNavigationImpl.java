@@ -328,7 +328,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
     // freezone
     if ((spaceId == null && showFreeZoneOnHomePage)) {
-      String pageWebAppId = settings.getString("home.freezone.appId");
+      String pageWebAppId = settings.getString("home.freezone.appId", "");
       if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
         String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
         data.setHtmlFreeZone(html);
