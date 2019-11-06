@@ -29,7 +29,7 @@ html {
   height: 100%;
 }
 
-body {
+body.ui-panel-wrapper {
   padding: 44px 0;
   margin: 0;
   background-color: #ececec;
@@ -379,6 +379,30 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   outline-style: auto;
 }
 
+.last-event-bloc h3.title-bloc-part{
+	position:relative;
+}
+.last-event-bloc h3.title-bloc-part::after{
+	content:'';
+	display:block;
+	width:16px;
+	height:16px;
+	background-image: url(packImagesNavigation.png);
+	background-position:-28px -2174px;
+    background-repeat: no-repeat;
+	position:absolute;
+	top:0;
+	right:1.25em;
+}
+
+.last-event-bloc .ui-listview .date {
+	float:right;
+	font-size:0.95em;
+}
+
+.last-event-bloc .ui-listview a{
+	font-size:0.95em;
+}
 .ui-listview li {
   font-size: 0.95em;
 }
@@ -553,13 +577,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .favoris-bloc a {
   padding-left: 2.5em;
-  font-size: 0.8em;
+  font-size: 0.95em;
   background: transparent url(packImagesNavigation.png) 0.5em -1186px no-repeat;
 }
 
 .racourcis-bloc a {
   padding-left: 2.5em;
-  font-size: 0.8em;
+  font-size: 0.95em;
 }
 
 .racourcis-bloc img {
@@ -569,7 +593,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .last-publication-bloc li a {
   padding-left: 4em;
-  font-size: 0.8em;
+  font-size: 0.95em;
 }
 
 .last-publication-bloc li a .date {
@@ -809,19 +833,19 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .app-actuality a {
-  background-position: 0.5em -1022px;
+  background-position: 0.5em -1026px;
 }
 
 .folder-ged a {
-  background-position: 0.5em 0.5625em;
+  background-position: 0.5em 0.5em;
 }
 
 .app-pageWeb a {
-  background-position: 0.7em -1393px;
+  background-position: 0.7em -1395px;
 }
 
 .app-blog a {
-  background-position: 0.65em -1506px;
+  background-position: 0.65em -1509px;
 }
 
 .app-workflow a {
@@ -829,7 +853,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .folder-galery a {
-  background-position: 0.5em -89px;
+  background-position: 0.5em -95px;
 }
 
 .publication a {
@@ -920,15 +944,14 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .publiDesc {
   padding-top: 0em;
-
 }
 
 .publiName, .mediaName, .title-instruction {
-  padding: 0 1em;
+  padding:0 2em 0.75em 1em;
   margin: 0;
-  font-size: 12pt;
+  font-size:1.05em;
   font-weight: normal;
-  height: 1.5em;
+  min-height: 1.5em;
 }
 
 .appHeader {
@@ -992,7 +1015,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #comments, .elts-pub {
   background-color: #FFF;
-
   padding: 0;
   margin: 0;
 }
@@ -1001,7 +1023,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border: 0 none;
   margin: 0;
   text-align: left;
-  background: #fff url(packImagesNavigation.png) 0.5625em -386px no-repeat;
+  background: #fff url(packImagesNavigation.png) 0.5625em -390px no-repeat;
   padding-left: 2.5625em;
 }
 
@@ -1518,7 +1540,7 @@ textarea.ui-input-text {
 .searchBox {
   border: 1px solid #d3d3d3;
   border-radius: 3px;
-  width: 80%;
+  width:calc( 100% - 2em - 20px );
   background-color: #FFF;
   color: #666;
   padding: 5px;
@@ -1804,7 +1826,7 @@ form .forms .fields > li:nth-child(even) {
   position: absolute;
   top: 3em;
   right: 1em;
-  padding: 1em;
+  padding: 0;
   margin: 0;
   width: 10em;
   background-color: #FFF;
@@ -1892,11 +1914,13 @@ form .forms .fields > li:nth-child(even) {
 
 .workflow-list > tbody > tr:nth-child(odd) {
   background-color: #f9f9f9;
-  border-bottom: 1px solid #ddd;
 }
 
 .workflow-list > tbody > tr:nth-child(even) {
-  background-color: #f6f6f6;
+  background-color: #efefef;
+}
+
+.workflow-list > tbody > tr > td {
   border-bottom: 1px solid #ddd;
 }
 
@@ -1914,7 +1938,10 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .workflow-form li, .formOnline-form li {
-  line-height: 3em;
+  padding:1em;
+}
+.workflow-form .gwt-Label, .formOnline-form  .gwt-Label {
+	padding-bottom:0.5em;
 }
 
 .workflow-form li:nth-child(odd),
@@ -1938,9 +1965,9 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .mandatory {
-  background-color: darkorange;
-  height: 10px;
-  width: 10px;
+  background-color:#ec9c01;
+  height:8px;
+  width:8px;
   margin-left: 1em;
 }
 
@@ -1973,7 +2000,7 @@ form .forms .fields > li:nth-child(even) {
 .forms-list li {
   margin: 0;
   padding: 1em;
-  line-height: 0.5em;
+  line-height:1em;
 }
 
 .forms-list li > a.gwt-Anchor {
