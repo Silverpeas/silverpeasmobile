@@ -141,18 +141,14 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       }
     } else {
       PublicationDetail pub = getKmeliaBm().getPublicationDetail(new PublicationPK(id));
-      if (pub.canBeAccessedBy(getUserInSession(request))) {
-        if (pub.getInfoId().equals("0")) {
-          // wysiwyg
-          html = pub.getContent().getRenderer().renderView();
-          displayWysiwyg(html, request, response, pub.getInstanceId());
-        } else {
-          // form xml
-          displayFormView(new PrintWriter(response.getOutputStream()), pub, getUserInSession(request),
-              ua);
-        }
+      if (pub.getInfoId().equals("0")) {
+        // wysiwyg
+        html = pub.getContent().getRenderer().renderView();
+        displayWysiwyg(html, request, response, pub.getInstanceId());
       } else {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        // form xml
+        displayFormView(new PrintWriter(response.getOutputStream()), pub, getUserInSession(request),
+            ua);
       }
     }
 
