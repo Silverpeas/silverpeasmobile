@@ -144,6 +144,7 @@ public class ContactItem extends Composite {
         container.add(field);
       } else {
         HTML field = new HTML(value);
+        field.setStylePrimaryName(prop);
         container.add(field);
       }
     }
