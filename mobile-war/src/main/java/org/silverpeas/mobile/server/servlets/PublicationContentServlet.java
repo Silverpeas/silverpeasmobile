@@ -139,9 +139,10 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         context.setObjectId("0");
         context.setBorderPrinted(false);
         PublicationTemplate pubTemplate = getXMLTemplate(request, componentId);
-        Method method = pubTemplate.getViewForm().getClass().getDeclaredMethod("display", PrintWriter.class, PagesContext.class, DataRecord.class);
-        method.setAccessible(true);
-        method.invoke(pubTemplate.getViewForm(), new PrintWriter(response.getOutputStream()), context, getDataRecord(request, componentId));
+        DataRecord record = getDataRecord(request, componentId);
+        html = pubTemplate.getViewForm().toString(context, record);
+        html = tranformContent(request, record, html);
+        response.getOutputStream().print(html);
       } else {
         html = WysiwygController.loadForReadOnly(componentId, id,
             getUserInSession(request).getUserPreferences().getLanguage());
@@ -209,30 +210,35 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     xmlContext.setContentLanguage(user.getUserPreferences().getLanguage());
     xmlContext.setCreation(false);
 
-    StringWriter generatedHtml = new StringWriter();
-    PrintWriter outTmp = new PrintWriter(generatedHtml);
-
     Form xmlForm = pubTemplate.getViewForm();
-    if (xmlForm instanceof XmlForm) {
-      String html = ((XmlForm) xmlForm).toString(xmlContext, xmlData);
-      html = tranformUserField(xmlData, html);
-      outTmp.write(html);
-      outTmp.flush();
-    } else if (xmlForm instanceof HtmlForm) {
-      String html = ((HtmlForm) xmlForm).toString(xmlContext, xmlData);
-      html = tranformUserField(xmlData, html);
-      outTmp.write(html);
-      outTmp.flush();
-    }
-    String html = generatedHtml.toString();
+    String html = xmlForm.toString(xmlContext, xmlData);
 
+    html = tranformContent(request, xmlData, html);
+    writeContainer(out, html);
+    out.flush();
+  }
+
+  private String tranformContent(final HttpServletRequest request, final DataRecord xmlData,
+      final String html) throws FormException {
     Document doc = Jsoup.parse(html);
 
-    Iterator it = doc.getElementsByAttributeValueStarting("id", "video-player").iterator();
+    // transform user fields
+    Iterator it = doc.getElementsByAttributeValueStarting("id", "select-user-group-").iterator();
+    while (it.hasNext()) {
+      Element el = (Element) it.next();
+      String fieldName = el.id().replace("select-user-group-", "");
+      UserDetail u = (UserDetail) xmlData.getField(fieldName).getObjectValue();
+      el.text(u.getDisplayedName());
+    }
+
+    // use html5 video player
+    it = doc.getElementsByAttributeValueStarting("id", "video-player").iterator();
     while (it.hasNext()) {
       Element el = (Element) it.next();
       String fieldName = el.parent().parent().getElementsByTag("label").first().attr("for");
       FileField f = (FileField) xmlData.getField(fieldName);
+
+      //TODO : fix display without desktop session
       String u = "/silverpeas/attached_file/componentId/" + request.getParameter("componentId") + "/attachmentId/"+f.getAttachmentId();
       el.html("<video controls='controls' src='" + u + "' width='100%'></video>");
     }
@@ -250,30 +256,13 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       }
     }
 
-
-
-
     // remove all scripts
     Elements scripts = doc.getElementsByTag("script");
     for (Element script : scripts) {
       script.remove();
     }
-    html = doc.outerHtml();
-    writeContainer(out, html);
-    out.flush();
-  }
 
-  private String tranformUserField(final DataRecord xmlData, String html) throws FormException {
-    Document doc = Jsoup.parse(html);
-    Iterator it = doc.getElementsByAttributeValueStarting("id", "select-user-group-").iterator();
-    while (it.hasNext()) {
-      Element el = (Element) it.next();
-      String fieldName = el.id().replace("select-user-group-", "");
-      UserDetail u = (UserDetail) xmlData.getField(fieldName).getObjectValue();
-      el.text(u.getDisplayedName());
-    }
-    html = doc.html();
-    return html;
+    return doc.outerHtml();
   }
 
   private void writeContainer(Writer out, String html) throws IOException {
