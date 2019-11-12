@@ -161,7 +161,7 @@ public class PublicationPage extends PageContent
 
   @UiHandler("contentLink")
   protected void showContent(ClickEvent event) {
-    showPublicationContent(publication.getId(), msg.content());
+    showPublicationContent(publication.getId(), publication.getInstanceId(), msg.content());
   }
 
   public static void showWebPageContent(String Id, String instanceId, String title) {
@@ -178,7 +178,7 @@ public class PublicationPage extends PageContent
     page.show();
   }
 
-  public static void showPublicationContent(String pubId, String title) {
+  public static void showPublicationContent(String pubId, String appId, String title) {
     // compute height available for content
     int heightAvailable = Window.getClientHeight() - (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
     int widthAvailable = Window.getClientWidth();
@@ -186,6 +186,7 @@ public class PublicationPage extends PageContent
     String url = UrlUtils.getServicesLocation();
     url += "PublicationContent";
     url += "?id=" + pubId;
+    url += "&componentId=" + appId;
     IframePage page = new IframePage(url);
     page.setSize(widthAvailable + "px", heightAvailable + "px");
     page.setPageTitle(title);
