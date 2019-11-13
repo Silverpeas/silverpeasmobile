@@ -76,7 +76,7 @@ public class MobilFilter implements Filter {
 
     if (CacheServiceProvider.getSessionCacheService().getCache() == null) {
       HttpSession session = ((HttpServletRequest) req).getSession(false);
-      if (session.getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) != null) {
+      if (session != null && session.getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) != null) {
         ((SessionCacheService) CacheServiceProvider.getSessionCacheService()).newSessionCache((UserDetail)session.getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME));
       }
     }
