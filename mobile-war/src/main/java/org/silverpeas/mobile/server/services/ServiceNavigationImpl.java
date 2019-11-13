@@ -184,12 +184,12 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private void initSilverpeasSession() {
     MainSessionController controller = (MainSessionController) getThreadLocalRequest().getSession()
         .getAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
-    if (controller == null) {
+      if (controller == null) {
       SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
       SessionInfo
           sessionInfo = sessionManagement.validateSession(getThreadLocalRequest().getSession().getId());
       if (sessionInfo.getSessionId() == null) {
-        sessionInfo = sessionManagement.openSession(getUserInSession());
+        sessionInfo = sessionManagement.openSession(getUserInSession(), getThreadLocalRequest());
       }
 
       try {

@@ -30,9 +30,6 @@ import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
-import org.silverpeas.core.admin.user.model.UserDetail;
-import org.silverpeas.core.cache.service.CacheServiceProvider;
-import org.silverpeas.core.cache.service.SessionCacheService;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
@@ -41,15 +38,14 @@ import org.silverpeas.core.security.token.TokenGeneratorProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
-import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
-import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,15 +68,6 @@ public class MobilFilter implements Filter {
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
     String url = ((HttpServletRequest) req).getRequestURL().toString();
-
-
-    if (CacheServiceProvider.getSessionCacheService().getCache() == null) {
-      HttpSession session = ((HttpServletRequest) req).getSession(false);
-      if (session != null && session.getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) != null) {
-        ((SessionCacheService) CacheServiceProvider.getSessionCacheService()).newSessionCache((UserDetail)session.getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME));
-      }
-    }
-
 
     if (url.contains("spmobile") && res != null) {
       String csp = ((HttpServletResponse) res).getHeader("Content-Security-Policy");
@@ -158,7 +145,7 @@ public class MobilFilter implements Filter {
 
         HttpSession session = ((HttpServletRequest) req).getSession(false);
         SynchronizerToken token = (SynchronizerToken) session.getAttribute(SESSION_TOKEN_KEY);
-        MainSessionController controller = (MainSessionController) session.getAttribute("SilverSessionController");
+        MainSessionController controller = (MainSessionController) session.getAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
         if (controller != null && token == null) {
           //logger.warn("security.web.protection.token is disable");
           // generate fake token for auto login without token security

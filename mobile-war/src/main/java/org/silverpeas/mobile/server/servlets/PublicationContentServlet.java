@@ -35,8 +35,6 @@ import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
-import org.silverpeas.core.cache.service.CacheServiceProvider;
-import org.silverpeas.core.cache.service.SessionCacheService;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
@@ -365,11 +363,6 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       throws ServletException, IOException {
     try {
       checkUserInSession(request, response);
-
-      CacheServiceProvider.clearAllThreadCaches();
-      ((SessionCacheService) CacheServiceProvider.getSessionCacheService())
-          .newSessionCache(getUserInSession(request));
-
       processRequest(request, response);
     } catch (Exception e) {
       e.printStackTrace();
