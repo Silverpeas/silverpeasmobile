@@ -55,7 +55,6 @@ import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.DocumentsException;
 import org.silverpeas.mobile.shared.services.ServiceDocuments;
 
-import javax.xml.soap.Node;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -133,8 +132,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
               for (PublicationDetail publication : publications) {
                 if (coWriting) {
                   if (isRightsOnTopicsEnabled(instanceId)) {
-                    NodePK f = getKmeliaBm().getPublicationFatherPK(publication.getPK(), true,
-                        getUserInSession().getId(), isRightsOnTopicsEnabled(instanceId));
+                    NodePK f = getKmeliaBm().getPublicationFatherPK(publication.getPK(), getUserInSession().getId());
                     NodeDetail node = NodeService.get().getHeader(f, false);
                     ProfiledObjectId profiledObjectId = ProfiledObjectId.fromNode(node.getRightsDependsOn());
                     String[] profiles = organizationController
