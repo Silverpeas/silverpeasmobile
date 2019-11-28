@@ -23,15 +23,24 @@
 
 package org.silverpeas.mobile.server.servlets;
 
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.silverstatistics.volume.service.SilverStatisticsManager;
 import org.silverpeas.mobile.server.helpers.MediaHelper;
+import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import java.util.Date;
 
 /**
  * @author: svu
  */
 public class SessionManager implements HttpSessionListener {
+
+  @Inject
+  private SilverStatisticsManager myStatisticsManager = null;
+
   @Override
   public void sessionCreated(final HttpSessionEvent httpSessionEvent) {
 
@@ -39,6 +48,18 @@ public class SessionManager implements HttpSessionListener {
 
   @Override
   public void sessionDestroyed(final HttpSessionEvent httpSessionEvent) {
-    MediaHelper.cleanTemporaryFiles(httpSessionEvent.getSession().getId());
+
+    Boolean mob = (Boolean) httpSessionEvent.getSession().getAttribute("isMobile");
+    if (mob != null && !mob) {
+      MediaHelper.cleanTemporaryFiles(httpSessionEvent.getSession().getId());
+
+      UserDetail user = (UserDetail) httpSessionEvent.getSession()
+          .getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+      if (user != null) {
+        Date now = new Date();
+        long duration = now.getTime() - httpSessionEvent.getSession().getCreationTime();
+        myStatisticsManager.addStatConnection(user.getId(), now, 1, duration);
+      }
+    }
   }
 }
