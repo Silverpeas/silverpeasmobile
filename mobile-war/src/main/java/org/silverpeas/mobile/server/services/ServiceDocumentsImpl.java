@@ -275,7 +275,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       if (node.haveRights()) {
         int rightsDependsOn = node.getRightsDependsOn();
         ProfiledObjectId nodeRef = ProfiledObjectId.fromNode(rightsDependsOn);
-        return organizationController.isObjectAvailableToUser(nodeRef, node.getNodePK().getId(), getUserInSession().getId());
+        return organizationController.isObjectAvailableToUser(nodeRef, node.getNodePK().getInstanceId(), getUserInSession().getId());
       }
     }
     return true;
