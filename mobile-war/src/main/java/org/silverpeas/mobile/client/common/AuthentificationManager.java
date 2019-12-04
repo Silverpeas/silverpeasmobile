@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.common;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import org.fusesource.restygwt.client.Method;
@@ -33,7 +34,9 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.event.authentication.AuthenticationErrorEvent;
+import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
@@ -171,17 +174,34 @@ public class AuthentificationManager {
 
               @Override
               public void onSuccess(final DetailUserDTO user) {
-                SpMobil.setUser(user);
+                ServicesLocator.getServiceConnection().showTermsOfService(new AsyncCallback<Boolean>() {
+                  @Override
+                  public void onFailure(final Throwable throwable) {
+                    if (throwable instanceof AuthenticationException) {
+                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+                    } else {
+                      EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                    }
+                  }
 
-                Notification.activityStop();
-                AuthentificationManager.getInstance().storeUser(user, userProfile, login, password,
-                    domainId);
+                  @Override
+                  public void onSuccess(final Boolean showTermsOfServices) {
+                    SpMobil.setUser(user);
 
-                if (attempt == null) {
-                  SpMobil.displayMainPage();
-                } else {
-                  attempt.execute();
-                }
+                    Notification.activityStop();
+                    AuthentificationManager.getInstance().storeUser(user, userProfile, login, password,
+                        domainId);
+                    if (showTermsOfServices) {
+                      SpMobil.displayTermsOfServicePage();
+                    } else {
+                      if (attempt == null) {
+                        SpMobil.displayMainPage();
+                      } else {
+                        attempt.execute();
+                      }
+                    }
+                  }
+                });
               }
             });
           }
@@ -195,6 +215,25 @@ public class AuthentificationManager {
     if (getHeader(AuthentificationManager.XSilverpeasSession) != null) {
       builder.setHeader(AuthentificationManager.XSilverpeasSession, getHeader(AuthentificationManager.XSilverpeasSession));
     }
+  }
+
+  public void logout() {
+    ServicesLocator.getServiceNavigation().logout(new AsyncCallback<Void>() {
+      @Override
+      public void onFailure(final Throwable throwable) {
+        Notification.activityStop();
+      }
+      @Override
+      public void onSuccess(final Void aVoid) {
+        AuthentificationManager.getInstance().clearLocalStorage();
+        PageHistory.getInstance().clear();
+        Notification.activityStop();
+        ConnexionPage connexionPage = new ConnexionPage();
+        RootPanel.get().clear();
+        RootPanel.get().add(connexionPage);
+        SpMobil.destroyMainPage();
+      }
+    });
   }
 
 }

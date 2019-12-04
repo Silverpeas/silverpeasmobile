@@ -193,22 +193,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   @UiHandler("disconnect")
   protected void disconnect(ClickEvent event) {
     closeMenu();
-    ServicesLocator.getServiceNavigation().logout(new AsyncCallback<Void>() {
-      @Override
-      public void onFailure(final Throwable throwable) {
-        Notification.activityStop();
-      }
-      @Override
-      public void onSuccess(final Void aVoid) {
-        AuthentificationManager.getInstance().clearLocalStorage();
-        PageHistory.getInstance().clear();
-        Notification.activityStop();
-        ConnexionPage connexionPage = new ConnexionPage();
-        RootPanel.get().clear();
-        RootPanel.get().add(connexionPage);
-        SpMobil.destroyMainPage();
-      }
-    });
+    AuthentificationManager.getInstance().logout();
   }
 
   @UiHandler("calendar")

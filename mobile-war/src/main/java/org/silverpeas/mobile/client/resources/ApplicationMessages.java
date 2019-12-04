@@ -151,4 +151,7 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Format non pris en charge")
   String mediaNotSupportedError();
+
+  @DefaultMessage("Vous devez accepter pour accéder à l application")
+  String userRefuseTermsOfService();
 }

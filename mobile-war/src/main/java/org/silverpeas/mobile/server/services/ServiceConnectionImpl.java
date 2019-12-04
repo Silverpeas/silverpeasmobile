@@ -25,13 +25,19 @@ package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.admin.domain.model.Domain;
+import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
+import org.silverpeas.core.security.authentication.exception.AuthenticationUserMustAcceptTermsOfService;
+import org.silverpeas.core.security.authentication.verifier.AuthenticationUserVerifierFactory;
+import org.silverpeas.core.template.SilverpeasTemplate;
+import org.silverpeas.core.template.SilverpeasTemplateFactory;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -144,5 +150,62 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     dto.setName(domain.getName());
     dto.setId(domain.getId());
     return dto;
+  }
+
+  @Override
+  public boolean showTermsOfService() throws AuthenticationException {
+    SettingBundle resource = ResourceLocator.getSettingBundle("org.silverpeas.authentication.settings.authenticationSettings");
+    String frequency = resource.getString("termsOfServiceAcceptanceFrequency");
+
+    try {
+      frequency = resource.getString("termsOfServiceAcceptanceFrequency.domain" + getUserInSession().getDomainId());
+    } catch(Exception e) {
+      SilverLogger.getLogger(this).debug("termsOfServiceAcceptanceFrequency.domain" + getUserInSession().getDomainId() + " not found");
+    }
+
+    if (frequency.equalsIgnoreCase("NEVER")) {
+      return false;
+    } else if (frequency.equalsIgnoreCase("ALWAYS")) {
+      return true;
+    } else {
+      try {
+        AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(getUserInSession().getLogin());
+        credential.setDomainId(getUserInSession().getDomainId());
+        AuthenticationUserVerifierFactory.getUserMustAcceptTermsOfServiceVerifier(credential).verify();
+      } catch (AuthenticationUserMustAcceptTermsOfService authenticationUserMustAcceptTermsOfService) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public String getTermsOfServiceText() throws AuthenticationException {
+      SettingBundle resource = ResourceLocator.getSettingBundle("org.silverpeas.authentication.settings.authenticationSettings");
+      Boolean specificTemplate = false;
+      try {
+        specificTemplate = resource.getBoolean("termsOfServiceAcceptanceSpecificTemplateContent.domain" + getUserInSession().getDomainId());
+      } catch(Exception e) {
+        SilverLogger.getLogger(this).debug("termsOfServiceAcceptanceSpecificTemplateContent.domain" + getUserInSession().getDomainId() + " not found");
+      }
+      String content = "";
+      SilverpeasTemplate template = SilverpeasTemplateFactory.createSilverpeasTemplateOnCore("termsOfService");
+      if (specificTemplate) {
+        content = template.applyFileTemplate(
+            "termsOfService_domain" + getUserInSession().getDomainId() + "_" + getUserInSession().getUserPreferences().getLanguage());
+      } else {
+        content = template.applyFileTemplate(
+            "termsOfService_" + getUserInSession().getUserPreferences().getLanguage());
+      }
+      return content;
+  }
+
+  @Override
+  public void userAcceptsTermsOfService() throws AuthenticationException {
+    try {
+      Administration.get().userAcceptsTermsOfService(getUserInSession().getId());
+    } catch (AdminException e) {
+      throw new AuthenticationException(e);
+    }
   }
 }

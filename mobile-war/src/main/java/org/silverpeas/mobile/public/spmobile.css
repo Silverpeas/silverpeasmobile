@@ -1401,6 +1401,10 @@ input.filter-contacts {
   padding: 0.5em 1em;
 }
 
+.btn-validate.multiple {
+  display: inline-block;
+}
+
 .ui-page-theme-a .btn-validate:hover {
   background-color: #7eb73a;
   background: linear-gradient(#6fa800, #7eb73a) repeat scroll 0 0 #7eb73a;
@@ -2221,4 +2225,10 @@ form .forms .fields > li:nth-child(even) {
   padding-top: 2em;
   display: inline-block;
   padding-left: 1em;
+}
+
+.termsOfServiceText {
+  text-align: center;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
