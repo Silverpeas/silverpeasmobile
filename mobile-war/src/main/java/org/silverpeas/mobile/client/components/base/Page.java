@@ -83,6 +83,14 @@ public class Page extends Composite implements Window.ScrollHandler {
     menu.resetSearchField();
   }
 
+  public void hideFooter() {
+    footer.setVisible(false);
+  }
+
+  public void showFooter() {
+    footer.setVisible(true);
+  }
+
   @Override
   public void onWindowScroll(final Window.ScrollEvent event) {
     if (Document.get().getScrollTop() + Document.get().getClientHeight() >= Document.get().getScrollHeight()) {

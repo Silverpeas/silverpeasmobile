@@ -38,7 +38,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
-import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
@@ -62,6 +61,8 @@ public class TermsOfServicePage extends PageContent {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
 
+    SpMobil.getMainPage().hideFooter();
+
     ServicesLocator.getServiceConnection().getTermsOfServiceText(new AsyncCallback<String>() {
       @Override
       public void onFailure(final Throwable t) {
@@ -80,6 +81,7 @@ public class TermsOfServicePage extends PageContent {
   @UiHandler("accept")
   void accept(ClickEvent e) {
     ServicesLocator.getServiceConnection().userAcceptsTermsOfService(null);
+    SpMobil.getMainPage().showFooter();
     SpMobil.displayMainPage();
   }
 
