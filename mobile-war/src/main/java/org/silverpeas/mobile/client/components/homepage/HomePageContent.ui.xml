@@ -30,9 +30,10 @@
 
   <g:HTMLPanel ui:field="container">
 
-      <div id="actus">
+
+      <g:FocusPanel ui:field="actus">
           <components:UnorderedList ui:field="news" styleName="carroussel-news"/>
-      </div>
+      </g:FocusPanel>
 
       <div id="spaces">
         <components:UnorderedList ui:field="spaces" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>

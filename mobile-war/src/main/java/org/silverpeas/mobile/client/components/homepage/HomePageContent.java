@@ -29,6 +29,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -73,6 +74,8 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   UnorderedList favoris, lastPublications, spaces, news, lastEvents, shortcuts;
   @UiField
   HTMLPanel container, lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection, freeZoneSection;
+  @UiField
+  FocusPanel actus;
 
   interface HomePageUiBinder extends UiBinder<Widget, HomePageContent> {}
 
@@ -80,6 +83,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     container.getElement().setAttribute("id", "homePageContent");
+    actus.getElement().setAttribute("id", "actus");
     favorisSection.getElement().setAttribute("id", "favoris");
     lastPublicationsSection.getElement().setAttribute("id", "lastPublications");
     lastEventsSection.getElement().setAttribute("id", "lastEvents");
@@ -167,8 +171,8 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     freeZoneSection.add(html);
 
     if (MobilUtils.isMobil()) {
-      Element e = Document.get().getElementById("actus");
-      HTML actus = HTML.wrap(e);
+      //Element e = Document.get().getElementById("actus");
+      //HTML actus = HTML.wrap(e);
       swipeRecognizer = new SwipeRecognizer(actus);
     }
 

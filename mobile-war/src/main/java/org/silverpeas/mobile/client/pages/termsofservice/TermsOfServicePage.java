@@ -38,6 +38,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.common.network.AsyncCallbackEmpty;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
@@ -80,7 +81,7 @@ public class TermsOfServicePage extends PageContent {
 
   @UiHandler("accept")
   void accept(ClickEvent e) {
-    ServicesLocator.getServiceConnection().userAcceptsTermsOfService(null);
+    ServicesLocator.getServiceConnection().userAcceptsTermsOfService(new AsyncCallbackEmpty<>());
     SpMobil.getMainPage().showFooter();
     SpMobil.displayMainPage();
   }
