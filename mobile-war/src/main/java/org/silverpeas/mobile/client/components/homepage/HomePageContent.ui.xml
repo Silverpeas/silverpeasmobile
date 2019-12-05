@@ -28,14 +28,13 @@
 
   <ui:with field='msg' type='org.silverpeas.mobile.client.resources.ApplicationMessages'/>
 
-  <g:HTMLPanel>
-
+  <g:HTMLPanel ui:field="container">
 
       <div id="actus">
           <components:UnorderedList ui:field="news" styleName="carroussel-news"/>
       </div>
 
-      <div>
+      <div id="spaces">
         <components:UnorderedList ui:field="spaces" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </div>
       <g:HTMLPanel stylePrimaryName="favoris-bloc bloc" ui:field="favorisSection">

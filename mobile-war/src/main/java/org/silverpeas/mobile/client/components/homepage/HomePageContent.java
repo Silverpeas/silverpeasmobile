@@ -72,13 +72,19 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   @UiField
   UnorderedList favoris, lastPublications, spaces, news, lastEvents, shortcuts;
   @UiField
-  HTMLPanel lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection, freeZoneSection;
+  HTMLPanel container, lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection, freeZoneSection;
 
   interface HomePageUiBinder extends UiBinder<Widget, HomePageContent> {}
 
   public HomePageContent() {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+    container.getElement().setAttribute("id", "homePageContent");
+    favorisSection.getElement().setAttribute("id", "favoris");
+    lastPublicationsSection.getElement().setAttribute("id", "lastPublications");
+    lastEventsSection.getElement().setAttribute("id", "lastEvents");
+    shortCutsSection.getElement().setAttribute("id", "shortCuts");
+    freeZoneSection.getElement().setAttribute("id", "freeZone");
     Config conf = SpMobil.getConfiguration();
     setConfig(conf);
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
