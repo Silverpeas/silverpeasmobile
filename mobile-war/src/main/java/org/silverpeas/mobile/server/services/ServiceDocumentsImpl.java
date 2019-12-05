@@ -273,9 +273,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   private boolean isCurrentTopicAvailable(NodeDetail node) throws Exception {
     if (isRightsOnTopicsEnabled(node.getNodePK().getInstanceId())) {
       if (node.haveRights()) {
-        int rightsDependsOn = node.getRightsDependsOn();
-        ProfiledObjectId nodeRef = ProfiledObjectId.fromNode(rightsDependsOn);
-        return organizationController.isObjectAvailableToUser(nodeRef, node.getNodePK().getInstanceId(), getUserInSession().getId());
+        return node.canBeAccessedBy(getUserInSession());
       }
     }
     return true;
