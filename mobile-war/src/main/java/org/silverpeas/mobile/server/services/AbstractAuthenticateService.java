@@ -74,8 +74,7 @@ public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
   }
 
   protected MainSessionController getMainSessionController() throws Exception {
-    MainSessionController mainSessionController = (MainSessionController) getThreadLocalRequest().getSession().getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
-    return mainSessionController;
+    return (MainSessionController) getThreadLocalRequest().getSession().getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
   }
 
   protected StreamingList createStreamingList(CommandCreateList command, int callNumber, int callSize, String cacheKey) throws Exception {

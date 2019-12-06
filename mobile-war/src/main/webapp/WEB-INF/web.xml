@@ -155,15 +155,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceDashboardImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceDashboardImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceDashboardImpl</servlet-name>
-    <url-pattern>/services/spmobile/Dashboard</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceNotificationsImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceNotificationsImpl</servlet-class>
   </servlet>

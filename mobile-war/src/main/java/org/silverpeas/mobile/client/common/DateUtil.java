@@ -23,8 +23,8 @@
 
 package org.silverpeas.mobile.client.common;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
-
 import java.util.Date;
 
 /**
@@ -38,11 +38,15 @@ public class DateUtil {
   private static final long MILLIS_DAY = 86400000;
 
   public static int getWeek(Date date) {
-    final int dayOfWeek = 1 + (date.getDay() + MAX_DAY_OF_WEEK) % DAYS_IN_WEEK;
-    final Date nearestThu = addDays(date, ISO_THURSDAY - dayOfWeek);
-    final int year = nearestThu.getYear();
-    final Date jan1 = new Date(year, 0, 1);
+    int dayOfWeek = 1 + (date.getDay() + MAX_DAY_OF_WEEK) % DAYS_IN_WEEK;
+    Date nearestThu = addDays(date, ISO_THURSDAY - dayOfWeek);
+    Date jan1 = getFirstDayOfTheYear(getYear(nearestThu));
     return 1 + dayDiff(nearestThu, jan1) / DAYS_IN_WEEK;
+  }
+
+  private static Date getFirstDayOfTheYear(int year) {
+    DateTimeFormat format=DateTimeFormat.getFormat("yyyy-MM-dd");
+    return format.parse(year + "-01-01");
   }
 
   public static Date addDays(final Date sourceDate, final long days) {
@@ -55,5 +59,15 @@ public class DateUtil {
 
   public static boolean isSameDate(Date date0, Date date1) {
     return CalendarUtil.isSameDate(date0, date1);
+  }
+
+  public static int getYear(Date date) {
+    DateTimeFormat format=DateTimeFormat.getFormat("yyyy");
+    return Integer.parseInt(format.format(date));
+  }
+
+  public static int getMonth(Date date) {
+    DateTimeFormat format=DateTimeFormat.getFormat("MM");
+    return Integer.parseInt(format.format(date));
   }
 }

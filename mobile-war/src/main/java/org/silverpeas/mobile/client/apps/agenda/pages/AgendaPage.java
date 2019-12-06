@@ -121,7 +121,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
       DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
       if (currentTimeRange.equals(TimeRange.weeks)) {
         int weekNumber = DateUtil.getWeek(new Date());
-        int yearNumber = getYearNumber(new Date());
+        int yearNumber = DateUtil.getYear(new Date());
         for (int i = 0; i <= 3; i++) {
           GroupItem groupItem = new GroupItem();
           groupItem.setTimeRange(TimeRange.weeks);
@@ -147,8 +147,8 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
           int startWeek = DateUtil.getWeek(startDate);
           int endWeek = DateUtil.getWeek(endDate);
-          int startYear = getYearNumber(startDate);
-          int endYear = getYearNumber(endDate);
+          int startYear = DateUtil.getYear(startDate);
+          int endYear = DateUtil.getYear(endDate);
           for (GroupItem groupItem : groups) {
             if ((groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) || (groupItem.getNumber() >= startWeek && endYear > startYear)) {
               EventItem item = new EventItem();
@@ -160,8 +160,8 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
         }
       } else if (currentTimeRange.equals(TimeRange.months)) {
         Date today = new Date();
-        int monthNumber = getMonth(today) - 1;
-        int yearNumber = getYearNumber(today);
+        int monthNumber = DateUtil.getMonth(today) - 1;
+        int yearNumber = DateUtil.getYear(today);
         int number = monthNumber;
         for (int i = 0; i < 12; i++) {
           GroupItem groupItem = new GroupItem();
@@ -187,11 +187,11 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
             endDate = dtf.parse(dto.getEndDate());
           }
 
-          int startMonth = getMonth(startDate);
-          int endMonth = getMonth(endDate);
+          int startMonth = DateUtil.getMonth(startDate);
+          int endMonth = DateUtil.getMonth(endDate);
 
-          int startYear = getYearNumber(startDate);
-          int endYear = getYearNumber(endDate);
+          int startYear = DateUtil.getYear(startDate);
+          int endYear = DateUtil.getYear(endDate);
 
           for (GroupItem groupItem : groups) {
             if ((groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) && groupItem.getYear() == startYear && groupItem.getYear() == endYear  || (groupItem.getNumber() >= startMonth && endYear > startYear)) {
@@ -216,16 +216,6 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     }
     actionsMenu.addAction(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
-  }
-
-  private int getYearNumber(Date date) {
-    DateTimeFormat format=DateTimeFormat.getFormat("yyyy");
-    return Integer.parseInt(format.format(date));
-  }
-
-  private int getMonth(Date date) {
-    DateTimeFormat format=DateTimeFormat.getFormat("MM");
-    return Integer.parseInt(format.format(date));
   }
 
   private CalendarDTO getCalendar(final String calendarId) {
