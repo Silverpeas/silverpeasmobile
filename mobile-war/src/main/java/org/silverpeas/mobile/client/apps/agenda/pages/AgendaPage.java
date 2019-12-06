@@ -121,10 +121,16 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
       DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
       if (currentTimeRange.equals(TimeRange.weeks)) {
         int weekNumber = DateUtil.getWeek(new Date());
+        int yearNumber = getYearNumber(new Date());
         for (int i = 0; i <= 3; i++) {
           GroupItem groupItem = new GroupItem();
           groupItem.setTimeRange(TimeRange.weeks);
+          if (weekNumber+i > 52) {
+            weekNumber = 1 - i;
+            yearNumber++;
+          }
           groupItem.setNumber(weekNumber+i);
+          groupItem.setYear(yearNumber);
           groups.add(groupItem);
         }
         for (CalendarEventDTO dto : event.getEvents()) {
@@ -133,6 +139,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           if (dto.isOnAllDay()) {
             startDate = df.parse(dto.getStartDate());
             endDate = df.parse(dto.getEndDate());
+            endDate.setTime(endDate.getTime()-1000);
           } else {
             startDate = dtf.parse(dto.getStartDate());
             endDate = dtf.parse(dto.getEndDate());
@@ -140,27 +147,31 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
           int startWeek = DateUtil.getWeek(startDate);
           int endWeek = DateUtil.getWeek(endDate);
+          int startYear = getYearNumber(startDate);
+          int endYear = getYearNumber(endDate);
           for (GroupItem groupItem : groups) {
-            if (groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) {
+            if ((groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) || (groupItem.getNumber() >= startWeek && endYear > startYear)) {
               EventItem item = new EventItem();
               item.showCalendarName(isMultiCalendar());
               item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
               groupItem.addEvent(item);
-              if (!groupItem.hasYear()) {
-                groupItem.setYear(item.getYear());
-              }
             }
           }
         }
       } else if (currentTimeRange.equals(TimeRange.months)) {
         int monthNumber = new Date().getMonth();
+        int yearNumber = getYearNumber(new Date());
         int number = monthNumber;
         for (int i = 0; i < 12; i++) {
           GroupItem groupItem = new GroupItem();
           groupItem.setTimeRange(TimeRange.months);
           number++;
-          if (number > 12) number = 1;
+          if (number > 12) {
+            number = 1;
+            yearNumber++;
+          }
           groupItem.setNumber(number);
+          groupItem.setYear(yearNumber);
           groups.add(groupItem);
         }
 
@@ -174,17 +185,19 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
             startDate = dtf.parse(dto.getStartDate());
             endDate = dtf.parse(dto.getEndDate());
           }
+
           int startMonth = startDate.getMonth() + 1;
           int endMonth = endDate.getMonth() + 1;
+
+          int startYear = getYearNumber(startDate);
+          int endYear = getYearNumber(endDate);
+
           for (GroupItem groupItem : groups) {
-            if (groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) {
+            if ((groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) && groupItem.getYear() == startYear && groupItem.getYear() == endYear  || (groupItem.getNumber() >= startMonth && endYear > startYear)) {
               EventItem item = new EventItem();
               item.showCalendarName(isMultiCalendar());
               item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
               groupItem.addEvent(item);
-              if (!groupItem.hasYear()) {
-                groupItem.setYear(item.getYear());
-              }
             }
           }
         }
@@ -202,6 +215,11 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     }
     actionsMenu.addAction(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
+  }
+
+  private int getYearNumber(Date date) {
+    DateTimeFormat format=DateTimeFormat.getFormat("yyyy");
+    return Integer.parseInt(format.format(date));
   }
 
   private CalendarDTO getCalendar(final String calendarId) {

@@ -31,7 +31,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -86,6 +85,8 @@ public class EventItem extends Composite {
     }
     Date startDate = dtf.parse(event.getStartDate());
     Date endDate = dtf.parse(event.getEndDate());
+
+    if (event.isOnAllDay()) endDate.setTime(endDate.getTime()-1000);
 
     DateTimeFormat dayformat = DateTimeFormat.getFormat("EEEE");
     DateTimeFormat mouthformat = DateTimeFormat.getFormat("MMMM");

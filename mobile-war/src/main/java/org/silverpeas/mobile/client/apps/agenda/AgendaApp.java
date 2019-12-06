@@ -26,8 +26,6 @@ package org.silverpeas.mobile.client.apps.agenda;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
@@ -58,7 +56,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
@@ -73,6 +70,7 @@ import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -240,9 +238,20 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         String startDateOfWindowTime;
         String endDateOfWindowTime;
 
-        Date today = new Date();
+        Date start = new Date();
+        if (event.getRange().equals(TimeRange.weeks)) {
+          DateTimeFormat formatter = DateTimeFormat.getFormat("EEE");
+          String day = formatter.format(start);
+          while (!day.equalsIgnoreCase("mon")) {
+            CalendarUtil.addDaysToDate(start, -1);
+            day = formatter.format(start);
+          }
+        } else if (event.getRange().equals(TimeRange.months)) {
+          CalendarUtil.setToFirstDayOfMonth(start);
+        }
         DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        startDateOfWindowTime = dtf.format(today);
+        startDateOfWindowTime = dtf.format(start);
+
         Date end = new Date();
         if (event.getRange().equals(TimeRange.weeks)) {
           CalendarUtil.addDaysToDate(end, 7*4+1); // for include last day

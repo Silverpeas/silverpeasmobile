@@ -24,34 +24,18 @@
 package org.silverpeas.mobile.client.apps.agenda.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author svu
@@ -61,16 +45,16 @@ public class GroupItem extends Composite {
   private int number;
   private TimeRange timeRange;
   private static GroupItem.GroupItemUiBinder uiBinder = GWT.create(GroupItem.GroupItemUiBinder.class);
-  private String year = null;
+  private int year;
 
   @UiField(provided = true) protected AgendaMessages msg = null;
 
-  public void setYear(final String year) {
+  public void setYear(final int year) {
     this.year = year;
   }
 
-  public boolean hasYear() {
-    return (year != null);
+  public int getYear() {
+    return year;
   }
 
   interface GroupItemUiBinder extends UiBinder<Widget, GroupItem> {}
