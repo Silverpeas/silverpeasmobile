@@ -32,10 +32,10 @@ import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
+import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
-import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.io.file.ImageResizingProcessor;
 import org.silverpeas.core.io.file.SilverpeasFileProcessor;
@@ -152,11 +152,12 @@ public class NewsHelper {
     return news;
   }
 
-  private List<PublicationDetail> getNewsByComponentId(String appId, boolean managerAccess, String userId) {
+  private List<PublicationDetail> getNewsByComponentId(String appId, boolean managerAccess, String userId) throws AdminException {
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
     List<PublicationDetail> allNews = new ArrayList<PublicationDetail>();
     List<News> news;
-    if (organizationController.isComponentAvailable(appId, userId)) {
+
+    if (Administration.get().isComponentAvailableToUser(appId, userId)) {
       if (managerAccess) {
         news = service.getAllNews(appId);
       } else {

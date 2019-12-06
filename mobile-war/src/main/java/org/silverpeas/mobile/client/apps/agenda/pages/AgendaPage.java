@@ -159,8 +159,9 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           }
         }
       } else if (currentTimeRange.equals(TimeRange.months)) {
-        int monthNumber = new Date().getMonth();
-        int yearNumber = getYearNumber(new Date());
+        Date today = new Date();
+        int monthNumber = getMonth(today) - 1;
+        int yearNumber = getYearNumber(today);
         int number = monthNumber;
         for (int i = 0; i < 12; i++) {
           GroupItem groupItem = new GroupItem();
@@ -186,8 +187,8 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
             endDate = dtf.parse(dto.getEndDate());
           }
 
-          int startMonth = startDate.getMonth() + 1;
-          int endMonth = endDate.getMonth() + 1;
+          int startMonth = getMonth(startDate);
+          int endMonth = getMonth(endDate);
 
           int startYear = getYearNumber(startDate);
           int endYear = getYearNumber(endDate);
@@ -219,6 +220,11 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
   private int getYearNumber(Date date) {
     DateTimeFormat format=DateTimeFormat.getFormat("yyyy");
+    return Integer.parseInt(format.format(date));
+  }
+
+  private int getMonth(Date date) {
+    DateTimeFormat format=DateTimeFormat.getFormat("MM");
     return Integer.parseInt(format.format(date));
   }
 

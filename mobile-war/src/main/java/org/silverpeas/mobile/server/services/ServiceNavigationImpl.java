@@ -87,9 +87,11 @@ import java.util.function.Predicate;
 
 /**
  * Service de gestion de la navigation dans les espaces et apps.
+ *
  * @author svuillet
  */
-public class ServiceNavigationImpl extends AbstractAuthenticateService implements ServiceNavigation {
+public class ServiceNavigationImpl extends AbstractAuthenticateService
+    implements ServiceNavigation {
 
   private static final long serialVersionUID = 1L;
   private static boolean showLastPublicationsOnHomePage;
@@ -101,9 +103,11 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private OrganizationController organizationController = OrganizationController.get();
 
   static {
-    SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    SettingBundle mobileSettings =
+        ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
     showLastPublicationsOnHomePage = mobileSettings.getBoolean("homepage.lastpublications", true);
-    showLastPublicationsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastpublications", true);
+    showLastPublicationsOnSpaceHomePage =
+        mobileSettings.getBoolean("spacehomepage.lastpublications", true);
     showLastEventsOnHomePage = mobileSettings.getBoolean("homepage.lastevents", true);
     showLastEventsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastevents", true);
     showFreeZoneOnHomePage = mobileSettings.getBoolean("homepage.freezone", true);
@@ -111,20 +115,23 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   @Override
-  public DetailUserDTO getUser(String login, String domainId) throws NavigationException, AuthenticationException {
+  public DetailUserDTO getUser(String login, String domainId)
+      throws NavigationException, AuthenticationException {
 
     String id = null;
     try {
-      id = Administration.get().getUserIdByLoginAndDomain(login,domainId);
+      id = Administration.get().getUserIdByLoginAndDomain(login, domainId);
       UserDetail user = Administration.get().getUserDetail(id);
       DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
       userDTO = initSession(userDTO);
-      String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), getSettings().getString("big.avatar.size", "40x"));
+      String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
+          getSettings().getString("big.avatar.size", "40x"));
       userDTO.setAvatar(avatar);
       return userDTO;
 
     } catch (AdminException e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getUser", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error("ServiceNavigationImpl.getUser", "root.EX_NO_MESSAGE", e);
       throw new NavigationException(e);
     }
   }
@@ -146,7 +153,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       Connection c = Jsoup.connect(url);
       Document d = c.get();
     } catch (IOException e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.logout", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error("ServiceNavigationImpl.logout", "root.EX_NO_MESSAGE", e);
     }
     getThreadLocalRequest().getSession().invalidate();
   }
@@ -161,7 +169,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
   @Override
   public DetailUserDTO initSession(DetailUserDTO user) throws AuthenticationException {
-    SynchronizerToken token = (SynchronizerToken) getThreadLocalRequest().getSession().getAttribute("X-STKN");
+    SynchronizerToken token =
+        (SynchronizerToken) getThreadLocalRequest().getSession().getAttribute("X-STKN");
     if (user != null) {
       UserDetail usr = organizationController.getUserDetail(user.getId());
       setUserInSession(usr);
@@ -171,7 +180,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         // web security turn off
         try {
           dto.setSessionKey(Administration.get().getUserFull(usr.getId()).getToken());
-        }catch (Exception e) { SilverLogger.getLogger(this).error(e); }
+        } catch (Exception e) {
+          SilverLogger.getLogger(this).error(e);
+        }
       } else {
         dto.setSessionKey(token.getValue());
       }
@@ -184,10 +195,10 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private void initSilverpeasSession() {
     MainSessionController controller = (MainSessionController) getThreadLocalRequest().getSession()
         .getAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
-      if (controller == null) {
+    if (controller == null) {
       SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
-      SessionInfo
-          sessionInfo = sessionManagement.validateSession(getThreadLocalRequest().getSession().getId());
+      SessionInfo sessionInfo =
+          sessionManagement.validateSession(getThreadLocalRequest().getSession().getId());
       if (sessionInfo.getSessionId() == null) {
         sessionInfo = sessionManagement.openSession(getUserInSession(), getThreadLocalRequest());
       }
@@ -197,14 +208,16 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       } catch (SilverpeasException e) {
         SilverLogger.getLogger(this).error(e);
       }
-      getThreadLocalRequest().getSession().setAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT, controller);
+      getThreadLocalRequest().getSession()
+          .setAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT, controller);
     }
 
-    GraphicElementFactory gef = (GraphicElementFactory) getThreadLocalRequest().getSession().getAttribute(
-        GraphicElementFactory.GE_FACTORY_SESSION_ATT);
+    GraphicElementFactory gef = (GraphicElementFactory) getThreadLocalRequest().getSession()
+        .getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
     if (gef == null && controller != null) {
       gef = new GraphicElementFactory(controller);
-      getThreadLocalRequest().getSession().setAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT, gef);
+      getThreadLocalRequest().getSession()
+          .setAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT, gef);
     }
   }
 
@@ -218,10 +231,12 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   @Override
-  public HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException {
+  public HomePageDTO getHomePageData(String spaceId)
+      throws NavigationException, AuthenticationException {
     checkUserInSession();
     initSilverpeasSession();
-    SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+    SettingBundle settings =
+        GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
     HomePageDTO data = new HomePageDTO();
     data.setId(spaceId);
     try {
@@ -236,109 +251,118 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       } else {
         maxNews = settings.getInteger("home.news.size", 3);
       }
-      List<PublicationDetail> lastNews = NewsHelper
-          .getInstance().getLastNews(getUserInSession().getId(), spaceId);
+      List<PublicationDetail> lastNews =
+          NewsHelper.getInstance().getLastNews(getUserInSession().getId(), spaceId);
       if (lastNews != null && lastNews.size() > maxNews) {
         lastNews = lastNews.subList(0, maxNews);
       }
       data.setNews(NewsHelper.getInstance().populatePub(lastNews, false));
 
       if (spaceId == null || spaceId.isEmpty()) {
-        List<LinkDetail> links = FavoritesHelper.getInstance().getBookmarkPersoVisible(getUserInSession().getId());
+        List<LinkDetail> links =
+            FavoritesHelper.getInstance().getBookmarkPersoVisible(getUserInSession().getId());
         data.setFavorites(FavoritesHelper.getInstance().populate(links));
       }
       data.setSpacesAndApps(getSpacesAndApps(spaceId));
-    } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
-      throw new NavigationException(e);
-    }
 
-    // last publications
-    if ((spaceId == null && showLastPublicationsOnHomePage) || (spaceId != null && showLastPublicationsOnSpaceHomePage)) {
-      try {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
-        ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
-        int max;
-        if (spaceId == null) {
-          max = settings.getInteger("home.publications.nb", 3);
-        } else {
-          max = settings.getInteger("space.homepage.latestpublications.nb", 3);
-        }
-        List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
-        for (PublicationDetail pub : pubs) {
-          if (pub.canBeAccessedBy(getUserInSession())) {
-            PublicationDTO dto = new PublicationDTO();
-            dto.setId(pub.getId());
-            dto.setName(pub.getName());
-            dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
-            dto.setInstanceId(pub.getInstanceId());
-            lastPubs.add(dto);
+
+      // last publications
+      if ((spaceId == null && showLastPublicationsOnHomePage) ||
+          (spaceId != null && showLastPublicationsOnSpaceHomePage)) {
+        try {
+          SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+          ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
+          int max;
+          if (spaceId == null) {
+            max = settings.getInteger("home.publications.nb", 3);
+          } else {
+            max = settings.getInteger("space.homepage.latestpublications.nb", 3);
           }
+          List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
+          for (PublicationDetail pub : pubs) {
+            if (pub.canBeAccessedBy(getUserInSession())) {
+              PublicationDTO dto = new PublicationDTO();
+              dto.setId(pub.getId());
+              dto.setName(pub.getName());
+              dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
+              dto.setInstanceId(pub.getInstanceId());
+              lastPubs.add(dto);
+            }
+          }
+          data.setLastPublications(lastPubs);
+
+        } catch (Exception e) {
+          SilverLogger.getLogger(SpMobileLogModule.getName())
+              .error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
         }
-        data.setLastPublications(lastPubs);
-
-      } catch (Exception e) {
-        SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
       }
-    }
 
-    // aurora shortcuts
-    List<ShortCutLinkDTO> shortCutLinkDTOList = new ArrayList<>();
-    if (spaceId == null || spaceId.isEmpty()) {
-      int i = 1;
-      while (i > 0) {
-        String url = settings.getString("Shortcut.home." + i + ".Url", "");
-        if (!url.isEmpty()) {
-          String text = settings.getString("Shortcut.home." + i + ".AltText", "");
-          String icon = settings.getString("Shortcut.home." + i + ".IconUrl", "");
-          ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
-          shortCutLinkDTO.setUrl(url);
-          shortCutLinkDTO.setText(text);
-          shortCutLinkDTO.setIcon(icon);
-          shortCutLinkDTOList.add(shortCutLinkDTO);
-        } else {
-          i = 0;
-          break;
+      // aurora shortcuts
+      List<ShortCutLinkDTO> shortCutLinkDTOList = new ArrayList<>();
+      if (spaceId == null || spaceId.isEmpty()) {
+        int i = 1;
+        while (i > 0) {
+          String url = settings.getString("Shortcut.home." + i + ".Url", "");
+          if (!url.isEmpty()) {
+            String text = settings.getString("Shortcut.home." + i + ".AltText", "");
+            String icon = settings.getString("Shortcut.home." + i + ".IconUrl", "");
+            ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
+            shortCutLinkDTO.setUrl(url);
+            shortCutLinkDTO.setText(text);
+            shortCutLinkDTO.setIcon(icon);
+            shortCutLinkDTOList.add(shortCutLinkDTO);
+          } else {
+            i = 0;
+            break;
+          }
+          i++;
         }
-        i++;
       }
-    }
-    data.setShortCuts(shortCutLinkDTOList);
+      data.setShortCuts(shortCutLinkDTOList);
 
-    // upcomming events
-    NextEvents events = null;
-    List<CalendarEventDTO> eventsToDisplay = null;
-    String lang = getUserInSession().getUserPreferences().getLanguage();
-    if ((spaceId == null && showLastEventsOnHomePage)) {
-      boolean includeToday = settings.getBoolean("home.events.today.include", true);
-      List<String> allowedComponentIds = Arrays.asList(getAllowedComponentIds(settings, "home.events.appId"));
-      int nbDays = settings.getInteger("home.events.maxDays", 3);
-      boolean onlyImportant = settings.getBoolean("home.events.importantOnly", false);
-      events = EventsHelper.getInstance().getNextEvents(allowedComponentIds, includeToday, nbDays, onlyImportant);
-    } else if (spaceId != null && showLastEventsOnSpaceHomePage) {
-      List<String> allowedAppIds = new ArrayList<>();
-      List<ComponentInstLight> components = getAllowedComponents(false, "almanach", spaceId);
-      for (ComponentInstLight component : components) {
-        allowedAppIds.add(component.getId());
+      // upcomming events
+      NextEvents events = null;
+      List<CalendarEventDTO> eventsToDisplay = null;
+      String lang = getUserInSession().getUserPreferences().getLanguage();
+      if ((spaceId == null && showLastEventsOnHomePage)) {
+        boolean includeToday = settings.getBoolean("home.events.today.include", true);
+        List<String> allowedComponentIds =
+            Arrays.asList(getAllowedComponentIds(settings, "home.events.appId"));
+        int nbDays = settings.getInteger("home.events.maxDays", 3);
+        boolean onlyImportant = settings.getBoolean("home.events.importantOnly", false);
+        events = EventsHelper.getInstance()
+            .getNextEvents(allowedComponentIds, includeToday, nbDays, onlyImportant);
+      } else if (spaceId != null && showLastEventsOnSpaceHomePage) {
+        List<String> allowedAppIds = new ArrayList<>();
+        List<ComponentInstLight> components = getAllowedComponents(false, "almanach", spaceId);
+        for (ComponentInstLight component : components) {
+          allowedAppIds.add(component.getId());
+        }
+        events = EventsHelper.getInstance().getNextEvents(allowedAppIds, true, 5, false);
       }
-      events = EventsHelper.getInstance().getNextEvents(allowedAppIds, true, 5, false);
-    }
-    eventsToDisplay = EventsHelper.getInstance().populate(events, lang);
-    data.setLastEvents(eventsToDisplay);
+      eventsToDisplay = EventsHelper.getInstance().populate(events, lang);
+      data.setLastEvents(eventsToDisplay);
 
-    // freezone
-    if ((spaceId == null && showFreeZoneOnHomePage)) {
-      String pageWebAppId = settings.getString("home.freezone.appId", "");
-      if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
-        String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
-        data.setHtmlFreeZone(html);
+      // freezone
+      if ((spaceId == null && showFreeZoneOnHomePage)) {
+        String pageWebAppId = settings.getString("home.freezone.appId", "");
+        if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
+          String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
+          data.setHtmlFreeZone(html);
+        }
       }
+
+    } catch (Exception e) {
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
+      throw new NavigationException(e);
     }
 
     return data;
   }
 
-  private List<ComponentInstLight> getAllowedComponents(boolean visibleOnly, String name, String spaceId) {
+  private List<ComponentInstLight> getAllowedComponents(boolean visibleOnly, String name,
+      String spaceId) {
     OrganizationController oc = OrganizationController.get();
     String[] appIds = oc.getAvailCompoIdsAtRoot(spaceId, getUserInSession().getId());
     List<ComponentInstLight> components = new ArrayList<>();
@@ -354,12 +378,13 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     return components;
   }
 
-  private String[] getAllowedComponentIds(SettingBundle settings, String param) {
+  private String[] getAllowedComponentIds(SettingBundle settings, String param)
+      throws AdminException {
     String[] appIds = StringUtil.split(settings.getString(param, ""), ' ');
     return getAllowedComponents(appIds).toArray(new String[0]);
   }
 
-  private List<String> getAllowedComponents(String... componentIds) {
+  private List<String> getAllowedComponents(String... componentIds) throws AdminException {
     List<String> allowedComponentIds = new ArrayList<>();
     for (String componentId : componentIds) {
       if (isComponentAvailable(componentId)) {
@@ -369,8 +394,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
     return allowedComponentIds;
   }
 
-  private boolean isComponentAvailable(String componentId) {
-    return organizationController.isComponentAvailable(componentId, getUserInSession().getId());
+  private boolean isComponentAvailable(String componentId) throws AdminException {
+    return Administration.get().isComponentAvailableToUser(componentId, getUserInSession().getId());
   }
 
   private boolean isSupportedApp(ComponentInstLight app) {
@@ -383,19 +408,20 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   private boolean isWorkflowApp(ComponentInstLight app) {
     try {
       return app.isWorkflow();
-    } catch(Throwable t) {
+    } catch (Throwable t) {
       return false;
     }
   }
 
   //TODO : remove appType
   @Override
-  public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId) throws NavigationException, AuthenticationException {
+  public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId)
+      throws NavigationException, AuthenticationException {
     checkUserInSession();
     ArrayList<SilverpeasObjectDTO> results = new ArrayList<SilverpeasObjectDTO>();
     try {
       if (rootSpaceId == null) {
-        String [] spaceIds = Administration.get().getAllSpaceIds(getUserInSession().getId());
+        String[] spaceIds = Administration.get().getAllSpaceIds(getUserInSession().getId());
         for (String spaceId : spaceIds) {
           SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
           if (space.getFatherId().equals("0")) {
@@ -406,10 +432,11 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         }
         Collections.sort(results);
       } else {
-        String [] spaceIds = Administration.get().getAllowedSubSpaceIds(getUserInSession().getId(), rootSpaceId);
+        String[] spaceIds =
+            Administration.get().getAllowedSubSpaceIds(getUserInSession().getId(), rootSpaceId);
         for (String spaceId : spaceIds) {
           SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
-          if (("WA"+space.getFatherId()).equals(rootSpaceId)) {
+          if (("WA" + space.getFatherId()).equals(rootSpaceId)) {
             if (containApp(space)) {
               results.add(populate(space));
             }
@@ -417,7 +444,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
         }
         Collections.sort(results);
         ArrayList<SilverpeasObjectDTO> partialResults = new ArrayList<SilverpeasObjectDTO>();
-        String [] appsIds = Administration.get().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
+        String[] appsIds =
+            Administration.get().getAvailCompoIds(rootSpaceId, getUserInSession().getId());
         for (String appId : appsIds) {
           ComponentInstLight app = Administration.get().getComponentInstLight(appId);
           if (isSupportedApp(app) && app.getDomainFatherId().equals(rootSpaceId)) {
@@ -431,23 +459,26 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       }
 
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceNavigationImpl.getSpacesAndApps", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error("ServiceNavigationImpl.getSpacesAndApps", "root.EX_NO_MESSAGE", e);
     }
     return results;
   }
 
   @Override
-  public ApplicationInstanceDTO getApp(String instanceId, String contentId, String contentType) throws NavigationException, AuthenticationException {
+  public ApplicationInstanceDTO getApp(String instanceId, String contentId, String contentType)
+      throws NavigationException, AuthenticationException {
     String localId = "";
     if (instanceId == null) {
       if (contentType.equals(ContentsTypes.Publication.name())) {
         PublicationDetail pub = PublicationService.get().getDetail(new PublicationPK(contentId));
         instanceId = pub.getInstanceId();
-      } else if(contentType.equals(ContentsTypes.Media.name())) {
+      } else if (contentType.equals(ContentsTypes.Media.name())) {
         Media media = MediaServiceProvider.getMediaService().getMedia(new MediaPK(contentId));
         instanceId = media.getInstanceId();
       } else if (contentType.equals(ContentsTypes.Event.name())) {
-        ContributionIdentifier contributionId = ContributionIdentifier.decode(new String(StringUtil.fromBase64(contentId)));
+        ContributionIdentifier contributionId =
+            ContributionIdentifier.decode(new String(StringUtil.fromBase64(contentId)));
         localId = contributionId.getLocalId();
         instanceId = contributionId.getComponentInstanceId();
       }
@@ -470,7 +501,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
   }
 
   private boolean containApp(SpaceInstLight space) throws Exception {
-    String [] appsIds = Administration.get().getAvailCompoIds(space.getId(), getUserInSession().getId());
+    String[] appsIds =
+        Administration.get().getAvailCompoIds(space.getId(), getUserInSession().getId());
     for (String appId : appsIds) {
       ComponentInstLight app = Administration.get().getComponentInstLight(appId);
       if (isSupportedApp(app)) {
@@ -524,7 +556,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
       try {
         value = getMainSessionController().getComponentParameterValue(app.getId(), "notifications");
         dto.setNotifiable(value.equals("yes"));
-      } catch(Exception e) {
+      } catch (Exception e) {
         dto.setNotifiable(false);
       }
       if (app.getName().equals("kmelia")) {
@@ -564,8 +596,10 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService implement
 
 
   private PublicationHelper getPublicationHelper() throws Exception {
-    SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
-    String helperClassName = settings.getString("publicationHelper", "org.silverpeas.components.kmelia.KmeliaTransversal");
+    SettingBundle settings =
+        GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+    String helperClassName = settings
+        .getString("publicationHelper", "org.silverpeas.components.kmelia.KmeliaTransversal");
     Class<?> helperClass = Class.forName(helperClassName);
     PublicationHelper kmeliaTransversal = (PublicationHelper) helperClass.newInstance();
     kmeliaTransversal.setMainSessionController(getMainSessionController());

@@ -42,7 +42,6 @@ import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPubli
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
-import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
@@ -52,6 +51,7 @@ import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.components.UnorderedList;
+import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
@@ -67,26 +67,32 @@ public class PublicationPage extends PageContent
 
   private PublicationDTO publication;
 
-  @UiField HeadingElement title;
-  @UiField HTMLPanel container;
+  @UiField
+  HeadingElement title;
+  @UiField
+  HTMLPanel container;
   @UiField
   UnorderedList attachments;
-  @UiField ParagraphElement desc, lastUpdate;
+  @UiField
+  ParagraphElement desc, lastUpdate;
   @UiField
   CommentsButton comments;
-  @UiField Anchor contentLink;
-  @UiField DivElement content;
-  @UiField ActionsMenu actionsMenu;
+  @UiField
+  Anchor contentLink;
+  @UiField
+  DivElement content;
+  @UiField
+  ActionsMenu actionsMenu;
 
-  @UiField(provided = true) protected DocumentsMessages msg = null;
+  @UiField(provided = true)
+  protected DocumentsMessages msg;
 
   private NotifyButton notification = new NotifyButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private ContentDTO contentDTO = null;
 
 
-  interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {
-  }
+  interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {}
 
   public PublicationPage() {
     msg = GWT.create(DocumentsMessages.class);
@@ -133,7 +139,10 @@ public class PublicationPage extends PageContent
     if (isVisible()) {
       title.setInnerHTML(publication.getName());
       desc.setInnerHTML(publication.getDescription());
-      if (publication.getUpdater() != null && publication.getUpdateDate() != null) lastUpdate.setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
+      if (publication.getUpdater() != null && publication.getUpdateDate() != null) {
+        lastUpdate
+            .setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
+      }
 
       for (AttachmentDTO attachment : publication.getAttachments()) {
         Attachment a = new Attachment();
@@ -142,9 +151,11 @@ public class PublicationPage extends PageContent
       }
       if (commentable) {
         String id = publication.getId();
-        if (contentDTO != null && contentDTO.getContributionId() != null) id = contentDTO.getContributionId();
-        comments.init(id, publication.getInstanceId(), type,
-            getPageTitle(), publication.getName(), publication.getCommentsNumber());
+        if (contentDTO != null && contentDTO.getContributionId() != null) {
+          id = contentDTO.getContributionId();
+        }
+        comments.init(id, publication.getInstanceId(), type, getPageTitle(), publication.getName(),
+            publication.getCommentsNumber());
         comments.getElement().getStyle().clearDisplay();
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
@@ -155,8 +166,12 @@ public class PublicationPage extends PageContent
         content.getStyle().setDisplay(Style.Display.NONE);
       }
     }
-    notification.init(publication.getInstanceId(), publication.getId(), NotificationDTO.TYPE_PUBLICATION, publication.getName(), getPageTitle());
-    favorite.init(publication.getInstanceId(), publication.getId(), ContentsTypes.Publication.name(), publication.getName());
+    notification
+        .init(publication.getInstanceId(), publication.getId(), NotificationDTO.TYPE_PUBLICATION,
+            publication.getName(), getPageTitle());
+    favorite
+        .init(publication.getInstanceId(), publication.getId(), ContentsTypes.Publication.name(),
+            publication.getName());
   }
 
   @UiHandler("contentLink")
@@ -166,7 +181,8 @@ public class PublicationPage extends PageContent
 
   public static void showWebPageContent(String Id, String instanceId, String title) {
     // compute height available for content
-    int heightAvailable = Window.getClientHeight() - (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
+    int heightAvailable = Window.getClientHeight() -
+        (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
     int widthAvailable = Window.getClientWidth();
     // display content
     String url = UrlUtils.getServicesLocation();
@@ -178,9 +194,10 @@ public class PublicationPage extends PageContent
     page.show();
   }
 
-  public static void showPublicationContent(String pubId, String appId, String title) {
+  private static void showPublicationContent(String pubId, String appId, String title) {
     // compute height available for content
-    int heightAvailable = Window.getClientHeight() - (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
+    int heightAvailable = Window.getClientHeight() -
+        (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
     int widthAvailable = Window.getClientWidth();
     // display content
     String url = UrlUtils.getServicesLocation();
