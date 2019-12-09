@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.shared.exceptions;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds;
+/**
+ * @author svu
+ */
+public class ClassifiedsException extends Exception {
+  private static final long serialVersionUID = 1L;
+
+  public ClassifiedsException() {
+    super();
+  }
+
+  public ClassifiedsException(String message, Throwable caught) {
+    super(message, caught);
+  }
+
+  public ClassifiedsException(String message) {
+    super(message);
+  }
+
+  public ClassifiedsException(Throwable caught) {
+    super(caught);
+  }
 }

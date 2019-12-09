@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.shared.services;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.silverpeas.mobile.shared.dto.blog.PostDTO;
+import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
+import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import org.silverpeas.mobile.shared.exceptions.BlogException;
+import org.silverpeas.mobile.shared.exceptions.ClassifiedsException;
+
+import java.util.List;
+
+public interface ServiceClassifiedsAsync {
+  void getClassifieds(String instanceId, final AsyncCallback<ClassifiedsDTO> async);
 }

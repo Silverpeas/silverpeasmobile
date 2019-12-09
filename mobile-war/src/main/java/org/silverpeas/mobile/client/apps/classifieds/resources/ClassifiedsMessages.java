@@ -21,8 +21,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.classifieds.resources;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds;
+import com.google.gwt.i18n.client.Messages;
+
+public interface ClassifiedsMessages extends Messages {
+
+
+  String title();
 }

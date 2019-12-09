@@ -21,8 +21,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.shared.services;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
+import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import org.silverpeas.mobile.shared.exceptions.ClassifiedsException;
+
+@RemoteServiceRelativePath("Classifieds")
+public interface ServiceClassifieds extends RemoteService {
+  public ClassifiedsDTO getClassifieds(String instanceId) throws ClassifiedsException, AuthenticationException;
 }

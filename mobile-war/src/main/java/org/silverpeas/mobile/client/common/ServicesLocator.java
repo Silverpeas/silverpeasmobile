@@ -63,6 +63,7 @@ public class ServicesLocator {
       (ServiceNotificationsAsync) GWT.create(ServiceNotifications.class);
   private static ServiceNewsAsync serviceNews = (ServiceNewsAsync) GWT.create(ServiceNews.class);
   private static ServiceBlogAsync serviceBlog = (ServiceBlogAsync) GWT.create(ServiceBlog.class);
+  private static ServiceClassifiedsAsync serviceClassifieds = (ServiceClassifiedsAsync) GWT.create(ServiceClassifieds.class);
   private static ServiceWorkflowAsync serviceWorkflow =
       (ServiceWorkflowAsync) GWT.create(ServiceWorkflow.class);
   private static ServiceHyperLinkAsync serviceHyperLink =
@@ -148,6 +149,12 @@ public class ServicesLocator {
     ((ServiceDefTarget) serviceBlog).setRpcRequestBuilder(builder);
     changeServiceEntryPoint((ServiceDefTarget) serviceBlog);
     return serviceBlog;
+  }
+
+  public static ServiceClassifiedsAsync getServiceClassifieds() {
+    ((ServiceDefTarget) serviceClassifieds).setRpcRequestBuilder(builder);
+    changeServiceEntryPoint((ServiceDefTarget) serviceClassifieds);
+    return serviceClassifieds;
   }
 
   public static ServiceNewsAsync getServiceNews() {

@@ -213,6 +213,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.silverpeas.components.classifieds</groupId>
+      <artifactId>silverpeas-classifieds</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.silverpeas.core.services</groupId>
       <artifactId>silverpeas-core-workflow</artifactId>
       <version>${silverpeas.version}</version>

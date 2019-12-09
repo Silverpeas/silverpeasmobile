@@ -82,8 +82,9 @@ public class NavigationItem extends Composite {
         setStyleName("app-almanach");
       } else if (type.equalsIgnoreCase(Apps.formsOnline.name())) {
         setStyleName("app-formsOnline");
-      }
-
+      } /*else if (type.equalsIgnoreCase(Apps.classifieds.name())) {
+        setStyleName("app-classifieds");
+      }*/
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
   }

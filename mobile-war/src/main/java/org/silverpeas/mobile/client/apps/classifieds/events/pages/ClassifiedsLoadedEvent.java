@@ -21,8 +21,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.classifieds.events.pages;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds;
+import org.silverpeas.mobile.shared.dto.blog.PostDTO;
+import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
+
+import java.util.List;
+
+public class ClassifiedsLoadedEvent extends AbstractClassifiedsPagesEvent {
+
+  private ClassifiedsDTO classifieds;
+
+  public ClassifiedsLoadedEvent(ClassifiedsDTO classifieds){
+    super();
+    this.classifieds = classifieds;
+  }
+
+  @Override
+  protected void dispatch(ClassifiedsPagesEventHandler handler) {
+    handler.onClassifiedsLoad(this);
+  }
+
+  public ClassifiedsDTO getClassifieds() {
+    return classifieds;
+  }
 }

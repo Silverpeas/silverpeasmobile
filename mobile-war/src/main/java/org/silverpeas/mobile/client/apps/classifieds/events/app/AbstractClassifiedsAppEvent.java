@@ -21,8 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.classifieds.events.app;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds;
+import com.google.gwt.event.shared.GwtEvent;
+
+public abstract class AbstractClassifiedsAppEvent extends GwtEvent<ClassifiedsAppEventHandler>{
+
+  public static Type<ClassifiedsAppEventHandler> TYPE = new Type<ClassifiedsAppEventHandler>();
+
+  public AbstractClassifiedsAppEvent(){
+  }
+
+  @Override
+  public Type<ClassifiedsAppEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 }
