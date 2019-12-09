@@ -121,7 +121,7 @@ public class NewsHelper {
   }
 
   private boolean isVisibleNews(PublicationDetail news) {
-    return news.isValid() && news.getVisibilityPeriod().contains(new Date());
+    return news.isValid() && news.isVisible();
   }
 
   private List<PublicationDetail> getDelegatedNews(String userId) throws Exception {
