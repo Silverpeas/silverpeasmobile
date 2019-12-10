@@ -26,17 +26,18 @@ package org.silverpeas.mobile.shared.dto.classifieds;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author svu
  */
 public class ClassifiedsDTO implements Serializable {
 
-  private List<String> types = new ArrayList<>();
-  private List<String> categories = new ArrayList<>();
+  private Map<String,String> types;
+  private Map<String, String> categories;
   private List<ClassifiedDTO> classifieds= new ArrayList<>();
 
-  public List<String> getTypes() {
+  public Map<String, String> getTypes() {
     return types;
   }
 
@@ -44,7 +45,15 @@ public class ClassifiedsDTO implements Serializable {
     return classifieds;
   }
 
-  public List<String> getCategories() {
+  public Map<String, String> getCategories() {
     return categories;
+  }
+
+  public void setTypes(final Map<String, String> types) {
+    this.types = types;
+  }
+
+  public void setCategories(final Map<String, String> categories) {
+    this.categories = categories;
   }
 }

@@ -32,13 +32,9 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <base:ActionsMenu ui:field="actionsMenu"/>
     <div class="content-navigation">
-      <span class="ui-btn-text"><ui:text from="{msg.category}"/></span>
-      <g:ListBox ui:field="categories"/>
+        <g:HTML ui:field="title"/>
+        <g:HTML ui:field="description"/>
+
     </div>
-    <div class="content-navigation">
-      <span class="ui-btn-text"><ui:text from="{msg.type}"/></span>
-      <g:ListBox ui:field="types"/>
-    </div>
-    <components:UnorderedList ui:field="classifieds" styleName="liste-annonces"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

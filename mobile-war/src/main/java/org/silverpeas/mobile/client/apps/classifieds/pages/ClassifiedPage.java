@@ -24,47 +24,41 @@
 package org.silverpeas.mobile.client.apps.classifieds.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsLoadEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.AbstractClassifiedsPagesEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsLoadedEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsPagesEventHandler;
-import org.silverpeas.mobile.client.apps.classifieds.pages.widgets.ClassifiedItem;
 import org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
-import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 
-public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEventHandler {
+public class ClassifiedPage extends PageContent implements ClassifiedsPagesEventHandler {
 
   private static ClassifiedsPageUiBinder uiBinder = GWT.create(ClassifiedsPageUiBinder.class);
 
   @UiField(provided = true) protected ClassifiedsMessages msg = null;
-  @UiField
-  UnorderedList classifieds;
+
   @UiField
   ActionsMenu actionsMenu;
+
   @UiField
-  ListBox categories, types;
+  HTML title, description;
 
-
-  private ClassifiedsDTO data;
+  private ClassifiedDTO data;
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
-  private String instanceId;
 
-  interface ClassifiedsPageUiBinder extends UiBinder<Widget, ClassifiedsPage> {
+  interface ClassifiedsPageUiBinder extends UiBinder<Widget, ClassifiedPage> {
   }
 
-  public ClassifiedsPage() {
+  public ClassifiedPage() {
     msg = GWT.create(ClassifiedsMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
@@ -78,44 +72,15 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
     EventBus.getInstance().removeHandler(AbstractClassifiedsPagesEvent.TYPE, this);
   }
 
+  public void setData(ClassifiedDTO data) {
+    this.data = data;
+    title.setHTML(data.getTitle());
+    description.setHTML(data.getDescription());
+    //TODO : add all informations + comments
+  }
+
   @Override
   public void onClassifiedsLoad(final ClassifiedsLoadedEvent event) {
-    data = event.getClassifieds();
-    types.clear();
-    types.addItem("","");
-    for (String type : data.getTypes().keySet()) {
-      types.addItem(data.getTypes().get(type), type);
-    }
-    categories.clear();
-    categories.addItem("","");
-    for (String cat : data.getCategories().keySet()) {
-      categories.addItem(data.getCategories().get(cat), cat);
-    }
-    displayList();
   }
 
-  private void displayList() {
-    classifieds.clear();
-    String cat = categories.getSelectedValue();
-    String type = types.getSelectedValue();
-    for (ClassifiedDTO classified : data.getClassifieds()) {
-      if ((classified.getCategory().equals(cat) || cat.isEmpty()) && (classified.getType().equals(type) || type.isEmpty())) {
-        ClassifiedItem item = new ClassifiedItem();
-        item.setCategory(data.getCategories().get(classified.getCategory()));
-        item.setType(data.getTypes().get(classified.getType()));
-        item.setData(classified);
-        classifieds.add(item);
-      }
-    }
-  }
-
-  @UiHandler("categories")
-  protected void onChangedCategory(ChangeEvent event) {
-    displayList();
-  }
-
-  @UiHandler("types")
-  protected void onChangedType(ChangeEvent event) {
-    displayList();
-  }
 }

@@ -41,25 +41,30 @@ public class DataURLHelper {
 
   /**
    * Return avatar dataurl
+   *
    * @param photoFileName
    * @return
    */
   public static String convertAvatarToUrlData(String photoFileName, String size) {
 
     int i = photoFileName.lastIndexOf("/");
-    if (i == -1) i = photoFileName.lastIndexOf("\\");
+    if (i == -1) {
+      i = photoFileName.lastIndexOf("\\");
+    }
     if (i != -1) {
-      photoFileName = photoFileName.substring(i+1);
+      photoFileName = photoFileName.substring(i + 1);
     }
 
     String data = "";
     try {
-      File originalImage = new File(FileRepositoryManager.getAvatarPath() + File.separatorChar + photoFileName);
+      File originalImage =
+          new File(FileRepositoryManager.getAvatarPath() + File.separatorChar + photoFileName);
       if (!originalImage.exists()) {
         return "";
       }
 
-      String askedPath = originalImage.getParent() + File.separator + size + File.separator + photoFileName;
+      String askedPath =
+          originalImage.getParent() + File.separator + size + File.separator + photoFileName;
       SilverpeasFile image = SilverpeasFileProvider.getFile(askedPath);
 
       byte[] binaryData = IOUtils.toByteArray(image.inputStream());
@@ -69,11 +74,39 @@ public class DataURLHelper {
         typeMime = "jpg";
       }
 
-      data = "data:" + typeMime + ";base64," + new String(
-          Base64.encodeBase64(binaryData));
+      data = "data:" + typeMime + ";base64," + new String(Base64.encodeBase64(binaryData));
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
     }
+    return data;
+  }
+
+  public static String convertPictureToUrlData(String path, String fileName, String size) {
+    String data = "";
+    try {
+      File originalImage = new File(path);
+      if (!originalImage.exists()) {
+        return "";
+      }
+
+      String askedPath = originalImage.getParent() + File.separator + size + File.separator + fileName;
+      SilverpeasFile image = SilverpeasFileProvider.getFile(askedPath);
+
+      byte[] binaryData = IOUtils.toByteArray(image.inputStream());
+      MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+      String typeMime = mimeTypesMap.getContentType(originalImage);
+      if (typeMime.equalsIgnoreCase("jpeg")) {
+        typeMime = "jpg";
+      }
+
+      data = "data:" + typeMime + ";base64," + new String(Base64.encodeBase64(binaryData));
+    } catch (Exception e) {
+      SilverLogger.getLogger(SpMobileLogModule.getName())
+          .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+    }
+
+
     return data;
   }
 

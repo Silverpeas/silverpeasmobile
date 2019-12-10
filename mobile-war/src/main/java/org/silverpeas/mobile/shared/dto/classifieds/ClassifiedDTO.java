@@ -24,21 +24,22 @@
 package org.silverpeas.mobile.shared.dto.classifieds;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author svu
  */
 public class ClassifiedDTO implements Serializable {
+  private String id;
   private String title;
   private String description;
   private String price;
   private String type;
   private String category;
-  private String picture1;
-  private String picture2;
-  private String picture3;
-  private String picture4;
-
+  private List<String> pictures;
+  private String creatorName;
+  private String creationDate;
+  private String updateDate;
 
   public String getTitle() {
     return title;
@@ -64,38 +65,6 @@ public class ClassifiedDTO implements Serializable {
     this.price = price;
   }
 
-  public String getPicture1() {
-    return picture1;
-  }
-
-  public void setPicture1(final String picture1) {
-    this.picture1 = picture1;
-  }
-
-  public String getPicture2() {
-    return picture2;
-  }
-
-  public void setPicture2(final String picture2) {
-    this.picture2 = picture2;
-  }
-
-  public String getPicture3() {
-    return picture3;
-  }
-
-  public void setPicture3(final String picture3) {
-    this.picture3 = picture3;
-  }
-
-  public String getPicture4() {
-    return picture4;
-  }
-
-  public void setPicture4(final String picture4) {
-    this.picture4 = picture4;
-  }
-
   public String getType() {
     return type;
   }
@@ -110,5 +79,45 @@ public class ClassifiedDTO implements Serializable {
 
   public void setCategory(final String category) {
     this.category = category;
+  }
+
+  public List<String> getPictures() {
+    return pictures;
+  }
+
+  public void setPictures(final List<String> pictures) {
+    this.pictures = pictures;
+  }
+
+  public String getCreatorName() {
+    return creatorName;
+  }
+
+  public void setCreatorName(final String creatorName) {
+    this.creatorName = creatorName;
+  }
+
+  public String getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(final String creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public String getUpdateDate() {
+    return updateDate;
+  }
+
+  public void setUpdateDate(final String updateDate) {
+    this.updateDate = updateDate;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
   }
 }

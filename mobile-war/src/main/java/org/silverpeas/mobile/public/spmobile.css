@@ -1609,30 +1609,30 @@ textarea.ui-input-text {
   padding-left: 1em;
 }
 
-.liste-news {
+.liste-news, .liste-annonces {
   list-style-type: none;
   padding: 0;
   margin: 0;
   border-top: 1px solid #ddd;
 }
 
-.liste-news li {
+.liste-news li, .liste-annonces li {
   padding: 0.2em 0.5em;
   margin: 0;
 }
 
-.liste-news li img {
+.liste-news li img, .liste-annonces img {
   float: left;
   margin: 1em;
   margin-left: 0;
 }
 
-.liste-news li h2 {
+.liste-news li h2, .liste-annonces li h2 {
   padding: 0;
   margin: 0;
 }
 
-.liste-news li p {
+.liste-news li p, .liste-annonces li p {
   font-size: 11px;
   color: #666;
 }
@@ -2069,7 +2069,8 @@ form .forms .fields > li:nth-child(even) {
 
 .liste-billet h2 a,
 .forms-list h2 a,
-.liste-news li h2 a {
+.liste-news li h2 a,
+.liste-annonces li h2 a {
   font-size: 14px;
   line-height: 16px;
   color: #555;
@@ -2235,4 +2236,34 @@ form .forms .fields > li:nth-child(even) {
   text-align: center;
   margin-top: 2em;
   margin-bottom: 2em;
+}
+
+.classified_type span {
+  margin: 0 .25em .15em 0;
+  background-color: #acacac;
+  color: white;
+  border-radius: 3px;
+  border: 1px solid #acacac;
+  padding: .35em .5em;
+}
+
+.classified_price {
+  color: #FFF;
+  font-size: 1.15em;
+  font-weight: bold;
+  padding: .15em .5em;
+  background-color: #56a3d9;
+  float: right;
+  border: 1px solid #56a3d9;
+  border-radius: 3px;
+}
+
+.classified_creationInfo {
+  color: #777;
+  float: right;
+  clear: both;
+}
+
+.liste-annonces li {
+  margin: 0.5em;
 }

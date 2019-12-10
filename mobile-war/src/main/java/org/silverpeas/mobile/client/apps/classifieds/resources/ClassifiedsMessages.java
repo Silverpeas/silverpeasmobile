@@ -29,4 +29,6 @@ public interface ClassifiedsMessages extends Messages {
 
 
   String title();
+  String type();
+  String category();
 }
