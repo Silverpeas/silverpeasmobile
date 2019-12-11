@@ -27,7 +27,9 @@ import org.silverpeas.components.classifieds.model.ClassifiedDetail;
 import org.silverpeas.components.classifieds.service.ClassifiedService;
 import org.silverpeas.components.classifieds.service.ClassifiedServiceProvider;
 import org.silverpeas.core.ResourceReference;
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.AdministrationServiceProvider;
+import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
@@ -35,6 +37,7 @@ import org.silverpeas.core.contribution.attachment.util.SimpleDocumentList;
 import org.silverpeas.core.contribution.content.form.DataRecord;
 import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
+import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateException;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
@@ -73,6 +76,7 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
       String searchFields2 = getSearchField1(instanceId, "searchFields2");
       dto.setCategories(createListField(instanceId, searchFields1));
       dto.setTypes(createListField(instanceId, searchFields2));
+      dto.setHasComments(hasComments(instanceId));
       ClassifiedService service = ClassifiedServiceProvider.getClassifiedService();
       List<ClassifiedDetail> classifiedDetails = service.getAllValidClassifieds(instanceId);
       for (ClassifiedDetail classifiedDetail : classifiedDetails) {
@@ -95,6 +99,12 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
         .getComponentParameterValue(instanceId, searchFields2);
   }
 
+  private boolean hasComments(final String instanceId) {
+    String value = AdministrationServiceProvider.getAdminService()
+        .getComponentParameterValue(instanceId, "comments");
+    return (value.equalsIgnoreCase("yes"));
+  }
+
   private ClassifiedDTO populate(ClassifiedDetail classifiedDetail) throws Exception {
     ClassifiedDTO dto = new ClassifiedDTO();
     dto.setId(classifiedDetail.getId());
@@ -111,7 +121,7 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
     }
     dto.setPictures(pictures);
 
-    dto.setCreatorName(classifiedDetail.getCreatorName());
+    dto.setCreatorName(Administration.get().getUserDetail(classifiedDetail.getCreatorId()).getDisplayedName());
     dto.setCreationDate(sdf.format(classifiedDetail.getCreationDate()));
     if (classifiedDetail.getUpdateDate() != null)dto.setUpdateDate(sdf.format(classifiedDetail.getUpdateDate()));
 
@@ -122,6 +132,8 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
       dto.setCategory(data.getField(getSearchField1(classifiedDetail.getComponentInstanceId(), "searchFields1")).getValue());
       dto.setType(data.getField(getSearchField2(classifiedDetail.getComponentInstanceId(), "searchFields2")).getValue());
     }
+    dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(ClassifiedDetail.getResourceType(), new PublicationPK(classifiedDetail.getId())));
+
     return dto;
   }
 

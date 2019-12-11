@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 
@@ -59,7 +60,6 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
 
   private ClassifiedsDTO data;
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
-  private String instanceId;
 
   interface ClassifiedsPageUiBinder extends UiBinder<Widget, ClassifiedsPage> {
   }
@@ -92,6 +92,9 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
       categories.addItem(data.getCategories().get(cat), cat);
     }
     displayList();
+
+    actionsMenu.addAction(favorite);
+    favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
   }
 
   private void displayList() {
@@ -103,7 +106,9 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
         ClassifiedItem item = new ClassifiedItem();
         item.setCategory(data.getCategories().get(classified.getCategory()));
         item.setType(data.getTypes().get(classified.getType()));
+        item.setApplication(getApp());
         item.setData(classified);
+        item.hasComments(data.hasComments());
         classifieds.add(item);
       }
     }

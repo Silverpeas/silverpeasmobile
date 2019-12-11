@@ -27,18 +27,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsLoadEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.AbstractClassifiedsPagesEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsLoadedEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsPagesEventHandler;
 import org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages;
-import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
+import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 public class ClassifiedPage extends PageContent implements ClassifiedsPagesEventHandler {
 
@@ -50,10 +50,15 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
   ActionsMenu actionsMenu;
 
   @UiField
-  HTML title, description;
+  HTML title, description, pictures, filters, price, audit;
 
+  @UiField
+  CommentsButton comments;
+
+  private boolean hasComments;
   private ClassifiedDTO data;
-  private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private String category, type;
+  private NotifyButton notification = new NotifyButton();
 
   interface ClassifiedsPageUiBinder extends UiBinder<Widget, ClassifiedPage> {
   }
@@ -63,20 +68,53 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractClassifiedsPagesEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new ClassifiedsLoadEvent());
   }
 
   @Override
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractClassifiedsPagesEvent.TYPE, this);
+    comments.stop();
+  }
+
+  public void setComments(boolean hasComments) {
+    this.hasComments = hasComments;
   }
 
   public void setData(ClassifiedDTO data) {
     this.data = data;
     title.setHTML(data.getTitle());
     description.setHTML(data.getDescription());
-    //TODO : add all informations + comments
+    price.setHTML(data.getPrice() + " €");
+    filters.setHTML("<span>" + category + "</span><span>" + type + "</span>");
+    String date = data.getCreationDate();
+    if (data.getUpdateDate() != null) date = data.getUpdateDate();
+    audit.setHTML("<span>" + data.getCreatorName() + "</span><span>" + date + "</span>");
+    String html = "";
+    for (String pic : data.getPictures()) {
+      html += "<img src='"+pic+"'/>";
+    }
+
+    pictures.setHTML(html);
+
+    notification.init(getApp().getApplicationInstance().getId(), data.getId(), NotificationDTO.TYPE_EVENT, data.getTitle(), getPageTitle());
+    actionsMenu.addAction(notification);
+
+    //TODO : add  comments
+    if (hasComments) {
+      String contentType = "Classified";
+      comments.init(data.getId(), getApp().getApplicationInstance().getId(), contentType,
+          getPageTitle(), data.getTitle(), data.getCommentsNumber());
+      comments.getElement().getStyle().clearDisplay();
+    }
+  }
+
+  public void setCategory(final String category) {
+    this.category = category;
+  }
+
+  public void setType(final String type) {
+    this.type = type;
   }
 
   @Override

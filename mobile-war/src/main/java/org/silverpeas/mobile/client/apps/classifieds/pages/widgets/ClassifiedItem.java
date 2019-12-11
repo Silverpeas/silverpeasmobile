@@ -28,18 +28,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.classifieds.pages.ClassifiedPage;
-import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.ContentDTO;
-import org.silverpeas.mobile.shared.dto.ContentsTypes;
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 
 public class ClassifiedItem extends Composite implements ClickHandler {
@@ -47,19 +42,25 @@ public class ClassifiedItem extends Composite implements ClickHandler {
   private ClassifiedDTO data;
   private String category, type;
   private static FavoriteItemUiBinder uiBinder = GWT.create(FavoriteItemUiBinder.class);
-  @UiField
-  Anchor picto;
+  private App application;
+  private boolean hasComments;
+
   @UiField
   HTML content;
   @UiField
   HTMLPanel container;
   protected ApplicationMessages msg = null;
 
+
   interface FavoriteItemUiBinder extends UiBinder<Widget, ClassifiedItem> {}
 
   public ClassifiedItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
+  }
+
+  public void hasComments(final boolean hasComments) {
+    this.hasComments = hasComments;
   }
 
   public void setData(ClassifiedDTO data) {
@@ -70,8 +71,9 @@ public class ClassifiedItem extends Composite implements ClickHandler {
     if (data.getUpdateDate() != null) {
       date = data.getUpdateDate();
     }
-    picto.setHTML("<h2><a href='#'>" + data.getTitle() + "</a></h2><img src='" + pic + "' width='200px'/>");
-    String html = "<div class='classified_type'><span>" + category + "</span><span>" + type + "</span></div>";
+
+    String html = "<h2>" + data.getTitle() + "</h2><img src='" + pic + "' width='200px'/>";
+    html += "<div class='classified_type'><span>" + category + "</span><span>" + type + "</span></div>";
     if (!data.getPrice().equalsIgnoreCase("0")) html += "<div class='classified_price'>" + data.getPrice() + " €" + "</div>";
     html += "<div class='classified_creationInfo'>" + date + "</div>";
     content.setHTML(html);
@@ -86,9 +88,17 @@ public class ClassifiedItem extends Composite implements ClickHandler {
     this.type = type;
   }
 
+  public void setApplication(final App application) {
+    this.application = application;
+  }
+
   @Override
   public void onClick(final ClickEvent event) {
     ClassifiedPage page = new ClassifiedPage();
+    page.setComments(hasComments);
+    page.setCategory(category);
+    page.setType(type);
+    page.setApp(application);
     page.setData(data);
     page.show();
   }

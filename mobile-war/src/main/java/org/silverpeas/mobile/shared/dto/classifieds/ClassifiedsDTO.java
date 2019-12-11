@@ -36,6 +36,7 @@ public class ClassifiedsDTO implements Serializable {
   private Map<String,String> types;
   private Map<String, String> categories;
   private List<ClassifiedDTO> classifieds= new ArrayList<>();
+  private boolean hasComments;
 
   public Map<String, String> getTypes() {
     return types;
@@ -55,5 +56,13 @@ public class ClassifiedsDTO implements Serializable {
 
   public void setCategories(final Map<String, String> categories) {
     this.categories = categories;
+  }
+
+  public boolean hasComments() {
+    return hasComments;
+  }
+
+  public void setHasComments(final boolean hasComments) {
+    this.hasComments = hasComments;
   }
 }

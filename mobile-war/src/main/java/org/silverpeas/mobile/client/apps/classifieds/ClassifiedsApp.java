@@ -41,13 +41,11 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
-import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, NavigationEventHandler {
 
   private ClassifiedsMessages msg;
-  private ApplicationInstanceDTO instance;
 
   public ClassifiedsApp(){
     super();
@@ -67,7 +65,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
 
   @Override
   public void loadClassifieds(final ClassifiedsLoadEvent event) {
-    final String key = "classifieds_" + instance.getId();
+    final String key = "classifieds_" + getApplicationInstance().getId();
     Command offlineAction = new Command() {
       @Override
       public void execute() {
@@ -82,7 +80,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
     AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<ClassifiedsDTO>(offlineAction) {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceClassifieds().getClassifieds(instance.getId(), this);
+        ServicesLocator.getServiceClassifieds().getClassifieds(getApplicationInstance().getId(), this);
       }
 
       @Override
@@ -98,9 +96,10 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.classifieds.name())) {
-      this.instance = event.getInstance();
+      setApplicationInstance(event.getInstance());
       ClassifiedsPage page = new ClassifiedsPage();
       page.setPageTitle(event.getInstance().getLabel());
+      page.setApp(this);
       page.show();
     }
   }
