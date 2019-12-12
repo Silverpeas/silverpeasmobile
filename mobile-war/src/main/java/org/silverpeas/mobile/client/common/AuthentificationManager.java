@@ -25,6 +25,7 @@ package org.silverpeas.mobile.client.common;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
@@ -51,7 +52,7 @@ public class AuthentificationManager {
 
   private static AuthentificationManager instance = null;
   private static final String USER_CONNECTED_KEY = "userConnected";
-  private static final String USER_PROFIL = "userProfil";
+  public static final String USER_PROFIL = "userProfil";
   private static final String DES_KEY = "LagTegshyeecnoc^";
 
   public static final String XSTKN = "X-STKN";
@@ -106,6 +107,7 @@ public class AuthentificationManager {
     FullUserDTO user = LocalStorageHelper.load(USER_CONNECTED_KEY, FullUserDTO.class);
     SpMobil.setUser(user);
     UserProfileDTO profil = LocalStorageHelper.load(USER_PROFIL, UserProfileDTO.class);
+    Window.alert("ici");
     SpMobil.setUserProfile(profil);
     return user;
   }

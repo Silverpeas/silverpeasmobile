@@ -310,7 +310,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
         @Override
         public void onSuccess(final DetailUserDTO detailUserDTO) {
-          user = detailUserDTO;
+          setUser(detailUserDTO);
+          setUserProfile(LocalStorageHelper.load(AuthentificationManager.USER_PROFIL, UserProfileDTO.class));
 
           ServicesLocator.getServiceConnection().showTermsOfService(new AsyncCallback<Boolean>() {
             @Override
