@@ -21,8 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.survey.events.app;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds, survey;
+import com.google.gwt.event.shared.GwtEvent;
+
+public abstract class AbstractSurveyAppEvent extends GwtEvent<SurveyAppEventHandler>{
+
+  public static Type<SurveyAppEventHandler> TYPE = new Type<SurveyAppEventHandler>();
+
+  public AbstractSurveyAppEvent(){
+  }
+
+  @Override
+  public Type<SurveyAppEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 }

@@ -21,8 +21,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.survey.events.pages;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds, survey;
+import org.silverpeas.mobile.shared.dto.blog.PostDTO;
+
+import java.util.List;
+
+public class SurveysLoadedEvent extends AbstractSurveyPagesEvent {
+
+  public SurveysLoadedEvent(){
+    super();
+  }
+
+  @Override
+  protected void dispatch(SurveyPagesEventHandler handler) {
+    handler.onSurveysLoad(this);
+  }
+
+
 }
