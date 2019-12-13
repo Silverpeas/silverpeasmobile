@@ -59,11 +59,15 @@
       l = "en";
     }
 
+    String loginPage = request.getParameter("forceLoginPage");
+    boolean displayLoginPage = false;
+    if (loginPage != null && loginPage.equalsIgnoreCase("true")) displayLoginPage = true;
+
     // SSO case
     SynchronizerToken token = (SynchronizerToken) ((HttpServletRequest) request).getSession().getAttribute("X-STKN");
     LocalizationBundle resourceGeneralLook = ResourceLocator.getLocalizationBundle("org.silverpeas.lookAndFeel.generalLook", l);
     String ssoPath = resourceGeneralLook.getString("login.sso.path");
-    if (token == null && (DomainTypeRegistry.get().exists(DomainType.GOOGLE) || DomainTypeRegistry.get().exists(DomainType.SCIM)) && (ssoPath != null && !ssoPath.isEmpty())) {
+    if (!displayLoginPage && token == null && (DomainTypeRegistry.get().exists(DomainType.GOOGLE) || DomainTypeRegistry.get().exists(DomainType.SCIM)) && (ssoPath != null && !ssoPath.isEmpty())) {
       if (!ssoPath.startsWith("/")) {
         ssoPath = "/" + ssoPath;
       }
