@@ -37,8 +37,8 @@
       <g:HTML ui:field="terms" styleName="termsOfServiceText"></g:HTML>
       <div class=" ui-controlgroup ui-controlgroup-horizontal">
         <div class="ui-controlgroup-controls ">
-          <g:Anchor ui:field="accept" styleName="btn-validate ui-link smaller multiple">Accept</g:Anchor>
-          <g:Anchor ui:field="refuse" styleName="btn-validate ui-link smaller multiple">Refuse</g:Anchor>
+          <g:Anchor ui:field="accept" styleName="btn-validate ui-link smaller multiple"><ui:safehtml from="{msg.accept}"/></g:Anchor>
+          <g:Anchor ui:field="refuse" styleName="btn-validate ui-link smaller multiple"><ui:safehtml from="{msg.refuse}"/></g:Anchor>
         </div>
       </div>
 
