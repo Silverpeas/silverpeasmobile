@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,11 +21,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.survey.events.app;
+package org.silverpeas.mobile.shared.services;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
+import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
 
-public interface SurveyAppEventHandler extends EventHandler{
-  void loadSurveys(SurveysLoadEvent event);
-  void loadSurvey(SurveyLoadEvent event);
+import java.util.List;
+
+public interface ServiceSurveyAsync {
+  void getSurveys(String instanceId, final AsyncCallback<List<SurveyDTO>> async);
+
+  void getSurvey(String id, final AsyncCallback<SurveyDetailDTO> async);
 }

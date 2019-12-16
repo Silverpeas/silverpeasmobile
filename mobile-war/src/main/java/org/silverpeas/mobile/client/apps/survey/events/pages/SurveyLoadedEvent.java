@@ -21,11 +21,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.survey.events.app;
+package org.silverpeas.mobile.client.apps.survey.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
 
-public interface SurveyAppEventHandler extends EventHandler{
-  void loadSurveys(SurveysLoadEvent event);
-  void loadSurvey(SurveyLoadEvent event);
+
+public class SurveyLoadedEvent extends AbstractSurveyPagesEvent {
+
+  private SurveyDetailDTO survey = null;
+
+  public SurveyLoadedEvent(SurveyDetailDTO survey){
+    super();
+    this.survey = survey;
+  }
+
+  @Override
+  protected void dispatch(SurveyPagesEventHandler handler) {
+    handler.onSurveyLoad(this);
+  }
+
+  public SurveyDetailDTO getSurvey() {
+    return survey;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,11 +21,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.survey.events.app;
+package org.silverpeas.mobile.shared.exceptions;
 
-import com.google.gwt.event.shared.EventHandler;
+/**
+ * @author svu
+ */
+public class SurveyException extends Exception {
+  private static final long serialVersionUID = 1L;
 
-public interface SurveyAppEventHandler extends EventHandler{
-  void loadSurveys(SurveysLoadEvent event);
-  void loadSurvey(SurveyLoadEvent event);
+  public SurveyException() {
+    super();
+  }
+
+  public SurveyException(String message, Throwable caught) {
+    super(message, caught);
+  }
+
+  public SurveyException(String message) {
+    super(message);
+  }
+
+  public SurveyException(Throwable caught) {
+    super(caught);
+  }
 }

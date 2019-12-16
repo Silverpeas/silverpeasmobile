@@ -21,11 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.survey.events.app;
+package org.silverpeas.mobile.shared.services;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
+import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
+import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import org.silverpeas.mobile.shared.exceptions.SurveyException;
 
-public interface SurveyAppEventHandler extends EventHandler{
-  void loadSurveys(SurveysLoadEvent event);
-  void loadSurvey(SurveyLoadEvent event);
+import java.util.List;
+
+@RemoteServiceRelativePath("Survey")
+public interface ServiceSurvey extends RemoteService {
+  public List<SurveyDTO> getSurveys(String instanceId) throws SurveyException, AuthenticationException;
+  public SurveyDetailDTO getSurvey(String id) throws SurveyException, AuthenticationException;
 }

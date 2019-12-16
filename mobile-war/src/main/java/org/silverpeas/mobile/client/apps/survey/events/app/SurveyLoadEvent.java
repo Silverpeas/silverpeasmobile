@@ -23,9 +23,24 @@
 
 package org.silverpeas.mobile.client.apps.survey.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+public class SurveyLoadEvent extends AbstractSurveyAppEvent {
 
-public interface SurveyAppEventHandler extends EventHandler{
-  void loadSurveys(SurveysLoadEvent event);
-  void loadSurvey(SurveyLoadEvent event);
+  private String id;
+
+  public SurveyLoadEvent() {
+    super();
+  }
+
+  @Override
+  protected void dispatch(SurveyAppEventHandler handler) {
+    handler.loadSurvey(this);
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
 }

@@ -27,4 +27,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface SurveyPagesEventHandler extends EventHandler{
 	void onSurveysLoad(SurveysLoadedEvent event);
+  void onSurveyLoad(SurveyLoadedEvent event);
 }

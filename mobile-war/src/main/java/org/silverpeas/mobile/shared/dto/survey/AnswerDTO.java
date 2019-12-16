@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,11 +21,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.survey.events.app;
+package org.silverpeas.mobile.shared.dto.survey;
 
-import com.google.gwt.event.shared.EventHandler;
+import java.io.Serializable;
 
-public interface SurveyAppEventHandler extends EventHandler{
-  void loadSurveys(SurveysLoadEvent event);
-  void loadSurvey(SurveyLoadEvent event);
+/**
+ * @author svu
+ */
+public class AnswerDTO implements Serializable {
+  private String id;
+  private String label;
+  private String comments;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(final String label) {
+    this.label = label;
+  }
+
+  public String getComments() {
+    return comments;
+  }
+
+  public void setComments(final String comments) {
+    this.comments = comments;
+  }
 }
