@@ -31,6 +31,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
@@ -75,6 +76,9 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
   @UiField
   CheckBox anonymComment;
 
+  @UiField
+  HTMLPanel secondPart;
+
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
   private SurveyDetailDTO data;
@@ -118,11 +122,7 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
         questions.add(item);
       }
     } else {
-      ok.setVisible(false);
-      cancel.setVisible(false);
-      comments.setVisible(false);
-      anonymComment.setVisible(false);
-      Window.alert("nbParticipation " + data.getNbParticipation());
+      secondPart.setVisible(false);
     }
   }
 
