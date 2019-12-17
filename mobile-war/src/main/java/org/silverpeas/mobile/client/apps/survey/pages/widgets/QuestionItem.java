@@ -34,9 +34,11 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.core.questioncontainer.answer.model.Answer;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.survey.AnswerDTO;
 import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
+import org.silverpeas.mobile.shared.dto.survey.ResponseDTO;
 
 public class QuestionItem extends Composite {
 
@@ -64,23 +66,63 @@ public class QuestionItem extends Composite {
     label.setText(data.getLabel());
 
     if (data.getType().equalsIgnoreCase("open")) {
-      field.add(new TextArea());
+      TextArea text = new TextArea();
+      text.getElement().setAttribute ("ref", data.getAnswers().get(0).getId());
+      field.add(text);
     } else if (data.getType().equalsIgnoreCase("radio")) {
       for (AnswerDTO answer : data.getAnswers()) {
-        RadioButton r = new RadioButton(answer.getLabel(), answer.getLabel());
+        RadioButton r = new RadioButton(data.getId(), answer.getLabel());
+        r.getElement().setAttribute("ref", answer.getId());
         field.add(r);
       }
     }  else if (data.getType().equalsIgnoreCase("checkbox")) {
       for (AnswerDTO answer : data.getAnswers()) {
         CheckBox cb = new CheckBox(answer.getLabel());
+        cb.getElement().setAttribute("ref", answer.getId());
         field.add(cb);
       }
     }  else if (data.getType().equalsIgnoreCase("list")) {
       ListBox l = new ListBox();
       for (AnswerDTO answer : data.getAnswers()) {
-        l.addItem(answer.getLabel());
+        l.addItem(answer.getLabel(), answer.getId());
       }
       field.add(l);
     }
+  }
+
+  public QuestionDTO updateWithResponse() {
+    for (int i = 0; i < field.getWidgetCount(); i++) {
+      Widget w = field.getWidget(i);
+      if (w instanceof TextArea) {
+        TextArea f = (TextArea) w;
+        ResponseDTO response = new ResponseDTO();
+        response.setId(f.getElement().getAttribute("ref"));
+        response.setContent(f.getText());
+        data.getResponses().add(response);
+      } else if (w instanceof ListBox) {
+        ListBox f = (ListBox) w;
+        ResponseDTO response = new ResponseDTO();
+        response.setId(f.getSelectedValue());
+        response.setContent("");
+        data.getResponses().add(response);
+      } else if(w instanceof RadioButton) {
+        RadioButton f = (RadioButton) w;
+        if (f.getValue()) {
+          ResponseDTO response = new ResponseDTO();
+          response.setId(f.getElement().getAttribute("ref"));
+          response.setContent("");
+          data.getResponses().add(response);
+        }
+      } else if(w instanceof CheckBox) {
+        CheckBox f = (CheckBox) w;
+        if (f.getValue()) {
+          ResponseDTO response = new ResponseDTO();
+          response.setId(f.getElement().getAttribute("ref"));
+          response.setContent("");
+          data.getResponses().add(response);
+        }
+      }
+    }
+     return data;
   }
 }

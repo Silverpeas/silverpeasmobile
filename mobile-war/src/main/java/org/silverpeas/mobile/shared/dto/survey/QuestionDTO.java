@@ -37,6 +37,7 @@ public class QuestionDTO implements Serializable {
   private String type;
   private String label;
   private List<AnswerDTO> answers = new ArrayList<>();
+  private List<ResponseDTO> responses = new ArrayList<>();
 
 
   public String getType() {
@@ -65,5 +66,9 @@ public class QuestionDTO implements Serializable {
 
   public void setId(final String id) {
     this.id = id;
+  }
+
+  public List<ResponseDTO> getResponses() {
+    return responses;
   }
 }

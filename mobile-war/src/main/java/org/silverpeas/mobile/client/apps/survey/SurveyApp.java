@@ -33,6 +33,7 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.survey.events.app.AbstractSurveyAppEvent;
 import org.silverpeas.mobile.client.apps.survey.events.app.SurveyAppEventHandler;
 import org.silverpeas.mobile.client.apps.survey.events.app.SurveyLoadEvent;
+import org.silverpeas.mobile.client.apps.survey.events.app.SurveySaveEvent;
 import org.silverpeas.mobile.client.apps.survey.events.app.SurveysLoadEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyLoadedEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveysLoadedEvent;
@@ -42,6 +43,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -127,7 +129,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void loadSurvey(final SurveyLoadEvent event) {
-      ServicesLocator.getServiceSurvey().getSurvey(event.getId(), new AsyncCallback<SurveyDetailDTO>() {
+      ServicesLocator.getServiceSurvey().getSurvey(event.getId(), instance.getId(), new AsyncCallback<SurveyDetailDTO>() {
         @Override
         public void onFailure(final Throwable throwable) {
           EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
@@ -136,6 +138,22 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
         @Override
         public void onSuccess(final SurveyDetailDTO surveyDetailDTO) {
           EventBus.getInstance().fireEvent(new SurveyLoadedEvent(surveyDetailDTO));
+        }
+      });
+  }
+
+  @Override
+  public void saveSurvey(final SurveySaveEvent event) {
+      ServicesLocator.getServiceSurvey().saveSurvey(event.getData(), new AsyncCallback<Void>() {
+        @Override
+        public void onFailure(final Throwable throwable) {
+          EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+        }
+
+        @Override
+        public void onSuccess(final Void aVoid) {
+          //TODO : go back
+          PageHistory.getInstance().back();
         }
       });
   }

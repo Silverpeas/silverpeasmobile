@@ -23,6 +23,7 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.silverpeas.core.admin.service.OrganizationControllerProvider;
 import org.silverpeas.core.questioncontainer.answer.model.Answer;
 import org.silverpeas.core.questioncontainer.container.model.QuestionContainerDetail;
 import org.silverpeas.core.questioncontainer.container.model.QuestionContainerHeader;
@@ -31,6 +32,7 @@ import org.silverpeas.core.questioncontainer.container.service.QuestionContainer
 import org.silverpeas.core.questioncontainer.question.model.Question;
 import org.silverpeas.mobile.shared.dto.survey.AnswerDTO;
 import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
+import org.silverpeas.mobile.shared.dto.survey.ResponseDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -38,8 +40,11 @@ import org.silverpeas.mobile.shared.exceptions.SurveyException;
 import org.silverpeas.mobile.shared.services.ServiceSurvey;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service de gestion des news.
@@ -60,15 +65,54 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
   }
 
   @Override
-  public SurveyDetailDTO getSurvey(final String id) throws SurveyException, AuthenticationException {
+  public void saveSurvey(final SurveyDetailDTO data) throws SurveyException, AuthenticationException {
     checkUserInSession();
-    QuestionContainerPK pk = new QuestionContainerPK(id, null, null);
-    QuestionContainerDetail questions = QuestionContainerService.get().getQuestionContainer(pk, getUserInSession().getId());
-    return populate(questions);
+    QuestionContainerPK pk = new QuestionContainerPK(data.getId(), null, null);
+
+    Map<String, List<String>> reply = new HashMap<>();
+
+    for (QuestionDTO question : data.getQuestions()) {
+      List<String> values = new ArrayList<>();
+      for(ResponseDTO response : question.getResponses()) {
+        values.add(response.getId());
+        values.add("OA" + response.getContent());
+      }
+      reply.put(question.getId(), values);
+    }
+    QuestionContainerService.get().recordReplyToQuestionContainerByUser(pk, getUserInSession().getId(), reply, data.getComments(), data.isAnonymComment());
   }
 
-  private SurveyDetailDTO populate(final QuestionContainerDetail questions) {
+  @Override
+  public SurveyDetailDTO getSurvey(final String id, final String instanceId) throws SurveyException, AuthenticationException {
+    checkUserInSession();
+
+    QuestionContainerPK pk = new QuestionContainerPK(id, null, null);
+    int nbParticipations = QuestionContainerService.get().getUserNbParticipationsByFatherId(pk, getUserInSession().getId());
+
+    QuestionContainerDetail questions = QuestionContainerService.get().getQuestionContainer(pk, getUserInSession().getId());
+    return populate(questions, instanceId, nbParticipations);
+  }
+
+  private boolean isMultipleParticipant(String componentId) {
+    List<String> userMultipleRole = new ArrayList<>();
+    userMultipleRole.add("userMultiple");
+    String[] ids = OrganizationControllerProvider.getOrganisationController().getUsersIdsByRoleNames(componentId, userMultipleRole);
+
+    return Arrays.asList(ids).contains(getUserInSession().getId());
+  }
+
+  private SurveyDetailDTO populate(final QuestionContainerDetail questions, final String instanceId, final int nbParticipations) {
     SurveyDetailDTO dto = new SurveyDetailDTO();
+    dto.setNbParticipation(nbParticipations);
+    if (isMultipleParticipant(instanceId)) {
+      dto.setCanParticipate(true);
+    } else if (nbParticipations > 1) {
+      dto.setCanParticipate(false);
+    } else if (nbParticipations < 1) {
+      dto.setCanParticipate(true);
+    }
+
+    dto.setId(questions.getId());
     for (Question question : questions.getQuestions()) {
       QuestionDTO q = new QuestionDTO();
       q.setId(question.getPK().getId());

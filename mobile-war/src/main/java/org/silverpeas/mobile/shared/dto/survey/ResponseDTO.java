@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,20 +21,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.dto.survey;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
-import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.SurveyException;
+import java.io.Serializable;
 
-import java.util.List;
+/**
+ * @author svu
+ */
+public class ResponseDTO implements Serializable {
+  private String id;
+  private String content;
 
-@RemoteServiceRelativePath("Survey")
-public interface ServiceSurvey extends RemoteService {
-  public List<SurveyDTO> getSurveys(String instanceId) throws SurveyException, AuthenticationException;
-  public SurveyDetailDTO getSurvey(String id, String instanceId) throws SurveyException, AuthenticationException;
-  public void saveSurvey(final SurveyDetailDTO data) throws SurveyException, AuthenticationException;
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(final String content) {
+    this.content = content;
+  }
 }

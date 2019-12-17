@@ -32,5 +32,7 @@ import java.util.List;
 public interface ServiceSurveyAsync {
   void getSurveys(String instanceId, final AsyncCallback<List<SurveyDTO>> async);
 
-  void getSurvey(String id, final AsyncCallback<SurveyDetailDTO> async);
+  void saveSurvey(final SurveyDetailDTO data, final AsyncCallback<Void> async);
+
+  void getSurvey(String id, String instanceId, final AsyncCallback<SurveyDetailDTO> async);
 }

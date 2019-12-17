@@ -28,4 +28,5 @@ import com.google.gwt.event.shared.EventHandler;
 public interface SurveyAppEventHandler extends EventHandler{
   void loadSurveys(SurveysLoadEvent event);
   void loadSurvey(SurveyLoadEvent event);
+  void saveSurvey(SurveySaveEvent event);
 }

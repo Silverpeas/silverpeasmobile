@@ -75,8 +75,10 @@ public class SurveyItem extends Composite implements ClickHandler {
 
   @Override
   public void onClick(final ClickEvent event) {
-    SurveyPage page = new SurveyPage();
-    page.setData(data.getId());
-    page.show();
+    if (data.getId() != null) {
+      SurveyPage page = new SurveyPage();
+      page.setData(data.getId());
+      page.show();
+    }
   }
 }

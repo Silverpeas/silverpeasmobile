@@ -31,9 +31,54 @@ import java.util.List;
  * @author svu
  */
 public class SurveyDetailDTO implements Serializable {
-    private List<QuestionDTO> questions = new ArrayList<>();
+  private String id;
+  private List<QuestionDTO> questions = new ArrayList<>();
+  private String comments;
+  private boolean anonymComment;
+  private boolean canParticipate;
+  private int nbParticipation;
 
   public List<QuestionDTO> getQuestions() {
     return questions;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
+
+  public void setComments(final String text) {
+    this.comments = text;
+  }
+
+  public String getComments() {
+    return comments;
+  }
+
+  public boolean isAnonymComment() {
+    return anonymComment;
+  }
+
+  public void setAnonymComment(final boolean anonymComment) {
+    this.anonymComment = anonymComment;
+  }
+
+  public boolean isCanParticipate() {
+    return canParticipate;
+  }
+
+  public void setCanParticipate(final boolean canParticipate) {
+    this.canParticipate = canParticipate;
+  }
+
+  public int getNbParticipation() {
+    return nbParticipation;
+  }
+
+  public void setNbParticipation(final int nbParticipation) {
+    this.nbParticipation = nbParticipation;
   }
 }

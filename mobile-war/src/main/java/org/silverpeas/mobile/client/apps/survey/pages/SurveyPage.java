@@ -28,10 +28,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.survey.events.app.SurveyLoadEvent;
+import org.silverpeas.mobile.client.apps.survey.events.app.SurveySaveEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.AbstractSurveyPagesEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyLoadedEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyPagesEventHandler;
@@ -46,6 +50,8 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
+
+import java.util.Iterator;
 
 public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
 
@@ -62,6 +68,12 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
 
   @UiField
   Anchor ok, cancel;
+
+  @UiField
+  TextArea comments;
+
+  @UiField
+  CheckBox anonymComment;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
@@ -99,16 +111,33 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
   public void onSurveyLoad(final SurveyLoadedEvent event) {
     Notification.activityStop();
     this.data = event.getSurvey();
-    for (QuestionDTO q : data.getQuestions()) {
-      QuestionItem item = new QuestionItem();
-      item.setData(q);
-      questions.add(item);
+    if (data.isCanParticipate()) {
+      for (QuestionDTO q : data.getQuestions()) {
+        QuestionItem item = new QuestionItem();
+        item.setData(q);
+        questions.add(item);
+      }
+    } else {
+      ok.setVisible(false);
+      cancel.setVisible(false);
+      comments.setVisible(false);
+      anonymComment.setVisible(false);
+      Window.alert("nbParticipation " + data.getNbParticipation());
     }
   }
 
   @UiHandler("ok")
   protected void ok(ClickEvent e) {
-    //TODO
+    data.getQuestions().clear();
+    Iterator it = questions.iterator();
+    while (it.hasNext()) {
+      QuestionItem item = (QuestionItem) it.next();
+      data.getQuestions().add(item.updateWithResponse());
+    }
+    data.setComments(comments.getText());
+    data.setAnonymComment(anonymComment.getValue().booleanValue());
+
+    EventBus.getInstance().fireEvent(new SurveySaveEvent(data));
   }
 
   @UiHandler("cancel")
