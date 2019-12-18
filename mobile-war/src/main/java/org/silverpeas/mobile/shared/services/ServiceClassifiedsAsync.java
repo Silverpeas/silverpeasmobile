@@ -36,4 +36,6 @@ import java.util.List;
 
 public interface ServiceClassifiedsAsync {
   void getClassifieds(String instanceId, final AsyncCallback<ClassifiedsDTO> async);
+
+  void getClassified(String instanceId, String id, final AsyncCallback<ClassifiedsDTO> async);
 }

@@ -25,10 +25,12 @@ package org.silverpeas.mobile.client.apps.classifieds;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.AbstractClassifiedsAppEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsAppEventHandler;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsLoadEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsLoadedEvent;
+import org.silverpeas.mobile.client.apps.classifieds.pages.ClassifiedPage;
 import org.silverpeas.mobile.client.apps.classifieds.pages.ClassifiedsPage;
 import org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -36,11 +38,17 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, NavigationEventHandler {
@@ -105,11 +113,39 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
   }
 
   @Override
+  public void startWithContent(final ContentDTO content) {
+    ApplicationInstanceDTO appDTO = new ApplicationInstanceDTO();
+    appDTO.setId(content.getInstanceId());
+    setApplicationInstance(appDTO);
+    if (content.getType().equals(ContentsTypes.Classified.toString())) {
+      ServicesLocator.getServiceClassifieds().getClassified(content.getInstanceId(), content.getId(), new AsyncCallback<ClassifiedsDTO>() {
+        @Override
+        public void onFailure(final Throwable throwable) {
+          EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+        }
+
+        @Override
+        public void onSuccess(final ClassifiedsDTO data) {
+          ClassifiedDTO c = data.getClassifieds().get(0);
+          ClassifiedPage page = new ClassifiedPage();
+          page.setComments(data.hasComments());
+          page.setCategory(c.getCategory());
+          page.setType(c.getType());
+          page.setApp(ClassifiedsApp.this);
+          page.setData(c);
+          Notification.activityStop();
+          page.show();
+        }
+      });
+    }
+  }
+
+  @Override
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.classifieds.name())) {
       super.showContent(event);
     } else {
-      //TODO
+      startWithContent(event.getContent());
     }
   }
 }

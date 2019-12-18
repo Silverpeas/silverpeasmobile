@@ -67,6 +67,19 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 
   @Override
+  public ClassifiedsDTO getClassified(String instanceId, String id) throws ClassifiedsException, AuthenticationException {
+    ClassifiedsDTO dto = getClassifieds(instanceId);
+    for (ClassifiedDTO c : dto.getClassifieds()) {
+      if (c.getId().equals(id)) {
+        dto.getClassifieds().clear();
+        dto.getClassifieds().add(c);
+        return dto;
+      }
+    }
+    return dto;
+  }
+
+  @Override
   public ClassifiedsDTO getClassifieds(String instanceId) throws ClassifiedsException, AuthenticationException {
     checkUserInSession();
     ClassifiedsDTO dto = new ClassifiedsDTO();

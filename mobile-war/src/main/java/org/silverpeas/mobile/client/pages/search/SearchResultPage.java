@@ -83,10 +83,6 @@ public class SearchResultPage extends PageContent implements View {
             }
           }
           EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
-
-
-
-
         }
       });
       link.setText(result.getTitle());

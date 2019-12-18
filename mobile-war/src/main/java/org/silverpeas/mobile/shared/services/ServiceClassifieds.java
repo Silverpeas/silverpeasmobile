@@ -32,4 +32,5 @@ import org.silverpeas.mobile.shared.exceptions.ClassifiedsException;
 @RemoteServiceRelativePath("Classifieds")
 public interface ServiceClassifieds extends RemoteService {
   public ClassifiedsDTO getClassifieds(String instanceId) throws ClassifiedsException, AuthenticationException;
+  public ClassifiedsDTO getClassified(String instanceId, String id) throws ClassifiedsException, AuthenticationException;
 }
