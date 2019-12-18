@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.core.questioncontainer.answer.model.Answer;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.survey.AnswerDTO;
 import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;

@@ -23,7 +23,6 @@
 
 package org.silverpeas.mobile.client.apps.survey.events.pages;
 
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 
 import java.util.List;
@@ -31,10 +30,12 @@ import java.util.List;
 public class SurveysLoadedEvent extends AbstractSurveyPagesEvent {
 
   private List<SurveyDTO> surveys = null;
+  private String instanceId;
 
-  public SurveysLoadedEvent(List<SurveyDTO> surveys){
+  public SurveysLoadedEvent(List<SurveyDTO> surveys, String instanceId){
     super();
     this.surveys = surveys;
+    this.instanceId = instanceId;
   }
 
   @Override

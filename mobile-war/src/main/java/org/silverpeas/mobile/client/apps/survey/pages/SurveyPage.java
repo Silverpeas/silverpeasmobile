@@ -28,13 +28,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.survey.events.app.SurveyLoadEvent;
 import org.silverpeas.mobile.client.apps.survey.events.app.SurveySaveEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.AbstractSurveyPagesEvent;
@@ -68,7 +67,7 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
   UnorderedList questions;
 
   @UiField
-  Anchor ok, cancel;
+  Anchor ok, cancel, newParticipation;
 
   @UiField
   TextArea comments;
@@ -77,10 +76,11 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
   CheckBox anonymComment;
 
   @UiField
-  HTMLPanel secondPart;
+  HTMLPanel secondPart, participationPart;
 
-  private AddToFavoritesButton favorite = new AddToFavoritesButton();
-  private String instanceId;
+  @UiField
+  InlineHTML participations;
+
   private SurveyDetailDTO data;
 
   interface SurveyPageUiBinder extends UiBinder<Widget, SurveyPage> {
@@ -115,14 +115,26 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
   public void onSurveyLoad(final SurveyLoadedEvent event) {
     Notification.activityStop();
     this.data = event.getSurvey();
-    if (data.isCanParticipate()) {
-      for (QuestionDTO q : data.getQuestions()) {
-        QuestionItem item = new QuestionItem();
-        item.setData(q);
-        questions.add(item);
-      }
+    participations.setText(msg.nbParticipation(""+data.getNbParticipation()));
+    if (data.isCanParticipate() && data.getNbParticipation() < 1) {
+      insertQuestions();
+      participationPart.setVisible(false);
     } else {
       secondPart.setVisible(false);
+      participationPart.setVisible(true);
+      if (data.getNbParticipation() > 1) {
+        newParticipation.setVisible(true);
+      } else {
+        newParticipation.setVisible(false);
+      }
+    }
+  }
+
+  private void insertQuestions() {
+    for (QuestionDTO q : data.getQuestions()) {
+      QuestionItem item = new QuestionItem();
+      item.setData(q);
+      questions.add(item);
     }
   }
 
@@ -143,5 +155,12 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
   @UiHandler("cancel")
   protected void cancel(ClickEvent e) {
     back();
+  }
+
+  @UiHandler("newParticipation")
+  protected void newParticipation(ClickEvent e) {
+    participationPart.setVisible(false);
+    secondPart.setVisible(true);
+    insertQuestions();
   }
 }

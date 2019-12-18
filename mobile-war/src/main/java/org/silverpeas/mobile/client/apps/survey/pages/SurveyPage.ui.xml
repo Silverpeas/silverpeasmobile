@@ -35,9 +35,9 @@
     <base:ActionsMenu ui:field="actionsMenu"/>
     <components:UnorderedList ui:field="questions" styleName="liste-questions"/>
     <g:HTMLPanel ui:field="secondPart">
-      <g:InlineHTML>Commentaires</g:InlineHTML>
+      <g:InlineHTML><ui:text from="{msg.comments}"/></g:InlineHTML>
       <g:TextArea ui:field="comments"></g:TextArea>
-      <g:InlineHTML>Commentaire anonyme</g:InlineHTML>
+      <g:InlineHTML><ui:text from="{msg.commentsAnonymous}"/></g:InlineHTML>
       <g:CheckBox ui:field="anonymComment"></g:CheckBox>
       <div class=" ui-controlgroup ui-controlgroup-horizontal">
         <div class="ui-controlgroup-controls ">
@@ -45,6 +45,10 @@
           <g:Anchor ui:field="cancel" styleName="btn-validate ui-link smaller multiple"></g:Anchor>
         </div>
       </div>
+    </g:HTMLPanel>
+    <g:HTMLPanel ui:field="participationPart">
+      <g:InlineHTML ui:field="participations"></g:InlineHTML>
+      <g:Anchor ui:field="newParticipation" styleName="btn-validate ui-link smaller multiple">Nouvelle participation</g:Anchor>
     </g:HTMLPanel>
   </g:HTMLPanel>
 </ui:UiBinder> 

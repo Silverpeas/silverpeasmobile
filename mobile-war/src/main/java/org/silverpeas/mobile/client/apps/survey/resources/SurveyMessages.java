@@ -27,5 +27,8 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface SurveyMessages extends Messages {
   String title();
+  String comments();
+  String commentsAnonymous();
+  String nbParticipation(String nb);
 
 }

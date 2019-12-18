@@ -96,8 +96,6 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void loadSurveys(final SurveysLoadEvent event) {
-    //TODO
-
     final String key = "surveys_" + instance.getId();
     Command offlineAction = new Command() {
       @Override
@@ -106,7 +104,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
         if (result == null) {
           result = new ArrayList<SurveyDTO>();
         }
-        EventBus.getInstance().fireEvent(new SurveysLoadedEvent(result));
+        EventBus.getInstance().fireEvent(new SurveysLoadedEvent(result, instance.getId()));
       }
     };
 
@@ -120,7 +118,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
       public void onSuccess(List<SurveyDTO> result) {
         super.onSuccess(result);
         LocalStorageHelper.store(key, List.class, result);
-        EventBus.getInstance().fireEvent(new SurveysLoadedEvent(result));
+        EventBus.getInstance().fireEvent(new SurveysLoadedEvent(result, instance.getId()));
       }
     };
     action.attempt();
