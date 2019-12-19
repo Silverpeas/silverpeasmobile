@@ -29,6 +29,7 @@ import org.silverpeas.core.index.search.SearchEngineProvider;
 import org.silverpeas.core.index.search.model.MatchingIndexEntry;
 import org.silverpeas.core.index.search.model.QueryDescription;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.SearchException;
@@ -61,7 +62,8 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
             result.getObjectType().equals(ContentsTypes.Streaming.toString()) ||
             result.getObjectType().equals(ContentsTypes.Publication.toString()) ||
             result.getObjectType().contains(ContentsTypes.Attachment.toString()) ||
-            result.getObjectType().contains(ContentsTypes.Classified.toString())) {
+            result.getObjectType().equals(ContentsTypes.Classified.toString()) ||
+            result.getObjectType().equals(ContentsTypes.Node.toString())) {
           String title = result.getTitle(getUserInSession().getUserPreferences().getLanguage());
           if (title != null && title.contains("wysiwyg") == false) {
             ResultDTO entry = new ResultDTO();
@@ -72,6 +74,10 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
               attachmentId = attachmentId
                   .replace("_" + getUserInSession().getUserPreferences().getLanguage(), "");
               entry.setAttachmentId(attachmentId);
+            } else if(result.getObjectType().equals(ContentsTypes.Node.toString())) {
+              if (result.getComponent().startsWith(Apps.kmelia.toString())) {
+                entry.setType(ContentsTypes.Folder.name());
+              }
             } else {
               entry.setType(result.getObjectType());
             }
