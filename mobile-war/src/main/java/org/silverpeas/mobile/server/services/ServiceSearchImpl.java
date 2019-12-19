@@ -77,6 +77,8 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
             } else if(result.getObjectType().equals(ContentsTypes.Node.toString())) {
               if (result.getComponent().startsWith(Apps.kmelia.toString())) {
                 entry.setType(ContentsTypes.Folder.name());
+              } else if(result.getComponent().startsWith(Apps.gallery.toString())) {
+                entry.setType(ContentsTypes.Album.name());
               }
             } else {
               entry.setType(result.getObjectType());
