@@ -63,7 +63,8 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
             result.getObjectType().equals(ContentsTypes.Publication.toString()) ||
             result.getObjectType().contains(ContentsTypes.Attachment.toString()) ||
             result.getObjectType().equals(ContentsTypes.Classified.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Node.toString())) {
+            result.getObjectType().equals(ContentsTypes.Node.toString()) ||
+            result.getObjectType().equals(ContentsTypes.QuestionContainer.toString())) {
           String title = result.getTitle(getUserInSession().getUserPreferences().getLanguage());
           if (title != null && title.contains("wysiwyg") == false) {
             ResultDTO entry = new ResultDTO();
