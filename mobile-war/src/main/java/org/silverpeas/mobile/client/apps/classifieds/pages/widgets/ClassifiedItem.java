@@ -72,7 +72,8 @@ public class ClassifiedItem extends Composite implements ClickHandler {
       date = data.getUpdateDate();
     }
 
-    String html = "<h2>" + data.getTitle() + "</h2><img src='" + pic + "' width='200px'/>";
+    String html = "<div class='thumbnail'><img src='" + pic + "' width='200px'/></div>";
+    html += "<h2>" + data.getTitle() + "</h2>";
     html += "<div class='classified_type'><span>" + category + "</span><span>" + type + "</span></div>";
     if (!data.getPrice().equalsIgnoreCase("0")) html += "<div class='classified_price'>" + data.getPrice() + " €" + "</div>";
     html += "<div class='classified_creationInfo'>" + date + "</div>";

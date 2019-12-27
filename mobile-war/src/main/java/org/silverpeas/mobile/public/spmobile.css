@@ -2242,32 +2242,128 @@ form .forms .fields > li:nth-child(even) {
   margin-bottom: 2em;
 }
 
+.classified_type {
+  margin-bottom:0.35em;
+}
 .classified_type span {
   margin: 0 .25em .15em 0;
-  background-color: #acacac;
-  color: white;
-  border-radius: 3px;
-  border: 1px solid #acacac;
-  padding: .35em .5em;
+  color: #5c5c5c;
+  padding:0;
+  font-size: 0.9em;
+}
+
+.classified_type span:before {
+  content:'[ ';
+}
+
+.classified_type span:after {
+  content:' ]';
 }
 
 .classified_price {
-  color: #FFF;
+  color: #56a3d9;
+  font-weight:bold;
   font-size: 1.15em;
-  font-weight: bold;
-  padding: .15em .5em;
-  background-color: #56a3d9;
-  float: right;
-  border: 1px solid #56a3d9;
-  border-radius: 3px;
 }
 
-.classified_creationInfo {
-  color: #777;
-  float: right;
-  clear: both;
+.liste-annonces li h2{
+  font-size:1em;
+  color:#333333;
+  font-weight:500;
+  padding:0;
+  margin:0.25em 0;
 }
-
 .liste-annonces li {
-  margin: 0.5em;
+  min-height:130px;
+  padding:0.15em;
+  margin:0;
+}
+.liste-annonces div.thumbnail {
+  width:125px;
+  height:125px;
+  background-color:#ececec;
+  float:left;
+  text-align:center;
+  margin:0 0.50em;
+}
+.liste-annonces .classified_price {
+  margin:0.50em 0 ;
+}
+
+.liste-annonces div.thumbnail img{
+  margin:auto;
+  max-height:125px;
+  max-width:125px;
+}
+
+.classified_form {
+  margin-bottom:1em;
+}
+.classified_form label{
+  font-weight:bold;
+}
+.classified_form label,
+.classified_form .fieldInput{
+  font-size:12px;
+}
+#classified h2 {
+  font-size:14px;
+  font-weight:500;
+  margin:0;
+  padding:0;
+  width:calc( 100% - 16px - 1em );
+  margin-bottom:1em;
+}
+
+#classified .btn-validate.contact-announcer {
+  margin-top:1em;
+}
+
+#classified .classified_price {
+  color:#FFF;
+  background-color:#56a3d9;
+  border-radius:6px;
+  padding:0.4em 0.5em ;
+  font-weight: 500;
+  font-size: 1.15em;
+  display:inline-block;
+  float:right;
+  margin-top:0.25em;
+}
+#classified .classified_pictures {
+  position:relative;
+}
+
+#classified .classified_creationInfo {
+  margin:0.5em 0;
+}
+
+
+#classified .classified_pictures ul {
+  list-style-type:none;
+  margin:0;
+  padding:0;
+}
+#classified .classified_pictures ul li {
+  margin:0;
+  padding:0;
+}
+
+#classified .classified_pictures ul li img {
+  width:98%;
+}
+#classified .classified_pictures  .classified_pictures_number {
+  position:absolute;
+  bottom:1em;
+  right:0;
+  left:0;
+  text-align:center;
+  color:#fff;
+  text-shadow: 1px 1px 1px rgba(150, 150, 150, 1);
+}
+
+#classified .classified_description {
+  color:#848484;
+  padding:0;
+  margin:1em 0 ;
 }
