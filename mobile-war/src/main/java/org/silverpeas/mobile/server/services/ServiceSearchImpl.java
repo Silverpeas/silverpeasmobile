@@ -52,6 +52,8 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
       QueryDescription q = new QueryDescription(query);
       q.setSearchingUser(getUserInSession().getId());
       q.setRequestedLanguage(getUserInSession().getUserPreferences().getLanguage());
+      q.setAdminScope(getUserInSession().isAccessAdmin());
+      q.addComponent("Spaces");
       buildSpaceComponentAvailableForUser(q, ALL_SPACES, ALL_COMPONENTS);
       PlainSearchResult r = SearchEngineProvider.getSearchEngine().search(q);
       for (MatchingIndexEntry result : r.getEntries()) {
@@ -64,7 +66,9 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
             result.getObjectType().contains(ContentsTypes.Attachment.toString()) ||
             result.getObjectType().equals(ContentsTypes.Classified.toString()) ||
             result.getObjectType().equals(ContentsTypes.Node.toString()) ||
-            result.getObjectType().equals(ContentsTypes.QuestionContainer.toString())) {
+            result.getObjectType().equals(ContentsTypes.QuestionContainer.toString()) ||
+            result.getObjectType().equals(ContentsTypes.Component.toString()) ||
+            result.getObjectType().equals(ContentsTypes.Space.toString())) {
           String title = result.getTitle(getUserInSession().getUserPreferences().getLanguage());
           if (title != null && title.contains("wysiwyg") == false) {
             ResultDTO entry = new ResultDTO();
