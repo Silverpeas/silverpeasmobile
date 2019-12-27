@@ -54,6 +54,7 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
       q.setRequestedLanguage(getUserInSession().getUserPreferences().getLanguage());
       q.setAdminScope(getUserInSession().isAccessAdmin());
       q.addComponent("Spaces");
+      q.addComponent("Components");
       buildSpaceComponentAvailableForUser(q, ALL_SPACES, ALL_COMPONENTS);
       PlainSearchResult r = SearchEngineProvider.getSearchEngine().search(q);
       for (MatchingIndexEntry result : r.getEntries()) {
@@ -90,7 +91,11 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
             }
             entry.setId(result.getObjectId());
             entry.setTitle(title);
-            entry.setComponentId(result.getComponent());
+            if (result.getObjectType().equals(ContentsTypes.Component.name())) {
+              entry.setComponentId(result.getObjectId());
+            } else {
+              entry.setComponentId(result.getComponent());
+            }
             results.add(entry);
           }
         }

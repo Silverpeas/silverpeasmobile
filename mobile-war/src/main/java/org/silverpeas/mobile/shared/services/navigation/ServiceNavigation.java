@@ -53,4 +53,6 @@ public interface ServiceNavigation extends RemoteService {
   String getUserToken();
 
   HomePageDTO getHomePageData(String spaceId) throws NavigationException, AuthenticationException;
+
+  boolean isWorkflowApp(String intanceId) throws NavigationException, AuthenticationException;
 }

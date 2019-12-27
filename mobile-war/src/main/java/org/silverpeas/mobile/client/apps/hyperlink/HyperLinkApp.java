@@ -102,5 +102,13 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
+    if (event.getContent().getType().equals("Component") &&
+        event.getContent().getInstanceId().startsWith(Apps.hyperlink.name())) {
+      ApplicationInstanceDTO app = new ApplicationInstanceDTO();
+      app.setId(event.getContent().getInstanceId());
+      app.setType(Apps.hyperlink.name());
+      NavigationAppInstanceChangedEvent ev = new NavigationAppInstanceChangedEvent(app);
+      appInstanceChanged(ev);
+    }
   }
 }

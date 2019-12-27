@@ -27,6 +27,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -56,6 +58,7 @@ import org.silverpeas.mobile.client.components.userselection.events.pages.Allowe
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
@@ -103,7 +106,25 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
+    if (event.getContent().getType().equals("Component")) {
+      ServicesLocator.getServiceNavigation().isWorkflowApp(event.getContent().getInstanceId(), new AsyncCallback<Boolean>() {
+        @Override
+        public void onFailure(final Throwable t) {
+          EventBus.getInstance().fireEvent(new ErrorEvent(t));
+        }
 
+        @Override
+        public void onSuccess(final Boolean workflow) {
+          if (workflow) {
+            ApplicationInstanceDTO app = new ApplicationInstanceDTO();
+            app.setId(event.getContent().getInstanceId());
+            app.setWorkflow(true);
+            NavigationAppInstanceChangedEvent ev = new NavigationAppInstanceChangedEvent(app);
+            appInstanceChanged(ev);
+          }
+        }
+      });
+    }
   }
 
   @Override

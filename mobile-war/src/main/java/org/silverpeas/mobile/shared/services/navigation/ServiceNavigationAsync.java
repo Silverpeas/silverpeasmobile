@@ -48,4 +48,6 @@ public interface ServiceNavigationAsync {
   void getUserToken(final AsyncCallback<String> async);
 
   void getUser(String login, String domainId, final AsyncCallback<DetailUserDTO> async);
+
+  void isWorkflowApp(String intanceId, final AsyncCallback<Boolean> async);
 }

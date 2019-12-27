@@ -413,6 +413,16 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     }
   }
 
+  @Override
+  public boolean isWorkflowApp(String intanceId) throws NavigationException, AuthenticationException {
+    try {
+      ComponentInstLight app = Administration.get().getComponentInstLight(intanceId);
+      return app.isWorkflow();
+    } catch(Throwable t) {
+      throw new NavigationException(t);
+    }
+  }
+
   //TODO : remove appType
   @Override
   public List<SilverpeasObjectDTO> getSpacesAndApps(String rootSpaceId)
