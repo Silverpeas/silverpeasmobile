@@ -25,9 +25,7 @@ package org.silverpeas.mobile.client.apps.workflow;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -49,6 +47,7 @@ import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowPage;
 import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowPresentationPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.FormsHelper;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
@@ -122,6 +121,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
             NavigationAppInstanceChangedEvent ev = new NavigationAppInstanceChangedEvent(app);
             appInstanceChanged(ev);
           }
+          Notification.activityStop();
         }
       });
     }
