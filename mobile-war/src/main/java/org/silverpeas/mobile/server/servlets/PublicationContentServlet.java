@@ -44,8 +44,6 @@ import org.silverpeas.core.contribution.content.form.FormException;
 import org.silverpeas.core.contribution.content.form.PagesContext;
 import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.content.form.field.FileField;
-import org.silverpeas.core.contribution.content.form.form.HtmlForm;
-import org.silverpeas.core.contribution.content.form.form.XmlForm;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
@@ -70,9 +68,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Method;
 import java.net.FileNameMap;
 import java.net.URL;
 import java.net.URLConnection;
@@ -224,7 +220,12 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     Iterator it = doc.getElementsByAttributeValueStarting("id", "select-user-group-").iterator();
     while (it.hasNext()) {
       Element el = (Element) it.next();
-      String fieldName = el.id().replace("select-user-group-", "");
+
+      String htmlField = el.parent().html();
+      String fieldName = htmlField.substring(htmlField.indexOf("userInputName\":'")+16);
+      fieldName = fieldName.substring(0, fieldName.indexOf("'"));
+
+      //String fieldName = el.id().replace("select-user-group-", "");
       UserDetail u = (UserDetail) xmlData.getField(fieldName).getObjectValue();
       el.text(u.getDisplayedName());
     }
