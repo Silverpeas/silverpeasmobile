@@ -31,76 +31,29 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.classifieds.pages.ClassifiedPage;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 
-public class ClassifiedItem extends Composite implements ClickHandler {
-
-  private ClassifiedDTO data;
-  private String category, type;
-  private static ClassifiedItemUiBinder uiBinder = GWT.create(ClassifiedItemUiBinder.class);
-  private App application;
-  private boolean hasComments;
+public class PictureItem extends Composite {
 
   @UiField
-  HTML content;
+  Image picture;
   @UiField
   HTMLPanel container;
-  protected ApplicationMessages msg = null;
 
+  interface PictureItemUiBinder extends UiBinder<Widget, PictureItem> {}
 
-  interface ClassifiedItemUiBinder extends UiBinder<Widget, ClassifiedItem> {}
+  private static PictureItemUiBinder uiBinder = GWT.create(PictureItemUiBinder.class);
 
-  public ClassifiedItem() {
+  public PictureItem() {
     initWidget(uiBinder.createAndBindUi(this));
-    msg = GWT.create(ApplicationMessages.class);
   }
 
-  public void hasComments(final boolean hasComments) {
-    this.hasComments = hasComments;
-  }
-
-  public void setData(ClassifiedDTO data) {
-    this.data = data;
-    String pic = "";
-    if (!data.getPictures().isEmpty()) pic = data.getPictures().get(0);
-    String date = data.getCreationDate();
-    if (data.getUpdateDate() != null) {
-      date = data.getUpdateDate();
-    }
-
-    String html = "<div class='thumbnail'><img src='" + pic + "' width='200px'/></div>";
-    html += "<h2>" + data.getTitle() + "</h2>";
-    html += "<div class='classified_type'><span>" + category + "</span><span>" + type + "</span></div>";
-    if (!data.getPrice().equalsIgnoreCase("0")) html += "<div class='classified_price'>" + data.getPrice() + " €" + "</div>";
-    html += "<div class='classified_creationInfo'>" + date + "</div>";
-    content.setHTML(html);
-    content.addClickHandler(this);
-  }
-
-  public void setCategory(final String category) {
-    this.category = category;
-  }
-
-  public void setType(final String type) {
-    this.type = type;
-  }
-
-  public void setApplication(final App application) {
-    this.application = application;
-  }
-
-  @Override
-  public void onClick(final ClickEvent event) {
-    ClassifiedPage page = new ClassifiedPage();
-    page.setComments(hasComments);
-    page.setCategory(category);
-    page.setType(type);
-    page.setApp(application);
-    page.setData(data);
-    page.show();
+  public void setData(String dataUrl) {
+    picture.setUrl(dataUrl);
   }
 }

@@ -26,23 +26,36 @@ package org.silverpeas.mobile.client.apps.classifieds.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.AbstractClassifiedsPagesEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsLoadedEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsPagesEventHandler;
+import org.silverpeas.mobile.client.apps.classifieds.pages.widgets.PictureItem;
 import org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.mobil.MobilUtils;
+import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
+import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
+import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
+import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
+import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
-public class ClassifiedPage extends PageContent implements ClassifiedsPagesEventHandler {
+public class ClassifiedPage extends PageContent implements ClassifiedsPagesEventHandler,
+    SwipeEndHandler {
 
   private static ClassifiedsPageUiBinder uiBinder = GWT.create(ClassifiedsPageUiBinder.class);
+
+  private SwipeRecognizer swipeRecognizer;
+  private int currentPictureIndex = 0;
 
   @UiField(provided = true) protected ClassifiedsMessages msg = null;
 
@@ -50,10 +63,19 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
   ActionsMenu actionsMenu;
 
   @UiField
-  HTML title, description, pictures, filters, price, audit;
+  HTML price, time, author;
+
+  @UiField
+  HTMLPanel title, description;
 
   @UiField
   CommentsButton comments;
+
+  @UiField
+  UnorderedList pictures;
+
+  @UiField
+  FocusPanel carroussel;
 
   private boolean hasComments;
   private ClassifiedDTO data;
@@ -68,12 +90,14 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractClassifiedsPagesEvent.TYPE, this);
+    EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
   }
 
   @Override
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractClassifiedsPagesEvent.TYPE, this);
+    EventBus.getInstance().removeHandler(SwipeEndEvent.getType(), this);
     comments.stop();
   }
 
@@ -83,19 +107,23 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
 
   public void setData(ClassifiedDTO data) {
     this.data = data;
-    title.setHTML(data.getTitle());
-    description.setHTML(data.getDescription());
+    title.getElement().setInnerText(data.getTitle());
+    description.getElement().setInnerText(data.getDescription());
     price.setHTML(data.getPrice() + " €");
-    filters.setHTML("<span>" + category + "</span><span>" + type + "</span>");
-    String date = data.getCreationDate();
-    if (data.getUpdateDate() != null) date = data.getUpdateDate();
-    audit.setHTML("<span>" + data.getCreatorName() + "</span><span>" + date + "</span>");
-    String html = "";
-    for (String pic : data.getPictures()) {
-      html += "<img src='"+pic+"'/>";
-    }
 
-    pictures.setHTML(html);
+    String date = data.getCreationDate();
+    if (data.getUpdateDate() != null) date = msg.online() + " " + data.getUpdateDate();
+    author.getElement().setInnerText(msg.by() + " " + data.getCreatorName());
+    time.getElement().setInnerText(date);
+
+    boolean v = true;
+    for (String pic : data.getPictures()) {
+      PictureItem item = new PictureItem();
+      item.setData(pic);
+      item.setVisible(v);
+      pictures.add(item);
+      v = false;
+    }
 
     notification.init(getApp().getApplicationInstance().getId(), data.getId(), NotificationDTO.TYPE_EVENT, data.getTitle(), getPageTitle());
     actionsMenu.addAction(notification);
@@ -106,6 +134,10 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
       comments.init(data.getId(), getApp().getApplicationInstance().getId(), contentType,
           getPageTitle(), data.getTitle(), data.getCommentsNumber());
       comments.getElement().getStyle().clearDisplay();
+    }
+
+    if (MobilUtils.isMobil()) {
+      swipeRecognizer = new SwipeRecognizer(carroussel);
     }
   }
 
@@ -119,6 +151,35 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
 
   @Override
   public void onClassifiedsLoad(final ClassifiedsLoadedEvent event) {
+  }
+
+  @Override
+  public void onSwipeEnd(final SwipeEndEvent event) {
+    if (isVisible()) {
+      if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
+        // next
+        if (currentPictureIndex == pictures.getWidgetCount() - 1) {
+          currentPictureIndex = 0;
+        } else {
+          currentPictureIndex++;
+        }
+        updatePicturesView();
+      } else if (event.getDirection() == SwipeEvent.DIRECTION.LEFT_TO_RIGHT) {
+        // previous
+        if (currentPictureIndex == 0) {
+          currentPictureIndex = pictures.getWidgetCount() - 1;
+        } else {
+          currentPictureIndex--;
+        }
+        updatePicturesView();
+      }
+    }
+  }
+
+  private void updatePicturesView() {
+    for (int i = 0; i < pictures.getWidgetCount(); i++) {
+      ((PictureItem) pictures.getWidget(i)).setVisible(i == currentPictureIndex);
+    }
   }
 
 }

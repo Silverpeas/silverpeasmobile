@@ -129,7 +129,7 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
     List<String> pictures = new ArrayList<>();
     SimpleDocumentList<SimpleDocument> pics = AttachmentServiceProvider.getAttachmentService().listAllDocumentsByForeignKey(new ResourceReference(pk), getUserInSession().getUserPreferences().getLanguage());
     for (SimpleDocument pic : pics) {
-      String s = DataURLHelper.convertPictureToUrlData(pic.getAttachmentPath(), pic.getFilename(), "200x");
+      String s = DataURLHelper.convertPictureToUrlData(pic.getAttachmentPath(), pic.getFilename(), "600x");
       pictures.add(s);
     }
     dto.setPictures(pictures);

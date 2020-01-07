@@ -24,6 +24,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:components="urn:import:org.silverpeas.mobile.client.components"
              xmlns:base="urn:import:org.silverpeas.mobile.client.components.base"
              xmlns:widgets="urn:import:org.silverpeas.mobile.client.apps.comments.pages.widgets">
 
@@ -31,13 +32,19 @@
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <base:ActionsMenu ui:field="actionsMenu"/>
-    <div class="content-navigation">
-        <g:HTML ui:field="title" styleName="title"/>
-        <g:HTML ui:field="description" styleName="description"/>
-        <g:HTML ui:field="filters" styleName="filters"/>
-        <g:HTML ui:field="pictures" styleName="pictures"/>
-        <g:HTML ui:field="price" styleName="price"/>
-        <g:HTML ui:field="audit" styleName="audit"/>
+    <div id="classified" class="content-navigation">
+        <g:HTMLPanel tag="h2" ui:field="title" styleName="title"></g:HTMLPanel>
+        <g:FocusPanel ui:field="carroussel" styleName="classified_pictures">
+          <components:UnorderedList ui:field="pictures" styleName="carroussel classified_pictures"/>
+        </g:FocusPanel>
+        <g:HTML ui:field="price" styleName="classified_price"/>
+        <g:HTMLPanel tag="div" ui:field="creationInfo" styleName="classified_creationInfo">
+          <g:HTML ui:field="time" styleName="time"/>
+          <g:HTML ui:field="author" styleName="author"/>
+        </g:HTMLPanel>
+
+        <g:HTMLPanel tag="p" ui:field="description" styleName="classified_description"></g:HTMLPanel>
+        <!-- forms fields -->
         <widgets:CommentsButton ui:field="comments" visible="false"/>
     </div>
   </g:HTMLPanel>
