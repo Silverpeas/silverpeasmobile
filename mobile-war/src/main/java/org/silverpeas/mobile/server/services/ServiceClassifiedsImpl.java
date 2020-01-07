@@ -24,6 +24,7 @@
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.classifieds.model.ClassifiedDetail;
+import org.silverpeas.components.classifieds.notification.ClassifiedOwnerNotification;
 import org.silverpeas.components.classifieds.service.ClassifiedService;
 import org.silverpeas.components.classifieds.service.ClassifiedServiceProvider;
 import org.silverpeas.core.ResourceReference;
@@ -41,6 +42,7 @@ import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateException;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.notification.user.builder.helper.UserNotificationHelper;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
@@ -77,6 +79,23 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
       }
     }
     return dto;
+  }
+
+  @Override
+  public void sendMessageToOwner(String message, ClassifiedDTO dto, String instanceId) throws ClassifiedsException, AuthenticationException {
+    checkUserInSession();
+    ClassifiedDetail classified = getClassifiedDetailById(dto.getId(), instanceId);
+    UserNotificationHelper.buildAndSend(new ClassifiedOwnerNotification(classified,
+        getUserInSession().getId(), message));
+  }
+
+  private ClassifiedDetail getClassifiedDetailById(String id, String instanceId) {
+    ClassifiedService service = ClassifiedServiceProvider.getClassifiedService();
+    List<ClassifiedDetail> l = service.getAllValidClassifieds(instanceId);
+    for (ClassifiedDetail d : l) {
+      if (d.getId().equals(id)) return d;
+    }
+    return null;
   }
 
   @Override

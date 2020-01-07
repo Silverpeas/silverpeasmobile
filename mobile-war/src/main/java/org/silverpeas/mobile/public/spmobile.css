@@ -934,7 +934,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 /**** Publication - media ***********/
-#publication, #contacts, #update-statut, #a-media, #notification, #edit-notification, #event {
+#publication, #contacts, #update-statut, #a-media, #notification, #edit-notification, #event, #send-message {
   background-color: #ECECEC;
   padding: 1em 0;
 }
@@ -1361,12 +1361,12 @@ input.filter-contacts {
 }
 
 /***** STATUT & ADD COMMENT***/
-#update-statut {
+#update-statut, #send-message {
   padding: 1em;
   position: relative;
 }
 
-#update-statut h2 {
+#update-statut h2, #send-message h2 {
   font-size: 13pt;
   font-weight: normal
 }
@@ -1803,7 +1803,7 @@ form .forms .fields > li:nth-child(even) {
   padding: 0;
 }
 
-#update-statut .label-percent {
+#update-statut .label-percent, send-message .label-percent {
   padding: 0.5em;
   text-align: center
 }
@@ -2366,4 +2366,8 @@ form .forms .fields > li:nth-child(even) {
   color:#848484;
   padding:0;
   margin:1em 0 ;
+}
+
+#send-message textarea {
+  height: 10em;
 }

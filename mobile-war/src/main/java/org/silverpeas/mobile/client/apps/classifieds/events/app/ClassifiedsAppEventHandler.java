@@ -27,4 +27,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ClassifiedsAppEventHandler extends EventHandler{
   void loadClassifieds(ClassifiedsLoadEvent event);
+  void sendMessage(ClassifiedsSendMessageEvent event);
 }

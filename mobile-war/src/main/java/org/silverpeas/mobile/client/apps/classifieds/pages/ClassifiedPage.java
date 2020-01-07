@@ -24,8 +24,11 @@
 package org.silverpeas.mobile.client.apps.classifieds.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -77,6 +80,9 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
   @UiField
   FocusPanel carroussel;
 
+  @UiField
+  Anchor contact;
+
   private boolean hasComments;
   private ClassifiedDTO data;
   private String category, type;
@@ -89,6 +95,7 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
     msg = GWT.create(ClassifiedsMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
+    contact.setHTML("<span class='ui-btn-text'>" + msg.contact() + "</span>");
     EventBus.getInstance().addHandler(AbstractClassifiedsPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
   }
@@ -182,4 +189,10 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
     }
   }
 
+  @UiHandler("contact")
+  protected void contact(ClickEvent event) {
+    MessagePage page = new MessagePage();
+    page.setData(data);
+    page.show();
+  }
 }

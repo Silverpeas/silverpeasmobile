@@ -29,6 +29,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.AbstractClassifiedsAppEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsAppEventHandler;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsLoadEvent;
+import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsSendMessageEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsLoadedEvent;
 import org.silverpeas.mobile.client.apps.classifieds.pages.ClassifiedPage;
 import org.silverpeas.mobile.client.apps.classifieds.pages.ClassifiedsPage;
@@ -42,6 +43,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
@@ -96,6 +98,18 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
         super.onSuccess(result);
         LocalStorageHelper.store(key, ClassifiedsDTO.class, result);
         EventBus.getInstance().fireEvent(new ClassifiedsLoadedEvent(result));
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void sendMessage(final ClassifiedsSendMessageEvent event) {
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceClassifieds().sendMessageToOwner(event.getMessage(),
+            event.getData(), getApplicationInstance().getId(), this);
       }
     };
     action.attempt();

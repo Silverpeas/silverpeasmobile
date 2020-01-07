@@ -25,12 +25,15 @@ package org.silverpeas.mobile.shared.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.ClassifiedsException;
 
 @RemoteServiceRelativePath("Classifieds")
 public interface ServiceClassifieds extends RemoteService {
+  void sendMessageToOwner(String message, ClassifiedDTO dto, String instanceId) throws ClassifiedsException, AuthenticationException;
+
   public ClassifiedsDTO getClassifieds(String instanceId) throws ClassifiedsException, AuthenticationException;
   public ClassifiedsDTO getClassified(String instanceId, String id) throws ClassifiedsException, AuthenticationException;
 }

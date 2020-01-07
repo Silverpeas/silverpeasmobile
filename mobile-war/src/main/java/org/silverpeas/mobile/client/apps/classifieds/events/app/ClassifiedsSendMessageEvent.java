@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2018 Silverpeas
+ * Copyright (C) 2000 - 2019 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,25 +21,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.client.apps.classifieds.events.app;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
-import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.BlogException;
-import org.silverpeas.mobile.shared.exceptions.ClassifiedsException;
 
-import java.util.List;
+public class ClassifiedsSendMessageEvent extends AbstractClassifiedsAppEvent {
 
-public interface ServiceClassifiedsAsync {
-  void getClassifieds(String instanceId, final AsyncCallback<ClassifiedsDTO> async);
+  private String message;
+  private ClassifiedDTO data;
 
-  void getClassified(String instanceId, String id, final AsyncCallback<ClassifiedsDTO> async);
+  public ClassifiedsSendMessageEvent() {
+    super();
+  }
 
-  void sendMessageToOwner(String message, ClassifiedDTO dto, String instanceId,
-      final AsyncCallback<Void> async);
+  @Override
+  protected void dispatch(ClassifiedsAppEventHandler handler) {
+    handler.sendMessage(this);
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(final String message) {
+    this.message = message;
+  }
+
+  public void setMessage(final ClassifiedDTO data) {
+    this.data = data;
+  }
+
+  public ClassifiedDTO getData() {
+    return data;
+  }
 }
