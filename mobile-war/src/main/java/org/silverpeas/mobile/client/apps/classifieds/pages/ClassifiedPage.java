@@ -37,6 +37,7 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.AbstractClassifiedsPagesEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsLoadedEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsPagesEventHandler;
+import org.silverpeas.mobile.client.apps.classifieds.pages.widgets.FieldItem;
 import org.silverpeas.mobile.client.apps.classifieds.pages.widgets.PictureItem;
 import org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
@@ -50,6 +51,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
@@ -76,7 +78,7 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
   CommentsButton comments;
 
   @UiField
-  UnorderedList pictures;
+  UnorderedList pictures, fields;
 
   @UiField
   FocusPanel carroussel;
@@ -138,10 +140,15 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
       v = false;
     }
 
+    for (FormFieldDTO field : data.getFields()) {
+      FieldItem item = new FieldItem();
+      item.setData(field);
+      fields.add(item);
+    }
+
     notification.init(getApp().getApplicationInstance().getId(), data.getId(), NotificationDTO.TYPE_EVENT, data.getTitle(), getPageTitle());
     actionsMenu.addAction(notification);
 
-    //TODO : add  comments
     if (hasComments) {
       String contentType = "Classified";
       comments.init(data.getId(), getApp().getApplicationInstance().getId(), contentType,

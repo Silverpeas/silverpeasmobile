@@ -23,6 +23,8 @@
 
 package org.silverpeas.mobile.shared.dto.classifieds;
 
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class ClassifiedDTO implements Serializable {
   private String creationDate;
   private String updateDate;
   private int commentsNumber;
+  private List<FormFieldDTO> fields;
 
   public String getTitle() {
     return title;
@@ -137,5 +140,13 @@ public class ClassifiedDTO implements Serializable {
 
   public void setCreatorId(final String creatorId) {
     this.creatorId = creatorId;
+  }
+
+  public List<FormFieldDTO> getFields() {
+    return fields;
+  }
+
+  public void setFields(final List<FormFieldDTO> fields) {
+    this.fields = fields;
   }
 }

@@ -36,6 +36,7 @@ import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.attachment.util.SimpleDocumentList;
 import org.silverpeas.core.contribution.content.form.DataRecord;
+import org.silverpeas.core.contribution.content.form.Field;
 import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
@@ -45,6 +46,7 @@ import org.silverpeas.core.contribution.template.publication.PublicationTemplate
 import org.silverpeas.core.notification.user.builder.helper.UserNotificationHelper;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -162,6 +164,17 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
     if (pubTemplate != null) {
       RecordSet recordSet = pubTemplate.getRecordSet();
       DataRecord data = recordSet.getRecord(classifiedDetail.getId());
+      List<FormFieldDTO> fields = new ArrayList<>();
+      for (String fieldName : data.getFieldNames()) {
+        FormFieldDTO f = new FormFieldDTO();
+        Field fi = data.getField(fieldName);
+        f.setValue(fi.getStringValue());
+        f.setName(fi.getName());
+        f.setLabel(pubTemplate.getRecordTemplate().getFieldTemplate(fieldName).getLabel(getUserInSession().getUserPreferences().getLanguage()));
+        f.setType(fi.getTypeName());
+        fields.add(f);
+      }
+      dto.setFields(fields);
       dto.setCategory(data.getField(getSearchField1(classifiedDetail.getComponentInstanceId(), "searchFields1")).getValue());
       dto.setType(data.getField(getSearchField2(classifiedDetail.getComponentInstanceId(), "searchFields2")).getValue());
     }

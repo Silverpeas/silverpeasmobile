@@ -44,7 +44,11 @@
         </g:HTMLPanel>
 
         <g:HTMLPanel tag="p" ui:field="description" styleName="classified_description"></g:HTMLPanel>
-        <!-- forms fields -->
+
+        <div class="forms classified_form nom_du_formulaire ">
+          <components:UnorderedList ui:field="fields" styleName="fields"/>
+        </div>
+
         <widgets:CommentsButton ui:field="comments" visible="false"/>
 
         <div class=" ui-controlgroup ui-controlgroup-horizontal">
