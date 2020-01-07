@@ -153,6 +153,7 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
     }
     dto.setPictures(pictures);
 
+    dto.setCreatorId(classifiedDetail.getCreatorId());
     dto.setCreatorName(Administration.get().getUserDetail(classifiedDetail.getCreatorId()).getDisplayedName());
     dto.setCreationDate(sdf.format(classifiedDetail.getCreationDate()));
     if (classifiedDetail.getUpdateDate() != null)dto.setUpdateDate(sdf.format(classifiedDetail.getUpdateDate()));

@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.AbstractClassifiedsPagesEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsLoadedEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.pages.ClassifiedsPagesEventHandler;
@@ -114,6 +115,11 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
 
   public void setData(ClassifiedDTO data) {
     this.data = data;
+
+    if(data.getCreatorId().equals(SpMobil.getUser().getId())) {
+      contact.setVisible(false);
+    }
+
     title.getElement().setInnerText(data.getTitle());
     description.getElement().setInnerText(data.getDescription());
     price.setHTML(data.getPrice() + " €");

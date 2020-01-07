@@ -38,6 +38,7 @@ public class ClassifiedDTO implements Serializable {
   private String category;
   private List<String> pictures;
   private String creatorName;
+  private String creatorId;
   private String creationDate;
   private String updateDate;
   private int commentsNumber;
@@ -128,5 +129,13 @@ public class ClassifiedDTO implements Serializable {
 
   public void setCommentsNumber(final int commentsNumber) {
     this.commentsNumber = commentsNumber;
+  }
+
+  public String getCreatorId() {
+    return creatorId;
+  }
+
+  public void setCreatorId(final String creatorId) {
+    this.creatorId = creatorId;
   }
 }
