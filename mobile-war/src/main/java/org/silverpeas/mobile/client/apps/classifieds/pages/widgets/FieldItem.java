@@ -57,7 +57,6 @@ public class FieldItem extends Composite {
       Anchor link = new Anchor();
       link.setVisible(true);
       link.setText(data.getValue());
-      label.getElement().getStyle().setDisplay(Style.Display.INLINE);
       AttachmentsManager
           .generateLink(data.getId(), data.getInstanceId(), SpMobil.getUser().getLanguage(),
               data.getValue(), link);
