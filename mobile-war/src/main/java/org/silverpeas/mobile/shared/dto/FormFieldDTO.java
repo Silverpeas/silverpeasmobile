@@ -46,6 +46,7 @@ public class FormFieldDTO implements Serializable {
   private String valueId;
   private String type;
   private Map<String, String> values;
+  private String instanceId;
   private transient Element objectValue = null;
 
   private String id;
@@ -141,4 +142,11 @@ public class FormFieldDTO implements Serializable {
     return objectValue;
   }
 
+  public void setInstanceId(final String instanceId) {
+    this.instanceId = instanceId;
+  }
+
+  public String getInstanceId() {
+    return instanceId;
+  }
 }

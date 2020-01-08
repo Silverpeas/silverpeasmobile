@@ -112,6 +112,7 @@ public class FormsHelper {
       dto.setType(type);
       dto.setId(id);
       dto.setDisplayerName(displayerName);
+      dto.setInstanceId(data.getResourceReference().getComponentInstanceId());
       if (value != null) fields.add(dto);
     }
 

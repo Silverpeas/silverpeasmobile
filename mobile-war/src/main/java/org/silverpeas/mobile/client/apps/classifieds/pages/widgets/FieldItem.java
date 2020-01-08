@@ -57,9 +57,15 @@ public class FieldItem extends Composite {
       link.setVisible(true);
       link.setText(data.getValue());
       label.getElement().getStyle().setDisplay(Style.Display.INLINE);
-      String url = UrlUtils.getServicesLocation();
-      url += "Attachment";
-      url = url + "?id=" + data.getId() + "&lang=" + SpMobil.getUser().getLanguage();
+      String url = UrlUtils.getAttachedFileLocation();
+      url += "componentId/";
+      url += data.getInstanceId();
+      url += "/attachmentId/";
+      url += data.getId();
+      url += "/lang/";
+      url += SpMobil.getUser().getLanguage();
+      url += "/name/";
+      url += data.getValue();
       link.setHref(url);
       link.setTarget("_self");
       link.getElement().setAttribute("download", data.getValue());
