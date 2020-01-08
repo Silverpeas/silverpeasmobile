@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.components.attachments.AttachmentsManager;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
 public class FieldItem extends Composite {
@@ -57,18 +58,9 @@ public class FieldItem extends Composite {
       link.setVisible(true);
       link.setText(data.getValue());
       label.getElement().getStyle().setDisplay(Style.Display.INLINE);
-      String url = UrlUtils.getAttachedFileLocation();
-      url += "componentId/";
-      url += data.getInstanceId();
-      url += "/attachmentId/";
-      url += data.getId();
-      url += "/lang/";
-      url += SpMobil.getUser().getLanguage();
-      url += "/name/";
-      url += data.getValue();
-      link.setHref(url);
-      link.setTarget("_self");
-      link.getElement().setAttribute("download", data.getValue());
+      AttachmentsManager
+          .generateLink(data.getId(), data.getInstanceId(), SpMobil.getUser().getLanguage(),
+              data.getValue(), link);
       this.value.add(link);
     } else {
       if (data.getDisplayerName().equals("url")) {

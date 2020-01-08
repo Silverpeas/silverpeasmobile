@@ -61,6 +61,7 @@ public class WorkflowPresentationPage extends PageContent {
     // display presentation form
     header.setInnerText(data.getTitle());
     for (FieldPresentationDTO field : data.getFields()) {
+      field.setInstanceId(instance.getId());
       String value = field.getValue();
       if (field.getValue() != null && !value.isEmpty()) {
         Field f = new Field();

@@ -48,19 +48,20 @@ import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 public class Attachment extends Composite {
 
   private static AttachmentUiBinder uiBinder = GWT.create(AttachmentUiBinder.class);
-  @UiField Anchor link;
-  @UiField SpanElement size, name;
-  @UiField ImageElement icon;
+  @UiField
+  Anchor link;
+  @UiField
+  SpanElement size, name;
+  @UiField
+  ImageElement icon;
 
   protected DocumentsResources ressources = null;
   private DocumentsMessages msg = null;
   private ApplicationMessages globalMsg = null;
-  private boolean clicked = false;
   private AttachmentDTO attachement = null;
   private SimpleDocumentDTO data = null;
 
-  interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {
-  }
+  interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {}
 
   public Attachment() {
     msg = GWT.create(DocumentsMessages.class);
@@ -87,15 +88,17 @@ public class Attachment extends Composite {
       /*if (!data..isDownloadAllowed()) {
         link.setStylePrimaryName("not-downloadable");
       }*/
-    if (data.getSize() < 1024*1024) {
-      sizeValue = String.valueOf(data.getSize()/1024);
+    if (data.getSize() < 1024 * 1024) {
+      sizeValue = String.valueOf(data.getSize() / 1024);
       size.setInnerHTML(msg.sizeK(sizeValue));
     } else {
-      sizeValue = String.valueOf(data.getSize()/(1024*1024));
+      sizeValue = String.valueOf(data.getSize() / (1024 * 1024));
       size.setInnerHTML(msg.sizeM(sizeValue));
     }
     String title = data.getFileName();
-    if (!data.getTitle().isEmpty()) title = data.getTitle();
+    if (!data.getTitle().isEmpty()) {
+      title = data.getTitle();
+    }
     name.setInnerHTML(title);
 
     if (data.getContentType().contains("msword")) {
@@ -108,8 +111,7 @@ public class Attachment extends Composite {
       img = new Image(ressources.image());
     } else if (data.getContentType().contains("presentation")) {
       img = new Image(ressources.mspowerpoint());
-    }
-    else {
+    } else {
       img = new Image(ressources.unknown());
     }
     icon.getParentElement().replaceChild(img.getElement(), icon);
@@ -133,8 +135,8 @@ public class Attachment extends Composite {
         link.addClickHandler(new ClickHandler() {
           @Override
           public void onClick(final ClickEvent clickEvent) {
-            String u =((Anchor)clickEvent.getSource()).getHref();
-            Window.open(u,"_blank","fullscreen=yes");
+            String u = ((Anchor) clickEvent.getSource()).getHref();
+            Window.open(u, "_blank", "fullscreen=yes");
           }
         });
       } else {
@@ -155,11 +157,11 @@ public class Attachment extends Composite {
     if (!attachement.isDownloadAllowed()) {
       link.setStylePrimaryName("not-downloadable");
     }
-    if (attachement.getSize() < 1024*1024) {
-      sizeValue = String.valueOf(attachement.getSize()/1024);
+    if (attachement.getSize() < 1024 * 1024) {
+      sizeValue = String.valueOf(attachement.getSize() / 1024);
       size.setInnerHTML(msg.sizeK(sizeValue));
     } else {
-      sizeValue = String.valueOf(attachement.getSize()/(1024*1024));
+      sizeValue = String.valueOf(attachement.getSize() / (1024 * 1024));
       size.setInnerHTML(msg.sizeM(sizeValue));
     }
     name.setInnerHTML(attachement.getTitle());
@@ -173,40 +175,14 @@ public class Attachment extends Composite {
       img = new Image(ressources.image());
     } else if (attachement.getType().contains("presentation")) {
       img = new Image(ressources.mspowerpoint());
-    }
-    else {
+    } else {
       img = new Image(ressources.unknown());
     }
     icon.getParentElement().replaceChild(img.getElement(), icon);
     if (attachement.isDownloadAllowed()) {
-      try {
-        String url = UrlUtils.getAttachedFileLocation();
-        url += "componentId/";
-        url += attachement.getInstanceId();
-        url += "/attachmentId/";
-        url += attachement.getId();
-        url += "/lang/";
-        url += attachement.getLang();
-        url += "/name/";
-        url += attachement.getTitle();
-
-        link.setHref(url);
-        if (MobilUtils.isIOS()) {
-          //link.setTarget("_blank");
-          link.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent clickEvent) {
-              String u =((Anchor)clickEvent.getSource()).getHref();
-              Window.open(u,"_blank","fullscreen=yes");
-            }
-          });
-        } else {
-          link.setTarget("_self");
-          link.getElement().setAttribute("download", attachement.getTitle());
-        }
-      } catch (JavaScriptException e) {
-        Notification.alert(e.getMessage());
-      }
+      AttachmentsManager
+          .generateLink(attachement.getId(), attachement.getInstanceId(), attachement.getLang(),
+              attachement.getTitle(), link);
     }
   }
 }
