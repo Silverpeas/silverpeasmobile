@@ -31,10 +31,10 @@
   <ui:with field='msgApp'
            type='org.silverpeas.mobile.client.resources.ApplicationMessages' />
 
-  <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
+  <g:HTMLPanel ui:field="container" styleName="content ui-body-a survey">
     <base:ActionsMenu ui:field="actionsMenu"/>
-    <components:UnorderedList ui:field="questions" styleName="liste-questions"/>
-    <g:HTMLPanel ui:field="secondPart">
+    <components:UnorderedList ui:field="questions" styleName="liste-questions forms-list"/>
+    <g:HTMLPanel ui:field="secondPart" styleName="comment-area">
       <g:InlineHTML><ui:text from="{msg.comments}"/></g:InlineHTML>
       <g:TextArea ui:field="comments"></g:TextArea>
       <g:InlineHTML><ui:text from="{msg.commentsAnonymous}"/></g:InlineHTML>
@@ -46,7 +46,7 @@
         </div>
       </div>
     </g:HTMLPanel>
-    <g:HTMLPanel ui:field="participationPart">
+    <g:HTMLPanel ui:field="participationPart" styleName="feedback-participation">
       <g:InlineHTML ui:field="participations"></g:InlineHTML>
       <g:Anchor ui:field="newParticipation" styleName="btn-validate ui-link smaller multiple">Nouvelle participation</g:Anchor>
     </g:HTMLPanel>

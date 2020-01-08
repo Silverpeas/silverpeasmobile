@@ -2371,3 +2371,64 @@ form .forms .fields > li:nth-child(even) {
 #send-message textarea {
   height: 10em;
 }
+
+/********* SURVEY ************/
+.liste-questions.forms-list {
+  color:inherit;
+  font-size:inherit;
+}
+
+.liste-questions.forms-list .label{
+  display:block;
+  color:#000;
+  text-decoration:underline;
+}
+
+.liste-questions.forms-list .fields > span{
+  display:block;
+  padding:0.75em 0 0;
+}
+
+.liste-questions.forms-list .fields > select,
+.liste-questions.forms-list .fields > textarea {
+  display:block;
+  margin:0.75em 0 0 ;
+}
+
+.survey .comment-area {
+  padding:1em;
+}
+
+.survey .comment-area > span:first-child {
+  display:block;
+  padding: 0 0 0.75em;
+}
+
+.survey .ui-controlgroup-horizontal {
+  margin:1.75em auto;
+}
+
+.survey .liste-enquete {
+  display:table;
+}
+.survey .liste-enquete li:first-child {
+  background-color:#333 !important;
+  color:#fff;
+  text-shadow: none;
+}
+.survey .liste-enquete li {
+  display:table-row;
+  background-color: #FFF;
+}
+.survey .liste-enquete li:nth-child(2n+1){
+  background-color: #f9f9f9;
+}
+.survey .liste-enquete .gwt-InlineHTML {
+  width:calc( 33% - 2em);
+  display:table-cell;
+  padding:1em;
+  border-bottom:1px solid #CCC
+}
+.survey .feedback-participation {
+  padding:1em;
+}

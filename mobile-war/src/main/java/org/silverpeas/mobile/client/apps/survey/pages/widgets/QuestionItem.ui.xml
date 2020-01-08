@@ -24,7 +24,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<g:HTMLPanel tag="li" ui:field="container">
-    <g:HTML ui:field="label"></g:HTML>
-    <g:HTMLPanel ui:field="field"></g:HTMLPanel>
+    <g:HTML ui:field="label" styleName="label"></g:HTML>
+    <g:HTMLPanel ui:field="field" styleName="fields"></g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
