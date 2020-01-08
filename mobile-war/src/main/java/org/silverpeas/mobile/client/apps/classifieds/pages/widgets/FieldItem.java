@@ -24,13 +24,17 @@
 package org.silverpeas.mobile.client.apps.classifieds.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.SpMobil;
+import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
 public class FieldItem extends Composite {
@@ -46,10 +50,32 @@ public class FieldItem extends Composite {
     initWidget(uiBinder.createAndBindUi(this));
   }
 
-  public void setData(FormFieldDTO field) {
-    this.label.add(new HTML(field.getLabel()));
-    this.value.add(new HTML(field.getValue()));
-    container.setStyleName("field field_" + field.getName());
-    container.getElement().setId("form-row-" + field.getName());
+  public void setData(FormFieldDTO data) {
+    this.label.add(new HTML(data.getLabel()));
+    if (data.getType().equalsIgnoreCase("file")) {
+      Anchor link = new Anchor();
+      link.setVisible(true);
+      link.setText(data.getValue());
+      label.getElement().getStyle().setDisplay(Style.Display.INLINE);
+      String url = UrlUtils.getServicesLocation();
+      url += "Attachment";
+      url = url + "?id=" + data.getId() + "&lang=" + SpMobil.getUser().getLanguage();
+      link.setHref(url);
+      link.setTarget("_self");
+      link.getElement().setAttribute("download", data.getValue());
+      this.value.add(link);
+    } else {
+      if (data.getDisplayerName().equals("url")) {
+        Anchor link = new Anchor();
+        link.setText(data.getValue());
+        link.setHref(data.getValue());
+        link.setTarget("_blank");
+        this.value.add(link);
+      } else {
+        this.value.add(new HTML(data.getValue()));
+        container.setStyleName("field field_" + data.getName());
+        container.getElement().setId("form-row-" + data.getName());
+      }
+    }
   }
 }
