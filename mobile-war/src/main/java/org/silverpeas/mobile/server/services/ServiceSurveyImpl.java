@@ -30,6 +30,7 @@ import org.silverpeas.core.questioncontainer.container.model.QuestionContainerHe
 import org.silverpeas.core.questioncontainer.container.model.QuestionContainerPK;
 import org.silverpeas.core.questioncontainer.container.service.QuestionContainerService;
 import org.silverpeas.core.questioncontainer.question.model.Question;
+import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.survey.AnswerDTO;
 import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.survey.ResponseDTO;
@@ -39,6 +40,7 @@ import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.SurveyException;
 import org.silverpeas.mobile.shared.services.ServiceSurvey;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,6 +50,7 @@ import java.util.Map;
 
 /**
  * Service de gestion des news.
+ *
  * @author svu
  */
 public class ServiceSurveyImpl extends AbstractAuthenticateService implements ServiceSurvey {
@@ -60,12 +63,14 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
       throws SurveyException, AuthenticationException {
     checkUserInSession();
     QuestionContainerPK pk = new QuestionContainerPK(null, null, instanceId);
-    Collection<QuestionContainerHeader> questions = QuestionContainerService.get().getOpenedQuestionContainers(pk);
+    Collection<QuestionContainerHeader> questions =
+        QuestionContainerService.get().getOpenedQuestionContainers(pk);
     return populate(questions);
   }
 
   @Override
-  public void saveSurvey(final SurveyDetailDTO data) throws SurveyException, AuthenticationException {
+  public void saveSurvey(final SurveyDetailDTO data)
+      throws SurveyException, AuthenticationException {
     checkUserInSession();
     QuestionContainerPK pk = new QuestionContainerPK(data.getId(), null, null);
 
@@ -73,35 +78,42 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
 
     for (QuestionDTO question : data.getQuestions()) {
       List<String> values = new ArrayList<>();
-      for(ResponseDTO response : question.getResponses()) {
+      for (ResponseDTO response : question.getResponses()) {
         values.add(response.getId());
         values.add("OA" + response.getContent());
       }
       reply.put(question.getId(), values);
     }
-    QuestionContainerService.get().recordReplyToQuestionContainerByUser(pk, getUserInSession().getId(), reply, data.getComments(), data.isAnonymComment());
+    QuestionContainerService.get()
+        .recordReplyToQuestionContainerByUser(pk, getUserInSession().getId(), reply,
+            data.getComments(), data.isAnonymComment());
   }
 
   @Override
-  public SurveyDetailDTO getSurvey(final String id, final String instanceId) throws SurveyException, AuthenticationException {
+  public SurveyDetailDTO getSurvey(final String id, final String instanceId)
+      throws SurveyException, AuthenticationException {
     checkUserInSession();
 
     QuestionContainerPK pk = new QuestionContainerPK(id, null, null);
-    int nbParticipations = QuestionContainerService.get().getUserNbParticipationsByFatherId(pk, getUserInSession().getId());
+    int nbParticipations = QuestionContainerService.get()
+        .getUserNbParticipationsByFatherId(pk, getUserInSession().getId());
 
-    QuestionContainerDetail questions = QuestionContainerService.get().getQuestionContainer(pk, getUserInSession().getId());
+    QuestionContainerDetail questions =
+        QuestionContainerService.get().getQuestionContainer(pk, getUserInSession().getId());
     return populate(questions, instanceId, nbParticipations);
   }
 
   private boolean isMultipleParticipant(String componentId) {
     List<String> userMultipleRole = new ArrayList<>();
     userMultipleRole.add("userMultiple");
-    String[] ids = OrganizationControllerProvider.getOrganisationController().getUsersIdsByRoleNames(componentId, userMultipleRole);
+    String[] ids = OrganizationControllerProvider.getOrganisationController()
+        .getUsersIdsByRoleNames(componentId, userMultipleRole);
 
     return Arrays.asList(ids).contains(getUserInSession().getId());
   }
 
-  private SurveyDetailDTO populate(final QuestionContainerDetail questions, final String instanceId, final int nbParticipations) {
+  private SurveyDetailDTO populate(final QuestionContainerDetail questions, final String instanceId,
+      final int nbParticipations) {
     SurveyDetailDTO dto = new SurveyDetailDTO();
     dto.setNbParticipation(nbParticipations);
     if (isMultipleParticipant(instanceId)) {
@@ -113,6 +125,9 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
     }
 
     dto.setId(questions.getId());
+    String imagePath =
+        System.getenv("SILVERPEAS_HOME") + File.separator + "data" + File.separator + "workspaces" +
+            File.separator + instanceId + File.separator + "images";
     for (Question question : questions.getQuestions()) {
       QuestionDTO q = new QuestionDTO();
       q.setId(question.getPK().getId());
@@ -121,6 +136,7 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
       for (Answer answer : question.getAnswers()) {
         AnswerDTO a = new AnswerDTO();
         a.setId(answer.getPK().getId());
+        if (answer.getImage() != null) a.setImage(DataURLHelper.convertPictureToUrlData(imagePath, answer.getImage(), null));
         a.setLabel(answer.getLabel());
         a.setComments(answer.getComment());
         q.getAnswers().add(a);

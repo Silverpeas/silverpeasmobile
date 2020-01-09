@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextArea;
@@ -73,12 +74,24 @@ public class QuestionItem extends Composite {
         RadioButton r = new RadioButton(data.getId(), answer.getLabel());
         r.getElement().setAttribute("ref", answer.getId());
         field.add(r);
+        if (answer.getImage() != null) {
+          Image img = new Image();
+          img.setStyleName("image");
+          img.setUrl(answer.getImage());
+          field.add(img);
+        }
       }
     }  else if (data.getType().equalsIgnoreCase("checkbox")) {
       for (AnswerDTO answer : data.getAnswers()) {
         CheckBox cb = new CheckBox(answer.getLabel());
         cb.getElement().setAttribute("ref", answer.getId());
         field.add(cb);
+        if (answer.getImage() != null) {
+          Image img = new Image();
+          img.setStyleName("image");
+          img.setUrl(answer.getImage());
+          field.add(img);
+        }
       }
     }  else if (data.getType().equalsIgnoreCase("list")) {
       ListBox l = new ListBox();

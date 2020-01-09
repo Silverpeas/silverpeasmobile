@@ -90,7 +90,13 @@ public class DataURLHelper {
         return "";
       }
 
-      String askedPath = originalImage.getParent() + File.separator + size + File.separator + fileName;
+      String askedPath;
+      if (size == null) {
+        askedPath = path + File.separator + fileName;
+      } else {
+        askedPath = originalImage.getParent() + File.separator + size + File.separator + fileName;
+      }
+
       SilverpeasFile image = SilverpeasFileProvider.getFile(askedPath);
 
       byte[] binaryData = IOUtils.toByteArray(image.inputStream());

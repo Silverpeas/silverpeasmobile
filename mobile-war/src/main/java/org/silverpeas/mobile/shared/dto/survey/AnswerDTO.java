@@ -32,6 +32,7 @@ public class AnswerDTO implements Serializable {
   private String id;
   private String label;
   private String comments;
+  private String image;
 
   public String getId() {
     return id;
@@ -55,5 +56,13 @@ public class AnswerDTO implements Serializable {
 
   public void setComments(final String comments) {
     this.comments = comments;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(final String image) {
+    this.image = image;
   }
 }

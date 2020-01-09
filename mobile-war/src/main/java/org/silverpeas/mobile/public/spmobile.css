@@ -2395,6 +2395,11 @@ form .forms .fields > li:nth-child(even) {
   margin:0.75em 0 0 ;
 }
 
+.liste-questions.forms-list .fields .image {
+  max-width: 50px;
+  margin: 5px;
+}
+
 .survey .comment-area {
   padding:1em;
 }
