@@ -79,6 +79,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Agenda")
   String usercalendar();
 
+  @DefaultMessage("Mes notifications")
+  String notifications();
+
   @DefaultMessage("Déconnexion")
   String disconnect();
 

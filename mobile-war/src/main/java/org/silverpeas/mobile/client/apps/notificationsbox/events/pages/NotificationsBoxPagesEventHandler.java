@@ -21,8 +21,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto;
+package org.silverpeas.mobile.client.apps.notificationsbox.events.pages;
 
-public enum ContentsTypes {
-  Publication, Photo, Media, Sound, Video, Streaming, Attachment, Tasks, Favortis, Folder, Space, Webpages, App, Album, News, Component, Event, Contacts, Classified, Node, QuestionContainer, NotificationsBox;
+import com.google.gwt.event.shared.EventHandler;
+
+public interface NotificationsBoxPagesEventHandler extends EventHandler{
+	void onNotificationsLoaded(NotificationsLoadedEvent event);
 }

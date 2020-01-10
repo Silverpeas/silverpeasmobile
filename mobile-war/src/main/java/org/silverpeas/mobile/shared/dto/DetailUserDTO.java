@@ -44,6 +44,7 @@ public class DetailUserDTO implements Serializable{
   private String zone;
   private String sessionKey;
   private boolean connected;
+  private boolean notificationBox;
   private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
 
   public void addProperty(String key, String value) {
@@ -164,5 +165,13 @@ public class DetailUserDTO implements Serializable{
 
   public String getSessionKey() {
     return sessionKey;
+  }
+
+  public void setNotificationBox(final boolean notificationBox) {
+    this.notificationBox = notificationBox;
+  }
+
+  public boolean isNotificationBox() {
+    return notificationBox;
   }
 }

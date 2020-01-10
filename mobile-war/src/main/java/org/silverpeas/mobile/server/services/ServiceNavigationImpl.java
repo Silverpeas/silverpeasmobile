@@ -43,6 +43,7 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.mylinks.model.LinkDetail;
+import org.silverpeas.core.notification.user.client.NotificationManager;
 import org.silverpeas.core.security.session.SessionInfo;
 import org.silverpeas.core.security.session.SessionManagement;
 import org.silverpeas.core.security.session.SessionManagementProvider;
@@ -83,6 +84,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Predicate;
 
 /**
@@ -122,14 +124,26 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     try {
       id = Administration.get().getUserIdByLoginAndDomain(login, domainId);
       UserDetail user = Administration.get().getUserDetail(id);
+
+      boolean notificationBox = false;
+      List<Properties> channels = NotificationManager.get().getNotifAddressProperties(user.getId());
+      for (Properties channel : channels) {
+        String isDefault = channel.getProperty("isDefault");
+        String canal = channel.getProperty("channel");
+        if (canal.equalsIgnoreCase("SILVERMAIL") && isDefault.equalsIgnoreCase("true")) {
+          notificationBox = true;
+        }
+      }
+
       DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
       userDTO = initSession(userDTO);
+      userDTO.setNotificationBox(notificationBox);
       String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
           getSettings().getString("big.avatar.size", "40x"));
       userDTO.setAvatar(avatar);
       return userDTO;
 
-    } catch (AdminException e) {
+    } catch (Exception e) {
       SilverLogger.getLogger(SpMobileLogModule.getName())
           .error("ServiceNavigationImpl.getUser", "root.EX_NO_MESSAGE", e);
       throw new NavigationException(e);

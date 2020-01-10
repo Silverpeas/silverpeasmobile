@@ -21,8 +21,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto;
+package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
 
-public enum ContentsTypes {
-  Publication, Photo, Media, Sound, Video, Streaming, Attachment, Tasks, Favortis, Folder, Space, Webpages, App, Album, News, Component, Event, Contacts, Classified, Node, QuestionContainer, NotificationsBox;
+
+import org.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
+
+public class NotificationsLoadEvent extends AbstractNotificationsBoxAppEvent {
+
+  public NotificationsLoadEvent(){
+    super();
+  }
+
+  @Override
+  protected void dispatch(NotificationsBoxAppEventHandler handler) {
+    handler.loadNotifications(this);
+  }
+
 }

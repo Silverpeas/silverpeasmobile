@@ -43,6 +43,7 @@
         <li id="menu-home"><g:Anchor ui:field="home" styleName="ui-link" text="{msg.home}"/></li>
         <li id="menu-tchat"><g:Anchor ui:field="tchat" styleName="ui-link" text="{msg.tchat}" href="chat.jsp" target="_blank"/></li>
         <li id="menu-usercalendar"><g:Anchor ui:field="calendar" styleName="ui-link" text="{msg.usercalendar}"/></li>
+        <li id="menu-notificationsbox"><g:Anchor ui:field="notifications" styleName="ui-link" text="{msg.notifications}"/></li>
         <li id="menu-parameter"><g:Anchor ui:field="config" styleName="ui-link" text="{msg.config}"/></li>
         <li id="menu-help"><g:Anchor ui:field="help" styleName="ui-link" text="{msg.help}"/></li>
         <li id="menu-logout"><g:Anchor ui:field="disconnect" styleName="ui-link" text="{msg.disconnect}"/></li>

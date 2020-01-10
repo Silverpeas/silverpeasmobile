@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto;
+package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
 
-public enum ContentsTypes {
-  Publication, Photo, Media, Sound, Video, Streaming, Attachment, Tasks, Favortis, Folder, Space, Webpages, App, Album, News, Component, Event, Contacts, Classified, Node, QuestionContainer, NotificationsBox;
+import com.google.gwt.event.shared.EventHandler;
+
+/**
+ * @author svu
+ */
+public interface NotificationsBoxAppEventHandler extends EventHandler {
+  void loadNotifications(NotificationsLoadEvent notificationsLoadEvent);
 }

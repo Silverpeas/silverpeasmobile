@@ -45,6 +45,7 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.config.ConfigApp;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external
     .NavigationAppInstanceChangedEvent;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.status.StatusApp;
 import org.silverpeas.mobile.client.apps.status.events.StatusEvents;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
@@ -64,6 +65,8 @@ import org.silverpeas.mobile.client.components.base.widgets.AvatarUpload;
 import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -74,7 +77,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
   @UiField HTMLPanel container, user;
-  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, tchat, calendar;
+  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, tchat, calendar, notifications;
   @UiField SpanElement status;
   @UiField TextBox search;
   @UiField AvatarUpload avatar;
@@ -98,7 +101,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
       help.setTarget("_self");
     }
     tchat.setVisible(Boolean.parseBoolean(ResourcesManager.getParam("chat.enable")));
-
+    notifications.setVisible(SpMobil.getUser().isNotificationBox());
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
 
@@ -169,6 +172,14 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     } else {
       PageHistory.getInstance().goBackToFirst();
     }
+  }
+
+  @UiHandler("notifications")
+  protected void goNotificationsBox(ClickEvent event) {
+    ContentDTO content = new ContentDTO();
+    content.setType(ContentsTypes.NotificationsBox.toString());
+    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+    closeMenu();
   }
 
   @UiHandler("help")
