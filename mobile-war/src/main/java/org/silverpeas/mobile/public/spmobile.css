@@ -2415,6 +2415,7 @@ form .forms .fields > li:nth-child(even) {
 
 .survey .liste-enquete {
   display:table;
+  padding-left: 0;
 }
 .survey .liste-enquete li:first-child {
   background-color:#333 !important;

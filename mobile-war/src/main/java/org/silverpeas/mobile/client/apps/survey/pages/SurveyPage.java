@@ -114,7 +114,6 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
 
   @Override
   public void onSurveyLoad(final SurveyLoadedEvent event) {
-    Notification.activityStop();
     this.data = event.getSurvey();
     participations.setText(msg.nbParticipation(""+data.getNbParticipation()));
     if (data.isCanParticipate() && data.getNbParticipation() < 1) {
@@ -129,6 +128,7 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
         newParticipation.setVisible(false);
       }
     }
+    Notification.activityStop();
   }
 
   @Override
