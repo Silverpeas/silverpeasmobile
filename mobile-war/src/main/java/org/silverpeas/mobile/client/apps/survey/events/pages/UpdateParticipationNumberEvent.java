@@ -23,10 +23,26 @@
 
 package org.silverpeas.mobile.client.apps.survey.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
+import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
 
-public interface SurveyPagesEventHandler extends EventHandler{
-	void onSurveysLoad(SurveysLoadedEvent event);
-  void onSurveyLoad(SurveyLoadedEvent event);
-  void onUpdateParticipationNumber(UpdateParticipationNumberEvent updateParticipationNumberEvent);
+import java.util.List;
+
+public class UpdateParticipationNumberEvent extends AbstractSurveyPagesEvent {
+
+  private SurveyDetailDTO survey = null;
+
+  public UpdateParticipationNumberEvent(SurveyDetailDTO survey) {
+    super();
+    this.survey = survey;
+  }
+
+  @Override
+  protected void dispatch(SurveyPagesEventHandler handler) {
+    handler.onUpdateParticipationNumber(this);
+  }
+
+  public SurveyDetailDTO getSurvey() {
+    return survey;
+  }
 }

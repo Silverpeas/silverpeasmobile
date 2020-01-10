@@ -40,6 +40,7 @@ import org.silverpeas.mobile.client.apps.survey.events.pages.AbstractSurveyPages
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyLoadedEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyPagesEventHandler;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveysLoadedEvent;
+import org.silverpeas.mobile.client.apps.survey.events.pages.UpdateParticipationNumberEvent;
 import org.silverpeas.mobile.client.apps.survey.pages.widgets.QuestionItem;
 import org.silverpeas.mobile.client.apps.survey.resources.SurveyMessages;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -130,6 +131,11 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
     }
   }
 
+  @Override
+  public void onUpdateParticipationNumber(
+      final UpdateParticipationNumberEvent updateParticipationNumberEvent) {
+  }
+
   private void insertQuestions() {
     for (QuestionDTO q : data.getQuestions()) {
       QuestionItem item = new QuestionItem();
@@ -148,7 +154,7 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
     }
     data.setComments(comments.getText());
     data.setAnonymComment(anonymComment.getValue().booleanValue());
-
+    data.setNbParticipation(data.getNbParticipation()+1);
     EventBus.getInstance().fireEvent(new SurveySaveEvent(data));
   }
 

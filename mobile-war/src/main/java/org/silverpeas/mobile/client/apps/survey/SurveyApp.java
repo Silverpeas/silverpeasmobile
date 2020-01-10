@@ -37,6 +37,7 @@ import org.silverpeas.mobile.client.apps.survey.events.app.SurveySaveEvent;
 import org.silverpeas.mobile.client.apps.survey.events.app.SurveysLoadEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyLoadedEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveysLoadedEvent;
+import org.silverpeas.mobile.client.apps.survey.events.pages.UpdateParticipationNumberEvent;
 import org.silverpeas.mobile.client.apps.survey.pages.SurveyPage;
 import org.silverpeas.mobile.client.apps.survey.pages.SurveysPage;
 import org.silverpeas.mobile.client.apps.survey.resources.SurveyMessages;
@@ -167,6 +168,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
         @Override
         public void onSuccess(final Void aVoid) {
           Notification.activityStop();
+          EventBus.getInstance().fireEvent(new UpdateParticipationNumberEvent(event.getData()));
           PageHistory.getInstance().back();
         }
       });

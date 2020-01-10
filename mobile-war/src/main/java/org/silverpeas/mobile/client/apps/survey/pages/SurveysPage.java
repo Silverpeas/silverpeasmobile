@@ -33,6 +33,7 @@ import org.silverpeas.mobile.client.apps.survey.events.pages.AbstractSurveyPages
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyLoadedEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyPagesEventHandler;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveysLoadedEvent;
+import org.silverpeas.mobile.client.apps.survey.events.pages.UpdateParticipationNumberEvent;
 import org.silverpeas.mobile.client.apps.survey.pages.widgets.SurveyItem;
 import org.silverpeas.mobile.client.apps.survey.resources.SurveyMessages;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -42,6 +43,7 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class SurveysPage extends PageContent implements SurveyPagesEventHandler {
@@ -83,6 +85,7 @@ public class SurveysPage extends PageContent implements SurveyPagesEventHandler 
 
     SurveyItem itemEntete = new SurveyItem();
     SurveyDTO entete = new SurveyDTO();
+    entete.setId("0");
     entete.setName("Nom");
     entete.setNbVotes("Nombre de participants");
     entete.setEndDate("Date de cloture");
@@ -100,4 +103,18 @@ public class SurveysPage extends PageContent implements SurveyPagesEventHandler 
 
   @Override
   public void onSurveyLoad(final SurveyLoadedEvent event) { }
+
+  @Override
+  public void onUpdateParticipationNumber(
+      final UpdateParticipationNumberEvent event) {
+    Iterator it = surveys.iterator();
+    while (it.hasNext()) {
+      SurveyItem item = (SurveyItem) it.next();
+      SurveyDTO data = item.getData();
+      if (data.getId().equals(event.getSurvey().getId())) {
+        data.setNbVotes(String.valueOf(event.getSurvey().getNbParticipation()));
+        item.setData(data);
+      }
+    }
+  }
 }

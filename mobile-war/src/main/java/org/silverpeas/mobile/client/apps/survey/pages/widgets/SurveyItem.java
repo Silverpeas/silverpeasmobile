@@ -64,6 +64,10 @@ public class SurveyItem extends Composite implements ClickHandler {
     nbParticipants.setText(data.getNbVotes());
   }
 
+  public SurveyDTO getData() {
+    return data;
+  }
+
   @Override
   public void onClick(final ClickEvent event) {
     if (data.getId() != null) {
