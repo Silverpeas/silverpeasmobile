@@ -26,15 +26,20 @@ package org.silverpeas.mobile.client.apps.notificationsbox.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.AbstractNotificationsBoxPagesEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsBoxPagesEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.NotificationItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+
+import java.util.List;
 
 public class NotificationsBoxPage extends PageContent implements NotificationsBoxPagesEventHandler {
 
@@ -63,6 +68,11 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
 
   @Override
   public void onNotificationsLoaded(final NotificationsLoadedEvent event) {
-    //TODO
+    List<NotificationReceivedDTO> notifs = event.getNotifications();
+    for (NotificationReceivedDTO notif : notifs) {
+      NotificationItem item = new NotificationItem();
+      item.setData(notif);
+      notifications.add(item);
+    }
   }
 }

@@ -24,8 +24,7 @@
 package org.silverpeas.mobile.client.apps.notificationsbox;
 
 import com.google.gwt.core.client.GWT;
-import org.silverpeas.mobile.client.apps.favorites.events.app.GotoAppEvent;
-import org.silverpeas.mobile.client.apps.favorites.pages.FavoritesPage;
+import com.google.gwt.user.client.Command;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -33,11 +32,19 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.AbstractNotificationsBoxAppEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsBoxAppEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBoxPage;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NotificationsBoxApp extends App implements NotificationsBoxAppEventHandler, NavigationEventHandler {
 
@@ -66,7 +73,32 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
 
   @Override
   public void loadNotifications(final NotificationsLoadEvent notificationsLoadEvent) {
-    //TODO
+    final String key = "notificationsBox";
+    Command offlineAction = new Command() {
+      @Override
+      public void execute() {
+        List<NotificationReceivedDTO> result = LocalStorageHelper.load(key, List.class);
+        if (result == null) {
+          result = new ArrayList<NotificationReceivedDTO>();
+        }
+        EventBus.getInstance().fireEvent(new NotificationsLoadedEvent(result));
+      }
+    };
+
+    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<NotificationReceivedDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNotifications().getUserNotifications(this);
+      }
+
+      @Override
+      public void onSuccess(List<NotificationReceivedDTO> result) {
+        super.onSuccess(result);
+        LocalStorageHelper.store(key, List.class, result);
+        EventBus.getInstance().fireEvent(new NotificationsLoadedEvent(result));
+      }
+    };
+    action.attempt();
   }
 
   @Override

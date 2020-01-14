@@ -21,28 +21,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.notificationsbox.events.pages;
+package org.silverpeas.mobile.client.apps.notificationsbox.resources;
+
+import com.google.gwt.i18n.client.Messages;
+
+public interface NotificationsMessages extends Messages {
 
 
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
-
-import java.util.List;
-
-public class NotificationsLoadedEvent extends AbstractNotificationsBoxPagesEvent {
-
-  List<NotificationReceivedDTO> notifications;
-
-  public NotificationsLoadedEvent(List<NotificationReceivedDTO> notifications) {
-    super();
-    this.notifications = notifications;
-  }
-
-  @Override
-  protected void dispatch(NotificationsBoxPagesEventHandler handler) {
-    handler.onNotificationsLoaded(this);
-  }
-
-  public List<NotificationReceivedDTO> getNotifications() {
-    return notifications;
-  }
 }

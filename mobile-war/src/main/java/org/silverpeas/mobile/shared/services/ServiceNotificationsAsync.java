@@ -26,6 +26,9 @@ package org.silverpeas.mobile.shared.services;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
+import org.silverpeas.mobile.shared.exceptions.NotificationsException;
 
 import java.util.List;
 
@@ -34,4 +37,6 @@ public interface ServiceNotificationsAsync {
     void send(NotificationDTO notification, List<BaseDTO> receivers, String subject, AsyncCallback<Void> async);
 
     void getAllowedUsersAndGroups(String componentId, String contentId, AsyncCallback<List<BaseDTO>> async);
+
+    void getUserNotifications(AsyncCallback<List<NotificationReceivedDTO>> async);
 }

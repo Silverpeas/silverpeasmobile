@@ -21,28 +21,74 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.notificationsbox.events.pages;
+package org.silverpeas.mobile.shared.dto.notifications;
+
+import org.silverpeas.mobile.shared.dto.BaseDTO;
+
+import java.io.Serializable;
+
+/**
+ * @author: svu
+ */
+public class NotificationReceivedDTO extends BaseDTO implements Serializable {
 
 
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+  private String date;
+  private String link;
+  private String title;
+  private String source;
+  private String author;
+  private int readen;
 
-import java.util.List;
-
-public class NotificationsLoadedEvent extends AbstractNotificationsBoxPagesEvent {
-
-  List<NotificationReceivedDTO> notifications;
-
-  public NotificationsLoadedEvent(List<NotificationReceivedDTO> notifications) {
+  public NotificationReceivedDTO() {
     super();
-    this.notifications = notifications;
   }
 
-  @Override
-  protected void dispatch(NotificationsBoxPagesEventHandler handler) {
-    handler.onNotificationsLoaded(this);
+  public String getDate() {
+    return date;
   }
 
-  public List<NotificationReceivedDTO> getNotifications() {
-    return notifications;
+  public void setDate(final String date) {
+    this.date = date;
+  }
+
+  public String getLink() {
+    return link;
+  }
+
+  public void setLink(final String link) {
+    this.link = link;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(final String title) {
+    this.title = title;
+  }
+
+  public String getSource() {
+    return source;
+  }
+
+  public void setSource(final String source) {
+    this.source = source;
+  }
+
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(final String author) {
+    this.author = author;
+  }
+
+  public int getReaden() {
+    return readen;
+  }
+
+  public void setReaden(final int readen) {
+    this.readen = readen;
   }
 }

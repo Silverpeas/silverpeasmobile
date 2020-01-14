@@ -44,6 +44,9 @@ import org.silverpeas.core.notification.user.client.GroupRecipient;
 import org.silverpeas.core.notification.user.client.NotificationMetaData;
 import org.silverpeas.core.notification.user.client.NotificationSender;
 import org.silverpeas.core.notification.user.client.UserRecipient;
+import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
+import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
+import org.silverpeas.core.notification.user.server.channel.silvermail.SilvermailCriteria;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.StringUtil;
@@ -52,11 +55,14 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.NotificationsException;
 import org.silverpeas.mobile.shared.services.ServiceNotifications;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -70,6 +76,26 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
 
   private static final long serialVersionUID = 1L;
   private OrganizationController organizationController = OrganizationController.get();
+
+  @Override
+  public List<NotificationReceivedDTO> getUserNotifications() throws NotificationsException, AuthenticationException {
+    List<NotificationReceivedDTO> notifs = new ArrayList<>();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    Collection<SILVERMAILMessage>
+        messages = SILVERMAILPersistence.getMessageOfFolder(getUserInSession().getId(), "INBOX", null, SilvermailCriteria.QUERY_ORDER_BY.RECEPTION_DATE_ASC);
+    for (SILVERMAILMessage message : messages) {
+      NotificationReceivedDTO dto = new NotificationReceivedDTO();
+      dto.setSource(message.getSource());
+      dto.setAuthor(message.getSenderName());
+      dto.setDate(sdf.format(message.getDate()));
+      dto.setLink(message.getUrl());
+      dto.setReaden(message.getReaden());
+      dto.setTitle(message.getSubject());
+      notifs.add(dto);
+    }
+
+    return notifs;
+  }
 
   @Override
   public List<BaseDTO> getAllowedUsersAndGroups(String componentId, String contentId)
