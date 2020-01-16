@@ -39,4 +39,6 @@ public interface ServiceNotificationsAsync {
     void getAllowedUsersAndGroups(String componentId, String contentId, AsyncCallback<List<BaseDTO>> async);
 
     void getUserNotifications(AsyncCallback<List<NotificationReceivedDTO>> async);
+
+  void markAsReaden(long id, final AsyncCallback<Void> async);
 }

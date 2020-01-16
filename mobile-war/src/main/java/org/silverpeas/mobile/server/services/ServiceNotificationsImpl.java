@@ -91,6 +91,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
       dto.setLink(message.getUrl());
       dto.setReaden(message.getReaden());
       dto.setTitle(message.getSubject());
+      dto.setIdNotif(message.getId());
       notifs.add(dto);
     }
 
@@ -243,6 +244,13 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
     String value =
         getMainSessionController().getComponentParameterValue(instanceId, "rightsOnTopics");
     return StringUtil.getBooleanValue(value);
+  }
+
+  @Override
+  public void markAsReaden(long id) throws NotificationsException, AuthenticationException {
+    ArrayList<String> ids = new ArrayList<>();
+    ids.add(String.valueOf(id));
+    SILVERMAILPersistence.markMessagesAsRead(getUserInSession().getId(), ids);
   }
 
   @Override

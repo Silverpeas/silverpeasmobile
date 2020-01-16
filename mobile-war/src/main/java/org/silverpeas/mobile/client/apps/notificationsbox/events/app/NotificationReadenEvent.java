@@ -24,16 +24,23 @@
 package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
 
 
+import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 
-public class NotificationsLoadEvent extends AbstractNotificationsBoxAppEvent {
+public class NotificationReadenEvent extends AbstractNotificationsBoxAppEvent {
 
-  public NotificationsLoadEvent(){
+  private NotificationReceivedDTO data;
+
+  public NotificationReadenEvent(NotificationReceivedDTO data){
     super();
+    this.data = data;
   }
 
   @Override
   protected void dispatch(NotificationsBoxAppEventHandler handler) {
-    handler.loadNotifications(this);
+    handler.readenNotification(this);
   }
 
+  public NotificationReceivedDTO getData() {
+    return data;
+  }
 }

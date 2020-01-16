@@ -30,6 +30,7 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.AbstractNotificationsBoxAppEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsBoxAppEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
@@ -37,6 +38,7 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBox
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -96,6 +98,17 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
         super.onSuccess(result);
         LocalStorageHelper.store(key, List.class, result);
         EventBus.getInstance().fireEvent(new NotificationsLoadedEvent(result));
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void readenNotification(final NotificationReadenEvent event) {
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNotifications().markAsReaden(event.getData().getIdNotif(), this);
       }
     };
     action.attempt();

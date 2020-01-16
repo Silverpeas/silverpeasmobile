@@ -36,6 +36,9 @@ import java.util.List;
 @RemoteServiceRelativePath("Notifications")
 public interface ServiceNotifications extends RemoteService {
   List<BaseDTO> getAllowedUsersAndGroups(String componentId, String contentId) throws NotificationsException, AuthenticationException;
+
+  void markAsReaden(long id) throws NotificationsException, AuthenticationException;
+
   void send(NotificationDTO notification, List<BaseDTO> receivers, String subject) throws NotificationsException, AuthenticationException;
   List<NotificationReceivedDTO> getUserNotifications() throws NotificationsException, AuthenticationException;
 }

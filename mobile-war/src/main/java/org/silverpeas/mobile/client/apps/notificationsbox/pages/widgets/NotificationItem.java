@@ -40,9 +40,11 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
 import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
+import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 
@@ -63,6 +65,8 @@ public class NotificationItem extends Composite implements ClickHandler {
   public void onClick(final ClickEvent clickEvent) {
     //TODO : test
     Window.Location.assign(data.getLink());
+    NotificationReadenEvent event = new NotificationReadenEvent(data);
+    EventBus.getInstance().fireEvent(event);
   }
 
   interface ContactItemUiBinder extends UiBinder<Widget, NotificationItem> {
@@ -83,5 +87,8 @@ public class NotificationItem extends Composite implements ClickHandler {
     author.setText(data.getAuthor());
     source.setText(data.getSource());
     title.setText(data.getTitle());
+    if (data.getReaden() == 0) {
+      getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
+    }
   }
 }
