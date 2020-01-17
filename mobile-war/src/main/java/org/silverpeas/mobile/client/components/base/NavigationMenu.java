@@ -101,7 +101,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
       help.setTarget("_self");
     }
     tchat.setVisible(Boolean.parseBoolean(ResourcesManager.getParam("chat.enable")));
-    notifications.setVisible(SpMobil.getUser().isNotificationBox());
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
 
@@ -223,6 +222,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     user.addAndReplaceElement(html, "userName");
     status.setInnerHTML(currentUser.getStatus());
 
-
+    notifications.setVisible(currentUser.isNotificationBox());
   }
 }
