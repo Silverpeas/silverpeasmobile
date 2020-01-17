@@ -25,12 +25,18 @@ package org.silverpeas.mobile.server.services.helpers;
 
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.notification.NotificationException;
+import org.silverpeas.core.notification.user.client.NotificationManager;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
+
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author: svu
@@ -51,7 +57,7 @@ public class UserHelper {
   }
 
   public DetailUserDTO populate(UserDetail user) {
-    DetailUserDTO dto= new DetailUserDTO();
+    DetailUserDTO dto = new DetailUserDTO();
     dto.setId(user.getId());
     dto.setFirstName(user.getFirstName());
     dto.setLastName(user.getLastName());
@@ -62,17 +68,34 @@ public class UserHelper {
     dto.setToken(user.getToken());
     dto.setZone(user.getUserPreferences().getZoneId().getId());
 
+    boolean notificationBox = false;
+    List<Properties> channels = null;
+    try {
+      channels = NotificationManager.get().getNotifAddressProperties(user.getId());
+    } catch (NotificationException e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    for (Properties channel : channels) {
+      String isDefault = channel.getProperty("isDefault");
+      String canal = channel.getProperty("channel");
+      if (canal.equalsIgnoreCase("SILVERMAIL") && isDefault.equalsIgnoreCase("true")) {
+        notificationBox = true;
+      }
+    }
+    dto.setNotificationBox(notificationBox);
+
+
     return dto;
   }
 
   public UserDTO populateUserDTO(UserDetail user) {
-    UserDTO dto= new UserDTO();
+    UserDTO dto = new UserDTO();
     dto.setId(user.getId());
     dto.setFirstName(user.getFirstName());
     dto.setLastName(user.getLastName());
     dto.seteMail(user.geteMail());
-    String avatar = DataURLHelper
-        .convertAvatarToUrlData(user.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
+    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
+        getSettings().getString("avatar.size", "24x"));
     dto.setAvatar(avatar);
     return dto;
   }

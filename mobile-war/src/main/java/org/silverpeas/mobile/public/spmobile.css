@@ -745,6 +745,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url(packPictos.png) 8px -134px no-repeat;
 }
 
+#silverpeas-navmenu-panel #navmenu-panel li#menu-notificationsbox a {
+  background: transparent url(packPictos.png) 8px -515px no-repeat;
+}
+
 #silverpeas-navmenu-panel #navmenu-panel li#menu-parameter a {
   background: transparent url(packPictos.png) 8px -98px no-repeat;
 }

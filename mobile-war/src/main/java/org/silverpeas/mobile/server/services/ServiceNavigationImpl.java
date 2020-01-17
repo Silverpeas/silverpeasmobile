@@ -125,19 +125,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       id = Administration.get().getUserIdByLoginAndDomain(login, domainId);
       UserDetail user = Administration.get().getUserDetail(id);
 
-      boolean notificationBox = false;
-      List<Properties> channels = NotificationManager.get().getNotifAddressProperties(user.getId());
-      for (Properties channel : channels) {
-        String isDefault = channel.getProperty("isDefault");
-        String canal = channel.getProperty("channel");
-        if (canal.equalsIgnoreCase("SILVERMAIL") && isDefault.equalsIgnoreCase("true")) {
-          notificationBox = true;
-        }
-      }
-
       DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
       userDTO = initSession(userDTO);
-      userDTO.setNotificationBox(notificationBox);
+
       String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
           getSettings().getString("big.avatar.size", "40x"));
       userDTO.setAvatar(avatar);
