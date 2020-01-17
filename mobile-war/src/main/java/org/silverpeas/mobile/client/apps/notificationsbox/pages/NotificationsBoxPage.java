@@ -32,13 +32,16 @@ import org.silverpeas.mobile.client.apps.notificationsbox.events.app.Notificatio
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.AbstractNotificationsBoxPagesEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsBoxPagesEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.DeleteButton;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.NotificationItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsBoxPage extends PageContent implements NotificationsBoxPagesEventHandler {
@@ -49,6 +52,11 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
   @UiField
   UnorderedList notifications;
 
+  @UiField
+  ActionsMenu actionsMenu;
+
+  private DeleteButton delete = new DeleteButton();
+
   interface NotificationsBoxPageUiBinder extends UiBinder<Widget, NotificationsBoxPage> {
   }
 
@@ -58,6 +66,8 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractNotificationsBoxPagesEvent.TYPE, this);
     EventBus.getInstance().fireEvent(new NotificationsLoadEvent());
+    delete.setParentPage(this);
+    actionsMenu.addAction(delete);
   }
 
   @Override
@@ -68,11 +78,23 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
 
   @Override
   public void onNotificationsLoaded(final NotificationsLoadedEvent event) {
+    notifications.clear();
     List<NotificationReceivedDTO> notifs = event.getNotifications();
     for (NotificationReceivedDTO notif : notifs) {
       NotificationItem item = new NotificationItem();
       item.setData(notif);
       notifications.add(item);
     }
+  }
+
+  public List<NotificationReceivedDTO> getSelectedNotification() {
+    List<NotificationReceivedDTO> selection = new ArrayList<>();
+    for (int i = 0; i < notifications.getCount(); i++) {
+      NotificationItem item = (NotificationItem) notifications.getWidget(i);
+      if (item.isSelected()) {
+        selection.add(item.getData());
+      }
+    }
+    return selection;
   }
 }

@@ -41,4 +41,6 @@ public interface ServiceNotificationsAsync {
     void getUserNotifications(AsyncCallback<List<NotificationReceivedDTO>> async);
 
   void markAsReaden(long id, final AsyncCallback<Void> async);
+
+  void delete(List<NotificationReceivedDTO> selection, final AsyncCallback<Void> async);
 }

@@ -21,12 +21,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.notificationsbox.resources;
+package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
 
-import com.google.gwt.i18n.client.Messages;
 
-public interface NotificationsMessages extends Messages {
+import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 
-  String delete();
+import java.util.List;
 
+public class DeleteNotificationsEvent extends AbstractNotificationsBoxAppEvent {
+
+  private List<NotificationReceivedDTO> selection;
+
+  public DeleteNotificationsEvent(){
+    super();
+  }
+
+  @Override
+  protected void dispatch(NotificationsBoxAppEventHandler handler) {
+    handler.deleteNotifications(this);
+  }
+
+  public List<NotificationReceivedDTO> getSelection() {
+    return selection;
+  }
+
+  public void setSelection(final List<NotificationReceivedDTO> selection) {
+    this.selection = selection;
+  }
 }

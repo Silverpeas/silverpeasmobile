@@ -35,6 +35,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -56,6 +57,9 @@ public class NotificationItem extends Composite implements ClickHandler {
 
   @UiField
   InlineHTML date, title, source, author;
+
+  @UiField
+  CheckBox select;
 
   @UiField(provided = true) protected NotificationsMessages msg = null;
 
@@ -81,6 +85,10 @@ public class NotificationItem extends Composite implements ClickHandler {
     title.addClickHandler(this);
   }
 
+  public boolean isSelected() {
+    return select.getValue();
+  }
+
   public void setData(NotificationReceivedDTO data) {
     this.data = data;
     date.setText(data.getDate());
@@ -90,5 +98,9 @@ public class NotificationItem extends Composite implements ClickHandler {
     if (data.getReaden() == 0) {
       getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
     }
+  }
+
+  public NotificationReceivedDTO getData() {
+    return data;
   }
 }

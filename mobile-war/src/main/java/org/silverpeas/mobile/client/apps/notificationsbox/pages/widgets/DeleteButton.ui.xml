@@ -21,16 +21,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages'/>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-  <g:HTMLPanel tag="li" ui:field="container" styleName="notification">
-    <g:CheckBox ui:field="select"></g:CheckBox>
-    <g:InlineHTML ui:field="date"></g:InlineHTML>
-    <g:InlineHTML ui:field="title"></g:InlineHTML>
-    <g:InlineHTML ui:field="author"></g:InlineHTML>
-    <g:InlineHTML ui:field="source"></g:InlineHTML>
-  </g:HTMLPanel>
+    <ui:with field='msg' type='org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages'/>
 
-</ui:UiBinder> 
+    <g:HTMLPanel tag="li" ui:field="container" styleName="">
+        <g:Anchor styleName="" ui:field="delete" text="{msg.delete}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -31,4 +31,5 @@ import com.google.gwt.event.shared.EventHandler;
 public interface NotificationsBoxAppEventHandler extends EventHandler {
   void loadNotifications(NotificationsLoadEvent notificationsLoadEvent);
   void readenNotification(NotificationReadenEvent notificationReadenEvent);
+  void deleteNotifications(DeleteNotificationsEvent deleteNotificationsEvent);
 }
