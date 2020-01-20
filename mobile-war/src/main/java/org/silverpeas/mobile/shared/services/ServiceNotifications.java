@@ -39,6 +39,8 @@ public interface ServiceNotifications extends RemoteService {
 
   void markAsReaden(long id) throws NotificationsException, AuthenticationException;
 
+  void markAsRead(List<NotificationReceivedDTO> selection) throws NotificationsException, AuthenticationException;
+
   void delete(List<NotificationReceivedDTO> selection) throws NotificationsException, AuthenticationException;
 
   void send(NotificationDTO notification, List<BaseDTO> receivers, String subject) throws NotificationsException, AuthenticationException;

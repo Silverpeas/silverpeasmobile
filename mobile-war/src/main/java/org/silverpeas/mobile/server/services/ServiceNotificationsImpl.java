@@ -254,13 +254,21 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
   }
 
   @Override
-  public void delete(List<NotificationReceivedDTO> selection) throws NotificationsException, AuthenticationException {
+  public void markAsRead(List<NotificationReceivedDTO> selection) throws NotificationsException, AuthenticationException {
+    SILVERMAILPersistence.markMessagesAsRead(getUserInSession().getId(), getSelectionIds(selection));
+  }
+
+  private List<String> getSelectionIds(List<NotificationReceivedDTO> selection) {
     ArrayList<String> ids = new ArrayList<>();
     for (NotificationReceivedDTO dto : selection) {
       ids.add(String.valueOf(dto.getIdNotif()));
     }
+    return ids;
+  }
 
-    SILVERMAILPersistence.deleteMessages(getUserInSession().getId(), ids);
+  @Override
+  public void delete(List<NotificationReceivedDTO> selection) throws NotificationsException, AuthenticationException {
+    SILVERMAILPersistence.deleteMessages(getUserInSession().getId(), getSelectionIds(selection));
   }
 
   @Override

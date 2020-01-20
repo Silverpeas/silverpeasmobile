@@ -21,28 +21,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
+
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.NotificationsException;
 
 import java.util.List;
 
-public interface ServiceNotificationsAsync {
+public class MarkAsReadNotificationsEvent extends AbstractNotificationsBoxAppEvent {
 
-    void send(NotificationDTO notification, List<BaseDTO> receivers, String subject, AsyncCallback<Void> async);
+  private List<NotificationReceivedDTO> selection;
 
-    void getAllowedUsersAndGroups(String componentId, String contentId, AsyncCallback<List<BaseDTO>> async);
+  public MarkAsReadNotificationsEvent(){
+    super();
+  }
 
-    void getUserNotifications(AsyncCallback<List<NotificationReceivedDTO>> async);
+  @Override
+  protected void dispatch(NotificationsBoxAppEventHandler handler) {
+    handler.markAsReadNotifications(this);
+  }
 
-  void markAsReaden(long id, final AsyncCallback<Void> async);
+  public List<NotificationReceivedDTO> getSelection() {
+    return selection;
+  }
 
-  void delete(List<NotificationReceivedDTO> selection, final AsyncCallback<Void> async);
-
-  void markAsRead(List<NotificationReceivedDTO> selection, final AsyncCallback<Void> async);
+  public void setSelection(final List<NotificationReceivedDTO> selection) {
+    this.selection = selection;
+  }
 }

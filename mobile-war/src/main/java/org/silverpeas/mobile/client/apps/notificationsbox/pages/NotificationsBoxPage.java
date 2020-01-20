@@ -26,13 +26,13 @@ package org.silverpeas.mobile.client.apps.notificationsbox.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.AbstractNotificationsBoxPagesEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsBoxPagesEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.DeleteButton;
+import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.MarkAsReadButton;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.NotificationItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
@@ -56,6 +56,7 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
   ActionsMenu actionsMenu;
 
   private DeleteButton delete = new DeleteButton();
+  private MarkAsReadButton notRead = new MarkAsReadButton();
 
   interface NotificationsBoxPageUiBinder extends UiBinder<Widget, NotificationsBoxPage> {
   }
@@ -67,7 +68,9 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
     EventBus.getInstance().addHandler(AbstractNotificationsBoxPagesEvent.TYPE, this);
     EventBus.getInstance().fireEvent(new NotificationsLoadEvent());
     delete.setParentPage(this);
+    notRead.setParentPage(this);
     actionsMenu.addAction(delete);
+    actionsMenu.addAction(notRead);
   }
 
   @Override

@@ -28,5 +28,6 @@ import com.google.gwt.i18n.client.Messages;
 public interface NotificationsMessages extends Messages {
 
   String delete();
+  String markAsRead();
 
 }

@@ -31,6 +31,7 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.AbstractNotificationsBoxAppEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.DeleteNotificationsEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.app.MarkAsReadNotificationsEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsBoxAppEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
@@ -122,6 +123,23 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
       @Override
       public void attempt() {
         ServicesLocator.getServiceNotifications().delete(event.getSelection(), this);
+      }
+
+      @Override
+      public void onSuccess(final Void result) {
+        super.onSuccess(result);
+        loadNotifications(new NotificationsLoadEvent());
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void markAsReadNotifications(final MarkAsReadNotificationsEvent event) {
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNotifications().markAsRead(event.getSelection(), this);
       }
 
       @Override
