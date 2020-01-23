@@ -2377,6 +2377,10 @@ form .forms .fields > li:nth-child(even) {
 }
 
 /********* SURVEY ************/
+
+.survey.content {
+	padding-top: 2em;
+}
 .liste-questions.forms-list {
   color:inherit;
   font-size:inherit;
@@ -2441,4 +2445,50 @@ form .forms .fields > li:nth-child(even) {
 }
 .survey .feedback-participation {
   padding:1em;
+}
+
+/********* notification **************/
+.notificationBox .ui-listview.notifications  .notification-date {
+	color:#777;
+	display:inline-block;
+	font-size:90%;
+}
+.notificationBox .ui-listview.notifications  input {
+	position:absolute;
+	top:0.5em;
+	left:0.25em;
+}
+
+
+.notificationBox .ui-listview.notifications  .notification-author{
+	font-size:90%;
+	display:inline-block;
+}
+.notificationBox .ui-listview.notifications  .notification-source {
+	font-size:90%;
+}
+
+.notificationBox .ui-listview.notifications  .notification-title{
+	margin-bottom:0.75em;
+	font-weight:600;
+}
+.ui-listview.notifications  li span {
+	display:block;
+}
+.ui-listview.notifications  li{
+	padding: 0.75em 0.75em 0.75em 3em;
+	position: relative;
+	border-bottom:1px solid  #CCC;
+}
+
+.ui-listview.notifications li:first-child{
+	border-top:1px solid  #CCC;
+}
+
+.ui-listview.notifications  li:nth-child(odd){
+	background-color: #F0F0F0;
+}
+
+.ui-listview.notifications  li:nth-child(even){
+	background-color: #FFF;
 }
