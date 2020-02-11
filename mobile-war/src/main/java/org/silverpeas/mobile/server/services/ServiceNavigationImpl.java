@@ -43,7 +43,6 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.mylinks.model.LinkDetail;
-import org.silverpeas.core.notification.user.client.NotificationManager;
 import org.silverpeas.core.security.session.SessionInfo;
 import org.silverpeas.core.security.session.SessionManagement;
 import org.silverpeas.core.security.session.SessionManagementProvider;
@@ -331,7 +330,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       if ((spaceId == null && showLastEventsOnHomePage)) {
         boolean includeToday = settings.getBoolean("home.events.today.include", true);
         List<String> allowedComponentIds =
-            Arrays.asList(getAllowedComponentIds(settings, "home.events.appId"));
+            Arrays.asList(getAllowedComponentIds(settings, "home.events.appId", "almanach"));
         int nbDays = settings.getInteger("home.events.maxDays", 3);
         boolean onlyImportant = settings.getBoolean("home.events.importantOnly", false);
         events = EventsHelper.getInstance()
@@ -382,9 +381,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     return components;
   }
 
-  private String[] getAllowedComponentIds(SettingBundle settings, String param)
+  private String[] getAllowedComponentIds(SettingBundle settings, String param, String appName)
       throws AdminException {
-    String[] appIds = StringUtil.split(settings.getString(param, ""), ' ');
+    String paramValue = settings.getString(param, "");
+    String[] appIds;
+    if (paramValue.trim().equals("*")) {
+      appIds = organizationController.getComponentIdsForUser(getUserInSession().getId(), appName);
+    } else {
+      appIds = StringUtil.split(paramValue, ' ');
+    }
     return getAllowedComponents(appIds).toArray(new String[0]);
   }
 
