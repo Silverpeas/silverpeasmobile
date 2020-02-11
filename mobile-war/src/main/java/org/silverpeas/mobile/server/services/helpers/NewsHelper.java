@@ -39,6 +39,7 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.io.file.ImageResizingProcessor;
 import org.silverpeas.core.io.file.SilverpeasFileProcessor;
+import org.silverpeas.core.util.CollectionUtil;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.SettingBundle;
@@ -59,6 +60,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.MissingResourceException;
 
 /**
@@ -112,6 +114,8 @@ public class NewsHelper {
       if (newsSource != null && newsSource.isEmpty() == false) {
           if (newsSource.startsWith("quickinfo")) {
             return getNewsByComponentId(newsSource, false, userId);
+          } else if (newsSource.trim().equals("*")) {
+            return getAllNews(userId);
           } else {
             return getDelegatedNews(userId);
           }
@@ -147,6 +151,17 @@ public class NewsHelper {
       news = service.getAllNews(appId);
     } else {
       news = service.getVisibleNews(appId);
+    }
+
+    return news;
+  }
+
+  private List<PublicationDetail> getAllNews(String userId) throws AdminException {
+    List<PublicationDetail> news = new ArrayList<>();
+    List<String> apps = CollectionUtil
+        .asList(organizationController.getComponentIdsForUser(userId, "quickinfo"));
+    for (String appId : apps) {
+      news.addAll(getNewsByComponentId(appId, false, userId));
     }
 
     return news;
