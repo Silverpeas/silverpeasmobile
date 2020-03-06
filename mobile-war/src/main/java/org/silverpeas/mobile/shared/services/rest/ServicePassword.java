@@ -21,19 +21,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.status.resources;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.safehtml.shared.SafeHtml;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.dto.password.PasswordControlDTO;
+import org.silverpeas.mobile.shared.dto.password.PasswordDTO;
 
-public interface StatusMessages extends Messages{
-	SafeHtml title();
-  SafeHtml titlePwd();
-  SafeHtml titleStatus();
-	String changeStatus();
-  String changePwd();
-  String newPwd();
-  String repeatNewPwd();
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
-  String pwdNotTheSame();
+/**
+ * @author svu
+ */
+@Path("/password/policy")
+public interface ServicePassword extends RestService {
+
+
+  @POST
+  @Path("/checking")
+  public void checking(PasswordDTO value, MethodCallback<PasswordControlDTO> callback);
+
+
 }

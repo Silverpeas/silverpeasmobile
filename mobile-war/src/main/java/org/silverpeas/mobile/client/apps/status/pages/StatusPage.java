@@ -30,12 +30,14 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.status.StatusApp;
 import org.silverpeas.mobile.client.apps.status.events.StatusEvents;
 import org.silverpeas.mobile.client.apps.status.resources.StatusMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
@@ -47,7 +49,8 @@ public class StatusPage extends PageContent {
   @UiField(provided = true) protected StatusMessages msg = null;
   @UiField protected HTMLPanel container;
   @UiField protected TextArea status;
-  @UiField protected Anchor publish;
+  @UiField protected Anchor publish, changePwd;
+  @UiField protected PasswordTextBox pwd1, pwd2;
 
   interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
   }
@@ -59,12 +62,25 @@ public class StatusPage extends PageContent {
     container.getElement().setId("update-statut");
     status.getElement().setAttribute("x-webkit-speech", "x-webkit-speech");
     status.getElement().setAttribute("speech", "speech");
+    pwd1.getElement().setAttribute("autocomplete", "off");
+    pwd2.getElement().setAttribute("autocomplete", "off");
   }
 
   @UiHandler("publish")
   void publish(ClickEvent event) {
 	// send event to apps
     EventBus.getInstance().fireEvent(new AppEvent(this, StatusEvents.POST.name(), status.getText()));
+  }
+
+  @UiHandler("changePwd")
+  void changePassword(ClickEvent event) {
+    // send event to apps
+
+    if (pwd1.getText().equals(pwd2.getText())) {
+      EventBus.getInstance().fireEvent(new AppEvent(this, StatusEvents.CHANGEPWD.name(), pwd1.getText()));
+    } else {
+      Notification.alert(msg.pwdNotTheSame());
+    }
   }
 
   @Override

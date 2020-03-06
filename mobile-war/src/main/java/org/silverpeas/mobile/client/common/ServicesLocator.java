@@ -37,6 +37,7 @@ import org.silverpeas.mobile.shared.services.rest.ServiceAuthentication;
 import org.silverpeas.mobile.shared.services.rest.ServiceComment;
 import org.silverpeas.mobile.shared.services.rest.ServiceFormsOnline;
 import org.silverpeas.mobile.shared.services.rest.ServiceMyLinks;
+import org.silverpeas.mobile.shared.services.rest.ServicePassword;
 import org.silverpeas.mobile.shared.services.rest.ServiceRestDocuments;
 import org.silverpeas.mobile.shared.services.rest.ServiceUserCalendar;
 
@@ -78,6 +79,8 @@ public class ServicesLocator {
       ServiceRestDocuments.class);
   private static ServiceComment serviceRestComment = GWT.create(ServiceComment.class);
   private static ServiceMyLinks serviceMyLinks = GWT.create(ServiceMyLinks.class);
+  private static ServicePassword servicePassword = GWT.create(ServicePassword.class);
+
 
   private static ServiceFormsOnline serviceFormsOnline = GWT.create(ServiceFormsOnline.class);
 
@@ -102,6 +105,11 @@ public class ServicesLocator {
   public static ServiceFormsOnline getServiceFormsOnline() {
     initRestContext();
     return serviceFormsOnline;
+  }
+
+  public static ServicePassword getServicePassword() {
+    initRestContext();
+    return servicePassword;
   }
 
   public static ServiceMyLinks getServiceMyLinks() {

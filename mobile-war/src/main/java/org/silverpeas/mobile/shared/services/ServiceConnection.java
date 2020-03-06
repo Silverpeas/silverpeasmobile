@@ -37,6 +37,9 @@ public interface ServiceConnection extends RemoteService {
   public DetailUserDTO login(String login, String password, String domainId) throws AuthenticationException;
   public List<DomainDTO> getDomains();
   public boolean setTabletMode() throws NavigationException, AuthenticationException;
+
+  void changePwd(String newPwd) throws AuthenticationException;
+
   public boolean showTermsOfService() throws AuthenticationException;
   public String getTermsOfServiceText() throws AuthenticationException;
   public void userAcceptsTermsOfService() throws AuthenticationException;

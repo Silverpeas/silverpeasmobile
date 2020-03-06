@@ -43,4 +43,6 @@ public interface ServiceConnectionAsync {
   void getTermsOfServiceText(final AsyncCallback<String> async);
 
   void userAcceptsTermsOfService(final AsyncCallback<Void> async);
+
+  void changePwd(String newPwd, final AsyncCallback<Void> async);
 }

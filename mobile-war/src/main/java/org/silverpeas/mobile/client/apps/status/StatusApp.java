@@ -24,17 +24,23 @@
 package org.silverpeas.mobile.client.apps.status;
 
 import com.google.gwt.core.client.GWT;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.status.events.StatusEvents;
 import org.silverpeas.mobile.client.apps.status.pages.StatusPage;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
+import org.silverpeas.mobile.shared.dto.password.PasswordControlDTO;
+import org.silverpeas.mobile.shared.dto.password.PasswordDTO;
 
 import java.util.Date;
 
@@ -75,6 +81,36 @@ public class StatusApp extends App {
                     };
                     action.attempt();
                 }
+            } else if (event.getName().equals(StatusEvents.CHANGEPWD.toString())) {
+              final String pwd = (String) event.getData();
+              PasswordDTO dto = new PasswordDTO();
+              dto.setValue(pwd);
+              ServicesLocator.getServicePassword().checking(dto, new MethodCallback<PasswordControlDTO>() {
+                @Override
+                public void onFailure(final Method method, final Throwable throwable) {
+                  EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                }
+
+                @Override
+                public void onSuccess(final Method method, final PasswordControlDTO passwordControlDTO) {
+                    if (passwordControlDTO.isCorrect()) {
+                      AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+                        @Override
+                        public void attempt() {
+                          ServicesLocator.getServiceConnection().changePwd(pwd, this);
+                        }
+
+                        public void onSuccess(Void result) {
+                          super.onSuccess(result);
+                          EventBus.getInstance().fireEvent(new PageEvent(StatusApp.this, StatusEvents.POSTED.toString(), ""));
+                        }
+                      };
+                      action.attempt();
+                    } else{
+                      Notification.alert(msg.pwdNotValid());
+                    }
+                }
+              });
             }
         }
     }

@@ -23,9 +23,11 @@
 
 package org.silverpeas.mobile.client.apps.status.events;
 
+import com.google.gwt.dom.builder.client.DomAnchorBuilder;
+
 /**
  * @author: svu
  */
 public enum StatusEvents {
-    POST, POSTED
+    POST, POSTED, CHANGEPWD;
 }

@@ -163,4 +163,7 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Refuser")
   SafeHtml refuse();
+
+  @DefaultMessage("Le mot de passe ne respecte pas les consignes de sécurité")
+  String pwdNotValid();
 }

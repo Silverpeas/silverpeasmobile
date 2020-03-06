@@ -28,7 +28,9 @@ import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 import org.silverpeas.core.security.authentication.exception.AuthenticationUserMustAcceptTermsOfService;
@@ -150,6 +152,18 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     dto.setName(domain.getName());
     dto.setId(domain.getId());
     return dto;
+  }
+
+  @Override
+  public void changePwd(String newPwd) throws AuthenticationException {
+    UserFull user = null;
+    try {
+      user = Administration.get().getUserFull(getUserInSession().getId());
+      user.setPassword(newPwd);
+      Administration.get().updateUserFull(user);
+    } catch (AdminException e) {
+      throw  new AuthenticationException(e);
+    }
   }
 
   @Override
