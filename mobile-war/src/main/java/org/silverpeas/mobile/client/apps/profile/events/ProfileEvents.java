@@ -21,13 +21,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.status.events;
-
-import com.google.gwt.dom.builder.client.DomAnchorBuilder;
+package org.silverpeas.mobile.client.apps.profile.events;
 
 /**
  * @author: svu
  */
-public enum StatusEvents {
+public enum ProfileEvents {
     POST, POSTED, CHANGEPWD;
 }

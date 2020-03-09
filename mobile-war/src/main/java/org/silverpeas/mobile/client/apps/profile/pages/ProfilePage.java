@@ -21,7 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.status.pages;
+package org.silverpeas.mobile.client.apps.profile.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,30 +33,30 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.status.StatusApp;
-import org.silverpeas.mobile.client.apps.status.events.StatusEvents;
-import org.silverpeas.mobile.client.apps.status.resources.StatusMessages;
+import org.silverpeas.mobile.client.apps.profile.ProfileApp;
+import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;
+import org.silverpeas.mobile.client.apps.profile.resources.ProfileMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
 
-public class StatusPage extends PageContent {
+public class ProfilePage extends PageContent {
 
   private static StatusPageUiBinder uiBinder = GWT.create(StatusPageUiBinder.class);
 
-  @UiField(provided = true) protected StatusMessages msg = null;
+  @UiField(provided = true) protected ProfileMessages msg = null;
   @UiField protected HTMLPanel container;
   @UiField protected TextArea status;
   @UiField protected Anchor publish, changePwd;
   @UiField protected PasswordTextBox pwd1, pwd2;
 
-  interface StatusPageUiBinder extends UiBinder<Widget, StatusPage> {
+  interface StatusPageUiBinder extends UiBinder<Widget, ProfilePage> {
   }
 
-  public StatusPage() {
-    msg = GWT.create(StatusMessages.class);
+  public ProfilePage() {
+    msg = GWT.create(ProfileMessages.class);
     setPageTitle(msg.title().asString());
     initWidget(uiBinder.createAndBindUi(this));
     container.getElement().setId("update-statut");
@@ -69,7 +69,7 @@ public class StatusPage extends PageContent {
   @UiHandler("publish")
   void publish(ClickEvent event) {
 	// send event to apps
-    EventBus.getInstance().fireEvent(new AppEvent(this, StatusEvents.POST.name(), status.getText()));
+    EventBus.getInstance().fireEvent(new AppEvent(this, ProfileEvents.POST.name(), status.getText()));
   }
 
   @UiHandler("changePwd")
@@ -77,7 +77,7 @@ public class StatusPage extends PageContent {
     // send event to apps
 
     if (pwd1.getText().equals(pwd2.getText())) {
-      EventBus.getInstance().fireEvent(new AppEvent(this, StatusEvents.CHANGEPWD.name(), pwd1.getText()));
+      EventBus.getInstance().fireEvent(new AppEvent(this, ProfileEvents.CHANGEPWD.name(), pwd1.getText()));
     } else {
       Notification.alert(msg.pwdNotTheSame());
     }
@@ -85,7 +85,7 @@ public class StatusPage extends PageContent {
 
   @Override
   public void receiveEvent(PageEvent event) {
-    if (event.getSender() instanceof StatusApp && event.getName().equals(StatusEvents.POSTED.toString())) {
+    if (event.getSender() instanceof ProfileApp && event.getName().equals(ProfileEvents.POSTED.toString())) {
       back();
     }
   }

@@ -25,7 +25,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.status.resources.StatusMessages'/>
+  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.profile.resources.ProfileMessages'/>
 
   <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
 

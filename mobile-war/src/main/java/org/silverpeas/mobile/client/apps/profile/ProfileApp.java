@@ -21,14 +21,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.status;
+package org.silverpeas.mobile.client.apps.profile;
 
 import com.google.gwt.core.client.GWT;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
-import org.silverpeas.mobile.client.apps.status.events.StatusEvents;
-import org.silverpeas.mobile.client.apps.status.pages.StatusPage;
+import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;
+import org.silverpeas.mobile.client.apps.profile.pages.ProfilePage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
@@ -44,24 +44,24 @@ import org.silverpeas.mobile.shared.dto.password.PasswordDTO;
 
 import java.util.Date;
 
-public class StatusApp extends App {
+public class ProfileApp extends App {
 
     private static ApplicationMessages msg;
 
-    public StatusApp(){
+    public ProfileApp(){
         super();
         msg = GWT.create(ApplicationMessages.class);
     }
 
     public void start(){
-        setMainPage(new StatusPage());
+        setMainPage(new ProfilePage());
         super.start();
     }
 
     @Override
     public void receiveEvent(AppEvent event) {
-        if (event.getSender() instanceof StatusPage) {
-            if (event.getName().equals(StatusEvents.POST.toString())) {
+        if (event.getSender() instanceof ProfilePage) {
+            if (event.getName().equals(ProfileEvents.POST.toString())) {
                 final String postStatus = (String) event.getData();
                 if (postStatus != null && postStatus.length() > 0) {
                     AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<String>() {
@@ -76,12 +76,12 @@ public class StatusApp extends App {
                             StatusDTO status = new StatusDTO();
                             status.setCreationDate(new Date());
                             status.setDescription(result);
-                            EventBus.getInstance().fireEvent(new PageEvent(StatusApp.this, StatusEvents.POSTED.toString(), status));
+                            EventBus.getInstance().fireEvent(new PageEvent(ProfileApp.this, ProfileEvents.POSTED.toString(), status));
                         }
                     };
                     action.attempt();
                 }
-            } else if (event.getName().equals(StatusEvents.CHANGEPWD.toString())) {
+            } else if (event.getName().equals(ProfileEvents.CHANGEPWD.toString())) {
               final String pwd = (String) event.getData();
               PasswordDTO dto = new PasswordDTO();
               dto.setValue(pwd);
@@ -102,7 +102,7 @@ public class StatusApp extends App {
 
                         public void onSuccess(Void result) {
                           super.onSuccess(result);
-                          EventBus.getInstance().fireEvent(new PageEvent(StatusApp.this, StatusEvents.POSTED.toString(), ""));
+                          EventBus.getInstance().fireEvent(new PageEvent(ProfileApp.this, ProfileEvents.POSTED.toString(), ""));
                         }
                       };
                       action.attempt();

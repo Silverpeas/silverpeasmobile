@@ -21,12 +21,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.status.resources;
+package org.silverpeas.mobile.client.apps.profile.resources;
 
 import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.safehtml.shared.SafeHtml;
 
-public interface StatusMessages extends Messages{
+public interface ProfileMessages extends Messages{
 	SafeHtml title();
   SafeHtml titlePwd();
   SafeHtml titleStatus();

@@ -33,12 +33,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
@@ -46,12 +44,10 @@ import org.silverpeas.mobile.client.apps.config.ConfigApp;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external
     .NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.apps.status.StatusApp;
-import org.silverpeas.mobile.client.apps.status.events.StatusEvents;
+import org.silverpeas.mobile.client.apps.profile.ProfileApp;
+import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
-import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
@@ -62,7 +58,6 @@ import org.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEv
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
 import org.silverpeas.mobile.client.components.base.widgets.AvatarUpload;
-import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
@@ -106,7 +101,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   @Override
   public void receiveEvent(PageEvent event) {
-    if (event.getSender() instanceof StatusApp && event.getName().equals(StatusEvents.POSTED.toString())) {
+    if (event.getSender() instanceof ProfileApp && event.getName().equals(ProfileEvents.POSTED.toString())) {
       StatusDTO newStatus = (StatusDTO) event.getData();
       status.setInnerHTML(newStatus.getDescription());
     }
@@ -195,7 +190,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   @UiHandler("updateStatus")
   protected void updateStatus(ClickEvent event) {
-    App app = new StatusApp();
+    App app = new ProfileApp();
     app.start();
     closeMenu();
   }

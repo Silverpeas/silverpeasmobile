@@ -32,12 +32,10 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.contacts.ContactsApp;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.apps.status.StatusApp;
+import org.silverpeas.mobile.client.apps.profile.ProfileApp;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
@@ -85,7 +83,7 @@ public class PageFooter extends Composite {
 
   @UiHandler("statut")
   void status(ClickEvent e) {
-    App app = new StatusApp();
+    App app = new ProfileApp();
     app.start();
   }
 
