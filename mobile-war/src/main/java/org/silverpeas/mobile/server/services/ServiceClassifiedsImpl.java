@@ -44,6 +44,7 @@ import org.silverpeas.core.contribution.template.publication.PublicationTemplate
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.notification.user.builder.helper.UserNotificationHelper;
 import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.FormsHelper;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
@@ -117,6 +118,7 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
         dto.getClassifieds().add(populate(classifiedDetail));
       }
     } catch(Exception e) {
+      SilverLogger.getLogger(this).error(e);
       throw new ClassifiedsException(e);
     }
 
