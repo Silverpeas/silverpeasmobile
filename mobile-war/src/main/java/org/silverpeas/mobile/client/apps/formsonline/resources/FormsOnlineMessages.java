@@ -31,5 +31,9 @@ public interface FormsOnlineMessages extends Messages {
   String cancel();
   String mandatory();
   String mandatoryOneField();
-
+  String viewAll();
+  String requestsNumber();
+  String reject();
+  String comment();
+  String accept();
 }

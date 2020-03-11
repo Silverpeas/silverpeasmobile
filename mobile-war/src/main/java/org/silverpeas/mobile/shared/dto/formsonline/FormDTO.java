@@ -32,6 +32,8 @@ public class FormDTO implements Serializable {
   private String id;
   private String title;
   private String description;
+  private boolean receiver;
+  private int nbRequests;
 
   private String xmlFormName;
 
@@ -62,4 +64,20 @@ public class FormDTO implements Serializable {
   public void setXmlFormName(final String xmlFormName) { this.xmlFormName = xmlFormName; }
 
   public String getXmlFormName() { return xmlFormName; }
+
+  public boolean isReceiver() {
+    return receiver;
+  }
+
+  public void setReceiver(final boolean receiver) {
+    this.receiver = receiver;
+  }
+
+  public int getNbRequests() {
+    return nbRequests;
+  }
+
+  public void setNbRequests(final int nbRequests) {
+    this.nbRequests = nbRequests;
+  }
 }

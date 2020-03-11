@@ -23,12 +23,110 @@
 
 package org.silverpeas.mobile.shared.dto.formsonline;
 
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author svu
  */
 public class FormRequestDTO implements Serializable {
-  private String id;
 
+  public static final int STATE_UNREAD = 1;
+  public static final int STATE_READ = 2;
+  public static final int STATE_VALIDATED = 3;
+  public static final int STATE_REFUSED = 4;
+  public static final int STATE_ARCHIVED = 5;
+
+  private String id;
+  private String comments;
+  private String title;
+  private String description;
+  private String creator;
+  private String creationDate;
+  private int state;
+  private String formId;
+  private List<FormFieldDTO> data;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
+
+  public String getComments() {
+    return comments;
+  }
+
+  public void setComments(final String comments) {
+    this.comments = comments;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(final String title) {
+    if (title == null) {
+      this.title = "";
+    } else {
+      this.title = title;
+    }
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(final String description) {
+    if (description == null) {
+      this.description = "";
+    } else {
+      this.description = description;
+    }
+  }
+
+  public String getCreator() {
+    return creator;
+  }
+
+  public void setCreator(final String creator) {
+    this.creator = creator;
+  }
+
+  public String getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(final String creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public int getState() {
+    return state;
+  }
+
+  public void setState(final int state) {
+    this.state = state;
+  }
+
+  public List<FormFieldDTO> getData() {
+    return data;
+  }
+
+  public void setData(final List<FormFieldDTO> data) {
+    this.data = data;
+  }
+
+  public String getFormId() {
+    return formId;
+  }
+
+  public void setFormId(final String formId) {
+    this.formId = formId;
+  }
 }

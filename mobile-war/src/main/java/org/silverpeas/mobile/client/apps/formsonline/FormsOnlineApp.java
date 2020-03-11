@@ -27,18 +27,17 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.AbstractFormsOnlineAppEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormSaveEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAppEventHandler;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.app.*;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadUserFieldEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineRequestValidatedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormOnlineEditPage;
+import org.silverpeas.mobile.client.apps.formsonline.pages.FormOnlineRequestsPage;
+import org.silverpeas.mobile.client.apps.formsonline.pages.FormsOnlineAsReceiverPage;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormsOnlinePage;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -51,15 +50,14 @@ import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
@@ -70,7 +68,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
 
   private FormsOnlineMessages msg;
   private ApplicationInstanceDTO instance;
-  private String keyForms;
+  private String keyForms, keyFormsAsReceiver;
   private FormDTO currentForm;
 
   public FormsOnlineApp(){
@@ -219,11 +217,88 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
   }
 
   @Override
+  public void loadFormsOnlineAsReceiver(
+      final FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent) {
+
+    Command offlineAction = new Command() {
+      @Override
+      public void execute() {
+        List<FormDTO> forms = LocalStorageHelper.load(keyFormsAsReceiver, List.class);
+        if (forms == null) {
+          forms = new ArrayList<FormDTO>();
+        }
+
+        FormsOnlineAsReceiverPage page = new FormsOnlineAsReceiverPage();
+        page.setPageTitle(instance.getLabel());
+        page.setData(forms);
+        page.show();
+      }
+    };
+
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceFormsOnline().getReceivablesForms(instance.getId(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<FormDTO> forms) {
+        super.onSuccess(method, forms);
+        LocalStorageHelper.store(keyFormsAsReceiver, List.class, forms);
+
+        FormsOnlineAsReceiverPage page = new FormsOnlineAsReceiverPage();
+        page.setPageTitle(instance.getLabel());
+        page.setData(forms);
+        page.show();
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void loadFormOnlineAsReceiver(final FormOnlineAsReceiverLoadEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceFormsOnline().getRequests(instance.getId(), event.getForm().getId(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
+        FormOnlineRequestsPage page = new FormOnlineRequestsPage();
+        page.setTitle(instance.getLabel());
+        page.setData(requests);
+        page.show();
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void validationRequest(final FormsOnlineValidationRequestEvent event) {
+
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceFormsOnline().processRequest(instance.getId(), event.getData().getId(), event.getValidation(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final Void aVoid) {
+        EventBus.getInstance().fireEvent(new FormsOnlineRequestValidatedEvent(event.getData()));
+      }
+    };
+    action.attempt();
+  }
+
+
+  @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.formsOnline.name())) {
       this.instance = event.getInstance();
 
       keyForms = "forms_" + instance.getId();
+      keyFormsAsReceiver = "formsAsReceiver_" + instance.getId();
 
       FormsOnlinePage page = new FormsOnlinePage();
       page.setPageTitle(event.getInstance().getLabel());

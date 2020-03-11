@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,22 +21,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.formsonline.events.app;
+package org.silverpeas.mobile.client.components.forms;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
-public interface FormsOnlineAppEventHandler extends EventHandler{
-  void loadFormsOnline(FormsOnlineLoadEvent event);
-  void loadFormOnline(FormOnlineLoadEvent event);
-  
 
-  void saveForm(FormSaveEvent formSaveEvent);
+public class FieldViewable extends Composite {
 
-  void loadUserField(FormOnlineLoadUserFieldEvent formOnlineLoadUserFieldEvent);
+  private static FieldUiBinder uiBinder = GWT.create(FieldUiBinder.class);
 
-  void loadFormsOnlineAsReceiver(FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent);
-  void loadFormOnlineAsReceiver(FormOnlineAsReceiverLoadEvent formOnlineAsReceiverLoadEvent);
+  @UiField InlineHTML label, value;
 
-  void validationRequest(FormsOnlineValidationRequestEvent formsOnlineAcceptRequestEvent);
+  protected ApplicationMessages msg = null;
+  private FormFieldDTO data;
 
+  interface FieldUiBinder extends UiBinder<Widget, FieldViewable> {}
+
+  public FieldViewable() {
+    initWidget(uiBinder.createAndBindUi(this));
+    msg = GWT.create(ApplicationMessages.class);
+  }
+
+  public void setData(FormFieldDTO data) {
+    this.data = data;
+    label.setText(data.getLabel() + " : ");
+    value.setText(data.getValue());
+
+  }
 }

@@ -23,20 +23,16 @@
 
 package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+public class FormsOnlineAsReceiverLoadEvent extends AbstractFormsOnlineAppEvent {
 
-public interface FormsOnlineAppEventHandler extends EventHandler{
-  void loadFormsOnline(FormsOnlineLoadEvent event);
-  void loadFormOnline(FormOnlineLoadEvent event);
-  
+  public FormsOnlineAsReceiverLoadEvent() {
+    super();
+  }
 
-  void saveForm(FormSaveEvent formSaveEvent);
 
-  void loadUserField(FormOnlineLoadUserFieldEvent formOnlineLoadUserFieldEvent);
-
-  void loadFormsOnlineAsReceiver(FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent);
-  void loadFormOnlineAsReceiver(FormOnlineAsReceiverLoadEvent formOnlineAsReceiverLoadEvent);
-
-  void validationRequest(FormsOnlineValidationRequestEvent formsOnlineAcceptRequestEvent);
+  @Override
+  protected void dispatch(FormsOnlineAppEventHandler handler) {
+    handler.loadFormsOnlineAsReceiver(this);
+  }
 
 }

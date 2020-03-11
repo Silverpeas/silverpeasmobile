@@ -23,20 +23,33 @@
 
 package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
-public interface FormsOnlineAppEventHandler extends EventHandler{
-  void loadFormsOnline(FormsOnlineLoadEvent event);
-  void loadFormOnline(FormOnlineLoadEvent event);
-  
+public class FormsOnlineValidationRequestEvent extends AbstractFormsOnlineAppEvent {
 
-  void saveForm(FormSaveEvent formSaveEvent);
+  private FormRequestDTO data;
+  private ValidationRequestDTO validation;
 
-  void loadUserField(FormOnlineLoadUserFieldEvent formOnlineLoadUserFieldEvent);
+  public FormsOnlineValidationRequestEvent() {
+    super();
+  }
 
-  void loadFormsOnlineAsReceiver(FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent);
-  void loadFormOnlineAsReceiver(FormOnlineAsReceiverLoadEvent formOnlineAsReceiverLoadEvent);
+  public FormsOnlineValidationRequestEvent(final FormRequestDTO data, final ValidationRequestDTO validation) {
+    this.data = data;
+    this.validation = validation;
+  }
 
-  void validationRequest(FormsOnlineValidationRequestEvent formsOnlineAcceptRequestEvent);
+  @Override
+  protected void dispatch(FormsOnlineAppEventHandler handler) {
+    handler.validationRequest(this);
+  }
 
+  public FormRequestDTO getData() {
+    return data;
+  }
+
+  public ValidationRequestDTO getValidation() {
+    return validation;
+  }
 }

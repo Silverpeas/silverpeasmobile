@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2000 - 2019 Silverpeas
+  ~ Copyright (C) 2000 - 2018 Silverpeas
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
   ~ published by the Free Software Foundation, either version 3 of the
@@ -29,16 +29,20 @@
 
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages' />
 
-  <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
+  <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a formOnlineRequest">
     <base:ActionsMenu ui:field="actionsMenu"/>
-    <components:UnorderedList ui:field="forms" styleName="forms-list"/>
-
-    <g:HTMLPanel ui:field="viewAll" styleName="ui-controlgroup ui-controlgroup-horizontal" visible="false">
+    <components:UnorderedList ui:field="fields" styleName="formOnline-form"/>
+    <g:Label text="{msg.comment}" styleName="label-comment"></g:Label>
+    <g:TextArea ui:field="comment" styleName="comment"></g:TextArea>
+    <div class=" ui-controlgroup ui-controlgroup-horizontal">
       <div class="ui-controlgroup-controls ">
-        <g:Anchor ui:field="view" styleName="btn-validate ui-link">
-          <span class="ui-btn-text"><ui:text from="{msg.viewAll}"/></span>
+        <g:Anchor ui:field="accept" styleName="btn-validate ui-link">
+          <span class="ui-btn-text"><ui:text from="{msg.accept}"/></span>
+        </g:Anchor>
+        <g:Anchor ui:field="reject" styleName="btn-validate ui-link">
+          <span class="ui-btn-text"><ui:text from="{msg.reject}"/></span>
         </g:Anchor>
       </div>
-    </g:HTMLPanel>
+    </div>
   </g:HTMLPanel>
 </ui:UiBinder> 

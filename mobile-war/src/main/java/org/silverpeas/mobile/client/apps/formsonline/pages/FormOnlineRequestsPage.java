@@ -24,63 +24,44 @@
 package org.silverpeas.mobile.client.apps.formsonline.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAsReceiverLoadEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineRequestValidatedEvent;
-import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.FormOnlineItem;
+import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.FormOnlineRequestItem;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
-import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
-import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
-import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
-public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEventHandler {
+import java.util.List;
 
-  private static FormsOnlinePageUiBinder uiBinder = GWT.create(FormsOnlinePageUiBinder.class);
+public class FormOnlineRequestsPage extends PageContent implements FormsOnlinePagesEventHandler {
+
+  private static FormsOnlineAsReceiverPageUiBinder uiBinder = GWT.create(FormsOnlineAsReceiverPageUiBinder.class);
 
   @UiField(provided = true) protected FormsOnlineMessages msg = null;
   @UiField
   ActionsMenu actionsMenu;
 
   @UiField
-  UnorderedList forms;
+  UnorderedList requests;
 
-  @UiField
-  Anchor view;
-
-  @UiField
-  HTMLPanel viewAll;
+  private List<FormRequestDTO> data;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
-  private boolean canReceive = false;
 
   @Override
-  public void onFormsOnlineLoad(final FormsOnlineLoadedEvent event) {
-    for (FormDTO form : event.getForms()) {
-      FormOnlineItem item = new FormOnlineItem();
-      item.setData(form);
-      forms.add(item);
-      if (form.isReceiver()) canReceive = true;
-    }
-    viewAll.setVisible(canReceive);
-  }
+  public void onFormsOnlineLoad(final FormsOnlineLoadedEvent event) {}
 
   @Override
   public void onFormLoaded(final FormLoadedEvent formLoadedEvent) {}
@@ -90,28 +71,43 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
 
   @Override
   public void onFormsOnlineRequestValidated(
-      final FormsOnlineRequestValidatedEvent formsOnlineRequestValidatedEvent) {
+      final FormsOnlineRequestValidatedEvent event) {
+    for (int i = 0; i < data.size(); i++) {
+      if (data.get(i).getId().equals(event.getData().getId())) {
+        data.remove(i);
+        break;
+      }
+    }
+    display(data);
   }
 
-  interface FormsOnlinePageUiBinder extends UiBinder<Widget, FormsOnlinePage> {
+  interface FormsOnlineAsReceiverPageUiBinder extends UiBinder<Widget, FormOnlineRequestsPage> {
   }
 
-  public FormsOnlinePage() {
+  public FormOnlineRequestsPage() {
     msg = GWT.create(FormsOnlineMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new FormsOnlineLoadEvent());
-  }
-
-  @UiHandler("view")
-  void view(ClickEvent event) {
-    EventBus.getInstance().fireEvent(new FormsOnlineAsReceiverLoadEvent());
   }
 
   @Override
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
+  }
+
+  public void setData(List<FormRequestDTO> data) {
+    this.data = data;
+    display(data);
+  }
+
+  private void display(final List<FormRequestDTO> data) {
+    requests.clear();
+    for (FormRequestDTO r : data) {
+      FormOnlineRequestItem item = new FormOnlineRequestItem();
+      item.setData(r);
+      requests.add(item);
+    }
   }
 }

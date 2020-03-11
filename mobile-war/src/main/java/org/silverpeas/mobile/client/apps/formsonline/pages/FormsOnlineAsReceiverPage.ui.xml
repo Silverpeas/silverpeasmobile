@@ -32,13 +32,5 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <base:ActionsMenu ui:field="actionsMenu"/>
     <components:UnorderedList ui:field="forms" styleName="forms-list"/>
-
-    <g:HTMLPanel ui:field="viewAll" styleName="ui-controlgroup ui-controlgroup-horizontal" visible="false">
-      <div class="ui-controlgroup-controls ">
-        <g:Anchor ui:field="view" styleName="btn-validate ui-link">
-          <span class="ui-btn-text"><ui:text from="{msg.viewAll}"/></span>
-        </g:Anchor>
-      </div>
-    </g:HTMLPanel>
   </g:HTMLPanel>
 </ui:UiBinder> 

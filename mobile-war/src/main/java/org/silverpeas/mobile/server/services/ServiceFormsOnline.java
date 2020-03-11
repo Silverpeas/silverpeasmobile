@@ -24,37 +24,43 @@
 package org.silverpeas.mobile.server.services;
 
 import org.apache.commons.fileupload.FileItem;
+import org.silverpeas.components.formsonline.FormsOnlineComponentSettings;
 import org.silverpeas.components.formsonline.model.FormDetail;
+import org.silverpeas.components.formsonline.model.FormInstance;
 import org.silverpeas.components.formsonline.model.FormPK;
 import org.silverpeas.components.formsonline.model.FormsOnlineDatabaseException;
 import org.silverpeas.components.formsonline.model.FormsOnlineService;
+import org.silverpeas.components.formsonline.model.RequestPK;
 import org.silverpeas.components.formsonline.model.RequestsByStatus;
+import org.silverpeas.components.formsonline.model.RequestsFilter;
 import org.silverpeas.core.SilverpeasException;
-import org.silverpeas.core.admin.service.AdminController;
 import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.ProfileInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.annotation.RequestScoped;
 import org.silverpeas.core.annotation.Service;
+import org.silverpeas.core.contribution.content.form.DataRecord;
+import org.silverpeas.core.contribution.content.form.Field;
 import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.RecordSet;
+import org.silverpeas.core.contribution.content.form.form.XmlForm;
 import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.webapi.base.RESTWebService;
 import org.silverpeas.core.webapi.base.annotation.Authorized;
-import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -65,6 +71,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -106,6 +113,36 @@ public class ServiceFormsOnline extends RESTWebService {
   @PathParam("appId")
   private String componentId;
 
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("processRequest/{requestId}")
+  public void processRequest(@PathParam("requestId") String requestId, ValidationRequestDTO validation) {
+    try {
+    FormsOnlineService.get().setValidationStatus(new RequestPK(requestId, getComponentId()), getUser().getId(), validation.getDecision(), validation.getComment());
+    } catch(Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("receivables")
+  public List<FormDTO> getReceivablesForms() {
+    List<FormDTO> dtos = new ArrayList<>();
+    try {
+      List<String> formIdsAsReceiver = FormsOnlineService.get().getAvailableFormIdsAsReceiver(getComponentId(), getUser().getId());
+      for (String id : formIdsAsReceiver) {
+        FormDetail form = FormsOnlineService.get().loadForm(new FormPK(id, getComponentId()));
+        FormDTO dto = populate(formIdsAsReceiver, form);
+        dtos.add(dto);
+      }
+    } catch(Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+
+    return dtos;
+  }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -114,21 +151,91 @@ public class ServiceFormsOnline extends RESTWebService {
       List<FormDTO> dtos = new ArrayList<>();
     try {
       List<FormDetail> forms = FormsOnlineService.get().getAllForms(getComponentId(), getUser().getId(), true);
+      List<String> formIdsAsReceiver = FormsOnlineService.get().getAvailableFormIdsAsReceiver(getComponentId(), getUser().getId());
       for (FormDetail form : forms) {
-        FormDTO dto = new FormDTO();
         if (form.isSendable() && form.isPublished()) {
-          dto.setId(String.valueOf(form.getId()));
-          dto.setTitle(form.getTitle());
-          dto.setDescription(form.getDescription());
-          dto.setXmlFormName(form.getXmlFormName());
+          FormDTO dto = populate(formIdsAsReceiver, form);
           dtos.add(dto);
         }
       }
-
-    } catch (FormsOnlineDatabaseException e) {
+    } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
     return dtos;
+  }
+
+  private int countRequestsToValidate(int formId) throws Exception {
+    int count = 0;
+    RequestsByStatus r = FormsOnlineService.get().getValidatorRequests(getRequestsFilter(), getUser().getId(), null);
+    for (FormInstance f : r.getToValidate()) {
+      if (f.getFormId() == formId) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  private FormDTO populate(final List<String> formIdsAsReceiver, final FormDetail form) throws Exception {
+    FormDTO dto = new FormDTO();
+    dto.setId(String.valueOf(form.getId()));
+    dto.setTitle(form.getTitle());
+    dto.setDescription(form.getDescription());
+    dto.setXmlFormName(form.getXmlFormName());
+    dto.setNbRequests(countRequestsToValidate(form.getId()));
+    if (formIdsAsReceiver.contains(String.valueOf(form.getId()))) {
+      dto.setReceiver(true);
+    }
+    return dto;
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("requests/{formId}")
+  public List<FormRequestDTO> getRequests(@PathParam("formId") String formId) {
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    List<FormRequestDTO> requestDTOS = new ArrayList<>();
+    try {
+      RequestsByStatus r = FormsOnlineService.get().getValidatorRequests(getRequestsFilter(), getUser().getId(), null);
+      for (FormInstance f : r.getToValidate()) {
+        if (f.getFormId() == Integer.parseInt(formId)) {
+          f = FormsOnlineService.get().loadRequest(new RequestPK(f.getId(), getComponentId()), getUser().getId());
+          FormRequestDTO dto = new FormRequestDTO();
+          dto.setId(f.getId());
+          dto.setComments(f.getComments());
+          dto.setTitle(f.getTitle());
+          dto.setDescription(f.getDescription());
+          dto.setState(f.getState());
+          dto.setCreator(f.getCreator().getDisplayedName());
+          dto.setCreationDate(sdf.format(f.getCreationDate()));
+          dto.setFormId(String.valueOf(f.getFormId()));
+
+          DataRecord record = ((XmlForm) f.getFormWithData()).getData();
+          List<FormFieldDTO> dataForm = new ArrayList<>();
+          for (String name : record.getFieldNames()) {
+            Field field = record.getField(name);
+            FormFieldDTO fieldDTO = new FormFieldDTO();
+            fieldDTO.setLabel(getLabel(f, name));
+            fieldDTO.setValue(field.getStringValue());
+            dataForm.add(fieldDTO);
+          }
+          dto.setData(dataForm);
+          requestDTOS.add(dto);
+        }
+      }
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+
+    return requestDTOS;
+  }
+
+  private String getLabel(final FormInstance f, final String name) {
+    for (FieldTemplate fTemplate : f.getFormWithData().getFieldTemplates()) {
+      if (fTemplate.getFieldName().equals(name)) {
+        return fTemplate.getLabel(getUser().getUserPreferences().getLanguage());
+      }
+    }
+    return "";
   }
 
   @GET
@@ -290,5 +397,18 @@ public class ServiceFormsOnline extends RESTWebService {
   @Override
   public String getComponentId() {
     return this.componentId;
+  }
+
+  private RequestsFilter getRequestsFilter() {
+    return new RequestsFilter(getComponentId(), isWorkgroupEnabled());
+  }
+
+  private boolean isWorkgroupEnabled() {
+    return StringUtil.getBooleanValue(
+        getComponentParameterValue(FormsOnlineComponentSettings.PARAM_WORKGROUP));
+  }
+
+  public String getComponentParameterValue(String parameterName) {
+    return OrganizationController.get().getComponentParameterValue(getComponentId(), parameterName);
   }
 }

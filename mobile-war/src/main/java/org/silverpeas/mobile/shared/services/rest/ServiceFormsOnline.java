@@ -27,8 +27,9 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -63,5 +64,16 @@ public interface ServiceFormsOnline extends RestService {
   public void getUserField(@PathParam("appId") String appId, @PathParam("formName") String formName,
       @PathParam("fieldName") String fieldName, MethodCallback<List<BaseDTO>> callback);
 
+  @GET
+  @Path("{appId}/requests/{formId}")
+  public void getRequests(@PathParam("appId") String appId, @PathParam("formId") String formId, MethodCallback<List<FormRequestDTO>> callback);
+
+  @GET
+  @Path("{appId}/receivables")
+  public void getReceivablesForms(@PathParam("appId") String appId, MethodCallback<List<FormDTO>> callback);
+
+  @POST
+  @Path("{appId}/processRequest/{requestId}")
+  public void processRequest(@PathParam("appId") String appId, @PathParam("requestId") String requestId, ValidationRequestDTO validation, MethodCallback<Void> callback);
 
 }

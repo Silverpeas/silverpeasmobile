@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -24,63 +24,72 @@
 package org.silverpeas.mobile.client.apps.formsonline.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAsReceiverLoadEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineValidationRequestEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineRequestValidatedEvent;
-import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.FormOnlineItem;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
-import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
-import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
-import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.client.components.forms.FieldViewable;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
-public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEventHandler {
+public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesEventHandler {
 
-  private static FormsOnlinePageUiBinder uiBinder = GWT.create(FormsOnlinePageUiBinder.class);
+  private static FormOnlineEditPageUiBinder uiBinder = GWT.create(FormOnlineEditPageUiBinder.class);
 
   @UiField(provided = true) protected FormsOnlineMessages msg = null;
   @UiField
   ActionsMenu actionsMenu;
 
   @UiField
-  UnorderedList forms;
+  UnorderedList fields;
 
   @UiField
-  Anchor view;
+  TextArea comment;
 
   @UiField
-  HTMLPanel viewAll;
+  Anchor accept, reject;
 
-  private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
-  private boolean canReceive = false;
+  private FormRequestDTO data;
+
+  interface FormOnlineEditPageUiBinder extends UiBinder<Widget, FormOnlineViewPage> {
+  }
+
+  public FormOnlineViewPage() {
+    msg = GWT.create(FormsOnlineMessages.class);
+    setPageTitle(msg.title());
+    initWidget(uiBinder.createAndBindUi(this));
+    accept.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+    reject.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+    EventBus.getInstance().addHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
+  }
 
   @Override
-  public void onFormsOnlineLoad(final FormsOnlineLoadedEvent event) {
-    for (FormDTO form : event.getForms()) {
-      FormOnlineItem item = new FormOnlineItem();
-      item.setData(form);
-      forms.add(item);
-      if (form.isReceiver()) canReceive = true;
-    }
-    viewAll.setVisible(canReceive);
+  public void stop() {
+    super.stop();
+    EventBus.getInstance().removeHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
   }
+
+  @Override
+  public void onFormsOnlineLoad(final FormsOnlineLoadedEvent event) {}
 
   @Override
   public void onFormLoaded(final FormLoadedEvent formLoadedEvent) {}
@@ -91,27 +100,35 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
   @Override
   public void onFormsOnlineRequestValidated(
       final FormsOnlineRequestValidatedEvent formsOnlineRequestValidatedEvent) {
+    stop();
+    back();
+    Notification.activityStop();
   }
 
-  interface FormsOnlinePageUiBinder extends UiBinder<Widget, FormsOnlinePage> {
+  @UiHandler("accept")
+  protected void validate(ClickEvent event) {
+    Notification.activityStart();
+    ValidationRequestDTO validation = new ValidationRequestDTO();
+    validation.setDecision("validate");
+    validation.setComment(comment.getText());
+    EventBus.getInstance().fireEvent(new FormsOnlineValidationRequestEvent(data, validation));
   }
 
-  public FormsOnlinePage() {
-    msg = GWT.create(FormsOnlineMessages.class);
-    setPageTitle(msg.title());
-    initWidget(uiBinder.createAndBindUi(this));
-    EventBus.getInstance().addHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
-    EventBus.getInstance().fireEvent(new FormsOnlineLoadEvent());
+  @UiHandler("reject")
+  protected void reject(ClickEvent event) {
+    Notification.activityStart();
+    ValidationRequestDTO validation = new ValidationRequestDTO();
+    validation.setDecision("refuse");
+    validation.setComment(comment.getText());
+    EventBus.getInstance().fireEvent(new FormsOnlineValidationRequestEvent(data, validation));
   }
 
-  @UiHandler("view")
-  void view(ClickEvent event) {
-    EventBus.getInstance().fireEvent(new FormsOnlineAsReceiverLoadEvent());
-  }
-
-  @Override
-  public void stop() {
-    super.stop();
-    EventBus.getInstance().removeHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
+  public void setData(FormRequestDTO data) {
+    this.data = data;
+    for (FormFieldDTO f : data.getData()) {
+      FieldViewable item = new FieldViewable();
+      item.setData(f);
+      fields.add(item);
+    }
   }
 }

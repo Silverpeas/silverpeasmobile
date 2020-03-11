@@ -21,22 +21,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.formsonline.events.app;
+package org.silverpeas.mobile.client.apps.formsonline.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
-public interface FormsOnlineAppEventHandler extends EventHandler{
-  void loadFormsOnline(FormsOnlineLoadEvent event);
-  void loadFormOnline(FormOnlineLoadEvent event);
-  
+public class FormsOnlineRequestValidatedEvent extends AbstractFormsOnlinePagesEvent {
 
-  void saveForm(FormSaveEvent formSaveEvent);
+  private FormRequestDTO data;
 
-  void loadUserField(FormOnlineLoadUserFieldEvent formOnlineLoadUserFieldEvent);
+  public FormsOnlineRequestValidatedEvent(){
+    super();
+  }
 
-  void loadFormsOnlineAsReceiver(FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent);
-  void loadFormOnlineAsReceiver(FormOnlineAsReceiverLoadEvent formOnlineAsReceiverLoadEvent);
+  public FormsOnlineRequestValidatedEvent(final FormRequestDTO data) {
+    this.data = data;
+  }
 
-  void validationRequest(FormsOnlineValidationRequestEvent formsOnlineAcceptRequestEvent);
+  @Override
+  protected void dispatch(FormsOnlinePagesEventHandler handler) {
+    handler.onFormsOnlineRequestValidated(this);
+  }
 
+  public FormRequestDTO getData() {
+    return data;
+  }
 }

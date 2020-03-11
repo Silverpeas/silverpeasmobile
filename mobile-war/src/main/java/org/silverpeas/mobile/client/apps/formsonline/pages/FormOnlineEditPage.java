@@ -24,7 +24,6 @@
 package org.silverpeas.mobile.client.apps.formsonline.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,16 +33,13 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormSaveEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
-import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.FormOnlineItem;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineRequestValidatedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
-import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowProcessFormEvent;
-import org.silverpeas.mobile.client.apps.workflow.pages.widgets.WorkflowFieldEditable;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.Popin;
@@ -52,9 +48,6 @@ import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.forms.FieldEditable;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +108,11 @@ public class FormOnlineEditPage extends PageContent implements FormsOnlinePagesE
     stopAllFields();
     Notification.activityStop();
     back();
+  }
+
+  @Override
+  public void onFormsOnlineRequestValidated(
+      final FormsOnlineRequestValidatedEvent formsOnlineRequestValidatedEvent) {
   }
 
   @UiHandler("validate")

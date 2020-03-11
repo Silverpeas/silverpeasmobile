@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,22 +21,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.formsonline.events.app;
+package org.silverpeas.mobile.shared.dto.formsonline;
 
-import com.google.gwt.event.shared.EventHandler;
+import java.io.Serializable;
 
-public interface FormsOnlineAppEventHandler extends EventHandler{
-  void loadFormsOnline(FormsOnlineLoadEvent event);
-  void loadFormOnline(FormOnlineLoadEvent event);
-  
+/**
+ * @author svu
+ */
+public class ValidationRequestDTO implements Serializable {
+  private String decision;
+  private String comment;
 
-  void saveForm(FormSaveEvent formSaveEvent);
+  public String getDecision() {
+    return decision;
+  }
 
-  void loadUserField(FormOnlineLoadUserFieldEvent formOnlineLoadUserFieldEvent);
+  public void setDecision(final String decision) {
+    this.decision = decision;
+  }
 
-  void loadFormsOnlineAsReceiver(FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent);
-  void loadFormOnlineAsReceiver(FormOnlineAsReceiverLoadEvent formOnlineAsReceiverLoadEvent);
+  public String getComment() {
+    return comment;
+  }
 
-  void validationRequest(FormsOnlineValidationRequestEvent formsOnlineAcceptRequestEvent);
-
+  public void setComment(final String comment) {
+    this.comment = comment;
+  }
 }

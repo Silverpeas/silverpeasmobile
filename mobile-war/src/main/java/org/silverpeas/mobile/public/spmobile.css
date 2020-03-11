@@ -2029,6 +2029,20 @@ form .forms .fields > li:nth-child(even) {
 
 }
 
+.forms-list li .number {
+  float: right;
+}
+
+.formOnlineRequest .label-comment {
+  margin-left: 1em;
+}
+
+.formOnlineRequest .comment {
+  width: 95%;
+  height: 5em;
+  margin-left: 1em;
+}
+
 
 /* LE BLOG */
 .liste-billet {
