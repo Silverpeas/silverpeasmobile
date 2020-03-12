@@ -296,11 +296,13 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.formsOnline.name())) {
       this.instance = event.getInstance();
+      this.setApplicationInstance(event.getInstance());
 
       keyForms = "forms_" + instance.getId();
       keyFormsAsReceiver = "formsAsReceiver_" + instance.getId();
 
       FormsOnlinePage page = new FormsOnlinePage();
+      page.setApp(this);
       page.setPageTitle(event.getInstance().getLabel());
       page.show();
     }

@@ -36,4 +36,5 @@ public interface FormsOnlineMessages extends Messages {
   String reject();
   String comment();
   String accept();
+  String viewMyRequests();
 }
