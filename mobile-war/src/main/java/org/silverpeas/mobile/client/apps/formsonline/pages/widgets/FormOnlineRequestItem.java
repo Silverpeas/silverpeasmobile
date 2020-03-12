@@ -39,6 +39,7 @@ import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 public class FormOnlineRequestItem extends Composite implements ClickHandler {
 
   private FormRequestDTO data;
+  private boolean readOnly;
   private static FormOnlineItemUiBinder uiBinder = GWT.create(FormOnlineItemUiBinder.class);
 
   @UiField
@@ -54,12 +55,13 @@ public class FormOnlineRequestItem extends Composite implements ClickHandler {
     msg = GWT.create(FormsOnlineMessages.class);
   }
 
-  public void setData(FormRequestDTO data) {
+  public void setData(FormRequestDTO data, boolean readOnly) {
     this.data = data;
+    this.readOnly = readOnly;
     if (data.getTitle().isEmpty()) data.setTitle("&nbsp;");
     String html = "<h2 class='title'><a href='#'>" + data.getTitle() + "</a></h2>";
     if (!data.getDescription().isEmpty()) html += "<span class='description'>" + data.getDescription() + "</span>";
-    html += "<span class='author'>" + data.getCreationDate() + "&nbsp;" + data.getCreator() + "</span>";
+    html += "<span class='state'>" + data.getStateLabel() + "</span>" + "<span class='author'>" + data.getCreationDate() + "&nbsp;" + data.getCreator() + "</span>";
     content.setHTML(html);
     content.addClickHandler(this);
   }
@@ -67,7 +69,7 @@ public class FormOnlineRequestItem extends Composite implements ClickHandler {
   @Override
   public void onClick(final ClickEvent event) {
     FormOnlineViewPage page = new FormOnlineViewPage();
-    page.setData(data);
+    page.setData(data, readOnly);
     page.setPageTitle(data.getTitle() + " " + data.getCreationDate() + " " + data.getCreator());
     page.show();
   }

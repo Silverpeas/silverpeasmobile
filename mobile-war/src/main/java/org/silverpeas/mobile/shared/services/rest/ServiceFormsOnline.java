@@ -35,6 +35,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -49,6 +51,10 @@ public interface ServiceFormsOnline extends RestService {
   public void getSendablesForms(@PathParam("appId") String appId,
       MethodCallback<List<FormDTO>> callback);
 
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{appId}/myrequests")
+  public void getMyRequests(@PathParam("appId") String appId, MethodCallback<List<FormRequestDTO>> callback);
 
   @GET
   @Path("{appId}/form/{formName}")

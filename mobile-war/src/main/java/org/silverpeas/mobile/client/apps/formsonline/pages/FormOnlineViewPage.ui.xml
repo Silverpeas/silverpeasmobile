@@ -32,7 +32,7 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a formOnlineRequest">
     <base:ActionsMenu ui:field="actionsMenu"/>
     <components:UnorderedList ui:field="fields" styleName="formOnline-form"/>
-    <g:Label text="{msg.comment}" styleName="label-comment"></g:Label>
+    <g:Label ui:field="labelComment" text="{msg.comment}" styleName="label-comment"></g:Label>
     <g:TextArea ui:field="comment" styleName="comment"></g:TextArea>
     <div class=" ui-controlgroup ui-controlgroup-horizontal">
       <div class="ui-controlgroup-controls ">

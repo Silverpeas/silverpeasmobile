@@ -2034,6 +2034,10 @@ form .forms .fields > li:nth-child(even) {
   float: right;
 }
 
+.forms-list li .state {
+  padding-right: 1em;
+}
+
 .formOnlineRequest .label-comment {
   margin-left: 1em;
 }

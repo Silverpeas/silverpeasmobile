@@ -56,6 +56,7 @@ public class FormOnlineRequestsPage extends PageContent implements FormsOnlinePa
   UnorderedList requests;
 
   private List<FormRequestDTO> data;
+  private boolean readOnly;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
@@ -97,7 +98,8 @@ public class FormOnlineRequestsPage extends PageContent implements FormsOnlinePa
     EventBus.getInstance().removeHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
   }
 
-  public void setData(List<FormRequestDTO> data) {
+  public void setData(List<FormRequestDTO> data, boolean readOnly) {
+    this.readOnly = readOnly;
     this.data = data;
     display(data);
   }
@@ -106,7 +108,7 @@ public class FormOnlineRequestsPage extends PageContent implements FormsOnlinePa
     requests.clear();
     for (FormRequestDTO r : data) {
       FormOnlineRequestItem item = new FormOnlineRequestItem();
-      item.setData(r);
+      item.setData(r, readOnly);
       requests.add(item);
     }
   }

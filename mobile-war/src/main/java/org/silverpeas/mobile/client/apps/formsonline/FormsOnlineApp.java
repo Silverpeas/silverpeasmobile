@@ -68,7 +68,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
 
   private FormsOnlineMessages msg;
   private ApplicationInstanceDTO instance;
-  private String keyForms, keyFormsAsReceiver;
+  private String keyForms, keyFormsAsReceiver, keysMyRequests;
   private FormDTO currentForm;
 
   public FormsOnlineApp(){
@@ -267,7 +267,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
       public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
         FormOnlineRequestsPage page = new FormOnlineRequestsPage();
         page.setTitle(instance.getLabel());
-        page.setData(requests);
+        page.setData(requests, false);
         page.show();
       }
     };
@@ -289,6 +289,40 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
       }
     };
     action.attempt();
+  }
+
+  @Override
+  public void loadMyRequests(final FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent) {
+    Command offlineAction = new Command() {
+      @Override
+      public void execute() {
+        List<FormRequestDTO> requests = LocalStorageHelper.load(keysMyRequests, List.class);
+        if (requests == null) {
+          requests = new ArrayList<FormRequestDTO>();
+        }
+        FormOnlineRequestsPage page = new FormOnlineRequestsPage();
+        page.setData(requests, true);
+        page.show();
+      }
+    };
+
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormRequestDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceFormsOnline().getMyRequests(instance.getId(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
+        super.onSuccess(method, requests);
+        LocalStorageHelper.store(keysMyRequests, List.class, requests);
+        FormOnlineRequestsPage page = new FormOnlineRequestsPage();
+        page.setData(requests, true);
+        page.show();
+      }
+    };
+    action.attempt();
+
   }
 
 

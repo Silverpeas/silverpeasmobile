@@ -47,6 +47,7 @@ public class FormRequestDTO implements Serializable {
   private String creator;
   private String creationDate;
   private int state;
+  private String stateLabel;
   private String formId;
   private List<FormFieldDTO> data;
 
@@ -128,5 +129,13 @@ public class FormRequestDTO implements Serializable {
 
   public void setFormId(final String formId) {
     this.formId = formId;
+  }
+
+  public String getStateLabel() {
+    return stateLabel;
+  }
+
+  public void setStateLabel(final String stateLabel) {
+    this.stateLabel = stateLabel;
   }
 }

@@ -30,6 +30,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineValidationRequestEvent;
@@ -66,6 +67,9 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
 
   @UiField
   Anchor accept, reject;
+
+  @UiField
+  Label labelComment;
 
   private String instanceId;
   private FormRequestDTO data;
@@ -123,8 +127,13 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
     EventBus.getInstance().fireEvent(new FormsOnlineValidationRequestEvent(data, validation));
   }
 
-  public void setData(FormRequestDTO data) {
+  public void setData(FormRequestDTO data, boolean readOnly) {
     this.data = data;
+    reject.setVisible(!readOnly);
+    accept.setVisible(!readOnly);
+    labelComment.setVisible(!readOnly);
+    comment.setVisible(!readOnly);
+
     for (FormFieldDTO f : data.getData()) {
       FieldViewable item = new FieldViewable();
       item.setData(f);
