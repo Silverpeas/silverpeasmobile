@@ -37,6 +37,7 @@ import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAsRec
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormRequestStatusChangedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
@@ -96,6 +97,11 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
   @Override
   public void onFormsOnlineRequestValidated(
       final FormsOnlineRequestValidatedEvent formsOnlineRequestValidatedEvent) {
+  }
+
+  @Override
+  public void onFormRequestStatusChange(
+      final FormRequestStatusChangedEvent formRequestStatusChangedEvent) {
   }
 
   interface FormsOnlinePageUiBinder extends UiBinder<Widget, FormsOnlinePage> {

@@ -35,6 +35,7 @@ import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesB
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormSaveEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormRequestStatusChangedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
@@ -113,6 +114,12 @@ public class FormOnlineEditPage extends PageContent implements FormsOnlinePagesE
   @Override
   public void onFormsOnlineRequestValidated(
       final FormsOnlineRequestValidatedEvent formsOnlineRequestValidatedEvent) {
+  }
+
+  @Override
+  public void onFormRequestStatusChange(
+      final FormRequestStatusChangedEvent formRequestStatusChangedEvent) {
+
   }
 
   @UiHandler("validate")

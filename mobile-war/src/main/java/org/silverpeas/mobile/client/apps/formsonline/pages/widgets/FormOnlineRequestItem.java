@@ -32,8 +32,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.formsonline.pages.FormOnlineViewPage;
+import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadRequestEvent;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
+import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
 public class FormOnlineRequestItem extends Composite implements ClickHandler {
@@ -68,9 +69,6 @@ public class FormOnlineRequestItem extends Composite implements ClickHandler {
 
   @Override
   public void onClick(final ClickEvent event) {
-    FormOnlineViewPage page = new FormOnlineViewPage();
-    page.setData(data, readOnly);
-    page.setPageTitle(data.getTitle() + " " + data.getCreationDate() + " " + data.getCreator());
-    page.show();
+    EventBus.getInstance().fireEvent(new FormsOnlineLoadRequestEvent(data, readOnly));
   }
 }

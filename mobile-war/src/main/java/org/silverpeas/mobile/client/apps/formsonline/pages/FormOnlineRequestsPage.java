@@ -26,10 +26,12 @@ package org.silverpeas.mobile.client.apps.formsonline.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormRequestStatusChangedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
@@ -77,6 +79,18 @@ public class FormOnlineRequestsPage extends PageContent implements FormsOnlinePa
       if (data.get(i).getId().equals(event.getData().getId())) {
         data.remove(i);
         break;
+      }
+    }
+    display(data);
+  }
+
+  @Override
+  public void onFormRequestStatusChange(
+      final FormRequestStatusChangedEvent event) {
+    for (FormRequestDTO r : data) {
+      if (r.getId().equals(event.getData().getId())) {
+        r.setState(event.getData().getState());
+        r.setStateLabel(event.getData().getStateLabel());
       }
     }
     display(data);

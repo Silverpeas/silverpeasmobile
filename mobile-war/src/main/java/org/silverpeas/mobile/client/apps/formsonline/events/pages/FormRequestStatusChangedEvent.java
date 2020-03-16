@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,25 +21,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.formsonline.events.app;
+package org.silverpeas.mobile.client.apps.formsonline.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
-public interface FormsOnlineAppEventHandler extends EventHandler{
-  void loadFormsOnline(FormsOnlineLoadEvent event);
-  void loadFormOnline(FormOnlineLoadEvent event);
-  
+public class FormRequestStatusChangedEvent extends AbstractFormsOnlinePagesEvent {
 
-  void saveForm(FormSaveEvent formSaveEvent);
+  private FormRequestDTO data;
 
-  void loadUserField(FormOnlineLoadUserFieldEvent formOnlineLoadUserFieldEvent);
+  public FormRequestStatusChangedEvent(){
+    super();
+  }
 
-  void loadFormsOnlineAsReceiver(FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent);
-  void loadFormOnlineAsReceiver(FormOnlineAsReceiverLoadEvent formOnlineAsReceiverLoadEvent);
+  public FormRequestStatusChangedEvent(final FormRequestDTO data) {
+    this.data = data;
+  }
 
-  void validationRequest(FormsOnlineValidationRequestEvent formsOnlineAcceptRequestEvent);
+  @Override
+  protected void dispatch(FormsOnlinePagesEventHandler handler) {
+    handler.onFormRequestStatusChange(this);
+  }
 
-  void loadMyRequests(FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent);
-
-  void loadFormRequest(FormsOnlineLoadRequestEvent formsOnlineMarkRequestAsReadEvent);
+  public FormRequestDTO getData() {
+    return data;
+  }
 }

@@ -36,10 +36,10 @@
     <g:TextArea ui:field="comment" styleName="comment"></g:TextArea>
     <div class=" ui-controlgroup ui-controlgroup-horizontal">
       <div class="ui-controlgroup-controls ">
-        <g:Anchor ui:field="accept" styleName="btn-validate ui-link">
+        <g:Anchor ui:field="accept" styleName="btn-validate ui-link smaller multiple">
           <span class="ui-btn-text"><ui:text from="{msg.accept}"/></span>
         </g:Anchor>
-        <g:Anchor ui:field="reject" styleName="btn-validate ui-link">
+        <g:Anchor ui:field="reject" styleName="btn-validate ui-link smaller multiple">
           <span class="ui-btn-text"><ui:text from="{msg.reject}"/></span>
         </g:Anchor>
       </div>

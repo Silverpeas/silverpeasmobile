@@ -23,23 +23,32 @@
 
 package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
-public interface FormsOnlineAppEventHandler extends EventHandler{
-  void loadFormsOnline(FormsOnlineLoadEvent event);
-  void loadFormOnline(FormOnlineLoadEvent event);
-  
+public class FormsOnlineLoadRequestEvent extends AbstractFormsOnlineAppEvent {
 
-  void saveForm(FormSaveEvent formSaveEvent);
+  private FormRequestDTO data;
+  private boolean readOnly;
 
-  void loadUserField(FormOnlineLoadUserFieldEvent formOnlineLoadUserFieldEvent);
+  public FormsOnlineLoadRequestEvent() {
+    super();
+  }
 
-  void loadFormsOnlineAsReceiver(FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent);
-  void loadFormOnlineAsReceiver(FormOnlineAsReceiverLoadEvent formOnlineAsReceiverLoadEvent);
+  public FormsOnlineLoadRequestEvent(final FormRequestDTO data, final boolean readOnly) {
+    this.data = data;
+    this.readOnly = readOnly;
+  }
 
-  void validationRequest(FormsOnlineValidationRequestEvent formsOnlineAcceptRequestEvent);
+  @Override
+  protected void dispatch(FormsOnlineAppEventHandler handler) {
+    handler.loadFormRequest(this);
+  }
 
-  void loadMyRequests(FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent);
+  public FormRequestDTO getData() {
+    return data;
+  }
 
-  void loadFormRequest(FormsOnlineLoadRequestEvent formsOnlineMarkRequestAsReadEvent);
+  public boolean isReadOnly() {
+    return readOnly;
+  }
 }

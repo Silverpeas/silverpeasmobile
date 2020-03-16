@@ -46,6 +46,10 @@ import java.util.List;
 public interface ServiceFormsOnline extends RestService {
 
 
+  @POST
+  @Path("{appId}/loadRequest/{requestId}")
+  public void loadRequest(@PathParam("appId") String appId, @PathParam("requestId") String requestId, MethodCallback<FormRequestDTO> callback);
+
   @GET
   @Path("{appId}/sendables")
   public void getSendablesForms(@PathParam("appId") String appId,

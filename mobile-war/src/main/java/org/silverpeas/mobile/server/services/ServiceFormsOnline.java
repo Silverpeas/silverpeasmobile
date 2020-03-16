@@ -123,10 +123,26 @@ public class ServiceFormsOnline extends RESTWebService {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Path("loadRequest/{requestId}")
+  public FormRequestDTO loadRequest(@PathParam("requestId") String requestId) {
+    FormRequestDTO dto = null;
+    try {
+      RequestPK pk = new RequestPK(requestId, getComponentId());
+      FormInstance request = FormsOnlineService.get().loadRequest(pk, getUser().getId());
+      dto = populate(request);
+    } catch(Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return dto;
+  }
+
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("processRequest/{requestId}")
   public void processRequest(@PathParam("requestId") String requestId, ValidationRequestDTO validation) {
     try {
-    FormsOnlineService.get().setValidationStatus(new RequestPK(requestId, getComponentId()), getUser().getId(), validation.getDecision(), validation.getComment());
+      FormsOnlineService.get().setValidationStatus(new RequestPK(requestId, getComponentId()), getUser().getId(), validation.getDecision(), validation.getComment());
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
@@ -204,7 +220,6 @@ public class ServiceFormsOnline extends RESTWebService {
       RequestsByStatus r = FormsOnlineService.get().getValidatorRequests(getRequestsFilter(), getUser().getId(), null);
       for (FormInstance f : r.getToValidate()) {
         if (f.getFormId() == Integer.parseInt(formId)) {
-          f = FormsOnlineService.get().loadRequest(new RequestPK(f.getId(), getComponentId()), getUser().getId());
           FormRequestDTO dto = populate(f);
           requestDTOS.add(dto);
         }
@@ -244,16 +259,19 @@ public class ServiceFormsOnline extends RESTWebService {
         dto.setStateLabel(formsOnlineBundle.getString("formsOnline.stateUnread"));
         break;
     }
-    DataRecord record = ((XmlForm) f.getFormWithData()).getData();
-    List<FormFieldDTO> dataForm = new ArrayList<>();
-    for (String name : record.getFieldNames()) {
-      Field field = record.getField(name);
-      FormFieldDTO fieldDTO = new FormFieldDTO();
-      fieldDTO.setLabel(getLabel(f, name));
-      fieldDTO.setValue(field.getStringValue());
-      dataForm.add(fieldDTO);
+    XmlForm formXml = ((XmlForm) f.getFormWithData());
+    if (formXml != null) {
+      DataRecord record = formXml.getData();
+      List<FormFieldDTO> dataForm = new ArrayList<>();
+      for (String name : record.getFieldNames()) {
+        Field field = record.getField(name);
+        FormFieldDTO fieldDTO = new FormFieldDTO();
+        fieldDTO.setLabel(getLabel(f, name));
+        fieldDTO.setValue(field.getStringValue());
+        dataForm.add(fieldDTO);
+      }
+      dto.setData(dataForm);
     }
-    dto.setData(dataForm);
     return dto;
   }
 

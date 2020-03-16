@@ -32,11 +32,13 @@ import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.*;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormRequestStatusChangedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineRequestValidatedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormOnlineEditPage;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormOnlineRequestsPage;
+import org.silverpeas.mobile.client.apps.formsonline.pages.FormOnlineViewPage;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormsOnlineAsReceiverPage;
 import org.silverpeas.mobile.client.apps.formsonline.pages.FormsOnlinePage;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
@@ -325,6 +327,26 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
 
   }
 
+  @Override
+  public void loadFormRequest(
+      final FormsOnlineLoadRequestEvent loadEvent) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<FormRequestDTO>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceFormsOnline().loadRequest(instance.getId(), loadEvent.getData().getId(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final FormRequestDTO data) {
+        EventBus.getInstance().fireEvent(new FormRequestStatusChangedEvent(data));
+        FormOnlineViewPage page = new FormOnlineViewPage();
+        page.setData(data, loadEvent.isReadOnly());
+        page.setPageTitle(data.getTitle() + " " + data.getCreationDate() + " " + data.getCreator());
+        page.show();
+      }
+    };
+    action.attempt();
+  }
 
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
