@@ -27,7 +27,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.*;
@@ -60,7 +59,6 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
-import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 import java.util.ArrayList;
@@ -69,7 +67,6 @@ import java.util.List;
 public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, NavigationEventHandler {
 
   private FormsOnlineMessages msg;
-  //private ApplicationInstanceDTO instance;
   private String keyForms, keyFormsAsReceiver, keysMyRequests;
   private FormDTO currentForm;
 
@@ -89,6 +86,11 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     // nevers stop
   }
 
+  /**
+   * Loads all forms published.
+   *
+   * @param event
+   */
   @Override
   public void loadFormsOnline(final FormsOnlineLoadEvent event) {
 
@@ -124,6 +126,11 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
 
   }
 
+  /**
+   * Loads one form for create a new request.
+   *
+   * @param event
+   */
   @Override
   public void loadFormOnline(final FormOnlineLoadEvent event) {
 
@@ -149,10 +156,13 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
       }
     };
     action.attempt();
-
-
   }
 
+  /**
+   * Save new request.
+   *
+   * @param formSaveEvent
+   */
   @Override
   public void saveForm(final FormSaveEvent formSaveEvent) {
     JavaScriptObject formData = FormsHelper.createFormData();
@@ -218,6 +228,11 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     action.attempt();
   }
 
+  /**
+   * Loads all forms where the current user is receiver.
+   *
+   * @param formsOnlineAsReceiverLoadEvent
+   */
   @Override
   public void loadFormsOnlineAsReceiver(
       final FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent) {
@@ -257,6 +272,11 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     action.attempt();
   }
 
+  /**
+   * Loads all requests of selected form where the current user is receiver.
+   *
+   * @param event
+   */
   @Override
   public void loadFormOnlineAsReceiver(final FormOnlineAsReceiverLoadEvent event) {
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
@@ -293,6 +313,11 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     action.attempt();
   }
 
+  /**
+   * Load all requests created by the current user.
+   *
+   * @param formOnlineMyRequestLoadEvent
+   */
   @Override
   public void loadMyRequests(final FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent) {
     Command offlineAction = new Command() {
@@ -327,6 +352,11 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
 
   }
 
+  /**
+   * Loads a form request.
+   *
+   * @param loadEvent
+   */
   @Override
   public void loadFormRequest(
       final FormsOnlineLoadRequestEvent loadEvent) {
