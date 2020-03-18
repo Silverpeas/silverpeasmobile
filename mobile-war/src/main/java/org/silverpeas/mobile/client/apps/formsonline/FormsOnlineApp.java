@@ -97,7 +97,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     Command offlineAction = new Command() {
       @Override
       public void execute() {
-        List<FormDTO> forms = LocalStorageHelper.load(keyForms, List.class);
+        List<FormDTO> forms = LocalStorageHelper.load(keyForms+getApplicationInstance().getId(), List.class);
         if (forms == null) {
           forms = new ArrayList<FormDTO>();
         }
@@ -116,7 +116,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
       @Override
       public void onSuccess(final Method method, final List<FormDTO> forms) {
         super.onSuccess(method, forms);
-        LocalStorageHelper.store(keyForms, List.class, forms);
+        LocalStorageHelper.store(keyForms+getApplicationInstance().getId(), List.class, forms);
         FormsOnlineLoadedEvent event = new FormsOnlineLoadedEvent();
         event.setForms(forms);
         EventBus.getInstance().fireEvent(event);
@@ -240,7 +240,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     Command offlineAction = new Command() {
       @Override
       public void execute() {
-        List<FormDTO> forms = LocalStorageHelper.load(keyFormsAsReceiver, List.class);
+        List<FormDTO> forms = LocalStorageHelper.load(keyFormsAsReceiver+getApplicationInstance().getId(), List.class);
         if (forms == null) {
           forms = new ArrayList<FormDTO>();
         }
@@ -261,7 +261,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
       @Override
       public void onSuccess(final Method method, final List<FormDTO> forms) {
         super.onSuccess(method, forms);
-        LocalStorageHelper.store(keyFormsAsReceiver, List.class, forms);
+        LocalStorageHelper.store(keyFormsAsReceiver+getApplicationInstance().getId(), List.class, forms);
 
         FormsOnlineAsReceiverPage page = new FormsOnlineAsReceiverPage();
         page.setPageTitle(getApplicationInstance().getLabel());
@@ -323,7 +323,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     Command offlineAction = new Command() {
       @Override
       public void execute() {
-        List<FormRequestDTO> requests = LocalStorageHelper.load(keysMyRequests, List.class);
+        List<FormRequestDTO> requests = LocalStorageHelper.load(keysMyRequests+getApplicationInstance().getId(), List.class);
         if (requests == null) {
           requests = new ArrayList<FormRequestDTO>();
         }
@@ -342,7 +342,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
       @Override
       public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
         super.onSuccess(method, requests);
-        LocalStorageHelper.store(keysMyRequests, List.class, requests);
+        LocalStorageHelper.store(keysMyRequests+getApplicationInstance().getId(), List.class, requests);
         FormOnlineRequestsPage page = new FormOnlineRequestsPage();
         page.setData(requests, true);
         page.show();
