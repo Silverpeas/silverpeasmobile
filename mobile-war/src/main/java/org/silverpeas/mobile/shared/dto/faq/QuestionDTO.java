@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.shared.dto.faq;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds, survey, questionReply;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author svu
+ */
+public class QuestionDTO implements Serializable {
+  private String title;
+
+  private CategoryDTO category;
+
+  private List<ReplyDTO> replies = new ArrayList<>();
+
+  public List<ReplyDTO> getReplies() {
+    return replies;
+  }
+
+  public void setReplies(final List<ReplyDTO> replies) {
+    this.replies = replies;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(final String title) {
+    this.title = title;
+  }
+
+  public CategoryDTO getCategory() {
+    return category;
+  }
+
+  public void setCategory(final CategoryDTO category) {
+    this.category = category;
+  }
 }

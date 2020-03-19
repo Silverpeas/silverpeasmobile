@@ -21,8 +21,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.faq.events.app;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds, survey, questionReply;
+import com.google.gwt.event.shared.GwtEvent;
+
+public abstract class AbstractFaqAppEvent extends GwtEvent<FaqAppEventHandler>{
+
+  public static Type<FaqAppEventHandler> TYPE = new Type<FaqAppEventHandler>();
+
+  public AbstractFaqAppEvent(){
+  }
+
+  @Override
+  public Type<FaqAppEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 }

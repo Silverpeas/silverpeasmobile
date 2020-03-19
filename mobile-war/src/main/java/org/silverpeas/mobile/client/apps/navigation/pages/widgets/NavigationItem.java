@@ -86,6 +86,8 @@ public class NavigationItem extends Composite {
         setStyleName("app-classifieds");
       } else if (type.equalsIgnoreCase(Apps.survey.name())) {
         setStyleName("app-survey");
+      } else if (type.equalsIgnoreCase(Apps.questionReply.name())) {
+        setStyleName("app-faq");
       }
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");

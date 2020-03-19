@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.shared.services.rest;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds, survey, questionReply;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
+import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import java.util.List;
+
+/**
+ * @author svu
+ */
+@Path("/faq")
+public interface ServiceFaq extends RestService {
+
+  @GET
+  @Path("{appId}/question/all")
+  public void getAllQuestions(@PathParam("appId") String appId,
+      MethodCallback<List<QuestionDTO>> callback);
+
+  @GET
+  @Path("{appId}/category/all")
+  public void getAllCategories(@PathParam("appId") String appId,
+      MethodCallback<List<CategoryDTO>> callback);
 }
