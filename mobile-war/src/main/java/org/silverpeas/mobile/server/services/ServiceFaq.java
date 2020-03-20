@@ -27,15 +27,21 @@ import org.silverpeas.components.questionreply.model.Category;
 import org.silverpeas.components.questionreply.model.Question;
 import org.silverpeas.components.questionreply.model.Reply;
 import org.silverpeas.components.questionreply.service.QuestionManagerProvider;
+import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.annotation.RequestScoped;
 import org.silverpeas.core.annotation.Service;
+import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
+import org.silverpeas.core.contribution.attachment.model.DocumentType;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.webapi.base.RESTWebService;
 import org.silverpeas.core.webapi.base.annotation.Authorized;
+import org.silverpeas.mobile.server.services.helpers.AttachmentHelper;
+import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.faq.ReplyDTO;
@@ -106,6 +112,13 @@ public class ServiceFaq extends RESTWebService {
           ReplyDTO dt = new ReplyDTO();
           dt.setTitle(r.getTitle());
           dt.setContent(r.loadWysiwygContent());
+          List<SimpleDocument> attachments = AttachmentServiceProvider.getAttachmentService().listDocumentsByForeignKeyAndType(new ResourceReference(r.getPK()), DocumentType.attachment, getUser().getUserPreferences().getLanguage());
+          List<AttachmentDTO> attachmentsDTO = new ArrayList();
+          for (SimpleDocument attachment : attachments) {
+            attachmentsDTO.add(AttachmentHelper.getInstance().populate(attachment, getUser()));
+          }
+          dt.setAttachments(attachmentsDTO);
+
           dtoReplies.add(dt);
         }
         dto.setReplies(dtoReplies);

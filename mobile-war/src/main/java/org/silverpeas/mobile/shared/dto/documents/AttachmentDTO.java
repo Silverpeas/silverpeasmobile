@@ -31,7 +31,6 @@ public class AttachmentDTO implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String type = null;
-  private Date creationDate;
   private long size;
   private String author = null;
   private String title = null;
@@ -49,14 +48,6 @@ public class AttachmentDTO implements Serializable {
 
   public void setType(String type) {
     this.type = type;
-  }
-
-  public Date getCreationDate() {
-    return creationDate;
-  }
-
-  public void setCreationDate(Date creationDate) {
-    this.creationDate = creationDate;
   }
 
   public long getSize() {

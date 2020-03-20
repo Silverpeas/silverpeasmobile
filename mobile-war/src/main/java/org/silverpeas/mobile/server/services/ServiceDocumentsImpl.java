@@ -47,6 +47,7 @@ import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
+import org.silverpeas.mobile.server.services.helpers.AttachmentHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -336,7 +337,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
 
       for (SimpleDocument attachment : pubAttachments) {
-        attachments.add(populate(attachment));
+        attachments.add(AttachmentHelper.getInstance().populate(attachment, getUserInSession()));
       }
       dto.setAttachments(attachments);
 
@@ -354,7 +355,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   public AttachmentDTO getAttachment(String attachmentId, String appId) throws DocumentsException, AuthenticationException {
     SimpleDocumentPK pk = new SimpleDocumentPK(attachmentId, appId);
     SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(pk, getUserInSession().getUserPreferences().getLanguage());
-    return populate(doc);
+    return AttachmentHelper.getInstance().populate(doc, getUserInSession());
   }
 
   @Override
@@ -364,24 +365,5 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     list.addAll(getTopics(instanceId, rootTopicId));
     list.addAll(getPublications(instanceId, rootTopicId));
     return list;
-  }
-
-  private AttachmentDTO populate(SimpleDocument attachment) {
-    AttachmentDTO attach = new AttachmentDTO();
-    attach.setTitle(attachment.getTitle());
-    if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
-      attach.setTitle(attachment.getFilename());
-    }
-    attach.setInstanceId(attachment.getInstanceId());
-    attach.setId(attachment.getId());
-    attach.setLang(attachment.getLanguage());
-    attach.setUserId(getUserInSession().getId());
-    attach.setType(attachment.getContentType());
-    attach.setAuthor(attachment.getCreatedBy());
-    attach.setOrderNum(attachment.getOrder());
-    attach.setSize(attachment.getSize());
-    attach.setCreationDate(attachment.getCreated());
-    attach.setDownloadAllowed(attachment.isDownloadAllowedForRolesFrom(getUserInSession()));
-    return attach;
   }
 }

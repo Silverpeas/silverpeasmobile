@@ -22,8 +22,11 @@
   -->
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<g:HTMLPanel tag="li" ui:field="container">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:components="urn:import:org.silverpeas.mobile.client.components">
+  <g:HTMLPanel tag="li" ui:field="container">
     <g:HTML stylePrimaryName="caption" ui:field="content"></g:HTML>
-	</g:HTMLPanel>
+    <components:UnorderedList ui:field="attachments"/>
+  </g:HTMLPanel>
 </ui:UiBinder> 

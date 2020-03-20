@@ -385,6 +385,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
 
       keyForms = "forms_" + getApplicationInstance().getId();
       keyFormsAsReceiver = "formsAsReceiver_" + getApplicationInstance().getId();
+      keysMyRequests = "keysMyRequests_" + getApplicationInstance().getId();
 
       FormsOnlinePage page = new FormsOnlinePage();
       page.setApp(this);

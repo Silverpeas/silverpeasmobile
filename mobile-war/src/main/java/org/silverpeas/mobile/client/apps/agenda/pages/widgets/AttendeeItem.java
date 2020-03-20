@@ -24,30 +24,14 @@
 package org.silverpeas.mobile.client.apps.agenda.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptException;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
-import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
-import org.silverpeas.mobile.client.common.Notification;
-import org.silverpeas.mobile.client.common.navigation.UrlUtils;
-import org.silverpeas.mobile.client.common.network.OfflineHelper;
-import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.ParticipationStatusDTO;
-import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 
 public class AttendeeItem extends Composite {
 

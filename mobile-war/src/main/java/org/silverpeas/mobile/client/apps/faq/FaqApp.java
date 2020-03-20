@@ -51,8 +51,8 @@ import java.util.List;
 public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHandler {
 
   private FaqMessages msg;
-  private String keysQuestions = "FaqQuestions";
-  private String keysCategories = "FaqCategories";
+  private String keysQuestions = "FaqQuestions_";
+  private String keysCategories = "FaqCategories_";
 
   public FaqApp(){
     super();

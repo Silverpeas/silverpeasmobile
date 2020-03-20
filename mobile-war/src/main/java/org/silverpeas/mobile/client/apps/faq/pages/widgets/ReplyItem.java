@@ -30,7 +30,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.components.UnorderedList;
+import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.faq.ReplyDTO;
 
 public class ReplyItem extends Composite {
@@ -42,6 +45,10 @@ public class ReplyItem extends Composite {
   HTML content;
   @UiField
   HTMLPanel container;
+
+  @UiField
+  UnorderedList attachments;
+
   protected ApplicationMessages msg = null;
 
   interface ReplyItemUiBinder extends UiBinder<Widget, ReplyItem> {}
@@ -49,6 +56,7 @@ public class ReplyItem extends Composite {
   public ReplyItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
+    attachments.getElement().setId("attachments");
   }
 
   public void setData(ReplyDTO data) {
@@ -56,5 +64,13 @@ public class ReplyItem extends Composite {
     String html = "<h2 class='title'>" + data.getTitle() + "</h2>";
     html += "<span>" + data.getContent() + "</span>";
     content.setHTML(html);
+
+
+    for (AttachmentDTO attachment : data.getAttachments()) {
+      Attachment a = new Attachment();
+      a.setAttachmentFromRPC(attachment);
+      attachments.add(a);
+    }
+
   }
 }

@@ -23,7 +23,10 @@
 
 package org.silverpeas.mobile.shared.dto.faq;
 
+import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author svu
@@ -31,6 +34,7 @@ import java.io.Serializable;
 public class ReplyDTO implements Serializable {
   private String title;
   private String content;
+  private List<AttachmentDTO> attachments;
 
   public String getTitle() {
     return title;
@@ -46,5 +50,13 @@ public class ReplyDTO implements Serializable {
 
   public void setContent(final String content) {
     this.content = content;
+  }
+
+  public List<AttachmentDTO> getAttachments() {
+    return attachments;
+  }
+
+  public void setAttachments(final List<AttachmentDTO> attachments) {
+    this.attachments = attachments;
   }
 }
