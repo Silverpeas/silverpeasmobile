@@ -30,13 +30,19 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.faq.events.app.FaqAttachmentsLoadEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.AbstractFaqPagesEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.FaqAttachmentsLoadedEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.FaqCategoriesLoadedEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.FaqPagesEventHandler;
+import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.faq.ReplyDTO;
 
-public class ReplyItem extends Composite {
+public class ReplyItem extends Composite implements FaqPagesEventHandler {
 
   private ReplyDTO data;
   private static ReplyItemUiBinder uiBinder = GWT.create(ReplyItemUiBinder.class);
@@ -57,6 +63,7 @@ public class ReplyItem extends Composite {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
     attachments.getElement().setId("attachments");
+    EventBus.getInstance().addHandler(AbstractFaqPagesEvent.TYPE, this);
   }
 
   public void setData(ReplyDTO data) {
@@ -64,13 +71,25 @@ public class ReplyItem extends Composite {
     String html = "<h2 class='title'>" + data.getTitle() + "</h2>";
     html += "<span>" + data.getContent() + "</span>";
     content.setHTML(html);
+    EventBus.getInstance().fireEvent(new FaqAttachmentsLoadEvent(data.getId()));
+  }
 
+  @Override
+  public void onCategoriesLoaded(final FaqCategoriesLoadedEvent event) {}
 
-    for (AttachmentDTO attachment : data.getAttachments()) {
-      Attachment a = new Attachment();
-      a.setAttachmentFromRPC(attachment);
-      attachments.add(a);
+  @Override
+  public void onAttachmentsLoaded(final FaqAttachmentsLoadedEvent event) {
+    if (event.getContentId().equals(data.getId())) {
+      data.setAttachments(event.getAttachments());
+      for (SimpleDocumentDTO attachment : event.getAttachments()) {
+        Attachment a = new Attachment();
+        a.setAttachment(attachment);
+        attachments.add(a);
+      }
     }
+  }
 
+  public void stop() {
+    EventBus.getInstance().removeHandler(AbstractFaqPagesEvent.TYPE, this);
   }
 }

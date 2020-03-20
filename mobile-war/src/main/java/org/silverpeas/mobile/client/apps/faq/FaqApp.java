@@ -26,9 +26,12 @@ package org.silverpeas.mobile.client.apps.faq;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import org.fusesource.restygwt.client.Method;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.faq.events.app.AbstractFaqAppEvent;
 import org.silverpeas.mobile.client.apps.faq.events.app.FaqAppEventHandler;
+import org.silverpeas.mobile.client.apps.faq.events.app.FaqAttachmentsLoadEvent;
 import org.silverpeas.mobile.client.apps.faq.events.app.FaqCategoriesLoadEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.FaqAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.faq.events.pages.FaqCategoriesLoadedEvent;
 import org.silverpeas.mobile.client.apps.faq.pages.FaqPage;
 import org.silverpeas.mobile.client.apps.faq.resources.FaqMessages;
@@ -39,8 +42,11 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.shared.dto.documents.DocumentType;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -142,6 +148,25 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
         EventBus.getInstance().fireEvent(new FaqCategoriesLoadedEvent(categories));
       }
     };
+    action.attempt();
+  }
+
+  @Override
+  public void loadAttachments(final FaqAttachmentsLoadEvent event) {
+
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getRestServiceDocuments().getDocumentsByType(getApplicationInstance().getId(), event.getContentId(),
+            DocumentType.attachment.name(), SpMobil.getUser().getLanguage(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
+        EventBus.getInstance().fireEvent(new FaqAttachmentsLoadedEvent(attachments, event.getContentId()));
+      }
+    };
+
     action.attempt();
   }
 }

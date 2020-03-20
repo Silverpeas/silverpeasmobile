@@ -28,4 +28,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface FaqPagesEventHandler extends EventHandler{
 
   void onCategoriesLoaded(FaqCategoriesLoadedEvent faqCategoriesLoadedEvent);
+
+  void onAttachmentsLoaded(FaqAttachmentsLoadedEvent faqAttachmentsLoadedEvent);
 }

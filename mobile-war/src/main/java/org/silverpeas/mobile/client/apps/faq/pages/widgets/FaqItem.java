@@ -33,11 +33,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.faq.pages.RepliesPage;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadEvent;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
-import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 
 public class FaqItem extends Composite implements ClickHandler {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -23,11 +23,21 @@
 
 package org.silverpeas.mobile.client.apps.faq.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+public class FaqAttachmentsLoadEvent extends AbstractFaqAppEvent {
 
-public interface FaqAppEventHandler extends EventHandler{
+  private String contentId;
 
-  void loadCategories(FaqCategoriesLoadEvent faqCategoriesLoadEvent);
+  public FaqAttachmentsLoadEvent(final String contentId) {
+    this.contentId = contentId;
+  }
 
-  void loadAttachments(FaqAttachmentsLoadEvent faqAttachmentsLoadEvent);
+  public String getContentId() {
+    return contentId;
+  }
+
+  @Override
+  protected void dispatch(FaqAppEventHandler handler) {
+    handler.loadAttachments(this);
+  }
+
 }

@@ -41,7 +41,6 @@ public class AttachmentsLoadedEvent extends AbstractEventPagesEvent {
     handler.onAttachmentLoaded(this);
   }
 
-
   public List<SimpleDocumentDTO> getAttachments() {
     return attachments;
   }

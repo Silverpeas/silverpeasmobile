@@ -24,7 +24,6 @@
 package org.silverpeas.mobile.client.apps.faq.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -32,9 +31,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
 import org.silverpeas.mobile.client.apps.faq.events.app.FaqCategoriesLoadEvent;
 import org.silverpeas.mobile.client.apps.faq.events.pages.AbstractFaqPagesEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.FaqAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.faq.events.pages.FaqCategoriesLoadedEvent;
 import org.silverpeas.mobile.client.apps.faq.events.pages.FaqPagesEventHandler;
 import org.silverpeas.mobile.client.apps.faq.pages.widgets.FaqItem;
@@ -112,6 +111,10 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
       categories.addItem(cat.getTitle(), cat.getId());
     }
     displayFaqs(data);
+  }
+
+  @Override
+  public void onAttachmentsLoaded(final FaqAttachmentsLoadedEvent faqAttachmentsLoadedEvent) {
   }
 
   @UiHandler("categories")

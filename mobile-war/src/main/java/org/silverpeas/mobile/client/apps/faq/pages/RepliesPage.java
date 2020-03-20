@@ -29,6 +29,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.faq.events.pages.AbstractFaqPagesEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.FaqAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.faq.events.pages.FaqCategoriesLoadedEvent;
 import org.silverpeas.mobile.client.apps.faq.events.pages.FaqPagesEventHandler;
 import org.silverpeas.mobile.client.apps.faq.pages.widgets.ReplyItem;
@@ -77,9 +78,17 @@ public class RepliesPage extends PageContent implements FaqPagesEventHandler {
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractFaqPagesEvent.TYPE, this);
+    for (int i = 0; i < replies.getCount(); i++) {
+      ReplyItem item = (ReplyItem) replies.getWidget(i);
+      item.stop();
+    }
   }
 
   @Override
   public void onCategoriesLoaded(final FaqCategoriesLoadedEvent event) {
+  }
+
+  @Override
+  public void onAttachmentsLoaded(final FaqAttachmentsLoadedEvent faqAttachmentsLoadedEvent) {
   }
 }
