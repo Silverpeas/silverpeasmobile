@@ -21,11 +21,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.documents.events.pages.publication;
+package org.silverpeas.mobile.client.apps.documents.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface PublicationNavigationPagesEventHandler extends EventHandler {
-	void onLoadedPublication(PublicationLoadedEvent event);
-  void onLoadedPublicationAttachments(PublicationAttachmentsLoadedEvent event);
+public class DocumentsLoadAttachmentsEvent extends AbstractDocumentsAppEvent {
+
+  private String pubId;
+
+  public DocumentsLoadAttachmentsEvent(String pubId) {
+    super();
+    this.pubId = pubId;
+  }
+
+  @Override
+  protected void dispatch(DocumentsAppEventHandler handler) {
+    handler.loadAttachments(this);
+  }
+
+  public String getPubId() {
+    return pubId;
+  }
 }

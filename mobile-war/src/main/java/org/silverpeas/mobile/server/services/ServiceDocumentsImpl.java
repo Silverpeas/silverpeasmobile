@@ -29,6 +29,7 @@ import org.silverpeas.core.admin.ProfiledObjectId;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.DocumentType;
@@ -47,7 +48,6 @@ import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
-import org.silverpeas.mobile.server.services.helpers.AttachmentHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -329,17 +329,11 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         dto.setContent(true);
       }
 
-      ArrayList<AttachmentDTO> attachments = new ArrayList<AttachmentDTO>();
       SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Get attachments");
 
       List<SimpleDocument> pubAttachments = AttachmentServiceProvider.getAttachmentService().listDocumentsByForeignKeyAndType(new ResourceReference(pub.getPK()), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
 
       SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
-
-      for (SimpleDocument attachment : pubAttachments) {
-        attachments.add(AttachmentHelper.getInstance().populate(attachment, getUserInSession()));
-      }
-      dto.setAttachments(attachments);
 
       ResourceReference resourceReference = new ResourceReference(pubId, pub.getComponentInstanceId());
       getStatisticService().addStat(getUserInSession().getId(), resourceReference, 1, "Publication");
@@ -355,7 +349,25 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   public AttachmentDTO getAttachment(String attachmentId, String appId) throws DocumentsException, AuthenticationException {
     SimpleDocumentPK pk = new SimpleDocumentPK(attachmentId, appId);
     SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(pk, getUserInSession().getUserPreferences().getLanguage());
-    return AttachmentHelper.getInstance().populate(doc, getUserInSession());
+    return populate(doc, getUserInSession());
+  }
+
+  private AttachmentDTO populate(SimpleDocument attachment, User user) {
+    AttachmentDTO attach = new AttachmentDTO();
+    attach.setTitle(attachment.getTitle());
+    if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
+      attach.setTitle(attachment.getFilename());
+    }
+    attach.setInstanceId(attachment.getInstanceId());
+    attach.setId(attachment.getId());
+    attach.setLang(attachment.getLanguage());
+    attach.setUserId(user.getId());
+    attach.setType(attachment.getContentType());
+    attach.setAuthor(attachment.getCreatedBy());
+    attach.setOrderNum(attachment.getOrder());
+    attach.setSize(attachment.getSize());
+    attach.setDownloadAllowed(attachment.isDownloadAllowedForRolesFrom(user));
+    return attach;
   }
 
   @Override

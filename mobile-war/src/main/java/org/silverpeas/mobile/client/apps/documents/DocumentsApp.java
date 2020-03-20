@@ -29,11 +29,15 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.Method;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.documents.events.app.AbstractDocumentsAppEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsAppEventHandler;
+import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadAttachmentsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
+import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.pages.GedNavigationPage;
 import org.silverpeas.mobile.client.apps.documents.pages.PublicationPage;
@@ -50,6 +54,7 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -57,7 +62,9 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
+import org.silverpeas.mobile.shared.dto.documents.DocumentType;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
@@ -170,6 +177,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     @Override
     public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
       if (event.getInstance().getType().equals(Apps.kmelia.name())) {
+        setApplicationInstance(event.getInstance());
         this.commentable = event.getInstance().isCommentable();
         this.notifiable = event.getInstance().isNotifiable();
         this.ableToStoreContent = event.getInstance().isAbleToStoreContent();
@@ -262,5 +270,23 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         };
         action.attempt();
     }
+
+  @Override
+  public void loadAttachments(final DocumentsLoadAttachmentsEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getRestServiceDocuments().getDocumentsByType(getApplicationInstance().getId(), event.getPubId(),
+            DocumentType.attachment.name(), SpMobil.getUser().getLanguage(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
+        EventBus.getInstance().fireEvent(new PublicationAttachmentsLoadedEvent(attachments));
+      }
+    };
+
+    action.attempt();
+  }
 
 }

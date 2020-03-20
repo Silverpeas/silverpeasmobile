@@ -42,7 +42,6 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 
 public class Attachment extends Composite {
@@ -58,7 +57,6 @@ public class Attachment extends Composite {
   protected DocumentsResources ressources = null;
   private DocumentsMessages msg = null;
   private ApplicationMessages globalMsg = null;
-  private AttachmentDTO attachement = null;
   private SimpleDocumentDTO data = null;
 
   interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {}
@@ -74,12 +72,6 @@ public class Attachment extends Composite {
   public void setAttachment(SimpleDocumentDTO data) {
     this.data = data;
     render();
-  }
-
-  @Deprecated
-  public void setAttachmentFromRPC(AttachmentDTO attachmentDTO) {
-    this.attachement = attachmentDTO;
-    renderFromRPC();
   }
 
   private void render() {
@@ -147,42 +139,5 @@ public class Attachment extends Composite {
       Notification.alert(e.getMessage());
     }
 
-  }
-
-  // still used by kmelia
-  @Deprecated
-  private void renderFromRPC() {
-    Image img = null;
-    String sizeValue;
-    if (!attachement.isDownloadAllowed()) {
-      link.setStylePrimaryName("not-downloadable");
-    }
-    if (attachement.getSize() < 1024 * 1024) {
-      sizeValue = String.valueOf(attachement.getSize() / 1024);
-      size.setInnerHTML(msg.sizeK(sizeValue));
-    } else {
-      sizeValue = String.valueOf(attachement.getSize() / (1024 * 1024));
-      size.setInnerHTML(msg.sizeM(sizeValue));
-    }
-    name.setInnerHTML(attachement.getTitle());
-    if (attachement.getType().contains("msword")) {
-      img = new Image(ressources.msword());
-    } else if (attachement.getType().contains("sheet")) {
-      img = new Image(ressources.msexcel());
-    } else if (attachement.getType().contains("pdf")) {
-      img = new Image(ressources.pdf());
-    } else if (attachement.getType().contains("image")) {
-      img = new Image(ressources.image());
-    } else if (attachement.getType().contains("presentation")) {
-      img = new Image(ressources.mspowerpoint());
-    } else {
-      img = new Image(ressources.unknown());
-    }
-    icon.getParentElement().replaceChild(img.getElement(), icon);
-    if (attachement.isDownloadAllowed()) {
-      AttachmentsManager
-          .generateLink(attachement.getId(), attachement.getInstanceId(), attachement.getLang(),
-              attachement.getTitle(), link);
-    }
   }
 }

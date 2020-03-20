@@ -38,8 +38,10 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
+import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadAttachmentsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
+import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
@@ -56,8 +58,8 @@ import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
-import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 public class PublicationPage extends PageContent
@@ -132,11 +134,21 @@ public class PublicationPage extends PageContent
     contentLink.setVisible(publication.getContent());
   }
 
+  @Override
+  public void onLoadedPublicationAttachments(final PublicationAttachmentsLoadedEvent event) {
+    for (SimpleDocumentDTO attachment : event.getAttachments()) {
+      Attachment a = new Attachment();
+      a.setAttachment(attachment);
+      attachments.add(a);
+    }
+  }
+
   /**
    * Refesh view informations.
    */
   private void display(boolean commentable, boolean ableToStoreContent, String type) {
     if (isVisible()) {
+      EventBus.getInstance().fireEvent(new DocumentsLoadAttachmentsEvent(publication.getId()));
       title.setInnerHTML(publication.getName());
       desc.setInnerHTML(publication.getDescription());
       if (publication.getUpdater() != null && publication.getUpdateDate() != null) {
@@ -144,11 +156,6 @@ public class PublicationPage extends PageContent
             .setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
       }
 
-      for (AttachmentDTO attachment : publication.getAttachments()) {
-        Attachment a = new Attachment();
-        a.setAttachmentFromRPC(attachment);
-        attachments.add(a);
-      }
       if (commentable) {
         String id = publication.getId();
         if (contentDTO != null && contentDTO.getContributionId() != null) {

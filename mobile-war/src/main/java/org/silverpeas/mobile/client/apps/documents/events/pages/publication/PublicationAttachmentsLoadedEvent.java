@@ -23,9 +23,26 @@
 
 package org.silverpeas.mobile.client.apps.documents.events.pages.publication;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface PublicationNavigationPagesEventHandler extends EventHandler {
-	void onLoadedPublication(PublicationLoadedEvent event);
-  void onLoadedPublicationAttachments(PublicationAttachmentsLoadedEvent event);
+import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
+
+import java.util.List;
+
+public class PublicationAttachmentsLoadedEvent extends AbstractPublicationPagesEvent {
+
+  private List<SimpleDocumentDTO> attachments;
+
+  public PublicationAttachmentsLoadedEvent(List<SimpleDocumentDTO> attachments) {
+    super();
+    this.attachments = attachments;
+  }
+
+  @Override
+  protected void dispatch(PublicationNavigationPagesEventHandler handler) {
+    handler.onLoadedPublicationAttachments(this);
+  }
+
+  public List<SimpleDocumentDTO> getAttachments() {
+    return attachments;
+  }
 }

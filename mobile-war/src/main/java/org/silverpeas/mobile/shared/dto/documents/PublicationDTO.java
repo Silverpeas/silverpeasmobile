@@ -38,7 +38,6 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   private String creator;
   private String updater;
   private String updateDate;
-  private ArrayList<AttachmentDTO> attachments = null;
   private int commentsNumber = 0;
   private String instanceId;
   private boolean content;
@@ -53,12 +52,7 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   public int compareTo(PublicationDTO o) {
     return name.compareTo(o.getName());
   }
-  public List<AttachmentDTO> getAttachments() {
-    return attachments;
-  }
-  public void setAttachments(ArrayList<AttachmentDTO> attachments) {
-    this.attachments = attachments;
-  }
+
   public String getDescription() {
     return description;
   }
