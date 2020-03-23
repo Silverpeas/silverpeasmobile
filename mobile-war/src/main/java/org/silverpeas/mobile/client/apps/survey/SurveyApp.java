@@ -62,7 +62,6 @@ import java.util.List;
 public class SurveyApp extends App implements SurveyAppEventHandler, NavigationEventHandler {
 
   private SurveyMessages msg;
-  //private ApplicationInstanceDTO instance;
 
   public SurveyApp(){
     super();
@@ -82,7 +81,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
-    if (event.getInstance().getType().equals(Apps.survey.name())) {
+    if (event.getInstance().getType().equals(Apps.survey.name()) || event.getInstance().getType().equalsIgnoreCase(Apps.pollingStation.name())) {
       setApplicationInstance(event.getInstance());
       SurveysPage page = new SurveysPage();
       page.setPageTitle(event.getInstance().getLabel());
@@ -92,7 +91,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.survey.name())) {
+    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.survey.name()) || event.getContent().getType().startsWith(Apps.pollingStation.name())) {
       super.showContent(event);
     } else {
       startWithContent(event.getContent());
