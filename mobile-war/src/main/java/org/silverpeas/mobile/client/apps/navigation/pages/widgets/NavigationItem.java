@@ -84,8 +84,10 @@ public class NavigationItem extends Composite {
         setStyleName("app-formsOnline");
       } else if (type.equalsIgnoreCase(Apps.classifieds.name())) {
         setStyleName("app-classifieds");
-      } else if (type.equalsIgnoreCase(Apps.survey.name()) || type.equalsIgnoreCase(Apps.pollingStation.name())) {
+      } else if (type.equalsIgnoreCase(Apps.survey.name())) {
         setStyleName("app-survey");
+      } else if (type.equalsIgnoreCase(Apps.pollingStation.name())) {
+        setStyleName("app-polling");
       } else if (type.equalsIgnoreCase(Apps.questionReply.name())) {
         setStyleName("app-faq");
       }
