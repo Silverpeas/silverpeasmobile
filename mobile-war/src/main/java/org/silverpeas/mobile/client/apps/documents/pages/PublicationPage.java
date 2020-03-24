@@ -44,6 +44,7 @@ import org.silverpeas.mobile.client.apps.documents.events.pages.publication.Abst
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
+import org.silverpeas.mobile.client.apps.documents.pages.widgets.LinkedPublicationItem;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
@@ -74,7 +75,7 @@ public class PublicationPage extends PageContent
   @UiField
   HTMLPanel container;
   @UiField
-  UnorderedList attachments;
+  UnorderedList attachments, linkedPublications;
   @UiField
   ParagraphElement desc, lastUpdate;
   @UiField
@@ -101,6 +102,7 @@ public class PublicationPage extends PageContent
     initWidget(uiBinder.createAndBindUi(this));
     container.getElement().setId("publication");
     attachments.getElement().setId("attachments");
+    linkedPublications.getElement().setId("linkedPublications");
     content.setId("content");
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
   }
@@ -171,6 +173,12 @@ public class PublicationPage extends PageContent
         content.getStyle().clearDisplay();
       } else {
         content.getStyle().setDisplay(Style.Display.NONE);
+      }
+      // links
+      for (PublicationDTO linkedPublication : publication.getLinkedPublications()) {
+        LinkedPublicationItem item = new LinkedPublicationItem();
+        item.setData(linkedPublication);
+        linkedPublications.add(item);
       }
     }
     notification

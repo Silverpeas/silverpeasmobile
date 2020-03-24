@@ -35,7 +35,9 @@ import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.DocumentType;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
+import org.silverpeas.core.contribution.publication.model.CompletePublication;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
+import org.silverpeas.core.contribution.publication.model.PublicationLink;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.node.model.NodeDetail;
@@ -329,11 +331,18 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         dto.setContent(true);
       }
 
-      SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Get attachments");
-
-      List<SimpleDocument> pubAttachments = AttachmentServiceProvider.getAttachmentService().listDocumentsByForeignKeyAndType(new ResourceReference(pub.getPK()), DocumentType.attachment, getUserInSession().getUserPreferences().getLanguage());
-
-      SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "Attachments number=" + pubAttachments.size());
+      CompletePublication completePublication = KmeliaService.get().getPublication(pub.getPK(), null).getCompleteDetail();
+      List<PublicationLink> linkedPublications = completePublication.getLinkList();
+      List<PublicationDTO> linkedPub = new ArrayList<>();
+      for (PublicationLink link :linkedPublications) {
+        PublicationDetail pubLinked = getPubBm().getDetail(new PublicationPK(link.getId()));
+        PublicationDTO linkDto = new PublicationDTO();
+        linkDto.setId(link.getId());
+        linkDto.setName(pubLinked.getName());
+        linkDto.setUpdateDate(sdf.format(pubLinked.getUpdateDate()));
+        linkedPub.add(linkDto);
+      }
+      dto.setLinkedPublications(linkedPub);
 
       ResourceReference resourceReference = new ResourceReference(pubId, pub.getComponentInstanceId());
       getStatisticService().addStat(getUserInSession().getId(), resourceReference, 1, "Publication");

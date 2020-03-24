@@ -41,6 +41,7 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   private int commentsNumber = 0;
   private String instanceId;
   private boolean content;
+  private List<PublicationDTO> linkedPublications;
 
   public String getName() {
     return name;
@@ -106,5 +107,13 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 
   public boolean getContent() {
     return content;
+  }
+
+  public List<PublicationDTO> getLinkedPublications() {
+    return linkedPublications;
+  }
+
+  public void setLinkedPublications(final List<PublicationDTO> linkedPublications) {
+    this.linkedPublications = linkedPublications;
   }
 }

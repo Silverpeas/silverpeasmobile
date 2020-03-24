@@ -1020,6 +1020,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   margin: 0;
 }
 
+#linkedPublications li {
+  list-style-type:none;
+}
+
 .list-detail-event {
   border-bottom: 0;
 }
