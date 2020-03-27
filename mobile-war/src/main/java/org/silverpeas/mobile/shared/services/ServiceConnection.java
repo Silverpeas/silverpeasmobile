@@ -34,7 +34,7 @@ import java.util.List;
 
 @RemoteServiceRelativePath("Connection")
 public interface ServiceConnection extends RemoteService {
-  public DetailUserDTO login(String login, String password, String domainId) throws AuthenticationException;
+  public DetailUserDTO login(String login, String password, String domainId, String notificationsToken) throws AuthenticationException;
   public List<DomainDTO> getDomains();
   public boolean setTabletMode() throws NavigationException, AuthenticationException;
 

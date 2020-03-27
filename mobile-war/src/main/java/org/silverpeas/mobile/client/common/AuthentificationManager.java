@@ -23,8 +23,14 @@
 
 package org.silverpeas.mobile.client.common;
 
+import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
@@ -161,7 +167,7 @@ public class AuthentificationManager {
             AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session", method.getResponse().getHeader("X-Silverpeas-Session"));
 
             SpMobil.setUserProfile(userProfile);
-            ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+            ServicesLocator.getServiceConnection().login(login, password, domainId, LocalStorageHelper.load("firebase.token", String.class), new AsyncCallback<DetailUserDTO>() {
 
               @Override
               public void onFailure(final Throwable throwable) {
