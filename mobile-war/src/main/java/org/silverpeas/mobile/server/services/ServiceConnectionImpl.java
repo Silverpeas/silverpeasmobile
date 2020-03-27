@@ -41,7 +41,6 @@ import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
-import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
@@ -71,7 +70,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
   }
 
-  public DetailUserDTO login(String login, String password, String domainId, String notificationsToken)
+  public DetailUserDTO login(String login, String password, String domainId)
       throws AuthenticationException {
 
     // vérification
@@ -101,7 +100,6 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     }
     UserDetail user = getUserDetail(userId);
     setUserInSession(user);
-    NotificationsPushHelper.getInstance().storeToken(userId, notificationsToken);
 
     try {
       setMainsessioncontroller(login, password, domainId);

@@ -41,7 +41,6 @@ import org.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPages
 import org.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
-import org.silverpeas.mobile.client.common.PushNotificationsManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.homepage.HomePageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -73,9 +72,6 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
 
   @Override
   public void homePageLoaded(final HomePageLoadedEvent event) {
-    PushNotificationsManager.getInstance().inject();
-
-
     if (isVisible() && dataLoaded == false) {
       content.setData(event.getData());
       dataLoaded = true;

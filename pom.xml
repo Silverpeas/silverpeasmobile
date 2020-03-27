@@ -48,7 +48,7 @@
   <repositories>
     <repository>
       <id>Silverpeas</id>
-      <!--layout>default</layout-->
+      <layout>default</layout>
       <name>Silverpeas Repository</name>
       <url>https://www.silverpeas.org/nexus/content/groups/silverpeas</url>
       <releases>
@@ -58,23 +58,6 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-
-    <repository>
-      <id>Central</id>
-      <!--layout>legacy</layout-->
-      <name>Central Repository</name>
-      <url>https://repo.maven.apache.org/maven2/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-
-
-
-
    </repositories>
 
   <build>

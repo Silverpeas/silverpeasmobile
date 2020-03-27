@@ -1,15 +1,15 @@
 <%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
-<%@ page import="org.silverpeas.core.admin.domain.DomainType" %>
-<%@ page import="org.silverpeas.core.admin.domain.DomainTypeRegistry" %>
-<%@ page import="org.silverpeas.core.security.session.SessionInfo" %>
-<%@ page import="org.silverpeas.core.security.session.SessionManagement" %>
-<%@ page import="org.silverpeas.core.security.session.SessionManagementProvider" %>
-<%@ page import="org.silverpeas.core.security.token.synchronizer.SynchronizerToken" %>
 <%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
 <%@ page import="org.silverpeas.core.util.ResourceLocator" %>
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
 <%@ page import="org.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="org.silverpeas.core.admin.domain.DomainType" %>
+<%@ page import="org.silverpeas.core.admin.domain.DomainTypeRegistry" %>
+<%@ page import="org.silverpeas.core.security.token.synchronizer.SynchronizerToken" %>
+<%@ page import="org.silverpeas.core.security.session.SessionManagementProvider" %>
+<%@ page import="org.silverpeas.core.security.session.SessionManagement" %>
+<%@ page import="org.silverpeas.core.security.session.SessionInfo" %>
 
 <%--
   ~ Copyright (C) 2000 - 2019 Silverpeas
@@ -39,8 +39,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
   <meta name="robots" content="noindex">
-  <meta name="viewport"
-        content="width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <meta name="viewport" content="width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="HandheldFriendly" content="true">
@@ -62,19 +61,13 @@
 
     String loginPage = request.getParameter("forceLoginPage");
     boolean displayLoginPage = false;
-    if (loginPage != null && loginPage.equalsIgnoreCase("true")) {
-      displayLoginPage = true;
-    }
+    if (loginPage != null && loginPage.equalsIgnoreCase("true")) displayLoginPage = true;
 
     // SSO case
-    SynchronizerToken token =
-        (SynchronizerToken) ((HttpServletRequest) request).getSession().getAttribute("X-STKN");
-    LocalizationBundle resourceGeneralLook =
-        ResourceLocator.getLocalizationBundle("org.silverpeas.lookAndFeel.generalLook", l);
+    SynchronizerToken token = (SynchronizerToken) ((HttpServletRequest) request).getSession().getAttribute("X-STKN");
+    LocalizationBundle resourceGeneralLook = ResourceLocator.getLocalizationBundle("org.silverpeas.lookAndFeel.generalLook", l);
     String ssoPath = resourceGeneralLook.getString("login.sso.path");
-    if (!displayLoginPage && token == null && (DomainTypeRegistry.get().exists(DomainType.GOOGLE) ||
-        DomainTypeRegistry.get().exists(DomainType.SCIM)) &&
-        (ssoPath != null && !ssoPath.isEmpty())) {
+    if (!displayLoginPage && token == null && (DomainTypeRegistry.get().exists(DomainType.GOOGLE) || DomainTypeRegistry.get().exists(DomainType.SCIM)) && (ssoPath != null && !ssoPath.isEmpty())) {
       if (!ssoPath.startsWith("/")) {
         ssoPath = "/" + ssoPath;
       }
@@ -91,38 +84,29 @@
 
     }
 
-    LocalizationBundle resourceLabels =
-        ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", l);
+    LocalizationBundle resourceLabels = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", l);
     Map<String, String> map = ResourceBundleHelper.convertResourceBundleToMap(resourceLabels);
     String jsonLabels = new ObjectMapper().writeValueAsString(map);
 
-    LocalizationBundle resource =
-        ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.mobileSettings", l);
+    LocalizationBundle resource = ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.mobileSettings", l);
     Map<String, String> mapConfig = ResourceBundleHelper.convertResourceBundleToMap(resource);
     String jsonParams = new ObjectMapper().writeValueAsString(mapConfig);
+
   %>
 
   <meta name="gwt:property" content="locale=<%=l%>">
 
   <link rel="apple-touch-icon" href="<%= resource.getString("apple-touch-icon")%>"/>
-  <link rel="apple-touch-icon" sizes="72x72"
-        href="<%= resource.getString("apple-touch-icon72x72")%>"/>
-  <link rel="apple-touch-icon" sizes="114x114"
-        href="<%= resource.getString("apple-touch-icon114x114")%>"/>
-  <link rel="shortcut icon" sizes="196x196"
-        href="<%= resource.getString("shortcut_icon196x196")%>"/>
-  <link rel="shortcut icon" sizes="128x128"
-        href="<%= resource.getString("shortcut_icon128x128")%>"/>
+  <link rel="apple-touch-icon" sizes="72x72" href="<%= resource.getString("apple-touch-icon72x72")%>"/>
+  <link rel="apple-touch-icon" sizes="114x114" href="<%= resource.getString("apple-touch-icon114x114")%>"/>
+  <link rel="shortcut icon" sizes="196x196" href="<%= resource.getString("shortcut_icon196x196")%>"/>
+  <link rel="shortcut icon" sizes="128x128" href="<%= resource.getString("shortcut_icon128x128")%>"/>
 
-  <title><%= resourceLabels.getString("shortcut_title")%>
-  </title>
-  <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-messaging.js"></script>
+  <title><%= resourceLabels.getString("shortcut_title")%></title>
   <script type="text/javascript" src="<%=appUrl%>/spmobile/spmobile.nocache.js"></script>
   <script>
     var labels = <% out.println(jsonLabels); %>;
     var params = <% out.println(jsonParams); %>;
-
     function resize() {
       var windowHeight = window.innerHeight;
       document.body.style.height = windowHeight + "px";
@@ -137,11 +121,9 @@
   %>
 
 
-</head>
+    </head>
 <body class="ui-panel-wrapper ui-page-theme-a csspinner traditional" onload="resize();">
-<div id="oneinch"
-     style="position: absolute;padding: 0;visibility: hidden;width: 1in;height: 1in;"></div>
-
+  <div id="oneinch" style="position: absolute;padding: 0;visibility: hidden;width: 1in;height: 1in;"></div>
 </body>
 
 </html>
