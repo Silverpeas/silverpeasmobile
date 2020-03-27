@@ -1,0 +1,30 @@
+if (firebaseConfig != null) {
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  const messaging = firebase.messaging();
+  navigator.serviceWorker.register('/silverpeas/spmobile/firebase-messaging-sw.js')
+      .then((registration) => {
+        messaging.useServiceWorker(registration);
+
+        // Request permission and get token.....
+        Notification.requestPermission().then(function(permission) {
+          if (permission === "granted") {
+            messaging.getToken().then(token => {
+              console.log("Token Is : " + token);
+              localStorage.setItem("firebase.token", token);
+            });
+          } else {
+            console.log("No permission to send push");
+          }
+        });
+      });
+
+  messaging.onMessage(payload => {
+    const notificationOptions = {
+      body : payload.data["subject"], icon : '/silverpeas/util/icons/desktop-user-notification.png'
+    };
+    var notification = new Notification(payload.data["sender"], notificationOptions );
+  });
+}
+

@@ -37,6 +37,26 @@
   </filter-mapping>
 
   <servlet>
+    <servlet-name>fireBaseInitServlet</servlet-name>
+    <servlet-class>org.silverpeas.mobile.server.servlets.FireBaseInitServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>fireBaseInitServlet</servlet-name>
+    <url-pattern>/spmobile/firebase-messaging-init.js</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>fireBaseServiceWorkerServlet</servlet-name>
+    <servlet-class>org.silverpeas.mobile.server.servlets.FireBaseServiceWorkerServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>fireBaseServiceWorkerServlet</servlet-name>
+    <url-pattern>/spmobile/firebase-messaging-sw.js</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>manifestServlet</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.servlets.ManifestServlet</servlet-class>
   </servlet>

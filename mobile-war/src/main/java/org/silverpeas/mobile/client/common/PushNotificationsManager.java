@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2019 Silverpeas
+ * Copyright (C) 2000 - 2018 Silverpeas
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
@@ -21,28 +21,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.client.common;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import org.silverpeas.mobile.shared.dto.DetailUserDTO;
-import org.silverpeas.mobile.shared.dto.DomainDTO;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.user.client.Window;
 
-import java.util.List;
+/**
+ * @author svu
+ */
+public class PushNotificationsManager {
 
+  private static PushNotificationsManager instance;
 
-public interface ServiceConnectionAsync {
+  public static PushNotificationsManager getInstance() {
+    if (instance == null) {
+      instance = new PushNotificationsManager();
+    }
+    return instance;
+  }
 
-  void login(String login, String password, String domainId, String notificationsToken, AsyncCallback<DetailUserDTO> callback);
-
-  void getDomains(AsyncCallback<List<DomainDTO>> callback);
-
-  void setTabletMode(final AsyncCallback<Boolean> async);
-
-  void showTermsOfService(final AsyncCallback<Boolean> async);
-
-  void getTermsOfServiceText(final AsyncCallback<String> async);
-
-  void userAcceptsTermsOfService(final AsyncCallback<Void> async);
-
-  void changePwd(String newPwd, final AsyncCallback<Void> async);
+  public void inject() {
+    Element head = Document.get().getElementsByTagName("head").getItem(0);
+    ScriptElement sce = Document.get().createScriptElement();
+    sce.setType("text/javascript");
+    sce.setSrc("/silverpeas/spmobile/firebase-messaging-init.js");
+    head.appendChild(sce);
+  }
 }

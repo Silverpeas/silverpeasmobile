@@ -58,6 +58,7 @@ import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
+import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.server.services.helpers.events.EventsHelper;
 import org.silverpeas.mobile.server.services.helpers.events.NextEvents;
@@ -116,7 +117,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
   }
 
   @Override
-  public DetailUserDTO getUser(String login, String domainId)
+  public DetailUserDTO getUser(String login, String domainId, String notificationsToken)
       throws NavigationException, AuthenticationException {
 
     String id = null;
@@ -130,6 +131,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
           getSettings().getString("big.avatar.size", "40x"));
       userDTO.setAvatar(avatar);
+      NotificationsPushHelper.getInstance().storeToken(id, notificationsToken);
       return userDTO;
 
     } catch (Exception e) {
