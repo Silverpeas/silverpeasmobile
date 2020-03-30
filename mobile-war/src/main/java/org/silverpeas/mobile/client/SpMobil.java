@@ -297,7 +297,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
    */
   public void loadIds(Command attempt) {
     if (token != null) {
-      ServicesLocator.getServiceNavigation().getUser(Cookies.getCookie("svpLogin"), Cookies.getCookie("defaultDomain"), LocalStorageHelper.load("firebase.token", String.class), new AsyncCallback
+      ServicesLocator.getServiceNavigation().getUser(Cookies.getCookie("svpLogin"), Cookies.getCookie("defaultDomain"), new AsyncCallback
           <DetailUserDTO>() {
         @Override
         public void onFailure(final Throwable throwable) {

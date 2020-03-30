@@ -26,7 +26,7 @@ package org.silverpeas.mobile.client.common;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.user.client.Window;
+import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 
 /**
  * @author svu
@@ -42,11 +42,26 @@ public class PushNotificationsManager {
     return instance;
   }
 
+  private static native void exportJavaMethods() /*-{
+    $wnd.storeToken = $entry(@org.silverpeas.mobile.client.common.PushNotificationsManager::storeToken(*));
+  }-*/;
+
   public void inject() {
+    exportJavaMethods();
     Element head = Document.get().getElementsByTagName("head").getItem(0);
     ScriptElement sce = Document.get().createScriptElement();
     sce.setType("text/javascript");
     sce.setSrc("/silverpeas/spmobile/firebase-messaging-init.js");
     head.appendChild(sce);
+  }
+
+  public static void storeToken(String token) {
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNavigation().storeTokenMessaging(token, this);
+      }
+    };
+    action.attempt();
   }
 }

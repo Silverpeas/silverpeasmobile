@@ -71,7 +71,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
   }
 
-  public DetailUserDTO login(String login, String password, String domainId, String notificationsToken)
+  public DetailUserDTO login(String login, String password, String domainId)
       throws AuthenticationException {
 
     // vérification
@@ -101,7 +101,6 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     }
     UserDetail user = getUserDetail(userId);
     setUserInSession(user);
-    NotificationsPushHelper.getInstance().storeToken(userId, notificationsToken);
 
     try {
       setMainsessioncontroller(login, password, domainId);

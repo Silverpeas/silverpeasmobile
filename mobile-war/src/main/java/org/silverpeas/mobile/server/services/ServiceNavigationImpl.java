@@ -117,7 +117,13 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
   }
 
   @Override
-  public DetailUserDTO getUser(String login, String domainId, String notificationsToken)
+  public void storeTokenMessaging(String token) throws NavigationException,AuthenticationException {
+    checkUserInSession();
+    NotificationsPushHelper.getInstance().storeToken(getUserInSession().getId(), token);
+  }
+
+  @Override
+  public DetailUserDTO getUser(String login, String domainId)
       throws NavigationException, AuthenticationException {
 
     String id = null;
@@ -131,7 +137,6 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
           getSettings().getString("big.avatar.size", "40x"));
       userDTO.setAvatar(avatar);
-      NotificationsPushHelper.getInstance().storeToken(id, notificationsToken);
       return userDTO;
 
     } catch (Exception e) {

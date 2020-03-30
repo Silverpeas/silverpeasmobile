@@ -167,7 +167,7 @@ public class AuthentificationManager {
             AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session", method.getResponse().getHeader("X-Silverpeas-Session"));
 
             SpMobil.setUserProfile(userProfile);
-            ServicesLocator.getServiceConnection().login(login, password, domainId, LocalStorageHelper.load("firebase.token", String.class), new AsyncCallback<DetailUserDTO>() {
+            ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
 
               @Override
               public void onFailure(final Throwable throwable) {

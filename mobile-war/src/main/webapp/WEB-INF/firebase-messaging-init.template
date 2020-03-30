@@ -12,7 +12,7 @@ if (firebaseConfig != null) {
           if (permission === "granted") {
             messaging.getToken().then(token => {
               console.log("Token Is : " + token);
-              localStorage.setItem("firebase.token", token);
+              storeToken(token);
             });
           } else {
             console.log("No permission to send push");

@@ -32,7 +32,7 @@ import java.util.List;
 
 public interface ServiceConnectionAsync {
 
-  void login(String login, String password, String domainId, String notificationsToken, AsyncCallback<DetailUserDTO> callback);
+  void login(String login, String password, String domainId, AsyncCallback<DetailUserDTO> callback);
 
   void getDomains(AsyncCallback<List<DomainDTO>> callback);
 
