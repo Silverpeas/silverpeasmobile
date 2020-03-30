@@ -67,6 +67,15 @@ public class NotificationsPushHelper {
     return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 
+  private void removeToken(String userId, String token) {
+    List<String> devices = data.get(userId);
+    if (devices != null) {
+      if (devices.remove(token)) {
+        data.put(userId, devices);
+      }
+    }
+  }
+
   public void storeToken(String userId, String token) {
     List<String> devices = data.get(userId);
     if (devices == null) {
@@ -87,7 +96,7 @@ public class NotificationsPushHelper {
             try {
               sendToToken(token, dataNotifcation);
             } catch(FirebaseMessagingException fe) {
-              //TODO : manage bad token
+              removeToken(userId, token);
               SilverLogger.getLogger(this).error(fe);
             }
           }
