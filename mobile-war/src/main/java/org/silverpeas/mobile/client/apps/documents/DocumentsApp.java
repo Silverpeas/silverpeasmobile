@@ -76,9 +76,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     private ApplicationMessages globalMsg;
     private DocumentsMessages msg;
 
-    private boolean commentable, ableToStoreContent, notifiable;
-    //private Anchor sourceLink;
-
     public DocumentsApp() {
         super();
         msg = GWT.create(DocumentsMessages.class);
@@ -102,28 +99,30 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
 
       if (content.getType().equals(ContentsTypes.Publication.toString()) || content.getType().equals(ContentsTypes.News.toString())) {
-        ableToStoreContent = true;
+        getApplicationInstance().setAbleToStoreContent(true);
       }
-      AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
-
-        @Override
-        public void attempt() {
-          ServicesLocator.getServiceNavigation()
-              .getApp(content.getInstanceId(), content.getId(), content.getType(), this);
-        }
-
-        @Override
-        public void onSuccess(final ApplicationInstanceDTO app) {
-          super.onSuccess(app);
-          commentable = app.isCommentable();
-          notifiable = app.isNotifiable();
-          displayContent(content);
-        }
-      };
-      action.attempt();
     }
 
-    private void displayContent(final ContentDTO content) {
+  private void loadAppInstance(final ContentDTO content) {
+    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
+
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNavigation()
+            .getApp(content.getInstanceId(), content.getId(), content.getType(), this);
+      }
+
+      @Override
+      public void onSuccess(final ApplicationInstanceDTO app) {
+        super.onSuccess(app);
+        setApplicationInstance(app);
+        displayContent(content);
+      }
+    };
+    action.attempt();
+  }
+
+  private void displayContent(final ContentDTO content) {
         if (content.getType().equals(ContentsTypes.Publication.toString()) || content.getType().equals(ContentsTypes.News.toString())) {
             PublicationPage page = new PublicationPage();
             page.setPageTitle(msg.publicationTitle());
@@ -178,9 +177,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
       if (event.getInstance().getType().equals(Apps.kmelia.name())) {
         setApplicationInstance(event.getInstance());
-        this.commentable = event.getInstance().isCommentable();
-        this.notifiable = event.getInstance().isNotifiable();
-        this.ableToStoreContent = event.getInstance().isAbleToStoreContent();
         GedNavigationPage page = new GedNavigationPage();
         page.setPageTitle(event.getInstance().getLabel());
         page.setInstanceId(event.getInstance().getId());
@@ -193,11 +189,13 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component") &&
         event.getContent().getInstanceId().startsWith(Apps.kmelia.name())) {
+      loadAppInstance(event.getContent());
       super.showContent(event);
     } else if (event.getContent().getType().equals(ContentsTypes.Publication.name()) ||
         event.getContent().getType().equals(ContentsTypes.News.name()) ||
         event.getContent().getType().equals(ContentsTypes.Attachment.name()) ||
         event.getContent().getType().equals(ContentsTypes.Folder.name())) {
+      loadAppInstance(event.getContent());
       startWithContent(event.getContent());
     }
   }
@@ -250,7 +248,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
                 if (result == null) {
                     result = new PublicationDTO();
                 }
-                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent, notifiable, event.getType()));
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, getApplicationInstance().isCommentable(), getApplicationInstance().isAbleToStoreContent(), getApplicationInstance().isNotifiable(), event.getType()));
             }
         };
 
@@ -264,7 +262,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             public void onSuccess(PublicationDTO result) {
                 super.onSuccess(result);
                 LocalStorageHelper.store(key, PublicationDTO.class, result);
-                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, commentable, ableToStoreContent, notifiable, event.getType()));
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, getApplicationInstance().isCommentable(), getApplicationInstance().isAbleToStoreContent(), getApplicationInstance().isNotifiable(), event.getType()));
             }
 
         };
