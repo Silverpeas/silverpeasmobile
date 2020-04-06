@@ -103,7 +103,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
     }
 
-  private void loadAppInstance(final ContentDTO content) {
+  private void loadAppInstance(final ContentDTO content, Command callback) {
     AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
       @Override
@@ -117,6 +117,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         super.onSuccess(app);
         setApplicationInstance(app);
         displayContent(content);
+        callback.execute();
       }
     };
     action.attempt();
@@ -189,14 +190,22 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component") &&
         event.getContent().getInstanceId().startsWith(Apps.kmelia.name())) {
-      loadAppInstance(event.getContent());
-      super.showContent(event);
+      loadAppInstance(event.getContent(), new Command() {
+        @Override
+        public void execute() {
+          DocumentsApp.super.showContent(event);
+        }
+      });
     } else if (event.getContent().getType().equals(ContentsTypes.Publication.name()) ||
         event.getContent().getType().equals(ContentsTypes.News.name()) ||
         event.getContent().getType().equals(ContentsTypes.Attachment.name()) ||
         event.getContent().getType().equals(ContentsTypes.Folder.name())) {
-      loadAppInstance(event.getContent());
-      startWithContent(event.getContent());
+      loadAppInstance(event.getContent(), new Command() {
+        @Override
+        public void execute() {
+          startWithContent(event.getContent());
+        }
+      });
     }
   }
 
