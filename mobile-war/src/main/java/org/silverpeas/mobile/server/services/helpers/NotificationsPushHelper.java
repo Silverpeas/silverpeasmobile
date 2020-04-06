@@ -31,36 +31,41 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.mobile.server.dao.token.TokenDAO;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author: svu
  */
+@Singleton
+@Named("notificationsPushHelper")
 public class NotificationsPushHelper {
 
-  private static NotificationsPushHelper instance;
+  @Inject
+  private TokenDAO tokenDAO;
 
   private static FileInputStream serviceAccount;
   private static boolean configPresent;
 
-  private static Map<String, List<String>> data = new HashMap<>();
-
   private static ObjectMapper mapper = new ObjectMapper();
 
   public static NotificationsPushHelper getInstance() {
-    if (instance == null) {
-      instance = new NotificationsPushHelper();
-    }
-    return instance;
+    return ServiceProvider.getSingleton(NotificationsPushHelper.class);
+  }
+
+  protected TokenDAO getTokenDAO() {
+    return tokenDAO;
   }
 
   private static SettingBundle getSettings() {
@@ -68,29 +73,18 @@ public class NotificationsPushHelper {
   }
 
   private void removeToken(String userId, String token) {
-    List<String> devices = data.get(userId);
-    if (devices != null) {
-      if (devices.remove(token)) {
-        data.put(userId, devices);
-      }
-    }
+    if (token != null) getTokenDAO().removeToken(userId, token);
   }
 
   public void storeToken(String userId, String token) {
-    List<String> devices = data.get(userId);
-    if (devices == null) {
-      devices = new ArrayList<>();
-    }
-    if (!devices.contains(token)) devices.add(token);
-    data.put(userId, devices);
-    //TODO : use persistent storage
+    if (token != null) getTokenDAO().saveToken(userId, token);
   }
 
   public void sendNotification(String userId, Map<String, Object> dataNotifcation) {
     try {
       init();
       if (configPresent) {
-        List<String> tokens = data.get(userId);
+        List<String> tokens = getTokenDAO().getTokens(userId);
         for (String token : tokens) {
           if (token != null) {
             try {
@@ -139,6 +133,7 @@ public class NotificationsPushHelper {
     // Send a message to the device corresponding to the provided
     // registration token.
     String response = FirebaseMessaging.getInstance().send(message);
+
     return response;
   }
 }
