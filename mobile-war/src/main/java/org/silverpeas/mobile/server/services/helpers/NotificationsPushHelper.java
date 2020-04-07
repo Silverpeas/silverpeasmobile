@@ -30,6 +30,8 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
+import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
+import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.SettingBundle;
@@ -127,6 +129,7 @@ public class NotificationsPushHelper {
     Message message = Message.builder()
         .putData("subject", String.valueOf(dataNotifcation.get("subject")))
         .putData("sender", String.valueOf(dataNotifcation.get("sender")))
+        .putData("permalink", getNotificationPermalink(String.valueOf(dataNotifcation.get("id"))))
         .setToken(registrationToken)
         .build();
 
@@ -135,5 +138,10 @@ public class NotificationsPushHelper {
     String response = FirebaseMessaging.getInstance().send(message);
 
     return response;
+  }
+
+  private String getNotificationPermalink(String id) {
+    SILVERMAILMessage notif = SILVERMAILPersistence.getMessage(Long.decode(id));
+    return notif.getUrl();
   }
 }

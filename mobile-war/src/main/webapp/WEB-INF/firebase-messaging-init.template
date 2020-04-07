@@ -25,6 +25,11 @@ if (firebaseConfig != null) {
       body : payload.data["subject"], icon : '/silverpeas/util/icons/desktop-user-notification.png'
     };
     var notification = new Notification(payload.data["sender"], notificationOptions );
+    notification.onclick = function(event) {
+      event.preventDefault();
+      window.location = payload.data["permalink"];
+      notification.close();
+    }
   });
 }
 
