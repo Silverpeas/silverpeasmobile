@@ -11,8 +11,15 @@ messaging.setBackgroundMessageHandler(function(payload) {
   const notificationTitle = payload.data["sender"];
   const notificationOptions = {
     body : payload.data["subject"], icon : '/silverpeas/util/icons/desktop-user-notification.png',
-    click_action : payload.data["permalink"]
+    data : payload.data
   };
+
+  self.addEventListener("notificationclick", function(event) {
+     const pushData = event.notification.data;
+     event.notification.close();
+     self.clients.openWindow(pushData["permalink"]);
+  });
+
 
   return self.registration.showNotification(notificationTitle, notificationOptions);
 });

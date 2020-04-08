@@ -24,12 +24,10 @@ if (firebaseConfig != null) {
     const notificationOptions = {
       body : payload.data["subject"], icon : '/silverpeas/util/icons/desktop-user-notification.png'
     };
-    var notification = new Notification(payload.data["sender"], notificationOptions );
-    notification.onclick = function(event) {
-      event.preventDefault();
-      window.location = payload.data["permalink"];
-      notification.close();
-    }
+
+    navigator.serviceWorker.getRegistration('/silverpeas/spmobile/').then(registration => {
+            registration.showNotification(payload.data["sender"], notificationOptions)
+    });
   });
 }
 
