@@ -69,13 +69,11 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
     EventBus.getInstance().addHandler(AbstractConfigAppEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractNavigationPagesEvent.TYPE, this);
     Config conf = SpMobil.getConfiguration();
+    PushNotificationsManager.getInstance().inject();
   }
 
   @Override
   public void homePageLoaded(final HomePageLoadedEvent event) {
-    PushNotificationsManager.getInstance().inject();
-
-
     if (isVisible() && dataLoaded == false) {
       content.setData(event.getData());
       dataLoaded = true;
