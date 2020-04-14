@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.agenda.pages.EventPage;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.common.DateUtil;
+import org.silverpeas.mobile.client.components.HTMLPanelClickable;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -54,7 +55,7 @@ public class EventItem extends Composite {
   DivElement eventName, calendarName, eventDate;
 
   @UiField
-  HTMLPanel container;
+  HTMLPanelClickable container;
 
   @UiField
   HTML infos;
@@ -199,7 +200,7 @@ public class EventItem extends Composite {
     return year;
   }
 
-  @UiHandler("infos")
+  @UiHandler("container")
   void openEvent(ClickEvent event) {
     EventPage page = new EventPage();
     page.setData(this.instance, this.event, calendar);
