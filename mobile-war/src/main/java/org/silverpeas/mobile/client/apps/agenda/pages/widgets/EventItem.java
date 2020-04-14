@@ -88,6 +88,7 @@ public class EventItem extends Composite {
 
     if (event.isOnAllDay()) endDate.setTime(endDate.getTime()-1000);
 
+    DateTimeFormat hoursformat = DateTimeFormat.getFormat("HH:mm");
     DateTimeFormat dayformat = DateTimeFormat.getFormat("EEEE");
     DateTimeFormat mouthformat = DateTimeFormat.getFormat("MMMM");
     DateTimeFormat df = DateTimeFormat.getFormat("dd");
@@ -95,14 +96,24 @@ public class EventItem extends Composite {
 
     String startDateFormated = dayformat.format(startDate);
     String endDateFormated = dayformat.format(endDate);
+
+    String startHourFormated = hoursformat.format(startDate);
+    String endHourFormated = hoursformat.format(endDate);
+
     String date = "";
     if (startDateFormated.equals(endDateFormated) || (event.isOnAllDay() && isOnOneDay())) {
       String start = getDay(startDateFormated) + " " + df.format(startDate) + " " + getMouth(mouthformat.format(startDate));
-      date = "<span>" + msg.the() + " <strong>" + start + "</strong></span>";
+      date = "<span>" + msg.the() + " <strong>" + start;
+      if (!event.isOnAllDay()) date += " " + startHourFormated + " - " + endHourFormated;
+      date += "</strong></span>";
     } else {
       String start = getDay(startDateFormated) + " " + df.format(startDate) + " " + getMouth(mouthformat.format(startDate));
       String end = getDay(endDateFormated) + " " + df.format(endDate) + " " + getMouth(mouthformat.format(endDate));
-      date = "<span>" + msg.from() + " <strong>" + start + "</strong></span> <span>" + msg.toDay() + " " + end + "</span>";
+      date = "<span>" + msg.from() + " <strong>" + start;
+      if (!event.isOnAllDay()) date += " " + startHourFormated;
+      date += "</strong></span> <span>" + msg.toDay() + " " + end;
+      if (!event.isOnAllDay()) date += " " + endHourFormated;
+      date += "</span>";
     }
 
     eventDate.setInnerHTML(date);
