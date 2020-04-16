@@ -134,7 +134,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
               for (PublicationDetail publication : publications) {
                 if (coWriting) {
                   if (isRightsOnTopicsEnabled(instanceId)) {
-                    NodePK f = getKmeliaBm().getPublicationFatherPK(publication.getPK(), getUserInSession().getId());
+                    NodePK f = KmeliaService.get().getPublicationFatherPK(publication.getPK(), getUserInSession().getId());
                     NodeDetail node = NodeService.get().getHeader(f, false);
                     ProfiledObjectId profiledObjectId = ProfiledObjectId.fromNode(node.getRightsDependsOn());
                     String[] profiles = organizationController
