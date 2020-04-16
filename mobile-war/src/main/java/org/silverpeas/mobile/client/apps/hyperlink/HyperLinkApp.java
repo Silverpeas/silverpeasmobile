@@ -35,6 +35,8 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
@@ -67,7 +69,13 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
         public void onSuccess(String result) {
           super.onSuccess(result);
           LocalStorageHelper.store(key, String.class, result);
-          openLink(result);
+          if (result.contains("Rdirectory")) {
+            ContentDTO content = new ContentDTO();
+            content.setType(ContentsTypes.Contacts.toString());
+            EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+          } else {
+            openLink(result);
+          }
         }
 
         @Override
