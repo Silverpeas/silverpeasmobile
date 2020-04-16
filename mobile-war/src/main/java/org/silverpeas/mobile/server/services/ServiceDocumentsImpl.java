@@ -32,7 +32,6 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
-import org.silverpeas.core.contribution.attachment.model.DocumentType;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.publication.model.CompletePublication;
@@ -296,10 +295,6 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
    return PublicationService.get();
   }
 
-  private KmeliaService getKmeliaBm() {
-    return KmeliaService.get();
-  }
-
   private NodeService getNodeBm() {
     return NodeService.get();
   }
@@ -331,7 +326,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         dto.setContent(true);
       }
 
-      CompletePublication completePublication = KmeliaService.get().getPublication(pub.getPK(), null).getCompleteDetail();
+      CompletePublication completePublication = PublicationService.get().getCompletePublication(pub.getPK());
       List<PublicationLink> linkedPublications = completePublication.getLinkList();
       List<PublicationDTO> linkedPub = new ArrayList<>();
       for (PublicationLink link :linkedPublications) {
