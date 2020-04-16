@@ -23,13 +23,16 @@
 
 package org.silverpeas.mobile.server.services.helpers;
 
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.notification.NotificationException;
 import org.silverpeas.core.notification.user.client.NotificationManager;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
@@ -105,5 +108,21 @@ public class UserHelper {
     dto.setId(group.getId());
     dto.setName(group.getName());
     return dto;
+  }
+
+  public String getUserLook(String userId) {
+    UserDetail user = null;
+    try {
+      user = Administration.get().getUserDetail(userId);
+    } catch(Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return getUserLook(user);
+  }
+
+  public String getUserLook(UserDetail user) {
+    String look = user.getUserPreferences().getLook();
+    if(!StringUtil.isDefined(look)) look = GraphicElementFactory.defaultLookName;
+    return look;
   }
 }

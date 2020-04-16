@@ -106,7 +106,7 @@ public class NewsHelper {
       return news;
     } else {
       // News on main page
-      SettingBundle settings = GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+      SettingBundle settings = GraphicElementFactory.getLookSettings(UserHelper.getInstance().getUserLook(userId));
       String newsSource = null;
       try{
         newsSource = settings.getString("home.news");

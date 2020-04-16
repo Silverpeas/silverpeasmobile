@@ -245,8 +245,10 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       throws NavigationException, AuthenticationException {
     checkUserInSession();
     initSilverpeasSession();
+
     SettingBundle settings =
-        GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+        GraphicElementFactory.getLookSettings(UserHelper.getInstance().getUserLook(getUserInSession()));
+
     HomePageDTO data = new HomePageDTO();
     data.setId(spaceId);
     try {
