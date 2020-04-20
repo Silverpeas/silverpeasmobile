@@ -33,6 +33,8 @@ import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
+import org.silverpeas.core.questioncontainer.container.model.QuestionContainerPK;
+import org.silverpeas.core.questioncontainer.container.service.QuestionContainerService;
 import org.silverpeas.core.security.token.TokenGenerator;
 import org.silverpeas.core.security.token.TokenGeneratorProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
@@ -107,6 +109,22 @@ public class MobilFilter implements Filter {
           Media media = getGalleryService().getMedia(new MediaPK(id));
           String appId = media.getInstanceId();
           params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+        } else if (url.toLowerCase().contains("survey")) {
+          String id = "";
+          String appId = "";
+          String contentType;
+          if (url.contains("Rsurvey")) {
+            String subUrl = url.substring(url.indexOf("/Rsurvey"));
+            appId = subUrl.replace("/Rsurvey/", "");
+            appId = appId.substring(0, appId.indexOf("/"));
+            contentType = "Component";
+          } else {
+            id = url.substring(url.lastIndexOf("/") + 1);
+            QuestionContainerPK pk = new QuestionContainerPK(id, null, null);
+            appId = QuestionContainerService.get().getQuestionContainer(pk, null).getComponentInstanceId();
+            contentType = "QuestionContainer";
+          }
+          params = "?shortcutContentType="+contentType+"&shortcutContentId=" + id + "&shortcutAppId=" + appId;
         } else if (url.contains("autoRedirect.jsp")) {
           QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
           String subUrl = ((HttpServletRequest) req).getParameter("goto");

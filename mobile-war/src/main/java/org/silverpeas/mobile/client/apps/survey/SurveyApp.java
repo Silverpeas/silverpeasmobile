@@ -91,10 +91,14 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.survey.name()) || event.getContent().getType().startsWith(Apps.pollingStation.name())) {
-      super.showContent(event);
-    } else {
+    if (event.getContent().getType().equals(ContentsTypes.QuestionContainer.toString()) && event.getContent().getInstanceId().startsWith(Apps.survey.name()) || event.getContent().getType().startsWith(Apps.pollingStation.name())) {
       startWithContent(event.getContent());
+    } else if(event.getContent().getType().equals(ContentsTypes.Component.toString()) && event.getContent().getInstanceId().startsWith(Apps.survey.name()) || event.getContent().getType().startsWith(Apps.pollingStation.name())) {
+      ApplicationInstanceDTO appDTO = new ApplicationInstanceDTO();
+      appDTO.setId(event.getContent().getInstanceId());
+      appDTO.setType(Apps.survey.name());
+      NavigationAppInstanceChangedEvent navEvent = new NavigationAppInstanceChangedEvent(appDTO);
+      appInstanceChanged(navEvent);
     }
   }
 
