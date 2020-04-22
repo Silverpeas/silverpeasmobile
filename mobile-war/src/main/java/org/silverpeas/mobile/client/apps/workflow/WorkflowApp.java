@@ -68,7 +68,6 @@ import java.util.List;
 public class WorkflowApp extends App implements NavigationEventHandler, WorkflowAppEventHandler {
 
   private ApplicationMessages globalMsg;
-  private ApplicationInstanceDTO instance;
   private String currentRole;
   private String currentAction;
   private String currentState;
@@ -94,8 +93,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   @Override
   public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().isWorkflow()) {
-      this.instance = event.getInstance();
-
+      setApplicationInstance(event.getInstance());
       WorkflowPage page = new WorkflowPage();
       page.show();
       loadInstances(new WorkflowLoadInstancesEvent());
@@ -128,7 +126,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       app.setId(event.getContent().getInstanceId());
       app.setWorkflow(true);
       setApplicationInstance(app);
-      instance = app;
+      currentRole = event.getContent().getRole();
 
       WorkflowLoadInstanceEvent levent = new WorkflowLoadInstanceEvent();
       levent.setRole(event.getContent().getRole());
@@ -143,7 +141,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       @Override
       public void attempt() {
         ServicesLocator.getServiceWorkflow()
-            .getInstances(instance.getId(), event.getRole(), this);
+            .getInstances(getApplicationInstance().getId(), event.getRole(), this);
       }
 
       public void onSuccess(WorkflowInstancesDTO dto) {
@@ -151,7 +149,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
         WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
         //currentRole = dto.getRoles().entrySet().iterator().next().getKey();
         event.setData(dto);
-        event.setInstanceId(instance.getId());
+        event.setInstanceId(getApplicationInstance().getId());
         EventBus.getInstance().fireEvent(event);
       }
     };
@@ -169,7 +167,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       public void onSuccess(WorkflowInstancePresentationFormDTO form) {
         super.onSuccess(form);
         WorkflowPresentationPage page = new WorkflowPresentationPage();
-        page.setData(form, instance);
+        page.setData(form, getApplicationInstance());
         page.show();
       }
     };
@@ -190,7 +188,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
         super.onSuccess(dto);
         dto.setActionName(currentAction);
         WorkflowActionFormPage page = new WorkflowActionFormPage();
-        page.setData(dto, instance);
+        page.setData(dto, getApplicationInstance());
         page.show();
       }
     };
@@ -228,7 +226,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
     }
     String url = UrlUtils.getUploadLocation();
     url +=  "FormAction";
-    processAction(this, url, formData, SpMobil.getUserToken(), instance.getId(), currentAction, currentRole, currentState, event.getProcessId());
+    processAction(this, url, formData, SpMobil.getUserToken(), getApplicationInstance().getId(), currentAction, currentRole, currentState, event.getProcessId());
   }
 
   @Override
