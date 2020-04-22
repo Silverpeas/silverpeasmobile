@@ -46,6 +46,7 @@
   <meta name="HandheldFriendly" content="true">
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <link rel="manifest" href="manifest.json">
 
   <%
     String l = request.getHeader("Accept-Language");
