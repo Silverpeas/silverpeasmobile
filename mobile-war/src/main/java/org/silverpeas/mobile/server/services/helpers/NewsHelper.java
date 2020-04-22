@@ -112,7 +112,7 @@ public class NewsHelper {
         newsSource = settings.getString("home.news");
       } catch (MissingResourceException e) {}
       if (newsSource != null && newsSource.isEmpty() == false) {
-          if (newsSource.startsWith("quickinfo")) {
+          if (newsSource.trim().startsWith("quickinfo")) {
             return getNewsByComponentId(newsSource, false, userId);
           } else if (newsSource.trim().equals("*")) {
             return getAllNews(userId);
