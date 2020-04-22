@@ -29,7 +29,6 @@ import org.silverpeas.core.notification.user.UserNotificationServerEvent;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 /**

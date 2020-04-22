@@ -111,21 +111,7 @@ public class MobilFilter implements Filter {
         } else if(url.contains("RprocessManager")) {
           params = extractWorkflowParameters(req);
         } else if (url.toLowerCase().contains("survey")) {
-          String id = "";
-          String appId = "";
-          String contentType;
-          if (url.contains("Rsurvey")) {
-            String subUrl = url.substring(url.indexOf("/Rsurvey"));
-            appId = subUrl.replace("/Rsurvey/", "");
-            appId = appId.substring(0, appId.indexOf("/"));
-            contentType = "Component";
-          } else {
-            id = url.substring(url.lastIndexOf("/") + 1);
-            QuestionContainerPK pk = new QuestionContainerPK(id, null, null);
-            appId = QuestionContainerService.get().getQuestionContainer(pk, null).getComponentInstanceId();
-            contentType = "QuestionContainer";
-          }
-          params = "?shortcutContentType="+contentType+"&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+          params = extractSurveyParameters(req);
         } else if (url.contains("autoRedirect.jsp")) {
           QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
           String subUrl = ((HttpServletRequest) req).getParameter("goto");
@@ -186,6 +172,26 @@ public class MobilFilter implements Filter {
       chain.doFilter(req, res);
       return;
     }
+  }
+
+  private String extractSurveyParameters(final ServletRequest req) {
+    String url = ((HttpServletRequest) req).getRequestURL().toString();
+    String id = "";
+    String appId = "";
+    String contentType;
+    if (url.contains("Rsurvey")) {
+      String subUrl = url.substring(url.indexOf("/Rsurvey"));
+      appId = subUrl.replace("/Rsurvey/", "");
+      appId = appId.substring(0, appId.indexOf("/"));
+      contentType = "Component";
+    } else {
+      id = url.substring(url.lastIndexOf("/") + 1);
+      QuestionContainerPK pk = new QuestionContainerPK(id, null, null);
+      appId = QuestionContainerService.get().getQuestionContainer(pk, null).getComponentInstanceId();
+      contentType = "QuestionContainer";
+    }
+    String params = "?shortcutContentType="+contentType+"&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+    return params;
   }
 
   private String extractWorkflowParameters(final ServletRequest req) {
