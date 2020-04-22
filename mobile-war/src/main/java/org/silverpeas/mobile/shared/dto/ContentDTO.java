@@ -33,6 +33,7 @@ public class ContentDTO implements  Serializable {
   private String id;
   private String instanceId;
   private String type;
+  private String role;
   private Anchor link;
   private String contributionId;
 
@@ -73,5 +74,13 @@ public class ContentDTO implements  Serializable {
 
   public void setContributionId(final String contributionId) {
     this.contributionId = contributionId;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(final String role) {
+    this.role = role;
   }
 }

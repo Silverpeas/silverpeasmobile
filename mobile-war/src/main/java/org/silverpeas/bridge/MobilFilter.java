@@ -47,14 +47,13 @@ import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MobilFilter implements Filter {
 
@@ -109,6 +108,8 @@ public class MobilFilter implements Filter {
           Media media = getGalleryService().getMedia(new MediaPK(id));
           String appId = media.getInstanceId();
           params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+        } else if(url.contains("RprocessManager")) {
+          params = extractWorkflowParameters(req);
         } else if (url.toLowerCase().contains("survey")) {
           String id = "";
           String appId = "";
@@ -185,6 +186,25 @@ public class MobilFilter implements Filter {
       chain.doFilter(req, res);
       return;
     }
+  }
+
+  private String extractWorkflowParameters(final ServletRequest req) {
+    /*
+      Url example :
+      /RprocessManager/demandeCongesSimple5/searchResult?Type=ProcessInstance&Id=22&role=Responsable
+    */
+
+    String url = ((HttpServletRequest) req).getRequestURL().toString();
+    Pattern pattern = Pattern.compile("\\w+" + "/RprocessManager/" + "(?<appId>\\w+)/\\w+");
+    Matcher parameters = pattern.matcher(url);
+    parameters.find();
+    String appId = parameters.group("appId");
+    String contentType = ((HttpServletRequest) req).getParameter("Type");
+    String id = ((HttpServletRequest) req).getParameter("Id");
+    String role = ((HttpServletRequest) req).getParameter("role");
+
+    String params = "?shortcutContentType="+contentType+"&shortcutContentId=" + id + "&shortcutAppId=" + appId + "&shortcutRole=" + role;
+    return params;
   }
 
   private boolean isRedirect(final String url) {

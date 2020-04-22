@@ -102,6 +102,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static String shortcutContentType;
   private static String shortcutContentId;
   private static String shortcutContributionId;
+  private static String shortcutRole;
   private static String token;
   private static String XSession;
   private static SpMobil instance = null;
@@ -134,6 +135,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     shortcutContentType = Window.Location.getParameter("shortcutContentType");
     shortcutContentId = Window.Location.getParameter("shortcutContentId");
     shortcutContributionId = Window.Location.getParameter("shortcutContributionId");
+    shortcutRole = Window.Location.getParameter("shortcutRole");
 
     NodeList<Element> node = Document.get().getElementsByTagName("meta");
     for (int i = 0; i < node.getLength(); i++) {
@@ -248,7 +250,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
     if ( (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) || shortcutContributionId != null
         || (shortcutContentType != null && shortcutContentType.equals("Component") && shortcutAppId != null) ) {
-      ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId, shortcutContributionId);
+      ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId, shortcutContributionId, shortcutRole);
     } else {
       final String key = "MainHomePage_";
       AsyncCallbackOnlineOrOffline action =

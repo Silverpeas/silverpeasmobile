@@ -83,7 +83,7 @@ public class LinksManager {
       }
 
       ShortCutRouter
-          .route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId, null);
+          .route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId, null, null);
       return;
     }
     openExternalLink(url);

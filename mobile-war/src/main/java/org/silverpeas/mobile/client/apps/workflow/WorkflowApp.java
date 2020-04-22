@@ -57,7 +57,6 @@ import org.silverpeas.mobile.client.components.userselection.events.pages.Allowe
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
-import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
@@ -124,6 +123,17 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
           Notification.activityStop();
         }
       });
+    } else if (event.getContent().getType().equals("ProcessInstance")) {
+      ApplicationInstanceDTO app = new ApplicationInstanceDTO();
+      app.setId(event.getContent().getInstanceId());
+      app.setWorkflow(true);
+      setApplicationInstance(app);
+      instance = app;
+
+      WorkflowLoadInstanceEvent levent = new WorkflowLoadInstanceEvent();
+      levent.setRole(event.getContent().getRole());
+      levent.setId(event.getContent().getId());
+      loadInstance(levent);
     }
   }
 
