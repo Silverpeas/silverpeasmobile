@@ -44,6 +44,8 @@ public class FireBaseServiceWorkerServlet extends AbstractSilverpeasMobileServle
     try {
       checkUserInSession(request, response);
       response.setContentType("text/javascript");
+      response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+      response.setHeader("Pragma", "no-cache");
       PrintWriter out = response.getWriter();
       String jsonFireBaseConfig = getSettings().getString("push.notification.clientConfig","null");
       out.println("var firebaseConfig = " + jsonFireBaseConfig + ";");
