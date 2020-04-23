@@ -5,7 +5,7 @@
   "description": "Version mobile de Silverpeas",
   "orientation": "portrait-primary",
   "scope": "/silverpeas/spmobile/",
-  "start_url": "spmobil.jsp",
+  "start_url": "/silverpeas/spmobile/spmobil.jsp",
   "display": "standalone",
   "theme_color": "green",
   "icons": [
