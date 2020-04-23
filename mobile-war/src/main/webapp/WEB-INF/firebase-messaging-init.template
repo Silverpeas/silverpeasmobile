@@ -29,5 +29,12 @@ if (firebaseConfig != null) {
             registration.showNotification(payload.data["sender"], notificationOptions)
     });
   });
+} else {
+  navigator.serviceWorker.register('/silverpeas/spmobile/firebase-messaging-sw.js')
+      .then((registration) => {
+        // Request permission and get token.....
+        Notification.requestPermission().then(function(permission) {
+        });
+  });
 }
 

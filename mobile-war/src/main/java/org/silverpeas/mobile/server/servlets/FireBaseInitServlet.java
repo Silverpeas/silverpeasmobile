@@ -48,14 +48,13 @@ public class FireBaseInitServlet extends AbstractSilverpeasMobileServlet {
       response.setHeader("Pragma", "no-cache");
 
       PrintWriter out = response.getWriter();
-      String jsonFireBaseConfig = getSettings().getString("push.notification.clientConfig","null");
+      String jsonFireBaseConfig = getSettings().getString("push.notification.clientConfig", "null");
       out.println("var firebaseConfig = " + jsonFireBaseConfig + ";");
 
-      if (!jsonFireBaseConfig.equalsIgnoreCase("null")) {
-        ServletContext context = getServletContext();
-        InputStream template = context.getResourceAsStream("/WEB-INF/firebase-messaging-init.template");
-        out.println(IOUtils.toString(template, StandardCharsets.UTF_8));
-      }
+      ServletContext context = getServletContext();
+      InputStream template =
+          context.getResourceAsStream("/WEB-INF/firebase-messaging-init.template");
+      out.println(IOUtils.toString(template, StandardCharsets.UTF_8));
 
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
