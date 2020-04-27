@@ -253,34 +253,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.realityforge.gwt.appcache</groupId>
-      <artifactId>gwt-appcache-client</artifactId>
-      <version>1.0.8</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.realityforge.gwt.appcache</groupId>
-      <artifactId>gwt-appcache-linker</artifactId>
-      <version>1.0.8</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.realityforge.gwt.appcache</groupId>
-      <artifactId>gwt-appcache-server</artifactId>
-      <version>1.0.8</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.seanchenxi.gwt</groupId>
       <artifactId>gwt-storage</artifactId>
       <version>1.4.0</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.realityforge.gwt.websockets</groupId>
-      <artifactId>gwt-websockets</artifactId>
-      <version>1.2</version>
       <scope>provided</scope>
     </dependency>
 

@@ -1,7 +1,7 @@
 {
   "name": "Silverpeas Mobile",
   "short_name": "SpMobile",
-  "background_color": "green",
+  "background_color": "white",
   "description": "Version mobile de Silverpeas",
   "orientation": "portrait-primary",
   "scope": "/silverpeas/spmobile/",

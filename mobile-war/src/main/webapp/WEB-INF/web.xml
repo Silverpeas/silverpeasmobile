@@ -63,7 +63,7 @@
 
   <servlet-mapping>
     <servlet-name>manifestServlet</servlet-name>
-    <url-pattern>/spmobil.appcache</url-pattern>
+    <url-pattern>/spmobile/manifest.json</url-pattern>
   </servlet-mapping>
 
   <servlet>

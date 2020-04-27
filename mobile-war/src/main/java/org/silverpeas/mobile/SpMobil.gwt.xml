@@ -42,19 +42,6 @@
   <set-configuration-property name="compiler.emulatedStack.recordLineNumbers" value="true"/>
   <set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true"/>
 
-  <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
-  <inherits name="org.realityforge.gwt.appcache.Appcache"/>
-  <inherits name="org.realityforge.gwt.appcache.linker.Linker"/>
-  <add-linker name="appcache"/>
-
-  <!-- configure all the static files not managed by the GWT compiler -->
-  <extend-configuration-property name="appcache_static_files" value="./"/>
-  <extend-configuration-property name="appcache_static_files" value="spmobil.jsp"/>
-  <extend-configuration-property name="appcache_static_files" value="nice-highres.png"/>
-  <extend-configuration-property name="appcache_static_files" value="niceicon.png"/>
-  <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone.png"/>
-  <extend-configuration-property name="appcache_static_files" value="touch-icon-iphone4.png"/>
-
   <!-- supported languages -->
   <extend-property name="locale" values="en"/>
 

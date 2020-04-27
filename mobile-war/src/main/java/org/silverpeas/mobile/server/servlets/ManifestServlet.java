@@ -23,15 +23,46 @@
 
 package org.silverpeas.mobile.server.servlets;
 
-import org.realityforge.gwt.appcache.server.AbstractManifestServlet;
-import org.realityforge.gwt.appcache.server.propertyprovider.UserAgentPropertyProvider;
+
+import org.apache.commons.io.IOUtils;
+import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.logging.SilverLogger;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author: svu
  */
-public class ManifestServlet extends AbstractManifestServlet {
-    public ManifestServlet()
-    {
-      addPropertyProvider( new UserAgentPropertyProvider() );
+public class ManifestServlet extends AbstractSilverpeasMobileServlet {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    try {
+      response.setContentType("application/json");
+      response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+      response.setHeader("Pragma", "no-cache");
+
+      PrintWriter out = response.getWriter();
+
+      ServletContext context = getServletContext();
+      String path = getSettings().getString("manifest.json.path=", "");
+      InputStream template;
+      if (StringUtil.isDefined(path)) {
+        template = new FileInputStream(path);
+      } else {
+        template =
+            context.getResourceAsStream("/WEB-INF/manifest.json.template");
+      }
+      out.println(IOUtils.toString(template, StandardCharsets.UTF_8));
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
     }
+  }
 }
