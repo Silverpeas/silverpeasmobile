@@ -3,7 +3,7 @@ if (firebaseConfig != null) {
   firebase.initializeApp(firebaseConfig);
 
   const messaging = firebase.messaging();
-  navigator.serviceWorker.register('/silverpeas/spmobile/firebase-messaging-sw.js')
+  navigator.serviceWorker.register('/silverpeas/spmobile/app-sw.js')
       .then((registration) => {
         messaging.useServiceWorker(registration);
 
@@ -30,7 +30,7 @@ if (firebaseConfig != null) {
     });
   });
 } else {
-  navigator.serviceWorker.register('/silverpeas/spmobile/firebase-messaging-sw.js')
+  navigator.serviceWorker.register('/silverpeas/spmobile/app-sw.js')
       .then((registration) => {
         // Request permission and get token.....
         Notification.requestPermission().then(function(permission) {

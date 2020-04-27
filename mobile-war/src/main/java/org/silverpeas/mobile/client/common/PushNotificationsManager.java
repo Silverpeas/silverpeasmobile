@@ -51,7 +51,7 @@ public class PushNotificationsManager {
     Element head = Document.get().getElementsByTagName("head").getItem(0);
     ScriptElement sce = Document.get().createScriptElement();
     sce.setType("text/javascript");
-    sce.setSrc("/silverpeas/spmobile/firebase-messaging-init.js");
+    sce.setSrc("/silverpeas/spmobile/app-init.js");
     head.appendChild(sce);
   }
 

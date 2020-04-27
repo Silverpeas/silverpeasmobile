@@ -36,7 +36,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
 @SuppressWarnings("serial")
-public class FireBaseInitServlet extends AbstractSilverpeasMobileServlet {
+public class AppInitServlet extends AbstractSilverpeasMobileServlet {
 
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -53,7 +53,7 @@ public class FireBaseInitServlet extends AbstractSilverpeasMobileServlet {
 
       ServletContext context = getServletContext();
       InputStream template =
-          context.getResourceAsStream("/WEB-INF/firebase-messaging-init.template");
+          context.getResourceAsStream("/WEB-INF/app-init.template");
       out.println(IOUtils.toString(template, StandardCharsets.UTF_8));
 
     } catch (Exception e) {
