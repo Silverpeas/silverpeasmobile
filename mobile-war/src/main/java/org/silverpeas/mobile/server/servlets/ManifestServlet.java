@@ -52,7 +52,7 @@ public class ManifestServlet extends AbstractSilverpeasMobileServlet {
       PrintWriter out = response.getWriter();
 
       ServletContext context = getServletContext();
-      String path = getSettings().getString("manifest.json.path=", "");
+      String path = getSettings().getString("manifest.json.path", "");
       InputStream template;
       if (StringUtil.isDefined(path)) {
         template = new FileInputStream(path);
