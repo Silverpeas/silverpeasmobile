@@ -133,6 +133,14 @@ public class MobilFilter implements Filter {
             appId = appId.substring(0, appId.indexOf("/"));
             String id = subUrl.substring(subUrl.indexOf("Id=")+3);
             params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+          } else if(subUrl.contains("Rkmelia")) {
+            /*
+              Example : /silverpeas/autoRedirect.jsp?domainId=0&goto=%2FRkmelia%2Fkmelia1%2FsearchResult%3FType%3DPublication%26Id%3D24
+            */
+            String appId = subUrl.replace("/Rkmelia/", "");
+            appId = appId.substring(0, appId.indexOf("/"));
+            String id = subUrl.substring(subUrl.indexOf("Id=")+3);
+            params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" + appId;
           }
         } else if (url.contains("Contribution")) {
           String contributionId = url.substring(url.lastIndexOf("/") + 1);
