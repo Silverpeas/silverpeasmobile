@@ -50,13 +50,9 @@ public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
       String jsonFireBaseConfig = getSettings().getString("push.notification.clientConfig","null");
       out.println("var firebaseConfig = " + jsonFireBaseConfig + ";");
 
-      out.println("self.addEventListener('fetch', function(event){});");
-
-      if (!jsonFireBaseConfig.equalsIgnoreCase("null")) {
-        ServletContext context = getServletContext();
-        InputStream template = context.getResourceAsStream("/WEB-INF/app-sw.template");
-        out.println(IOUtils.toString(template, StandardCharsets.UTF_8));
-      }
+      ServletContext context = getServletContext();
+      InputStream template = context.getResourceAsStream("/WEB-INF/app-sw.template");
+      out.println(IOUtils.toString(template, StandardCharsets.UTF_8));
 
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
