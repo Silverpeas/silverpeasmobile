@@ -49,6 +49,8 @@ public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
       PrintWriter out = response.getWriter();
       String jsonFireBaseConfig = getSettings().getString("push.notification.clientConfig","null");
       out.println("var firebaseConfig = " + jsonFireBaseConfig + ";");
+      String version = request.getServletContext().getInitParameter("SILVERPEAS_VERSION");
+      out.println("const OFFLINE_VERSION = '" + version + "';");
 
       ServletContext context = getServletContext();
       InputStream template = context.getResourceAsStream("/WEB-INF/app-sw.template");
