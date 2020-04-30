@@ -63,6 +63,7 @@ import org.silverpeas.mobile.shared.services.ServiceNotifications;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -94,6 +95,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
       dto.setIdNotif(message.getId());
       notifs.add(dto);
     }
+    Collections.reverse(notifs);
 
     return notifs;
   }
