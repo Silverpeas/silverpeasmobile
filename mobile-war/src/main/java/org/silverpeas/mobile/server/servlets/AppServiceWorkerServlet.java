@@ -58,7 +58,7 @@ public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
       File resFolder = new File(context.getRealPath("/spmobile/"));
       for (File res : resFolder.listFiles()) {
         if (res.getName().contains(".") && !res.getName().endsWith(".txt") &&
-            !res.getName().contains("devmode") && !res.getName().endsWith(".rpc")) {
+            !res.getName().contains("devmode") && !res.getName().endsWith(".rpc") && !res.getName().contains("chat.")) {
           ressources += "'" + res.getName() + "', ";
         }
       }
