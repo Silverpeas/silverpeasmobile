@@ -30,6 +30,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -46,13 +47,25 @@ public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
       response.setContentType("text/javascript");
       response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
       response.setHeader("Pragma", "no-cache");
+      ServletContext context = getServletContext();
       PrintWriter out = response.getWriter();
       String jsonFireBaseConfig = getSettings().getString("push.notification.clientConfig","null");
       out.println("var firebaseConfig = " + jsonFireBaseConfig + ";");
       String version = request.getServletContext().getInitParameter("SILVERPEAS_VERSION");
       out.println("const OFFLINE_VERSION = '" + version + "';");
 
-      ServletContext context = getServletContext();
+      String ressources = "";
+      File resFolder = new File(context.getRealPath("/spmobile/"));
+      for (File res : resFolder.listFiles()) {
+        if (res.getName().contains(".") && !res.getName().endsWith(".txt") &&
+            !res.getName().contains("devmode") && !res.getName().endsWith(".rpc")) {
+          ressources += "'" + res.getName() + "', ";
+        }
+      }
+      ressources = ressources.substring(0, ressources.length()-2);
+
+      out.println("const OFFLINE_URLS = [" + ressources + "];");
+
       InputStream template = context.getResourceAsStream("/WEB-INF/app-sw.template");
       out.println(IOUtils.toString(template, StandardCharsets.UTF_8));
 
