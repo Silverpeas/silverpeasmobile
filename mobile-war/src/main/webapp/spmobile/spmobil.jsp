@@ -10,6 +10,7 @@
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
 <%@ page import="org.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="org.silverpeas.core.util.SettingBundle" %>
 
 <%--
   ~ Copyright (C) 2000 - 2019 Silverpeas
@@ -117,8 +118,15 @@
 
   <title><%= resourceLabels.getString("shortcut_title")%>
   </title>
-  <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-messaging.js"></script>
+  <%
+    SettingBundle settings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    String jsonFireBaseConfig = settings.getString("push.notification.clientConfig", "null");
+    if (!jsonFireBaseConfig.equals("null")) {
+      out.println("<script src='https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js'></script>");
+      out.println("<script src='https://www.gstatic.com/firebasejs/7.12.0/firebase-messaging.js'></script>");
+    }
+  %>
+
   <script type="text/javascript" src="<%=appUrl%>/spmobile/spmobile.nocache.js"></script>
   <script>
     var labels = <% out.println(jsonLabels); %>;
