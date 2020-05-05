@@ -49,7 +49,7 @@ public class ErrorManager implements ErrorEventHandler {
           }
         }
         if (message == null || message.isEmpty()) {
-          message = msg.systemError();
+          message = msg.systemError() + " " + event.getException().toString();
         }
 
         Notification.activityStop();
