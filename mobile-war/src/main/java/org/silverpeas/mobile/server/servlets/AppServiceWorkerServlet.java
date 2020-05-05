@@ -62,7 +62,7 @@ public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
           ressources += "'" + res.getName() + "', ";
         }
       }
-      ressources += "manifest.json, app-init.js";
+      ressources += "'manifest.json', 'app-init.js'";
 
       out.println("const OFFLINE_URLS = [" + ressources + "];");
 
