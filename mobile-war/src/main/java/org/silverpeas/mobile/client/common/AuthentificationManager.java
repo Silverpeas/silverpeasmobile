@@ -145,6 +145,10 @@ public class AuthentificationManager {
               SpMobil.displayMainPage();
             } else if (statusError == 401 || statusError == 500) {
               EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+            } else if (statusError == 0) {
+              loadUser();
+              SpMobil.displayMainPage();
+              //TODO : display termsofservice
             } else {
               EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
             }
