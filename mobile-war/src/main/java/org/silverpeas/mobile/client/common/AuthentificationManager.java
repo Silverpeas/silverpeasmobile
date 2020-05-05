@@ -23,14 +23,8 @@
 
 package org.silverpeas.mobile.client.common;
 
-import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
@@ -47,8 +41,6 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-
-import java.util.Date;
 
 /**
  * @author: svu

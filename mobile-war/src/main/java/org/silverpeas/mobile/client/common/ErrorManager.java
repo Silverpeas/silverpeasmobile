@@ -38,7 +38,7 @@ public class ErrorManager implements ErrorEventHandler {
     private ApplicationMessages msg = GWT.create(ApplicationMessages.class);
 
     public void onError(ExceptionEvent event) {
-      String message = getStackTrace(event);
+      String message = msg.systemError() + "<br/><br/>" + getStackTrace(event);
 
       if (event.getException() instanceof AuthenticationException) {
           AuthenticationException ae = (AuthenticationException) event.getException();
@@ -49,9 +49,6 @@ public class ErrorManager implements ErrorEventHandler {
           } else if (ae.getError().name().equals(AuthenticationException.AuthenticationError.PwdNotAvailable.name())) {
             message = msg.badPassword();
           }
-        }
-        if (message == null || message.isEmpty()) {
-          message = msg.systemError();
         }
 
         Notification.activityStop();
@@ -65,13 +62,15 @@ public class ErrorManager implements ErrorEventHandler {
     }
 
   private String getStackTrace(final ExceptionEvent event) {
-    final String message;
+    String message;
     StringBuilder msgEx = new StringBuilder();
     StackTracePrintStream ps = new StackTracePrintStream(msgEx);
     event.getException().printStackTrace(ps);
     ps.flush();
 
-    message = msg.toString();
+    message = msgEx.toString();
+    message = message.replaceAll("\n", "<br/>");
+
     return message;
   }
 
