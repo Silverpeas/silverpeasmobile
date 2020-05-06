@@ -72,6 +72,7 @@ import org.silverpeas.mobile.client.common.mobil.Orientation;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.Page;
 import org.silverpeas.mobile.client.components.base.events.window.OrientationChangeEvent;
@@ -83,6 +84,7 @@ import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
+import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
@@ -266,7 +268,12 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
               super.onSuccess(result);
               // send event to main home page
               EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
+
+              // caching for offline mode
               LocalStorageHelper.store(key, HomePageDTO.class, result);
+              for (ShortCutLinkDTO shortCut : result.getShortCuts()) {
+                CacheStorageHelper.store(shortCut.getIcon());
+              }
             }
           };
       action.attempt();
