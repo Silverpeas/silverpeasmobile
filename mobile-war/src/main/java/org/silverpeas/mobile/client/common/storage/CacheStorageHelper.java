@@ -33,8 +33,12 @@ public class CacheStorageHelper {
   }
 
   private static native void addToCache(String req) /*-{
-    var cache = caches.open('spmobileOffline');
-    cache.add(req);
+    try {
+      caches.open('spmobileOffline').then(function(cache) {
+        cache.add(req);
+      });
+    } catch(error) {
+      console.log(error);
+    }
   }-*/;
-
 }
