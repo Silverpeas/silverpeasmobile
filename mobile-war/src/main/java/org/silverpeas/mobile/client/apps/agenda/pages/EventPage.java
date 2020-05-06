@@ -62,6 +62,7 @@ import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButto
 import org.silverpeas.mobile.client.common.DateUtil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
@@ -370,6 +371,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     url += "PublicationContent";
     url += "?id=" + eventId;
     url += "&componentId=" + componentId;
+    CacheStorageHelper.store(url);
     IframePage page = new IframePage(url);
     page.setSize(widthAvailable + "px", heightAvailable + "px");
     page.setPageTitle(title);
