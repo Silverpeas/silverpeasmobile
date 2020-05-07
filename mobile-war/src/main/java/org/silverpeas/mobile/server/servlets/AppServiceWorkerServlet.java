@@ -35,6 +35,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
@@ -55,14 +58,53 @@ public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
       out.println("const OFFLINE_VERSION = '" + version + "';");
 
       String ressources = "";
+
+      // statics ressources
       File resFolder = new File(context.getRealPath("/spmobile/"));
       for (File res : resFolder.listFiles()) {
         if (res.getName().contains(".") && !res.getName().endsWith(".txt") &&
-            !res.getName().contains("devmode") && !res.getName().endsWith(".rpc") && !res.getName().contains("chat.")) {
+            !res.getName().contains("devmode") && !res.getName().endsWith(".rpc") &&
+            !res.getName().contains("chat.") && !res.getName().endsWith(".cache.js")) {
           ressources += "'" + res.getName() + "', ";
         }
       }
+
+      // gwt ressources
+      String lang = request.getHeader("Accept-Language");
+      if (lang != null && !lang.isEmpty()) {
+        lang = lang.substring(0, 2);
+        if (!lang.equalsIgnoreCase("fr")) {
+          lang = "en";
+        }
+      } else {
+        lang = "en";
+      }
+      if (lang.equalsIgnoreCase("fr")) lang = "default";
+
+      String userAgent = request.getHeader("User-Agent").toLowerCase();
+
+      List<String> allLines = Files.readAllLines(Paths.get(context.getRealPath("/spmobile/compilation-mappings.txt")));
+      allLines.removeIf(item -> item.isEmpty());
+      allLines.removeIf(item -> item.equals("Devmode:devmode.js"));
+      int i = 0;
+      String f, l, u;
+      while (i < allLines.size()) {
+        f = allLines.get(i);
+        l = allLines.get(i+1).replaceAll("locale ", "");
+        u = allLines.get(i+2).replaceAll("user.agent ", "");
+        if (u.equalsIgnoreCase("safari") && userAgent.contains(u) && lang.equals(l)) {
+          ressources += "'" + f + "', ";
+          break;
+        } else if (u.equalsIgnoreCase("gecko1_8") && userAgent.contains("gecko") && lang.equals(l)) {
+          ressources += "'" + f + "', ";
+          break;
+        }
+        i = i + 3;
+      }
+
+      // dynamics ressources
       ressources += "'manifest.json', 'app-init.js'";
+
 
       out.println("const OFFLINE_URLS = [" + ressources + "];");
 
