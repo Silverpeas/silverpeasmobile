@@ -105,6 +105,9 @@ public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
       // dynamics ressources
       ressources += "'manifest.json', 'app-init.js'";
 
+      if (!jsonFireBaseConfig.equals("null")) {
+        ressources += ", '/silverpeas/spmobile/firebasejs/7.12.0/firebase-app.js', '/silverpeas/spmobile/firebasejs/7.12.0/firebase-messaging.js'";
+      }
 
       out.println("const OFFLINE_URLS = [" + ressources + "];");
 

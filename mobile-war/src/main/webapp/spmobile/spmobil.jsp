@@ -122,8 +122,8 @@
     SettingBundle settings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
     String jsonFireBaseConfig = settings.getString("push.notification.clientConfig", "null");
     if (!jsonFireBaseConfig.equals("null")) {
-      out.println("<script src='https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js'></script>");
-      out.println("<script src='https://www.gstatic.com/firebasejs/7.12.0/firebase-messaging.js'></script>");
+      out.println("<script src='"+ appUrl + "/spmobile/firebasejs/7.12.0/firebase-app.js'></script>");
+      out.println("<script src='" + appUrl + "/spmobile/firebasejs/7.12.0/firebase-messaging.js'></script>");
     }
   %>
 
