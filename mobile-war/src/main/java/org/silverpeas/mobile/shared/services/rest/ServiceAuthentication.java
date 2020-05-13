@@ -25,17 +25,10 @@ package org.silverpeas.mobile.shared.services.rest;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
-import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import java.util.List;
 
 /**
  * @author svu

@@ -95,7 +95,7 @@ public class AppServiceWorkerServlet extends AbstractSilverpeasMobileServlet {
         if (u.equalsIgnoreCase("safari") && userAgent.contains(u) && lang.equals(l)) {
           ressources += "'" + f + "', ";
           break;
-        } else if (u.equalsIgnoreCase("gecko1_8") && userAgent.contains("gecko") && lang.equals(l)) {
+        } else if (u.equalsIgnoreCase("gecko1_8") && userAgent.contains("firefox") && lang.equals(l)) {
           ressources += "'" + f + "', ";
           break;
         }
