@@ -49,9 +49,24 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request).then(response => {
-            return response || fetch(event.request);
-        })
-    );
+    var req = event.request;
+    if (req.method == 'GET') {
+      event.respondWith(
+          caches.match(event.request).then(response => {
+          if (!response) {
+             return fetch(req.clone()).then(function (res) {
+                event.waitUntil((async () => {
+                              const cache = await caches.open(CACHE_NAME);
+
+                            // Put in cache and return the network response.
+                            return cache.put(req, res.clone()).then(function () {
+                                    return res;
+                            });
+
+                }));
+             });
+          }
+          return response;
+      }));
+    }
 });
