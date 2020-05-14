@@ -371,7 +371,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     url += "PublicationContent";
     url += "?id=" + eventId;
     url += "&componentId=" + componentId;
-    CacheStorageHelper.store(url);
+
     IframePage page = new IframePage(url);
     page.setSize(widthAvailable + "px", heightAvailable + "px");
     page.setPageTitle(title);

@@ -204,7 +204,7 @@ public class PublicationPage extends PageContent
     String url = UrlUtils.getServicesLocation();
     url += "PublicationContent";
     url += "?id=" + Id + "&componentId=" + instanceId;
-    CacheStorageHelper.store(url);
+
     IframePage page = new IframePage(url);
     page.setSize(widthAvailable + "px", heightAvailable + "px");
     page.setPageTitle(title);
@@ -221,7 +221,7 @@ public class PublicationPage extends PageContent
     url += "PublicationContent";
     url += "?id=" + pubId;
     url += "&componentId=" + appId;
-    CacheStorageHelper.store(url);
+
     IframePage page = new IframePage(url);
     page.setSize(widthAvailable + "px", heightAvailable + "px");
     page.setPageTitle(title);

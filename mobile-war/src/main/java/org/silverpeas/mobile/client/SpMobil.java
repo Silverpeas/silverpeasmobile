@@ -269,6 +269,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
               // send event to main home page
               EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
 
+              LocalStorageHelper.store(key, HomePageDTO.class, result);
+
               // caching for offline mode
               LocalStorageHelper.store(key, HomePageDTO.class, result);
               for (ShortCutLinkDTO shortCut : result.getShortCuts()) {
