@@ -32,15 +32,7 @@ import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
 import org.silverpeas.mobile.shared.services.*;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
 import org.silverpeas.mobile.shared.services.navigation.ServiceNavigationAsync;
-import org.silverpeas.mobile.shared.services.rest.ServiceAlmanach;
-import org.silverpeas.mobile.shared.services.rest.ServiceAuthentication;
-import org.silverpeas.mobile.shared.services.rest.ServiceComment;
-import org.silverpeas.mobile.shared.services.rest.ServiceFaq;
-import org.silverpeas.mobile.shared.services.rest.ServiceFormsOnline;
-import org.silverpeas.mobile.shared.services.rest.ServiceMyLinks;
-import org.silverpeas.mobile.shared.services.rest.ServicePassword;
-import org.silverpeas.mobile.shared.services.rest.ServiceRestDocuments;
-import org.silverpeas.mobile.shared.services.rest.ServiceUserCalendar;
+import org.silverpeas.mobile.shared.services.rest.*;
 
 public class ServicesLocator {
   private static SpMobileRpcRequestBuilder builder = new SpMobileRpcRequestBuilder();
@@ -84,6 +76,7 @@ public class ServicesLocator {
 
   private static ServiceFaq serviceFaq = GWT.create(ServiceFaq.class);
   private static ServiceFormsOnline serviceFormsOnline = GWT.create(ServiceFormsOnline.class);
+  private static ServiceTermsOfService serviceTermsOfService = GWT.create(ServiceTermsOfService.class);
 
   private static void initRestContext() {
       Defaults.getServiceRoot().equals("/silverpeas/services");
@@ -111,6 +104,11 @@ public class ServicesLocator {
   public static ServiceFormsOnline getServiceFormsOnline() {
     initRestContext();
     return serviceFormsOnline;
+  }
+
+  public static ServiceTermsOfService getServiceTermsOfService() {
+    initRestContext();
+    return serviceTermsOfService;
   }
 
   public static ServicePassword getServicePassword() {

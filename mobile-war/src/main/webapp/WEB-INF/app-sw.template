@@ -40,33 +40,44 @@ if (firebaseConfig != null) {
 }
 
 const CACHE_NAME = 'spmobileOffline';
+var cache;
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
+    cache = await caches.open(CACHE_NAME);
     await cache.addAll(OFFLINE_URLS);
   })());
 });
 
-self.addEventListener('fetch', event => {
-    var req = event.request;
-    if (req.method == 'GET') {
-      event.respondWith(
-          caches.match(event.request).then(response => {
-          if (!response) {
-             return fetch(req.clone()).then(function (res) {
-                event.waitUntil((async () => {
-                              const cache = await caches.open(CACHE_NAME);
+self.addEventListener('activate', function(event) {
+  event.waitUntil((async () => {
+    cache = await caches.open(CACHE_NAME);
+  })());
+});
 
-                            // Put in cache and return the network response.
-                            return cache.put(req, res.clone()).then(function () {
-                                    return res;
-                            });
 
-                }));
-             });
-          }
+self.addEventListener('fetch', function(event) {
+
+  if (event.request.method == 'GET') {
+
+    event.respondWith(
+      caches.match(event.request).then(function(response) {
+        if (response) {
+          //console.log('Réponse trouvée en cache:', response);
           return response;
-      }));
-    }
+        }
+        //console.log('Pas de réponse trouvée en cache. Sur le point de la récupérer via le réseau...');
+
+        return fetch(event.request).then(function(response) {
+          //console.log('La réponse du réseau est:', response);
+          cache.put(request.clone(), response.clone());
+          return response;
+        }).catch(function(error) {
+          console.error('Récupération échouée:', error);
+          throw error;
+        });
+      })
+    );
+
+  }
 });

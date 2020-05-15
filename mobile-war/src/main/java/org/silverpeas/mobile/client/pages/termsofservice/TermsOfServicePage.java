@@ -28,10 +28,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -64,14 +65,14 @@ public class TermsOfServicePage extends PageContent {
 
     SpMobil.getMainPage().hideFooter();
 
-    ServicesLocator.getServiceConnection().getTermsOfServiceText(new AsyncCallback<String>() {
+    ServicesLocator.getServiceTermsOfService().getContent(new TextCallback() {
       @Override
-      public void onFailure(final Throwable t) {
-        EventBus.getInstance().fireEvent(new ErrorEvent(t));
+      public void onFailure(final Method method, final Throwable throwable) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
       }
 
       @Override
-      public void onSuccess(final String text) {
+      public void onSuccess(final Method method, final String text) {
         terms.setHTML(text);
       }
     });
