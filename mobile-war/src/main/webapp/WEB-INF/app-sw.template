@@ -69,8 +69,22 @@ self.addEventListener('fetch', function(event) {
         //console.log('Pas de réponse trouvée en cache. Sur le point de la récupérer via le réseau...');
 
         return fetch(event.request).then(function(response) {
-          //console.log('La réponse du réseau est:', response);
-          cache.put(event.request.clone(), response.clone());
+
+          try {
+            cache.put(event.request.clone(), response.clone());
+          } catch(error) {
+            if (error.name === 'QuotaExceededError') {
+              console.log('cleaning cache');
+              cache.keys().then(function(cachedRequests) {
+                cachedRequests.forEach(function(cachedRequest) {
+                  if (cachedRequest.url.includes('/services/')) {
+                    cache.delete(cachedRequest);
+                  }
+                });
+              });
+            }
+          }
+
           return response;
         }).catch(function(error) {
           console.error('Récupération échouée:', error);
