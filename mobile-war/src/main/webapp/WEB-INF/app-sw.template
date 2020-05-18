@@ -70,7 +70,7 @@ self.addEventListener('fetch', function(event) {
 
         return fetch(event.request).then(function(response) {
           //console.log('La réponse du réseau est:', response);
-          cache.put(request.clone(), response.clone());
+          cache.put(event.request.clone(), response.clone());
           return response;
         }).catch(function(error) {
           console.error('Récupération échouée:', error);
