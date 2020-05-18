@@ -71,7 +71,21 @@ self.addEventListener('fetch', function(event) {
         return fetch(event.request).then(function(response) {
 
           try {
+            if (event.request.url.includes('.cache.js')) {
+
+              console.log('clean old nocache.js');
+              cache.keys().then(function(cachedRequests) {
+                cachedRequests.forEach(function(cachedRequest) {
+                  if (cachedRequest.url.includes('.cache.js')) {
+                    console.log('old cache.js found !');
+                    cache.delete(cachedRequest);
+                  }
+                });
+              });
+
+            }
             cache.put(event.request.clone(), response.clone());
+
           } catch(error) {
             if (error.name === 'QuotaExceededError') {
               console.log('cleaning cache');
