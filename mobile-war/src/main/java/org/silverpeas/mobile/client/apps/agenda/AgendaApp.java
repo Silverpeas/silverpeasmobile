@@ -153,6 +153,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
           if (calendars == null) {
             calendars = new ArrayList<CalendarDTO>();
           }
+          AgendaApp.this.calendars = calendars;
           page.setApp(AgendaApp.this);
           page.setCalendars(calendars);
           page.show();
@@ -172,6 +173,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         @Override
         public void onSuccess(final Method method, final List<CalendarDTO> calendars) {
           super.onSuccess(method, calendars);
+          LocalStorageHelper.store(keyCalendars, List.class, calendars);
           AgendaApp.this.calendars = calendars;
           page.setApp(AgendaApp.this);
           page.setCalendars(calendars);
@@ -216,7 +218,13 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     Command offlineAction = new Command() {
       @Override
       public void execute() {
-        List<CalendarEventDTO> events = LocalStorageHelper.load(key+getApplicationInstance().getId()+event.getCalendar().getId(), List.class);
+        List<CalendarEventDTO> events;
+        if (event.getCalendar() != null) {
+          events = LocalStorageHelper.load(key + event.getCalendar().getId(), List.class);
+        } else {
+          events = LocalStorageHelper.load(key, List.class);
+        }
+
         if (events == null) {
           events = new ArrayList<CalendarEventDTO>();
           getAppEvents().addAll(events);
@@ -292,7 +300,12 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       @Override
       public void onSuccess(final Method method, final List<CalendarEventDTO> events) {
         super.onSuccess(method, events);
-        LocalStorageHelper.store(key + getApplicationInstance().getId() + currentAppId, List.class, events);
+
+        if (event.getCalendar() == null) {
+          LocalStorageHelper.store(key, List.class, events);
+        } else {
+          LocalStorageHelper.store(key+event.getCalendar().getId(), List.class, events);
+        }
         allEvents.addAll(events);
         getAppEvents().addAll(events);
         callNumber++;
