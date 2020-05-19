@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 
@@ -128,12 +129,19 @@ public class Attachment extends Composite {
           @Override
           public void onClick(final ClickEvent clickEvent) {
             String u = ((Anchor) clickEvent.getSource()).getHref();
+            CacheStorageHelper.store(u);
             Window.open(u, "_blank", "fullscreen=yes");
           }
         });
       } else {
         link.setTarget("_self");
         link.getElement().setAttribute("download", data.getFileName());
+        link.addClickHandler(new ClickHandler() {
+          @Override
+          public void onClick(final ClickEvent clickEvent) {
+            CacheStorageHelper.store(((Anchor)clickEvent.getSource()).getHref());
+          }
+        });
       }
     } catch (JavaScriptException e) {
       Notification.alert(e.getMessage());
