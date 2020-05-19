@@ -70,7 +70,6 @@ import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
