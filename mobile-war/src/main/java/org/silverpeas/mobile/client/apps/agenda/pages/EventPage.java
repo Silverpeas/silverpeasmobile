@@ -37,12 +37,10 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AttachmentsLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
@@ -61,9 +59,7 @@ import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.DateUtil;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.navigation.UrlUtils;
-import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
-import org.silverpeas.mobile.client.components.IframePage;
+import org.silverpeas.mobile.client.common.PublicationContentHelper;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
@@ -362,20 +358,8 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     return result;
   }
 
-  public static void showContent(String eventId, String componentId, String title) {
-    // compute height available for content
-    int heightAvailable = Window.getClientHeight() - (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
-    int widthAvailable = Window.getClientWidth();
-    // display content
-    String url = UrlUtils.getServicesLocation();
-    url += "PublicationContent";
-    url += "?id=" + eventId;
-    url += "&componentId=" + componentId;
-
-    IframePage page = new IframePage(url);
-    page.setSize(widthAvailable + "px", heightAvailable + "px");
-    page.setPageTitle(title);
-    page.show();
+  public static void showContent(String eventId, String appId, String title) {
+    PublicationContentHelper.showContent(eventId, appId, title);
   }
 
 

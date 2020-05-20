@@ -24,6 +24,7 @@
 package org.silverpeas.mobile.server.servlets;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -72,6 +73,7 @@ import java.io.Writer;
 import java.net.FileNameMap;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -114,9 +116,12 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     response.getOutputStream().print("<head>");
     response.getOutputStream()
         .print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
-    response.getOutputStream()
-        .print("<link rel='stylesheet' href='/silverpeas/spmobile/spmobile.css'/>");
+    response.getOutputStream().print("<style>");
 
+    InputStream template =
+        getServletContext().getResourceAsStream("/spmobile/spmobile.css");
+    response.getOutputStream().print(IOUtils.toString(template, StandardCharsets.UTF_8));
+    response.getOutputStream().print("</style>");
 
     String urlCSS = mobileSettings.getString("styleSheet", "");
     if (!urlCSS.isEmpty()) {

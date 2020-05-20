@@ -29,6 +29,11 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -50,7 +55,9 @@ import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesB
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
+import org.silverpeas.mobile.client.common.PublicationContentHelper;
 import org.silverpeas.mobile.client.common.app.View;
+import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.components.IframePage;
@@ -63,6 +70,8 @@ import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
+
+import java.util.Date;
 
 public class PublicationPage extends PageContent
     implements View, PublicationNavigationPagesEventHandler {
@@ -195,36 +204,11 @@ public class PublicationPage extends PageContent
     showPublicationContent(publication.getId(), publication.getInstanceId(), msg.content());
   }
 
-  public static void showWebPageContent(String Id, String instanceId, String title) {
-    // compute height available for content
-    int heightAvailable = Window.getClientHeight() -
-        (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
-    int widthAvailable = Window.getClientWidth();
-    // display content
-    String url = UrlUtils.getServicesLocation();
-    url += "PublicationContent";
-    url += "?id=" + Id + "&componentId=" + instanceId;
-
-    IframePage page = new IframePage(url);
-    page.setSize(widthAvailable + "px", heightAvailable + "px");
-    page.setPageTitle(title);
-    page.show();
+  public static void showWebPageContent(String pubId, String appId, String title) {
+    PublicationContentHelper.showContent(pubId, appId, title);
   }
 
   private static void showPublicationContent(String pubId, String appId, String title) {
-    // compute height available for content
-    int heightAvailable = Window.getClientHeight() -
-        (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
-    int widthAvailable = Window.getClientWidth();
-    // display content
-    String url = UrlUtils.getServicesLocation();
-    url += "PublicationContent";
-    url += "?id=" + pubId;
-    url += "&componentId=" + appId;
-
-    IframePage page = new IframePage(url);
-    page.setSize(widthAvailable + "px", heightAvailable + "px");
-    page.setPageTitle(title);
-    page.show();
+    PublicationContentHelper.showContent(pubId, appId, title);
   }
 }

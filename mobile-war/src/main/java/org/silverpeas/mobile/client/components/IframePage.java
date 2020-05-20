@@ -25,8 +25,11 @@ package org.silverpeas.mobile.client.components;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import org.silverpeas.mobile.client.SpMobil;
@@ -44,16 +47,41 @@ import org.silverpeas.mobile.client.components.base.events.window.WindowEventHan
 public class IframePage extends PageContent implements View, WindowEventHandler {
 
   private Frame frame;
-  public IframePage(String url) {
-    frame = new Frame(url);
+  private String html;
+
+  private void init() {
     frame.getElement().getStyle().setBorderWidth(0, Style.Unit.PX);
     frame.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
     frame.getElement().getStyle().setTop(SpMobil.getMainPage().getHeaderHeight(), Style.Unit.PX);
-
     setViewport();
     initWidget(frame);
     EventBus.getInstance().addHandler(AbstractWindowEvent.TYPE, this);
   }
+
+  public IframePage(String url) {
+    frame = new Frame(url);
+    init();
+  }
+
+  public IframePage(String url, String html) {
+    frame = new Frame(url);
+    init();
+    this.html = html;
+
+    frame.addLoadHandler(new LoadHandler() {
+      @Override
+      public void onLoad(final LoadEvent loadEvent) {
+        IFrameElement el = IFrameElement.as(frame.getElement());
+        write(el.getContentDocument(), html);
+      }
+    });
+  }
+
+  private static native void write(Document doc, String newHTML) /*-{
+    doc.open();
+    doc.write(newHTML);
+    doc.close();
+  }-*/;
 
   public void setSize(String width, String height) {
     frame.setSize(width, height);
