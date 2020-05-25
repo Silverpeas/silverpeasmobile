@@ -46,12 +46,14 @@ self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     cache = await caches.open(CACHE_NAME);
     await cache.addAll(OFFLINE_URLS);
+    return self.skipWaiting();
   })());
 });
 
 self.addEventListener('activate', function(event) {
   event.waitUntil((async () => {
     cache = await caches.open(CACHE_NAME);
+    return self.clients.claim();
   })());
 });
 
