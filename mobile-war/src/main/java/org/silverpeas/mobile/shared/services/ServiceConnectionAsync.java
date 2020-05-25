@@ -38,10 +38,6 @@ public interface ServiceConnectionAsync {
 
   void setTabletMode(final AsyncCallback<Boolean> async);
 
-  void showTermsOfService(final AsyncCallback<Boolean> async);
-
-  void getTermsOfServiceText(final AsyncCallback<String> async);
-
   void userAcceptsTermsOfService(final AsyncCallback<Void> async);
 
   void changePwd(String newPwd, final AsyncCallback<Void> async);

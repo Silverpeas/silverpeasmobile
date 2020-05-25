@@ -176,9 +176,11 @@ public class AuthentificationManager {
 
               @Override
               public void onSuccess(final DetailUserDTO user) {
-                ServicesLocator.getServiceConnection().showTermsOfService(new AsyncCallback<Boolean>() {
+                SpMobil.setUser(user);
+
+                ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
                   @Override
-                  public void onFailure(final Throwable throwable) {
+                  public void onFailure(final Method method, final Throwable throwable) {
                     if (throwable instanceof AuthenticationException) {
                       EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
                     } else {
@@ -187,8 +189,7 @@ public class AuthentificationManager {
                   }
 
                   @Override
-                  public void onSuccess(final Boolean showTermsOfServices) {
-                    SpMobil.setUser(user);
+                  public void onSuccess(final Method method, final Boolean showTermsOfServices) {
 
                     Notification.activityStop();
                     AuthentificationManager.getInstance().storeUser(user, userProfile, login, password,

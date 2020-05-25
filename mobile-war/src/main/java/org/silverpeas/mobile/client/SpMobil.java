@@ -38,6 +38,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.apps.agenda.AgendaApp;
 import org.silverpeas.mobile.client.apps.blog.BlogApp;
 import org.silverpeas.mobile.client.apps.classifieds.ClassifiedsApp;
@@ -89,6 +91,7 @@ import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 
+import javax.xml.ws.Service;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -330,16 +333,15 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           setUser(detailUserDTO);
           setUserProfile(LocalStorageHelper.load(AuthentificationManager.USER_PROFIL, UserProfileDTO.class));
 
-          ServicesLocator.getServiceConnection().showTermsOfService(new AsyncCallback<Boolean>() {
+          ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
             @Override
-            public void onFailure(final Throwable t) {
+            public void onFailure(final Method method, final Throwable throwable) {
               Notification.activityStop();
-              EventBus.getInstance().fireEvent(new ErrorEvent(t));
+              EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
             }
 
             @Override
-            public void onSuccess(final Boolean showTerms) {
-
+            public void onSuccess(final Method method, final Boolean showTerms) {
               if (showTerms) {
                 SpMobil.displayTermsOfServicePage();
               } else {

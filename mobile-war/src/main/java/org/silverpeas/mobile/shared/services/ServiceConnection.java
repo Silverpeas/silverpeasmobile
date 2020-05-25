@@ -39,8 +39,5 @@ public interface ServiceConnection extends RemoteService {
   public boolean setTabletMode() throws NavigationException, AuthenticationException;
 
   void changePwd(String newPwd) throws AuthenticationException;
-
-  public boolean showTermsOfService() throws AuthenticationException;
-  public String getTermsOfServiceText() throws AuthenticationException;
   public void userAcceptsTermsOfService() throws AuthenticationException;
 }
