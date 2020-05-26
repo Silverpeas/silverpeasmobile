@@ -28,20 +28,13 @@ import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
-import org.silverpeas.core.security.authentication.exception.AuthenticationUserMustAcceptTermsOfService;
-import org.silverpeas.core.security.authentication.verifier.AuthenticationUserVerifierFactory;
-import org.silverpeas.core.template.SilverpeasTemplate;
-import org.silverpeas.core.template.SilverpeasTemplateFactory;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
-import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
-import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
@@ -79,6 +72,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
         AuthenticationCredential.newWithAsLogin(login).withAsPassword(password)
             .withAsDomainId(domainId);
     String key = AuthenticationServiceProvider.getService().authenticate(credential);
+    //SilverLogger.getLogger(this).debug("mobile authentification : {0} {1}", login, key);
     if (key == null || key.startsWith("Error_")) {
       if (key.equals("Error_1")) {
         throw new AuthenticationException(AuthenticationError.BadCredential);
@@ -88,7 +82,12 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
         throw new AuthenticationException(AuthenticationError.PwdNotAvailable);
       } else if (key.equals("Error_6")) {
         throw new AuthenticationException(AuthenticationError.LoginNotAvailable);
+      } else if (key.equals("Error_PwdExpired")) {
+        throw new AuthenticationException(AuthenticationError.PwdExpired);
+      } else if(key.equals("Error_PwdMustBeChanged")) {
+        throw new AuthenticationException(AuthenticationError.PwdMustBeChanged);
       }
+
       throw new AuthenticationException();
     }
 
