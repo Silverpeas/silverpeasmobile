@@ -122,6 +122,17 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
   }
 
   @Override
+  public boolean userExist(final String login, final String domainId)
+      throws AuthenticationException {
+    try {
+      String id = getUserId(login, domainId);
+      return !(id == null);
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  @Override
   public boolean setTabletMode() throws NavigationException, AuthenticationException {
     if (!useGUImobileForTablets) {
       getThreadLocalRequest().getSession().setAttribute("tablet", new Boolean(true));

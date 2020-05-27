@@ -32,7 +32,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -48,6 +47,7 @@ import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
+import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -71,9 +71,16 @@ public class ConnexionPage extends PageContent {
   @UiField
   FormPanel form;
 
-  public void setAuthenticateError(final boolean authenticateError) {
-    if (authenticateError) {
-      checkCredentials("","");
+  public void setAuthenticateError(final AuthenticationException authenticateError) {
+    if (authenticateError == null) {
+      checkCredentials("init","init");
+      loginField.setText("");
+    } else {
+      if (authenticateError.getError().name().equals(AuthenticationException.AuthenticationError.LoginNotAvailable.name())) {
+        checkCredentials("","");
+      } else if(authenticateError.getError().name().equals(AuthenticationException.AuthenticationError.PwdNotAvailable.name())) {
+        checkCredentials(authenticateError.getLogin(),"");
+      }
     }
   }
 
@@ -146,6 +153,7 @@ public class ConnexionPage extends PageContent {
       loginField.getElement().getStyle().setBackgroundColor("#ec9c01");
     } else {
       loginField.getElement().getStyle().clearBackgroundColor();
+      loginField.setText(login);
     }
     if (password.isEmpty()) {
       passwordField.getElement().getStyle().setBackgroundColor("#ec9c01");

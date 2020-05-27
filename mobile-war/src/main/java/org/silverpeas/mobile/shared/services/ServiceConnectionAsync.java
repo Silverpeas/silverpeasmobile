@@ -41,4 +41,6 @@ public interface ServiceConnectionAsync {
   void userAcceptsTermsOfService(final AsyncCallback<Void> async);
 
   void changePwd(String newPwd, final AsyncCallback<Void> async);
+
+  void userExist(String login, String domainId, final AsyncCallback<Boolean> async);
 }

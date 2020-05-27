@@ -27,6 +27,15 @@ public class AuthenticationException extends Exception {
 
   private static final long serialVersionUID = -1322336397375722938L;
   private AuthenticationError error;
+  private String login;
+
+  public String getLogin() {
+    return login;
+  }
+
+  public void setLogin(final String login) {
+    this.login = login;
+  }
 
   public enum AuthenticationError {
     BadCredential, Host, PwdNotAvailable, NotAuthenticate, LoginNotAvailable, CanCreateMainSessionController, PwdExpired, PwdMustBeChanged;

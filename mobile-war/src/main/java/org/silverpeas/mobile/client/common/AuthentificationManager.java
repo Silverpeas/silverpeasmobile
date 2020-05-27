@@ -144,7 +144,26 @@ public class AuthentificationManager {
               Notification.activityStop();
               SpMobil.displayMainPage();
             } else if (statusError == 401 || statusError == 500) {
-              EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+
+              ServicesLocator.getServiceConnection().userExist(login, domainId, new AsyncCallback<Boolean>() {
+                @Override
+                public void onFailure(final Throwable throwable) {
+                  EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+                }
+
+                @Override
+                public void onSuccess(final Boolean exist) {
+                  if (exist) {
+                    AuthenticationException ex = new AuthenticationException(AuthenticationException.AuthenticationError.PwdNotAvailable);
+                    ex.setLogin(login);
+                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+                  } else {
+                    AuthenticationException ex = new AuthenticationException(AuthenticationException.AuthenticationError.LoginNotAvailable);
+                    ex.setLogin(login);
+                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+                  }
+                }
+              });
             } else if (statusError == 0) {
               loadUser();
               SpMobil.displayMainPage();

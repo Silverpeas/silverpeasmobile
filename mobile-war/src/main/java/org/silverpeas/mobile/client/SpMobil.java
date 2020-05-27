@@ -90,8 +90,8 @@ import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
+import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
-import javax.xml.ws.Service;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -324,7 +324,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           } else {
             //Login
             tabletGesture(false);
-            displayLoginPage(false);
+            displayLoginPage(null);
           }
         }
 
@@ -354,7 +354,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     } else {
       //Login
       tabletGesture(false);
-      displayLoginPage(false);
+      displayLoginPage(null);
     }
   }
 
@@ -398,9 +398,9 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     }
   }
 
-  public static void displayLoginPage(boolean authenticateError) {
+  public static void displayLoginPage(AuthenticationException error) {
     ConnexionPage connexionPage = new ConnexionPage();
-    connexionPage.setAuthenticateError(authenticateError);
+    connexionPage.setAuthenticateError(error);
     RootPanel.get().clear();
     RootPanel.get().add(connexionPage);
   }
@@ -482,6 +482,6 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   @Override
   public void onAuthenticationError(final AbstractAuthenticationErrorEvent event) {
-    displayLoginPage(true);
+    displayLoginPage(((AuthenticationException) event.getException()));
   }
 }
