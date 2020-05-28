@@ -43,6 +43,7 @@ const CACHE_NAME = 'spmobileOffline';
 var cache;
 
 self.addEventListener('install', (event) => {
+  console.log('Install service worker');
   event.waitUntil((async () => {
     cache = await caches.open(CACHE_NAME);
     await cache.addAll(OFFLINE_URLS);
