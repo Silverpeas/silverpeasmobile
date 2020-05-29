@@ -14,7 +14,7 @@ if (firebaseConfig != null) {
     event.srcElement.onnotificationclick = function(ev) {
       const pushData = ev.notification.data;
       ev.notification.close();
-      self.clients.openWindow(pushData["permalink"]);
+      event.waitUntil(self.clients.openWindow(pushData["permalink"]));
       }
     };
   });
