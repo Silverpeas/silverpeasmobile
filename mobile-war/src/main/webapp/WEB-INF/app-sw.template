@@ -31,7 +31,7 @@ if (firebaseConfig != null) {
     self.addEventListener("notificationclick", function(event) {
        const pushData = event.notification.data;
        event.notification.close();
-       self.clients.openWindow(pushData["permalink"]);
+       event.waitUntil(self.clients.openWindow(pushData["permalink"]));
     });
 
     return self.registration.showNotification(notificationTitle, notificationOptions);
