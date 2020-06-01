@@ -26,18 +26,15 @@ package org.silverpeas.mobile.client.apps.media;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
-import org.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
-import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import org.silverpeas.mobile.client.apps.media.pages.MediaNavigationPage;
@@ -417,25 +414,6 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       EventBus.getInstance()
           .fireEvent(new MediaPreviewLoadedEvent(event.getMedia(), commentable, notifiable));
     }
-  }
-
-  @Override
-  public void loadMediaView(final MediaViewLoadEvent event) {
-    AsyncCallbackOnlineOnly action =
-        new AsyncCallbackOnlineOnly<PhotoDTO>() {
-          @Override
-          public void attempt() {
-            ServicesLocator.getServiceMedia()
-                .getOriginalPicture(event.getInstanceId(), event.getMediaId(), this);
-          }
-
-          @Override
-          public void onSuccess(final PhotoDTO view) {
-            super.onSuccess(view);
-            EventBus.getInstance().fireEvent(new MediaViewLoadedEvent(view));
-          }
-        };
-    action.attempt();
   }
 
   @Override

@@ -48,7 +48,6 @@ public interface ServiceMedia extends RemoteService {
 
   public StreamingList<BaseDTO> getAlbumsAndPictures(String instanceId, String albumId, int callNumber) throws
                                                                                MediaException, AuthenticationException;
-  public PhotoDTO getOriginalPicture(String instanceId, String pictureId) throws MediaException, AuthenticationException;
   public PhotoDTO getPreviewPicture(String instanceId, String pictureId) throws MediaException, AuthenticationException;
 
   public SoundDTO getSound(String instanceId, String soundId) throws MediaException, AuthenticationException;

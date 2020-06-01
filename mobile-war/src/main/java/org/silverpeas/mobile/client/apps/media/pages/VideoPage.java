@@ -50,7 +50,6 @@ import org.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.AbstractMediaPagesEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaPagesEventHandler;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
-import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import org.silverpeas.mobile.client.apps.media.resources.MediaMessages;
@@ -210,11 +209,6 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
         EventBus.getInstance().fireEvent(new MediaViewGetPreviousEvent(video));
       }
     }
-  }
-
-  @Override
-  public void onMediaViewLoaded(final MediaViewLoadedEvent event) {
-
   }
 
   @Override

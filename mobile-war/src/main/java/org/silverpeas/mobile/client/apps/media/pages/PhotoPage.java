@@ -44,12 +44,10 @@ import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
-import org.silverpeas.mobile.client.apps.media.events.app.MediaViewLoadEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.AbstractMediaPagesEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaPagesEventHandler;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaPreviewLoadedEvent;
-import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewLoadedEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewNextEvent;
 import org.silverpeas.mobile.client.apps.media.events.pages.MediaViewPrevEvent;
 import org.silverpeas.mobile.client.apps.media.resources.MediaMessages;
@@ -176,15 +174,6 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
   }
 
   @Override
-  public void onMediaViewLoaded(final MediaViewLoadedEvent event) {
-    Notification.activityStop();
-
-    PhotoViewerPage page = new PhotoViewerPage();
-    page.setDataPhoto(event.getView().getDataPhoto());
-    page.show();
-  }
-
-  @Override
   public void stop() {
     super.stop();
     comments.stop();
@@ -194,8 +183,9 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiHandler("mediaFullSize")
   void showFullScreen(ClickEvent event) {
-    Notification.activityStart();
-    EventBus.getInstance().fireEvent(new MediaViewLoadEvent(photo.getInstance(), photo.getId()));
+    PhotoViewerPage page = new PhotoViewerPage();
+    page.setDataPhoto(photo);
+    page.show();
   }
 
   @UiHandler("download")

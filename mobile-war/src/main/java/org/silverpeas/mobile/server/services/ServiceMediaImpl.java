@@ -333,25 +333,6 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     return streamingList;
   }
 
-  /**
-   * Retourne la photo originale.
-   */
-  public PhotoDTO getOriginalPicture(String instanceId, String pictureId) throws MediaException, AuthenticationException {
-    checkUserInSession();
-
-    PhotoDTO picture = null;
-    try {
-      picture = getPhoto(instanceId, pictureId, MediaResolution.ORIGINAL);
-      if (!picture.isDownload()) {
-        picture = getPhoto(instanceId, pictureId, MediaResolution.LARGE);
-      }
-
-    } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getOriginalPicture", "root.EX_NO_MESSAGE", e);
-    }
-    return picture;
-  }
-
   public SoundDTO getSound(String instanceId, String soundId) throws MediaException, AuthenticationException {
     checkUserInSession();
     Media sound = null;

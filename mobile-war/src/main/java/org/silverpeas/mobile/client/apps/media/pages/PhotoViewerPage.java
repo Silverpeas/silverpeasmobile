@@ -37,11 +37,15 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.event.touch.TouchCopy;
+import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.media.PhotoDTO;
 
 /**
  * @author: svu
@@ -83,6 +87,18 @@ public class PhotoViewerPage extends PageContent implements View, TouchStartHand
 
   public void setDataPhoto(final String dataPhoto) {
     this.img = new Image(dataPhoto);
+    img.setStyleName("photo");
+    img.addTouchStartHandler(this);
+    img.addTouchEndHandler(this);
+    img.addTouchMoveHandler(this);
+    img.addTouchCancelHandler(this);
+    viewer.add(img);
+  }
+
+  public void setDataPhoto(final PhotoDTO photo) {
+    String url = UrlUtils.getSilverpeasServicesLocation();
+    url += "gallery/" + photo.getInstance() + "/photos/" + photo.getId() + "/content?resolution=ORIGINAL";
+    this.img = new Image(url);
     img.setStyleName("photo");
     img.addTouchStartHandler(this);
     img.addTouchEndHandler(this);
