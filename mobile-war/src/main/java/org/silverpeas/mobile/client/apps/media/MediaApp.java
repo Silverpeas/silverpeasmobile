@@ -247,6 +247,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           result = new StreamingList<BaseDTO>();
         }
         EventBus.getInstance().fireEvent(new DataLoadedEvent(event.getRootAlbumId(), result));
+        EventBus.getInstance().fireEvent(new LoadingDataFinishEvent());
       }
     };
     boolean moreElements = true;

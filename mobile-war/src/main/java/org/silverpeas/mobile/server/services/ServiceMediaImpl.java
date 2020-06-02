@@ -39,7 +39,6 @@ import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaCriteria;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.model.Photo;
-import org.silverpeas.components.gallery.model.Video;
 import org.silverpeas.components.gallery.service.GalleryService;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
@@ -470,40 +469,9 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     } else {
       video.setUpdateDate(sdf.format(media.getCreationDate()));
     }
-
-    video.setDataPoster( getVideoPoster(media.getVideo()));
-
     video.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_VIDEO, new MediaPK(video.getId())));
 
     return video;
-  }
-
-  private String getVideoPoster(Video video) {
-    long t = 0;
-    String silverpeasServerUrl = getUserInSession().getDomain().getSilverpeasServerURL();
-    if (!silverpeasServerUrl.contains("silverpeas")) {
-      silverpeasServerUrl = silverpeasServerUrl + "/silverpeas";
-    }
-    String data = "";
-    String url = silverpeasServerUrl + "/services/gallery/" + video.getInstanceId() + "/videos/" + video.getId() + "/thumbnail/" + t;
-
-    Client client = Client.create();
-    WebResource webResource = client.resource(url);
-
-    ClientResponse response = webResource.accept("application/octet-stream")
-        .header("Authorization", "Bearer " + getUserInSession().getToken())
-        .header("X-STKN", getUserInSession().getToken())
-        .get(ClientResponse.class);
-
-    InputStream input = response.getEntityInputStream();
-    try {
-      byte[] binaryData = getBytesFromInputStream(input);
-      data = "data:" + "img/*" + ";base64," + new String(Base64.encodeBase64(binaryData));
-    } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceMediaImpl.getVideoPoster", "root.EX_NO_MESSAGE", e);
-    }
-
-    return data;
   }
 
   private byte[] getBytesFromInputStream(InputStream inStream)
