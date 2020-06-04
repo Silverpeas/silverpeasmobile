@@ -91,18 +91,19 @@ public class ConnexionPage extends PageContent {
     loadDomains();
     initWidget(uiBinder.createAndBindUi(this));
     loginField.getElement().setId("Login");
-    loginField.getElement().setAttribute("autocapitalize", "off");
+    loginField.getElement().setAttribute("autocapitalize", "none");
     loginField.getElement().setAttribute("autocorrect", "off");
     loginField.getElement().setAttribute("spellcheck", "off");
     loginField.getElement().setAttribute("autocomplete", "off");
 
     passwordField.getElement().setId("Password");
-    passwordField.getElement().setAttribute("autocapitalize", "off");
+    passwordField.getElement().setAttribute("autocapitalize", "none");
     passwordField.getElement().setAttribute("autocorrect", "off");
     passwordField.getElement().setAttribute("spellcheck", "off");
     passwordField.getElement().setAttribute("autocomplete", "off");
     domains.getElement().setId("DomainId");
     form.getElement().setId("formLogin");
+    form.getElement().setAttribute("autocomplete","off");
 
     Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
