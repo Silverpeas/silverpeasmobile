@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.silverpeas.components.gallery.GalleryComponentSettings;
 import org.silverpeas.components.gallery.constant.MediaResolution;
@@ -46,12 +45,8 @@ import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.service.OrganizationControllerProvider;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
-import org.silverpeas.core.io.file.SilverpeasFile;
 import org.silverpeas.core.node.model.NodePK;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
-import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
@@ -72,7 +67,6 @@ import org.silverpeas.mobile.shared.services.ServiceMedia;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -549,7 +543,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     picture = new PhotoDTO();
     picture.setId(photoDetail.getId());
     picture.setDownload(photoDetail.isDownloadAuthorized());
-    picture.setDataPhoto(getBase64ImageData(instanceId, photoDetail, size));
+    picture.setDataPhoto("/silverpeas/services/gallery/"+photoDetail.getInstanceId()+"/photos/"+photoDetail.getId()+"/content?resolution="+size.getName());
     picture.setFormat(size.name());
     picture.setTitle(photoDetail.getTitle());
     picture.setName(photoDetail.getName());
@@ -576,26 +570,6 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     picture.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_PHOTO, new MediaPK(photoDetail.getId())));
 
     return picture;
-  }
-
-  @SuppressWarnings("deprecation")
-  private String getBase64ImageData(String instanceId, Photo photoDetail, MediaResolution size) throws Exception {
-    SettingBundle gallerySettings = ResourceLocator.getSettingBundle("org.silverpeas.gallery.settings.gallerySettings");
-
-    String nomRep = gallerySettings.getString("imagesSubDirectory") + photoDetail.getMediaPK().getId();
-    String[] rep = {nomRep};
-    String path = FileRepositoryManager.getAbsolutePath(instanceId, rep);
-
-    Media media = getGalleryService().getMedia(new MediaPK(photoDetail.getId(), instanceId));
-    SilverpeasFile f = media.getFile(size);
-
-    FileInputStream is = new FileInputStream(f);
-    byte[] binaryData = new byte[(int) f.length()];
-    is.read(binaryData);
-    is.close();
-    String data = "data:" + photoDetail.getFileMimeType().getMimeType() + ";base64," + new String(Base64.encodeBase64(binaryData));
-
-    return data;
   }
 
   private GalleryService getGalleryService() throws Exception {
