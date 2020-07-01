@@ -362,6 +362,10 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     if (attachment.getTitle() == null || attachment.getTitle().isEmpty()) {
       attach.setTitle(attachment.getFilename());
     }
+    if (attachment.getDescription() == null || attachment.getDescription().isEmpty()) {
+      attach.setDescription(attachment.getDescription());
+    }
+
     attach.setInstanceId(attachment.getInstanceId());
     attach.setId(attachment.getId());
     attach.setLang(attachment.getLanguage());

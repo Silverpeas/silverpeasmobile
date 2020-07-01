@@ -28,6 +28,7 @@
     <g:Anchor ui:field="link" styleName="downloadable">
       <img ui:field="icon" src=""/>
       <span ui:field="name"></span><span ui:field="size" class="weight"></span>
+      <span ui:field="description"></span>
     </g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder> 

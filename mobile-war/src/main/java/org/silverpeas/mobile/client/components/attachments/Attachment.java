@@ -27,6 +27,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -51,7 +52,7 @@ public class Attachment extends Composite {
   @UiField
   Anchor link;
   @UiField
-  SpanElement size, name;
+  SpanElement size, name, description;
   @UiField
   ImageElement icon;
 
@@ -93,6 +94,11 @@ public class Attachment extends Composite {
       title = data.getTitle();
     }
     name.setInnerHTML(title);
+    if (!data.getDescription().isEmpty()){
+      description.setInnerHTML("<br/>"+data.getDescription());
+    } else {
+      description.getStyle().setDisplay(Style.Display.NONE);
+    }
 
     if (data.getContentType().contains("msword")) {
       img = new Image(ressources.msword());

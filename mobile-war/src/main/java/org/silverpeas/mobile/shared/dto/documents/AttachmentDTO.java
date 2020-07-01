@@ -40,6 +40,7 @@ public class AttachmentDTO implements Serializable {
   private String lang;
   private String userId;
   private boolean downloadAllowed;
+  private String description;
 
 
   public String getType() {
@@ -120,5 +121,13 @@ public class AttachmentDTO implements Serializable {
 
   public boolean isDownloadAllowed() {
     return downloadAllowed;
+  }
+
+  public void setDescription(final String description) {
+    this.description = description;
+  }
+
+  public String getDescription() {
+    return description;
   }
 }
