@@ -23,6 +23,13 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.silverpeas.components.kmelia.KmeliaPublicationHelper;
+import org.silverpeas.components.kmelia.model.KmeliaPublication;
+import org.silverpeas.components.kmelia.model.PubliAuthorComparatorAsc;
+import org.silverpeas.components.kmelia.model.PubliCreationDateComparatorAsc;
+import org.silverpeas.components.kmelia.model.PubliImportanceComparatorDesc;
+import org.silverpeas.components.kmelia.model.PubliRankComparatorAsc;
+import org.silverpeas.components.kmelia.model.PubliUpdateDateComparatorAsc;
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.admin.ProfiledObjectId;
@@ -59,7 +66,9 @@ import org.silverpeas.mobile.shared.services.ServiceDocuments;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -211,6 +220,78 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     return subNodes;
   }
 
+  public String getUserTopicProfile(String nodeId, String componentId) {
+    return KmeliaService.get().getUserTopicProfile(new NodePK(nodeId, componentId), getUserInSession().getId());
+  }
+
+  public boolean isTreeStructure(String componentId) {
+    return KmeliaPublicationHelper.isTreeEnabled(componentId);
+  }
+
+  public int getDefaultSortValue(String instanceId) throws Exception {
+    String defaultSortValue = getMainSessionController().getComponentParameterValue(instanceId, "publicationSort");
+    if (!StringUtil.isDefined(defaultSortValue)) {
+      defaultSortValue = getSettings().getString("publications.sort.default", "2");
+    }
+    return Integer.parseInt(defaultSortValue);
+  }
+
+  private boolean isManualSortingUsed(List<KmeliaPublication> publications) {
+    for (KmeliaPublication publication : publications) {
+      if (publication.getDetail().getExplicitRank() > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private List<KmeliaPublication> sortByTitle(List<KmeliaPublication> publications) {
+    KmeliaPublication[] pubs = publications.toArray(new KmeliaPublication[publications.size()]);
+    for (int i = pubs.length; --i >= 0; ) {
+      boolean swapped = false;
+      for (int j = 0; j < i; j++) {
+        if (pubs[j].getDetail().getName(getUserInSession().getUserPreferences().getLanguage())
+            .compareToIgnoreCase(pubs[j + 1].getDetail().getName(getUserInSession().getUserPreferences().getLanguage())) > 0) {
+          KmeliaPublication pub = pubs[j];
+          pubs[j] = pubs[j + 1];
+          pubs[j + 1] = pub;
+          swapped = true;
+        }
+      }
+      if (!swapped) {
+        break;
+      }
+    }
+    return Arrays.asList(pubs);
+  }
+
+  private List<KmeliaPublication> sortByDescription(List<KmeliaPublication> publications) {
+    KmeliaPublication[] pubs = publications.toArray(new KmeliaPublication[publications.size()]);
+    for (int i = pubs.length; --i >= 0; ) {
+      boolean swapped = false;
+      for (int j = 0; j < i; j++) {
+        String p1 = pubs[j].getDetail().getDescription(getUserInSession().getUserPreferences().getLanguage());
+        if (p1 == null) {
+          p1 = "";
+        }
+        String p2 = pubs[j + 1].getDetail().getDescription(getUserInSession().getUserPreferences().getLanguage());
+        if (p2 == null) {
+          p2 = "";
+        }
+        if (p1.compareToIgnoreCase(p2) > 0) {
+          KmeliaPublication pub = pubs[j];
+          pubs[j] = pubs[j + 1];
+          pubs[j + 1] = pub;
+          swapped = true;
+        }
+      }
+      if (!swapped) {
+        break;
+      }
+    }
+    return Arrays.asList(pubs);
+  }
+
   /**
    * Retourne les publications d'un topic (au niveau 1).
    */
@@ -231,7 +312,52 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       ArrayList<String> nodeIds = new ArrayList<String>();
       nodeIds.add(nodePK.getId());
 
-      List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(nodeIds, pubPK.getInstanceId(), false);
+      //List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(nodeIds, pubPK.getInstanceId(), false);
+
+      List<KmeliaPublication> publications = KmeliaService.get().getPublicationsOfFolder(nodePK, getUserTopicProfile(nodePK.getId(),pubPK.getInstanceId()), getUserInSession().getId(), isTreeStructure(pubPK.getInstanceId()));
+      int sort = -1;
+      if (isManualSortingUsed(publications) && sort == -1) {
+        // display publications according to manual order defined by admin
+        sort = 99;
+      } else if (sort == -1) {
+        // display publications according to default sort defined on application level or instance
+        // level
+        sort = getDefaultSortValue(pubPK.getInstanceId());
+      }
+
+      switch (sort) {
+        case 0:
+          Collections.sort(publications, new PubliAuthorComparatorAsc());
+          break;
+        case 1:
+          Collections.sort(publications, new PubliUpdateDateComparatorAsc());
+          break;
+        case 2:
+          Collections.sort(publications, new PubliUpdateDateComparatorAsc());
+          Collections.reverse(publications);
+          break;
+        case 3:
+          Collections.sort(publications, new PubliImportanceComparatorDesc());
+          break;
+        case 4:
+          publications = sortByTitle(publications);
+          break;
+        case 5:
+          Collections.sort(publications, new PubliCreationDateComparatorAsc());
+          break;
+        case 6:
+          Collections.sort(publications, new PubliCreationDateComparatorAsc());
+          Collections.reverse(publications);
+          break;
+        case 7:
+          publications = sortByDescription(publications);
+          break;
+        default:
+          // display publications according to manual order defined by admin
+          Collections.sort(publications, new PubliRankComparatorAsc());
+      }
+
+
       String[] profiles;
 
       if (isRightsOnTopicsEnabled(instanceId)) {
@@ -242,7 +368,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId);
       }
 
-      for (PublicationDetail publicationDetail : publications) {
+      for (KmeliaPublication publication : publications) {
+        PublicationDetail publicationDetail = publication.getDetail();
         boolean visible = publicationDetail.isVisible();
         if (isManager(profiles)) visible = true;
         PublicationDTO dto = new PublicationDTO();
