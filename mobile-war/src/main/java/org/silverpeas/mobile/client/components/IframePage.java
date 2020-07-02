@@ -28,8 +28,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import org.silverpeas.mobile.client.SpMobil;
@@ -67,14 +66,13 @@ public class IframePage extends PageContent implements View, WindowEventHandler 
     frame = new Frame(url);
     init();
     this.html = html;
-
-    frame.addLoadHandler(new LoadHandler() {
+    frame.addAttachHandler(new AttachEvent.Handler() {
       @Override
-      public void onLoad(final LoadEvent loadEvent) {
+      public void onAttachOrDetach(final AttachEvent attachEvent) {
         IFrameElement el = IFrameElement.as(frame.getElement());
         write(el.getContentDocument(), html);
       }
-    });
+    })  ;
   }
 
   private static native void write(Document doc, String newHTML) /*-{
