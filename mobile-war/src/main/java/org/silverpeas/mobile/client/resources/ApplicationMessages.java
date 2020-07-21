@@ -31,6 +31,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Login")
   SafeHtml loginLabel();
 
+  @DefaultMessage("Mot de passe")
+  SafeHtml passwordLabel();
+
   @DefaultMessage("Silverpeas &gt; Ecran de connexion")
   SafeHtml loginTitle();
 

@@ -95,12 +95,14 @@ public class ConnexionPage extends PageContent {
     loginField.getElement().setAttribute("autocorrect", "off");
     loginField.getElement().setAttribute("spellcheck", "off");
     loginField.getElement().setAttribute("autocomplete", "off");
+    loginField.getElement().setAttribute("placeholder", msg.loginLabel().asString());
 
     passwordField.getElement().setId("Password");
     passwordField.getElement().setAttribute("autocapitalize", "none");
     passwordField.getElement().setAttribute("autocorrect", "off");
     passwordField.getElement().setAttribute("spellcheck", "off");
     passwordField.getElement().setAttribute("autocomplete", "off");
+    passwordField.getElement().setAttribute("placeholder", msg.passwordLabel().asString());
     domains.getElement().setId("DomainId");
     form.getElement().setId("formLogin");
     form.getElement().setAttribute("autocomplete","off");
