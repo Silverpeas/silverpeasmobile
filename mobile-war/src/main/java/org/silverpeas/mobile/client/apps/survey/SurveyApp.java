@@ -53,6 +53,8 @@ import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
+import org.silverpeas.mobile.shared.dto.survey.AnswerDTO;
+import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
 
@@ -162,6 +164,14 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void saveSurvey(final SurveySaveEvent event) {
+
+      // remove image (for upload faster)
+      for (QuestionDTO q : event.getData().getQuestions()) {
+        for (AnswerDTO a : q.getAnswers()) {
+          a.setImage("");
+        }
+      }
+
       ServicesLocator.getServiceSurvey().saveSurvey(event.getData(), new AsyncCallback<Void>() {
         @Override
         public void onFailure(final Throwable throwable) {
