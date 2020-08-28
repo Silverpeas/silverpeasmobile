@@ -8,17 +8,6 @@ if (firebaseConfig != null) {
 
   const messaging = firebase.messaging();
 
-  // In page notification management
-  self.addEventListener('push', function(event) {
-    if (event.srcElement) {
-    event.srcElement.onnotificationclick = function(ev) {
-      const pushData = ev.notification.data;
-      ev.notification.close();
-      event.waitUntil(self.clients.openWindow(pushData["permalink"]));
-      }
-    };
-  });
-
   messaging.setBackgroundMessageHandler(function(payload) {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
     const notificationTitle = payload.data["sender"];
