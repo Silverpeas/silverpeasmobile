@@ -30,6 +30,7 @@ import org.silverpeas.core.questioncontainer.container.model.QuestionContainerHe
 import org.silverpeas.core.questioncontainer.container.model.QuestionContainerPK;
 import org.silverpeas.core.questioncontainer.container.service.QuestionContainerService;
 import org.silverpeas.core.questioncontainer.question.model.Question;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.survey.AnswerDTO;
 import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
@@ -72,21 +73,24 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
   public void saveSurvey(final SurveyDetailDTO data)
       throws SurveyException, AuthenticationException {
     checkUserInSession();
-    QuestionContainerPK pk = new QuestionContainerPK(data.getId(), null, null);
+    try {
+      QuestionContainerPK pk = new QuestionContainerPK(data.getId(), null, null);
 
-    Map<String, List<String>> reply = new HashMap<>();
+      Map<String, List<String>> reply = new HashMap<>();
 
-    for (QuestionDTO question : data.getQuestions()) {
-      List<String> values = new ArrayList<>();
-      for (ResponseDTO response : question.getResponses()) {
-        values.add(response.getId());
-        values.add("OA" + response.getContent());
+      for (QuestionDTO question : data.getQuestions()) {
+        List<String> values = new ArrayList<>();
+        for (ResponseDTO response : question.getResponses()) {
+          values.add(response.getId());
+          if (!response.getContent().isEmpty()) values.add("OA" + response.getContent());
+        }
+        reply.put(question.getId(), values);
       }
-      reply.put(question.getId(), values);
+      QuestionContainerService.get()
+          .recordReplyToQuestionContainerByUser(pk, getUserInSession().getId(), reply, data.getComments(), data.isAnonymComment());
+    } catch (Throwable t) {
+      SilverLogger.getLogger(this).error(t);
     }
-    QuestionContainerService.get()
-        .recordReplyToQuestionContainerByUser(pk, getUserInSession().getId(), reply,
-            data.getComments(), data.isAnonymComment());
   }
 
   @Override
