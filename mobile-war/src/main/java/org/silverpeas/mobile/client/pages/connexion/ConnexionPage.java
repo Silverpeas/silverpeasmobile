@@ -33,6 +33,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -70,6 +71,8 @@ public class ConnexionPage extends PageContent {
   ListBox domains;
   @UiField
   FormPanel form;
+  @UiField
+  CheckBox tooglePasswordView;
 
   public void setAuthenticateError(final AuthenticationException authenticateError) {
     if (authenticateError == null) {
@@ -131,6 +134,17 @@ public class ConnexionPage extends PageContent {
     login(login, password, domains.getValue(domains.getSelectedIndex()));
 
 
+  }
+
+  @UiHandler("tooglePasswordView")
+  void changePasswordVisibity(ClickEvent e) {
+    if (passwordField.getElement().getAttribute("type").equals("password")) {
+      passwordField.getElement().setAttribute("type", "text");
+      tooglePasswordView.setText(msg.hidePwd());
+    } else {
+      passwordField.getElement().setAttribute("type", "password");
+      tooglePasswordView.setText(msg.showPwd());
+    }
   }
 
   /**

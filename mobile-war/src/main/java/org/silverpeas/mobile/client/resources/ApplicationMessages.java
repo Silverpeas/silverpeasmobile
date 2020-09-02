@@ -169,4 +169,10 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Le mot de passe ne respecte pas les consignes de sécurité")
   String pwdNotValid();
+
+  @DefaultMessage("Afficher le mot de passe")
+  String showPwd();
+
+  @DefaultMessage("Masquer le mot de passe")
+  String hidePwd();
 }

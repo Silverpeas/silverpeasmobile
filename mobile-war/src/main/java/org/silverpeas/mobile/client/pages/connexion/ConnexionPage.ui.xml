@@ -42,6 +42,10 @@
         <div id="password-formLogin">
           <g:PasswordTextBox ui:field="passwordField" name="Password"/>
         </div>
+        <div id="password-visibility">
+          <g:CheckBox ui:field="tooglePasswordView" text="{msg.showPwd}"/>
+        </div>
+
         <div id="domain-formLogin">
           <g:ListBox ui:field="domains" name="DomainId"/>
         </div>

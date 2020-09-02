@@ -1527,6 +1527,8 @@ textarea.ui-input-text {
   width: 237px;
 }
 
+#page-login #password-visibility {
+  margin-bottom: 1em;
 #page-login #copyright {
   bottom: 1em;
   font-size: 80%;
