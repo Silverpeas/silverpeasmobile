@@ -625,7 +625,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
 
   private PublicationHelper getPublicationHelper() throws Exception {
     SettingBundle settings =
-        GraphicElementFactory.getLookSettings(GraphicElementFactory.defaultLookName);
+        GraphicElementFactory.getLookSettings(GraphicElementFactory.DEFAULT_LOOK_NAME);
     String helperClassName = settings
         .getString("publicationHelper", "org.silverpeas.components.kmelia.KmeliaTransversal");
     Class<?> helperClass = Class.forName(helperClassName);

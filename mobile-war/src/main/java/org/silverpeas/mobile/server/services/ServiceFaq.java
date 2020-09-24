@@ -28,8 +28,7 @@ import org.silverpeas.components.questionreply.model.Question;
 import org.silverpeas.components.questionreply.model.Reply;
 import org.silverpeas.components.questionreply.service.QuestionManagerProvider;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.annotation.RequestScoped;
-import org.silverpeas.core.annotation.Service;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
@@ -74,8 +73,7 @@ import java.util.List;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Service
-@RequestScoped
+@WebService
 @Authorized
 @Path(ServiceFaq.PATH + "/{appId}")
 public class ServiceFaq extends RESTWebService {
