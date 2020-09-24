@@ -58,9 +58,9 @@ import org.silverpeas.core.webapi.base.RESTWebService;
 import org.silverpeas.core.webapi.base.annotation.Authorized;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
-import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
@@ -76,8 +76,12 @@ import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import static java.util.Collections.emptyList;
 
 /*
  * Copyright (C) 2000 - 2020 Silverpeas
@@ -142,7 +146,9 @@ public class ServiceFormsOnline extends RESTWebService {
   @Path("processRequest/{requestId}")
   public void processRequest(@PathParam("requestId") String requestId, ValidationRequestDTO validation) {
     try {
-      FormsOnlineService.get().setValidationStatus(new RequestPK(requestId, getComponentId()), getUser().getId(), validation.getDecision(), validation.getComment());
+      FormsOnlineService.get()
+          .saveNextRequestValidationStep(new RequestPK(requestId, getComponentId()),
+              getUser().getId(), validation.getDecision(), validation.getComment(), false);
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
@@ -154,7 +160,9 @@ public class ServiceFormsOnline extends RESTWebService {
   public List<FormDTO> getReceivablesForms() {
     List<FormDTO> dtos = new ArrayList<>();
     try {
-      List<String> formIdsAsReceiver = FormsOnlineService.get().getAvailableFormIdsAsReceiver(getComponentId(), getUser().getId());
+      Set<String> formIdsAsReceiver = FormsOnlineService.get()
+          .getValidatorFormIdsWithValidationTypes(getComponentId(), getUser().getId(), emptyList())
+          .keySet();
       for (String id : formIdsAsReceiver) {
         FormDetail form = FormsOnlineService.get().loadForm(new FormPK(id, getComponentId()));
         FormDTO dto = populate(formIdsAsReceiver, form);
@@ -174,7 +182,9 @@ public class ServiceFormsOnline extends RESTWebService {
       List<FormDTO> dtos = new ArrayList<>();
     try {
       List<FormDetail> forms = FormsOnlineService.get().getAllForms(getComponentId(), getUser().getId(), true);
-      List<String> formIdsAsReceiver = FormsOnlineService.get().getAvailableFormIdsAsReceiver(getComponentId(), getUser().getId());
+      Set<String> formIdsAsReceiver = FormsOnlineService.get()
+          .getValidatorFormIdsWithValidationTypes(getComponentId(), getUser().getId(), emptyList())
+          .keySet();
       for (FormDetail form : forms) {
         if (form.isSendable() && form.isPublished()) {
           FormDTO dto = populate(formIdsAsReceiver, form);
@@ -198,7 +208,7 @@ public class ServiceFormsOnline extends RESTWebService {
     return count;
   }
 
-  private FormDTO populate(final List<String> formIdsAsReceiver, final FormDetail form) throws Exception {
+  private FormDTO populate(final Collection<String> formIdsAsReceiver, final FormDetail form) throws Exception {
     FormDTO dto = new FormDTO();
     dto.setId(String.valueOf(form.getId()));
     dto.setTitle(form.getTitle());
@@ -314,7 +324,7 @@ public class ServiceFormsOnline extends RESTWebService {
     List<FileItem> items = this.getHttpRequest().getFileItems();
     FormPK pk = new FormPK(formId, instanceId);
     try {
-      FormsOnlineService.get().saveRequest(pk, getUser().getId(), items);
+      FormsOnlineService.get().saveRequest(pk, getUser().getId(), items, false);
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
