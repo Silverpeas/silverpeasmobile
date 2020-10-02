@@ -23,8 +23,7 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.silverpeas.core.annotation.RequestScoped;
-import org.silverpeas.core.annotation.Service;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.exception.AuthenticationUserMustAcceptTermsOfService;
 import org.silverpeas.core.security.authentication.verifier.AuthenticationUserVerifierFactory;
@@ -66,8 +65,7 @@ import javax.ws.rs.core.MediaType;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@Service
-@RequestScoped
+@WebService
 @Authorized
 @Path(ServiceTermsOfService.PATH)
 public class ServiceTermsOfService extends RESTWebService {

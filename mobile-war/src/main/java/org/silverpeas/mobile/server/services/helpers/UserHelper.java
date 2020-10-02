@@ -122,7 +122,7 @@ public class UserHelper {
 
   public String getUserLook(UserDetail user) {
     String look = user.getUserPreferences().getLook();
-    if(!StringUtil.isDefined(look)) look = GraphicElementFactory.defaultLookName;
+    if(!StringUtil.isDefined(look)) look = GraphicElementFactory.DEFAULT_LOOK_NAME;
     return look;
   }
 }
