@@ -17,7 +17,7 @@ node {
       }
       stage('Check Silverpeas Version') {
         echo 'Check the version of the dependencies on Silverpeas is up to date'
-        copyArtifacts projectName: 'Silverpeas_Master_AutoDeploy', flatten: true
+        copyArtifacts projectName: 'Silverpeas_Stable_AutoDeploy', flatten: true
         def lastSilverpeasBuild = readYaml file: 'build.yaml'
         def lastSilverpeasVersion = lastSilverpeasBuild.version
         if (pom.properties['silverpeas.version'] != lastSilverpeasVersion) {
