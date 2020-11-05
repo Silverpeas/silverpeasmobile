@@ -330,7 +330,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       List<PublicationLink> linkedPublications = completePublication.getLinkList();
       List<PublicationDTO> linkedPub = new ArrayList<>();
       for (PublicationLink link :linkedPublications) {
-        PublicationDetail pubLinked = getPubBm().getDetail(new PublicationPK(link.getId()));
+        PublicationDetail pubLinked = getPubBm().getDetail(new PublicationPK(link.getTarget().getId()));
         PublicationDTO linkDto = new PublicationDTO();
         linkDto.setId(link.getId());
         linkDto.setName(pubLinked.getName());
