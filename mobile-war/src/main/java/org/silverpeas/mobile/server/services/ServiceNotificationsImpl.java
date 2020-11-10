@@ -294,7 +294,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
       metaData.setSendImmediately(true);
 
       String silverpeasServerUrl = getUserInSession().getDomain().getSilverpeasServerURL();
-      if (!silverpeasServerUrl.contains("silverpeas")) {
+      if (!silverpeasServerUrl.contains("/silverpeas")) {
         silverpeasServerUrl = silverpeasServerUrl + "/silverpeas";
       }
 
