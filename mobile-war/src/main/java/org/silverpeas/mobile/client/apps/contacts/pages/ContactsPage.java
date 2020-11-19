@@ -28,7 +28,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -47,6 +46,7 @@ import org.silverpeas.mobile.client.apps.contacts.events.pages.ContactsStopPages
 import org.silverpeas.mobile.client.apps.contacts.pages.widgets.ContactItem;
 import org.silverpeas.mobile.client.apps.contacts.resources.ContactsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.events.AbstractScrollEvent;
@@ -98,8 +98,11 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     filter.setVisible(false);
     container.getElement().setId("contacts");
     mycontacts.getElement().setId("btn-my-contacts");
+    mycontacts.setVisible(false);
     allcontacts.getElement().setId("btn-all-contacts");
+    allcontacts.setVisible(false);
     allextcontacts.getElement().setId("btn-all-contactsext");
+    allextcontacts.setVisible(false);
     EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractScrollEvent.TYPE, this);
 
@@ -109,32 +112,61 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   public void init(boolean limited) {
     this.limited = limited;
     list.clear();
+
+    String tabs = ResourcesManager.getParam("directory.display.tabs");
+    String defaultTab = ResourcesManager.getParam("directory.display.tab.default");
+
     if (!limited) {
-      allcontacts.setVisible(true);
+        mycontacts.setVisible(tabs.contains("mycontacts"));
+        allcontacts.setVisible(tabs.contains("allcontacts"));
+        allextcontacts.setVisible(tabs.contains("allextcontacts"));
+
       Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
         @Override
         public void execute() {
-          if (mycontacts.isVisible()) {
+          if (defaultTab.equals("mycontacts")) {
             EventBus.getInstance().fireEvent(
                 new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(),
                     startIndex));
             currentType = ContactFilters.MY;
-          } else {
+            mycontacts.addStyleName("ui-btn-active");
+            mycontacts.addStyleName("ui-first-child");
+            if (!allcontacts.isVisible() && !allextcontacts.isVisible()) {
+              mycontacts.addStyleName("ui-last-child");
+            }
+            filter.setVisible(false);
+          } else if (defaultTab.equals("allcontacts")) {
             EventBus.getInstance().fireEvent(
                 new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(),
                     startIndex));
-            allcontacts.addStyleName("ui-btn-active");
-            allcontacts.addStyleName("ui-first-child");
             currentType = ContactFilters.ALL;
-          }
-          if (!mycontacts.isVisible() && !allextcontacts.isVisible()) {
-            allcontacts.setVisible(false);
+            allcontacts.addStyleName("ui-btn-active");
+            if (!mycontacts.isVisible()) {
+              allcontacts.addStyleName("ui-first-child");
+            }
+            if (!allextcontacts.isVisible()) {
+              allcontacts.addStyleName("ui-last-child");
+            }
+            filter.setVisible(true);
+          } else if (defaultTab.equals("allextcontacts")) {
+            EventBus.getInstance().fireEvent(
+                new ContactsLoadEvent(ContactFilters.ALL_EXT, filter.getText(), computePageSize(),
+                    startIndex));
+            currentType = ContactFilters.ALL_EXT;
+            allextcontacts.addStyleName("ui-btn-active");
+            if (!mycontacts.isVisible() && !allcontacts.isVisible()) {
+              allextcontacts.addStyleName("ui-first-child");
+            }
+            allextcontacts.addStyleName("ui-last-child");
             filter.setVisible(true);
           }
         }
       });
     } else {
+      mycontacts.setVisible(false);
+      allextcontacts.setVisible(false);
       allcontacts.setVisible(false);
+      filter.setVisible(true);
     }
   }
 

@@ -124,10 +124,12 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
             super.onSuccess(result);
             // Store in local storage
             storeInLocalStorage(result, event);
+
+            ContactsApp.super.start();
             // Notify view
             ContactsLoadedEvent pageEvent = new ContactsLoadedEvent(result);
             EventBus.getInstance().fireEvent(pageEvent);
-            ContactsApp.super.start();
+
           }
         };
     action.attempt();

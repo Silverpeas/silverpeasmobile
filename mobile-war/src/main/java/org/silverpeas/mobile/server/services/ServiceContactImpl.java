@@ -154,6 +154,12 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
           DetailUserDTO userDTO = populate(user);
           listUsers.add(userDTO);
         }
+      } else if (type.isEmpty()) {
+        List<UserDetail> users = Administration.get().getAllUsers();
+        for (User user : users) {
+          DetailUserDTO userDTO = populate(user);
+          listUsers.add(userDTO);
+        }
       }
     } catch (Throwable e) {
       SilverLogger.getLogger(this)

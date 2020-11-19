@@ -32,7 +32,7 @@
   <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
     <div class="ui-corner-all ui-controlgroup ui-controlgroup-horizontal">
       <div class="ui-controlgroup-controls ">
-        <g:Anchor ui:field="mycontacts" styleName="ui-btn-active  ui-btn  ui-first-child">
+        <g:Anchor ui:field="mycontacts" styleName="ui-btn ui-first-child">
           <span class="ui-btn-inner ui-corner-left">
             <span class="ui-btn-text"><ui:safehtml from="{msg.myContacts}"/></span>
           </span>
