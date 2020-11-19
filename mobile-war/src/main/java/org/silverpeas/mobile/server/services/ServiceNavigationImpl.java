@@ -140,8 +140,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       return userDTO;
 
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
-          .error("ServiceNavigationImpl.getUser", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error("ServiceNavigationImpl.getUser", "root.EX_NO_MESSAGE", e);
       throw new NavigationException(e);
     }
   }
@@ -163,7 +162,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       Connection c = Jsoup.connect(url);
       Document d = c.get();
     } catch (IOException e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .error("ServiceNavigationImpl.logout", "root.EX_NO_MESSAGE", e);
     }
     getThreadLocalRequest().getSession().invalidate();
@@ -311,7 +310,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
           data.setLastPublications(lastPubs);
 
         } catch (Exception e) {
-          SilverLogger.getLogger(SpMobileLogModule.getName())
+          SilverLogger.getLogger(this)
               .error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
         }
       }
@@ -372,7 +371,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       }
 
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .error("ServiceNavigationImpl.getHomePageData", "root.EX_NO_MESSAGE", e);
       throw new NavigationException(e);
     }
@@ -494,7 +493,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       }
 
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .error("ServiceNavigationImpl.getSpacesAndApps", "root.EX_NO_MESSAGE", e);
     }
     return results;
@@ -529,7 +528,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
       dto = populate(app);
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .error("ServiceNavigationImpl.getApp", "root.EX_NO_MESSAGE", e);
     }
     return dto;

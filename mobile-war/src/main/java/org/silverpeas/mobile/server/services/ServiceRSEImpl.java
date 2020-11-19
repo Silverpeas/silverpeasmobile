@@ -65,7 +65,7 @@ public class ServiceRSEImpl extends AbstractAuthenticateService implements Servi
       dto.setDescription(status.getDescription());
       return dto;
     } catch (Exception ex) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceRSEImpl.getStatus", ex);
+      SilverLogger.getLogger(this).error("ServiceRSEImpl.getStatus", ex);
       throw new RSEexception(ex);
     }
   }

@@ -130,7 +130,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       }
       defaultSortContacts(listUsers);
     } catch (Throwable e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .error("ServiceContactImpl.getContacts", "root.EX_NO_MESSAGE", e);
       throw new ContactException(e);
     }
@@ -156,7 +156,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
         }
       }
     } catch (Throwable e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .error("ServiceContactImpl.getContactsFiltered", "root.EX_NO_MESSAGE", e);
       throw new ContactException(e);
     }
@@ -227,8 +227,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       }
 
     } catch (ParseException e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
-          .error(SpMobileLogModule.getName(), "ServiceContactImpl.getUsersByQuery", e);
+      SilverLogger.getLogger(this).error(e);
     }
 
     return results;
@@ -256,7 +255,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
   private DetailUserDTO populate(Object user) {
     if (user != null && user instanceof UserDetail) {
       UserDetail userDetail = (UserDetail) user;
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .debug(SpMobileLogModule.getName(), "ServiceContactImpl.populate",
               "User id=" + userDetail.getId());
       UserFull userFull = UserFull.getById(userDetail.getId());
@@ -279,7 +278,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       return dto;
     } else if (user != null && user instanceof ContactDetail) {
       ContactDetail contactDetail = (ContactDetail) user;
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .debug(SpMobileLogModule.getName(), "ServiceContactImpl.populate",
               "Contact id=" + contactDetail.getPK().getId() + "app id=" + contactDetail.getPK().getInstanceId());
       DetailUserDTO dto = new DetailUserDTO();

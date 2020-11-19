@@ -300,7 +300,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         data = "data:" + photo.getFileMimeType() + ";base64," +
             new String(Base64.encodeBase64(binaryData));
       } catch (Exception e) {
-        SilverLogger.getLogger(SpMobileLogModule.getName())
+        SilverLogger.getLogger(this)
             .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
       }
     } else if (url.contains("attachmentId")) {
@@ -323,7 +323,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         connection.getInputStream().read(binaryData);
         data = "data:" + contentType + ";base64," + new String(Base64.encodeBase64(binaryData));
       } catch (Exception e) {
-        SilverLogger.getLogger(SpMobileLogModule.getName())
+        SilverLogger.getLogger(this)
             .error("PublicationContentServlet.convertImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
         // If can't connect to url, return the url without change
       }
@@ -358,7 +358,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       data = "data:" + attachment.getContentType() + ";base64," +
           new String(Base64.encodeBase64(binaryData));
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName())
+      SilverLogger.getLogger(this)
           .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
     }
     return data;

@@ -178,7 +178,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       }
       if (trash != null) topicsList.add(0, trash);
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error("ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
     }
     return topicsList;
@@ -392,7 +392,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         if (visible) pubs.add(dto);
       }
     } catch (Exception e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error("ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
     }
 
@@ -430,7 +430,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
   @Override
   public PublicationDTO getPublication(String pubId, String contentType) throws DocumentsException, AuthenticationException {
-    SilverLogger.getLogger(SpMobileLogModule.getName()).debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
+    SilverLogger.getLogger(this).debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
     checkUserInSession();
 
     try {
@@ -471,7 +471,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
       return dto;
     } catch (Throwable e) {
-      SilverLogger.getLogger(SpMobileLogModule.getName()).error("ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error("ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
     }
   }

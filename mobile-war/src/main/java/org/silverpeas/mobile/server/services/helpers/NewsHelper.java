@@ -48,7 +48,6 @@ import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationUpdateDateComparator;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
-import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.io.File;
@@ -58,9 +57,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.MissingResourceException;
 
 /**
@@ -292,7 +289,7 @@ public class NewsHelper {
         data = "data:" + photo.getFileMimeType().getMimeType().toLowerCase() + ";base64," +
             new String(Base64.encodeBase64(binaryData));
       } catch (Exception e) {
-        SilverLogger.getLogger(SpMobileLogModule.getName())
+        SilverLogger.getLogger(this)
             .error("NewsHelper.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
       }
     }
