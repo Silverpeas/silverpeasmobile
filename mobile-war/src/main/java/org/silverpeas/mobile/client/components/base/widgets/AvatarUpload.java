@@ -40,6 +40,7 @@ import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.OfflineHelper;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -98,12 +99,13 @@ public class AvatarUpload extends Composite {
 
   @UiHandler("avatar")
   void upload(ClickEvent event) {
-    if (OfflineHelper.isOffLine() == false) {
-      clickOnInputFile(file.getElement());
-    } else {
-      Notification.alert(msg.needToBeOnline());
+    if (Boolean.parseBoolean(ResourcesManager.getParam("avatar.updatable"))) {
+      if (OfflineHelper.isOffLine() == false) {
+        clickOnInputFile(file.getElement());
+      } else {
+        Notification.alert(msg.needToBeOnline());
+      }
     }
-
   }
 
   public void setUser(final DetailUserDTO currentUser, ApplicationResources resources) {
