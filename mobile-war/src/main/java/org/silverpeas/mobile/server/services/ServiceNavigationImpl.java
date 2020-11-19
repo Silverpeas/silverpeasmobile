@@ -246,8 +246,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     checkUserInSession();
     initSilverpeasSession();
 
-    SettingBundle settings =
-        GraphicElementFactory.getLookSettings(UserHelper.getInstance().getUserLook(getUserInSession()));
+    String look = "";
+    try {
+      look = getMainSessionController().getFavoriteLook();
+    } catch (Exception e) {
+      look = "Initial";
+      SilverLogger.getLogger(this).error(e);
+    }
+
+    SettingBundle settings = GraphicElementFactory.getLookSettings(look);
 
     HomePageDTO data = new HomePageDTO();
     data.setId(spaceId);
