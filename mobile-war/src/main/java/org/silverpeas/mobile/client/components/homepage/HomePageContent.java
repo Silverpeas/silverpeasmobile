@@ -73,7 +73,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   @UiField
   UnorderedList favoris, lastPublications, spaces, news, lastEvents, shortcuts;
   @UiField
-  HTMLPanel container, lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection, freeZoneSection;
+  HTMLPanel container, lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection, freeZoneSection, freeZoneThinSection;
   @UiField
   FocusPanel actus;
 
@@ -89,6 +89,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     lastEventsSection.getElement().setAttribute("id", "lastEvents");
     shortCutsSection.getElement().setAttribute("id", "shortCuts");
     freeZoneSection.getElement().setAttribute("id", "freeZone");
+    freeZoneThinSection.getElement().setAttribute("id", "freeZoneThin");
     Config conf = SpMobil.getConfiguration();
     setConfig(conf);
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
@@ -100,6 +101,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     lastPublicationsSection.setVisible(config.isLastPublicationsDisplay());
     news.setVisible(config.isNewsDisplay());
     freeZoneSection.setVisible(config.isFreeZoneDisplay());
+    freeZoneThinSection.setVisible(config.isFreeZoneThinDisplay());
   }
 
   public void setData(HomePageDTO data) {
@@ -169,6 +171,10 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     freeZoneSection.clear();
     HTML html = new HTML(data.getHtmlFreeZone());
     freeZoneSection.add(html);
+
+    freeZoneThinSection.clear();
+    HTML html2 = new HTML(data.getHtmlFreeZoneThin());
+    freeZoneThinSection.add(html2);
 
     if (MobilUtils.isMobil()) {
       //Element e = Document.get().getElementById("actus");

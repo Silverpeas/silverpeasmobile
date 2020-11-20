@@ -101,6 +101,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
   private static boolean showLastEventsOnHomePage;
   private static boolean showLastEventsOnSpaceHomePage;
   private static boolean showFreeZoneOnHomePage;
+  private static boolean showFreeZonethinOnHomePage;
   private static boolean useGUImobileForTablets;
   private OrganizationController organizationController = OrganizationController.get();
 
@@ -113,6 +114,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     showLastEventsOnHomePage = mobileSettings.getBoolean("homepage.lastevents", true);
     showLastEventsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastevents", true);
     showFreeZoneOnHomePage = mobileSettings.getBoolean("homepage.freezone", true);
+    showFreeZonethinOnHomePage = mobileSettings.getBoolean("homepage.freezonethin", true);
     useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
   }
 
@@ -367,6 +369,15 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
         if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
           String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
           data.setHtmlFreeZone(html);
+        }
+      }
+
+      // freezone thin
+      if ((spaceId == null && showFreeZonethinOnHomePage)) {
+        String pageWebAppId = settings.getString("home.freezone.thin.appId", "");
+        if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
+          String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
+          data.setHtmlFreeZoneThin(html);
         }
       }
 

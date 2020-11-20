@@ -36,6 +36,7 @@ public class Config extends BaseDTO implements Serializable {
   private boolean favoritesDisplay;
   private boolean shortCutsDisplay;
   private boolean freeZoneDisplay;
+  private boolean freeZoneThinDisplay;
 
   public Config() {
   }
@@ -48,7 +49,16 @@ public class Config extends BaseDTO implements Serializable {
     c.setFavoritesDisplay(true);
     c.setShortCutsDisplay(true);
     c.setFreeZoneDisplay(true);
+    c.setFreeZoneThinDisplay(true);
     return c;
+  }
+
+  public boolean isFreeZoneThinDisplay() {
+    return freeZoneThinDisplay;
+  }
+
+  public void setFreeZoneThinDisplay(final boolean freeZoneThinDisplay) {
+    this.freeZoneThinDisplay = freeZoneThinDisplay;
   }
 
   public boolean isNewsDisplay() {
