@@ -340,6 +340,31 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       }
       data.setShortCuts(shortCutLinkDTOList);
 
+      // aurora tools
+      shortCutLinkDTOList = new ArrayList<>();
+      if (spaceId == null || spaceId.isEmpty()) {
+        int i = 1;
+        while (i > 0) {
+          String url = settings.getString("Shortcut.tool." + i + ".Url", "");
+          if (!url.isEmpty()) {
+            String text = settings.getString("Shortcut.tool." + i + ".AltText", "");
+            String icon = settings.getString("Shortcut.tool." + i + ".IconUrl", "");
+            ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
+            shortCutLinkDTO.setUrl(url);
+            shortCutLinkDTO.setText(text);
+            shortCutLinkDTO.setIcon(icon);
+            shortCutLinkDTOList.add(shortCutLinkDTO);
+          } else {
+            i = 0;
+            break;
+          }
+          i++;
+        }
+      }
+      data.setTools(shortCutLinkDTOList);
+
+
+
       // upcomming events
       NextEvents events = null;
       List<CalendarEventDTO> eventsToDisplay = null;

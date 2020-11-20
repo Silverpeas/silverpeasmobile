@@ -137,6 +137,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Raccourcis")
   SafeHtml shortcuts();
 
+  @DefaultMessage("Outils")
+  SafeHtml shortcutstools();
+
   @DefaultMessage("Les dernières publications")
   SafeHtml lastPublications();
 

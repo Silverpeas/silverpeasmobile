@@ -43,6 +43,11 @@
         <components:UnorderedList ui:field="favoris" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
+    <g:HTMLPanel stylePrimaryName="tools-bloc bloc" ui:field="shortCutsToolsSection">
+      <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.shortcutstools}"/></h3>
+      <components:UnorderedList ui:field="shortcutstools" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+    </g:HTMLPanel>
+
       <g:HTMLPanel stylePrimaryName="racourcis-bloc bloc" ui:field="shortCutsSection">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.shortcuts}"/></h3>
         <components:UnorderedList ui:field="shortcuts" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>

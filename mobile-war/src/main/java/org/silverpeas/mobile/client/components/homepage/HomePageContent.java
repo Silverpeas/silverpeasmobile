@@ -71,9 +71,9 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   protected ApplicationMessages msg = null;
 
   @UiField
-  UnorderedList favoris, lastPublications, spaces, news, lastEvents, shortcuts;
+  UnorderedList favoris, lastPublications, spaces, news, lastEvents, shortcuts, shortcutstools;
   @UiField
-  HTMLPanel container, lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection, freeZoneSection, freeZoneThinSection;
+  HTMLPanel container, lastPublicationsSection, lastEventsSection, favorisSection, shortCutsSection, shortCutsToolsSection, freeZoneSection, freeZoneThinSection;
   @UiField
   FocusPanel actus;
 
@@ -88,6 +88,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     lastPublicationsSection.getElement().setAttribute("id", "lastPublications");
     lastEventsSection.getElement().setAttribute("id", "lastEvents");
     shortCutsSection.getElement().setAttribute("id", "shortCuts");
+    shortCutsToolsSection.getElement().setAttribute("id", "shortCutsTools");
     freeZoneSection.getElement().setAttribute("id", "freeZone");
     freeZoneThinSection.getElement().setAttribute("id", "freeZoneThin");
     Config conf = SpMobil.getConfiguration();
@@ -141,8 +142,17 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
       favoris.add(item);
     }
 
+    shortcutstools.clear();
+    List<ShortCutLinkDTO> shortCutLinkList = data.getTools();
+    shortCutsToolsSection.setVisible(!shortCutLinkList.isEmpty() && config.isShortCutsToolsDisplay());
+    for (ShortCutLinkDTO shortCutLinkDTO : shortCutLinkList) {
+      ShortCutItem item = new ShortCutItem();
+      item.setData(shortCutLinkDTO);
+      shortcutstools.add(item);
+    }
+
     shortcuts.clear();
-    List<ShortCutLinkDTO> shortCutLinkList = data.getShortCuts();
+    shortCutLinkList = data.getShortCuts();
     shortCutsSection.setVisible(!shortCutLinkList.isEmpty() && config.isShortCutsDisplay());
     for (ShortCutLinkDTO shortCutLinkDTO : shortCutLinkList) {
       ShortCutItem item = new ShortCutItem();

@@ -44,6 +44,7 @@ public class HomePageDTO extends BaseDTO implements Serializable{
   private List<PublicationDTO> lastPublications = new ArrayList<PublicationDTO>();
   private List<CalendarEventDTO> lastEvents = new ArrayList<CalendarEventDTO>();
   private List<ShortCutLinkDTO> shortCuts = new ArrayList<>();
+  private List<ShortCutLinkDTO> tools = new ArrayList<>();
   private String htmlFreeZone;
 
   public String getHtmlFreeZoneThin() {
@@ -119,4 +120,11 @@ public class HomePageDTO extends BaseDTO implements Serializable{
     this.htmlFreeZone = htmlFreeZone;
   }
 
+  public List<ShortCutLinkDTO> getTools() {
+    return tools;
+  }
+
+  public void setTools(final List<ShortCutLinkDTO> tools) {
+    this.tools = tools;
+  }
 }
