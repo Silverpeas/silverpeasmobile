@@ -24,15 +24,15 @@
 package org.silverpeas.mobile.client.apps.documents.events.app;
 
 
+import org.silverpeas.mobile.shared.dto.ContentDTO;
+
 public class DocumentsLoadPublicationEvent extends AbstractDocumentsAppEvent {
 
-  private String pubId;
-  private String type;
+  private ContentDTO content;
 
-  public DocumentsLoadPublicationEvent(String pubId, String type) {
+  public DocumentsLoadPublicationEvent(ContentDTO content) {
     super();
-    this.pubId = pubId;
-    this.type = type;
+    this.content = content;
   }
 
   @Override
@@ -40,11 +40,8 @@ public class DocumentsLoadPublicationEvent extends AbstractDocumentsAppEvent {
     handler.loadPublication(this);
   }
 
-  public String getPubId() {
-    return pubId;
+  public ContentDTO getContent() {
+    return content;
   }
 
-  public String getType() {
-    return type;
-  }
 }

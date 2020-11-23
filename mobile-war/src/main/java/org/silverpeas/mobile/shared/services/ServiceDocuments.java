@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -39,6 +40,6 @@ public interface ServiceDocuments extends RemoteService {
   public List<BaseDTO> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException;
   public List<TopicDTO> getTopics(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException;
   public List<PublicationDTO> getPublications(String instanceId, String topicId) throws DocumentsException, AuthenticationException;
-  public PublicationDTO getPublication(String pubId, String contentType) throws DocumentsException, AuthenticationException;
+  public PublicationDTO getPublication(ContentDTO content) throws DocumentsException, AuthenticationException;
   public AttachmentDTO getAttachment(String appId, String attachmentId) throws DocumentsException, AuthenticationException;
   }

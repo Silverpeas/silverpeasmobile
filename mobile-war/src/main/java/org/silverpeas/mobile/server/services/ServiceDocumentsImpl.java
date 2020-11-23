@@ -57,6 +57,7 @@ import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -429,14 +430,14 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   private StatisticService getStatisticService() { return ServiceProvider.getService(StatisticService.class); }
 
   @Override
-  public PublicationDTO getPublication(String pubId, String contentType) throws DocumentsException, AuthenticationException {
-    SilverLogger.getLogger(this).debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + pubId);
+  public PublicationDTO getPublication(ContentDTO content) throws DocumentsException, AuthenticationException {
+    SilverLogger.getLogger(this).debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + content.getId());
     checkUserInSession();
 
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-      PublicationDetail pub = getPubBm().getDetail(new PublicationPK(pubId));
+      PublicationDetail pub = getPubBm().getDetail(new PublicationPK(content.getId()));
 
       PublicationDTO dto = new PublicationDTO();
       dto.setId(pub.getId());
@@ -446,7 +447,12 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setVersion(pub.getVersion());
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
-      dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(contentType, new PublicationPK(pubId)));
+
+      if (content.getType().equals("News")) {
+        dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(content.getType(), new PublicationPK(content.getContributionId())));
+      } else {
+        dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(content.getType(), new PublicationPK(content.getId())));
+      }
       dto.setInstanceId(pub.getInstanceId());
       String wysiwyg = pub.getContent().getRenderer().renderView();
       if (wysiwyg == null|| !wysiwyg.trim().isEmpty() || !pub.getInfoId().equals("0")) {
@@ -466,7 +472,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       }
       dto.setLinkedPublications(linkedPub);
 
-      ResourceReference resourceReference = new ResourceReference(pubId, pub.getComponentInstanceId());
+      ResourceReference resourceReference = new ResourceReference(content.getId(), pub.getComponentInstanceId());
       getStatisticService().addStat(getUserInSession().getId(), resourceReference, 1, "Publication");
 
       return dto;

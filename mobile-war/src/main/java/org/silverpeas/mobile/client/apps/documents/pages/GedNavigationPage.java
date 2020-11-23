@@ -45,6 +45,7 @@ import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -132,7 +133,11 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
         PublicationPage page = new PublicationPage();
         page.setPageTitle(msg.publicationTitle());
         page.show();
-        EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(((PublicationDTO) event.getGedItem()).getId(), ContentsTypes.Publication.toString()));
+
+        ContentDTO content = new ContentDTO();
+        content.setId(((PublicationDTO) event.getGedItem()).getId());
+        content.setType(ContentsTypes.Publication.toString());
+        EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
       }
     }
   }

@@ -25,6 +25,7 @@ package org.silverpeas.mobile.shared.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -37,7 +38,7 @@ public interface ServiceDocumentsAsync {
 
   void getPublications(String instanceId, String topicId, 	AsyncCallback<List<PublicationDTO>> callback);
 
-  void getPublication(String pubId, String contentType, AsyncCallback<PublicationDTO> callback);
+  void getPublication(ContentDTO content, AsyncCallback<PublicationDTO> callback);
 
   void getTopicsAndPublications(String instanceId, String rootTopicId, AsyncCallback<List<BaseDTO>> callback);
 

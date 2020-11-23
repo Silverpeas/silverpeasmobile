@@ -130,7 +130,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             page.setContent(content);
             setMainPage(page);
             page.show();
-            EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content.getId(), content.getType()));
+            EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
         } else if(content.getType().equals(ContentsTypes.Attachment.toString())) {
             final DocumentsApp app = this;
             ServicesLocator.getServiceDocuments().getAttachment(content.getId(), content.getInstanceId(), new AsyncCallback<AttachmentDTO>() {
@@ -249,7 +249,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
      */
     @Override
     public void loadPublication(final DocumentsLoadPublicationEvent event) {
-        final String key = "publication_" + event.getPubId();
+        final String key = "publication_" + event.getContent().getId();
         Command offlineAction = new Command() {
             @Override
             public void execute() {
@@ -257,21 +257,21 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
                 if (result == null) {
                     result = new PublicationDTO();
                 }
-                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, getApplicationInstance().isCommentable(), getApplicationInstance().isAbleToStoreContent(), getApplicationInstance().isNotifiable(), event.getType()));
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, getApplicationInstance().isCommentable(), getApplicationInstance().isAbleToStoreContent(), getApplicationInstance().isNotifiable(), event.getContent().getType()));
             }
         };
 
         AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<PublicationDTO>(offlineAction) {
             @Override
             public void attempt() {
-                ServicesLocator.getServiceDocuments().getPublication(event.getPubId(), event.getType(), this);
+                ServicesLocator.getServiceDocuments().getPublication(event.getContent(), this);
             }
 
             @Override
             public void onSuccess(PublicationDTO result) {
                 super.onSuccess(result);
                 LocalStorageHelper.store(key, PublicationDTO.class, result);
-                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, getApplicationInstance().isCommentable(), getApplicationInstance().isAbleToStoreContent(), getApplicationInstance().isNotifiable(), event.getType()));
+                EventBus.getInstance().fireEvent(new PublicationLoadedEvent(result, getApplicationInstance().isCommentable(), getApplicationInstance().isAbleToStoreContent(), getApplicationInstance().isNotifiable(), event.getContent().getType()));
             }
 
         };

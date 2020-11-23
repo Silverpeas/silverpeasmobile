@@ -34,7 +34,7 @@ public class ContentDTO implements  Serializable {
   private String instanceId;
   private String type;
   private String role;
-  private Anchor link;
+  private transient Anchor link;
   private String contributionId;
 
   public String getId() {

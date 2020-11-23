@@ -131,7 +131,11 @@ public class PublicationPage extends PageContent
   public void setPublicationId(String id, String type) {
     // send event to controler for retrieve pub infos
     Notification.activityStart();
-    EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(id, type));
+
+    ContentDTO content = new ContentDTO();
+    content.setId(id);
+    content.setType(type);
+    EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
   }
 
   @Override
