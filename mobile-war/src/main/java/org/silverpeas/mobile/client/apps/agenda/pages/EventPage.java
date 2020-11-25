@@ -310,7 +310,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
       ReminderDTO dto = new ReminderDTO();
       dto.setDuration(Integer.parseInt(d[0]));
       dto.setTimeUnit(TimeUnitDTO.valueOf(d[1]));
-
+      dto.setProcessName("CalendarEventUserNotification");
 
       dto.setCanBeDeleted(true);
       dto.setCanBeModified(true);

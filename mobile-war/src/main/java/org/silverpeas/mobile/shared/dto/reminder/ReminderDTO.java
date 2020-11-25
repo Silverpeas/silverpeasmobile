@@ -39,6 +39,7 @@ public class ReminderDTO implements Serializable {
   private Integer duration;
   private TimeUnitDTO timeUnit;
   private String text;
+  private String processName;
   private boolean canBeModified;
   private boolean canBeDeleted;
 
@@ -120,5 +121,13 @@ public class ReminderDTO implements Serializable {
 
   public void setCanBeDeleted(final boolean canBeDeleted) {
     this.canBeDeleted = canBeDeleted;
+  }
+
+  public String getProcessName() {
+    return processName;
+  }
+
+  public void setProcessName(final String processName) {
+    this.processName = processName;
   }
 }
