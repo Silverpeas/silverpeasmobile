@@ -503,7 +503,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
             Administration.get().getAllowedSubSpaceIds(getUserInSession().getId(), rootSpaceId);
         for (String spaceId : spaceIds) {
           SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
-          if (("WA" + space.getFatherId()).equals(rootSpaceId)) {
+          if (("WA" + space.getFatherId()).equals(rootSpaceId) || space.getFatherId().equals(rootSpaceId)) {
             if (containApp(space)) {
               results.add(populate(space));
             }
