@@ -49,7 +49,7 @@ self.addEventListener('activate', function(event) {
 
 
 self.addEventListener('fetch', function(event) {
-    if (event.request.method == 'GET' && event.request.url.startsWith('http') ) {
+    if (event.request.method == 'GET' && event.request.url.startsWith('http') && event.request.url.indexOf("9876") === -1) {
       event.respondWith(
         fetch(event.request).then(function(response){
                       try {
