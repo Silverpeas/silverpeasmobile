@@ -23,14 +23,26 @@
 
 package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.almanach.ParticipationStatusDTO;
+import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-public interface EventPagesEventHandler extends EventHandler{
-  void onRemindersLoaded(RemindersLoadedEvent event);
-  void onRemindersDeleted(ReminderDeletedEvent event);
-  void onAttachmentLoaded(AttachmentsLoadedEvent event);
-  void onRemindersAdding(RemindersAddingEvent event);
-  void onReminderAdded(ReminderAddedEvent event);
+import java.util.List;
 
-  void onParticipationUpdated(ParticipationUpdatedEvent event);
+public class ParticipationUpdatedEvent extends AbstractEventPagesEvent {
+
+  private ParticipationStatusDTO status;
+
+  public ParticipationUpdatedEvent(ParticipationStatusDTO status){
+    super();
+    this.status = status;
+  }
+
+  @Override
+  protected void dispatch(EventPagesEventHandler handler) {
+    handler.onParticipationUpdated(this);
+  }
+
+  public ParticipationStatusDTO getStatus() {
+    return status;
+  }
 }

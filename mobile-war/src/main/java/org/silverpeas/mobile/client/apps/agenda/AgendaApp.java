@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.agenda;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
@@ -34,6 +35,7 @@ import org.silverpeas.mobile.client.apps.agenda.events.app.AbstractAgendaAppEven
 import org.silverpeas.mobile.client.apps.agenda.events.app.AgendaAppEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AttachmentsLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.ParticipationEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderUpdateEvent;
@@ -42,6 +44,7 @@ import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractAgendaPages
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AgendaPagesEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.CalendarLoadedEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.ParticipationUpdatedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderAddedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
@@ -62,7 +65,9 @@ import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import org.silverpeas.mobile.shared.dto.almanach.ParticipationStatusDTO;
 import org.silverpeas.mobile.shared.dto.documents.DocumentType;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -488,6 +493,38 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
     };
     action.attempt();
+  }
+
+  @Override
+  public void participation(final ParticipationEvent event) {
+
+    String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CalendarEventDTO>() {
+      @Override
+      public void onSuccess(final Method method, final CalendarEventDTO dto) {
+        super.onSuccess(method, dto);
+        EventBus.getInstance().fireEvent(new ParticipationUpdatedEvent(event.getStatus()));
+      }
+
+      @Override
+      public void attempt() {
+        CalendarEventAttendeeDTO attendee = getUserAttendee(event.getEvent().getAttendees());
+        attendee.setParticipationStatus(event.getStatus());
+        ServicesLocator.getServiceAlmanach().updateParticipation(currentAppId, event.getEvent().getCalendarId(), event.getEvent().getEventId(), event.getEvent().getOccurrenceId(), attendee.getId(), SpMobil.getUser().getZone(), attendee, this);
+      }
+    };
+    action.attempt();
+  }
+
+  private CalendarEventAttendeeDTO getUserAttendee(final List<CalendarEventAttendeeDTO> attendees) {
+    CalendarEventAttendeeDTO attendee = null;
+    for (CalendarEventAttendeeDTO attendeeDTO : attendees) {
+      if (attendeeDTO.getId().equals(SpMobil.getUser().getId())) {
+        attendee = attendeeDTO;
+        break;
+      }
+    }
+    return attendee;
   }
 }
 

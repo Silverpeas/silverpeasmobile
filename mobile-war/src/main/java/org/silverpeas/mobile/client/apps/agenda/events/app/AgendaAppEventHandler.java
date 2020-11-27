@@ -34,4 +34,6 @@ public interface AgendaAppEventHandler extends EventHandler{
   void deleteReminder(ReminderDeleteEvent event);
 
   void loadAttachments(AttachmentsLoadEvent event);
+
+  void participation(ParticipationEvent participationEvent);
 }

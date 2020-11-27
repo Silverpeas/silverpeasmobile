@@ -52,6 +52,7 @@ public class CalendarEventDTO implements Serializable {
   private CalendarEventRecurrenceDTO recurrence;
   private List<CalendarEventAttendeeDTO> attendees = new ArrayList<>();
   private List<CalendarEventAttributeDTO> attributes = new ArrayList<>();
+  private String occurrenceId;
   //private PdcClassificationEntity pdcClassification;
   private List<AttachmentParameterDTO> attachmentParameters = new ArrayList<>();
   private ReminderDTO reminder;
@@ -287,5 +288,13 @@ public class CalendarEventDTO implements Serializable {
 
   public void setAttributes(final List<CalendarEventAttributeDTO> attributes) {
     this.attributes = attributes;
+  }
+
+  public String getOccurrenceId() {
+    return occurrenceId;
+  }
+
+  public void setOccurrenceId(final String occurrenceId) {
+    this.occurrenceId = occurrenceId;
   }
 }

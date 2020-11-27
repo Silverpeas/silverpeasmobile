@@ -60,6 +60,9 @@ public interface AgendaMessages extends Messages {
   String OneWeek();
 
   String addReminder();
+  String acceptParticipation();
+  String rejectParticipation();
+  String tentativeParticipation();
 
   String weekFilter();
   String mouthFilter();

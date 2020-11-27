@@ -26,9 +26,11 @@ package org.silverpeas.mobile.shared.services.rest;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -42,14 +44,31 @@ public interface ServiceAlmanach extends RestService {
 
   @GET
   @Path("{componentInstanceId}/")
-  public void getCalendars(@PathParam("componentInstanceId") String componentInstanceId, MethodCallback<List<CalendarDTO>> callback);
+  public void getCalendars(@PathParam("componentInstanceId") String componentInstanceId,
+      MethodCallback<List<CalendarDTO>> callback);
 
   @GET
   @Path("{componentInstanceId}/{calendarId}/events/occurrences/")
-  public void getOccurences(@PathParam("componentInstanceId") String componentInstanceId, @PathParam("calendarId") String calendarId, @QueryParam("startDateOfWindowTime") String startDateOfWindowTime, @QueryParam("endDateOfWindowTime") String endDateOfWindowTime, @QueryParam("zoneid") String zoneid, MethodCallback<List<CalendarEventDTO>> callback);
+  public void getOccurences(@PathParam("componentInstanceId") String componentInstanceId,
+      @PathParam("calendarId") String calendarId,
+      @QueryParam("startDateOfWindowTime") String startDateOfWindowTime,
+      @QueryParam("endDateOfWindowTime") String endDateOfWindowTime,
+      @QueryParam("zoneid") String zoneid, MethodCallback<List<CalendarEventDTO>> callback);
 
   @GET
   @Path("{calendarId}/events/{eventId}")
-  public void getEvent(@PathParam("calendarId") String calendarId, @PathParam("eventId") String eventId, MethodCallback<CalendarEventDTO> callback);
+  public void getEvent(@PathParam("calendarId") String calendarId,
+      @PathParam("eventId") String eventId, MethodCallback<CalendarEventDTO> callback);
+
+  @PUT
+  @Path("{componentInstanceId}/{calendarId}/events/{eventId}/occurrences/{occurenceId}/attendees" +
+      "/{attendeeId}")
+  public void updateParticipation(@PathParam("componentInstanceId") String componentInstanceId,
+      @PathParam("calendarId") String calendarId,
+      @PathParam("eventId") String eventId,
+      @PathParam("occurenceId") String occurenceId,
+      @PathParam("attendeeId") String attendeeId,
+      @QueryParam("zoneid") String zoneid, CalendarEventAttendeeDTO dto,
+      MethodCallback<CalendarEventDTO> callback);
 
 }

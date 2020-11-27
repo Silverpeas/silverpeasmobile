@@ -37,10 +37,12 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AttachmentsLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
@@ -49,12 +51,16 @@ import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractEventPagesEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.EventPagesEventHandler;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.ParticipationUpdatedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderAddedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersAddingEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
+import org.silverpeas.mobile.client.apps.agenda.pages.widgets.AcceptParticipationButton;
 import org.silverpeas.mobile.client.apps.agenda.pages.widgets.AddReminderButton;
 import org.silverpeas.mobile.client.apps.agenda.pages.widgets.AttendeeItem;
+import org.silverpeas.mobile.client.apps.agenda.pages.widgets.RejectParticipationButton;
+import org.silverpeas.mobile.client.apps.agenda.pages.widgets.TentativeParticipationButton;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.DateUtil;
@@ -68,6 +74,7 @@ import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttributeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import org.silverpeas.mobile.shared.dto.almanach.ParticipationStatusDTO;
 import org.silverpeas.mobile.shared.dto.almanach.TimeUnitDTO;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -75,6 +82,7 @@ import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * @author svu
@@ -121,6 +129,9 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
   private NotifyButton notification = new NotifyButton();
   private AddReminderButton addReminder = new AddReminderButton();
+  private AcceptParticipationButton participation = new AcceptParticipationButton();
+  private RejectParticipationButton rejectParticipation = new RejectParticipationButton();
+  private TentativeParticipationButton tentativeParticipation = new TentativeParticipationButton();
 
   interface EventPageUiBinder extends UiBinder<Widget, EventPage> {
   }
@@ -141,6 +152,10 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     this.event = event;
     this.calendar = calendar;
     this.instance = instance;
+
+    participation.setEvent(event);
+    rejectParticipation.setEvent(event);
+    tentativeParticipation.setEvent(event);
 
     // title and description
     setPageTitle(calendar.getTitle());
@@ -220,6 +235,15 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     }
 
     for (CalendarEventAttendeeDTO attendee : event.getAttendees()) {
+      if (attendee.getId().equals(SpMobil.getUser().getId())) {
+        actionsMenu.addAction(participation);
+        actionsMenu.addAction(rejectParticipation);
+        actionsMenu.addAction(tentativeParticipation);
+        participation.setVisible(!attendee.getParticipationStatus().equals(ParticipationStatusDTO.ACCEPTED));
+        rejectParticipation.setVisible(!attendee.getParticipationStatus().equals(ParticipationStatusDTO.DECLINED));
+        tentativeParticipation.setVisible(!attendee.getParticipationStatus().equals(ParticipationStatusDTO.TENTATIVE));
+      }
+
       AttendeeItem item = new AttendeeItem();
       item.setData(attendee);
       attendees.add(item);
@@ -262,22 +286,25 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
       reminderDurations.addItem(durationLabel, duration);
     }
 
-
-    if (!event.getReminders().isEmpty()) {
-      ReminderDTO r = event.getReminders().get(0);
-      this.reminderDTO = r;
-
-      String duration = r.getDuration() + r.getTimeUnit().name();
-      for (int i = 0; i < reminderDurations.getItemCount(); i++) {
-        if (reminderDurations.getValue(i).equals(duration)) {
-          reminderDurations.setSelectedIndex(i);
-          break;
-        }
-      }
-      reminder.getStyle().setDisplay(Style.Display.BLOCK);
-    } else {
+    if (event.getDurations().isEmpty()) {
       reminder.getStyle().setDisplay(Style.Display.NONE);
-      addReminder.setVisible(true);
+    } else {
+      if (!event.getReminders().isEmpty()) {
+        ReminderDTO r = event.getReminders().get(0);
+        this.reminderDTO = r;
+
+        String duration = r.getDuration() + r.getTimeUnit().name();
+        for (int i = 0; i < reminderDurations.getItemCount(); i++) {
+          if (reminderDurations.getValue(i).equals(duration)) {
+            reminderDurations.setSelectedIndex(i);
+            break;
+          }
+        }
+        reminder.getStyle().setDisplay(Style.Display.BLOCK);
+      } else {
+        reminder.getStyle().setDisplay(Style.Display.NONE);
+        addReminder.setVisible(true);
+      }
     }
   }
 
@@ -328,6 +355,37 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
   @Override
   public void onReminderAdded(final ReminderAddedEvent event) {
     this.reminderDTO = event.getReminder();
+  }
+
+  @Override
+  public void onParticipationUpdated(final ParticipationUpdatedEvent event) {
+    // update actions menu
+    if (event.getStatus().equals(ParticipationStatusDTO.ACCEPTED)) {
+      participation.setVisible(false);
+      tentativeParticipation.setVisible(true);
+      rejectParticipation.setVisible(true);
+    } else if (event.getStatus().equals(ParticipationStatusDTO.TENTATIVE)) {
+      participation.setVisible(true);
+      tentativeParticipation.setVisible(false);
+      rejectParticipation.setVisible(true);
+    } else if (event.getStatus().equals(ParticipationStatusDTO.DECLINED)) {
+      participation.setVisible(true);
+      tentativeParticipation.setVisible(true);
+      rejectParticipation.setVisible(false);
+    }
+
+    // update status
+    Iterator<Widget> it = attendees.iterator();
+    while (it.hasNext()) {
+      Widget w = it.next();
+      if (w instanceof AttendeeItem) {
+          CalendarEventAttendeeDTO data = ((AttendeeItem)w).getData();
+        if (data.getId().equals(SpMobil.getUser().getId())) {
+          data.setParticipationStatus(event.getStatus());
+          ((AttendeeItem)w).setData(data);
+        }
+      }
+    }
   }
 
   @UiHandler("content")

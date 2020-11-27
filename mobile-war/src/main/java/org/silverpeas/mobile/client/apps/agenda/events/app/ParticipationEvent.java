@@ -21,16 +21,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.agenda.events.pages;
+package org.silverpeas.mobile.client.apps.agenda.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import org.silverpeas.mobile.shared.dto.almanach.ParticipationStatusDTO;
+import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-public interface EventPagesEventHandler extends EventHandler{
-  void onRemindersLoaded(RemindersLoadedEvent event);
-  void onRemindersDeleted(ReminderDeletedEvent event);
-  void onAttachmentLoaded(AttachmentsLoadedEvent event);
-  void onRemindersAdding(RemindersAddingEvent event);
-  void onReminderAdded(ReminderAddedEvent event);
+public class ParticipationEvent extends AbstractAgendaAppEvent {
 
-  void onParticipationUpdated(ParticipationUpdatedEvent event);
+  private ParticipationStatusDTO status;
+  private CalendarEventDTO event;
+
+  public ParticipationEvent(final ParticipationStatusDTO status, final CalendarEventDTO event) {
+    this.status = status;
+    this.event = event;
+  }
+
+  @Override
+  protected void dispatch(AgendaAppEventHandler handler) {
+    handler.participation(this);
+  }
+
+  public ParticipationStatusDTO getStatus() {
+    return status;
+  }
+
+  public CalendarEventDTO getEvent() {
+    return event;
+  }
 }

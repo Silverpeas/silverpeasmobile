@@ -51,6 +51,10 @@ public class AttendeeItem extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
     }
 
+    public CalendarEventAttendeeDTO getData() {
+      return data;
+    }
+
     public void setData(CalendarEventAttendeeDTO data) {
       this.data = data;
 
