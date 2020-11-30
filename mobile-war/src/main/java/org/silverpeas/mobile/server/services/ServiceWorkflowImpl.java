@@ -83,10 +83,6 @@ public class ServiceWorkflowImpl extends AbstractAuthenticateService implements 
   private static final long serialVersionUID = 1L;
   private OrganizationController organizationController = OrganizationController.get();
 
-  static {
-    SettingBundle mobileSettings = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
-  }
-
   private List<GroupDetail> getGroups(List<String> ids) throws Exception {
     ArrayList<GroupDetail> groups = new ArrayList<GroupDetail>();
     for (String id : ids) {

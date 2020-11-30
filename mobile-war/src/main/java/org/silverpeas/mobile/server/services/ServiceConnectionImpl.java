@@ -56,12 +56,9 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
   private static final long serialVersionUID = 1L;
 
   private OrganizationController organizationController = OrganizationController.get();
-  private static boolean useGUImobileForTablets;
 
-  static {
-    SettingBundle mobileSettings =
-        ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
-    useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
+  private boolean isUserGUIMobileForTablets() {
+    return getSettings().getBoolean("guiMobileForTablets", true);
   }
 
   public DetailUserDTO login(String login, String password, String domainId)
@@ -134,7 +131,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
 
   @Override
   public boolean setTabletMode() throws NavigationException, AuthenticationException {
-    if (!useGUImobileForTablets) {
+    if (!isUserGUIMobileForTablets()) {
       getThreadLocalRequest().getSession().setAttribute("tablet", new Boolean(true));
       return true;
     }

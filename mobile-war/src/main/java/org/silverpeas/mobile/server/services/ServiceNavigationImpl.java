@@ -47,14 +47,12 @@ import org.silverpeas.core.security.session.SessionInfo;
 import org.silverpeas.core.security.session.SessionManagement;
 import org.silverpeas.core.security.session.SessionManagementProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
-import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
-import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
@@ -84,7 +82,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Predicate;
 
 /**
@@ -96,26 +93,10 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     implements ServiceNavigation {
 
   private static final long serialVersionUID = 1L;
-  private static boolean showLastPublicationsOnHomePage;
-  private static boolean showLastPublicationsOnSpaceHomePage;
-  private static boolean showLastEventsOnHomePage;
-  private static boolean showLastEventsOnSpaceHomePage;
-  private static boolean showFreeZoneOnHomePage;
-  private static boolean showFreeZonethinOnHomePage;
-  private static boolean useGUImobileForTablets;
   private OrganizationController organizationController = OrganizationController.get();
 
-  static {
-    SettingBundle mobileSettings =
-        ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
-    showLastPublicationsOnHomePage = mobileSettings.getBoolean("homepage.lastpublications", true);
-    showLastPublicationsOnSpaceHomePage =
-        mobileSettings.getBoolean("spacehomepage.lastpublications", true);
-    showLastEventsOnHomePage = mobileSettings.getBoolean("homepage.lastevents", true);
-    showLastEventsOnSpaceHomePage = mobileSettings.getBoolean("spacehomepage.lastevents", true);
-    showFreeZoneOnHomePage = mobileSettings.getBoolean("homepage.freezone", true);
-    showFreeZonethinOnHomePage = mobileSettings.getBoolean("homepage.freezonethin", true);
-    useGUImobileForTablets = mobileSettings.getBoolean("guiMobileForTablets", true);
+  private boolean isUserGUIMobileForTablets() {
+    return getSettings().getBoolean("guiMobileForTablets", true);
   }
 
   @Override
@@ -149,7 +130,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
 
   @Override
   public boolean setTabletMode() throws NavigationException, AuthenticationException {
-    if (!useGUImobileForTablets) {
+    if (!isUserGUIMobileForTablets()) {
       getThreadLocalRequest().getSession().setAttribute("tablet", new Boolean(true));
       return true;
     }
@@ -286,8 +267,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
 
 
       // last publications
-      if ((spaceId == null && showLastPublicationsOnHomePage) ||
-          (spaceId != null && showLastPublicationsOnSpaceHomePage)) {
+      if ((spaceId == null && getSettings().getBoolean("homepage.lastpublications", true)) ||
+          (spaceId != null && getSettings().getBoolean("spacehomepage.lastpublications", true))) {
         try {
           SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
           ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
@@ -367,7 +348,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       NextEvents events = null;
       List<CalendarEventDTO> eventsToDisplay = null;
       String lang = getUserInSession().getUserPreferences().getLanguage();
-      if ((spaceId == null && showLastEventsOnHomePage)) {
+      if ((spaceId == null && getSettings().getBoolean("homepage.lastevents", true))) {
         boolean includeToday = settings.getBoolean("home.events.today.include", true);
         List<String> allowedComponentIds =
             Arrays.asList(getAllowedComponentIds(settings, "home.events.appId", "almanach"));
@@ -375,7 +356,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
         boolean onlyImportant = settings.getBoolean("home.events.importantOnly", false);
         events = EventsHelper.getInstance()
             .getNextEvents(allowedComponentIds, includeToday, nbDays, onlyImportant);
-      } else if (spaceId != null && showLastEventsOnSpaceHomePage) {
+      } else if (spaceId != null && getSettings().getBoolean("spacehomepage.lastevents", true)) {
         List<String> allowedAppIds = new ArrayList<>();
         List<ComponentInstLight> components = getAllowedComponents(false, "almanach", spaceId);
         for (ComponentInstLight component : components) {
@@ -387,7 +368,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       data.setLastEvents(eventsToDisplay);
 
       // freezone
-      if ((spaceId == null && showFreeZoneOnHomePage)) {
+      if ((spaceId == null && getSettings().getBoolean("homepage.freezone", true))) {
         String pageWebAppId = settings.getString("home.freezone.appId", "");
         if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
           String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
@@ -396,7 +377,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       }
 
       // freezone thin
-      if ((spaceId == null && showFreeZonethinOnHomePage)) {
+      if ((spaceId == null && getSettings().getBoolean("homepage.freezonethin", true))) {
         String pageWebAppId = settings.getString("home.freezone.thin.appId", "");
         if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
           String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);

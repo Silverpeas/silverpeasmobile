@@ -37,7 +37,6 @@ import org.silverpeas.core.index.search.model.MatchingIndexEntry;
 import org.silverpeas.core.index.search.model.ParseException;
 import org.silverpeas.core.index.search.model.QueryDescription;
 import org.silverpeas.core.socialnetwork.relationship.RelationShipService;
-import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
@@ -62,31 +61,36 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
   private static final long serialVersionUID = 1L;
   private OrganizationController organizationController = OrganizationController.get();
   private RelationShipService relationShipService = RelationShipService.get();
-  private static List<String> domainsIds = new ArrayList<String>();
-  private static List<String> userProperties = new ArrayList<String>();
-  private static List<String> contactProperties = new ArrayList<String>();
 
-  static {
-    SettingBundle mobileSettings = getSettings();
-    String domains = mobileSettings.getString("directory.domains", "");
+  private List<String> getUserProperties() {
+    List<String> userProperties = new ArrayList<String>();
+    String properties = getSettings().getString("directory.user.properties", "");
+    StringTokenizer stkU = new StringTokenizer(properties,",");
+    while(stkU.hasMoreTokens()) {
+      userProperties.add(stkU.nextToken());
+    }
+    return userProperties;
+  }
+
+  private List<String> getContactProperties() {
+    List<String> contactProperties = new ArrayList<String>();
+    String formProperties = getSettings().getString("directory.contact.properties", "");
+    StringTokenizer stkC = new StringTokenizer(formProperties,",");
+    while(stkC.hasMoreTokens()) {
+      contactProperties.add(stkC.nextToken());
+    }
+    return contactProperties;
+  }
+
+  private List<String> getdomainsIds() {
+    List<String> domainsIds = new ArrayList<String>();
+    String domains = getSettings().getString("directory.domains", "");
 
     StringTokenizer stk = new StringTokenizer(domains,",");
     while(stk.hasMoreTokens()) {
       domainsIds.add(stk.nextToken());
     }
-
-    String properties = mobileSettings.getString("directory.user.properties", "");
-    StringTokenizer stkU = new StringTokenizer(properties,",");
-    while(stkU.hasMoreTokens()) {
-      userProperties.add(stkU.nextToken());
-    }
-
-    String formProperties = mobileSettings.getString("directory.contact.properties", "");
-    StringTokenizer stkC = new StringTokenizer(formProperties,",");
-    while(stkC.hasMoreTokens()) {
-      contactProperties.add(stkC.nextToken());
-    }
-
+    return domainsIds;
   }
 
   /**
@@ -224,6 +228,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
             } else if (result.getObjectType().equals("UserFull")) {
               UserDetail userDetail = organizationController.getUserDetail(objectId);
               // if userDetail is null than mean user was deleted but is still in index
+              List<String> domainsIds = getdomainsIds();
               if (userDetail!= null && (domainsIds.isEmpty() || domainsIds.contains(userDetail.getDomainId())) && userDetail.isActivatedState()) {
                 results.add(userDetail);
               }
@@ -277,7 +282,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), getSettings().getString("avatar.size", "24x"));
       dto.setAvatar(avatar);
       if (userFull != null) {
-        for (String prop : userProperties) {
+        for (String prop : getUserProperties()) {
           dto.addProperty(prop, userFull.getValue(prop));
         }
       }
@@ -302,7 +307,7 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
       CompleteContact completeContact = YellowpagesService.get().getCompleteContact(((ContactDetail) user).getPK());
       Map<String, String> fields = completeContact.getFormValues(getUserInSession().getUserPreferences().getLanguage(), true);
       if (fields != null) {
-        for (String prop : contactProperties) {
+        for (String prop : getContactProperties()) {
           dto.addProperty(prop, fields.get(prop));
         }
       }

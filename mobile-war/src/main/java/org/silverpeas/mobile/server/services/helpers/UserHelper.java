@@ -55,7 +55,7 @@ public class UserHelper {
     return instance;
   }
 
-  private static SettingBundle getSettings() {
+  private SettingBundle getSettings() {
     return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 

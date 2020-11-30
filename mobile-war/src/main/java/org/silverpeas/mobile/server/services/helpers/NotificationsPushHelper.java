@@ -70,7 +70,7 @@ public class NotificationsPushHelper {
     return tokenDAO;
   }
 
-  private static SettingBundle getSettings() {
+  private SettingBundle getSettings() {
     return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 
