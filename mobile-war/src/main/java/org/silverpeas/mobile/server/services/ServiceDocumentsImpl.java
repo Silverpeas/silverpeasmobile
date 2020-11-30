@@ -53,6 +53,7 @@ import org.silverpeas.core.silverstatistics.access.service.StatisticService;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
+import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
@@ -177,9 +178,17 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
           }
         }
       }
-      if (trash != null) topicsList.add(0, trash);
+
+      if (trash != null) {
+        boolean atfirst = getSettings().getBoolean("ged.trash.display.atfirst", true);
+        if (atfirst) {
+          topicsList.add(0, trash);
+        } else {
+          topicsList.add(trash);
+        }
+      }
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceDocumentsImpl.getTopics", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
       throw new DocumentsException(e.getMessage());
     }
     return topicsList;
