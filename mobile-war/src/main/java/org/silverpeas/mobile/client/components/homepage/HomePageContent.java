@@ -145,19 +145,25 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     shortcutstools.clear();
     List<ShortCutLinkDTO> shortCutLinkList = data.getTools();
     shortCutsToolsSection.setVisible(!shortCutLinkList.isEmpty() && config.isShortCutsToolsDisplay());
+    int i = 1;
     for (ShortCutLinkDTO shortCutLinkDTO : shortCutLinkList) {
       ShortCutItem item = new ShortCutItem();
       item.setData(shortCutLinkDTO);
+      item.setCssId("shortCutTools" + i);
       shortcutstools.add(item);
+      i++;
     }
 
     shortcuts.clear();
     shortCutLinkList = data.getShortCuts();
     shortCutsSection.setVisible(!shortCutLinkList.isEmpty() && config.isShortCutsDisplay());
+    i = 1;
     for (ShortCutLinkDTO shortCutLinkDTO : shortCutLinkList) {
       ShortCutItem item = new ShortCutItem();
       item.setData(shortCutLinkDTO);
+      item.setCssId("shortCut" + i);
       shortcuts.add(item);
+      i++;
     }
 
     lastPublications.clear();

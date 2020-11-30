@@ -73,4 +73,8 @@ public class ShortCutItem extends Composite {
     LinksManager.processLink(data.getUrl());
   }
 
+  public void setCssId(String id) {
+    this.getElement().setId(id);
+  }
+
 }
