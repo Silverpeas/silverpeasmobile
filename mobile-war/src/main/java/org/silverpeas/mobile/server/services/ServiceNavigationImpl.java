@@ -31,11 +31,12 @@ import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.core.SilverpeasException;
+import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.admin.space.SpaceInstLight;
+import org.silverpeas.core.admin.space.SpaceInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
 import org.silverpeas.core.contribution.model.ContributionIdentifier;
@@ -69,6 +70,7 @@ import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
+import org.silverpeas.mobile.shared.dto.navigation.HomePages;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
@@ -241,7 +243,12 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     data.setId(spaceId);
     try {
       if (spaceId != null) {
-        SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
+        SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+        List<ComponentInst> apps = space.getAllComponentsInst();
+        int hiddenApps = 0;
+        for (ComponentInst app : apps) {
+          if (app.isHidden()) hiddenApps++;
+        }
         data.setSpaceName(space.getName(getUserInSession().getUserPreferences().getLanguage()));
       }
 
@@ -471,8 +478,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       if (rootSpaceId == null) {
         String[] spaceIds = Administration.get().getAllSpaceIds(getUserInSession().getId());
         for (String spaceId : spaceIds) {
-          SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
-          if (space.getFatherId().equals("0")) {
+          SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+          if (space.getLevel() == 0) {
             if (containApp(space)) {
               results.add(populate(space));
             }
@@ -483,8 +490,8 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
         String[] spaceIds =
             Administration.get().getAllowedSubSpaceIds(getUserInSession().getId(), rootSpaceId);
         for (String spaceId : spaceIds) {
-          SpaceInstLight space = Administration.get().getSpaceInstLightById(spaceId);
-          if (("WA" + space.getFatherId()).equals(rootSpaceId) || space.getFatherId().equals(rootSpaceId)) {
+          SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+          if (("WA" + space.getDomainFatherId()).equals(rootSpaceId) || space.getDomainFatherId().equals(rootSpaceId)) {
             if (containApp(space)) {
               results.add(populate(space));
             }
@@ -546,7 +553,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     return dto;
   }
 
-  private boolean containApp(SpaceInstLight space) throws Exception {
+  private boolean containApp(SpaceInst space) throws Exception {
     String[] appsIds =
         Administration.get().getAvailCompoIds(space.getId(), getUserInSession().getId());
     for (String appId : appsIds) {
@@ -562,12 +569,37 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     return organizationController.getUserProfiles(userId, componentId);
   }
 
-  private SpaceDTO populate(SpaceInstLight space) {
+  private SpaceDTO populate(SpaceInst space) {
     SpaceDTO dto = new SpaceDTO();
     dto.setId(space.getId());
     dto.setLabel(space.getName());
     dto.setPersonal(space.isPersonalSpace());
     dto.setOrderNum(space.getOrderNum());
+
+    if (space.getFirstPageType() == HomePages.APP.getValue()) {
+      List<ComponentInst> apps = space.getAllComponentsInst();
+      int nbHiddenApps = 0;
+      String appNotHidden = "";
+      if (apps.size() == 1) {
+        dto.setHomePageType(HomePages.APP.getValue());
+      } else {
+        for (ComponentInst app : apps) {
+          if (app.isHidden()) {
+            nbHiddenApps++;
+          } else {
+            appNotHidden = app.getId();
+          }
+        }
+        if (apps.size() == nbHiddenApps || (apps.size() -1 == nbHiddenApps && appNotHidden.equals(space.getFirstPageExtraParam()))) {
+          dto.setHomePageType(HomePages.APP.getValue());
+        } else {
+          dto.setHomePageType(HomePages.SILVERPEAS.getValue());
+        }
+      }
+    } else {
+      dto.setHomePageType(space.getFirstPageType());    }
+    dto.setHomePageParameter(space.getFirstPageExtraParam());
+
     return dto;
   }
 

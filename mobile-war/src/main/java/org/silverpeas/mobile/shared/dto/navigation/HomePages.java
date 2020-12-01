@@ -23,51 +23,16 @@
 
 package org.silverpeas.mobile.shared.dto.navigation;
 
-import java.io.Serializable;
+public enum HomePages {
+	SILVERPEAS(0),APP(1),PORTLET(2),URL(3);
 
+  private int value;
 
-public class SpaceDTO extends SilverpeasObjectDTO implements Serializable {
-
-  private static final long serialVersionUID = 1L;
-  boolean personal;
-  private int homePageType;
-  private String homePageParameter;
-
-  public int getHomePageType() {
-    return homePageType;
+  private HomePages(int value) {
+    this.value = value;
   }
 
-  public void setHomePageType(final int homePageType) {
-    this.homePageType = homePageType;
+  public int getValue() {
+    return value;
   }
-
-  public String getHomePageParameter() {
-    return homePageParameter;
-  }
-
-  public void setHomePageParameter(final String homePageParameter) {
-    this.homePageParameter = homePageParameter;
-  }
-
-  public boolean isPersonal() {
-    return personal;
-  }
-
-  public void setPersonal(boolean personal) {
-    this.personal = personal;
-  }
-
-  @Override
-  public int compareTo(SilverpeasObjectDTO o) {
-    if (o instanceof SpaceDTO) {
-      if (isPersonal()) {
-        return 100;
-      } else {
-        return new Integer(getOrderNum()).compareTo(((SpaceDTO) o).getOrderNum());
-      }
-    } else {
-      return super.compareTo(o);
-    }
-  }
-
 }

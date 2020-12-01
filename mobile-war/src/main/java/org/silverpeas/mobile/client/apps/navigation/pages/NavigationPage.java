@@ -27,6 +27,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -36,12 +37,15 @@ import org.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedE
 import org.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPagesEventHandler;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
+import org.silverpeas.mobile.client.common.ShortCutRouter;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.homepage.HomePageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.navigation.HomePages;
 import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class NavigationPage extends PageContent implements NavigationPagesEventHandler {
@@ -73,6 +77,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   @Override
   public void homePageLoaded(HomePageLoadedEvent event) {
     if (isVisible() && dataLoaded == false) {
+      // Silverpeas Home
       content.setData(event.getData());
       setPageTitle(event.getData().getSpaceName());
       dataLoaded = true;
@@ -100,14 +105,23 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   public void clickItem(ClickItemEvent event) {
     if (isVisible()) {
       if (event.getData() instanceof SpaceDTO) {
-        NavigationPage subPage = new NavigationPage();
-        if (((SpaceDTO) event.getData()).isPersonal()) {
-          subPage.setPageTitle(msg.personalSpace());
-        } else {
-          subPage.setPageTitle(event.getData().getLabel());
+        SpaceDTO space =(SpaceDTO) event.getData();
+        if (space.getHomePageType() == HomePages.SILVERPEAS.getValue()) {
+          NavigationPage subPage = new NavigationPage();
+          if (space.isPersonal()) {
+            subPage.setPageTitle(msg.personalSpace());
+          } else {
+            subPage.setPageTitle(event.getData().getLabel());
+          }
+          subPage.setRootSpaceId(event.getData().getId());
+          subPage.show();
+        } else if (space.getHomePageType() == HomePages.APP.getValue()) {
+          // App home
+          ShortCutRouter.route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null, null, null);
+        } else if (space.getHomePageType() == HomePages.URL.getValue()) {
+          // Url App
+          LinksManager.processLink(space.getHomePageParameter());
         }
-        subPage.setRootSpaceId(event.getData().getId());
-        subPage.show();
       } else {
         EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
       }
