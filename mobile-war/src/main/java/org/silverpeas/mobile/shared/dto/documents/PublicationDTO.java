@@ -36,6 +36,7 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   private String description;
   private String version;
   private String creator;
+  private String creationDate;
   private String updater;
   private String updateDate;
   private int commentsNumber = 0;
@@ -115,5 +116,13 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 
   public void setLinkedPublications(final List<PublicationDTO> linkedPublications) {
     this.linkedPublications = linkedPublications;
+  }
+
+  public String getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(final String creationDate) {
+    this.creationDate = creationDate;
   }
 }

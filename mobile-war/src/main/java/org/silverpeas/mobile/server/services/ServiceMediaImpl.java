@@ -385,6 +385,10 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     video.setId(media.getId());
     video.setMimeType(media.getType().getMediaWebUriPart());
     video.setInstance(media.getInstanceId());
+
+    video.setCreator(media.getCreatorName());
+    video.setCreationDate(sdf.format(media.getCreationDate()));
+
     if (media.getLastUpdater() != null) {
       video.setUpdater(media.getLastUpdaterName());
     } else {
@@ -453,6 +457,10 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     video.setDownload(media.getVideo().isDownloadAuthorized());
     video.setSize(media.getVideo().getFileSize());
     video.setDuration(durationFormat.format(duration));
+
+    video.setCreator(media.getCreatorName());
+    video.setCreationDate(sdf.format(media.getCreationDate()));
+
     if (media.getLastUpdater() != null) {
       video.setUpdater(media.getLastUpdaterName());
     } else {
@@ -521,6 +529,10 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     sound.setDownload(media.getSound().isDownloadAuthorized());
     sound.setSize(media.getSound().getFileSize());
     sound.setDuration(durationFormat.format(duration));
+
+    sound.setCreator(media.getCreatorName());
+    sound.setCreationDate(sdf.format(media.getCreationDate()));
+
     if (media.getLastUpdater() != null) {
       sound.setUpdater(media.getLastUpdaterName());
     } else {
@@ -553,6 +565,9 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     picture.setMimeType(photoDetail.getFileMimeType().getMimeType());
     picture.setInstance(photoDetail.getInstanceId());
 
+
+    picture.setCreator(photoDetail.getCreatorName());
+    picture.setCreationDate(sdf.format(photoDetail.getCreationDate()));
 
     if (photoDetail.getLastUpdater() != null) {
       picture.setUpdater(photoDetail.getLastUpdaterName());

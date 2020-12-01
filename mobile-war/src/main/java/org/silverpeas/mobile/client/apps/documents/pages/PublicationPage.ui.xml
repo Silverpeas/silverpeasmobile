@@ -41,6 +41,7 @@
     </div>
     <components:UnorderedList ui:field="attachments"/>
     <components:UnorderedList ui:field="linkedPublications"/>
+    <p ui:field="creator" class="lastUpdate"></p>
     <p ui:field="lastUpdate" class="lastUpdate"></p>
   </g:HTMLPanel>
 </ui:UiBinder>

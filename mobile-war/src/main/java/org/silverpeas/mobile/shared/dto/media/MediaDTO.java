@@ -35,6 +35,8 @@ public class MediaDTO extends BaseDTO implements Serializable {
   private String name;
   private String updateDate;
   private String updater;
+  private String creator;
+  private String creationDate;
   private int commentsNumber;
   private String instance;
   private String mimeType;
@@ -106,5 +108,21 @@ public class MediaDTO extends BaseDTO implements Serializable {
 
   public long getSize() {
     return size;
+  }
+
+  public String getCreator() {
+    return creator;
+  }
+
+  public void setCreator(final String creator) {
+    this.creator = creator;
+  }
+
+  public String getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(final String creationDate) {
+    this.creationDate = creationDate;
   }
 }

@@ -45,7 +45,7 @@
           </g:Anchor>
         </li>
       </ul>
-
+      <p ui:field="creator" class="lastUpdate"></p>
       <p class="lastUpdate" ui:field="lastUpdate"></p>
   </g:HTMLPanel>
 </ui:UiBinder>

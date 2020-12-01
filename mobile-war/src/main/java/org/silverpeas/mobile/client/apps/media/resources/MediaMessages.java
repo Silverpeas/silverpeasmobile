@@ -28,6 +28,7 @@ import com.google.gwt.i18n.client.Messages;
 public interface MediaMessages extends Messages {
   String title();
   String lastUpdate(String updateDate, String updater);
+  String creation(String creationDate, String creator);
   String sizeK(String size);
   String sizeM(String size);
   String dimensions(String l, String h);

@@ -451,11 +451,12 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       PublicationDTO dto = new PublicationDTO();
       dto.setId(pub.getId());
       dto.setName(pub.getName());
-      dto.setCreator(pub.getCreator().getDisplayedName() + " " + sdf.format(pub.getCreationDate()));
+      dto.setCreator(pub.getCreator().getDisplayedName());
       dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName());
       dto.setVersion(pub.getVersion());
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
+      dto.setCreationDate(sdf.format(pub.getCreationDate()));
 
       if (content.getType().equals("News")) {
         dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(content.getType(), new PublicationPK(content.getContributionId())));

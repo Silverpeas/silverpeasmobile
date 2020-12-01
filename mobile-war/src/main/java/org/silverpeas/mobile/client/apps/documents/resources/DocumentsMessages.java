@@ -36,4 +36,6 @@ public interface DocumentsMessages extends Messages {
 
   String content();
 
+  String creation(String creationDate, String creator);
+
 }

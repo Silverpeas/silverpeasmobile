@@ -73,7 +73,7 @@ public class VideoStreamingPage extends PageContent
 
   @UiField HeadingElement mediaTitle;
   @UiField Anchor mediaFullSize, download;
-  @UiField ParagraphElement lastUpdate;
+  @UiField ParagraphElement lastUpdate, creator;
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement mediaType;
   @UiField
@@ -119,6 +119,7 @@ public class VideoStreamingPage extends PageContent
       mediaTitle.setInnerHTML(video.getTitle());
       mediaFileName.setInnerHTML(video.getName());
 
+      creator.setInnerHTML(msg.creation(video.getCreationDate(), video.getCreator()));
       lastUpdate.setInnerHTML(msg.lastUpdate(video.getUpdateDate(), video.getUpdater()));
 
       if (event.isCommentable()) {

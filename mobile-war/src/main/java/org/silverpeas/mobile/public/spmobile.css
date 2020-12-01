@@ -955,9 +955,17 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding: 1em;
 }
 
-.publiDesc, .lastUpdate {
+.publiDesc {
   color: #848484;
   padding: 1em;
+  margin: 0;
+  font-size: 10pt;
+}
+
+.lastUpdate {
+  color: #848484;
+  padding-top: 1em;
+  padding-left: 1em;
   margin: 0;
   font-size: 10pt;
 }

@@ -77,7 +77,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiField HeadingElement mediaTitle;
   @UiField Anchor mediaFullSize, download;
-  @UiField ParagraphElement lastUpdate;
+  @UiField ParagraphElement lastUpdate, creator;
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement preview, mediaType;
   @UiField
@@ -155,6 +155,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
 
       dimensions.setInnerHTML(msg.dimensions(String.valueOf(photo.getSizeL()), String.valueOf(photo.getSizeH())));
 
+      creator.setInnerHTML(msg.creation(photo.getCreationDate(), photo.getCreator()));
       lastUpdate.setInnerHTML(msg.lastUpdate(photo.getUpdateDate(), photo.getUpdater()));
 
       if (event.isCommentable()) {

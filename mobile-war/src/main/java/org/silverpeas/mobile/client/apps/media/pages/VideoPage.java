@@ -82,7 +82,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiField HeadingElement mediaTitle;
   @UiField Anchor mediaFullSize, download;
-  @UiField ParagraphElement lastUpdate;
+  @UiField ParagraphElement lastUpdate, creator;
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement mediaType;
   @UiField CommentsButton comments;
@@ -157,6 +157,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
 
       dimensions.setInnerHTML(String.valueOf(video.getDuration()));
 
+      creator.setInnerHTML(msg.creation(video.getCreationDate(), video.getCreator()));
       lastUpdate.setInnerHTML(msg.lastUpdate(video.getUpdateDate(), video.getUpdater()));
 
       if (event.isCommentable()) {

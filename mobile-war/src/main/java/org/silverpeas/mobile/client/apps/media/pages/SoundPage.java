@@ -79,7 +79,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiField HeadingElement mediaTitle;
   @UiField Anchor mediaFullSize, download;
-  @UiField ParagraphElement lastUpdate;
+  @UiField ParagraphElement lastUpdate, creator;
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement mediaPreview, mediaType;
   @UiField AudioElement player;
@@ -138,6 +138,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
         weight.setInnerHTML(msg.sizeM(size));
       }
       dimensions.setInnerHTML(String.valueOf(sound.getDuration()));
+      creator.setInnerHTML(msg.creation(sound.getCreationDate(), sound.getCreator()));
       lastUpdate.setInnerHTML(msg.lastUpdate(sound.getUpdateDate(), sound.getUpdater()));
 
       if (event.isCommentable()) {
