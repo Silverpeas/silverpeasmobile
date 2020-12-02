@@ -70,6 +70,11 @@ public class GedItem extends Composite {
       dataPublication = (PublicationDTO) data;
       link.setHTML(dataPublication.getName());
       setStyleName("publication");
+      if (dataPublication.getVignette() != null) {
+        String style = "background-image:url("+dataPublication.getVignette();
+        style += ");background-position:5px 5px;background-size:20px 20px;";
+        link.getElement().setAttribute("style", style);
+      }
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
   }

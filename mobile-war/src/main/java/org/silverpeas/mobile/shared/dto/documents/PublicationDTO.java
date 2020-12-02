@@ -43,6 +43,7 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   private String instanceId;
   private boolean content;
   private List<PublicationDTO> linkedPublications;
+  private String vignette;
 
   public String getName() {
     return name;
@@ -124,5 +125,13 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 
   public void setCreationDate(final String creationDate) {
     this.creationDate = creationDate;
+  }
+
+  public String getVignette() {
+    return vignette;
+  }
+
+  public void setVignette(final String vignette) {
+    this.vignette = vignette;
   }
 }

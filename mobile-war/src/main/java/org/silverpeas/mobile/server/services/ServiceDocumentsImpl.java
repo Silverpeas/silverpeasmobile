@@ -46,6 +46,7 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationLink;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
+import org.silverpeas.core.io.media.image.thumbnail.ThumbnailSettings;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
@@ -55,8 +56,8 @@ import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.file.FileServerUtils;
 import org.silverpeas.core.util.logging.SilverLogger;
-import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
@@ -384,6 +385,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         if (isManager(profiles)) visible = true;
         PublicationDTO dto = new PublicationDTO();
         dto.setId(publicationDetail.getId());
+        dto.setVignette(getVignetteUrl(publicationDetail));
+
         if (publicationDetail.isDraft()) {
           if (publicationDetail.getUpdaterId().equals(getUserInSession().getId())) {
             dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.draft") + ")");
@@ -490,6 +493,40 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       SilverLogger.getLogger(this).error("ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
       throw new DocumentsException(e.getMessage());
     }
+  }
+
+  private String getVignetteUrl(PublicationDetail pub) {
+    SettingBundle publicationSettings =
+        ResourceLocator.getSettingBundle("org.silverpeas.publication.publicationSettings");
+    SettingBundle kmeliaSettings =
+        ResourceLocator.getSettingBundle("org.silverpeas.kmelia.settings.kmeliaSettings");
+
+    int width = kmeliaSettings.getInteger("vignetteWidth", -1);
+    int height = kmeliaSettings.getInteger("vignetteHeight", -1);
+    ThumbnailSettings thumbnailSettings = ThumbnailSettings.getInstance(pub.getComponentInstanceId(), width, height);
+
+    String vignetteUrl;
+    String w = String.valueOf(thumbnailSettings.getWidth());
+    String h = String.valueOf(thumbnailSettings.getHeight());
+
+    if (pub.getImage() == null) return null;
+
+    if (pub.getImage().startsWith("/")) {
+      vignetteUrl = pub.getImage();
+    } else {
+      vignetteUrl = FileServerUtils.getUrl(pub.getPK().
+              getComponentName(), "vignette", pub.getImage(), pub.getImageMimeType(),
+          publicationSettings.getString("imagesSubDirectory"));
+      if (StringUtil.isDefined(pub.getThumbnail().getCropFileName())) {
+        // thumbnail is cropped, no resize
+        w = null;
+        h = null;
+      } else {
+        vignetteUrl += "&Size=" + StringUtil.defaultStringIfNotDefined(w) + "x" + StringUtil.defaultStringIfNotDefined(h);
+      }
+    }
+
+    return vignetteUrl;
   }
 
   @Override
