@@ -31,6 +31,7 @@ import org.silverpeas.components.kmelia.model.PubliImportanceComparatorDesc;
 import org.silverpeas.components.kmelia.model.PubliRankComparatorAsc;
 import org.silverpeas.components.kmelia.model.PubliUpdateDateComparatorAsc;
 import org.silverpeas.components.kmelia.service.KmeliaService;
+import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.admin.ProfiledObjectId;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
@@ -60,6 +61,7 @@ import org.silverpeas.core.util.file.FileServerUtils;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
@@ -450,7 +452,6 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
       PublicationDetail pub = getPubBm().getDetail(new PublicationPK(content.getId()));
-      KmeliaPublication kPub = KmeliaService.get().getPublication(new PublicationPK(content.getId()), null);
 
       PublicationDTO dto = new PublicationDTO();
       dto.setId(pub.getId());
@@ -461,7 +462,16 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
-      dto.setViewsNumber(kPub.getNbAccess());
+
+      if (content.getType().equals(ContentsTypes.Publication.toString())) {
+        KmeliaPublication kPub =
+            KmeliaService.get().getPublication(new PublicationPK(content.getId()), null);
+        dto.setViewsNumber(kPub.getNbAccess());
+      } else if (content.getType().equals(ContentsTypes.News.toString())) {
+        dto.setViewsNumber(QuickInfoService.get().getNews(content.getContributionId()).getNbAccess());
+      } else {
+        dto.setViewsNumber(0);
+      }
 
       if (content.getType().equals("News")) {
         dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(content.getType(), new PublicationPK(content.getContributionId())));
