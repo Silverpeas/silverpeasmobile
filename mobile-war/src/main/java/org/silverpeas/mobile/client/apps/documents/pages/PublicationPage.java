@@ -87,7 +87,7 @@ public class PublicationPage extends PageContent
   @UiField
   UnorderedList attachments, linkedPublications;
   @UiField
-  ParagraphElement desc, lastUpdate, creator;
+  ParagraphElement desc, lastUpdate, creator, nbViews;
   @UiField
   CommentsButton comments;
   @UiField
@@ -167,6 +167,14 @@ public class PublicationPage extends PageContent
       EventBus.getInstance().fireEvent(new DocumentsLoadAttachmentsEvent(publication.getId()));
       title.setInnerHTML(publication.getName());
       desc.setInnerHTML(publication.getDescription());
+
+      if (publication.getViewsNumber() == 0) {
+        nbViews.setInnerHTML(msg.noview());
+      } else if (publication.getViewsNumber() == 1) {
+        nbViews.setInnerHTML(msg.view());
+      } else {
+        nbViews.setInnerHTML(msg.views(publication.getViewsNumber()));
+      }
 
       creator.setInnerHTML(msg.creation(publication.getCreationDate(), publication.getCreator()));
 

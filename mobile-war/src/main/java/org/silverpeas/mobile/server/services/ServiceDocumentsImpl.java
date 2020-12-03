@@ -450,6 +450,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
       PublicationDetail pub = getPubBm().getDetail(new PublicationPK(content.getId()));
+      KmeliaPublication kPub = KmeliaService.get().getPublication(new PublicationPK(content.getId()), null);
 
       PublicationDTO dto = new PublicationDTO();
       dto.setId(pub.getId());
@@ -460,6 +461,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
+      dto.setViewsNumber(kPub.getNbAccess());
 
       if (content.getType().equals("News")) {
         dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(content.getType(), new PublicationPK(content.getContributionId())));

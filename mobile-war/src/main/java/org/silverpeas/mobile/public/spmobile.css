@@ -970,6 +970,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-size: 10pt;
 }
 
+.nbViews {
+  color: #848484;
+  padding-top: 1em;
+  padding-left: 1em;
+  margin: 0;
+  font-size: 10pt;
+  font-style: italic;
+}
+
 .publiDesc {
   padding-top: 0em;
 

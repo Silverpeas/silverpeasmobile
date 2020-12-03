@@ -43,5 +43,6 @@
     <components:UnorderedList ui:field="linkedPublications"/>
     <p ui:field="creator" class="lastUpdate"></p>
     <p ui:field="lastUpdate" class="lastUpdate"></p>
+    <p ui:field="nbViews" class="nbViews"></p>
   </g:HTMLPanel>
 </ui:UiBinder>

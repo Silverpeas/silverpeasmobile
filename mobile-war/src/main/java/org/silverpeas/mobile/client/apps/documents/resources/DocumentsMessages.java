@@ -38,4 +38,7 @@ public interface DocumentsMessages extends Messages {
 
   String creation(String creationDate, String creator);
 
+  String views(int number);
+  String view();
+  String noview();
 }
