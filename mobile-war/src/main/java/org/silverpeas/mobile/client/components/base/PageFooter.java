@@ -36,6 +36,7 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.profile.ProfileApp;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
@@ -60,6 +61,21 @@ public class PageFooter extends Composite {
 
     footer.getElement().setId("navigation-footer");
     ressources.css().ensureInjected();
+
+    addCustomButtons();
+  }
+
+  private void addCustomButtons() {
+    int i = 1;
+    String url = ResourcesManager.getParam("customButtonUrl" + i);
+    while (!url.isEmpty()) {
+      Anchor a = new Anchor();
+      a.setHref(url);
+      a.setStylePrimaryName("btn-custom" + i);
+      footer.add(a);
+      i++;
+      url = ResourcesManager.getParam("customButtonUrl" + i);
+    }
   }
 
   @UiHandler("browse")
