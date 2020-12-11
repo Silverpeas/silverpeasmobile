@@ -40,22 +40,28 @@ import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
+import org.silverpeas.core.notification.NotificationException;
 import org.silverpeas.core.notification.user.client.GroupRecipient;
 import org.silverpeas.core.notification.user.client.NotificationMetaData;
 import org.silverpeas.core.notification.user.client.NotificationSender;
 import org.silverpeas.core.notification.user.client.UserRecipient;
+import org.silverpeas.core.notification.user.client.model.SentNotificationDetail;
+import org.silverpeas.core.notification.user.client.model.SentNotificationInterface;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SilvermailCriteria;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.NotificationsException;
 import org.silverpeas.mobile.shared.services.ServiceNotifications;
@@ -77,6 +83,30 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
 
   private static final long serialVersionUID = 1L;
   private OrganizationController organizationController = OrganizationController.get();
+
+  @Override
+  public List<NotificationSendedDTO> getUserSendedNotifications() throws NotificationsException, AuthenticationException {
+
+    List<NotificationSendedDTO> notifs = new ArrayList<>();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    try {
+      List<SentNotificationDetail> notifications = SentNotificationInterface.get().getAllNotifByUser(getUserInSession().getId());
+      for (SentNotificationDetail notif : notifications) {
+        NotificationSendedDTO dto = new NotificationSendedDTO();
+        dto.setSource(notif.getSource());
+        dto.setDate(sdf.format(notif.getNotifDate()));
+        dto.setLink(notif.getLink());
+        dto.setTitle(notif.getTitle());
+        dto.setIdNotif(notif.getNotifId());
+        notifs.add(dto);
+      }
+    } catch (NotificationException e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+
+    return notifs;
+  }
+
 
   @Override
   public List<NotificationReceivedDTO> getUserNotifications() throws NotificationsException, AuthenticationException {
@@ -256,21 +286,31 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
   }
 
   @Override
-  public void markAsRead(List<NotificationReceivedDTO> selection) throws NotificationsException, AuthenticationException {
+  public void markAsRead(List<NotificationBoxDTO> selection) throws NotificationsException, AuthenticationException {
     SILVERMAILPersistence.markMessagesAsRead(getUserInSession().getId(), getSelectionIds(selection));
   }
 
-  private List<String> getSelectionIds(List<NotificationReceivedDTO> selection) {
+  private List<String> getSelectionIds(List<NotificationBoxDTO> selection) {
     ArrayList<String> ids = new ArrayList<>();
-    for (NotificationReceivedDTO dto : selection) {
+    for (NotificationBoxDTO dto : selection) {
       ids.add(String.valueOf(dto.getIdNotif()));
     }
     return ids;
   }
 
   @Override
-  public void delete(List<NotificationReceivedDTO> selection) throws NotificationsException, AuthenticationException {
-    SILVERMAILPersistence.deleteMessages(getUserInSession().getId(), getSelectionIds(selection));
+  public void delete(List<NotificationBoxDTO> selection) throws NotificationsException, AuthenticationException {
+    if (selection.get(0) instanceof NotificationSendedDTO) {
+      for (NotificationBoxDTO dto : selection) {
+        try {
+          SentNotificationInterface.get().deleteNotif((int)dto.getIdNotif(), getUserInSession().getId());
+        } catch (NotificationException e) {
+          SilverLogger.getLogger(this).error(e);
+        }
+      }
+    } else {
+      SILVERMAILPersistence.deleteMessages(getUserInSession().getId(), getSelectionIds(selection));
+    }
   }
 
   @Override

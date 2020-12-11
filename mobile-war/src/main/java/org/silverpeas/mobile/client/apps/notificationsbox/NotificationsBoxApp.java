@@ -35,7 +35,9 @@ import org.silverpeas.mobile.client.apps.notificationsbox.events.app.MarkAsReadN
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsBoxAppEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsSendedLoadEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsSendedLoadedEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBoxPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
@@ -46,6 +48,7 @@ import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +131,11 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
       @Override
       public void onSuccess(final Void result) {
         super.onSuccess(result);
-        loadNotifications(new NotificationsLoadEvent());
+        if (event.getSelection().get(0) instanceof NotificationSendedDTO) {
+          loadNotificationsSended(new NotificationsSendedLoadEvent());
+        } else {
+          loadNotifications(new NotificationsLoadEvent());
+        }
       }
     };
     action.attempt();
@@ -146,6 +153,37 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
       public void onSuccess(final Void result) {
         super.onSuccess(result);
         loadNotifications(new NotificationsLoadEvent());
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void loadNotificationsSended(
+      final NotificationsSendedLoadEvent notificationsSendedLoadEvent) {
+    final String key = "notificationsSendedBox";
+    Command offlineAction = new Command() {
+      @Override
+      public void execute() {
+        List<NotificationSendedDTO> result = LocalStorageHelper.load(key, List.class);
+        if (result == null) {
+          result = new ArrayList<NotificationSendedDTO>();
+        }
+        EventBus.getInstance().fireEvent(new NotificationsSendedLoadedEvent(result));
+      }
+    };
+
+    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<NotificationSendedDTO>>(offlineAction) {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNotifications().getUserSendedNotifications(this);
+      }
+
+      @Override
+      public void onSuccess(List<NotificationSendedDTO> result) {
+        super.onSuccess(result);
+        LocalStorageHelper.store(key, List.class, result);
+        EventBus.getInstance().fireEvent(new NotificationsSendedLoadedEvent(result));
       }
     };
     action.attempt();

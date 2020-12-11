@@ -24,13 +24,18 @@
 package org.silverpeas.mobile.client.apps.notificationsbox.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsSendedLoadEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.AbstractNotificationsBoxPagesEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsBoxPagesEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsSendedLoadedEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.DeleteButton;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.MarkAsReadButton;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.NotificationItem;
@@ -39,7 +44,9 @@ import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +58,9 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
   @UiField(provided = true) protected ApplicationMessages msg = null;
   @UiField
   UnorderedList notifications;
+
+  @UiField
+  Anchor notificationReceived, notificationSended;
 
   @UiField
   ActionsMenu actionsMenu;
@@ -90,8 +100,20 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
     }
   }
 
-  public List<NotificationReceivedDTO> getSelectedNotification() {
-    List<NotificationReceivedDTO> selection = new ArrayList<>();
+  @Override
+  public void onNotificationsSendedLoaded(
+      final NotificationsSendedLoadedEvent event) {
+    notifications.clear();
+    List<NotificationSendedDTO> notifs = event.getNotifications();
+    for (NotificationSendedDTO notif : notifs) {
+      NotificationItem item = new NotificationItem();
+      item.setData(notif);
+      notifications.add(item);
+    }
+  }
+
+  public List<NotificationBoxDTO> getSelectedNotification() {
+    List<NotificationBoxDTO> selection = new ArrayList<>();
     for (int i = 0; i < notifications.getCount(); i++) {
       NotificationItem item = (NotificationItem) notifications.getWidget(i);
       if (item.isSelected()) {
@@ -99,5 +121,23 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
       }
     }
     return selection;
+  }
+
+  @UiHandler("notificationSended")
+  protected void showSendedNotifications(ClickEvent event) {
+    notificationReceived.removeStyleName("ui-btn-active");
+    notificationSended.addStyleName("ui-btn-active");
+
+    notRead.setVisible(false);
+
+    EventBus.getInstance().fireEvent(new NotificationsSendedLoadEvent());
+  }
+
+  @UiHandler("notificationReceived")
+  protected void showReceivedNotifications(ClickEvent event) {
+    notificationSended.removeStyleName("ui-btn-active");
+    notificationReceived.addStyleName("ui-btn-active");
+    notRead.setVisible(true);
+    EventBus.getInstance().fireEvent(new NotificationsLoadEvent());
   }
 }

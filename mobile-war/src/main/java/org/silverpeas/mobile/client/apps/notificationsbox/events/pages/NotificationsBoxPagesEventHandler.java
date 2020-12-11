@@ -27,4 +27,6 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface NotificationsBoxPagesEventHandler extends EventHandler{
 	void onNotificationsLoaded(NotificationsLoadedEvent event);
+
+  void onNotificationsSendedLoaded(NotificationsSendedLoadedEvent notificationsSendedLoadedEvent);
 }

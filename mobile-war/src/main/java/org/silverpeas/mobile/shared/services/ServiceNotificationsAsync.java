@@ -25,10 +25,10 @@ package org.silverpeas.mobile.shared.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.NotificationsException;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
 import java.util.List;
 
@@ -42,7 +42,9 @@ public interface ServiceNotificationsAsync {
 
   void markAsReaden(long id, final AsyncCallback<Void> async);
 
-  void delete(List<NotificationReceivedDTO> selection, final AsyncCallback<Void> async);
+  void delete(List<NotificationBoxDTO> selection, final AsyncCallback<Void> async);
 
-  void markAsRead(List<NotificationReceivedDTO> selection, final AsyncCallback<Void> async);
+  void markAsRead(List<NotificationBoxDTO> selection, final AsyncCallback<Void> async);
+
+  void getUserSendedNotifications(final AsyncCallback<List<NotificationSendedDTO>> async);
 }

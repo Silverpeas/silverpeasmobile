@@ -35,7 +35,7 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBox
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 
 import java.util.List;
 
@@ -67,11 +67,11 @@ public class DeleteButton extends ActionItem {
 
   @UiHandler("delete")
   void delete(ClickEvent event) {
-    List<NotificationReceivedDTO> selection = parentPage.getSelectedNotification();
+    List<NotificationBoxDTO> selection = parentPage.getSelectedNotification();
 
     DeleteNotificationsEvent deleteEvent = new DeleteNotificationsEvent();
     deleteEvent.setSelection(selection);
-    EventBus.getInstance().fireEvent(deleteEvent);
+    if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
 
     // hide menu
     getElement().getParentElement().removeAttribute("style");

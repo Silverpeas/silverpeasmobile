@@ -24,13 +24,13 @@
 package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
 
 
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 
 import java.util.List;
 
 public class DeleteNotificationsEvent extends AbstractNotificationsBoxAppEvent {
 
-  private List<NotificationReceivedDTO> selection;
+  private List<NotificationBoxDTO> selection;
 
   public DeleteNotificationsEvent(){
     super();
@@ -41,11 +41,11 @@ public class DeleteNotificationsEvent extends AbstractNotificationsBoxAppEvent {
     handler.deleteNotifications(this);
   }
 
-  public List<NotificationReceivedDTO> getSelection() {
+  public List<NotificationBoxDTO> getSelection() {
     return selection;
   }
 
-  public void setSelection(final List<NotificationReceivedDTO> selection) {
+  public void setSelection(final List<NotificationBoxDTO> selection) {
     this.selection = selection;
   }
 }

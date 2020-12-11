@@ -21,31 +21,56 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
+package org.silverpeas.mobile.shared.dto.notifications;
 
+import org.silverpeas.mobile.shared.dto.BaseDTO;
 
-import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
+import java.io.Serializable;
 
-import java.util.List;
+/**
+ * @author: svu
+ */
+public class NotificationSendedDTO extends NotificationBoxDTO implements Serializable {
 
-public class MarkAsReadNotificationsEvent extends AbstractNotificationsBoxAppEvent {
+  private String date;
+  private String link;
+  private String title;
+  private String source;
 
-  private List<NotificationBoxDTO> selection;
-
-  public MarkAsReadNotificationsEvent(){
+  public NotificationSendedDTO() {
     super();
   }
 
-  @Override
-  protected void dispatch(NotificationsBoxAppEventHandler handler) {
-    handler.markAsReadNotifications(this);
+  public String getDate() {
+    return date;
   }
 
-  public List<NotificationBoxDTO> getSelection() {
-    return selection;
+  public void setDate(final String date) {
+    this.date = date;
   }
 
-  public void setSelection(final List<NotificationBoxDTO> selection) {
-    this.selection = selection;
+  public String getLink() {
+    return link;
   }
+
+  public void setLink(final String link) {
+    this.link = link;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(final String title) {
+    this.title = title;
+  }
+
+  public String getSource() {
+    return source;
+  }
+
+  public void setSource(final String source) {
+    this.source = source;
+  }
+
 }

@@ -34,4 +34,6 @@ public interface NotificationsBoxAppEventHandler extends EventHandler {
   void deleteNotifications(DeleteNotificationsEvent deleteNotificationsEvent);
 
   void markAsReadNotifications(MarkAsReadNotificationsEvent notReadNotificationsEvent);
+
+  void loadNotificationsSended(NotificationsSendedLoadEvent notificationsSendedLoadEvent);
 }

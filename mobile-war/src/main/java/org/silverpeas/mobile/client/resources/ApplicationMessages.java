@@ -178,4 +178,11 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Masquer le mot de passe")
   String hidePwd();
+
+  @DefaultMessage("Reçues")
+  SafeHtml received();
+
+  @DefaultMessage("Envoyées")
+  SafeHtml sended();
+
 }

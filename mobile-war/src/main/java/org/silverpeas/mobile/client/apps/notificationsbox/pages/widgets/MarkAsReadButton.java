@@ -35,7 +35,7 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBox
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class MarkAsReadButton extends ActionItem {
 
   @UiHandler("read")
   void read(ClickEvent event) {
-    List<NotificationReceivedDTO> selection = parentPage.getSelectedNotification();
+    List<NotificationBoxDTO> selection = parentPage.getSelectedNotification();
 
     MarkAsReadNotificationsEvent notReadEvent = new MarkAsReadNotificationsEvent();
     notReadEvent.setSelection(selection);

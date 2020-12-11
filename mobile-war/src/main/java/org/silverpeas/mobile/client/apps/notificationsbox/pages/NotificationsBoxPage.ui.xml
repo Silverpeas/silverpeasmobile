@@ -31,6 +31,22 @@
 
   <g:HTMLPanel ui:field="container" styleName="content ui-body-a notificationBox">
     <base:ActionsMenu ui:field="actionsMenu"/>
+
+    <div class="ui-corner-all ui-controlgroup ui-controlgroup-horizontal">
+      <div class="ui-controlgroup-controls ">
+        <g:Anchor ui:field="notificationReceived" styleName="ui-btn ui-first-child ui-btn-active">
+          <span class="ui-btn-inner ui-corner-left">
+            <span class="ui-btn-text"><ui:safehtml from="{msg.received}"/></span>
+          </span>
+        </g:Anchor>
+        <g:Anchor ui:field="notificationSended" styleName="ui-btn ui-btn-up-c  ui-last-child">
+          <span class="ui-btn-inner ui-corner-right ui-controlgroup-last">
+            <span class="ui-btn-text"><ui:safehtml from="{msg.sended}"/></span>
+          </span>
+        </g:Anchor>
+      </div>
+    </div>
+
     <components:UnorderedList ui:field="notifications" stylePrimaryName="ui-listview ui-listview-inset ui-corner-all ui-shadow notifications"></components:UnorderedList>
   </g:HTMLPanel>
 </ui:UiBinder> 

@@ -30,9 +30,8 @@ import java.io.Serializable;
 /**
  * @author: svu
  */
-public class NotificationReceivedDTO extends BaseDTO implements Serializable {
+public class NotificationReceivedDTO extends NotificationBoxDTO implements Serializable {
 
-  private long idNotif;
   private String date;
   private String link;
   private String title;
@@ -92,11 +91,4 @@ public class NotificationReceivedDTO extends BaseDTO implements Serializable {
     this.readen = readen;
   }
 
-  public long getIdNotif() {
-    return idNotif;
-  }
-
-  public void setIdNotif(final long id) {
-    this.idNotif = id;
-  }
 }

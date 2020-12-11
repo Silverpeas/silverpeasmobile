@@ -21,31 +21,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
+package org.silverpeas.mobile.client.apps.notificationsbox.events.pages;
 
 
-import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
 import java.util.List;
 
-public class MarkAsReadNotificationsEvent extends AbstractNotificationsBoxAppEvent {
+public class NotificationsSendedLoadedEvent extends AbstractNotificationsBoxPagesEvent {
 
-  private List<NotificationBoxDTO> selection;
+  List<NotificationSendedDTO> notifications;
 
-  public MarkAsReadNotificationsEvent(){
+  public NotificationsSendedLoadedEvent(List<NotificationSendedDTO> notifications) {
     super();
+    this.notifications = notifications;
   }
 
   @Override
-  protected void dispatch(NotificationsBoxAppEventHandler handler) {
-    handler.markAsReadNotifications(this);
+  protected void dispatch(NotificationsBoxPagesEventHandler handler) {
+    handler.onNotificationsSendedLoaded(this);
   }
 
-  public List<NotificationBoxDTO> getSelection() {
-    return selection;
-  }
-
-  public void setSelection(final List<NotificationBoxDTO> selection) {
-    this.selection = selection;
+  public List<NotificationSendedDTO> getNotifications() {
+    return notifications;
   }
 }

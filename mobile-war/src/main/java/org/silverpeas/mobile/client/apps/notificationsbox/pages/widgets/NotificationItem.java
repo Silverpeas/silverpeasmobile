@@ -24,30 +24,23 @@
 package org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
-import org.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
-import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.shared.dto.TaskDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
 public class NotificationItem extends Composite implements ClickHandler {
 
@@ -63,14 +56,17 @@ public class NotificationItem extends Composite implements ClickHandler {
 
   @UiField(provided = true) protected NotificationsMessages msg = null;
 
-  private NotificationReceivedDTO data;
+  private NotificationBoxDTO data;
 
   @Override
   public void onClick(final ClickEvent clickEvent) {
-    //TODO : test
-    Window.Location.assign(data.getLink());
-    NotificationReadenEvent event = new NotificationReadenEvent(data);
-    EventBus.getInstance().fireEvent(event);
+    if (data instanceof NotificationSendedDTO) {
+      Window.Location.assign(((NotificationSendedDTO)data).getLink());
+    } else {
+      Window.Location.assign(((NotificationReceivedDTO)data).getLink());
+      NotificationReadenEvent event = new NotificationReadenEvent((NotificationReceivedDTO) data);
+      EventBus.getInstance().fireEvent(event);
+    }
   }
 
   interface ContactItemUiBinder extends UiBinder<Widget, NotificationItem> {
@@ -89,6 +85,13 @@ public class NotificationItem extends Composite implements ClickHandler {
     return select.getValue();
   }
 
+  public void setData(NotificationSendedDTO data) {
+    this.data = data;
+    date.setText(data.getDate());
+    source.setText(data.getSource());
+    title.setText(data.getTitle());
+  }
+
   public void setData(NotificationReceivedDTO data) {
     this.data = data;
     date.setText(data.getDate());
@@ -100,7 +103,7 @@ public class NotificationItem extends Composite implements ClickHandler {
     }
   }
 
-  public NotificationReceivedDTO getData() {
+  public NotificationBoxDTO getData() {
     return data;
   }
 }

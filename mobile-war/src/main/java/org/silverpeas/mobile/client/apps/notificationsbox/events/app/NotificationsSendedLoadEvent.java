@@ -24,28 +24,16 @@
 package org.silverpeas.mobile.client.apps.notificationsbox.events.app;
 
 
-import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 
-import java.util.List;
+public class NotificationsSendedLoadEvent extends AbstractNotificationsBoxAppEvent {
 
-public class MarkAsReadNotificationsEvent extends AbstractNotificationsBoxAppEvent {
-
-  private List<NotificationBoxDTO> selection;
-
-  public MarkAsReadNotificationsEvent(){
+  public NotificationsSendedLoadEvent(){
     super();
   }
 
   @Override
   protected void dispatch(NotificationsBoxAppEventHandler handler) {
-    handler.markAsReadNotifications(this);
+    handler.loadNotificationsSended(this);
   }
 
-  public List<NotificationBoxDTO> getSelection() {
-    return selection;
-  }
-
-  public void setSelection(final List<NotificationBoxDTO> selection) {
-    this.selection = selection;
-  }
 }
