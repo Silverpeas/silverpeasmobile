@@ -35,14 +35,14 @@
   <groupId>org.silverpeas.components</groupId>
   <artifactId>mobile</artifactId>
   <packaging>pom</packaging>
-  <version>6.1.1-SNAPSHOT</version>
+  <version>6.1.2-SNAPSHOT</version>
   <name>Silverpeas Mobile component</name>
 
   <properties>
-    <silverpeas.version>6.1.1-SNAPSHOT</silverpeas.version>
+    <silverpeas.version>6.1.2-SNAPSHOT</silverpeas.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-     <next.release>6.1.1</next.release>
+     <next.release>6.1.2</next.release>
   </properties>
 
   <repositories>
