@@ -143,7 +143,7 @@ public class ServiceNotificationsImpl extends AbstractAuthenticateService
 
       if (componentId.toLowerCase().startsWith("kmelia") && isRightsOnTopicsEnabled(componentId)) {
         TopicDetail topic = getKmeliaService()
-            .getPublicationFather(new PublicationPK(contentId, componentId), true,
+            .getBestTopicDetailOfPublicationForUser(new PublicationPK(contentId, componentId), true,
                 getUserInSession().getId());
         if (topic != null) {
           NodePK pk = topic.getNodePK();
