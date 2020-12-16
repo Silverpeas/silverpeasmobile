@@ -240,7 +240,11 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     SettingBundle settings = GraphicElementFactory.getLookSettings(look);
 
     HomePageDTO data = new HomePageDTO();
-    data.setId(spaceId);
+    if (spaceId == null) {
+      data.setId("root");
+    } else {
+      data.setId(spaceId);
+    }
     try {
       if (spaceId != null) {
         SpaceInst space = Administration.get().getSpaceInstById(spaceId);

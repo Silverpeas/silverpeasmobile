@@ -80,6 +80,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
       // Silverpeas Home
       content.setData(event.getData());
       setPageTitle(event.getData().getSpaceName());
+
       dataLoaded = true;
 
       actionsMenu.addAction(favorite);

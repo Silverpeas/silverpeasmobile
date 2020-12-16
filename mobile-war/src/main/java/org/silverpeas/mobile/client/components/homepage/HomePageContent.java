@@ -24,8 +24,6 @@
 package org.silverpeas.mobile.client.components.homepage;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -35,9 +33,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
+import org.silverpeas.mobile.client.apps.navigation.pages.widgets.HomePageItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.NavigationItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.NewsItem;
-import org.silverpeas.mobile.client.apps.navigation.pages.widgets.HomePageItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.ShortCutItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
@@ -107,6 +105,8 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
 
   public void setData(HomePageDTO data) {
     this.data = data;
+    getElement().setClassName("space-content");
+    getElement().setId(data.getId());
 
     news.clear();
     if (config.isNewsDisplay()) {
@@ -129,6 +129,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     for (SilverpeasObjectDTO space : spacesList) {
       NavigationItem item = new NavigationItem();
       item.setData(space);
+      item.getElement().setId(space.getId());
       spaces.add(item);
     }
 
