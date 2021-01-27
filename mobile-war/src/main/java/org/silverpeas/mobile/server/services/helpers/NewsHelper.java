@@ -176,7 +176,7 @@ public class NewsHelper {
     news.setId(n.getPublication().getId());
     news.setTitle(n.getPublication().getTitle());
     news.setDescription(n.getPublication().getDescription());
-    news.setUpdateDate(sdf.format(n.getPublication().getUpdateDate()));
+    news.setUpdateDate(sdf.format(n.getPublication().getLastUpdateDate()));
     news.setDraft(n.getPublication().isDraft());
     news.setVisible(n.getPublication().isVisible());
     news.setIdNews(n.getId());
@@ -204,7 +204,7 @@ public class NewsHelper {
     news.setId(pub.getId());
     news.setTitle(pub.getTitle());
     news.setDescription(pub.getDescription());
-    news.setUpdateDate(sdf.format(pub.getUpdateDate()));
+    news.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
     news.setDraft(pub.isDraft());
     news.setVisible(pub.isVisible());
     try {

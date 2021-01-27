@@ -107,7 +107,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       rootTopic.setRoot(true);
       if (rootNode.hasFather()) {
         rootTopic.setName(rootNode.getName());
-        rootTopic.setId(String.valueOf(rootNode.getId()));
+        rootTopic.setId(rootNode.getId());
       } else {
         ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
         rootTopic.setName(app.getLabel());
@@ -118,17 +118,17 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       for (NodeDetail nodeDetail : nodes) {
         if (rootTopicId.equals(nodeDetail.getFatherPK().getId())) {
           TopicDTO topic = new TopicDTO();
-          if (nodeDetail.getId() != 2) {
+          if (!nodeDetail.isUnclassified()) {
 
             if (isCurrentTopicAvailable(nodeDetail)) {
-              topic.setId(String.valueOf(nodeDetail.getId()));
+              topic.setId(nodeDetail.getId());
               topic.setName(nodeDetail.getName());
               int childrenNumber = nodeDetail.getChildrenNumber();
 
               // count publications
               Collection<NodePK> pks = getAllSubNodePKs(nodeDetail.getNodePK());
               List<String> ids = new ArrayList<String>();
-              ids.add(String.valueOf(nodeDetail.getId()));
+              ids.add(nodeDetail.getId());
               if (isRightsOnTopicsEnabled(instanceId)) {
                 for (NodePK onePk : pks) {
                   NodeDetail oneNode = getNodeBm().getDetail(onePk);
@@ -172,7 +172,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
 
               topic.setTerminal(childrenNumber == 0);
-              if (nodeDetail.getId() ==1) {
+              if (nodeDetail.isBin()) {
                 trash = topic;
               } else {
                 topicsList.add(topic);
@@ -460,7 +460,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName());
       dto.setVersion(pub.getVersion());
       dto.setDescription(pub.getDescription());
-      dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
+      dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
 
       if (content.getType().equals(ContentsTypes.Publication.toString())) {
@@ -478,9 +478,11 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       }
 
       if (content.getType().equals("News")) {
-        dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(content.getType(), new PublicationPK(content.getContributionId())));
+        final ResourceReference ref = new ResourceReference(new PublicationPK(content.getContributionId()));
+        dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(content.getType(), ref));
       } else {
-        dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(content.getType(), new PublicationPK(content.getId())));
+        final ResourceReference ref = new ResourceReference(new PublicationPK(content.getId()));
+        dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(content.getType(), ref));
       }
       dto.setInstanceId(pub.getInstanceId());
       String wysiwyg = pub.getContent().getRenderer().renderView();
@@ -496,7 +498,7 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
         PublicationDTO linkDto = new PublicationDTO();
         linkDto.setId(link.getId());
         linkDto.setName(pubLinked.getName());
-        linkDto.setUpdateDate(sdf.format(pubLinked.getUpdateDate()));
+        linkDto.setUpdateDate(sdf.format(pubLinked.getLastUpdateDate()));
         linkedPub.add(linkDto);
       }
       dto.setLinkedPublications(linkedPub);

@@ -171,7 +171,9 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
       dto.setCategory(data.getField(getSearchField1(classifiedDetail.getComponentInstanceId(), "searchFields1")).getValue());
       dto.setType(data.getField(getSearchField2(classifiedDetail.getComponentInstanceId(), "searchFields2")).getValue());
     }
-    dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(ClassifiedDetail.getResourceType(), new PublicationPK(classifiedDetail.getId())));
+    final ResourceReference ref = new ResourceReference(
+        new PublicationPK(classifiedDetail.getId()));
+    dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(ClassifiedDetail.getResourceType(), ref));
 
     return dto;
   }

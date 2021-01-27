@@ -104,7 +104,7 @@ public class ServiceBlog extends RESTWebService {
     dto.setDescription(post.getDescription());
     if (post.getCategory() != null) {
       dto.setCategoryName(post.getCategory().getName());
-      dto.setCategoryId(String.valueOf(post.getCategory().getId()));
+      dto.setCategoryId(post.getCategory().getId());
     } else {
       dto.setCategoryId("");
       dto.setCategoryName("");
