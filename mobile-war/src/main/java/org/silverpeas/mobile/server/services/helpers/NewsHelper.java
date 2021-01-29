@@ -57,6 +57,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.MissingResourceException;
 
@@ -78,7 +79,7 @@ public class NewsHelper {
     return instance;
   }
 
-  public List<PublicationDetail> getLastNews(String userId, String spaceId) throws Exception {
+  public List<News> getLastNews(String userId, String spaceId) throws Exception {
     if(spaceId != null) {
       List<String> appIds = new ArrayList<String>();
       String[] cIds = organizationController.getAvailCompoIds(spaceId, userId);
@@ -87,19 +88,12 @@ public class NewsHelper {
           appIds.add(id);
         }
       }
-
-      List<PublicationDetail> news = new ArrayList<PublicationDetail>();
+      QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
+      List<News> news = new ArrayList<>();
       for (String appId : appIds) {
-        Collection<PublicationDetail> someNews =
-            PublicationService.get().getOrphanPublications(appId);
-        for (PublicationDetail aNews : someNews) {
-          if (isVisibleNews(aNews)) {
-            news.add(aNews);
-          }
-        }
+        news.addAll(service.getVisibleNews(appId));
       }
-
-      Collections.sort(news, PublicationUpdateDateComparator.comparator);
+      Collections.sort(news, (o1, o2) -> o1.getUpdateDate().compareTo(o2.getUpdateDate()));
       return news;
     } else {
       // News on main page
@@ -109,13 +103,13 @@ public class NewsHelper {
         newsSource = settings.getString("home.news");
       } catch (MissingResourceException e) {}
       if (newsSource != null && newsSource.isEmpty() == false) {
-          if (newsSource.trim().startsWith("quickinfo")) {
-            return getNewsByComponentId(newsSource, false, userId);
-          } else if (newsSource.trim().equals("*")) {
-            return getAllNews(userId);
-          } else {
-            return getDelegatedNews(userId);
-          }
+        if (newsSource.trim().startsWith("quickinfo")) {
+          return getNewsByComponentId(newsSource, false, userId);
+        } else if (newsSource.trim().equals("*")) {
+          return getAllNews(userId);
+        } else {
+          return getDelegatedNews(userId);
+        }
       }
       return null;
     }
@@ -125,16 +119,15 @@ public class NewsHelper {
     return news.isValid() && news.isVisible();
   }
 
-  private List<PublicationDetail> getDelegatedNews(String userId) throws Exception {
-    List<PublicationDetail> news = new ArrayList<PublicationDetail>();
+  private List<News> getDelegatedNews(String userId) throws Exception {
+    List<News> news = new ArrayList();
     List<DelegatedNews> delegatedNews = DelegatedNewsServiceProvider.getDelegatedNewsService().getAllValidDelegatedNews();
 
     for (DelegatedNews delegated : delegatedNews) {
       PublicationDetail pub = delegated.getPublicationDetail();
       if (pub.canBeAccessedBy(Administration.get().getUserDetail(userId))) {
-        News aNews = new News(pub);
-        aNews.setPublicationId(delegated.getPublicationDetail().getId());
-        news.add(aNews.getPublication());
+        News aNews = QuickInfoService.get().getNewsByForeignId(delegated.getPubId());
+        news.add(aNews);
       }
     }
 
@@ -153,8 +146,8 @@ public class NewsHelper {
     return news;
   }
 
-  private List<PublicationDetail> getAllNews(String userId) throws AdminException {
-    List<PublicationDetail> news = new ArrayList<>();
+  private List<News> getAllNews(String userId) throws AdminException {
+    List<News> news = new ArrayList<>();
     List<String> apps = CollectionUtil
         .asList(organizationController.getComponentIdsForUser(userId, "quickinfo"));
     for (String appId : apps) {
@@ -164,10 +157,9 @@ public class NewsHelper {
     return news;
   }
 
-  private List<PublicationDetail> getNewsByComponentId(String appId, boolean managerAccess, String userId) throws AdminException {
+  private List<News> getNewsByComponentId(String appId, boolean managerAccess, String userId) throws AdminException {
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
-    List<PublicationDetail> allNews = new ArrayList<PublicationDetail>();
-    List<News> news;
+    List<News> news = new ArrayList<>();
 
     if (Administration.get().isComponentAvailableToUser(appId, userId)) {
       if (managerAccess) {
@@ -175,11 +167,8 @@ public class NewsHelper {
       } else {
         news = service.getVisibleNews(appId);
       }
-      for (News aNews : news) {
-        allNews.add(aNews.getPublication());
-      }
     }
-    return allNews;
+    return news;
   }
 
   public NewsDTO populate(News n) {
