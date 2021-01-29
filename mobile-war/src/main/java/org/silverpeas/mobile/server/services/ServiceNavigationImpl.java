@@ -30,6 +30,7 @@ import org.jsoup.nodes.Document;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
@@ -262,12 +263,13 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       } else {
         maxNews = settings.getInteger("home.news.size", 3);
       }
-      List<PublicationDetail> lastNews =
+      List<News> lastNews =
           NewsHelper.getInstance().getLastNews(getUserInSession().getId(), spaceId);
       if (lastNews != null && lastNews.size() > maxNews) {
         lastNews = lastNews.subList(0, maxNews);
       }
-      data.setNews(NewsHelper.getInstance().populatePub(lastNews, false));
+
+      data.setNews(NewsHelper.getInstance().populate(lastNews, false));
 
       if (spaceId == null || spaceId.isEmpty()) {
         List<LinkDetail> links =

@@ -74,7 +74,8 @@ public class NewsItem extends Composite implements ClickHandler {
   public void onClick(final ClickEvent event) {
     ContentDTO content = new ContentDTO();
     content.setId(data.getId());
-    content.setType(ContentsTypes.Publication.toString());
+    content.setContributionId(data.getIdNews());
+    content.setType(ContentsTypes.News.toString());
     content.setInstanceId(data.getInstanceId());
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
 
