@@ -89,7 +89,7 @@ public class Attachment extends Composite {
       size.setInnerHTML(msg.sizeM(sizeValue));
     }
     String title = data.getFileName();
-    if (!data.getTitle().isEmpty()) {
+    if (data.getTitle() != null && !data.getTitle().isEmpty()) {
       title = data.getTitle();
     }
     name.setInnerHTML(title);
