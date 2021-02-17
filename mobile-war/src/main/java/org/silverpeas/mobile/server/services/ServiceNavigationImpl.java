@@ -167,6 +167,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
           .error("ServiceNavigationImpl.logout", "root.EX_NO_MESSAGE", e);
     }
     getThreadLocalRequest().getSession().invalidate();
+
+    // clear cache
+    getThreadLocalResponse().setHeader("Clear-Site-Data","\"cache\", \"cookies\", \"storage\"");
   }
 
   private static String getBaseUrl(HttpServletRequest request) {
