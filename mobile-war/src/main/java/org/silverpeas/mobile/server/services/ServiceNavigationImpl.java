@@ -151,6 +151,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       SilverLogger.getLogger(this).error(e);
     }
     getThreadLocalRequest().getSession().invalidate();
+
+    // clear cache
+    getThreadLocalResponse().setHeader("Clear-Site-Data","\"cache\", \"cookies\", \"storage\"");
   }
 
   private static String getBaseUrl(HttpServletRequest request) {
