@@ -42,7 +42,7 @@
     <silverpeas.version>6.2.1-SNAPSHOT</silverpeas.version>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-     <next.release>6.2.1-SNAPSHOT</next.release>
+     <next.release>6.2.1</next.release>
   </properties>
 
   <repositories>
