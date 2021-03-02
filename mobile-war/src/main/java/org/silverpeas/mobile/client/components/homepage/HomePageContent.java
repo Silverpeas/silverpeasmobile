@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.components.homepage;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -101,6 +102,17 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     news.setVisible(config.isNewsDisplay());
     freeZoneSection.setVisible(config.isFreeZoneDisplay());
     freeZoneThinSection.setVisible(config.isFreeZoneThinDisplay());
+  }
+
+  public void slideToRight() {
+    if (news.getWidgetCount() > 0) {
+      if (currentNewsIndex == news.getWidgetCount() - 1) {
+        currentNewsIndex = 0;
+      } else {
+        currentNewsIndex++;
+      }
+      updateNewsView();
+    }
   }
 
   public void setData(HomePageDTO data) {
@@ -205,6 +217,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   @Override
   public void onSwipeEnd(final SwipeEndEvent event) {
     if (isVisible()) {
+      HomePageNewsSlider.getInstance().stopAutoSlider();
       if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
         // next
         if (currentNewsIndex == news.getWidgetCount() - 1) {

@@ -81,6 +81,10 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
     Notification.activityStop();
   }
 
+  public HomePageContent getContent() {
+    return content;
+  }
+
   @Override
   public void clickItem(final ClickItemEvent event) {
     if (isVisible()) {

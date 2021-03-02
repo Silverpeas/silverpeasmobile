@@ -33,9 +33,12 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.components.base.events.EndPageEvent;
+import org.silverpeas.mobile.client.components.homepage.HomePageNewsSlider;
+import org.silverpeas.mobile.client.pages.main.HomePage;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 public class Page extends Composite implements Window.ScrollHandler {
@@ -65,6 +68,13 @@ public class Page extends Composite implements Window.ScrollHandler {
     contentPlace.setWidget(content);
     header.setPageTitle(content.getPageTitle());
     header.setVisibleBackButton(PageHistory.getInstance().size() > 1);
+
+    if (content instanceof HomePage) {
+      HomePageNewsSlider.getInstance().setCurrentHomePageContent(((HomePage) content).getContent());
+    } else if (content instanceof NavigationPage) {
+      HomePageNewsSlider.getInstance().setCurrentHomePageContent(((NavigationPage) content).getContent());
+    }
+
   }
 
   public void toogleMenu() {

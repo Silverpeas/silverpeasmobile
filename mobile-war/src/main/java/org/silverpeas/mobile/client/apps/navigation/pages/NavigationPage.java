@@ -74,6 +74,10 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
     Notification.activityStart();
   }
 
+  public HomePageContent getContent() {
+    return content;
+  }
+
   @Override
   public void homePageLoaded(HomePageLoadedEvent event) {
     if (isVisible() && dataLoaded == false) {
