@@ -202,9 +202,21 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     Notification.activityStop();
   }
 
+  public void slideToRight() {
+    if (news.getWidgetCount() > 0) {
+      if (currentNewsIndex == news.getWidgetCount() - 1) {
+        currentNewsIndex = 0;
+      } else {
+        currentNewsIndex++;
+      }
+      updateNewsView();
+    }
+  }
+
   @Override
   public void onSwipeEnd(final SwipeEndEvent event) {
     if (isVisible()) {
+      HomePageNewsSlider.getInstance().stopAutoSlider();
       if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
         // next
         if (currentNewsIndex == news.getWidgetCount() - 1) {
