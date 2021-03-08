@@ -25,23 +25,18 @@ package org.silverpeas.mobile.client.apps.documents.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadAttachmentsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
@@ -57,10 +52,8 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.PublicationContentHelper;
 import org.silverpeas.mobile.client.common.app.View;
-import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
-import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
-import org.silverpeas.mobile.client.components.IframePage;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
@@ -70,8 +63,6 @@ import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
-
-import java.util.Date;
 
 public class PublicationPage extends PageContent
     implements View, PublicationNavigationPagesEventHandler {
@@ -147,8 +138,21 @@ public class PublicationPage extends PageContent
     if (event.isNotifiable()) {
       actionsMenu.addAction(notification);
     }
+
+    if (Boolean.parseBoolean(ResourcesManager.getParam("content.display.embedded")) && publication.getContent()) {
+      final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + publication.getId() + "&componentId=" + publication.getInstanceId();
+      IFrameElement iframeC = Document.get().createIFrameElement();
+      iframeC.setSrc(url);
+      iframeC.getStyle().setBorderStyle(Style.BorderStyle.NONE);
+      iframeC.getStyle().setWidth(100, Style.Unit.PCT);
+      iframeC.getStyle().setOverflow(Style.Overflow.HIDDEN);
+      iframeC.setAttribute("onload", "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));");
+      content.appendChild(iframeC);
+    }
     contentLink.setVisible(publication.getContent());
   }
+
+
 
   @Override
   public void onLoadedPublicationAttachments(final PublicationAttachmentsLoadedEvent event) {
