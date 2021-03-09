@@ -35,6 +35,7 @@ import org.silverpeas.components.formsonline.model.RequestsFilter;
 import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.space.SpaceProfileInst;
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.ProfileInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
@@ -76,6 +77,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -389,8 +391,15 @@ public class ServiceFormsOnline extends RESTWebService {
                 }
               }
             } else {
-              users.addAll(Arrays.asList(Administration.get().getAllUsersIds()));
+              String spaceId = Administration.get().getComponentInst(getComponentId()).getSpaceId();
+              List<SpaceProfileInst> allProfilesInst = Administration.get().getSpaceInstById(spaceId).getAllSpaceProfilesInst();
+              for (SpaceProfileInst profileInst : allProfilesInst) {
+                users.addAll(profileInst.getAllUsers());
+              }
             }
+
+            // remove duplicate users
+            users = new ArrayList<String>(new HashSet<>(users));
 
             for (String usrId : users) {
               UserDetail usr = Administration.get().getUserDetail(usrId);
