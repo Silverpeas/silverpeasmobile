@@ -23,9 +23,11 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.silverpeas.components.yellowpages.service.YellowpagesService;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
@@ -52,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -147,13 +150,27 @@ public class ServiceContactImpl extends AbstractAuthenticateService implements S
     checkUserInSession();
     try {
       if (type.equals(ContactScope.group.name())) {
-        List<User>  users = Administration.get().getGroup(filter).getAllUsers();
+        String [] groupsIds = filter.split(",");
+        GroupDetail [] groups = Administration.get().getGroups(groupsIds);
+        List<User>  users = new ArrayList<>();
+        for (GroupDetail group : groups) {
+          users.addAll(group.getAllUsers());
+        }
+        users = new ArrayList<User>(new HashSet<>(users));
         for (User user : users) {
           DetailUserDTO userDTO = populate(user);
           listUsers.add(userDTO);
         }
       } else if (type.equals(ContactScope.domain.name())) {
-        UserDetail[]  users = Administration.get().getUsersOfDomain(filter);
+        String [] domainsIds = filter.split(",");
+        UserDetail [] users = null;
+        for (String domainId : domainsIds) {
+          if (users == null) {
+            users = Administration.get().getUsersOfDomain(domainId);
+          } else {
+            users = ArrayUtils.addAll(users, Administration.get().getUsersOfDomain(domainId));
+          }
+        }
         for (User user : users) {
           DetailUserDTO userDTO = populate(user);
           listUsers.add(userDTO);

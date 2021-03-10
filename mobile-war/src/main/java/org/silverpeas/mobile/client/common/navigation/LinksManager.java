@@ -69,12 +69,12 @@ public class LinksManager {
       } else if (url.contains("/silverpeas/Rdirectory/jsp/Main")) {
         String type = "";
         String filter = "";
-        if (url.contains("GroupId=")) {
+        if (url.contains("GroupIds=")) {
           type = ContactScope.group.name();
-          filter = url.substring(url.indexOf("GroupId=") + "GroupId=".length());
-        } else if (url.contains("DomainId=")) {
+          filter = url.substring(url.indexOf("GroupIds=") + "GroupIds=".length());
+        } else if (url.contains("DomainIds=")) {
           type = ContactScope.domain.name();
-          filter = url.substring(url.indexOf("DomainId=") + "DomainId=".length());
+          filter = url.substring(url.indexOf("DomainIds=") + "DomainIds=".length());
         }
         EventBus.getInstance().fireEvent(new ContactsFilteredLoadEvent(type, filter));
       } else {
