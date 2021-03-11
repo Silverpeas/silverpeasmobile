@@ -391,10 +391,13 @@ public class ServiceFormsOnline extends RESTWebService {
                 }
               }
             } else {
-              String spaceId = Administration.get().getComponentInst(getComponentId()).getSpaceId();
-              List<SpaceProfileInst> allProfilesInst = Administration.get().getSpaceInstById(spaceId).getAllSpaceProfilesInst();
-              for (SpaceProfileInst profileInst : allProfilesInst) {
+              List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(getComponentId()).getAllProfilesInst();
+              for (ProfileInst profileInst : allProfilesInst) {
                 users.addAll(profileInst.getAllUsers());
+                List<String> groupsIds = profileInst.getAllGroups();
+                for (String groupId : groupsIds) {
+                  users.addAll(Arrays.asList(Administration.get().getGroup(groupId).getUserIds()));
+                }
               }
             }
 
