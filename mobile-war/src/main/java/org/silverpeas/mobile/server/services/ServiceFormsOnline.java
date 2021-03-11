@@ -381,6 +381,10 @@ public class ServiceFormsOnline extends RESTWebService {
               List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(getComponentId()).getAllProfilesInst();
               for (ProfileInst profileInst : allProfilesInst) {
                 users.addAll(profileInst.getAllUsers());
+                List<String> groupsIds = profileInst.getAllGroups();
+                for (String groupId : groupsIds) {
+                  users.addAll(Arrays.asList(Administration.get().getGroup(groupId).getUserIds()));
+                }
               }
             } else if (parameters.containsKey("roles")) {
               List<String> roles = Arrays.asList(parameters.get("roles").split(","));
@@ -388,17 +392,14 @@ public class ServiceFormsOnline extends RESTWebService {
               for (ProfileInst profileInst : allProfilesInst) {
                 if (roles.contains(profileInst.getName())) {
                   users.addAll(profileInst.getAllUsers());
+                  List<String> groupsIds = profileInst.getAllGroups();
+                  for (String groupId : groupsIds) {
+                    users.addAll(Arrays.asList(Administration.get().getGroup(groupId).getUserIds()));
+                  }
                 }
               }
             } else {
-              List<ProfileInst> allProfilesInst = Administration.get().getComponentInst(getComponentId()).getAllProfilesInst();
-              for (ProfileInst profileInst : allProfilesInst) {
-                users.addAll(profileInst.getAllUsers());
-                List<String> groupsIds = profileInst.getAllGroups();
-                for (String groupId : groupsIds) {
-                  users.addAll(Arrays.asList(Administration.get().getGroup(groupId).getUserIds()));
-                }
-              }
+              users = Arrays.asList(Administration.get().getAllUsersIds());
             }
 
             // remove duplicate users
