@@ -23,7 +23,9 @@ if (firebaseConfig != null) {
   self.addEventListener("notificationclick", function(event) {
      const pushData = event.notification.data;
      event.notification.close();
-     event.waitUntil(self.clients.openWindow(pushData["permalink"]));
+     if (!pushData["permalink"].endsWith("/null")) {
+      event.waitUntil(self.clients.openWindow(pushData["permalink"]));
+     }
   });
 
 }
