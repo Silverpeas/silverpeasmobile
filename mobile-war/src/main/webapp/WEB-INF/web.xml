@@ -85,15 +85,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceBlogImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceBlogImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceBlogImpl</servlet-name>
-    <url-pattern>/services/spmobile/Blog</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceClassifiedsImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceClassifiedsImpl</servlet-class>
   </servlet>

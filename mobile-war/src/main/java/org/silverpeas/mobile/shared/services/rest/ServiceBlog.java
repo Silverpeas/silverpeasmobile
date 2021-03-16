@@ -21,17 +21,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.BlogException;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import java.util.List;
 
-@RemoteServiceRelativePath("Blog")
-public interface ServiceBlog extends RemoteService {
-  public List<PostDTO> getPosts(String instanceId, String categoryId) throws BlogException, AuthenticationException;
+/**
+ * @author svu
+ */
+@Path("/blog")
+public interface ServiceBlog extends RestService {
+
+  @GET
+  @Path("{appId}/category/{categoryId}")
+  public void getPosts(@PathParam("appId") String appId, @PathParam("categoryId") String categoryId, MethodCallback<List<PostDTO>> callback);
+
 }

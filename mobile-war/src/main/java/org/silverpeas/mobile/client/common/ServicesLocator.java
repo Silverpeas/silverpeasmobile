@@ -56,7 +56,6 @@ public class ServicesLocator {
   private static ServiceNotificationsAsync serviceNotifications =
       (ServiceNotificationsAsync) GWT.create(ServiceNotifications.class);
   private static ServiceNewsAsync serviceNews = (ServiceNewsAsync) GWT.create(ServiceNews.class);
-  private static ServiceBlogAsync serviceBlog = (ServiceBlogAsync) GWT.create(ServiceBlog.class);
   private static ServiceClassifiedsAsync serviceClassifieds = (ServiceClassifiedsAsync) GWT.create(ServiceClassifieds.class);
   private static ServiceSurveyAsync serviceSurvey = (ServiceSurveyAsync) GWT.create(ServiceSurvey.class);
   private static ServiceWorkflowAsync serviceWorkflow =
@@ -64,6 +63,7 @@ public class ServicesLocator {
   private static ServiceHyperLinkAsync serviceHyperLink =
       (ServiceHyperLinkAsync) GWT.create(ServiceHyperLink.class);
 
+  private static ServiceBlog serviceBlog = GWT.create(ServiceBlog.class);
   private static ServiceAuthentication serviceRestAuthentication = GWT.create(ServiceAuthentication.class);
   private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
   private static ServiceUserCalendar serviceUserCalendar = GWT.create(ServiceUserCalendar.class);
@@ -94,6 +94,11 @@ public class ServicesLocator {
   public static ServiceAuthentication getRestServiceAuthentication(String login, String password, String domainId) {
     initRestContext(login, password, domainId);
     return serviceRestAuthentication;
+  }
+
+  public static ServiceBlog getServiceBlog() {
+    initRestContext();
+    return serviceBlog;
   }
 
   public static ServiceFaq getServiceFaq() {
@@ -156,12 +161,6 @@ public class ServicesLocator {
     ((ServiceDefTarget) serviceWorkflow).setRpcRequestBuilder(builder);
     changeServiceEntryPoint((ServiceDefTarget) serviceWorkflow);
     return serviceWorkflow;
-  }
-
-  public static ServiceBlogAsync getServiceBlog() {
-    ((ServiceDefTarget) serviceBlog).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceBlog);
-    return serviceBlog;
   }
 
   public static ServiceClassifiedsAsync getServiceClassifieds() {

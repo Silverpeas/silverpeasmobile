@@ -24,7 +24,7 @@
 package org.silverpeas.mobile.client.apps.blog;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.blog.events.app.AbstractBlogAppEvent;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogAppEventHandler;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
@@ -38,13 +38,11 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BlogApp extends App implements BlogAppEventHandler, NavigationEventHandler {
@@ -70,32 +68,20 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
 
   @Override
   public void loadBlog(final BlogLoadEvent event) {
-    final String key = "posts_" + instance.getId() + event.getCategoryId();
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<PostDTO> result = LocalStorageHelper.load(key, List.class);
-        if (result == null) {
-          result = new ArrayList<PostDTO>();
-        }
-        EventBus.getInstance().fireEvent(new BlogLoadedEvent(result));
-      }
-    };
-
-    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<PostDTO>>(offlineAction) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<PostDTO>>() {
       @Override
       public void attempt() {
         ServicesLocator.getServiceBlog().getPosts(instance.getId(), event.getCategoryId(), this);
       }
 
       @Override
-      public void onSuccess(List<PostDTO> result) {
-        super.onSuccess(result);
-        LocalStorageHelper.store(key, List.class, result);
-        EventBus.getInstance().fireEvent(new BlogLoadedEvent(result));
+      public void onSuccess(final Method method, final List<PostDTO> posts) {
+        super.onSuccess(method, posts);
+        EventBus.getInstance().fireEvent(new BlogLoadedEvent(posts));
       }
     };
     action.attempt();
+
   }
 
   @Override
@@ -112,8 +98,6 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.blog.name())) {
       super.showContent(event);
-    } else {
-      //TODO
     }
   }
 }

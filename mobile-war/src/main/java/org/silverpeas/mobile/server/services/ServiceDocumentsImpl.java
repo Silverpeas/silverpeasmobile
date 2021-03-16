@@ -464,9 +464,13 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
 
       if (content.getType().equals(ContentsTypes.Publication.toString())) {
-        KmeliaPublication kPub =
-            KmeliaService.get().getPublication(new PublicationPK(content.getId()), null);
-        dto.setViewsNumber(kPub.getNbAccess());
+        try {
+          KmeliaPublication kPub =
+              KmeliaService.get().getPublication(new PublicationPK(content.getId()), null);
+          dto.setViewsNumber(kPub.getNbAccess());
+        } catch (Exception e) {
+          SilverLogger.getLogger(this).warn("Unable to get views number", e);
+        }
       } else if (content.getType().equals(ContentsTypes.News.toString())) {
         dto.setViewsNumber(QuickInfoService.get().getNews(content.getContributionId()).getNbAccess());
       } else {
