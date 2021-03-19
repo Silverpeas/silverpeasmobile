@@ -23,6 +23,8 @@
 
 package org.silverpeas.mobile.client.common.network;
 
+import org.silverpeas.mobile.client.SpMobil;
+
 /**
  * @author: svu
  */
@@ -30,6 +32,7 @@ public class NetworkHelper {
 
     private static NetworkHelper instance = null;
     private String connectionType = null;
+    private boolean offline = false;
 
     public static NetworkHelper getInstance() {
         if (instance == null) {
@@ -39,7 +42,8 @@ public class NetworkHelper {
     }
 
     public NetworkHelper() {
-        watchConnectionType(this);
+      watchConnectionState(this);
+      watchConnectionType(this);
     }
 
     private static native void watchConnectionType(NetworkHelper i) /*-{
@@ -58,10 +62,33 @@ public class NetworkHelper {
         }
     }-*/;
 
+    private static native void watchConnectionState(NetworkHelper i) /*-{
+      $wnd.addEventListener("offline", function () {
+        i.@org.silverpeas.mobile.client.common.network.NetworkHelper::updateConnexionIndicator(*)(true);
+      }, false);
+      $wnd.addEventListener("online", function () {
+        i.@org.silverpeas.mobile.client.common.network.NetworkHelper::updateConnexionIndicator(*)(false);
+      }, false);
+    }-*/;
+
     private static native boolean isNetworkDetectionAvailable() /*-{
         var connection = window.navigator.connection || window.navigator.mozConnection || null;
         return (connection == null);
     }-*/;
+
+    private void updateConnexionIndicator(boolean offline) {
+      if (offline) {
+        SpMobil.getMainPage().showOfflineIndicator();
+        this.offline = true;
+      } else {
+        SpMobil.getMainPage().hideOfflineIndicator();
+        this.offline = false;
+      }
+    }
+
+    public boolean isOffline() {
+      return offline;
+    }
 
     public String getConnectionType() {
         return connectionType;
@@ -74,4 +101,7 @@ public class NetworkHelper {
             return false;
         }
     }
+
+
+
 }

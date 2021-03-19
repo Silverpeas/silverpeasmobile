@@ -74,6 +74,7 @@ import org.silverpeas.mobile.client.common.mobil.Orientation;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.Page;
@@ -135,6 +136,9 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
    * Init. spmobile.
    */
   public void onModuleLoad() {
+    // init connexion supervision
+    NetworkHelper.getInstance();
+
     instance = this;
     shortcutAppId = Window.Location.getParameter("shortcutAppId");
     shortcutContentType = Window.Location.getParameter("shortcutContentType");
