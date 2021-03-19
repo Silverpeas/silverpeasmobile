@@ -21,28 +21,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.server.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import org.silverpeas.core.admin.component.model.ComponentInstLight;
-import org.silverpeas.core.admin.service.AdminException;
-import org.silverpeas.core.admin.service.Administration;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.HyperLinkException;
-import org.silverpeas.mobile.shared.services.ServiceHyperLink;
+import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.client.TextCallback;
 
-public class ServiceHyperLinkImpl extends AbstractAuthenticateService implements ServiceHyperLink {
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-  private static final long serialVersionUID = 1L;
+/**
+ * @author svu
+ */
+@Path("/hyperlink")
+public interface ServiceHyperLink extends RestService {
 
-  public String getUrl(String instanceId) throws HyperLinkException, AuthenticationException {
-    checkUserInSession();
-    String url = "";
-    try {
-      ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
-      url = app.getParameterValue("URL");
-    } catch (AdminException e) {
-      throw new HyperLinkException(e);
-    }
-    return url;
-  }
+  @GET
+  @Path("{appId}/")
+  public void getUrl(@PathParam("appId") String appId, TextCallback callback);
 }

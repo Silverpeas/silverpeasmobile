@@ -23,7 +23,8 @@
 
 package org.silverpeas.mobile.client.apps.hyperlink;
 
-import com.google.gwt.user.client.Command;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -32,9 +33,9 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
@@ -61,43 +62,25 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.hyperlink.name())) {
       this.instance = event.getInstance();
-      final String key = "hyperlink" + "_" + event.getInstance().getId();
-      AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<String>(getOfflineAction(event, key)) {
+
+      ServicesLocator.getServiceHyperLink().getUrl(instance.getId(), new TextCallback() {
         @Override
-        public void onSuccess(String result) {
-          super.onSuccess(result);
-          LocalStorageHelper.store(key, String.class, result);
-          openLink(result);
+        public void onFailure(final Method method, final Throwable t) {
+          EventBus.getInstance().fireEvent(new ErrorEvent(t));
         }
 
         @Override
-        public void attempt() {
-          ServicesLocator.getServiceHyperLink().getUrl(instance.getId(), this);
+        public void onSuccess(final Method method, final String url) {
+          openLink(url);
         }
-      };
-      action.attempt();
+      });
     }
   }
 
   private void openLink(String url) {
     Notification.activityStop();
+    OfflineHelper.hideOfflineIndicator();
     LinksManager.processLink(url);
-  }
-
-  private Command getOfflineAction(final NavigationAppInstanceChangedEvent event, final String key) {
-    Command offlineAction = new Command() {
-
-      @Override
-      public void execute() {
-        String result = LocalStorageHelper.load(key, String.class);
-        if (result == null) {
-          result = "";
-        }
-        openLink(result);
-      }
-    };
-
-    return offlineAction;
   }
 
   @Override

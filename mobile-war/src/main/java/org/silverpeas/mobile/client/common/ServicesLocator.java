@@ -60,8 +60,7 @@ public class ServicesLocator {
   private static ServiceSurveyAsync serviceSurvey = (ServiceSurveyAsync) GWT.create(ServiceSurvey.class);
   private static ServiceWorkflowAsync serviceWorkflow =
       (ServiceWorkflowAsync) GWT.create(ServiceWorkflow.class);
-  private static ServiceHyperLinkAsync serviceHyperLink =
-      (ServiceHyperLinkAsync) GWT.create(ServiceHyperLink.class);
+  private static ServiceHyperLink serviceHyperLink = GWT.create(ServiceHyperLink.class);
 
   private static ServiceBlog serviceBlog = GWT.create(ServiceBlog.class);
   private static ServiceAuthentication serviceRestAuthentication = GWT.create(ServiceAuthentication.class);
@@ -151,9 +150,8 @@ public class ServicesLocator {
     return serviceAlmanach;
   }
 
-  public static ServiceHyperLinkAsync getServiceHyperLink() {
-    ((ServiceDefTarget) serviceHyperLink).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceHyperLink);
+  public static ServiceHyperLink getServiceHyperLink() {
+    initRestContext();
     return serviceHyperLink;
   }
 

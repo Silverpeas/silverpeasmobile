@@ -67,15 +67,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceHyperLinkImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceHyperLinkImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceHyperLinkImpl</servlet-name>
-    <url-pattern>/services/spmobile/HyperLink</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceWorkflowImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceWorkflowImpl</servlet-class>
   </servlet>
