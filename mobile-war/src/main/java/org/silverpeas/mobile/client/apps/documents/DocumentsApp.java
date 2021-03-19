@@ -54,7 +54,7 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -280,15 +280,17 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void loadAttachments(final DocumentsLoadAttachmentsEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<SimpleDocumentDTO>>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getRestServiceDocuments().getDocumentsByType(getApplicationInstance().getId(), event.getPubId(),
             DocumentType.attachment.name(), SpMobil.getUser().getLanguage(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
+        super.onSuccess(method, attachments);
         EventBus.getInstance().fireEvent(new PublicationAttachmentsLoadedEvent(attachments));
       }
     };

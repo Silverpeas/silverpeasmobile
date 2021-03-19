@@ -24,8 +24,6 @@
 package org.silverpeas.mobile.client.apps.favorites;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
@@ -44,18 +42,13 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
-import org.silverpeas.mobile.shared.dto.FavoriteDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FavoritesApp extends App implements FavoritesAppEventHandler, NavigationEventHandler {
@@ -80,30 +73,16 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
     @Override
     public void loadFavorites(final FavoritesLoadEvent event) {
-      final String key = "favorites";
-      Command offlineAction = new Command() {
-
-        @Override
-        public void execute() {
-          List<MyLinkDTO> result = LocalStorageHelper.load(key, List.class);
-          if (result == null) {
-            result = new ArrayList<MyLinkDTO>();
-          }
-          EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(result));
-        }
-      };
-
-
-      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<MyLinkDTO>>(offlineAction) {
+      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<MyLinkDTO>>(null) {
         @Override
         public void onSuccess(final Method method, final List<MyLinkDTO> result) {
           super.onSuccess(method, result);
-          LocalStorageHelper.store(key, List.class, result);
           EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(result));
         }
 
         @Override
         public void attempt() {
+          super.attempt();
           ServicesLocator.getServiceMyLinks().getMyLinks(this);
         }
       };
@@ -116,11 +95,11 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
       @Override
       public void onSuccess(final Method method, final MyLinkDTO myLinkDTO) {
         super.onSuccess(method, myLinkDTO);
-        //TODO : message ?
       }
 
       @Override
       public void attempt() {
+        super.attempt();
         MyLinkDTO dto = new MyLinkDTO();
         dto.setName(event.getDescription());
         dto.setUrl("/" + event.getObjectType() + "/" + event.getObjectId());

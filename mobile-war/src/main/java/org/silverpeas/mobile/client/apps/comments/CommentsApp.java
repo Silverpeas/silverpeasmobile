@@ -75,10 +75,10 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
     @Override
     public void loadComments(final CommentsLoadEvent event) {
-        final String key = "comments" + event.getContentType() + "_" + event.getContentId();
-        MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CommentDTO>>(getOfflineAction(event, key)) {
+        MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CommentDTO>>(null) {
           @Override
           public void attempt() {
+            super.attempt();
             ServicesLocator.getRestServiceComment().getAllComments(instanceId,
                 event.getContentType(), event.getContentId(), this);
           }
@@ -86,27 +86,10 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
           @Override
           public void onSuccess(final Method method, final List<CommentDTO> result) {
             super.onSuccess(method, result);
-            LocalStorageHelper.store(key, List.class, result);
             EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));
           }
         };
         action.attempt();
-    }
-
-    private Command getOfflineAction(final CommentsLoadEvent event, final String key) {
-        Command offlineAction = new Command() {
-
-            @Override
-            public void execute() {
-                List<CommentDTO> result = LocalStorageHelper.load(key, List.class);
-                if (result == null) {
-                    result = new ArrayList<CommentDTO>();
-                }
-                EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));
-            }
-        };
-
-        return offlineAction;
     }
 
     @Override
@@ -122,6 +105,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
       MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
         @Override
         public void attempt() {
+          super.attempt();
           ServicesLocator.getRestServiceComment().saveNewComment(event.getInstanceId(), event.getContentType(), event.getContentId(), dto, this);
         }
 

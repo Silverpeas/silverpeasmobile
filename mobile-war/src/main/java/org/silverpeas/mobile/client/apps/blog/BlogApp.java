@@ -38,7 +38,7 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -68,9 +68,10 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
 
   @Override
   public void loadBlog(final BlogLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<PostDTO>>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<PostDTO>>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceBlog().getPosts(instance.getId(), event.getCategoryId(), this);
       }
 

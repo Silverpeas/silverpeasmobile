@@ -34,6 +34,7 @@ import org.silverpeas.mobile.client.resources.ApplicationMessages;
 /**
  * @author: svu
  */
+@Deprecated
 public class OfflineHelper {
 
     private static ApplicationMessages msg = GWT.create(ApplicationMessages.class);

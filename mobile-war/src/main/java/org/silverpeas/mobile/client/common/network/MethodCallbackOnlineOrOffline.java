@@ -46,7 +46,16 @@ public abstract class MethodCallbackOnlineOrOffline<T> implements MethodCallback
     this.offlineAction = offlineAction;
   }
 
-  public abstract void attempt();
+  public void attempt() {
+    Notification.activityStart();
+    if (NetworkHelper.getInstance().isOffline()) {
+      if (offlineAction != null) {
+        offlineAction.execute();
+        Notification.activityStop();
+      }
+      return;
+    }
+  }
 
   @Override
   public void onFailure(final Method method, final Throwable t) {
@@ -59,20 +68,13 @@ public abstract class MethodCallbackOnlineOrOffline<T> implements MethodCallback
         }
       });
     } else {
-      if (OfflineHelper.needToGoOffine(t)) {
-        if (offlineAction != null) {
-          offlineAction.execute();
-        }
-      } else {
-        EventBus.getInstance().fireEvent(new ErrorEvent(t));
-      }
+      EventBus.getInstance().fireEvent(new ErrorEvent(t));
     }
   }
 
   @Override
   public void onSuccess(final Method method, final T t) {
     Notification.activityStop();
-    OfflineHelper.hideOfflineIndicator();
   }
 
 }

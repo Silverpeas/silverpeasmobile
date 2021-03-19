@@ -98,6 +98,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
       MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<QuestionDTO>>(offlineAction) {
         @Override
         public void attempt() {
+          super.attempt();
           ServicesLocator.getServiceFaq().getAllQuestions(getApplicationInstance().getId(), this);
         }
 
@@ -138,6 +139,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
     MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CategoryDTO>>(offlineAction) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFaq().getAllCategories(getApplicationInstance().getId(), this);
       }
 
@@ -157,12 +159,14 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getRestServiceDocuments().getDocumentsByType(getApplicationInstance().getId(), event.getContentId(),
             DocumentType.attachment.name(), SpMobil.getUser().getLanguage(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
+        super.onSuccess(method, attachments);
         EventBus.getInstance().fireEvent(new FaqAttachmentsLoadedEvent(attachments, event.getContentId()));
       }
     };

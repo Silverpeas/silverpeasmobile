@@ -48,13 +48,16 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.FormsHelper;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
+import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
@@ -67,8 +70,9 @@ import java.util.List;
 public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, NavigationEventHandler {
 
   private FormsOnlineMessages msg;
-  private String keyForms, keyFormsAsReceiver, keysMyRequests;
   private FormDTO currentForm;
+
+private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class);
 
   public FormsOnlineApp(){
     super();
@@ -94,29 +98,16 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
   @Override
   public void loadFormsOnline(final FormsOnlineLoadEvent event) {
 
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<FormDTO> forms = LocalStorageHelper.load(keyForms+getApplicationInstance().getId(), List.class);
-        if (forms == null) {
-          forms = new ArrayList<FormDTO>();
-        }
-        FormsOnlineLoadedEvent event = new FormsOnlineLoadedEvent();
-        event.setForms(forms);
-        EventBus.getInstance().fireEvent(event);
-      }
-    };
-
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormDTO>>(offlineAction) {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormDTO>>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFormsOnline().getSendablesForms(getApplicationInstance().getId(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<FormDTO> forms) {
         super.onSuccess(method, forms);
-        LocalStorageHelper.store(keyForms+getApplicationInstance().getId(), List.class, forms);
         FormsOnlineLoadedEvent event = new FormsOnlineLoadedEvent();
         event.setForms(forms);
         EventBus.getInstance().fireEvent(event);
@@ -140,9 +131,10 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     page.setPageTitle(event.getForm().getTitle());
     page.show();
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormFieldDTO>>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormFieldDTO>>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFormsOnline().getForm(getApplicationInstance().getId(),
             event.getForm().getXmlFormName(), this);
       }
@@ -175,7 +167,14 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
       }
     }
-    saveForm(this, formData, SpMobil.getUserToken(), AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN), getApplicationInstance().getId(), currentForm.getId());
+    if (NetworkHelper.getInstance().isOffline()) {
+      Notification.activityStop();
+      Notification.alert(msgApp.needToBeOnline());
+      return;
+    }
+    saveForm(this, formData, SpMobil.getUserToken(),
+          AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN),
+          getApplicationInstance().getId(), currentForm.getId());
   }
 
   private static native void saveForm(FormsOnlineApp app, JavaScriptObject fd, String token, String stkn, String instanceId, String formId) /*-{
@@ -210,17 +209,16 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
   public void loadUserField(final FormOnlineLoadUserFieldEvent event) {
 
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<BaseDTO>>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFormsOnline().getUserField(getApplicationInstance().getId(), currentForm.getXmlFormName(), event.getFieldName(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<BaseDTO> users) {
         super.onSuccess(method, users);
-
-
         AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users);
         EventBus.getInstance().fireEvent(ev);
       }
@@ -237,32 +235,16 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
   public void loadFormsOnlineAsReceiver(
       final FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent) {
 
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<FormDTO> forms = LocalStorageHelper.load(keyFormsAsReceiver+getApplicationInstance().getId(), List.class);
-        if (forms == null) {
-          forms = new ArrayList<FormDTO>();
-        }
-
-        FormsOnlineAsReceiverPage page = new FormsOnlineAsReceiverPage();
-        page.setPageTitle(getApplicationInstance().getLabel());
-        page.setData(forms);
-        page.show();
-      }
-    };
-
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormDTO>>(offlineAction) {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormDTO>>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFormsOnline().getReceivablesForms(getApplicationInstance().getId(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<FormDTO> forms) {
         super.onSuccess(method, forms);
-        LocalStorageHelper.store(keyFormsAsReceiver+getApplicationInstance().getId(), List.class, forms);
-
         FormsOnlineAsReceiverPage page = new FormsOnlineAsReceiverPage();
         page.setPageTitle(getApplicationInstance().getLabel());
         page.setData(forms);
@@ -279,14 +261,16 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
    */
   @Override
   public void loadFormOnlineAsReceiver(final FormOnlineAsReceiverLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormRequestDTO>>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFormsOnline().getRequests(getApplicationInstance().getId(), event.getForm().getId(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
+        super.onSuccess(method, requests);
         FormOnlineRequestsPage page = new FormOnlineRequestsPage();
         page.setTitle(getApplicationInstance().getLabel());
         page.setData(requests, false);
@@ -302,11 +286,13 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFormsOnline().processRequest(getApplicationInstance().getId(), event.getData().getId(), event.getValidation(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final Void aVoid) {
+        super.onSuccess(method, aVoid);
         EventBus.getInstance().fireEvent(new FormsOnlineRequestValidatedEvent(event.getData()));
       }
     };
@@ -320,29 +306,17 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
    */
   @Override
   public void loadMyRequests(final FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent) {
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<FormRequestDTO> requests = LocalStorageHelper.load(keysMyRequests+getApplicationInstance().getId(), List.class);
-        if (requests == null) {
-          requests = new ArrayList<FormRequestDTO>();
-        }
-        FormOnlineRequestsPage page = new FormOnlineRequestsPage();
-        page.setData(requests, true);
-        page.show();
-      }
-    };
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormRequestDTO>>(offlineAction) {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormRequestDTO>>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFormsOnline().getMyRequests(getApplicationInstance().getId(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
         super.onSuccess(method, requests);
-        LocalStorageHelper.store(keysMyRequests+getApplicationInstance().getId(), List.class, requests);
         FormOnlineRequestsPage page = new FormOnlineRequestsPage();
         page.setData(requests, true);
         page.show();
@@ -363,11 +337,13 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<FormRequestDTO>() {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceFormsOnline().loadRequest(getApplicationInstance().getId(), loadEvent.getData().getId(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final FormRequestDTO data) {
+        super.onSuccess(method, data);
         EventBus.getInstance().fireEvent(new FormRequestStatusChangedEvent(data));
         FormOnlineViewPage page = new FormOnlineViewPage();
         page.setData(data, loadEvent.isReadOnly());
@@ -382,10 +358,6 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.formsOnline.name())) {
       this.setApplicationInstance(event.getInstance());
-
-      keyForms = "forms_" + getApplicationInstance().getId();
-      keyFormsAsReceiver = "formsAsReceiver_" + getApplicationInstance().getId();
-      keysMyRequests = "keysMyRequests_" + getApplicationInstance().getId();
 
       FormsOnlinePage page = new FormsOnlinePage();
       page.setApp(this);

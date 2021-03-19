@@ -32,7 +32,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
 /**
  * @author: svu
@@ -41,12 +40,20 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
 
   private static ApplicationMessages msg = GWT.create(ApplicationMessages.class);
 
-  public abstract void attempt();
+  public void attempt() {
+    Notification.activityStart();
+    if (NetworkHelper.getInstance().isOffline()) {
+      Notification.activityStop();
+      Notification.alert(msg.needToBeOnline());
+      return;
+    }
+  }
 
   @Override
   public void onFailure(final Method method, final Throwable t) {
     Notification.activityStop();
     if (method.getResponse().getStatusCode() == 403 || method.getResponse().getStatusCode() == 401) {
+      // Session expired, need to re-authent
       SpMobil.getInstance().loadIds(new Command() {
         @Override
         public void execute() {
@@ -54,18 +61,13 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
         }
       });
     } else {
-      if (OfflineHelper.needToGoOffine(t)) {
-          Notification.alert(msg.needToBeOnline());
-      } else {
-        EventBus.getInstance().fireEvent(new ErrorEvent(t));
-      }
+      EventBus.getInstance().fireEvent(new ErrorEvent(t));
     }
   }
 
   @Override
   public void onSuccess(final Method method, final T t) {
     Notification.activityStop();
-    OfflineHelper.hideOfflineIndicator();
   }
 
 
