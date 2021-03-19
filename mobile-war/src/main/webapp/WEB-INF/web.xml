@@ -103,15 +103,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceNewsImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceNewsImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceNewsImpl</servlet-name>
-    <url-pattern>/services/spmobile/News</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceTasksImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceTasksImpl</servlet-class>
   </servlet>

@@ -55,7 +55,7 @@ public class ServicesLocator {
       (ServiceSearchAsync) GWT.create(ServiceSearch.class);
   private static ServiceNotificationsAsync serviceNotifications =
       (ServiceNotificationsAsync) GWT.create(ServiceNotifications.class);
-  private static ServiceNewsAsync serviceNews = (ServiceNewsAsync) GWT.create(ServiceNews.class);
+  private static ServiceNews serviceNews = GWT.create(ServiceNews.class);
   private static ServiceClassifiedsAsync serviceClassifieds = (ServiceClassifiedsAsync) GWT.create(ServiceClassifieds.class);
   private static ServiceSurveyAsync serviceSurvey = (ServiceSurveyAsync) GWT.create(ServiceSurvey.class);
   private static ServiceWorkflowAsync serviceWorkflow =
@@ -175,9 +175,8 @@ public class ServicesLocator {
     return serviceSurvey;
   }
 
-  public static ServiceNewsAsync getServiceNews() {
-    ((ServiceDefTarget) serviceNews).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceNews);
+  public static ServiceNews getServiceNews() {
+    initRestContext();
     return serviceNews;
   }
 

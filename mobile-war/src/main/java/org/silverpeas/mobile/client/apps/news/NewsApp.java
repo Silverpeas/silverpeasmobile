@@ -24,7 +24,7 @@
 package org.silverpeas.mobile.client.apps.news;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -38,13 +38,11 @@ import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NewsApp extends App implements NewsAppEventHandler, NavigationEventHandler {
@@ -70,29 +68,16 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
 
   @Override
   public void loadNews(final NewsLoadEvent event) {
-    final String key = "news_" + instance.getId();
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<NewsDTO> result = LocalStorageHelper.load(key, List.class);
-        if (result == null) {
-          result = new ArrayList<NewsDTO>();
-        }
-        EventBus.getInstance().fireEvent(new NewsLoadedEvent(result));
-      }
-    };
-
-    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<NewsDTO>>(offlineAction) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<NewsDTO>>() {
       @Override
       public void attempt() {
         ServicesLocator.getServiceNews().getNews(instance.getId(), this);
       }
 
       @Override
-      public void onSuccess(List<NewsDTO> result) {
-        super.onSuccess(result);
-        LocalStorageHelper.store(key, List.class, result);
-        EventBus.getInstance().fireEvent(new NewsLoadedEvent(result));
+      public void onSuccess(final Method method, final List<NewsDTO> news) {
+        super.onSuccess(method, news);
+        EventBus.getInstance().fireEvent(new NewsLoadedEvent(news));
       }
     };
     action.attempt();

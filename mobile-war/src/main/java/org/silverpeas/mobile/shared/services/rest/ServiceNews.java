@@ -21,13 +21,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import java.util.List;
 
-public interface ServiceNewsAsync {
-  void getNews(String instanceId, final AsyncCallback<List<NewsDTO>> async);
+/**
+ * @author svu
+ */
+@Path("/news")
+public interface ServiceNews extends RestService {
+
+  @GET
+  @Path("{appId}/all")
+  public void getNews(@PathParam("appId") String appId, MethodCallback<List<NewsDTO>> callback);
+
 }
