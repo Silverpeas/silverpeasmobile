@@ -33,9 +33,9 @@ import org.silverpeas.components.formsonline.model.RequestPK;
 import org.silverpeas.components.formsonline.model.RequestsByStatus;
 import org.silverpeas.components.formsonline.model.RequestsFilter;
 import org.silverpeas.core.SilverpeasException;
+import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.admin.space.SpaceProfileInst;
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.ProfileInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
@@ -242,7 +242,7 @@ public class ServiceFormsOnline extends RESTWebService {
   }
 
   private FormRequestDTO populate(final FormInstance f)
-      throws FormException {
+      throws FormException, AdminException {
     FormRequestDTO dto = new FormRequestDTO();
     dto.setId(f.getId());
     dto.setComments(f.getComments());
@@ -277,7 +277,11 @@ public class ServiceFormsOnline extends RESTWebService {
         Field field = record.getField(name);
         FormFieldDTO fieldDTO = new FormFieldDTO();
         fieldDTO.setLabel(getLabel(f, name));
-        fieldDTO.setValue(field.getStringValue());
+        if (field.getTypeName().equalsIgnoreCase("multipleUser") || field.getTypeName().equalsIgnoreCase("user") || field.getTypeName().equalsIgnoreCase("group")) {
+          fieldDTO.setValue(field.getValue());
+        } else {
+          fieldDTO.setValue(field.getStringValue());
+        }
         dataForm.add(fieldDTO);
       }
       dto.setData(dataForm);
