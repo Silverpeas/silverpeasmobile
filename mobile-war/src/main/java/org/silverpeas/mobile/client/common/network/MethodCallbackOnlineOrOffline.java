@@ -68,7 +68,12 @@ public abstract class MethodCallbackOnlineOrOffline<T> implements MethodCallback
         }
       });
     } else {
-      EventBus.getInstance().fireEvent(new ErrorEvent(t));
+      if (OfflineHelper.needToGoOffine(t)) {
+        // Lost connexion during requesting
+        Notification.alert(msg.needToBeOnline());
+      } else {
+        EventBus.getInstance().fireEvent(new ErrorEvent(t));
+      }
     }
   }
 
