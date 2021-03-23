@@ -39,6 +39,7 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -76,7 +77,13 @@ public class AvatarUpload extends Composite {
     Notification.activityStartImmediately();
     String url = UrlUtils.getUploadLocation();
     url += "AvatarAction";
-    upload(this, file.getElement(), url, SpMobil.getUserToken());
+
+    if (!NetworkHelper.getInstance().isOffline()) {
+      upload(this, file.getElement(), url, SpMobil.getUserToken());
+    } else {
+      Notification.activityStop();
+      Notification.alert(msg.needToBeOnline());
+    }
   }
 
   public void avatarUploadedSuccessfully(String avatarData) {
@@ -93,6 +100,8 @@ public class AvatarUpload extends Composite {
       Notification.alert(msg.mediaNotSupportedError());
     } else if (codeError == 500) {
       Notification.alert(msg.systemError());
+    } else if (codeError == 0) {
+      Notification.alert(msg.needToBeOnline());
     }
     Notification.activityStop();
   }
