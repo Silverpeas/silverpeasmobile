@@ -42,11 +42,14 @@ import org.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.PushNotificationsManager;
+import org.silverpeas.mobile.client.common.ShortCutRouter;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.homepage.HomePageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.navigation.HomePages;
 import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class HomePage extends PageContent implements ConfigAppEventHandler, NavigationPagesEventHandler {
@@ -89,14 +92,33 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
   public void clickItem(final ClickItemEvent event) {
     if (isVisible()) {
       if (event.getData() instanceof SpaceDTO) {
-        NavigationPage subPage = new NavigationPage();
-        if (((SpaceDTO) event.getData()).isPersonal()) {
+        //NavigationPage subPage = new NavigationPage();
+        SpaceDTO space =(SpaceDTO) event.getData();
+        if (space.getHomePageType() == HomePages.SILVERPEAS.getValue()) {
+          NavigationPage subPage = new NavigationPage();
+          if (space.isPersonal()) {
+            subPage.setPageTitle(msg.personalSpace());
+          } else {
+            subPage.setPageTitle(event.getData().getLabel());
+          }
+          subPage.setRootSpaceId(event.getData().getId());
+          subPage.show();
+        } else if (space.getHomePageType() == HomePages.APP.getValue()) {
+          // App home
+          ShortCutRouter
+              .route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null, null, null);
+        } else if (space.getHomePageType() == HomePages.URL.getValue()) {
+          // Url App
+          LinksManager.processLink(space.getHomePageParameter());
+        }
+
+        /*if (((SpaceDTO) event.getData()).isPersonal()) {
           subPage.setPageTitle(msg.personalSpace());
         } else {
           subPage.setPageTitle(event.getData().getLabel());
         }
         subPage.setRootSpaceId(event.getData().getId());
-        subPage.show();
+        subPage.show();*/
       } else {
         EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
       }
