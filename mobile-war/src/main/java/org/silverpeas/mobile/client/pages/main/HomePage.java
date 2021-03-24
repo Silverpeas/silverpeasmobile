@@ -92,7 +92,6 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
   public void clickItem(final ClickItemEvent event) {
     if (isVisible()) {
       if (event.getData() instanceof SpaceDTO) {
-        //NavigationPage subPage = new NavigationPage();
         SpaceDTO space =(SpaceDTO) event.getData();
         if (space.getHomePageType() == HomePages.SILVERPEAS.getValue()) {
           NavigationPage subPage = new NavigationPage();
@@ -111,14 +110,6 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
           // Url App
           LinksManager.processLink(space.getHomePageParameter());
         }
-
-        /*if (((SpaceDTO) event.getData()).isPersonal()) {
-          subPage.setPageTitle(msg.personalSpace());
-        } else {
-          subPage.setPageTitle(event.getData().getLabel());
-        }
-        subPage.setRootSpaceId(event.getData().getId());
-        subPage.show();*/
       } else {
         EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
       }
