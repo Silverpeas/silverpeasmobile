@@ -384,10 +384,20 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
       data.setLastEvents(eventsToDisplay);
 
       // freezone
+
       if ((spaceId == null && getSettings().getBoolean("homepage.freezone", true))) {
         String pageWebAppId = settings.getString("home.freezone.appId", "");
         if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
           String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
+          data.setHtmlFreeZone(html);
+        }
+      } else if (spaceId != null) {
+        SpaceInst space =Administration.get().getSpaceInstById(spaceId);
+        if (space.getFirstPageType() == HomePages.URL.getValue()) {
+          String html =
+              "<iframe frameborder='0' onLoad='javaScript:this.height = this.contentWindow.document.body" +
+                  ".scrollHeight ;' style='width:100%;' src='" +
+                  space.getFirstPageExtraParam() + "'></iframe>";
           data.setHtmlFreeZone(html);
         }
       }

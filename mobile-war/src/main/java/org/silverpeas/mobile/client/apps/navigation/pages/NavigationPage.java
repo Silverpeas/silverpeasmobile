@@ -38,7 +38,6 @@ import org.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPages
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ShortCutRouter;
-import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.homepage.HomePageContent;
@@ -111,7 +110,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
     if (isVisible()) {
       if (event.getData() instanceof SpaceDTO) {
         SpaceDTO space =(SpaceDTO) event.getData();
-        if (space.getHomePageType() == HomePages.SILVERPEAS.getValue()) {
+        if (space.getHomePageType() == HomePages.SILVERPEAS.getValue() || space.getHomePageType() == HomePages.URL.getValue()) {
           NavigationPage subPage = new NavigationPage();
           if (space.isPersonal()) {
             subPage.setPageTitle(msg.personalSpace());
@@ -123,9 +122,6 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
         } else if (space.getHomePageType() == HomePages.APP.getValue()) {
           // App home
           ShortCutRouter.route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null, null, null);
-        } else if (space.getHomePageType() == HomePages.URL.getValue()) {
-          // Url App
-          LinksManager.processLink(space.getHomePageParameter());
         }
       } else {
         EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
