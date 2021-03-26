@@ -25,9 +25,8 @@ package org.silverpeas.mobile.client.apps.documents.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -52,7 +51,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.PublicationContentHelper;
 import org.silverpeas.mobile.client.common.app.View;
-import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
@@ -140,19 +138,10 @@ public class PublicationPage extends PageContent
     }
 
     if (Boolean.parseBoolean(ResourcesManager.getParam("content.display.embedded")) && publication.getContent()) {
-      final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + publication.getId() + "&componentId=" + publication.getInstanceId();
-      IFrameElement iframeC = Document.get().createIFrameElement();
-      iframeC.setSrc(url);
-      iframeC.getStyle().setBorderStyle(Style.BorderStyle.NONE);
-      iframeC.getStyle().setWidth(100, Style.Unit.PCT);
-      iframeC.getStyle().setOverflow(Style.Overflow.HIDDEN);
-      iframeC.setAttribute("onload", "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));");
-      content.appendChild(iframeC);
+      PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
     }
     contentLink.setVisible(publication.getContent());
   }
-
-
 
   @Override
   public void onLoadedPublicationAttachments(final PublicationAttachmentsLoadedEvent event) {
@@ -229,5 +218,16 @@ public class PublicationPage extends PageContent
 
   private static void showPublicationContent(String pubId, String appId, String title) {
     PublicationContentHelper.showContent(pubId, appId, title);
+  }
+
+  @Override
+  public void setVisible(final boolean visible) {
+    super.setVisible(visible);
+    Element iframeC = content.getElementsByTagName("iframe").getItem(0);
+    if (iframeC != null) {
+      // need to re display
+      iframeC.removeFromParent();
+      PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
+    }
   }
 }
