@@ -44,6 +44,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
@@ -197,6 +198,31 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
       //Element e = Document.get().getElementById("actus");
       //HTML actus = HTML.wrap(e);
       swipeRecognizer = new SwipeRecognizer(actus);
+    }
+
+    // Display zones order
+    Boolean reorder = Boolean.parseBoolean(ResourcesManager.getParam("spacehomepage.zone.changeorder"));
+    if (reorder && !data.getId().equalsIgnoreCase("root")) {
+      container.getElement().setAttribute("style", "display:flex; flex-direction:column;");
+      String spacesOrder = ResourcesManager.getParam("spacehomepage.spaces.order");
+      String freeZoneOrder = ResourcesManager.getParam("spacehomepage.freeZone.order");
+      String newsOrder = ResourcesManager.getParam("spacehomepage.news.order");
+      String favoritesOrder = ResourcesManager.getParam("spacehomepage.favorites.order");
+      String shortcutstoolsOrder = ResourcesManager.getParam("spacehomepage.shortcutstools.order");
+      String shortcutsOrder = ResourcesManager.getParam("spacehomepage.shortcuts.order");
+      String lastPublicationsOrder = ResourcesManager.getParam("spacehomepage.lastPublications.order");
+      String lastEventsOrder = ResourcesManager.getParam("spacehomepage.lastEvents.order");
+      String freeZoneThinSectionOrder = ResourcesManager.getParam("spacehomepage.freeZoneThinSection.order");
+
+      container.getElementById("spaces").getStyle().setProperty("order", spacesOrder);
+      freeZoneSection.getElement().getStyle().setProperty("order", freeZoneOrder);
+      freeZoneThinSection.getElement().getStyle().setProperty("order", freeZoneThinSectionOrder);
+      lastPublicationsSection.getElement().getStyle().setProperty("order", lastPublicationsOrder);
+      lastEventsSection.getElement().getStyle().setProperty("order", lastEventsOrder);
+      shortCutsSection.getElement().getStyle().setProperty("order", shortcutsOrder);
+      shortCutsToolsSection.getElement().getStyle().setProperty("order", shortcutstoolsOrder);
+      favorisSection.getElement().getStyle().setProperty("order", favoritesOrder);
+      actus.getElement().getStyle().setProperty("order", newsOrder);
     }
 
     Notification.activityStop();
