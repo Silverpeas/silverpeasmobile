@@ -201,7 +201,36 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     }
 
     // Display zones order
-    Boolean reorder = Boolean.parseBoolean(ResourcesManager.getParam("spacehomepage.zone.changeorder"));
+    reorderZones(data);
+
+    Notification.activityStop();
+  }
+
+  private void reorderZones(final HomePageDTO data) {
+    Boolean reorder = Boolean.parseBoolean(ResourcesManager.getParam("homepage.zone.changeorder"));
+    if (reorder && data.getId().equalsIgnoreCase("root")) {
+      container.getElement().setAttribute("style", "display:flex; flex-direction:column;");
+      String spacesOrder = ResourcesManager.getParam("homepage.spaces.order");
+      String freeZoneOrder = ResourcesManager.getParam("homepage.freeZone.order");
+      String newsOrder = ResourcesManager.getParam("homepage.news.order");
+      String favoritesOrder = ResourcesManager.getParam("homepage.favorites.order");
+      String shortcutstoolsOrder = ResourcesManager.getParam("homepage.shortcutstools.order");
+      String shortcutsOrder = ResourcesManager.getParam("homepage.shortcuts.order");
+      String lastPublicationsOrder = ResourcesManager.getParam("homepage.lastPublications.order");
+      String lastEventsOrder = ResourcesManager.getParam("homepage.lastEvents.order");
+      String freeZoneThinSectionOrder = ResourcesManager.getParam("homepage.freeZoneThinSection.order");
+
+      container.getElementById("spaces").getStyle().setProperty("order", spacesOrder);
+      freeZoneSection.getElement().getStyle().setProperty("order", freeZoneOrder);
+      freeZoneThinSection.getElement().getStyle().setProperty("order", freeZoneThinSectionOrder);
+      lastPublicationsSection.getElement().getStyle().setProperty("order", lastPublicationsOrder);
+      lastEventsSection.getElement().getStyle().setProperty("order", lastEventsOrder);
+      shortCutsSection.getElement().getStyle().setProperty("order", shortcutsOrder);
+      shortCutsToolsSection.getElement().getStyle().setProperty("order", shortcutstoolsOrder);
+      favorisSection.getElement().getStyle().setProperty("order", favoritesOrder);
+      actus.getElement().getStyle().setProperty("order", newsOrder);
+    }
+    reorder = Boolean.parseBoolean(ResourcesManager.getParam("spacehomepage.zone.changeorder"));
     if (reorder && !data.getId().equalsIgnoreCase("root")) {
       container.getElement().setAttribute("style", "display:flex; flex-direction:column;");
       String spacesOrder = ResourcesManager.getParam("spacehomepage.spaces.order");
@@ -224,8 +253,6 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
       favorisSection.getElement().getStyle().setProperty("order", favoritesOrder);
       actus.getElement().getStyle().setProperty("order", newsOrder);
     }
-
-    Notification.activityStop();
   }
 
   public void slideToRight() {
