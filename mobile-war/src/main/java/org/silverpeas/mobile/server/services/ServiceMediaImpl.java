@@ -40,6 +40,7 @@ import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.model.Photo;
 import org.silverpeas.components.gallery.service.GalleryService;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -226,7 +227,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
   private AlbumDTO populate(final AlbumDetail albumDetail) throws Exception {
     AlbumDTO album = new AlbumDTO();
-    album.setId(String.valueOf(albumDetail.getId()));
+    album.setId(albumDetail.getId());
     album.setName(albumDetail.getName());
     int nbPhotos = countMedias(albumDetail);
     album.setCountMedia(nbPhotos);
@@ -430,8 +431,9 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       video.setUrlPoster("http://img.youtube.com/vi/" + id + "/0.jpg");
     }
 
-      video.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(
-          CommentDTO.TYPE_STREAMING, new MediaPK(video.getId())));
+    final ResourceReference ref = new ResourceReference(new MediaPK(video.getId()));
+    video.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(
+          CommentDTO.TYPE_STREAMING, ref));
 
     return video;
   }
@@ -471,7 +473,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     } else {
       video.setUpdateDate(sdf.format(media.getCreationDate()));
     }
-    video.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_VIDEO, new MediaPK(video.getId())));
+    final ResourceReference ref = new ResourceReference(new MediaPK(video.getId()));
+    video.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(CommentDTO.TYPE_VIDEO, ref));
 
     return video;
   }
@@ -543,7 +546,8 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     } else {
       sound.setUpdateDate(sdf.format(media.getCreationDate()));
     }
-    sound.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_SOUND, new MediaPK(sound.getId())));
+    final ResourceReference ref = new ResourceReference(new MediaPK(sound.getId()));
+    sound.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(CommentDTO.TYPE_SOUND, ref));
 
     return sound;
   }
@@ -581,8 +585,9 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     }
 
 
-
-    picture.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnPublication(CommentDTO.TYPE_PHOTO, new MediaPK(photoDetail.getId())));
+    final ResourceReference ref = new ResourceReference(
+        new MediaPK(photoDetail.getId()));
+    picture.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(CommentDTO.TYPE_PHOTO, ref));
 
     return picture;
   }

@@ -300,7 +300,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
               PublicationDTO dto = new PublicationDTO();
               dto.setId(pub.getId());
               dto.setName(pub.getName());
-              dto.setUpdateDate(sdf.format(pub.getUpdateDate()));
+              dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
               dto.setInstanceId(pub.getInstanceId());
               lastPubs.add(dto);
             }

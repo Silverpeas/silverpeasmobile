@@ -121,7 +121,7 @@ public class ServiceFaq extends RESTWebService {
     NodePK nodePK = new NodePK(categoryId, getComponentId());
     Category c = new Category(NodeService.get().getDetail(nodePK));
     CategoryDTO dto = new CategoryDTO();
-    dto.setId(String.valueOf(c.getId()));
+    dto.setId(c.getId());
     dto.setTitle(c.getName(getUser().getUserPreferences().getLanguage()));
     dto.setDescription(c.getDescription(getUser().getUserPreferences().getLanguage()));
     return dto;
@@ -138,7 +138,7 @@ public class ServiceFaq extends RESTWebService {
       Collection<NodeDetail> cats = NodeService.get().getChildrenDetails(nodePK);
       for (NodeDetail cat : cats) {
         CategoryDTO dto = new CategoryDTO();
-        dto.setId(String.valueOf(cat.getId()));
+        dto.setId(cat.getId());
         dto.setTitle(cat.getName(getUser().getUserPreferences().getLanguage()));
         dto.setDescription(cat.getDescription(getUser().getUserPreferences().getLanguage()));
         dtos.add(dto);
