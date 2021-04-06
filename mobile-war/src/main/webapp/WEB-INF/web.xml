@@ -112,15 +112,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceRSEImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceRSEImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceRSEImpl</servlet-name>
-    <url-pattern>/services/spmobile/RSE</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceNavigationImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceNavigationImpl</servlet-class>
   </servlet>

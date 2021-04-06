@@ -32,8 +32,6 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -110,7 +108,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), getSettings().getString("big.avatar.size", "40x"));
     userDTO.setAvatar(avatar);
     try {
-      userDTO.setStatus(new ServiceRSEImpl().getStatus().getDescription());
+      userDTO.setStatus(new ServiceRSE().getStatus().getDescription());
     } catch (Exception e) {
       userDTO.setStatus("");
     }

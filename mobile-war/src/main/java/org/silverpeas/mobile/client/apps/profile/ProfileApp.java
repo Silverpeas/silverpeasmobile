@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.profile;
 import com.google.gwt.core.client.GWT;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;
 import org.silverpeas.mobile.client.apps.profile.pages.ProfilePage;
@@ -35,6 +36,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -64,22 +66,30 @@ public class ProfileApp extends App {
             if (event.getName().equals(ProfileEvents.POST.toString())) {
                 final String postStatus = (String) event.getData();
                 if (postStatus != null && postStatus.length() > 0) {
-                    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<String>() {
+                  TextCallback action = new TextCallback() {
+                    @Override
+                    public void onFailure(final Method method, final Throwable t) {
+                      if (NetworkHelper.getInstance().isOffline()) {
+                        Notification.alert(msg.needToBeOnline());
+                      } else {
+                        EventBus.getInstance().fireEvent(new ErrorEvent(t));
+                      }
+                    }
 
-                        @Override
-                        public void attempt() {
-                            ServicesLocator.getServiceRSE().updateStatus(postStatus, this);
-                        }
-
-                        public void onSuccess(String result) {
-                            super.onSuccess(result);
-                            StatusDTO status = new StatusDTO();
-                            status.setCreationDate(new Date());
-                            status.setDescription(result);
-                            EventBus.getInstance().fireEvent(new PageEvent(ProfileApp.this, ProfileEvents.POSTED.toString(), status));
-                        }
-                    };
-                    action.attempt();
+                    @Override
+                    public void onSuccess(final Method method, final String s) {
+                      Notification.activityStop();
+                      StatusDTO status = new StatusDTO();
+                      status.setCreationDate(new Date());
+                      status.setDescription(s);
+                      EventBus.getInstance().fireEvent(new PageEvent(ProfileApp.this, ProfileEvents.POSTED.toString(), status));
+                    }
+                  };
+                  if (!NetworkHelper.getInstance().isOffline()) {
+                    ServicesLocator.getServiceRSE().updateStatus(postStatus, action);
+                  } else {
+                    Notification.alert(msg.needToBeOnline());
+                  }
                 }
             } else if (event.getName().equals(ProfileEvents.CHANGEPWD.toString())) {
               final String pwd = (String) event.getData();

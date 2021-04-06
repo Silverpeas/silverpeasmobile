@@ -21,18 +21,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.RSEexception;
 
-import java.util.List;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-@RemoteServiceRelativePath("RSE")
-public interface ServiceRSE extends RemoteService {
-  public String updateStatus(String status) throws RSEexception, AuthenticationException;
-  public StatusDTO getStatus() throws RSEexception, AuthenticationException;
+/**
+ * @author svu
+ */
+@Path("/rse")
+public interface ServiceRSE extends RestService {
+
+  @POST
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("status/{textStatus}")
+  public void updateStatus(@PathParam("textStatus") String textStatus, TextCallback callback);
+
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("status")
+  public void getStatus(MethodCallback<StatusDTO> callback);
 }
