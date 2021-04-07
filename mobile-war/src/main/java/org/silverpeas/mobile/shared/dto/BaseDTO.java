@@ -26,6 +26,8 @@ package org.silverpeas.mobile.shared.dto;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
+import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
+import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.io.Serializable;
@@ -37,6 +39,9 @@ import java.io.Serializable;
     @JsonSubTypes.Type(value = GroupDTO.class, name = "GroupeDTO"),
     @JsonSubTypes.Type(value = PostDTO.class, name = "PostDTO"),
     @JsonSubTypes.Type(value = StatusDTO.class, name = "StatusDTO"),
+    @JsonSubTypes.Type(value = ClassifiedsDTO.class, name = "ClassifiedsDTO"),
+    @JsonSubTypes.Type(value = ClassifiedDTO.class, name = "ClassifiedDTO"),
+    @JsonSubTypes.Type(value = FormFieldDTO.class, name = "FormFieldDTO"),
     @JsonSubTypes.Type(value = NewsDTO.class, name = "NewsDTO")})
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class BaseDTO implements Serializable {

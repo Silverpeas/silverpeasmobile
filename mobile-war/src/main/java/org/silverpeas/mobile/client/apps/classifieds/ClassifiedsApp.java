@@ -24,8 +24,7 @@
 package org.silverpeas.mobile.client.apps.classifieds;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.AbstractClassifiedsAppEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsAppEventHandler;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsLoadEvent;
@@ -42,10 +41,8 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.event.ErrorEvent;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
@@ -75,28 +72,16 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
 
   @Override
   public void loadClassifieds(final ClassifiedsLoadEvent event) {
-    final String key = "classifieds_" + getApplicationInstance().getId();
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        ClassifiedsDTO result = LocalStorageHelper.load(key, ClassifiedsDTO.class);
-        if (result == null) {
-          result = new ClassifiedsDTO();
-        }
-        EventBus.getInstance().fireEvent(new ClassifiedsLoadedEvent(result));
-      }
-    };
-
-    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<ClassifiedsDTO>(offlineAction) {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<ClassifiedsDTO>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceClassifieds().getClassifieds(getApplicationInstance().getId(), this);
       }
 
       @Override
-      public void onSuccess(ClassifiedsDTO result) {
-        super.onSuccess(result);
-        LocalStorageHelper.store(key, ClassifiedsDTO.class, result);
+      public void onSuccess(final Method method, final ClassifiedsDTO result) {
+        super.onSuccess(method, result);
         EventBus.getInstance().fireEvent(new ClassifiedsLoadedEvent(result));
       }
     };
@@ -105,11 +90,12 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
 
   @Override
   public void sendMessage(final ClassifiedsSendMessageEvent event) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly() {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly() {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceClassifieds().sendMessageToOwner(event.getMessage(),
-            event.getData(), getApplicationInstance().getId(), this);
+        super.attempt();
+        ServicesLocator.getServiceClassifieds().sendMessageToOwner(getApplicationInstance().getId(), event.getMessage(),
+            event.getData(), this);
       }
     };
     action.attempt();
@@ -132,14 +118,16 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
     appDTO.setId(content.getInstanceId());
     setApplicationInstance(appDTO);
     if (content.getType().equals(ContentsTypes.Classified.toString())) {
-      ServicesLocator.getServiceClassifieds().getClassified(content.getInstanceId(), content.getId(), new AsyncCallback<ClassifiedsDTO>() {
+      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<ClassifiedsDTO>(null) {
         @Override
-        public void onFailure(final Throwable throwable) {
-          EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+        public void attempt() {
+          super.attempt();
+          ServicesLocator.getServiceClassifieds().getClassified(content.getInstanceId(), content.getId(), this);
         }
 
         @Override
-        public void onSuccess(final ClassifiedsDTO data) {
+        public void onSuccess(final Method method, final ClassifiedsDTO data) {
+          super.onSuccess(method, data);
           ClassifiedDTO c = data.getClassifieds().get(0);
           ClassifiedPage page = new ClassifiedPage();
           page.setComments(data.hasComments());
@@ -150,7 +138,8 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
           Notification.activityStop();
           page.show();
         }
-      });
+      };
+      action.attempt();
     }
   }
 

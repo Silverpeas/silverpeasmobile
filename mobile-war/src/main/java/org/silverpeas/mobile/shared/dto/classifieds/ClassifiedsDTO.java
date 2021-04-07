@@ -23,7 +23,8 @@
 
 package org.silverpeas.mobile.shared.dto.classifieds;
 
-import java.io.Serializable;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ import java.util.Map;
 /**
  * @author svu
  */
-public class ClassifiedsDTO implements Serializable {
+public class ClassifiedsDTO extends BaseDTO {
 
   private Map<String,String> types;
   private Map<String, String> categories;
@@ -48,6 +49,10 @@ public class ClassifiedsDTO implements Serializable {
 
   public Map<String, String> getCategories() {
     return categories;
+  }
+
+  public void setClassifieds(final List<ClassifiedDTO> classifieds) {
+    this.classifieds = classifieds;
   }
 
   public void setTypes(final Map<String, String> types) {

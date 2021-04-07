@@ -30,6 +30,7 @@ import org.silverpeas.components.classifieds.service.ClassifiedServiceProvider;
 import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.AdministrationServiceProvider;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
@@ -45,15 +46,24 @@ import org.silverpeas.core.contribution.template.publication.PublicationTemplate
 import org.silverpeas.core.notification.user.builder.helper.UserNotificationHelper;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.core.webapi.base.RESTWebService;
+import org.silverpeas.core.webapi.base.annotation.Authorized;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.FormsHelper;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.ClassifiedsException;
-import org.silverpeas.mobile.shared.services.ServiceClassifieds;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,19 +71,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Service de gestion des news.
- * @author svu
+/*
+ * Copyright (C) 2000 - 2020 Silverpeas
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://www.silverpeas.org/docs/core/legal/floss_exception.html"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class ServiceClassifiedsImpl extends AbstractAuthenticateService implements
-    ServiceClassifieds {
+@WebService
+@Authorized
+@Path(ServiceClassifieds.PATH + "/{appId}")
+public class ServiceClassifieds extends RESTWebService {
 
-  private static final long serialVersionUID = 1L;
+  @Context
+  HttpServletRequest request;
+
+  @PathParam("appId")
+  private String componentId;
+
+  static final String PATH = "classifieds";
+
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 
-  @Override
-  public ClassifiedsDTO getClassified(String instanceId, String id) throws ClassifiedsException, AuthenticationException {
-    ClassifiedsDTO dto = getClassifieds(instanceId);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{Id}")
+  public ClassifiedsDTO getClassified(@PathParam("Id") String id) {
+    ClassifiedsDTO dto = getClassifieds();
     for (ClassifiedDTO c : dto.getClassifieds()) {
       if (c.getId().equals(id)) {
         dto.getClassifieds().clear();
@@ -84,12 +124,14 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
     return dto;
   }
 
-  @Override
-  public void sendMessageToOwner(String message, ClassifiedDTO dto, String instanceId) throws ClassifiedsException, AuthenticationException {
-    checkUserInSession();
-    ClassifiedDetail classified = getClassifiedDetailById(dto.getId(), instanceId);
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{instanceId}/{message}")
+  public void sendMessageToOwner(@PathParam("message") String message, ClassifiedDTO dto) {
+    ClassifiedDetail classified = getClassifiedDetailById(dto.getId(), componentId);
     UserNotificationHelper.buildAndSend(new ClassifiedOwnerNotification(classified,
-        getUserInSession().getId(), message));
+        getUser().getId(), message));
   }
 
   private ClassifiedDetail getClassifiedDetailById(String id, String instanceId) {
@@ -101,25 +143,26 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
     return null;
   }
 
-  @Override
-  public ClassifiedsDTO getClassifieds(String instanceId) throws ClassifiedsException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("all")
+  public ClassifiedsDTO getClassifieds() {
     ClassifiedsDTO dto = new ClassifiedsDTO();
 
     try {
-      String searchFields1 = getSearchField1(instanceId, "searchFields1");
-      String searchFields2 = getSearchField1(instanceId, "searchFields2");
-      dto.setCategories(createListField(instanceId, searchFields1));
-      dto.setTypes(createListField(instanceId, searchFields2));
-      dto.setHasComments(hasComments(instanceId));
+      String searchFields1 = getSearchField1(componentId, "searchFields1");
+      String searchFields2 = getSearchField1(componentId, "searchFields2");
+      dto.setCategories(createListField(componentId, searchFields1));
+      dto.setTypes(createListField(componentId, searchFields2));
+      dto.setHasComments(hasComments(componentId));
       ClassifiedService service = ClassifiedServiceProvider.getClassifiedService();
-      List<ClassifiedDetail> classifiedDetails = service.getAllValidClassifieds(instanceId);
+      List<ClassifiedDetail> classifiedDetails = service.getAllValidClassifieds(componentId);
       for (ClassifiedDetail classifiedDetail : classifiedDetails) {
         dto.getClassifieds().add(populate(classifiedDetail));
       }
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
-      throw new ClassifiedsException(e);
+      throw new WebApplicationException(e);
     }
 
     return dto;
@@ -150,9 +193,11 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
 
     SimpleDocumentPK pk = new SimpleDocumentPK(classifiedDetail.getId(), classifiedDetail.getComponentInstanceId());
     List<String> pictures = new ArrayList<>();
-    SimpleDocumentList<SimpleDocument> pics = AttachmentServiceProvider.getAttachmentService().listAllDocumentsByForeignKey(new ResourceReference(pk), getUserInSession().getUserPreferences().getLanguage());
+    SimpleDocumentList<SimpleDocument> pics = AttachmentServiceProvider
+        .getAttachmentService().listAllDocumentsByForeignKey(new ResourceReference(pk), getUser().getUserPreferences().getLanguage());
     for (SimpleDocument pic : pics) {
-      String s = DataURLHelper.convertPictureToUrlData(pic.getAttachmentPath(), pic.getFilename(), "600x");
+      String s = DataURLHelper
+          .convertPictureToUrlData(pic.getAttachmentPath(), pic.getFilename(), "600x");
       pictures.add(s);
     }
     dto.setPictures(pictures);
@@ -166,14 +211,16 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
     if (pubTemplate != null) {
       RecordSet recordSet = pubTemplate.getRecordSet();
       DataRecord data = recordSet.getRecord(classifiedDetail.getId());
-      List<FormFieldDTO> fields = FormsHelper.getInstance().getViewFormFields(pubTemplate, data, getUserInSession());
+      List<FormFieldDTO> fields = FormsHelper
+          .getInstance().getViewFormFields(pubTemplate, data, getUser());
       dto.setFields(fields);
       dto.setCategory(data.getField(getSearchField1(classifiedDetail.getComponentInstanceId(), "searchFields1")).getValue());
       dto.setType(data.getField(getSearchField2(classifiedDetail.getComponentInstanceId(), "searchFields2")).getValue());
     }
     final ResourceReference ref = new ResourceReference(
         new PublicationPK(classifiedDetail.getId()));
-    dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(ClassifiedDetail.getResourceType(), ref));
+    dto.setCommentsNumber(CommentServiceProvider
+        .getCommentService().getCommentsCountOnResource(ClassifiedDetail.getResourceType(), ref));
 
     return dto;
   }
@@ -181,16 +228,17 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
   private Map<String, String> createListField(String instanceId, String listName) throws Exception {
     Map<String, String> fields = Collections.synchronizedMap(new HashMap<>());
     if (StringUtil.isDefined(listName)) {
-        PublicationTemplate pubTemplate = getPublicationTemplate(instanceId);
-        if (pubTemplate != null) {
-          GenericFieldTemplate field = (GenericFieldTemplate) pubTemplate.getRecordTemplate().getFieldTemplate(listName);
-          return field.getKeyValuePairs(getUserInSession().getUserPreferences().getLanguage());
-        }
+      PublicationTemplate pubTemplate = getPublicationTemplate(instanceId);
+      if (pubTemplate != null) {
+        GenericFieldTemplate field = (GenericFieldTemplate) pubTemplate.getRecordTemplate().getFieldTemplate(listName);
+        return field.getKeyValuePairs(getUser().getUserPreferences().getLanguage());
+      }
     } else { }
     return fields;
   }
 
-  private PublicationTemplate getPublicationTemplate(String instanceId) throws PublicationTemplateException {
+  private PublicationTemplate getPublicationTemplate(String instanceId) throws
+                                                                        PublicationTemplateException {
     PublicationTemplate pubTemplate = null;
     String xmlFormName = AdministrationServiceProvider.getAdminService().getComponentParameterValue(instanceId, "XMLFormName");
     if (StringUtil.isDefined(xmlFormName)) {
@@ -202,4 +250,17 @@ public class ServiceClassifiedsImpl extends AbstractAuthenticateService implemen
     }
     return pubTemplate;
   }
+
+
+
+  @Override
+  protected String getResourceBasePath() {
+    return PATH;
+  }
+
+  @Override
+  public String getComponentId() {
+    return this.componentId;
+  }
+
 }

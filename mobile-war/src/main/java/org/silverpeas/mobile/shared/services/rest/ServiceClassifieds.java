@@ -21,19 +21,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.ClassifiedsException;
 
-@RemoteServiceRelativePath("Classifieds")
-public interface ServiceClassifieds extends RemoteService {
-  void sendMessageToOwner(String message, ClassifiedDTO dto, String instanceId) throws ClassifiedsException, AuthenticationException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-  public ClassifiedsDTO getClassifieds(String instanceId) throws ClassifiedsException, AuthenticationException;
-  public ClassifiedsDTO getClassified(String instanceId, String id) throws ClassifiedsException, AuthenticationException;
+/**
+ * @author svu
+ */
+@Path("/classifieds")
+public interface ServiceClassifieds extends RestService {
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{appId}/{Id}")
+  public void getClassified(@PathParam("appId") String appId, @PathParam("Id") String id,
+      MethodCallback<ClassifiedsDTO> callback);
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{appId}/{instanceId}/{message}")
+  public void sendMessageToOwner(@PathParam("appId") String appId, @PathParam("message") String message, ClassifiedDTO dto,
+      MethodCallback<Void> callback);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{appId}/all")
+  public void getClassifieds(@PathParam("appId") String appId, MethodCallback<ClassifiedsDTO> callback);
 }
+
+

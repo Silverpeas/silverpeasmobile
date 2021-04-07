@@ -26,6 +26,7 @@ package org.silverpeas.mobile.server.services.helpers;
 
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.user.model.GroupDetail;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
@@ -61,7 +62,7 @@ public class FormsHelper {
     return instance;
   }
 
-  public List<FormFieldDTO> getViewFormFields(PublicationTemplate pubTemplate, DataRecord data, UserDetail currentUser) throws Exception {
+  public List<FormFieldDTO> getViewFormFields(PublicationTemplate pubTemplate, DataRecord data, User currentUser) throws Exception {
     List<FormFieldDTO> fields = new ArrayList<>();
 
     Form form = pubTemplate.getViewForm();
@@ -119,7 +120,7 @@ public class FormsHelper {
     return fields;
   }
 
-  private String getDisplayValue(final FieldTemplate ft, String value, UserDetail currentUser, String instanceId) {
+  private String getDisplayValue(final FieldTemplate ft, String value, User currentUser, String instanceId) {
     Map<String, String> params = ft.getParameters(currentUser.getUserPreferences().getLanguage());
     String keys = params.get("keys");
     String values = params.get("values");

@@ -23,16 +23,15 @@
 
 package org.silverpeas.mobile.shared.dto.classifieds;
 
+import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author svu
  */
-public class ClassifiedDTO implements Serializable {
-  private String id;
+public class ClassifiedDTO extends BaseDTO {
   private String title;
   private String description;
   private String price;
@@ -116,14 +115,6 @@ public class ClassifiedDTO implements Serializable {
 
   public void setUpdateDate(final String updateDate) {
     this.updateDate = updateDate;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(final String id) {
-    this.id = id;
   }
 
   public int getCommentsNumber() {

@@ -76,15 +76,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceClassifiedsImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceClassifiedsImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceClassifiedsImpl</servlet-name>
-    <url-pattern>/services/spmobile/Classifieds</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceSurveyImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceSurveyImpl</servlet-class>
   </servlet>
