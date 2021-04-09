@@ -23,31 +23,21 @@
 
 package org.silverpeas.mobile.shared.dto;
 
-import java.io.Serializable;
 
-public class TaskDTO implements Serializable {
+public class TaskDTO extends BaseDTO {
 
   private static final long serialVersionUID = 2921606984249560882L;
 
-  private int id, percentCompleted;
+  private int percentCompleted;
   private String priority;
   private String name = "";
   private String delegator = "";
   private String endDate = "";
   private String externalId;
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-
   @Override
   public boolean equals(Object obj) {
-    return ((TaskDTO) obj).getId() == id;
+    return ((TaskDTO) obj).getId().equals(getId());
   }
 
   public String getName() {

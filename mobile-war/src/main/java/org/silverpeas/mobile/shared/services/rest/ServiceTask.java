@@ -21,17 +21,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-public interface ServiceTasksAsync {
-  void loadTasks(final AsyncCallback<List<TaskDTO>> async);
+/**
+ * @author svu
+ */
+@Path("/personalTask")
+public interface ServiceTask extends RestService {
 
-  void updateTask(TaskDTO task, final AsyncCallback<Void> async);
 
-  void createTask(final TaskDTO task, final AsyncCallback<TaskDTO> async);
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("all")
+  public void loadTasks(MethodCallback<List<TaskDTO>> callback);
+
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("")
+  public void updateTask(TaskDTO task, MethodCallback<Void> callback);
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("")
+  public void createTask(TaskDTO task, MethodCallback<TaskDTO> callback);
+
 }
