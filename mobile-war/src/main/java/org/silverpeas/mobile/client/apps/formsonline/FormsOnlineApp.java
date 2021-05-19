@@ -169,13 +169,23 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     for (FormFieldDTO f : formSaveEvent.getData()) {
       if (f.getType().equalsIgnoreCase("file")) {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getObjectValue());
-      } else if(f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") || f.getType().equalsIgnoreCase("group")) {
+      } else if(isStoreValueId(f)) {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValueId());
       } else {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
       }
     }
     saveForm(this, formData, SpMobil.getUserToken(), AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN), getApplicationInstance().getId(), currentForm.getId());
+  }
+
+  public static boolean isStoreValueId(FormFieldDTO f) {
+    boolean r =
+        f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") ||
+            f.getType().equalsIgnoreCase("group") ||
+            f.getDisplayerName().equalsIgnoreCase("checkbox") ||
+            f.getDisplayerName().equalsIgnoreCase("radio") ||
+            f.getDisplayerName().equalsIgnoreCase("listbox");
+    return r;
   }
 
   private static native void saveForm(FormsOnlineApp app, JavaScriptObject fd, String token, String stkn, String instanceId, String formId) /*-{
