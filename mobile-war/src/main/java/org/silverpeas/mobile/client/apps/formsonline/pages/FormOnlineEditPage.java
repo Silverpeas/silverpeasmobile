@@ -32,6 +32,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormSaveEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
@@ -135,7 +136,7 @@ public class FormOnlineEditPage extends PageContent implements FormsOnlinePagesE
               errors.add(f.getLabel());
             }
           }
-        } else if (f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("group") ||f.getType().equalsIgnoreCase("multipleUser")) {
+        } else if (FormsOnlineApp.isStoreValueId(f)) {
           if (f.getValueId() == null || f.getValueId().isEmpty()) {
             errors.add(f.getLabel());
           }

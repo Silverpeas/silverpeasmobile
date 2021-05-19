@@ -76,33 +76,35 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         data.setObjectValue(((TextBox) changeEvent.getSource()).getElement());
       } else {
         value = ((TextBox) changeEvent.getSource()).getText();
+        data.setValue(value);
       }
     } else if (changeEvent.getSource() instanceof TextArea) {
       value = ((TextArea) changeEvent.getSource()).getText();
+      data.setValue(value);
     } else if (changeEvent.getSource() instanceof ListBox) {
       value = ((ListBox) changeEvent.getSource()).getSelectedValue();
+      data.setValueId(value);
     }
-    data.setValue(value);
   }
 
   @Override
   public void onValueChange(final ValueChangeEvent valueChangeEvent) {
     String value = "";
     if (valueChangeEvent.getSource() instanceof RadioButton) {
-      value = ((RadioButton) valueChangeEvent.getSource()).getText();
+      value = ((RadioButton) valueChangeEvent.getSource()).getFormValue();
     } else if(valueChangeEvent.getSource() instanceof CheckBox) {
       FlowPanel p = (FlowPanel) ((CheckBox) valueChangeEvent.getSource()).getParent();
       for (int i = 0; i < p.getWidgetCount(); i++) {
         CheckBox c = (CheckBox) p.getWidget(i);
         if (c.getValue()) {
-          value += c.getName() + ",";
+          value += c.getFormValue() + "##";
         }
       }
-      if (value.indexOf(",") != -1) {
-        value = value.substring(0, value.length() - 1);
+      if (value.indexOf("#") != -1) {
+        value = value.substring(0, value.length() - 2);
       }
     }
-    data.setValue(value);
+    data.setValueId(value);
   }
 
   @Override
@@ -171,6 +173,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
       for(Map.Entry<String,String> v : data.getValues().entrySet()) {
         RadioButton rb0 = new RadioButton(data.getName(), v.getValue());
+        rb0.setFormValue(v.getKey());
         rb0.addValueChangeHandler(this);
         if (data.getValue() != null && data.getValue().equals(v.getValue())) {
           rb0.setValue(true);
@@ -183,6 +186,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
       for(Map.Entry<String,String> v : data.getValues().entrySet()) {
         CheckBox chk = new CheckBox(v.getValue());
+        chk.setFormValue(v.getKey());
         chk.setName(v.getValue());
         chk.addValueChangeHandler(this);
         panel.add(chk);

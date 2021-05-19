@@ -26,7 +26,7 @@ package org.silverpeas.mobile.client.apps.formsonline;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.*;
@@ -55,7 +55,6 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -64,7 +63,6 @@ import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, NavigationEventHandler {
@@ -161,7 +159,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
     for (FormFieldDTO f : formSaveEvent.getData()) {
       if (f.getType().equalsIgnoreCase("file")) {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getObjectValue());
-      } else if(f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") || f.getType().equalsIgnoreCase("group")) {
+      } else if(isStoreValueId(f)) {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValueId());
       } else {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
@@ -175,6 +173,16 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
     saveForm(this, formData, SpMobil.getUserToken(),
           AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN),
           getApplicationInstance().getId(), currentForm.getId());
+  }
+
+  public static boolean isStoreValueId(FormFieldDTO f) {
+    boolean r =
+        f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") ||
+            f.getType().equalsIgnoreCase("group") ||
+            f.getDisplayerName().equalsIgnoreCase("checkbox") ||
+            f.getDisplayerName().equalsIgnoreCase("radio") ||
+            f.getDisplayerName().equalsIgnoreCase("listbox");
+    return r;
   }
 
   private static native void saveForm(FormsOnlineApp app, JavaScriptObject fd, String token, String stkn, String instanceId, String formId) /*-{
