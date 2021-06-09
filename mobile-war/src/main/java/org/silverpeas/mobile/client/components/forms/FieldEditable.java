@@ -34,6 +34,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadUserFieldEvent;
@@ -206,8 +207,9 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       }
       l.setEnabled(!data.isReadOnly());
       l.addChangeHandler(this);
-      l.setSelectedIndex(i);
-      data.setValue(l.getSelectedValue());
+      l.setSelectedIndex(0);
+      data.setValue(l.getSelectedItemText());
+      data.setValueId(l.getSelectedValue());
       w = l;
     } else if(type.equalsIgnoreCase("file") || type.equalsIgnoreCase("image") || type.equalsIgnoreCase("video")) {
       TextBox t = new TextBox();
