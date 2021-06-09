@@ -206,8 +206,9 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       }
       l.setEnabled(!data.isReadOnly());
       l.addChangeHandler(this);
-      l.setSelectedIndex(i);
-      data.setValue(l.getSelectedValue());
+      l.setSelectedIndex(0);
+      data.setValue(l.getSelectedItemText());
+      data.setValueId(l.getSelectedValue());
       w = l;
     } else if(type.equalsIgnoreCase("file") || type.equalsIgnoreCase("image") || type.equalsIgnoreCase("video")) {
       TextBox t = new TextBox();
