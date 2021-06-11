@@ -275,14 +275,45 @@ public class ServiceFormsOnline extends RESTWebService {
       List<FormFieldDTO> dataForm = new ArrayList<>();
       for (String name : record.getFieldNames()) {
         Field field = record.getField(name);
-        FormFieldDTO fieldDTO = new FormFieldDTO();
-        fieldDTO.setLabel(getLabel(f, name));
-        fieldDTO.setValue(field.getStringValue());
+        FormFieldDTO fieldDTO = populateField(f, field);
         dataForm.add(fieldDTO);
       }
       dto.setData(dataForm);
     }
     return dto;
+  }
+
+  private FormFieldDTO populateField(final FormInstance f, final Field field) {
+    FormFieldDTO fieldDTO = new FormFieldDTO();
+    fieldDTO.setLabel(getLabel(f, field.getName()));
+    for (FieldTemplate fTemplate : f.getFormWithData().getFieldTemplates()) {
+      if (fTemplate.getFieldName().equals(field.getName())) {
+        Map<String, String> params = fTemplate.getParameters(getUser().getId());
+        if (params.containsKey("keys")) {
+          String [] keys = params.get("keys").split("##");
+          String [] values = params.get("values").split("##");
+          if (field.getValue().contains("##")) {
+            String [] fiedValues = field.getValue().split("##");
+            String fieldDisplayValue = "";
+            for (String fieldValue : fiedValues) {
+              int index = Arrays.asList(keys).indexOf(fieldValue);
+              fieldDisplayValue += values[index] + " ";
+            }
+            fieldDTO.setValue(fieldDisplayValue);
+            fieldDTO.setValueId(field.getValue());
+          } else {
+            int index = Arrays.asList(keys).indexOf(field.getValue());
+            fieldDTO.setValue(values[index]);
+            fieldDTO.setValueId(field.getValue());
+          }
+
+        } else {
+          fieldDTO.setValue(field.getValue());
+          fieldDTO.setValueId(field.getStringValue());
+        }
+      }
+    }
+    return fieldDTO;
   }
 
   private String getLabel(final FormInstance f, final String name) {
