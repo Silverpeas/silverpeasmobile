@@ -113,7 +113,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       String value = "";
       ListBox l = ((ListBox) w);
       l.clear();
-      l.setVisibleItemCount(event.getUsersAndGroupsSelected().size() + 1);
+      l.setVisibleItemCount(event.getUsersAndGroupsSelected().size());
       for (BaseDTO dto : event.getUsersAndGroupsSelected()) {
         if (dto instanceof UserDTO) {
           UserDTO u = (UserDTO) dto;
@@ -272,7 +272,6 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       }
       l.setWidth("10em");
       l.setEnabled(!data.isReadOnly());
-      l.setVisibleItemCount(2);
       l.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(final ClickEvent clickEvent) {
