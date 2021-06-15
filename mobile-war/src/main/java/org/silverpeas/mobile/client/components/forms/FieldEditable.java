@@ -50,7 +50,7 @@ import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -111,23 +111,24 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
   public void onUsersAndGroupSelected(final UsersAndGroupsSelectedEvent event) {
     if (event.getContentId().equals(data.getName()) ) {
       String value = "";
-      ListBox l = ((ListBox) w);
-      l.clear();
-      l.setVisibleItemCount(event.getUsersAndGroupsSelected().size());
+      TextArea t = ((TextArea) w);
+      t.setVisibleLines(event.getUsersAndGroupsSelected().size());
+      t.setText("");
       for (BaseDTO dto : event.getUsersAndGroupsSelected()) {
         if (dto instanceof UserDTO) {
           UserDTO u = (UserDTO) dto;
-          l.addItem(u.getFirstName() + " " + u.getLastName(), u.getId());
+          t.setText(t.getText() + u.getFirstName() + " " + u.getLastName() + "\n");
           value = value + u.getId() + ",";
         } else if (dto instanceof GroupDTO) {
           GroupDTO g = (GroupDTO) dto;
-          l.addItem(g.getName(), g.getId());
+          t.setText(g.getName());
           value = value + g.getId() + ",";
         }
       }
       if (!value.isEmpty()) {
         value = value.substring(0, value.length()-1);
       }
+      t.getElement().setAttribute("data", value);
       data.setValueId(value);
     }
   }
@@ -256,23 +257,26 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         t.addChangeHandler(this);
         w = t;
     } else if(type.equalsIgnoreCase("user") || type.equalsIgnoreCase("multipleUser") || type.equalsIgnoreCase("group")) {
-      ListBox l = new ListBox();
+      TextArea t = new TextArea();
+      t.getElement().getStyle().setOverflow(Style.Overflow.HIDDEN);
+      t.getElement().getStyle().setProperty("resize", "none");
       if (type.equalsIgnoreCase("multipleUser")) {
         if (data.getValue() != null && data.getValueId() != null && !data.getValue().isEmpty() && !data.getValueId().isEmpty()) {
           String[] values = data.getValue().split(",");
           String[] ids = data.getValueId().split(",");
           for (int i = 0; i < values.length; i++) {
-            l.addItem(values[i], ids[i].trim());
+            t.setText(t.getText() + "\n" + values[i]);
           }
+          t.getElement().setAttribute("data", data.getValueId());
         }
       } else {
         if (data.getValue() != null && !data.getValue().isEmpty()) {
-          l.addItem(data.getValue(), data.getValueId());
+          t.setText(data.getValue());
         }
       }
-      l.setWidth("10em");
-      l.setEnabled(!data.isReadOnly());
-      l.addClickHandler(new ClickHandler() {
+      t.setWidth("10em");
+      t.setEnabled(!data.isReadOnly());
+      t.addClickHandler(new ClickHandler() {
         @Override
         public void onClick(final ClickEvent clickEvent) {
           UserSelectionPage page = new UserSelectionPage();
@@ -280,18 +284,15 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
           page.setContentId(data.getName());
 
           // get users or groups selected before
-          ListBox ls = ((ListBox) clickEvent.getSource());
-          List<String> ids = new ArrayList<String>();
-          for (int i = 0; i < ls.getItemCount(); i++) {
-            ids.add(ls.getValue(i));
-          }
+          TextArea tx = ((TextArea) clickEvent.getSource());
+          List<String> ids = Arrays.asList(tx.getElement().getAttribute("data").split(","));
           page.setPreSelectedIds(ids);
           sendEventToGetPossibleUsers();
           page.show();
         }
       });
 
-      w = l;
+      w = t;
     } else if(type.equalsIgnoreCase("url")) {
       TextBox t = new TextBox();
       t.getElement().setAttribute("type", "url");
