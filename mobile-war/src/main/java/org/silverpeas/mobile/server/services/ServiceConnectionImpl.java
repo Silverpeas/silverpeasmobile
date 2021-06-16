@@ -32,6 +32,7 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
+import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -41,6 +42,7 @@ import org.silverpeas.mobile.shared.exceptions.AuthenticationException.Authentic
 import org.silverpeas.mobile.shared.exceptions.NavigationException;
 import org.silverpeas.mobile.shared.services.ServiceConnection;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,9 @@ import java.util.List;
  */
 public class ServiceConnectionImpl extends AbstractAuthenticateService
     implements ServiceConnection {
+
+  @Inject
+  ChatUserAuthenticationListener chatUserAuthenticationListener;
 
   private static final long serialVersionUID = 1L;
 
@@ -112,6 +117,9 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     } catch (Exception e) {
       userDTO.setStatus("");
     }
+
+    // chat init
+    chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(getThreadLocalRequest(), user, "");
 
     return userDTO;
   }
