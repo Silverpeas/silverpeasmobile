@@ -75,7 +75,8 @@ public class PageHistory implements ValueChangeHandler<String> {
   public PageContent back() {
     String url = Window.Location.getHref();
     String query = Window.Location.getQueryString();
-    if (url.contains("?")) {
+    if (url.contains("?") && pages.size() == 2) {
+      // first page is empty app, because open with shortcut (ex : notification)
       Window.Location.assign(url.replace(query, ""));
       return null;
     } else {
