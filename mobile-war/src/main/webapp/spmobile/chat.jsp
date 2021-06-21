@@ -64,15 +64,6 @@
 
   <script type="text/javascript">
     function init() {
-      window.spLayout = new function() {
-        this.getBody = function() {
-          return this;
-        };
-        this.addEventListener = function() {
-          return this;
-        };
-      };
-
       <c:choose>
       <c:when test="${sessionScope.get('Silverpeas.Chat') and chatUser.chatEnabled and chatServer.isUserExisting(chatUser)}">
       /*window.USERSESSION_PROMISE.then(function() {*/
