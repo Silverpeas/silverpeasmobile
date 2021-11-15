@@ -264,11 +264,17 @@ public class FormServlet extends AbstractSilverpeasMobileServlet {
             Path source = Paths.get(file.toURI());
             String mimeType = Files.probeContentType(source);
             String foreignId = model.getModelId();
+            final UserDetail userInSession = getUserInSession(request);
+            final String userLanguage = userInSession.getUserPreferences().getLanguage();
+            final SimpleAttachment attachment =SimpleAttachment.builder(userLanguage)
+                .setFilename(file.getName())
+                .setTitle(file.getName())
+                .setSize(file.length())
+                .setContentType(mimeType)
+                .setCreationData(userInSession.getId(), new Date())
+                .build();
             SimpleDocument doc = new SimpleDocument(simpleDocPk, foreignId, 0, false,
-                getUserInSession(request).getId(),
-                new SimpleAttachment(file.getName(), getUserInSession(request).getUserPreferences().getLanguage(), file.getName(), "",
-
-                    file.length(), mimeType, getUserInSession(request).getId(), new Date(), null));
+                userInSession.getId(), attachment);
             doc = AttachmentServiceProvider.getAttachmentService().createAttachment(doc, file);
             ((FileField) field).setAttachmentId(doc.getId());
           }
