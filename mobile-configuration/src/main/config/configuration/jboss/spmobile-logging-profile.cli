@@ -1,0 +1,23 @@
+#
+# Define a peculiar logging profile for Spmobile in JBoss/Wildfly
+#
+
+# Start batching commands
+batch
+
+# Add the size rotating file handlers
+
+
+# For Spmobile
+/subsystem=logging/logging-profile=silverpeas/size-rotating-file-handler=SPMOBILE_LOG_FILE:add(level="INFO",suffix=".yyyy.MM.dd.hh.mm.ss", file={"path"=>"${SILVERPEAS_LOG}/spmobile.log"}, append=true, max-backup-index=${SILVERPEAS_LOG_BACKUP_MAX}, rotate-size=${SILVERPEAS_LOG_BACKUP_SIZE}, autoflush=true)
+/subsystem=logging/logging-profile=silverpeas/size-rotating-file-handler=SPMOBILE_LOG_FILE:write-attribute(name="formatter", value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %s%e%n")
+
+# Create a logger for Spmobile
+/subsystem=logging/logging-profile=silverpeas/logger=silverpeas.mobile:add(level="${SILVERPEAS_LOGGING_LEVEL}",handlers=[SPMOBILE_LOG_FILE])
+/subsystem=logging/logging-profile=silverpeas/logger=silverpeas.mobile:write-attribute(name=use-parent-handlers, value=false)
+
+
+#################
+
+# Run the batch commands
+run-batch
