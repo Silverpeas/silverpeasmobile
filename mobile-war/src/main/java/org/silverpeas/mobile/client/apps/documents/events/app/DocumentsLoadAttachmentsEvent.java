@@ -27,11 +27,12 @@ package org.silverpeas.mobile.client.apps.documents.events.app;
 
 public class DocumentsLoadAttachmentsEvent extends AbstractDocumentsAppEvent {
 
-  private String pubId;
+  private String pubId, instanceId;
 
-  public DocumentsLoadAttachmentsEvent(String pubId) {
+  public DocumentsLoadAttachmentsEvent(String pubId, String instanceId) {
     super();
     this.pubId = pubId;
+    this.instanceId = instanceId;
   }
 
   @Override
@@ -41,5 +42,9 @@ public class DocumentsLoadAttachmentsEvent extends AbstractDocumentsAppEvent {
 
   public String getPubId() {
     return pubId;
+  }
+
+  public String getInstanceId() {
+    return instanceId;
   }
 }

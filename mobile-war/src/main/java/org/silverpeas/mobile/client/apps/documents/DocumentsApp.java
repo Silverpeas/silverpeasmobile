@@ -285,7 +285,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       @Override
       public void attempt() {
         super.attempt();
-        ServicesLocator.getRestServiceDocuments().getDocumentsByType(getApplicationInstance().getId(), event.getPubId(),
+        ServicesLocator.getRestServiceDocuments().getDocumentsByType(event.getInstanceId(), event.getPubId(),
             DocumentType.attachment.name(), SpMobil.getUser().getLanguage(), this);
       }
 

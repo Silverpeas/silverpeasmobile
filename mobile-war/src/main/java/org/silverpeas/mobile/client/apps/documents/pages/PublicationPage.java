@@ -158,7 +158,7 @@ public class PublicationPage extends PageContent
    */
   private void display(boolean commentable, boolean ableToStoreContent, String type) {
     if (isVisible()) {
-      EventBus.getInstance().fireEvent(new DocumentsLoadAttachmentsEvent(publication.getId()));
+      EventBus.getInstance().fireEvent(new DocumentsLoadAttachmentsEvent(publication.getId(), publication.getInstanceId()));
       title.setInnerHTML(publication.getName());
       desc.setInnerHTML(publication.getDescription());
 
