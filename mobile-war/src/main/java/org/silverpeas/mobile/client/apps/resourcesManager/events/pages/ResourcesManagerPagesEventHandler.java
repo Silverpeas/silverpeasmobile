@@ -22,8 +22,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.resourcesManager.events.pages;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds, survey, questionReply, pollingStation, resourcesManager;
+import com.google.gwt.event.shared.EventHandler;
+
+public interface ResourcesManagerPagesEventHandler extends EventHandler{
+
 }

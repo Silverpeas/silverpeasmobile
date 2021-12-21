@@ -22,8 +22,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.client.apps.resourcesManager.events.app;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds, survey, questionReply, pollingStation, resourcesManager;
+import com.google.gwt.event.shared.GwtEvent;
+
+public abstract class AbstractResourcesManagerAppEvent extends GwtEvent<ResourcesManagerAppEventHandler>{
+
+  public static Type<ResourcesManagerAppEventHandler> TYPE = new Type<ResourcesManagerAppEventHandler>();
+
+  public AbstractResourcesManagerAppEvent(){
+  }
+
+  @Override
+  public Type<ResourcesManagerAppEventHandler> getAssociatedType() {
+    return TYPE;
+  }
 }
