@@ -25,11 +25,13 @@
 package org.silverpeas.mobile.client.apps.resourcesManager;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AbstractResourcesManagerAppEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.ResourcesManagerAppEventHandler;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.ResourcesManagerPage;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
@@ -74,5 +76,10 @@ public class ResourcesManagerApp extends App implements ResourcesManagerAppEvent
     if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.resourcesManager.name())) {
       super.showContent(event);
     }
+  }
+
+  @Override
+  public void addReservation(final AddReservationEvent event) {
+    //TODO
   }
 }

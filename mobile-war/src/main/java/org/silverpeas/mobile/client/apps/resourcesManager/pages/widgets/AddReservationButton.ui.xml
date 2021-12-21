@@ -22,17 +22,12 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages' />
+    <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages'/>
 
-  <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
-    <div class="content-navigation" style="min-height:100vh;">
-
-    </div>
-  </g:HTMLPanel>
-</ui:UiBinder> 
+    <g:HTMLPanel tag="li" ui:field="container" styleName="">
+        <g:Anchor styleName="" ui:field="addReservation" text="{msg.addReservation}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

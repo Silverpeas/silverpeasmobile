@@ -24,15 +24,30 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <div class="content-navigation" style="min-height:100vh;">
-
+      <g:Label>Evènement</g:Label>
+      <g:TextBox ui:field="title"></g:TextBox>
+      <g:Image styleName="mandatory"></g:Image>
+      <g:Label><ui:text from="{msg.startDate}"/></g:Label>
+      <g:TextBox ui:field="start"></g:TextBox>
+      <g:Image styleName="mandatory"></g:Image>
+      <g:Label><ui:text from="{msg.endDate}"/></g:Label>
+      <g:TextBox ui:field="end"></g:TextBox>
+      <g:Image styleName="mandatory"></g:Image>
+      <g:Label><ui:text from="{msg.reason}"/></g:Label>
+      <g:TextArea ui:field="reason" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
+      <div class=" ui-controlgroup ui-controlgroup-horizontal">
+        <div class="ui-controlgroup-controls ">
+          <g:Anchor ui:field="validate" styleName="btn-validate ui-link">
+            <span class="ui-btn-text"><ui:text from="{msg.validate}"/></span>
+          </g:Anchor>
+        </div>
+      </div>
     </div>
   </g:HTMLPanel>
 </ui:UiBinder> 

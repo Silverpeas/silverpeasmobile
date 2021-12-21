@@ -24,9 +24,19 @@
 
 package org.silverpeas.mobile.client.apps.resourcesManager.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface ResourcesManagerAppEventHandler extends EventHandler{
+import org.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
+import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesAppEventHandler;
 
-  void addReservation(AddReservationEvent event);
+public class AddReservationEvent extends AbstractResourcesManagerAppEvent {
+
+
+  public AddReservationEvent(){
+    super();
+  }
+
+  @Override
+  protected void dispatch(ResourcesManagerAppEventHandler handler) {
+    handler.addReservation(this);
+  }
 }

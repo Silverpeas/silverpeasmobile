@@ -25,50 +25,48 @@
 package org.silverpeas.mobile.client.apps.resourcesManager.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
-import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.AddReservationButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 
-public class ResourcesManagerPage extends PageContent implements ResourcesManagerPagesEventHandler {
+public class ReservationPage extends PageContent implements ResourcesManagerPagesEventHandler {
 
   private static ResourcesManagerPageUiBinder uiBinder = GWT.create(ResourcesManagerPageUiBinder.class);
 
   @UiField(provided = true) protected ResourcesManagerMessages msg = null;
 
   @UiField
-  ActionsMenu actionsMenu;
+  TextBox start, end;
 
-  private AddToFavoritesButton favorite = new AddToFavoritesButton();
-  private AddReservationButton addReservation = new AddReservationButton();
-  private String instanceId;
-
-  interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ResourcesManagerPage> {
+  interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ReservationPage> {
   }
 
-  public ResourcesManagerPage() {
+  public ReservationPage() {
     msg = GWT.create(ResourcesManagerMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractResourcesManagerPagesEvent.TYPE, this);
-
-    actionsMenu.addAction(favorite);
-    //favorite.init();
-    actionsMenu.addAction(addReservation);
-    //EventBus.getInstance().fireEvent(new ResourcesManagerLoadEvent("all"));
+    start.getElement().setAttribute("type", "datetime-local");
+    end.getElement().setAttribute("type", "datetime-local");
   }
 
   @Override
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractResourcesManagerPagesEvent.TYPE, this);
+  }
+
+  @UiHandler("validate")
+  protected void validate(ClickEvent event) {
+    //TODO : retreive reservables resources
   }
 
 }
