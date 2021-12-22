@@ -875,7 +875,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .app-resourcesManager a {
   background-position: 0.65em -2360px;
-  /*display: none;*/
+  display: none;
 }
 
 .folder-galery a {
