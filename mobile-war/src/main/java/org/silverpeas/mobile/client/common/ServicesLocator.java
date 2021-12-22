@@ -77,6 +77,8 @@ public class ServicesLocator {
   private static ServiceFormsOnline serviceFormsOnline = GWT.create(ServiceFormsOnline.class);
   private static ServiceTermsOfService serviceTermsOfService = GWT.create(ServiceTermsOfService.class);
 
+  private static ServiceResourcesManager serviceResourcesManager = GWT.create(ServiceResourcesManager.class);
+
   private static void initRestContext() {
       Defaults.getServiceRoot().equals("/silverpeas/services");
       Defaults.setServiceRoot("/silverpeas/services");
@@ -98,6 +100,11 @@ public class ServicesLocator {
   public static ServiceBlog getServiceBlog() {
     initRestContext();
     return serviceBlog;
+  }
+
+  public static ServiceResourcesManager getServiceResourcesManager() {
+    initRestContext();
+    return serviceResourcesManager;
   }
 
   public static ServiceFaq getServiceFaq() {

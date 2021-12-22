@@ -22,30 +22,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.resourcesManager.events.app;
+package org.silverpeas.mobile.shared.services.rest;
 
-
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
+import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
 
-public class AddReservationEvent extends AbstractResourcesManagerAppEvent {
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
+/**
+ * @author svu
+ */
+@Path("/resourcesManager")
+public interface ServiceResourcesManager extends RestService {
 
-  public AddReservationEvent(){
-    super();
-  }
+  @GET
+  @Path("{appId}/resources/available/{startDate}/{endDate}")
+  public void getAvailableResources(@PathParam("appId") String appId, @PathParam("startDate") String startDate, @PathParam("endDate") String endDate, MethodCallback<List<ResourceDTO>> callback);
 
-  private ReservationDTO data;
-
-  public ReservationDTO getData() {
-    return data;
-  }
-
-  public void setData(final ReservationDTO data) {
-    this.data = data;
-  }
-
-  @Override
-  protected void dispatch(ResourcesManagerAppEventHandler handler) {
-    handler.addReservation(this);
-  }
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{appId}/saveReservation/{reservation}")
+  public void saveReservation(@PathParam("appId") String appId, ReservationDTO dto,
+      MethodCallback<Void> callback);
 }

@@ -23,16 +23,8 @@
   -->
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base">
-
-  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages' />
-
-  <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
-    <div id="resourcesManager" class="content-navigation" style="min-height:100vh;">
-
-    </div>
-  </g:HTMLPanel>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<g:HTMLPanel tag="li" ui:field="container">
+    <g:HTML ui:field="content"></g:HTML>
+	</g:HTMLPanel>
 </ui:UiBinder> 

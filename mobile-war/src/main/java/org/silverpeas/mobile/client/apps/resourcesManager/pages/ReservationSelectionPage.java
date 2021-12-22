@@ -29,39 +29,72 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.app.SaveReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
+import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.ResourceItem;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
+import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
 
-public class ReservationPage extends PageContent implements ResourcesManagerPagesEventHandler {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class ReservationSelectionPage extends PageContent implements ResourcesManagerPagesEventHandler {
 
   private static ResourcesManagerPageUiBinder uiBinder = GWT.create(ResourcesManagerPageUiBinder.class);
+
+  private ReservationDTO reservation;
+  private List<String> categoriesIds;
 
   @UiField(provided = true) protected ResourcesManagerMessages msg = null;
 
   @UiField
-  TextBox start, end, title;
+  UnorderedList resources;
 
-  @UiField
-  TextArea reason;
 
-  interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ReservationPage> {
+
+  public void setReservation(final ReservationDTO data) {
+    this.reservation = data;
   }
 
-  public ReservationPage() {
+  public void setResources(final List<ResourceDTO> resources) {
+    categoriesIds = new ArrayList<>();
+    for (ResourceDTO res : resources) {
+      if (!categoriesIds.contains(res.getCategoryId())) {
+        categoriesIds.add(res.getCategoryId());
+      }
+    }
+
+    for (String catId : categoriesIds) {
+      ResourceItem itemCat = new ResourceItem();
+      this.resources.add(itemCat);
+      for (ResourceDTO res : resources) {
+        if (res.getCategoryId().equals(catId)) {
+          itemCat.setData(res, true);
+
+          ResourceItem item = new ResourceItem();
+          item.setData(res, false);
+          this.resources.add(item);
+        }
+      }
+    }
+  }
+
+  interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ReservationSelectionPage> {
+  }
+
+  public ReservationSelectionPage() {
     msg = GWT.create(ResourcesManagerMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractResourcesManagerPagesEvent.TYPE, this);
-    start.getElement().setAttribute("type", "datetime-local");
-    end.getElement().setAttribute("type", "datetime-local");
+
   }
 
   @Override
@@ -73,15 +106,21 @@ public class ReservationPage extends PageContent implements ResourcesManagerPage
   @UiHandler("validate")
   protected void validate(ClickEvent event) {
 
-    //TODO : controle form field mandatory and dates order
-    ReservationDTO dto = new ReservationDTO();
-    dto.setEvenement(title.getText());
-    dto.setStartDate(start.getText());
-    dto.setEndDate(end.getText());
-    dto.setReason(reason.getText());
-    AddReservationEvent eventToApp = new AddReservationEvent();
-    eventToApp.setData(dto);
-    EventBus.getInstance().fireEvent(eventToApp);
+    //TODO : test selection >=1
+
+    List<ResourceDTO> selection = new ArrayList<>();
+    Iterator<Widget> it = resources.iterator();
+    while (it.hasNext()) {
+      ResourceItem item = (ResourceItem) it.next();
+      if (item.isSelected()) {
+        selection.add(item.getData());
+      }
+    }
+    reservation.setResources(selection);
+
+    SaveReservationEvent saveEvent = new SaveReservationEvent();
+    saveEvent.setData(reservation);
+    EventBus.getInstance().fireEvent(saveEvent);
   }
 
 }

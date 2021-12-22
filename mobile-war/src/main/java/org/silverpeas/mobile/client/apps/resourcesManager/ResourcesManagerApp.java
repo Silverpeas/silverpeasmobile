@@ -25,7 +25,7 @@
 package org.silverpeas.mobile.client.apps.resourcesManager;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -33,26 +33,34 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AbstractResourcesManagerAppEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.ResourcesManagerAppEventHandler;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.app.SaveReservationEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.pages.ReservationSelectionPage;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.ResourcesManagerPage;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
+import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
 
-public class ResourcesManagerApp extends App implements ResourcesManagerAppEventHandler, NavigationEventHandler {
+import java.util.List;
+
+public class ResourcesManagerApp extends App
+    implements ResourcesManagerAppEventHandler, NavigationEventHandler {
 
   private ResourcesManagerMessages msg;
   private ApplicationInstanceDTO instance;
 
-  public ResourcesManagerApp(){
+  public ResourcesManagerApp() {
     super();
     msg = GWT.create(ResourcesManagerMessages.class);
     EventBus.getInstance().addHandler(AbstractResourcesManagerAppEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
   }
 
-  public void start(){
+  public void start() {
     // always start
   }
 
@@ -73,13 +81,53 @@ public class ResourcesManagerApp extends App implements ResourcesManagerAppEvent
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.resourcesManager.name())) {
+    if (event.getContent().getType().equals("Component") &&
+        event.getContent().getInstanceId().startsWith(Apps.resourcesManager.name())) {
       super.showContent(event);
     }
   }
 
   @Override
   public void addReservation(final AddReservationEvent event) {
-    //TODO
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ResourceDTO>>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceResourcesManager()
+            .getAvailableResources(instance.getId(), event.getData().getStartDate(),
+                event.getData().getEndDate(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<ResourceDTO> resources) {
+        super.onSuccess(method, resources);
+
+        ReservationSelectionPage page = new ReservationSelectionPage();
+        page.setPageTitle(msg.resourcesSelection());
+        page.setReservation(event.getData());
+        page.setResources(resources);
+        page.show();
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void saveReservation(final SaveReservationEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceResourcesManager()
+            .saveReservation(instance.getId(), event.getData(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final Void unused) {
+        super.onSuccess(method, unused);
+        //TODO
+      }
+    };
+    action.attempt();
   }
 }

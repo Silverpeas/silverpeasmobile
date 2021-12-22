@@ -408,11 +408,11 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-size: 0.95em;
 }
 
-.ui-listview > li:nth-child(odd) a, .list-contacts > li:nth-child(odd), .list-notifications > li:nth-child(odd) {
+.ui-listview > li:nth-child(odd) a, .list-contacts > li:nth-child(odd), .list-notifications > li:nth-child(odd), .list-resources > li:nth-child(odd) {
   background-color: #fff;
 }
 
-.ui-listview > li:nth-child(even) a, .list-contacts > li:nth-child(even), .list-notifications > li:nth-child(even) {
+.ui-listview > li:nth-child(even) a, .list-contacts > li:nth-child(even), .list-notifications > li:nth-child(even), .list-resources > li:nth-child(even) {
   background-color: #f6f6f6;
 }
 
@@ -875,7 +875,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .app-resourcesManager a {
   background-position: 0.65em -2360px;
-  display: none;
+  /*display: none;*/
 }
 
 .folder-galery a {
@@ -1025,7 +1025,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   max-width: 100%;
 }
 
-#attachments, .list-contacts, .list-comments, .list-notifications, .list-detail-event {
+#attachments, .list-contacts, .list-comments, .list-notifications, .list-detail-event, .list-resources {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -1036,6 +1036,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .list-contacts li,
 .list-comments li,
 .list-notifications li,
+.list-resources li,
 .list-detail-event {
   background-color: #FFF;
   border-bottom: 1px solid #e0e0e0;
@@ -1314,7 +1315,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   width: 2em;
 }
 
-#notification .list-notifications > li.selected {
+#notification .list-notifications > li.selected, .list-resources > li.selected {
   border-left: 8px solid #7eb73a;
   color: #000
 }
@@ -2549,4 +2550,13 @@ form .forms .fields > li:nth-child(even) {
 
 .ui-listview.notifications  li:nth-child(even){
 	background-color: #FFF;
+}
+
+/******** Resources Manager ********/
+
+#resourcesManager .list-resources li.category {
+  font-weight: bold;
+  background-color: #6fa800;
+  color: white;
+  padding-bottom: 0px;
 }

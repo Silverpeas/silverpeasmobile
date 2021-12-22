@@ -272,6 +272,12 @@
       <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.silverpeas.components.resourcesmanager</groupId>
+      <artifactId>silverpeas-resourcesmanager</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.jsoup</groupId>

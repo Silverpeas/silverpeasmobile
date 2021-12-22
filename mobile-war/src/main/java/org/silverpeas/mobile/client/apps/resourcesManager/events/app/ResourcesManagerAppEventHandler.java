@@ -29,4 +29,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface ResourcesManagerAppEventHandler extends EventHandler{
 
   void addReservation(AddReservationEvent event);
+
+  void saveReservation(SaveReservationEvent event);
 }

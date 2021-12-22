@@ -60,9 +60,9 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
     EventBus.getInstance().addHandler(AbstractResourcesManagerPagesEvent.TYPE, this);
 
     actionsMenu.addAction(favorite);
+    //TODO : manage favorite
     //favorite.init();
     actionsMenu.addAction(addReservation);
-    //EventBus.getInstance().fireEvent(new ResourcesManagerLoadEvent("all"));
   }
 
   @Override

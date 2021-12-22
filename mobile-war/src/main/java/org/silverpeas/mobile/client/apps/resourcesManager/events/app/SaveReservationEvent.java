@@ -27,10 +27,10 @@ package org.silverpeas.mobile.client.apps.resourcesManager.events.app;
 
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 
-public class AddReservationEvent extends AbstractResourcesManagerAppEvent {
+public class SaveReservationEvent extends AbstractResourcesManagerAppEvent {
 
 
-  public AddReservationEvent(){
+  public SaveReservationEvent(){
     super();
   }
 
@@ -46,6 +46,6 @@ public class AddReservationEvent extends AbstractResourcesManagerAppEvent {
 
   @Override
   protected void dispatch(ResourcesManagerAppEventHandler handler) {
-    handler.addReservation(this);
+    handler.saveReservation(this);
   }
 }

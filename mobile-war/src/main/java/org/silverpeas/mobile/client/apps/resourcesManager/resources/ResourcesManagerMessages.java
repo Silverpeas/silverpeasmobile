@@ -35,4 +35,8 @@ public interface ResourcesManagerMessages extends Messages {
   String endDate();
 
   String reason();
+
+  String availablesResources();
+
+  String resourcesSelection();
 }
