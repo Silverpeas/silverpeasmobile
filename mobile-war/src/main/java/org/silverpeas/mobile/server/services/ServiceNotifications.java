@@ -266,7 +266,7 @@ public class ServiceNotifications extends AbstractRestWebService {
     String[] asAvailProfileNames = Administration.get().getAllProfilesNames("kmelia");
     for (String asAvailProfileName : asAvailProfileNames) {
       ProfileInst profile = getTopicProfile(asAvailProfileName, topicId, componentId);
-      profile.setLabel(Administration.get().getProfileLabelfromName("kmelia", asAvailProfileName,
+      profile.setLabel(Administration.get().getProfileLabelFromName("kmelia", asAvailProfileName,
           getUser().getUserPreferences().getLanguage()));
       alShowProfile.add(profile);
     }
