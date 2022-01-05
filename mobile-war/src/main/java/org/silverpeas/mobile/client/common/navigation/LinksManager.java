@@ -71,18 +71,22 @@ public class LinksManager {
         String type = "";
         String filter = "";
         if (url.contains("GroupIds=")) {
-          type = ContactScope.group.name();
           filter = url.substring(url.indexOf("GroupIds=") + "GroupIds=".length());
           int end = filter.indexOf("&");
           if (end != -1) {
             filter = filter.substring(0, end);
           }
+          if (!filter.isEmpty()) {
+            type = ContactScope.group.name();
+          }
         } else if (url.contains("DomainIds=")) {
-          type = ContactScope.domain.name();
           filter = url.substring(url.indexOf("DomainIds=") + "DomainIds=".length());
           int end = filter.indexOf("&");
           if (end != -1) {
             filter = filter.substring(0, end);
+          }
+          if (!filter.isEmpty()) {
+            type = ContactScope.domain.name();
           }
         }
         EventBus.getInstance().fireEvent(new ContactsFilteredLoadEvent(type, filter));
