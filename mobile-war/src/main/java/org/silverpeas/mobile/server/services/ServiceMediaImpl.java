@@ -24,11 +24,6 @@
 
 package org.silverpeas.mobile.server.services;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.fileupload.FileItem;
 import org.silverpeas.components.gallery.GalleryComponentSettings;
 import org.silverpeas.components.gallery.constant.MediaResolution;
@@ -50,9 +45,9 @@ import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.core.webapi.media.streaming.StreamingProviderDataEntity;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
-import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -78,10 +73,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import static org.silverpeas.core.util.StringUtil.EMPTY;
 
 /**
  * Service de gestion des galleries d'images.
@@ -402,34 +397,20 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       video.setUpdateDate(sdf.format(media.getCreationDate()));
     }
 
-    String urlVideo = media.getStreaming().getHomepageUrl();
-    if (urlVideo.contains("vimeo")) {
-      String id = media.getStreaming().getProvider().extractStreamingId(urlVideo);
-      video.setUrl("https://player.vimeo.com/video/" + id);
-
-      String urlJson = "https://vimeo.com/api/oembed.json?url=" + urlVideo;
-      Client client = Client.create();
-      WebResource webResource = client.resource(urlJson);
-      ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
-      try {
-        String json = response.getEntity(String.class);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        Map<String,String> map = objectMapper.readValue(json, HashMap.class);
-        video.setUrlPoster(map.get("thumbnail_url"));
-
-      } catch (Exception e) {
-        SilverLogger.getLogger(this).error("ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
-        video.setUrlPoster("");
-      }
-    } else if (urlVideo.contains("youtu")){
-      String id = urlVideo.substring(urlVideo.lastIndexOf("/") + 1);
-      int p = id.indexOf("?v=");
-      if (p != -1) {
-        id = id.substring(p+3);
-      }
-      video.setUrl("https://www.youtube.com/embed/" + id);
-      video.setUrlPoster("http://img.youtube.com/vi/" + id + "/0.jpg");
+    final String urlVideo = media.getStreaming().getHomepageUrl();
+    final Runnable noData = () -> {
+      video.setUrl(EMPTY);
+      video.setUrlPoster(EMPTY);
+    };
+    try {
+      StreamingProviderDataEntity.from(urlVideo).ifPresentOrElse(e -> {
+        video.setUrl(e.getSilverpeasEmbedUrl());
+        video.setUrlPoster(e.getThumbnailUrl().toString());
+        video.setDuration(e.getFormattedDurationHMS());
+      }, noData);
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error("ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
+      noData.run();
     }
 
     final ResourceReference ref = new ResourceReference(new MediaPK(video.getId()));
