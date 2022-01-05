@@ -97,6 +97,7 @@ public class ServiceFaq extends RESTWebService {
   }
 
   private CategoryDTO getCategory(String categoryId) throws Exception {
+    if (categoryId == null || categoryId.isEmpty()) return null;
     NodePK nodePK = new NodePK(categoryId, getComponentId());
     Category c = new Category(NodeService.get().getDetail(nodePK));
     CategoryDTO dto = new CategoryDTO();

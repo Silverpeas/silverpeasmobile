@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -127,10 +128,18 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
     String id = categories.getSelectedValue();
     faqs.clear();
     for (QuestionDTO question : data) {
-      if (question.getCategory().getId().equals(id) || id.isEmpty()) {
-        FaqItem item = new FaqItem();
-        item.setData(question);
-        faqs.add(item);
+      if (id.isEmpty()) {
+        if (question.getCategory() == null) {
+          FaqItem item = new FaqItem();
+          item.setData(question);
+          faqs.add(item);
+        }
+      } else {
+        if (question.getCategory() != null && question.getCategory().getId().equals(id)) {
+          FaqItem item = new FaqItem();
+          item.setData(question);
+          faqs.add(item);
+        }
       }
     }
   }
