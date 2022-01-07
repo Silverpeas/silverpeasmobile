@@ -11,6 +11,7 @@
 <%@ page import="org.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="org.silverpeas.core.util.SettingBundle" %>
+<%@ page import="org.silverpeas.bridge.MobilFilter" %>
 
 <%--
   ~ Copyright (C) 2000 - 2021 Silverpeas
@@ -82,6 +83,8 @@
       }
       ssoPath = appUrl + ssoPath;
       response.sendRedirect(ssoPath);
+    } else {
+      session.removeAttribute(MobilFilter.SESSION_PARAMS_KEY);
     }
 
     if (token != null) {
