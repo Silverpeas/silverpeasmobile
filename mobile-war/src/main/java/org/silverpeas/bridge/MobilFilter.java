@@ -59,6 +59,7 @@ public class MobilFilter implements Filter {
 
   //private static final SilverLogger logger = SilverLogger.getLogger("silverpeas.core.security");
   public static final String SESSION_TOKEN_KEY = "X-STKN";
+  public static final String SESSION_PARAMS_KEY = "SESSION_PARAMS_KEY";
   private static String [] urlsAllowed = null;
 
   @Override
@@ -167,7 +168,13 @@ public class MobilFilter implements Filter {
           session.setAttribute(SESSION_TOKEN_KEY, token);
         }
 
+        if (session.getAttribute(SESSION_PARAMS_KEY) != null && params.isEmpty()) {
+          params = (String) session.getAttribute(SESSION_PARAMS_KEY);
+          session.removeAttribute(SESSION_PARAMS_KEY);
+        }
         String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
+        session.setAttribute(SESSION_PARAMS_KEY, params);
+
         String urlWithSessionID = ((HttpServletResponse) res).encodeRedirectURL(aDestinationPage.toString());
         ((HttpServletResponse) res).sendRedirect(urlWithSessionID);
         return;
