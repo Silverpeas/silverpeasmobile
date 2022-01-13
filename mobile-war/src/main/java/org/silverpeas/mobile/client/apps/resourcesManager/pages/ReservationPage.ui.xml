@@ -30,13 +30,13 @@
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <div id="resourcesManager" class="content-navigation" style="min-height:100vh;">
-      <g:Label>Evènement</g:Label>
+      <g:Label ui:field="labelTitle"><ui:text from="{msg.event}"/></g:Label>
       <g:TextBox ui:field="title"></g:TextBox>
       <g:Image styleName="mandatory"></g:Image>
-      <g:Label><ui:text from="{msg.startDate}"/></g:Label>
+      <g:Label ui:field="labelStartDate"><ui:text from="{msg.startDate}"/></g:Label>
       <g:TextBox ui:field="start"></g:TextBox>
       <g:Image styleName="mandatory"></g:Image>
-      <g:Label><ui:text from="{msg.endDate}"/></g:Label>
+      <g:Label ui:field="labelEndDate"><ui:text from="{msg.endDate}"/></g:Label>
       <g:TextBox ui:field="end"></g:TextBox>
       <g:Image styleName="mandatory"></g:Image>
       <g:Label><ui:text from="{msg.reason}"/></g:Label>

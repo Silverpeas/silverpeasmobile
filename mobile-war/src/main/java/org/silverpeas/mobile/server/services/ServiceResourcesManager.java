@@ -110,6 +110,7 @@ public class ServiceResourcesManager extends RESTWebService {
       }
       reservation.setInstanceId(componentId);
       reservation.setUserId(getUser().getId());
+      reservation.setPlace("");
 
       ResourcesManagerProvider.getResourcesManager().saveReservation(reservation, resources);
 

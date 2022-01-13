@@ -31,6 +31,7 @@ public interface ResourcesManagerMessages extends Messages {
   String addReservation();
   String validate();
 
+  String event();
   String startDate();
   String endDate();
 
@@ -39,4 +40,9 @@ public interface ResourcesManagerMessages extends Messages {
   String availablesResources();
 
   String resourcesSelection();
+
+  String mandatory();
+  String mandatoryOneField();
+
+  String saved();
 }

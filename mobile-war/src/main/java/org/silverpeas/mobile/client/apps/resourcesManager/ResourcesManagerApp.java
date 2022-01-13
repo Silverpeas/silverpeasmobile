@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
@@ -75,6 +76,7 @@ public class ResourcesManagerApp extends App
       this.instance = event.getInstance();
       ResourcesManagerPage page = new ResourcesManagerPage();
       page.setPageTitle(event.getInstance().getLabel());
+      setMainPage(page);
       page.show();
     }
   }
@@ -125,7 +127,9 @@ public class ResourcesManagerApp extends App
       @Override
       public void onSuccess(final Method method, final Void unused) {
         super.onSuccess(method, unused);
-        //TODO
+        new Popin(msg.saved()).show();
+        getMainPage().back();
+        getMainPage().back();
       }
     };
     action.attempt();

@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,14 +38,20 @@ import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractR
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
+
+import java.util.ArrayList;
 
 public class ReservationPage extends PageContent implements ResourcesManagerPagesEventHandler {
 
   private static ResourcesManagerPageUiBinder uiBinder = GWT.create(ResourcesManagerPageUiBinder.class);
 
   @UiField(provided = true) protected ResourcesManagerMessages msg = null;
+
+  @UiField
+  Label labelTitle, labelStartDate, labelEndDate;
 
   @UiField
   TextBox start, end, title;
@@ -72,16 +79,40 @@ public class ReservationPage extends PageContent implements ResourcesManagerPage
 
   @UiHandler("validate")
   protected void validate(ClickEvent event) {
+    ArrayList<String> errors = new ArrayList<String>();
+    if (title.getText().isEmpty()) {
+      errors.add(labelTitle.getText());
+    }
+    if (start.getText().isEmpty()) {
+      errors.add(labelStartDate.getText());
+    }
+    if (end.getText().isEmpty()) {
+      errors.add(labelEndDate.getText());
+    }
+    //TODO : check dates
+    if (!errors.isEmpty()) {
+      String message = "";
+      for (String error : errors) {
+        message += error + ",";
+      }
+      message = message.substring(0, message.length() - 1) + " ";
+      if (errors.size() == 1) {
+        message += msg.mandatoryOneField();
+      } else {
+        message += msg.mandatory();
+      }
 
-    //TODO : controle form field mandatory and dates order
-    ReservationDTO dto = new ReservationDTO();
-    dto.setEvenement(title.getText());
-    dto.setStartDate(start.getText());
-    dto.setEndDate(end.getText());
-    dto.setReason(reason.getText());
-    AddReservationEvent eventToApp = new AddReservationEvent();
-    eventToApp.setData(dto);
-    EventBus.getInstance().fireEvent(eventToApp);
+      new Popin(message).show();
+    } else {
+      ReservationDTO dto = new ReservationDTO();
+      dto.setEvenement(title.getText());
+      dto.setStartDate(start.getText());
+      dto.setEndDate(end.getText());
+      dto.setReason(reason.getText());
+      AddReservationEvent eventToApp = new AddReservationEvent();
+      eventToApp.setData(dto);
+      EventBus.getInstance().fireEvent(eventToApp);
+    }
   }
 
 }
