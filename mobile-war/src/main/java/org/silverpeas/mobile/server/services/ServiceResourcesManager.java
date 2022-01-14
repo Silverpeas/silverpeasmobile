@@ -24,17 +24,25 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.silverpeas.components.classifieds.model.ClassifiedDetail;
-import org.silverpeas.components.classifieds.notification.ClassifiedOwnerNotification;
 import org.silverpeas.components.resourcesmanager.ResourcesManagerProvider;
 import org.silverpeas.components.resourcesmanager.model.Reservation;
 import org.silverpeas.components.resourcesmanager.model.Resource;
+import org.silverpeas.components.resourcesmanager.model.ResourceStatus;
+import org.silverpeas.components.resourcesmanager.model.ResourceValidator;
 import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.core.notification.user.builder.helper.UserNotificationHelper;
+import org.silverpeas.core.notification.NotificationException;
+import org.silverpeas.core.notification.user.client.NotificationMetaData;
+import org.silverpeas.core.notification.user.client.NotificationParameters;
+import org.silverpeas.core.notification.user.client.NotificationSender;
+import org.silverpeas.core.notification.user.client.UserRecipient;
+import org.silverpeas.core.ui.DisplayI18NHelper;
+import org.silverpeas.core.util.Link;
+import org.silverpeas.core.util.LocalizationBundle;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
-import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
 
@@ -62,6 +70,8 @@ public class ServiceResourcesManager extends RESTWebService {
 
   @PathParam("appId")
   private String componentId;
+
+  private NotificationSender notifSender;
 
   private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
@@ -114,12 +124,87 @@ public class ServiceResourcesManager extends RESTWebService {
 
       ResourcesManagerProvider.getResourcesManager().saveReservation(reservation, resources);
 
-      //TODO : envoi d'une notification pour validation aux responsables des ressources selectionnées.
-      // voir sendNotificationForValidation de ResourcesManagerSessionController
+      // envoi d'une notification pour validation aux responsables des ressources selectionnées.
+      for (Long resourceId : resources) {
+        sendNotificationForValidation(resourceId, reservation.getIdAsLong());
+      }
 
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
+  }
+
+  private void sendNotificationForValidation(Long resourceId, Long reservationId)
+      throws NotificationException {
+    Resource resource = getResource(resourceId);
+    String status = ResourcesManagerProvider.getResourcesManager()
+        .getResourceOfReservationStatus(resourceId, reservationId);
+    if (ResourceStatus.STATUS_FOR_VALIDATION.equals(status)) {
+      // envoyer une notification aux responsables de la ressource
+      String user = getUser().getDisplayedName();
+
+      LocalizationBundle message = ResourceLocator.getLocalizationBundle(
+          "org.silverpeas.resourcesmanager.multilang.resourcesManagerBundle",
+          DisplayI18NHelper.getDefaultLanguage());
+
+      StringBuilder messageBody = new StringBuilder();
+
+      // liste des responsables (de la ressource) à notifier
+      List<ResourceValidator> validators = ResourcesManagerProvider.getResourcesManager().
+          getManagers(resource.getIdAsLong());
+      List<UserRecipient> managers = new ArrayList<UserRecipient>(validators.size());
+      if (!ResourcesManagerProvider.getResourcesManager()
+          .isManager(Long.parseLong(getUser().getId()), resourceId)) {
+        // envoie de la notification seulement si le user courant n'est pas aussi responsable
+        for (ResourceValidator validator : validators) {
+          managers.add(new UserRecipient(String.valueOf(validator.getManagerId())));
+        }
+        String url = URLUtil.getURL(null, getComponentId()) +
+            "ViewReservation?reservationId=" + reservationId;
+
+        String subject = message.getString("resourcesManager.notifSubject");
+        messageBody = messageBody.append(user).append(" ").append(message.getString(
+            "resourcesManager.notifBody")).append(" '").append(resource.getName()).append("'");
+
+        NotificationMetaData notifMetaData =
+            new NotificationMetaData(NotificationParameters.PRIORITY_NORMAL, subject,
+                messageBody.toString());
+
+        for (String language : DisplayI18NHelper.getLanguages()) {
+          message = ResourceLocator.getLocalizationBundle(
+              "org.silverpeas.resourcesmanager.multilang.resourcesManagerBundle", language);
+          subject = message.getString("resourcesManager.notifSubject");
+          messageBody = new StringBuilder();
+          messageBody = messageBody.append(user).append(" ").append(message.getString(
+              "resourcesManager.notifBody")).append(" '").append(resource.getName()).append("'.");
+          notifMetaData.addLanguage(language, subject, messageBody.toString());
+
+          Link link = new Link(url, message.getString("resourcesManager.notifReservationLinkLabel"));
+          notifMetaData.setLink(link, language);
+        }
+
+        notifMetaData.addUserRecipients(managers);
+        setMetaData(notifMetaData);
+        // 2. envoie de la notification aux responsables
+        getNotificationSender().notifyUser(notifMetaData);
+      }
+    }
+  }
+
+  public Resource getResource(Long id) {
+    return ResourcesManagerProvider.getResourcesManager().getResource(id);
+  }
+
+  public NotificationSender getNotificationSender() {
+    if (notifSender == null) {
+      notifSender = new NotificationSender(getComponentId());
+    }
+    return notifSender;
+  }
+
+  private void setMetaData(NotificationMetaData notifMetaData) {
+    notifMetaData.setComponentId(getComponentId());
+    notifMetaData.setSender(getUser().getId());
   }
 
   @Override
