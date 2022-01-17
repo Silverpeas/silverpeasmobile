@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.services.rest;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
 
@@ -45,8 +46,18 @@ import java.util.List;
 public interface ServiceResourcesManager extends RestService {
 
   @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("{appId}/resources/checkdates/{startDate}/{endDate}")
+  public void checkDates(@PathParam("appId") String appId, @PathParam("startDate") String startDate,
+      @PathParam("endDate") String endDate, TextCallback callback);
+
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("{appId}/resources/available/{startDate}/{endDate}")
-  public void getAvailableResources(@PathParam("appId") String appId, @PathParam("startDate") String startDate, @PathParam("endDate") String endDate, MethodCallback<List<ResourceDTO>> callback);
+  public void getAvailableResources(@PathParam("appId") String appId,
+      @PathParam("startDate") String startDate, @PathParam("endDate") String endDate,
+      MethodCallback<List<ResourceDTO>> callback);
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)

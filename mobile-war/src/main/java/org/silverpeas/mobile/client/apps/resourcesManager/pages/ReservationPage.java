@@ -89,7 +89,6 @@ public class ReservationPage extends PageContent implements ResourcesManagerPage
     if (end.getText().isEmpty()) {
       errors.add(labelEndDate.getText());
     }
-    //TODO : check dates
     if (!errors.isEmpty()) {
       String message = "";
       for (String error : errors) {

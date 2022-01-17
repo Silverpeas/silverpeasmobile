@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.resourcesManager;
 
 import com.google.gwt.core.client.GWT;
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -40,11 +41,13 @@ import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesMan
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
+import org.silverpeas.mobile.shared.dto.resourcesmanager.Errors;
 
 import java.util.List;
 
@@ -91,27 +94,50 @@ public class ResourcesManagerApp extends App
 
   @Override
   public void addReservation(final AddReservationEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ResourceDTO>>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceResourcesManager()
-            .getAvailableResources(instance.getId(), event.getData().getStartDate(),
-                event.getData().getEndDate(), this);
-      }
 
-      @Override
-      public void onSuccess(final Method method, final List<ResourceDTO> resources) {
-        super.onSuccess(method, resources);
 
-        ReservationSelectionPage page = new ReservationSelectionPage();
-        page.setPageTitle(msg.resourcesSelection());
-        page.setReservation(event.getData());
-        page.setResources(resources);
-        page.show();
-      }
-    };
-    action.attempt();
+    ServicesLocator.getServiceResourcesManager()
+        .checkDates(instance.getId(), event.getData().getStartDate(), event.getData().getEndDate(),
+            new TextCallback() {
+              @Override
+              public void onFailure(final Method method, final Throwable throwable) {
+                EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+              }
+
+              @Override
+              public void onSuccess(final Method method, final String error) {
+                if (error.isEmpty()) {
+                  MethodCallbackOnlineOnly action =
+                      new MethodCallbackOnlineOnly<List<ResourceDTO>>() {
+                        @Override
+                        public void attempt() {
+                          super.attempt();
+                          ServicesLocator.getServiceResourcesManager()
+                              .getAvailableResources(instance.getId(),
+                                  event.getData().getStartDate(), event.getData().getEndDate(),
+                                  this);
+                        }
+
+                        @Override
+                        public void onSuccess(final Method method,
+                            final List<ResourceDTO> resources) {
+                          super.onSuccess(method, resources);
+
+                          ReservationSelectionPage page = new ReservationSelectionPage();
+                          page.setPageTitle(msg.resourcesSelection());
+                          page.setReservation(event.getData());
+                          page.setResources(resources);
+                          page.show();
+                        }
+                      };
+                  action.attempt();
+                } else if (error.equals(Errors.dateOrder.toString())) {
+                  new Popin(msg.errorDateOrder()).show();
+                } else if (error.equals(Errors.earlierDate.toString())) {
+                  new Popin(msg.errorEarlierDate()).show();
+                }
+              }
+            });
   }
 
   @Override

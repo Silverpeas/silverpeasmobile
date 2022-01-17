@@ -22,30 +22,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.resourcesManager.resources;
+package org.silverpeas.mobile.shared.dto.resourcesmanager;
 
-import com.google.gwt.i18n.client.Messages;
-
-public interface ResourcesManagerMessages extends Messages {
-  String title();
-  String addReservation();
-  String validate();
-
-  String event();
-  String startDate();
-  String endDate();
-
-  String reason();
-
-  String availablesResources();
-
-  String resourcesSelection();
-
-  String mandatory();
-  String mandatoryOneField();
-
-  String saved();
-
-  String errorDateOrder();
-  String errorEarlierDate();
+public enum Errors {
+	dateOrder, earlierDate;
 }

@@ -45,6 +45,7 @@ import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
+import org.silverpeas.mobile.shared.dto.resourcesmanager.Errors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -57,6 +58,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -76,6 +78,25 @@ public class ServiceResourcesManager extends RESTWebService {
   private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
   static final String PATH = "resourcesManager";
+
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("resources/checkdates/{startDate}/{endDate}")
+  public String checkDates(@PathParam("startDate") String startDate, @PathParam("endDate") String endDate) {
+    try {
+      Date start = sdf.parse(startDate.replace("T", " "));
+      Date end = sdf.parse(endDate.replace("T", " "));
+      Date now = Calendar.getInstance().getTime();
+      if (end.before(start)) {
+        return Errors.dateOrder.toString();
+      } else if (start.before(now)) {
+        return Errors.earlierDate.toString();
+      }
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return "";
+  }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
