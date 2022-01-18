@@ -12,6 +12,8 @@ public class ReservationDTO implements Serializable {
   private String endDate;
   private String reason;
 
+  private String status;
+
   private List<ResourceDTO> resources;
 
   public String getEvenement() {
@@ -53,4 +55,8 @@ public class ReservationDTO implements Serializable {
   public void setResources(final List<ResourceDTO> resources) {
     this.resources = resources;
   }
+
+  public String getStatus() { return status; }
+
+  public void setStatus(final String status) { this.status = status; }
 }

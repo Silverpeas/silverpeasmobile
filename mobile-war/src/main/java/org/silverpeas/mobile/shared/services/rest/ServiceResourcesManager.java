@@ -51,13 +51,18 @@ public interface ServiceResourcesManager extends RestService {
   public void checkDates(@PathParam("appId") String appId, @PathParam("startDate") String startDate,
       @PathParam("endDate") String endDate, TextCallback callback);
 
-
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{appId}/resources/available/{startDate}/{endDate}")
   public void getAvailableResources(@PathParam("appId") String appId,
       @PathParam("startDate") String startDate, @PathParam("endDate") String endDate,
       MethodCallback<List<ResourceDTO>> callback);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{appId}/reservations/my")
+  public void getMyReservations(@PathParam("appId") String appId,
+      MethodCallback<List<ReservationDTO>> callback);
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)

@@ -29,6 +29,7 @@ import org.silverpeas.components.resourcesmanager.model.Reservation;
 import org.silverpeas.components.resourcesmanager.model.Resource;
 import org.silverpeas.components.resourcesmanager.model.ResourceStatus;
 import org.silverpeas.components.resourcesmanager.model.ResourceValidator;
+import org.silverpeas.components.resourcesmanager.service.ReservationService;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.notification.NotificationException;
 import org.silverpeas.core.notification.user.client.NotificationMetaData;
@@ -36,16 +37,18 @@ import org.silverpeas.core.notification.user.client.NotificationParameters;
 import org.silverpeas.core.notification.user.client.NotificationSender;
 import org.silverpeas.core.notification.user.client.UserRecipient;
 import org.silverpeas.core.ui.DisplayI18NHelper;
+import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.Link;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
-import org.silverpeas.mobile.shared.dto.resourcesmanager.Errors;
+import org.silverpeas.mobile.shared.dto.reservations.Errors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -82,7 +85,8 @@ public class ServiceResourcesManager extends RESTWebService {
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   @Path("resources/checkdates/{startDate}/{endDate}")
-  public String checkDates(@PathParam("startDate") String startDate, @PathParam("endDate") String endDate) {
+  public String checkDates(@PathParam("startDate") String startDate,
+      @PathParam("endDate") String endDate) {
     try {
       Date start = sdf.parse(startDate.replace("T", " "));
       Date end = sdf.parse(endDate.replace("T", " "));
@@ -101,12 +105,14 @@ public class ServiceResourcesManager extends RESTWebService {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("resources/available/{startDate}/{endDate}")
-  public List<ResourceDTO> getAvailableResources(@PathParam("startDate") String startDate, @PathParam("endDate") String endDate) {
+  public List<ResourceDTO> getAvailableResources(@PathParam("startDate") String startDate,
+      @PathParam("endDate") String endDate) {
     List<ResourceDTO> resources = new ArrayList<>();
     try {
       Date start = sdf.parse(startDate.replace("T", " "));
       Date end = sdf.parse(endDate.replace("T", " "));
-      List<Resource> availablesResources = ResourcesManagerProvider.getResourcesManager().getResourcesReservable(componentId, start, end);
+      List<Resource> availablesResources = ResourcesManagerProvider.getResourcesManager()
+          .getResourcesReservable(componentId, start, end);
       for (Resource res : availablesResources) {
         ResourceDTO dto = new ResourceDTO();
         dto.setId(res.getId());
@@ -120,6 +126,47 @@ public class ServiceResourcesManager extends RESTWebService {
       SilverLogger.getLogger(this).error(e);
     }
     return resources;
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/reservations/my")
+  public List<ReservationDTO> getMyReservations() {
+    List<ReservationDTO> reservations = new ArrayList<>();
+    try {
+      ReservationService service = ServiceProvider.getService(ReservationService.class);
+      String startPeriod = String.valueOf(Calendar.getInstance().getTime().getTime());
+      String endPeriod = String.valueOf(DateUtil.MAXIMUM_DATE.getTime());
+
+      List<Reservation> reservationList =
+          service.findAllReservationsInRange(componentId, Integer.parseInt(getUser().getId()),
+              startPeriod, endPeriod);
+      for (Reservation reserv : reservationList) {
+        ReservationDTO dto = new ReservationDTO();
+        dto.setEvenement(reserv.getEvent());
+        dto.setStartDate(sdf.format(reserv.getBeginDate()));
+        dto.setEndDate(sdf.format(reserv.getEndDate()));
+        dto.setReason(reserv.getReason());
+        dto.setStatus(reserv.getStatus());
+        List<Resource> resources = ResourcesManagerProvider.getResourcesManager().getResourcesOfReservation(componentId, reserv.getIdAsLong());
+        List<ResourceDTO> resourcesBooked = new ArrayList();
+        for (Resource res : resources) {
+          ResourceDTO resourceDTO = new ResourceDTO();
+          String status = ResourcesManagerProvider.getResourcesManager().getResourceOfReservationStatus(res.getIdAsLong(), reserv.getIdAsLong());
+          resourceDTO.setReservationStatus(status);
+          resourceDTO.setName(res.getName());
+          resourceDTO.setId(res.getId());
+          resourceDTO.setDescription(res.getDescription());
+          resourceDTO.setCategoryId(String.valueOf(res.getCategoryId()));
+          resourcesBooked.add(resourceDTO);
+        }
+        dto.setResources(resourcesBooked);
+        reservations.add(dto);
+      }
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return reservations;
   }
 
   @POST
@@ -171,8 +218,8 @@ public class ServiceResourcesManager extends RESTWebService {
       StringBuilder messageBody = new StringBuilder();
 
       // liste des responsables (de la ressource) à notifier
-      List<ResourceValidator> validators = ResourcesManagerProvider.getResourcesManager().
-          getManagers(resource.getIdAsLong());
+      List<ResourceValidator> validators =
+          ResourcesManagerProvider.getResourcesManager().getManagers(resource.getIdAsLong());
       List<UserRecipient> managers = new ArrayList<UserRecipient>(validators.size());
       if (!ResourcesManagerProvider.getResourcesManager()
           .isManager(Long.parseLong(getUser().getId()), resourceId)) {
@@ -180,12 +227,13 @@ public class ServiceResourcesManager extends RESTWebService {
         for (ResourceValidator validator : validators) {
           managers.add(new UserRecipient(String.valueOf(validator.getManagerId())));
         }
-        String url = URLUtil.getURL(null, getComponentId()) +
-            "ViewReservation?reservationId=" + reservationId;
+        String url = URLUtil.getURL(null, getComponentId()) + "ViewReservation?reservationId=" +
+            reservationId;
 
         String subject = message.getString("resourcesManager.notifSubject");
-        messageBody = messageBody.append(user).append(" ").append(message.getString(
-            "resourcesManager.notifBody")).append(" '").append(resource.getName()).append("'");
+        messageBody = messageBody.append(user).append(" ")
+            .append(message.getString("resourcesManager.notifBody")).append(" '")
+            .append(resource.getName()).append("'");
 
         NotificationMetaData notifMetaData =
             new NotificationMetaData(NotificationParameters.PRIORITY_NORMAL, subject,
@@ -196,11 +244,13 @@ public class ServiceResourcesManager extends RESTWebService {
               "org.silverpeas.resourcesmanager.multilang.resourcesManagerBundle", language);
           subject = message.getString("resourcesManager.notifSubject");
           messageBody = new StringBuilder();
-          messageBody = messageBody.append(user).append(" ").append(message.getString(
-              "resourcesManager.notifBody")).append(" '").append(resource.getName()).append("'.");
+          messageBody = messageBody.append(user).append(" ")
+              .append(message.getString("resourcesManager.notifBody")).append(" '")
+              .append(resource.getName()).append("'.");
           notifMetaData.addLanguage(language, subject, messageBody.toString());
 
-          Link link = new Link(url, message.getString("resourcesManager.notifReservationLinkLabel"));
+          Link link =
+              new Link(url, message.getString("resourcesManager.notifReservationLinkLabel"));
           notifMetaData.setLink(link, language);
         }
 

@@ -11,6 +11,7 @@ public class ResourceDTO implements Serializable {
   private String categoryId;
   private String categoryName;
   private String description;
+  private String reservationStatus;
 
   public String getId() {
     return id;
@@ -50,5 +51,13 @@ public class ResourceDTO implements Serializable {
 
   public void setDescription(final String description) {
     this.description = description;
+  }
+
+  public String getReservationStatus() {
+    return reservationStatus;
+  }
+
+  public void setReservationStatus(final String reservationStatus) {
+    this.reservationStatus = reservationStatus;
   }
 }

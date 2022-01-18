@@ -22,7 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.resourcesmanager;
+package org.silverpeas.mobile.shared.dto.reservations;
 
 public enum Errors {
 	dateOrder, earlierDate;
