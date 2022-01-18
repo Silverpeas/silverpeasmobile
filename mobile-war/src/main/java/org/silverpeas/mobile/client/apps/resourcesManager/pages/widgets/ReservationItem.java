@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.resourcesManager.pages.ReservationDetailPage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationStatus;
@@ -83,6 +84,9 @@ public class ReservationItem extends Composite implements ClickHandler {
 
   @Override
   public void onClick(final ClickEvent clickEvent) {
-    //TODO
+    ReservationDetailPage page = new ReservationDetailPage();
+    page.setPageTitle("todo");
+    page.setData(data);
+    page.show();
   }
 }

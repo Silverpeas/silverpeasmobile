@@ -40,6 +40,7 @@ public interface ResourcesManagerMessages extends Messages {
   String availablesResources();
 
   String resourcesSelection();
+  String resourcesBooked();
 
   String mandatory();
   String mandatoryOneField();

@@ -2590,22 +2590,36 @@ form .forms .fields > li:nth-child(even) {
   margin-right: 5px;
 }
 
-#resourcesManager .reservationRessources li.validated {
+#resourcesManager .reservationRessources li.validated,
+#reservationDetail .reservationRessources li.validated {
   background-color: #87bd41;
   color: #FFF;
-
   margin-bottom: 3px;
   border-radius: 5px;
   padding: 3px 5px;
-
-
 }
 
-#resourcesManager .reservationRessources li.waitingForValidation {
+#resourcesManager .reservationRessources li.waitingForValidation,
+#reservationDetail .reservationRessources li.waitingForValidation {
   background-color: #a7a7a7;
   color: #FFF;
-
   margin-bottom: 3px;
   border-radius: 5px;
   padding: 3px 5px;
+}
+
+#reservationDetail .field {
+  padding: 5px;
+  margin: 5px;
+}
+
+#reservationDetail .section {
+  background-color: #8080802b;
+  border-radius: 5px;
+}
+
+#reservationDetail ul.reservationRessources {
+  list-style-type: none;
+  width: fit-content;
+  padding-bottom: 5px;
 }
