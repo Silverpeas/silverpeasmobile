@@ -60,7 +60,6 @@ public class ResourcesManagerApp extends App
     implements ResourcesManagerAppEventHandler, NavigationEventHandler {
 
   private ResourcesManagerMessages msg;
-  private ApplicationInstanceDTO instance;
 
   public ResourcesManagerApp() {
     super();
@@ -81,23 +80,24 @@ public class ResourcesManagerApp extends App
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.resourcesManager.name())) {
-      this.instance = event.getInstance();
-      ResourcesManagerPage page = new ResourcesManagerPage();
-      page.setPageTitle(event.getInstance().getLabel());
-      setMainPage(page);
-      page.show();
+      setApplicationInstance(event.getInstance());
 
       MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ReservationDTO>>() {
         @Override
         public void attempt() {
           super.attempt();
-          ServicesLocator.getServiceResourcesManager().getMyReservations(instance.getId(), this);
+          ServicesLocator.getServiceResourcesManager().getMyReservations(getApplicationInstance().getId(), this);
         }
 
         @Override
         public void onSuccess(final Method method, final List<ReservationDTO> reservationDTOS) {
           super.onSuccess(method, reservationDTOS);
-          //TODO : display my reservations
+          ResourcesManagerPage page = new ResourcesManagerPage();
+          page.setApp(ResourcesManagerApp.this);
+          page.setPageTitle(event.getInstance().getLabel());
+          page.setData(reservationDTOS);
+          setMainPage(page);
+          page.show();
         }
       };
       action.attempt();
@@ -119,7 +119,7 @@ public class ResourcesManagerApp extends App
       public void attempt() {
         super.attempt();
         ServicesLocator.getServiceResourcesManager()
-            .checkDates(instance.getId(), event.getData().getStartDate(), event.getData().getEndDate(),this);
+            .checkDates(getApplicationInstance().getId(), event.getData().getStartDate(), event.getData().getEndDate(),this);
       }
 
       @Override
@@ -132,7 +132,7 @@ public class ResourcesManagerApp extends App
                 public void attempt() {
                   super.attempt();
                   ServicesLocator.getServiceResourcesManager()
-                      .getAvailableResources(instance.getId(),
+                      .getAvailableResources(getApplicationInstance().getId(),
                           event.getData().getStartDate(), event.getData().getEndDate(),
                           this);
                 }
@@ -167,7 +167,7 @@ public class ResourcesManagerApp extends App
       public void attempt() {
         super.attempt();
         ServicesLocator.getServiceResourcesManager()
-            .saveReservation(instance.getId(), event.getData(), this);
+            .saveReservation(getApplicationInstance().getId(), event.getData(), this);
       }
 
       @Override

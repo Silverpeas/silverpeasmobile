@@ -1025,7 +1025,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   max-width: 100%;
 }
 
-#attachments, .list-contacts, .list-comments, .list-notifications, .list-detail-event, .list-resources {
+#attachments, .list-contacts, .list-comments, .list-notifications, .list-detail-event, .list-resources, .list-reservations {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -1037,6 +1037,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .list-comments li,
 .list-notifications li,
 .list-resources li,
+list-reservations li,
 .list-detail-event {
   background-color: #FFF;
   border-bottom: 1px solid #e0e0e0;
@@ -2008,7 +2009,8 @@ form .forms .fields > li:nth-child(even) {
 .forms-list li:nth-child(odd),
 .formOnline-form:nth-child(odd),
 #action-bloc li:nth-child(odd),
-.liste-news li:nth-child(odd) {
+.liste-news li:nth-child(odd),
+.list-reservations li:nth-child(odd) {
   background-color: #f9f9f9;
   border-bottom: 1px solid #ddd;
 }
@@ -2018,7 +2020,8 @@ form .forms .fields > li:nth-child(even) {
 .forms-list li:nth-child(even),
 .formOnline-form:nth-child(even),
 #action-bloc li:nth-child(even),
-.liste-news li:nth-child(even) {
+.liste-news li:nth-child(even),
+.list-reservations li:nth-child(even) {
   background-color: #efefef;
   border-bottom: 1px solid #ddd;
 }
@@ -2559,4 +2562,50 @@ form .forms .fields > li:nth-child(even) {
   background-color: #6fa800;
   color: white;
   padding-bottom: 0px;
+}
+
+#resourcesManager .list-reservations {
+  margin-top: 3em;
+}
+
+#resourcesManager .reservationDate {
+  font-weight: bold;
+}
+
+#resourcesManager .reservationEvent {
+  margin-bottom: 5px;
+}
+
+#resourcesManager ul .reservation {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#resourcesManager ul .reservationRessources {
+  padding-left: 0;
+}
+
+#resourcesManager .reservationRessources li {
+  display: inline;
+  margin-right: 5px;
+}
+
+#resourcesManager .reservationRessources li.validated {
+  background-color: #87bd41;
+  color: #FFF;
+
+  margin-bottom: 3px;
+  border-radius: 5px;
+  padding: 3px 5px;
+
+
+}
+
+#resourcesManager .reservationRessources li.waitingForValidation {
+  background-color: #a7a7a7;
+  color: #FFF;
+
+  margin-bottom: 3px;
+  border-radius: 5px;
+  padding: 3px 5px;
 }

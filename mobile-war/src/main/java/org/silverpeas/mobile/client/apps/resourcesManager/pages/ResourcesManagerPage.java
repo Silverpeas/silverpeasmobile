@@ -27,15 +27,22 @@ package org.silverpeas.mobile.client.apps.resourcesManager.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.AddReservationButton;
+import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.ReservationItem;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
+
+import java.util.List;
 
 public class ResourcesManagerPage extends PageContent implements ResourcesManagerPagesEventHandler {
 
@@ -46,9 +53,13 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
   @UiField
   ActionsMenu actionsMenu;
 
+  @UiField
+  UnorderedList reservations;
+
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private AddReservationButton addReservation = new AddReservationButton();
-  private String instanceId;
+  private List<ReservationDTO> data;
+
 
   interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ResourcesManagerPage> {
   }
@@ -58,10 +69,18 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractResourcesManagerPagesEvent.TYPE, this);
+  }
+
+  public void setData(final List<ReservationDTO> reservationsDTO) {
+    this.data = reservationsDTO;
+    for (ReservationDTO reservation : reservationsDTO) {
+      ReservationItem item = new ReservationItem();
+      item.setData(reservation);
+      reservations.add(item);
+    }
 
     actionsMenu.addAction(favorite);
-    //TODO : manage favorite
-    //favorite.init();
+    favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
     actionsMenu.addAction(addReservation);
   }
 
