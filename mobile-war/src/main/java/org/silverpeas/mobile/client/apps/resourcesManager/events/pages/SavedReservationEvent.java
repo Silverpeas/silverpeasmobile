@@ -22,15 +22,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.resourcesManager.events.app;
+package org.silverpeas.mobile.client.apps.resourcesManager.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface ResourcesManagerAppEventHandler extends EventHandler{
+import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 
-  void addReservation(AddReservationEvent event);
+public class SavedReservationEvent extends AbstractResourcesManagerPagesEvent {
 
-  void saveReservation(SaveReservationEvent event);
+  private ReservationDTO data;
 
-  void deleteReservation(DeleteReservationEvent deleteReservationEvent);
+  public ReservationDTO getData() {
+    return data;
+  }
+
+  public void setData(final ReservationDTO data) {
+    this.data = data;
+  }
+
+  public SavedReservationEvent(){
+    super();
+  }
+
+  @Override
+  protected void dispatch(
+      final ResourcesManagerPagesEventHandler handler) {
+      handler.savedReservation(this);
+  }
 }

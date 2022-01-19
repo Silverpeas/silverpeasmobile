@@ -32,7 +32,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.SaveReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.DeletedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.ResourceItem;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -84,6 +86,16 @@ public class ReservationSelectionPage extends PageContent implements ResourcesMa
         }
       }
     }
+  }
+
+  @Override
+  public void deletedReservation(final DeletedReservationEvent deletedReservationEvent) {
+
+  }
+
+  @Override
+  public void savedReservation(final SavedReservationEvent savedReservationEvent) {
+
   }
 
   interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ReservationSelectionPage> {

@@ -36,7 +36,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.DeletedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.AddReservationButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.DeleteReservationButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
@@ -83,7 +85,17 @@ public class ReservationDetailPage extends PageContent implements ResourcesManag
     }
     html += "</ul>";
     resources.setHTML(html);
+    deleteReservation.setData(data);
     actionsMenu.addAction(deleteReservation);
+  }
+
+  @Override
+  public void deletedReservation(final DeletedReservationEvent deletedReservationEvent) {
+  }
+
+  @Override
+  public void savedReservation(final SavedReservationEvent savedReservationEvent) {
+
   }
 
   interface ReservationDetailPageUiBinder extends UiBinder<Widget, ReservationDetailPage> {
@@ -101,6 +113,4 @@ public class ReservationDetailPage extends PageContent implements ResourcesManag
     super.stop();
     EventBus.getInstance().removeHandler(AbstractResourcesManagerPagesEvent.TYPE, this);
   }
-
-
 }

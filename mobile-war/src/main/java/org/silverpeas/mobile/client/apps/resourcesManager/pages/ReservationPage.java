@@ -35,7 +35,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.DeletedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.Popin;
@@ -58,6 +60,16 @@ public class ReservationPage extends PageContent implements ResourcesManagerPage
 
   @UiField
   TextArea reason;
+
+  @Override
+  public void deletedReservation(final DeletedReservationEvent deletedReservationEvent) {
+
+  }
+
+  @Override
+  public void savedReservation(final SavedReservationEvent savedReservationEvent) {
+
+  }
 
   interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ReservationPage> {
   }

@@ -24,13 +24,28 @@
 
 package org.silverpeas.mobile.client.apps.resourcesManager.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface ResourcesManagerAppEventHandler extends EventHandler{
+import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 
-  void addReservation(AddReservationEvent event);
+public class DeleteReservationEvent extends AbstractResourcesManagerAppEvent {
 
-  void saveReservation(SaveReservationEvent event);
 
-  void deleteReservation(DeleteReservationEvent deleteReservationEvent);
+  public DeleteReservationEvent(){
+    super();
+  }
+
+  private ReservationDTO data;
+
+  public ReservationDTO getData() {
+    return data;
+  }
+
+  public void setData(final ReservationDTO data) {
+    this.data = data;
+  }
+
+  @Override
+  protected void dispatch(ResourcesManagerAppEventHandler handler) {
+    handler.deleteReservation(this);
+  }
 }

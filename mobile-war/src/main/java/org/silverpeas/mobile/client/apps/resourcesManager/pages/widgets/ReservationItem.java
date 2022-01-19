@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.ReservationDetailPage;
+import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationStatus;
@@ -49,12 +50,14 @@ public class ReservationItem extends Composite implements ClickHandler {
   @UiField
   HTMLPanel container;
   protected ApplicationMessages msg = null;
+  protected ResourcesManagerMessages msgApp = null;
 
   interface FavoriteItemUiBinder extends UiBinder<Widget, ReservationItem> {}
 
   public ReservationItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
+    msgApp = GWT.create(ResourcesManagerMessages.class);
   }
 
   public ReservationDTO getData() {
@@ -85,7 +88,7 @@ public class ReservationItem extends Composite implements ClickHandler {
   @Override
   public void onClick(final ClickEvent clickEvent) {
     ReservationDetailPage page = new ReservationDetailPage();
-    page.setPageTitle("todo");
+    page.setPageTitle(msgApp.titleDetail());
     page.setData(data);
     page.show();
   }

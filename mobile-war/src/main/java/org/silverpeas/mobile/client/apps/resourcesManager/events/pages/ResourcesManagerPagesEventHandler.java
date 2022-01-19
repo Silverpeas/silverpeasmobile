@@ -28,4 +28,7 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface ResourcesManagerPagesEventHandler extends EventHandler{
 
+  void deletedReservation(DeletedReservationEvent deletedReservationEvent);
+
+  void savedReservation(SavedReservationEvent savedReservationEvent);
 }

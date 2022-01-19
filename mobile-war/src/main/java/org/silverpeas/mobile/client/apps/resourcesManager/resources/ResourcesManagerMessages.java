@@ -28,6 +28,7 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface ResourcesManagerMessages extends Messages {
   String title();
+  String titleDetail();
   String addReservation();
   String validate();
 
@@ -51,4 +52,6 @@ public interface ResourcesManagerMessages extends Messages {
   String errorEarlierDate();
 
   String deleteReservation();
+
+  String deleteReservationConfirmation();
 }

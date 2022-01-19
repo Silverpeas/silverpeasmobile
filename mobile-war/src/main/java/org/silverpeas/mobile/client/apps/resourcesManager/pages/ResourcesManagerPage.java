@@ -31,7 +31,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.DeletedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.AddReservationButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.ReservationItem;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
@@ -60,6 +62,25 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
   private AddReservationButton addReservation = new AddReservationButton();
   private List<ReservationDTO> data;
 
+  @Override
+  public void deletedReservation(final DeletedReservationEvent deletedReservationEvent) {
+    for (int j = 0; j < data.size(); j++) {
+      ReservationDTO res = data.get(j);
+      if (res.getId().equals(deletedReservationEvent.getData().getId())) {
+        data.remove(j);
+        break;
+      }
+    }
+    displayList();
+  }
+
+  @Override
+  public void savedReservation(final SavedReservationEvent savedReservationEvent) {
+    Window.alert("ici");
+    data.add(savedReservationEvent.getData());
+    displayList();
+  }
+
 
   interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ResourcesManagerPage> {
   }
@@ -73,15 +94,20 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
 
   public void setData(final List<ReservationDTO> reservationsDTO) {
     this.data = reservationsDTO;
-    for (ReservationDTO reservation : reservationsDTO) {
-      ReservationItem item = new ReservationItem();
-      item.setData(reservation);
-      reservations.add(item);
-    }
+    displayList();
 
     actionsMenu.addAction(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
     actionsMenu.addAction(addReservation);
+  }
+
+  private void displayList() {
+    reservations.clear();
+    for (ReservationDTO reservation : data) {
+      ReservationItem item = new ReservationItem();
+      item.setData(reservation);
+      reservations.add(item);
+    }
   }
 
   @Override

@@ -35,8 +35,11 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AbstractResourcesManagerAppEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.app.DeleteReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.ResourcesManagerAppEventHandler;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.SaveReservationEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.DeletedReservationEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.ReservationSelectionPage;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.ResourcesManagerPage;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
@@ -161,13 +164,13 @@ public class ResourcesManagerApp extends App
   }
 
   @Override
-  public void saveReservation(final SaveReservationEvent event) {
+  public void saveReservation(final SaveReservationEvent saveReservationEvent) {
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
         ServicesLocator.getServiceResourcesManager()
-            .saveReservation(getApplicationInstance().getId(), event.getData(), this);
+            .saveReservation(getApplicationInstance().getId(), saveReservationEvent.getData(), this);
       }
 
       @Override
@@ -176,6 +179,32 @@ public class ResourcesManagerApp extends App
         new Popin(msg.saved()).show();
         getMainPage().back();
         getMainPage().back();
+        SavedReservationEvent event = new SavedReservationEvent();
+        event.setData(saveReservationEvent.getData());
+        // TODO: retrieve data reservation
+        //EventBus.getInstance().fireEvent(event);
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void deleteReservation(final DeleteReservationEvent deleteReservationEvent) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceResourcesManager()
+            .deleteReservation(getApplicationInstance().getId(), deleteReservationEvent.getData(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final Void unused) {
+        super.onSuccess(method, unused);
+        getMainPage().back();
+        DeletedReservationEvent event = new DeletedReservationEvent();
+        event.setData(deleteReservationEvent.getData());
+        EventBus.getInstance().fireEvent(event);
       }
     };
     action.attempt();
