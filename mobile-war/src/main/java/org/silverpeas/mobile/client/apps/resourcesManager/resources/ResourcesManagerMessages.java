@@ -49,4 +49,6 @@ public interface ResourcesManagerMessages extends Messages {
 
   String errorDateOrder();
   String errorEarlierDate();
+
+  String deleteReservation();
 }

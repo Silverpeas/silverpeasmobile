@@ -1946,6 +1946,20 @@ form .forms .fields > li:nth-child(even) {
   text-align: center;
 }
 
+.popin-btns {
+  margin-top: 2em;
+}
+
+a.popin-btn {
+  background: linear-gradient(#ccc, #999) repeat scroll 0 0 #999;
+  border: 1px solid #999;
+  text-shadow: 0 1px 0 #999;
+  text-decoration: none;
+  color: #FFFFFF;
+  padding: 1em;
+  margin: 1em;
+}
+
 #real-element {
   padding: 0 0.5em;
   background-color: #ececec;
@@ -2611,6 +2625,11 @@ form .forms .fields > li:nth-child(even) {
 #reservationDetail .field {
   padding: 5px;
   margin: 5px;
+}
+
+#reservationDetail {
+  min-height: 100vh;
+  margin-top: 2em;
 }
 
 #reservationDetail .section {

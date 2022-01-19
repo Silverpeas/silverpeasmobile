@@ -31,6 +31,7 @@ import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -67,7 +68,14 @@ public interface ServiceResourcesManager extends RestService {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{appId}/saveReservation/{reservation}")
+  @Path("{appId}/saveReservation")
   public void saveReservation(@PathParam("appId") String appId, ReservationDTO dto,
+      MethodCallback<Void> callback);
+
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{appId}/reservation")
+  public void deleteReservation(@PathParam("appId") String appId, ReservationDTO reservation,
       MethodCallback<Void> callback);
 }

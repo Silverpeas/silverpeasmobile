@@ -24,12 +24,14 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base">
 
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <div id="reservationDetail" class="content-navigation" style="min-height:100vh;">
+    <base:ActionsMenu ui:field="actionsMenu"/>
+    <div id="reservationDetail" class="content-navigation">
       <div class="section">
         <g:Label ui:field="labelTitle" stylePrimaryName="field"><ui:text from="{msg.event}"/></g:Label>
         <g:Label ui:field="labelStartDate" stylePrimaryName="field"><ui:text from="{msg.startDate}"/></g:Label>
@@ -43,4 +45,5 @@
       </div>
     </div>
   </g:HTMLPanel>
+
 </ui:UiBinder> 

@@ -52,6 +52,7 @@ import org.silverpeas.mobile.shared.dto.reservations.Errors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -128,6 +129,15 @@ public class ServiceResourcesManager extends RESTWebService {
     return resources;
   }
 
+  //TODO : delete reservation
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("/reservation")
+  public void deleteReservation(ReservationDTO reservation) {
+    ResourcesManagerProvider.getResourcesManager().deleteReservation(Long.parseLong(reservation.getId()), componentId);
+  }
+
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/reservations/my")
@@ -143,6 +153,7 @@ public class ServiceResourcesManager extends RESTWebService {
               startPeriod, endPeriod);
       for (Reservation reserv : reservationList) {
         ReservationDTO dto = new ReservationDTO();
+        dto.setId(reserv.getId());
         dto.setEvenement(reserv.getEvent());
         dto.setStartDate(sdf.format(reserv.getBeginDate()));
         dto.setEndDate(sdf.format(reserv.getEndDate()));
@@ -172,7 +183,7 @@ public class ServiceResourcesManager extends RESTWebService {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @Path("saveReservation/{reservation}")
+  @Path("saveReservation")
   public void saveReservation(ReservationDTO dto) {
     try {
       Reservation reservation = new Reservation();

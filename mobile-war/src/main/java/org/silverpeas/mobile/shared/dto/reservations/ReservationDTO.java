@@ -7,6 +7,7 @@ import java.util.List;
  * @author svu
  */
 public class ReservationDTO implements Serializable {
+  private String id;
   private String evenement;
   private String startDate;
   private String endDate;
@@ -59,4 +60,8 @@ public class ReservationDTO implements Serializable {
   public String getStatus() { return status; }
 
   public void setStatus(final String status) { this.status = status; }
+
+  public String getId() { return id; }
+
+  public void setId(final String id) { this.id = id; }
 }
