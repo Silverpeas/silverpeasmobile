@@ -1876,7 +1876,7 @@ form .forms .fields > li:nth-child(even) {
   right: 1em;
   background: transparent url("qvf.png") 0 0 no-repeat;
   outline: none;
-  z-index: 1002;
+  z-index: 999;
 }
 
 #action-bloc {

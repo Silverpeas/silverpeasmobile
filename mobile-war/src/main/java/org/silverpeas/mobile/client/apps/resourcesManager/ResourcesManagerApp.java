@@ -25,10 +25,7 @@
 package org.silverpeas.mobile.client.apps.resourcesManager;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -46,16 +43,13 @@ import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesMan
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.network.TextCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.Popin;
-import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
+import org.silverpeas.mobile.shared.dto.reservations.Errors;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
-import org.silverpeas.mobile.shared.dto.reservations.Errors;
 
 import java.util.List;
 
@@ -165,7 +159,7 @@ public class ResourcesManagerApp extends App
 
   @Override
   public void saveReservation(final SaveReservationEvent saveReservationEvent) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReservationDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -174,15 +168,14 @@ public class ResourcesManagerApp extends App
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
-        super.onSuccess(method, unused);
+      public void onSuccess(final Method method, final ReservationDTO reservation) {
+        super.onSuccess(method, reservation);
         new Popin(msg.saved()).show();
         getMainPage().back();
         getMainPage().back();
         SavedReservationEvent event = new SavedReservationEvent();
-        event.setData(saveReservationEvent.getData());
-        // TODO: retrieve data reservation
-        //EventBus.getInstance().fireEvent(event);
+        event.setData(reservation);
+        EventBus.getInstance().fireEvent(event);
       }
     };
     action.attempt();

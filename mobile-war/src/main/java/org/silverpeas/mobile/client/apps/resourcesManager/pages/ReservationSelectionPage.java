@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.SaveReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
@@ -38,6 +39,7 @@ import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedRese
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.ResourceItem;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
@@ -59,13 +61,18 @@ public class ReservationSelectionPage extends PageContent implements ResourcesMa
   @UiField
   UnorderedList resources;
 
-
+  @UiField
+  Anchor validate;
 
   public void setReservation(final ReservationDTO data) {
     this.reservation = data;
   }
 
   public void setResources(final List<ResourceDTO> resources) {
+    if (resources.isEmpty()) {
+      validate.setVisible(false);
+    }
+
     categoriesIds = new ArrayList<>();
     for (ResourceDTO res : resources) {
       if (!categoriesIds.contains(res.getCategoryId())) {
@@ -89,14 +96,10 @@ public class ReservationSelectionPage extends PageContent implements ResourcesMa
   }
 
   @Override
-  public void deletedReservation(final DeletedReservationEvent deletedReservationEvent) {
-
-  }
+  public void deletedReservation(final DeletedReservationEvent deletedReservationEvent) {}
 
   @Override
-  public void savedReservation(final SavedReservationEvent savedReservationEvent) {
-
-  }
+  public void savedReservation(final SavedReservationEvent savedReservationEvent) {}
 
   interface ResourcesManagerPageUiBinder extends UiBinder<Widget, ReservationSelectionPage> {
   }
@@ -117,9 +120,6 @@ public class ReservationSelectionPage extends PageContent implements ResourcesMa
 
   @UiHandler("validate")
   protected void validate(ClickEvent event) {
-
-    //TODO : test selection >=1
-
     List<ResourceDTO> selection = new ArrayList<>();
     Iterator<Widget> it = resources.iterator();
     while (it.hasNext()) {
@@ -128,11 +128,16 @@ public class ReservationSelectionPage extends PageContent implements ResourcesMa
         selection.add(item.getData());
       }
     }
-    reservation.setResources(selection);
 
-    SaveReservationEvent saveEvent = new SaveReservationEvent();
-    saveEvent.setData(reservation);
-    EventBus.getInstance().fireEvent(saveEvent);
+    if (selection.isEmpty()) {
+      new Popin(msg.errorNoResource()).show();
+
+    } else {
+      reservation.setResources(selection);
+      SaveReservationEvent saveEvent = new SaveReservationEvent();
+      saveEvent.setData(reservation);
+      EventBus.getInstance().fireEvent(saveEvent);
+    }
   }
 
 }

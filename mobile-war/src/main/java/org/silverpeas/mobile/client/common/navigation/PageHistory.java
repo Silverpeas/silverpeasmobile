@@ -63,6 +63,7 @@ public class PageHistory implements ValueChangeHandler<String> {
     pages.push(page);
     SpMobil.getMainPage().setContent(page);
     page.setVisible(true);
+    Window.scrollTo(0,0);
     browserGoto(""+page.hashCode());
     //TODO : TODO : css3 transition
   }

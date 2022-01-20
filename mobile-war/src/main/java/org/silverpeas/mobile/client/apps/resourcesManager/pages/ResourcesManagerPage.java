@@ -27,7 +27,6 @@ package org.silverpeas.mobile.client.apps.resourcesManager.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
@@ -76,7 +75,6 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
 
   @Override
   public void savedReservation(final SavedReservationEvent savedReservationEvent) {
-    Window.alert("ici");
     data.add(savedReservationEvent.getData());
     displayList();
   }

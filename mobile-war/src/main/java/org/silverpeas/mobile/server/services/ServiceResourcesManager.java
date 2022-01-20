@@ -152,26 +152,8 @@ public class ServiceResourcesManager extends RESTWebService {
           service.findAllReservationsInRange(componentId, Integer.parseInt(getUser().getId()),
               startPeriod, endPeriod);
       for (Reservation reserv : reservationList) {
-        ReservationDTO dto = new ReservationDTO();
-        dto.setId(reserv.getId());
-        dto.setEvenement(reserv.getEvent());
-        dto.setStartDate(sdf.format(reserv.getBeginDate()));
-        dto.setEndDate(sdf.format(reserv.getEndDate()));
-        dto.setReason(reserv.getReason());
-        dto.setStatus(reserv.getStatus());
-        List<Resource> resources = ResourcesManagerProvider.getResourcesManager().getResourcesOfReservation(componentId, reserv.getIdAsLong());
-        List<ResourceDTO> resourcesBooked = new ArrayList();
-        for (Resource res : resources) {
-          ResourceDTO resourceDTO = new ResourceDTO();
-          String status = ResourcesManagerProvider.getResourcesManager().getResourceOfReservationStatus(res.getIdAsLong(), reserv.getIdAsLong());
-          resourceDTO.setReservationStatus(status);
-          resourceDTO.setName(res.getName());
-          resourceDTO.setId(res.getId());
-          resourceDTO.setDescription(res.getDescription());
-          resourceDTO.setCategoryId(String.valueOf(res.getCategoryId()));
-          resourcesBooked.add(resourceDTO);
-        }
-        dto.setResources(resourcesBooked);
+        ReservationDTO dto = populate(reserv);
+        dto = populateResourcesOfReservation(reserv, dto);
         reservations.add(dto);
       }
     } catch (Exception e) {
@@ -180,11 +162,28 @@ public class ServiceResourcesManager extends RESTWebService {
     return reservations;
   }
 
+  private ReservationDTO populateResourcesOfReservation(final Reservation reserv, final ReservationDTO dto) {
+    List<Resource> resources = ResourcesManagerProvider.getResourcesManager().getResourcesOfReservation(componentId, reserv.getIdAsLong());
+    List<ResourceDTO> resourcesBooked = new ArrayList();
+    for (Resource res : resources) {
+      ResourceDTO resourceDTO = new ResourceDTO();
+      String status = ResourcesManagerProvider.getResourcesManager().getResourceOfReservationStatus(res.getIdAsLong(), reserv.getIdAsLong());
+      resourceDTO.setReservationStatus(status);
+      resourceDTO.setName(res.getName());
+      resourceDTO.setId(res.getId());
+      resourceDTO.setDescription(res.getDescription());
+      resourceDTO.setCategoryId(String.valueOf(res.getCategoryId()));
+      resourcesBooked.add(resourceDTO);
+    }
+    dto.setResources(resourcesBooked);
+    return dto;
+  }
+
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("saveReservation")
-  public void saveReservation(ReservationDTO dto) {
+  public ReservationDTO saveReservation(ReservationDTO dto) {
     try {
       Reservation reservation = new Reservation();
       reservation.setEvent(dto.getEvenement());
@@ -202,6 +201,8 @@ public class ServiceResourcesManager extends RESTWebService {
       reservation.setPlace("");
 
       ResourcesManagerProvider.getResourcesManager().saveReservation(reservation, resources);
+      dto = populate(reservation);
+      dto = populateResourcesOfReservation(reservation, dto);
 
       // envoi d'une notification pour validation aux responsables des ressources selectionnées.
       for (Long resourceId : resources) {
@@ -211,6 +212,19 @@ public class ServiceResourcesManager extends RESTWebService {
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
+
+    return dto;
+  }
+
+  private ReservationDTO populate(final Reservation reservation) {
+    ReservationDTO dto = new ReservationDTO();
+    dto.setId(reservation.getId());
+    dto.setEvenement(reservation.getEvent());
+    dto.setStartDate(sdf.format(reservation.getBeginDate()));
+    dto.setEndDate(sdf.format(reservation.getEndDate()));
+    dto.setReason(reservation.getReason());
+    dto.setStatus(reservation.getStatus());
+    return dto;
   }
 
   private void sendNotificationForValidation(Long resourceId, Long reservationId)

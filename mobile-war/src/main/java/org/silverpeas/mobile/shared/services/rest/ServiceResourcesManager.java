@@ -70,7 +70,7 @@ public interface ServiceResourcesManager extends RestService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("{appId}/saveReservation")
   public void saveReservation(@PathParam("appId") String appId, ReservationDTO dto,
-      MethodCallback<Void> callback);
+      MethodCallback<ReservationDTO> callback);
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
