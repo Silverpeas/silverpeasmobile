@@ -465,7 +465,12 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
 
   private boolean isSupportedApp(ComponentInstLight app) {
     if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
-      return true;
+      String [] supportedApps = getSettings().getList("apps.supported",",");
+      if (Arrays.asList(supportedApps).contains(app.getName())) {
+        return true;
+      } else {
+        return false;
+      }
     }
     return isWorkflowApp(app);
   }
