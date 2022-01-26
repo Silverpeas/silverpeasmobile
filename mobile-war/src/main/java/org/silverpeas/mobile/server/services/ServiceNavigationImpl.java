@@ -466,6 +466,11 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
   private boolean isSupportedApp(ComponentInstLight app) {
     if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
       String [] supportedApps = getSettings().getList("apps.supported",",");
+      String [] appsExcluded = getSettings().getList("apps.exclude.intances",",");
+      if (Arrays.asList(appsExcluded).contains(app.getId())) {
+        return false;
+      }
+
       if (Arrays.asList(supportedApps).contains(app.getName())) {
         return true;
       } else {
