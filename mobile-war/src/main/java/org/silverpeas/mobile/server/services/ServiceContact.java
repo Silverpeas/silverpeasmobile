@@ -53,7 +53,6 @@ import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import org.silverpeas.mobile.shared.dto.contact.ContactScope;
-import org.silverpeas.mobile.shared.exceptions.ContactException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -124,7 +123,6 @@ public class ServiceContact extends RESTWebService {
    * Return list of DetailUserDTO of my contacts
    *
    * @return list of UserDetailDTO
-   * @throws ContactException
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
