@@ -41,6 +41,7 @@ import org.silverpeas.core.security.token.TokenGeneratorProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 
 import javax.servlet.Filter;
@@ -96,8 +97,12 @@ public class MobilFilter implements Filter {
 
       boolean redirect = isRedirect(url);
 
-      if (isMobile && !url.contains("sso") && !url.contains("services") && !url.contains("spmobile")
-          && (!tablet) && !url.contains("attached_file") && !url.contains("Ticket") && !url.contains("LinkFile/Key") && redirect) {
+      if (isMobile && !url.contains("sso") && !url.contains("services") &&
+          !url.contains("spmobile") && !url.contains(URLUtil.getApplicationURL() + "/chat/") &&
+          !url.contains(URLUtil.getApplicationURL() + "/visio/") &&
+          !url.contains(URLUtil.getApplicationURL() + "/util/") && (!tablet) &&
+          !url.contains("attached_file") && !url.contains("Ticket") &&
+          !url.contains("LinkFile/Key") && redirect) {
         String params = "";
         if (url.contains("Publication")) {
           String id = url.substring(url.lastIndexOf("/") + 1);

@@ -35,33 +35,33 @@
 <c:set var="chatUser" value="<%=ChatUser.getCurrentRequester()%>"/>
 <c:set var="chatSettings" value="<%=ChatServer.getChatSettings()%>"/>
 <c:set var="currentUser" value='<%=session.getAttribute("user")%>'/>
+<jsp:useBean id="currentUser" type="org.silverpeas.core.admin.user.model.User"/>
 
 
 <jsp:useBean id="chatSettings" type="org.silverpeas.core.chat.ChatSettings"/>
 <c:set var="chatServer" value="<%=ChatServer.get()%>"/>
 <jsp:useBean id="chatServer" type="org.silverpeas.core.chat.servers.ChatServer"/>
-<c:set var="chatBundle" value="<%=ChatLocalizationProvider.getLocalizationBundle(
-          User.getCurrentRequester().getUserPreferences().getLanguage())%>"/>
+<c:set var="userLanguage" value="${currentUser.userPreferences.language}"/>
+<jsp:useBean id="userLanguage" type="java.lang.String"/>
+<c:set var="chatBundle" value="<%=ChatLocalizationProvider.getLocalizationBundle(userLanguage)%>"/>
 <jsp:useBean id="chatBundle" type="org.silverpeas.core.util.LocalizationBundle"/>
 
 <c:set var="chatUrl" value="${chatSettings.BOSHServiceUrl}"/>
+<c:set var="chatWsUrl" value="${chatSettings.websocketServiceUrl}"/>
 <c:set var="chatIceServer" value="${chatSettings.ICEServer}"/>
 <c:set var="chatACL" value="${chatSettings.ACL}"/>
 <c:set var="aclGroupsAllowedToCreate" value="${chatACL.aclOnGroupChat.groupsAllowedToCreate}"/>
 
 <!DOCTYPE HTML>
-<html>
-
+<html lang="${userLanguage}">
 <head>
   <title>Spmobile chat</title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex">
-
-
   <view:includePlugin name="minimalsilverpeas"/>
   <view:includePlugin name="chat"/>
-
   <script type="text/javascript">
     function init() {
       <c:choose>
@@ -70,6 +70,7 @@
         const chatOptions = {
           viewMode : 'mobile',
           url : '${chatUrl}',
+          wsUrl : '${chatWsUrl}',
           jid : '${chatUser.chatLogin}@${chatUser.chatDomain}',
           vcard : {
             'fn' : '${silfn:escapeJs(chatUser.displayedName)}'
@@ -88,9 +89,12 @@
               creation : ${empty aclGroupsAllowedToCreate or chatUser.isAtLeastInOneGroup(aclGroupsAllowedToCreate)}
             }
           },
-          language : '${currentUser.userPreferences.language}',
+          language : '${userLanguage}',
           avatar : '/silverpeas/display/avatar/60x/',
           userAvatarUrl : '/silverpeas/<%=FileServerUtils.getImageURL(((ChatUser)pageContext.getAttribute("chatUser")).getAvatar(), "60x60")%>', notificationLogo : (window.SilverChatSettings ? window.SilverChatSettings.get('un.d.i.u') : ''),
+          nbMsgMaxCachedPerRoom : ${chatSettings.maxCachedMsgThresholdPerRoom},
+          replyToEnabled : ${chatSettings.replyToEnabled},
+          reactionToEnabled : ${chatSettings.reactionToEnabled},
           visioEnabled : ${chatSettings.visioEnabled},
           screencastEnabled : ${chatSettings.screencastEnabled},
           debug : false,
@@ -136,16 +140,11 @@
   <!-- init script -->
   <script src="chat.js"></script>
 </head>
-
 <body class="page-tchat" onload="init()">
 <h1 class="tchat-header">Spmobile chat</h1>
-
 <form id="chat_selected_user">
   <input type="hidden" name="userId" id="userId"/>
   <input type="hidden" name="userName" id="userName"/>
 </form>
-
-
 </body>
-
 </html>
