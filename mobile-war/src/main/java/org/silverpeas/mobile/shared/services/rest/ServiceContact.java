@@ -22,24 +22,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.ContactException;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@RemoteServiceRelativePath("Contact")
-public interface ServiceContact extends RemoteService {
-  List<DetailUserDTO> getContacts(String type, String filter, int pageSize, int startIndex)
-      throws ContactException, AuthenticationException;
+@Path("/contact")
+public interface ServiceContact extends RestService {
 
-  ContactFilters hasContacts() throws ContactException, AuthenticationException;
 
-  List<DetailUserDTO> getContactsFiltered(String type, String filter)
-      throws ContactException, AuthenticationException;
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("paging/{type}/")
+  void getContacts(@PathParam("type") String type, @QueryParam("filter") String filter,
+      @QueryParam("pageSize") int pageSize, @QueryParam("startIndex") int startIndex,
+      MethodCallback<List<DetailUserDTO>> callback);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("hasContacts/")
+  void hasContacts(MethodCallback<ContactFilters> callback);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{type}/")
+  void getContactsFiltered(@PathParam("type") String type, @QueryParam("filter") String filter,
+      MethodCallback<List<DetailUserDTO>> callback);
+
 }

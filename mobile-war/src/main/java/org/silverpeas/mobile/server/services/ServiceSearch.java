@@ -36,8 +36,6 @@ import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.SearchException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -61,64 +59,59 @@ public class ServiceSearch extends RESTWebService {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{query}")
-  public List<ResultDTO> search(@PathParam("query") String query)
-      throws SearchException, AuthenticationException {
+  public List<ResultDTO> search(@PathParam("query") String query) throws Exception {
     List<ResultDTO> results = new ArrayList<ResultDTO>();
-    try {
-      QueryDescription q = new QueryDescription(query);
-      q.setSearchingUser(getUser().getId());
-      q.setRequestedLanguage(getUser().getUserPreferences().getLanguage());
-      q.setAdminScope(getUser().isAccessAdmin());
-      q.addComponent("Spaces");
-      q.addComponent("Components");
-      buildSpaceComponentAvailableForUser(q, ALL_SPACES, ALL_COMPONENTS);
-      PlainSearchResult r = SearchEngineProvider.getSearchEngine().search(q);
-      for (MatchingIndexEntry result : r.getEntries()) {
 
-        if (result.getObjectType().equals(ContentsTypes.Photo.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Sound.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Video.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Streaming.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Publication.toString()) ||
-            result.getObjectType().contains(ContentsTypes.Attachment.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Classified.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Node.toString()) ||
-            result.getObjectType().equals(ContentsTypes.QuestionContainer.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Component.toString()) ||
-            result.getObjectType().equals(ContentsTypes.Space.toString())) {
-          String title = result.getTitle(getUser().getUserPreferences().getLanguage());
-          if (title != null && title.contains("wysiwyg") == false) {
-            ResultDTO entry = new ResultDTO();
+    QueryDescription q = new QueryDescription(query);
+    q.setSearchingUser(getUser().getId());
+    q.setRequestedLanguage(getUser().getUserPreferences().getLanguage());
+    q.setAdminScope(getUser().isAccessAdmin());
+    q.addComponent("Spaces");
+    q.addComponent("Components");
+    buildSpaceComponentAvailableForUser(q, ALL_SPACES, ALL_COMPONENTS);
+    PlainSearchResult r = SearchEngineProvider.getSearchEngine().search(q);
+    for (MatchingIndexEntry result : r.getEntries()) {
 
-            if (result.getObjectType().contains(ContentsTypes.Attachment.toString())) {
-              entry.setType(ContentsTypes.Attachment.toString());
-              String attachmentId = result.getObjectType().replace("Attachment", "");
-              attachmentId = attachmentId
-                  .replace("_" + getUser().getUserPreferences().getLanguage(), "");
-              entry.setAttachmentId(attachmentId);
-            } else if(result.getObjectType().equals(ContentsTypes.Node.toString())) {
-              if (result.getComponent().startsWith(Apps.kmelia.toString())) {
-                entry.setType(ContentsTypes.Folder.name());
-              } else if(result.getComponent().startsWith(Apps.gallery.toString())) {
-                entry.setType(ContentsTypes.Album.name());
-              }
-            } else {
-              entry.setType(result.getObjectType());
+      if (result.getObjectType().equals(ContentsTypes.Photo.toString()) ||
+          result.getObjectType().equals(ContentsTypes.Sound.toString()) ||
+          result.getObjectType().equals(ContentsTypes.Video.toString()) ||
+          result.getObjectType().equals(ContentsTypes.Streaming.toString()) ||
+          result.getObjectType().equals(ContentsTypes.Publication.toString()) ||
+          result.getObjectType().contains(ContentsTypes.Attachment.toString()) ||
+          result.getObjectType().equals(ContentsTypes.Classified.toString()) ||
+          result.getObjectType().equals(ContentsTypes.Node.toString()) ||
+          result.getObjectType().equals(ContentsTypes.QuestionContainer.toString()) ||
+          result.getObjectType().equals(ContentsTypes.Component.toString()) ||
+          result.getObjectType().equals(ContentsTypes.Space.toString())) {
+        String title = result.getTitle(getUser().getUserPreferences().getLanguage());
+        if (title != null && title.contains("wysiwyg") == false) {
+          ResultDTO entry = new ResultDTO();
+
+          if (result.getObjectType().contains(ContentsTypes.Attachment.toString())) {
+            entry.setType(ContentsTypes.Attachment.toString());
+            String attachmentId = result.getObjectType().replace("Attachment", "");
+            attachmentId =
+                attachmentId.replace("_" + getUser().getUserPreferences().getLanguage(), "");
+            entry.setAttachmentId(attachmentId);
+          } else if (result.getObjectType().equals(ContentsTypes.Node.toString())) {
+            if (result.getComponent().startsWith(Apps.kmelia.toString())) {
+              entry.setType(ContentsTypes.Folder.name());
+            } else if (result.getComponent().startsWith(Apps.gallery.toString())) {
+              entry.setType(ContentsTypes.Album.name());
             }
-            entry.setId(result.getObjectId());
-            entry.setTitle(title);
-            if (result.getObjectType().equals(ContentsTypes.Component.name())) {
-              entry.setComponentId(result.getObjectId());
-            } else {
-              entry.setComponentId(result.getComponent());
-            }
-            results.add(entry);
+          } else {
+            entry.setType(result.getObjectType());
           }
+          entry.setId(result.getObjectId());
+          entry.setTitle(title);
+          if (result.getObjectType().equals(ContentsTypes.Component.name())) {
+            entry.setComponentId(result.getObjectId());
+          } else {
+            entry.setComponentId(result.getComponent());
+          }
+          results.add(entry);
         }
       }
-
-    } catch (Exception e) {
-      throw new SearchException(e);
     }
 
     return results;

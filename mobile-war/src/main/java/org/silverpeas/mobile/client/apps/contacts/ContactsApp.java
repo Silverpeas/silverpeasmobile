@@ -25,9 +25,7 @@
 package org.silverpeas.mobile.client.apps.contacts;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.contacts.events.app.AbstractContactsAppEvent;
 import org.silverpeas.mobile.client.apps.contacts.events.app.ContactsAppEventHandler;
 import org.silverpeas.mobile.client.apps.contacts.events.app.ContactsFilteredLoadEvent;
@@ -39,17 +37,14 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContactsApp extends App implements ContactsAppEventHandler, NavigationEventHandler {
@@ -74,26 +69,22 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
 
   @Override
   public void loadContacts(final ContactsLoadEvent event) {
-    AsyncCallbackOnlineOrOffline action =
-        new AsyncCallbackOnlineOrOffline<List<DetailUserDTO>>(getOfflineAction(event)) {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<DetailUserDTO>>(null) {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceContact()
+            .getContacts(event.getType(), event.getFilter(), event.getPageSize(),
+                event.getStartIndex(), this);
+      }
 
-          @Override
-          public void attempt() {
-            Notification.activityStart();
-            ServicesLocator.getServiceContact()
-                .getContacts(event.getType(), event.getFilter(), event.getPageSize(),
-                    event.getStartIndex(), this);
-          }
-
-          @Override
-          public void onSuccess(List<DetailUserDTO> result) {
-            super.onSuccess(result);
-            // Store in local storage
-            storeInLocalStorage(result, event);
-            // Notify view
-            EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
-          }
-        };
+      @Override
+      public void onSuccess(final Method method, final List<DetailUserDTO> result) {
+        super.onSuccess(method, result);
+        // Notify view
+        EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
+      }
+    };
     action.attempt();
   }
 
@@ -110,83 +101,24 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
     page.setPersonnalContactsVisible(false);
     page.init(true);
 
-    AsyncCallbackOnlineOrOffline action =
-        new AsyncCallbackOnlineOrOffline<List<DetailUserDTO>>(getOfflineAction(event)) {
-
-          @Override
-          public void attempt() {
-            Notification.activityStart();
-            ServicesLocator.getServiceContact()
-                .getContactsFiltered(event.getType(), event.getFilter(), this);
-          }
-
-          @Override
-          public void onSuccess(List<DetailUserDTO> result) {
-            super.onSuccess(result);
-            // Store in local storage
-            storeInLocalStorage(result, event);
-
-            ContactsApp.super.start();
-            // Notify view
-            ContactsLoadedEvent pageEvent = new ContactsLoadedEvent(result);
-            EventBus.getInstance().fireEvent(pageEvent);
-
-          }
-        };
-    action.attempt();
-  }
-
-  private Command getOfflineAction(final ContactsFilteredLoadEvent event) {
-    Command offlineAction = new Command() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<DetailUserDTO>>(null) {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceContact()
+            .getContactsFiltered(event.getType(), event.getFilter(), this);
+      }
 
       @Override
-      public void execute() {
-        String key = "contact" + event.getType() + "_" + event.getFilter();
-        List<DetailUserDTO> result = LocalStorageHelper.load(key, List.class);
-        if (result == null) {
-          result = new ArrayList<DetailUserDTO>();
-        }
+      public void onSuccess(final Method method, final List<DetailUserDTO> result) {
+        super.onSuccess(method, result);
+        ContactsApp.super.start();
         // Notify view
         ContactsLoadedEvent pageEvent = new ContactsLoadedEvent(result);
         EventBus.getInstance().fireEvent(pageEvent);
-        ContactsApp.super.start();
       }
     };
-
-    return offlineAction;
-  }
-
-  private void storeInLocalStorage(final List<DetailUserDTO> result,
-      final ContactsFilteredLoadEvent event) {
-    String key = "contact" + event.getType() + "_" + event.getFilter();
-    LocalStorageHelper.store(key, List.class, result);
-  }
-
-  private Command getOfflineAction(final ContactsLoadEvent event) {
-    Command offlineAction = new Command() {
-
-      @Override
-      public void execute() {
-        String key =
-            "contact" + event.getType() + "_" + event.getFilter() + "_" + event.getPageSize() +
-                "_" + event.getStartIndex();
-        List<DetailUserDTO> result = LocalStorageHelper.load(key, List.class);
-        if (result == null) {
-          result = new ArrayList<DetailUserDTO>();
-        }
-        EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
-      }
-    };
-
-    return offlineAction;
-  }
-
-  private void storeInLocalStorage(final List<DetailUserDTO> result,
-      final ContactsLoadEvent event) {
-    String key =
-        "contact" + event.getType() + "_" + event.getFilter() + "_" + event.getPageSize() + "_" +
-            event.getStartIndex();
-    LocalStorageHelper.store(key, List.class, result);
+    action.attempt();
   }
 
   @Override
@@ -196,10 +128,17 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
   @Override
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals(ContentsTypes.Contacts.toString())) {
-      ServicesLocator.getServiceContact().hasContacts(new AsyncCallback<ContactFilters>() {
+
+      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<ContactFilters>(null) {
         @Override
-        public void onFailure(final Throwable throwable) {
-          Notification.activityStop();
+        public void attempt() {
+          super.attempt();
+          ServicesLocator.getServiceContact().hasContacts(this);
+        }
+
+        @Override
+        public void onFailure(final Method method, final Throwable t) {
+          super.onFailure(method, t);
           ContactsPage page = (ContactsPage) getMainPage();
           if (page != null) {
             page.stop();
@@ -212,20 +151,21 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
         }
 
         @Override
-        public void onSuccess(final ContactFilters result) {
-          Notification.activityStop();
+        public void onSuccess(final Method method, final ContactFilters result) {
+          super.onSuccess(method, result);
           ContactsPage page = (ContactsPage) getMainPage();
           if (page != null) {
             page.stop();
           }
           page = new ContactsPage();
           setMainPage(page);
-          page.setContactsVisible(result.hasContacts());
-          page.setPersonnalContactsVisible(result.hasPersonnalContacts());
+          page.setContactsVisible(result.isHasContacts());
+          page.setPersonnalContactsVisible(result.isHasPersonnalContacts());
           page.init(false);
           ContactsApp.super.start();
         }
-      });
+      };
+      action.attempt();
     }
   }
 }

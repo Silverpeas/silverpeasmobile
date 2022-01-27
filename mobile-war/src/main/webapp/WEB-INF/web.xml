@@ -121,15 +121,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceContactImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceContactImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceContactImpl</servlet-name>
-    <url-pattern>/services/spmobile/Contact</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceNotificationsImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceNotificationsImpl</servlet-class>
   </servlet>
