@@ -22,13 +22,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-public interface ServiceSearchAsync {
-  void search(String query, AsyncCallback<List<ResultDTO>> callback);
+@Path("/search")
+public interface ServiceSearch extends RestService {
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{query}")
+  void search(@PathParam("query") String query, MethodCallback<List<ResultDTO>> callback);
 }

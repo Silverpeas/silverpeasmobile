@@ -74,8 +74,8 @@ import org.silverpeas.mobile.client.common.event.authentication.AuthenticationEv
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.mobil.Orientation;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
@@ -414,15 +414,16 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   public static void search(final String query) {
     Notification.activityStart();
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<List<ResultDTO>>() {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ResultDTO>>() {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceSearch().search(query, this);
       }
 
       @Override
-      public void onSuccess(final List<ResultDTO> results) {
-        super.onSuccess(results);
+      public void onSuccess(final Method method, final List<ResultDTO> results) {
+        super.onSuccess(method, results);
         getMainPage().resetSearchField();
         getMainPage().closeMenu();
         SearchResultPage page = new SearchResultPage();

@@ -25,35 +25,50 @@
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.index.search.PlainSearchResult;
 import org.silverpeas.core.index.search.SearchEngineProvider;
 import org.silverpeas.core.index.search.model.MatchingIndexEntry;
 import org.silverpeas.core.index.search.model.QueryDescription;
+import org.silverpeas.core.web.rs.RESTWebService;
+import org.silverpeas.core.web.rs.UserPrivilegeValidation;
+import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.SearchException;
-import org.silverpeas.mobile.shared.services.ServiceSearch;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceSearchImpl extends AbstractAuthenticateService implements ServiceSearch {
+@WebService
+@Authorized
+@Path(ServiceSearch.PATH)
+public class ServiceSearch extends RESTWebService {
 
-  private static final long serialVersionUID = 1L;
   private final String ALL_SPACES = "*";
   private final String ALL_COMPONENTS = "*";
 
-  @Override
-  public List<ResultDTO> search(final String query)
+  static final String PATH = "search";
+
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{query}")
+  public List<ResultDTO> search(@PathParam("query") String query)
       throws SearchException, AuthenticationException {
     List<ResultDTO> results = new ArrayList<ResultDTO>();
     try {
       QueryDescription q = new QueryDescription(query);
-      q.setSearchingUser(getUserInSession().getId());
-      q.setRequestedLanguage(getUserInSession().getUserPreferences().getLanguage());
-      q.setAdminScope(getUserInSession().isAccessAdmin());
+      q.setSearchingUser(getUser().getId());
+      q.setRequestedLanguage(getUser().getUserPreferences().getLanguage());
+      q.setAdminScope(getUser().isAccessAdmin());
       q.addComponent("Spaces");
       q.addComponent("Components");
       buildSpaceComponentAvailableForUser(q, ALL_SPACES, ALL_COMPONENTS);
@@ -71,7 +86,7 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
             result.getObjectType().equals(ContentsTypes.QuestionContainer.toString()) ||
             result.getObjectType().equals(ContentsTypes.Component.toString()) ||
             result.getObjectType().equals(ContentsTypes.Space.toString())) {
-          String title = result.getTitle(getUserInSession().getUserPreferences().getLanguage());
+          String title = result.getTitle(getUser().getUserPreferences().getLanguage());
           if (title != null && title.contains("wysiwyg") == false) {
             ResultDTO entry = new ResultDTO();
 
@@ -79,7 +94,7 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
               entry.setType(ContentsTypes.Attachment.toString());
               String attachmentId = result.getObjectType().replace("Attachment", "");
               attachmentId = attachmentId
-                  .replace("_" + getUserInSession().getUserPreferences().getLanguage(), "");
+                  .replace("_" + getUser().getUserPreferences().getLanguage(), "");
               entry.setAttachmentId(attachmentId);
             } else if(result.getObjectType().equals(ContentsTypes.Node.toString())) {
               if (result.getComponent().startsWith(Apps.kmelia.toString())) {
@@ -121,7 +136,7 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
 
     if (spaceId.equals(ALL_SPACES)) {
       //No restriction on spaces.
-      String[] allowedSpaceIds = getAdministration().getAllSpaceIds(getUserInSession().getId());
+      String[] allowedSpaceIds = getAdministration().getAllSpaceIds(getUser().getId());
 
       for (String allowedSpaceId : allowedSpaceIds) {
         buildSpaceComponentAvailableForUser(queryDescription, (String) allowedSpaceId,
@@ -133,14 +148,14 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
         //No restriction on components of the selected space
         //First, we get all available components on this space
         String[] allowedComponentIds =
-            getAdministration().getAvailCompoIds(spaceId, getUserInSession().getId());
+            getAdministration().getAvailCompoIds(spaceId, getUser().getId());
         for (String allowedComponentId : allowedComponentIds) {
           buildSpaceComponentAvailableForUser(queryDescription, spaceId, allowedComponentId);
         }
 
         //Second, we recurse on each sub space of this space
         String[] subSpaceIds =
-            getAdministration().getAllowedSubSpaceIds(getUserInSession().getId(), spaceId);
+            getAdministration().getAllowedSubSpaceIds(getUser().getId(), spaceId);
         if (subSpaceIds != null) {
           for (String subSpaceId : subSpaceIds) {
             buildSpaceComponentAvailableForUser(queryDescription, subSpaceId, ALL_COMPONENTS);
@@ -156,4 +171,17 @@ public class ServiceSearchImpl extends AbstractAuthenticateService implements Se
     return Administration.get();
   }
 
+  @Override
+  protected String getResourceBasePath() {
+    return PATH;
+  }
+
+  @Override
+  public String getComponentId() {
+    return null;
+  }
+
+  @Override
+  public void validateUserAuthorization(final UserPrivilegeValidation validation) {
+  }
 }
