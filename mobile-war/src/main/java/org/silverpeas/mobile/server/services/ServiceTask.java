@@ -60,7 +60,7 @@ public class ServiceTask extends RESTWebService {
   @Context
   HttpServletRequest request;
 
-  static final String PATH = "personalTask";
+  static final String PATH = "mobile/personalTask";
   private OrganizationController organizationController = OrganizationController.get();
   private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
   private LocalizationBundle todoMultilang = null;

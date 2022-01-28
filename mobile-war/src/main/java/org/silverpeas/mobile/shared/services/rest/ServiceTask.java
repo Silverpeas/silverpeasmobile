@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * @author svu
  */
-@Path("/personalTask")
+@Path("/mobile/personalTask")
 public interface ServiceTask extends RestService {
 
 
