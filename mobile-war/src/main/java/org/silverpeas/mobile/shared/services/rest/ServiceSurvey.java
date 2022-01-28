@@ -38,7 +38,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/survey")
+@Path("/mobile/survey")
 public interface ServiceSurvey extends RestService {
   @GET
   @Produces(MediaType.APPLICATION_JSON)

@@ -69,7 +69,7 @@ import java.util.Map;
 @Path(ServiceSurvey.PATH + "/{appId}")
 public class ServiceSurvey extends RESTWebService {
 
-  static final String PATH = "survey";
+  static final String PATH = "mobile/survey";
 
   @Context
   HttpServletRequest request;

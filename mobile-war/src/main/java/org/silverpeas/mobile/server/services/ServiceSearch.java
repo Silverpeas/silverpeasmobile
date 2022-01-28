@@ -53,7 +53,7 @@ public class ServiceSearch extends RESTWebService {
   private final String ALL_SPACES = "*";
   private final String ALL_COMPONENTS = "*";
 
-  static final String PATH = "search";
+  static final String PATH = "mobile/search";
 
 
   @GET
