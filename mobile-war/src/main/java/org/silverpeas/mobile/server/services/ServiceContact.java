@@ -74,7 +74,7 @@ import java.util.StringTokenizer;
 @WebService
 @Authorized
 @Path(ServiceContact.PATH)
-public class ServiceContact extends RESTWebService {
+public class ServiceContact extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;
@@ -92,10 +92,6 @@ public class ServiceContact extends RESTWebService {
       userProperties.add(stkU.nextToken());
     }
     return userProperties;
-  }
-
-  protected static SettingBundle getSettings() {
-    return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 
   private List<String> getContactProperties() {

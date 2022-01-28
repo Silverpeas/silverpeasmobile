@@ -54,11 +54,8 @@ import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAI
 import org.silverpeas.core.notification.user.server.channel.silvermail.SilvermailCriteria;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
-import org.silverpeas.core.web.mvc.controller.MainSessionController;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
@@ -70,7 +67,6 @@ import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationToSendDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -95,10 +91,9 @@ import java.util.List;
 @WebService
 @Authorized
 @Path(ServiceNotifications.PATH)
-public class ServiceNotifications extends RESTWebService {
+public class ServiceNotifications extends AbstractRestWebService {
 
   private OrganizationController organizationController = OrganizationController.get();
-  public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = "SilverSessionController";
   static final String PATH = "mobile/notification";
 
   @GET
@@ -423,15 +418,6 @@ public class ServiceNotifications extends RESTWebService {
 
   private NodeService getNodeService() {
     return NodeService.get();
-  }
-
-  protected static SettingBundle getSettings() {
-    return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
-  }
-
-  protected MainSessionController getMainSessionController() throws Exception {
-    return (MainSessionController) getHttpRequest().getSession()
-        .getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
   }
 
   @Override
