@@ -22,18 +22,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-public interface ServiceSurveyAsync {
-  void getSurveys(String instanceId, final AsyncCallback<List<SurveyDTO>> async);
+@Path("/survey")
+public interface ServiceSurvey extends RestService {
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{appId}/all")
+  public void getSurveys(@PathParam("appId") String appId, MethodCallback<List<SurveyDTO>> callback);
 
-  void saveSurvey(final SurveyDetailDTO data, final AsyncCallback<Void> async);
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{appId}/{id}")
+  public void getSurvey(@PathParam("appId") String appId, @PathParam("id") String id, MethodCallback<SurveyDetailDTO> callback);
 
-  void getSurvey(String id, String instanceId, final AsyncCallback<SurveyDetailDTO> async);
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{appId}/")
+  public void saveSurvey(@PathParam("appId") String appId, final SurveyDetailDTO data, MethodCallback<Void> callback);
 }

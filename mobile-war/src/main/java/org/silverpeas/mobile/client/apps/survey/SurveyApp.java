@@ -25,8 +25,7 @@
 package org.silverpeas.mobile.client.apps.survey;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -43,13 +42,11 @@ import org.silverpeas.mobile.client.apps.survey.pages.SurveyPage;
 import org.silverpeas.mobile.client.apps.survey.pages.SurveysPage;
 import org.silverpeas.mobile.client.apps.survey.resources.SurveyMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -59,21 +56,20 @@ import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SurveyApp extends App implements SurveyAppEventHandler, NavigationEventHandler {
 
   private SurveyMessages msg;
 
-  public SurveyApp(){
+  public SurveyApp() {
     super();
     msg = GWT.create(SurveyMessages.class);
     EventBus.getInstance().addHandler(AbstractSurveyAppEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
   }
 
-  public void start(){
+  public void start() {
     // always start
   }
 
@@ -84,7 +80,8 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
-    if (event.getInstance().getType().equals(Apps.survey.name()) || event.getInstance().getType().equalsIgnoreCase(Apps.pollingStation.name())) {
+    if (event.getInstance().getType().equals(Apps.survey.name()) ||
+        event.getInstance().getType().equalsIgnoreCase(Apps.pollingStation.name())) {
       setApplicationInstance(event.getInstance());
       SurveysPage page = new SurveysPage();
       page.setPageTitle(event.getInstance().getLabel());
@@ -94,9 +91,13 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals(ContentsTypes.QuestionContainer.toString()) && event.getContent().getInstanceId().startsWith(Apps.survey.name()) || event.getContent().getType().startsWith(Apps.pollingStation.name())) {
+    if (event.getContent().getType().equals(ContentsTypes.QuestionContainer.toString()) &&
+        event.getContent().getInstanceId().startsWith(Apps.survey.name()) ||
+        event.getContent().getType().startsWith(Apps.pollingStation.name())) {
       startWithContent(event.getContent());
-    } else if(event.getContent().getType().equals(ContentsTypes.Component.toString()) && event.getContent().getInstanceId().startsWith(Apps.survey.name()) || event.getContent().getType().startsWith(Apps.pollingStation.name())) {
+    } else if (event.getContent().getType().equals(ContentsTypes.Component.toString()) &&
+        event.getContent().getInstanceId().startsWith(Apps.survey.name()) ||
+        event.getContent().getType().startsWith(Apps.pollingStation.name())) {
       ApplicationInstanceDTO appDTO = new ApplicationInstanceDTO();
       appDTO.setId(event.getContent().getInstanceId());
       appDTO.setType(Apps.survey.name());
@@ -119,72 +120,70 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void loadSurveys(final SurveysLoadEvent event) {
-    final String key = "surveys_" + getApplicationInstance().getId();
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<SurveyDTO> result = LocalStorageHelper.load(key, List.class);
-        if (result == null) {
-          result = new ArrayList<SurveyDTO>();
-        }
-        EventBus.getInstance().fireEvent(new SurveysLoadedEvent(result, getApplicationInstance().getId()));
-      }
-    };
 
-    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<SurveyDTO>>(offlineAction) {
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceSurvey().getSurveys(getApplicationInstance().getId(), this);
-      }
+    MethodCallbackOnlineOrOffline action =
+        new MethodCallbackOnlineOrOffline<List<SurveyDTO>>(null) {
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceSurvey().getSurveys(getApplicationInstance().getId(), this);
+          }
 
-      @Override
-      public void onSuccess(List<SurveyDTO> result) {
-        super.onSuccess(result);
-        LocalStorageHelper.store(key, List.class, result);
-        EventBus.getInstance().fireEvent(new SurveysLoadedEvent(result, getApplicationInstance().getId()));
-      }
-    };
+          @Override
+          public void onSuccess(final Method method, final List<SurveyDTO> result) {
+            super.onSuccess(method, result);
+            EventBus.getInstance()
+                .fireEvent(new SurveysLoadedEvent(result, getApplicationInstance().getId()));
+          }
+        };
     action.attempt();
-
   }
 
   @Override
   public void loadSurvey(final SurveyLoadEvent event) {
-      ServicesLocator.getServiceSurvey().getSurvey(event.getId(), getApplicationInstance().getId(), new AsyncCallback<SurveyDetailDTO>() {
-        @Override
-        public void onFailure(final Throwable throwable) {
-          EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-        }
+    MethodCallbackOnlineOrOffline action =
+        new MethodCallbackOnlineOrOffline<SurveyDetailDTO>(null) {
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceSurvey()
+                .getSurvey(getApplicationInstance().getId(), event.getId(), this);
+          }
 
-        @Override
-        public void onSuccess(final SurveyDetailDTO surveyDetailDTO) {
-          EventBus.getInstance().fireEvent(new SurveyLoadedEvent(surveyDetailDTO));
-        }
-      });
+          @Override
+          public void onSuccess(final Method method, final SurveyDetailDTO surveyDetailDTO) {
+            super.onSuccess(method, surveyDetailDTO);
+            EventBus.getInstance().fireEvent(new SurveyLoadedEvent(surveyDetailDTO));
+          }
+        };
+    action.attempt();
   }
 
   @Override
   public void saveSurvey(final SurveySaveEvent event) {
 
-      // remove image (for upload faster)
-      for (QuestionDTO q : event.getData().getQuestions()) {
-        for (AnswerDTO a : q.getAnswers()) {
-          a.setImage("");
-        }
+    // remove image (for upload faster)
+    for (QuestionDTO q : event.getData().getQuestions()) {
+      for (AnswerDTO a : q.getAnswers()) {
+        a.setImage("");
+      }
+    }
+
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceSurvey()
+            .saveSurvey(getApplicationInstance().getId(), event.getData(), this);
       }
 
-      ServicesLocator.getServiceSurvey().saveSurvey(event.getData(), new AsyncCallback<Void>() {
-        @Override
-        public void onFailure(final Throwable throwable) {
-          EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-        }
-
-        @Override
-        public void onSuccess(final Void aVoid) {
-          Notification.activityStop();
-          EventBus.getInstance().fireEvent(new UpdateParticipationNumberEvent(event.getData()));
-          PageHistory.getInstance().back();
-        }
-      });
+      @Override
+      public void onSuccess(final Method method, final Void unused) {
+        super.onSuccess(method, unused);
+        EventBus.getInstance().fireEvent(new UpdateParticipationNumberEvent(event.getData()));
+        PageHistory.getInstance().back();
+      }
+    };
+    action.attempt();
   }
 }

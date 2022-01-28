@@ -82,4 +82,8 @@ public class SurveyDetailDTO implements Serializable {
   public void setNbParticipation(final int nbParticipation) {
     this.nbParticipation = nbParticipation;
   }
+
+  public void setQuestions(final List<QuestionDTO> questions) {
+    this.questions = questions;
+  }
 }

@@ -24,8 +24,6 @@
 
 package org.silverpeas.mobile.shared.dto.survey;
 
-import org.silverpeas.core.questioncontainer.answer.model.Answer;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +38,13 @@ public class QuestionDTO implements Serializable {
   private List<AnswerDTO> answers = new ArrayList<>();
   private List<ResponseDTO> responses = new ArrayList<>();
 
+  public void setAnswers(final List<AnswerDTO> answers) {
+    this.answers = answers;
+  }
+
+  public void setResponses(final List<ResponseDTO> responses) {
+    this.responses = responses;
+  }
 
   public String getType() {
     return type;

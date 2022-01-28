@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.core.admin.service.OrganizationControllerProvider;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.questioncontainer.answer.model.Answer;
 import org.silverpeas.core.questioncontainer.container.model.QuestionContainerDetail;
 import org.silverpeas.core.questioncontainer.container.model.QuestionContainerHeader;
@@ -32,16 +33,24 @@ import org.silverpeas.core.questioncontainer.container.model.QuestionContainerPK
 import org.silverpeas.core.questioncontainer.container.service.QuestionContainerService;
 import org.silverpeas.core.questioncontainer.question.model.Question;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.core.web.rs.RESTWebService;
+import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.survey.AnswerDTO;
 import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.survey.ResponseDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.SurveyException;
-import org.silverpeas.mobile.shared.services.ServiceSurvey;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,25 +64,34 @@ import java.util.Map;
  *
  * @author svu
  */
-public class ServiceSurveyImpl extends AbstractAuthenticateService implements ServiceSurvey {
+@WebService
+@Authorized
+@Path(ServiceSurvey.PATH + "/{appId}")
+public class ServiceSurvey extends RESTWebService {
 
-  private static final long serialVersionUID = 1L;
+  static final String PATH = "survey";
 
+  @Context
+  HttpServletRequest request;
 
-  @Override
-  public List<SurveyDTO> getSurveys(final String instanceId)
-      throws SurveyException, AuthenticationException {
-    checkUserInSession();
-    QuestionContainerPK pk = new QuestionContainerPK(null, null, instanceId);
+  @PathParam("appId")
+  private String componentId;
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("all/")
+  public List<SurveyDTO> getSurveys() {
+    QuestionContainerPK pk = new QuestionContainerPK(null, null, getComponentId());
     Collection<QuestionContainerHeader> questions =
         QuestionContainerService.get().getOpenedQuestionContainers(pk);
     return populate(questions);
   }
 
-  @Override
-  public void saveSurvey(final SurveyDetailDTO data)
-      throws SurveyException, AuthenticationException {
-    checkUserInSession();
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("")
+  public void saveSurvey(final SurveyDetailDTO data) {
 
     try {
       QuestionContainerPK pk = new QuestionContainerPK(data.getId(), null, null);
@@ -89,24 +107,23 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
         reply.put(question.getId(), values);
       }
       QuestionContainerService.get()
-          .recordReplyToQuestionContainerByUser(pk, getUserInSession().getId(), reply, data.getComments(), data.isAnonymComment());
+          .recordReplyToQuestionContainerByUser(pk, getUser().getId(), reply, data.getComments(), data.isAnonymComment());
     } catch(Throwable t) {
       SilverLogger.getLogger(this).error(t);
     }
   }
 
-  @Override
-  public SurveyDetailDTO getSurvey(final String id, final String instanceId)
-      throws SurveyException, AuthenticationException {
-    checkUserInSession();
-
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{id}/")
+  public SurveyDetailDTO getSurvey(@PathParam("id") final String id) {
     QuestionContainerPK pk = new QuestionContainerPK(id, null, null);
     int nbParticipations = QuestionContainerService.get()
-        .getUserNbParticipationsByFatherId(pk, getUserInSession().getId());
+        .getUserNbParticipationsByFatherId(pk, getUser().getId());
 
     QuestionContainerDetail questions =
-        QuestionContainerService.get().getQuestionContainer(pk, getUserInSession().getId());
-    return populate(questions, instanceId, nbParticipations);
+        QuestionContainerService.get().getQuestionContainer(pk, getUser().getId());
+    return populate(questions, getComponentId(), nbParticipations);
   }
 
   private boolean isMultipleParticipant(String componentId) {
@@ -115,7 +132,7 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
     String[] ids = OrganizationControllerProvider.getOrganisationController()
         .getUsersIdsByRoleNames(componentId, userMultipleRole);
 
-    return Arrays.asList(ids).contains(getUserInSession().getId());
+    return Arrays.asList(ids).contains(getUser().getId());
   }
 
   private SurveyDetailDTO populate(final QuestionContainerDetail questions, final String instanceId,
@@ -172,5 +189,15 @@ public class ServiceSurveyImpl extends AbstractAuthenticateService implements Se
     }
 
     return dtos;
+  }
+
+  @Override
+  protected String getResourceBasePath() {
+    return PATH;
+  }
+
+  @Override
+  public String getComponentId() {
+    return this.componentId;
   }
 }

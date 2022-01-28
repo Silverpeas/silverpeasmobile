@@ -129,7 +129,6 @@ public class ServiceResourcesManager extends RESTWebService {
     return resources;
   }
 
-  //TODO : delete reservation
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
