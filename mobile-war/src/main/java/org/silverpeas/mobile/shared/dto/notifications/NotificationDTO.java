@@ -31,7 +31,7 @@ import java.io.Serializable;
 /**
  * @author: svu
  */
-public class NotificationDTO extends BaseDTO implements Serializable {
+public class NotificationDTO implements Serializable {
 
   public final static String TYPE_PUBLICATION = "Publication";
   public final static String TYPE_PHOTO = "Photo";

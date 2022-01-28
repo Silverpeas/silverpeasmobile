@@ -31,7 +31,7 @@ import java.io.Serializable;
 /**
  * @author: svu
  */
-public class NotificationBoxDTO extends BaseDTO implements Serializable {
+public class NotificationBoxDTO implements Serializable {
 
   private long idNotif;
 

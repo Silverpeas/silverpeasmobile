@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.notifications;
 
 import com.google.gwt.core.client.GWT;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.notifications.events.app.AbstractNotificationsAppEvent;
 import org.silverpeas.mobile.client.apps.notifications.events.app.NotificationsAppEventHandler;
@@ -37,12 +38,13 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.network.OfflineHelper;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationToSendDTO;
 
 import java.util.List;
 
@@ -51,88 +53,84 @@ import java.util.List;
  */
 public class NotificationsApp extends App implements NotificationsAppEventHandler {
 
-    private NotificationPage mainPage = new NotificationPage();
-    private String instanceId, contentId, contentType;
-    private ApplicationMessages globalMsg = null;
-    private NotificationsMessages msg = null;
+  private NotificationPage mainPage = new NotificationPage();
+  private String instanceId, contentId, contentType;
+  private ApplicationMessages globalMsg = null;
+  private NotificationsMessages msg = null;
 
-    public NotificationsApp(String instanceId, String contentId, String contentType, String title, String pageTitle) {
-        super();
-        globalMsg = GWT.create(ApplicationMessages.class);
-        msg = GWT.create(NotificationsMessages.class);
-        this.instanceId = instanceId;
-        this.contentId = contentId;
-        this.contentType = contentType;
-        EventBus.getInstance().addHandler(AbstractNotificationsAppEvent.TYPE, this);
-        mainPage.setTitle(title);
-        mainPage.setPageTitle(msg.notifyContent());
-    }
+  public NotificationsApp(String instanceId, String contentId, String contentType, String title,
+      String pageTitle) {
+    super();
+    globalMsg = GWT.create(ApplicationMessages.class);
+    msg = GWT.create(NotificationsMessages.class);
+    this.instanceId = instanceId;
+    this.contentId = contentId;
+    this.contentType = contentType;
+    EventBus.getInstance().addHandler(AbstractNotificationsAppEvent.TYPE, this);
+    mainPage.setTitle(title);
+    mainPage.setPageTitle(msg.notifyContent());
+  }
 
-    public void start(){
-        setMainPage(mainPage);
-        super.start();
-        loadUsersAndGroups();
-    }
+  public void start() {
+    setMainPage(mainPage);
+    super.start();
+    loadUsersAndGroups();
+  }
 
-    @Override
-    public void stop() {
-        EventBus.getInstance().removeHandler(AbstractNotificationsAppEvent.TYPE, this);
-        super.stop();
-    }
+  @Override
+  public void stop() {
+    EventBus.getInstance().removeHandler(AbstractNotificationsAppEvent.TYPE, this);
+    super.stop();
+  }
 
-    public void loadUsersAndGroups() {
+  public void loadUsersAndGroups() {
 
-        AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<BaseDTO>>(null) {
-            @Override
-            public void attempt() {
-                ServicesLocator
-                    .getServiceNotifications().getAllowedUsersAndGroups(instanceId, contentId, this);
-            }
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<BaseDTO>>(null) {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceNotifications()
+            .getAllowedUsersAndGroups(instanceId, contentId, this);
+      }
 
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-                if (OfflineHelper.isOffLine()) {
-                    Notification.alert(globalMsg.needToBeOnline());
-                }
-            }
+      @Override
+      public void onSuccess(final Method method, final List<BaseDTO> baseDTOS) {
+        super.onSuccess(method, baseDTOS);
+        // Notify view
+        EventBus.getInstance().fireEvent(new AllowedUsersAndGroupsLoadedEvent(baseDTOS));
+      }
+    };
+    action.attempt();
+  }
 
-            @Override
-            public void onSuccess(List<BaseDTO> result) {
-                super.onSuccess(result);
-                // No storage in local storage
+  @Override
+  public void sendNotification(final SendNotificationEvent event) {
 
-                // Notify view
-                EventBus.getInstance().fireEvent(new AllowedUsersAndGroupsLoadedEvent(result));
-            }
-        };
-        action.attempt();
-    }
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        NotificationDTO n = event.getNotification();
+        n.setContentId(contentId);
+        n.setContentType(contentType);
+        n.setInstanceId(instanceId);
 
-    @Override
-    public void sendNotification(final SendNotificationEvent event) {
-        AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
-            @Override
-            public void attempt() {
-                NotificationDTO n = event.getNotification();
-                n.setContentId(contentId);
-                n.setContentType(contentType);
-                n.setInstanceId(instanceId);
-                ServicesLocator.getServiceNotifications().send(n, event.getReceivers(), event.getSubject(), this);
-            }
+        NotificationToSendDTO dto = new NotificationToSendDTO();
+        dto.setNotification(n);
+        dto.setReceivers(event.getReceivers());
+        dto.setSubject(event.getSubject());
+        ServicesLocator.getServiceNotifications().send(dto, this);
+      }
 
-            @Override
-            public void onSuccess(Void result) {
-                super.onSuccess(result);
-                // No storage in local storage
-
-                // Notify view
-                Notification.activityStop();
-                EventBus.getInstance().fireEvent(new NotificationSendedEvent());
-            }
-        };
-        action.attempt();
-    }
+      @Override
+      public void onSuccess(final Method method, final Void unused) {
+        super.onSuccess(method, unused);
+        // Notify view
+        EventBus.getInstance().fireEvent(new NotificationSendedEvent());
+      }
+    };
+    action.attempt();
+  }
 
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {

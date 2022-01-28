@@ -25,7 +25,7 @@
 package org.silverpeas.mobile.client.apps.notificationsbox;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -43,36 +43,34 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBox
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsBoxApp extends App implements NotificationsBoxAppEventHandler, NavigationEventHandler {
+public class NotificationsBoxApp extends App
+    implements NotificationsBoxAppEventHandler, NavigationEventHandler {
 
-    private ApplicationMessages msg;
+  private ApplicationMessages msg;
 
-    public NotificationsBoxApp(){
-        super();
-        msg = GWT.create(ApplicationMessages.class);
-        EventBus.getInstance().addHandler(AbstractNotificationsBoxAppEvent.TYPE, this);
-        EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
-    }
+  public NotificationsBoxApp() {
+    super();
+    msg = GWT.create(ApplicationMessages.class);
+    EventBus.getInstance().addHandler(AbstractNotificationsBoxAppEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
+  }
 
-    public void start(){
-      // no "super.start(lauchingPage);" this apps is used in another apps
-    }
+  public void start() {
+    // no "super.start(lauchingPage);" this apps is used in another apps
+  }
 
-    @Override
-    public void stop() {
-      // never stop
-    }
+  @Override
+  public void stop() {
+    // never stop
+  }
 
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
@@ -81,39 +79,31 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
 
   @Override
   public void loadNotifications(final NotificationsLoadEvent notificationsLoadEvent) {
-    final String key = "notificationsBox";
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<NotificationReceivedDTO> result = LocalStorageHelper.load(key, List.class);
-        if (result == null) {
-          result = new ArrayList<NotificationReceivedDTO>();
-        }
-        EventBus.getInstance().fireEvent(new NotificationsLoadedEvent(result));
-      }
-    };
+    MethodCallbackOnlineOrOffline action =
+        new MethodCallbackOnlineOrOffline<List<NotificationReceivedDTO>>(null) {
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceNotifications().getUserNotifications(this);
+          }
 
-    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<NotificationReceivedDTO>>(offlineAction) {
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceNotifications().getUserNotifications(this);
-      }
-
-      @Override
-      public void onSuccess(List<NotificationReceivedDTO> result) {
-        super.onSuccess(result);
-        LocalStorageHelper.store(key, List.class, result);
-        EventBus.getInstance().fireEvent(new NotificationsLoadedEvent(result));
-      }
-    };
+          @Override
+          public void onSuccess(final Method method,
+              final List<NotificationReceivedDTO> notificationReceivedDTOS) {
+            super.onSuccess(method, notificationReceivedDTOS);
+            EventBus.getInstance()
+                .fireEvent(new NotificationsLoadedEvent(notificationReceivedDTOS));
+          }
+        };
     action.attempt();
   }
 
   @Override
   public void readenNotification(final NotificationReadenEvent event) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<Void>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceNotifications().markAsReaden(event.getData().getIdNotif(), this);
       }
     };
@@ -123,15 +113,16 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
   @Override
   public void deleteNotifications(final DeleteNotificationsEvent event) {
 
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<Void>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceNotifications().delete(event.getSelection(), this);
       }
 
       @Override
-      public void onSuccess(final Void result) {
-        super.onSuccess(result);
+      public void onSuccess(final Method method, final Void unused) {
+        super.onSuccess(method, unused);
         if (event.getSelection().get(0) instanceof NotificationSendedDTO) {
           loadNotificationsSended(new NotificationsSendedLoadEvent());
         } else {
@@ -144,15 +135,16 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
 
   @Override
   public void markAsReadNotifications(final MarkAsReadNotificationsEvent event) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<Void>(null) {
       @Override
       public void attempt() {
+        super.attempt();
         ServicesLocator.getServiceNotifications().markAsRead(event.getSelection(), this);
       }
 
       @Override
-      public void onSuccess(final Void result) {
-        super.onSuccess(result);
+      public void onSuccess(final Method method, final Void unused) {
+        super.onSuccess(method, unused);
         loadNotifications(new NotificationsLoadEvent());
       }
     };
@@ -162,31 +154,23 @@ public class NotificationsBoxApp extends App implements NotificationsBoxAppEvent
   @Override
   public void loadNotificationsSended(
       final NotificationsSendedLoadEvent notificationsSendedLoadEvent) {
-    final String key = "notificationsSendedBox";
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<NotificationSendedDTO> result = LocalStorageHelper.load(key, List.class);
-        if (result == null) {
-          result = new ArrayList<NotificationSendedDTO>();
-        }
-        EventBus.getInstance().fireEvent(new NotificationsSendedLoadedEvent(result));
-      }
-    };
 
-    AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<List<NotificationSendedDTO>>(offlineAction) {
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceNotifications().getUserSendedNotifications(this);
-      }
+    MethodCallbackOnlineOrOffline action =
+        new MethodCallbackOnlineOrOffline<List<NotificationSendedDTO>>(null) {
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceNotifications().getUserSendedNotifications(this);
+          }
 
-      @Override
-      public void onSuccess(List<NotificationSendedDTO> result) {
-        super.onSuccess(result);
-        LocalStorageHelper.store(key, List.class, result);
-        EventBus.getInstance().fireEvent(new NotificationsSendedLoadedEvent(result));
-      }
-    };
+          @Override
+          public void onSuccess(final Method method,
+              final List<NotificationSendedDTO> notificationSendedDTOS) {
+            super.onSuccess(method, notificationSendedDTOS);
+            EventBus.getInstance()
+                .fireEvent(new NotificationsSendedLoadedEvent(notificationSendedDTOS));
+          }
+        };
     action.attempt();
   }
 

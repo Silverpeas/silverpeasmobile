@@ -22,30 +22,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services;
+package org.silverpeas.mobile.shared.dto.notifications;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface ServiceNotificationsAsync {
+/**
+ * @author: svu
+ */
+public class NotificationToSendDTO implements Serializable {
 
-    void send(NotificationDTO notification, List<BaseDTO> receivers, String subject, AsyncCallback<Void> async);
+  private NotificationDTO notification;
+  private List<BaseDTO> receivers;
+  private String subject;
 
-    void getAllowedUsersAndGroups(String componentId, String contentId, AsyncCallback<List<BaseDTO>> async);
+  public NotificationDTO getNotification() {
+    return notification;
+  }
 
-    void getUserNotifications(AsyncCallback<List<NotificationReceivedDTO>> async);
+  public void setNotification(final NotificationDTO notification) {
+    this.notification = notification;
+  }
 
-  void markAsReaden(long id, final AsyncCallback<Void> async);
+  public List<BaseDTO> getReceivers() {
+    return receivers;
+  }
 
-  void delete(List<NotificationBoxDTO> selection, final AsyncCallback<Void> async);
+  public void setReceivers(final List<BaseDTO> receivers) {
+    this.receivers = receivers;
+  }
 
-  void markAsRead(List<NotificationBoxDTO> selection, final AsyncCallback<Void> async);
+  public String getSubject() {
+    return subject;
+  }
 
-  void getUserSendedNotifications(final AsyncCallback<List<NotificationSendedDTO>> async);
+  public void setSubject(final String subject) {
+    this.subject = subject;
+  }
 }
