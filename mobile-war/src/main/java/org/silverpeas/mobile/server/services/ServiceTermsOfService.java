@@ -52,7 +52,7 @@ public class ServiceTermsOfService extends RESTWebService {
   @Context
   HttpServletRequest request;
 
-  static final String PATH = "termsOfService";
+  static final String PATH = "mobile/termsOfService";
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

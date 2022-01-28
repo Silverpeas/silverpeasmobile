@@ -34,7 +34,7 @@ import javax.ws.rs.Path;
 /**
  * @author svu
  */
-@Path("/termsOfService")
+@Path("/mobile/termsOfService")
 public interface ServiceTermsOfService extends RestService {
 
   @GET
