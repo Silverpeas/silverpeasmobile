@@ -47,7 +47,6 @@ import org.silverpeas.core.contribution.template.publication.PublicationTemplate
 import org.silverpeas.core.notification.user.builder.helper.UserNotificationHelper;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.FormsHelper;
@@ -75,7 +74,7 @@ import java.util.Map;
 @WebService
 @Authorized
 @Path(ServiceClassifieds.PATH + "/{appId}")
-public class ServiceClassifieds extends RESTWebService {
+public class ServiceClassifieds extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

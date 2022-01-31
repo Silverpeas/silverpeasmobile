@@ -44,7 +44,6 @@ import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
@@ -69,7 +68,7 @@ import java.util.List;
 @WebService
 @Authorized
 @Path(ServiceResourcesManager.PATH + "/{appId}")
-public class ServiceResourcesManager extends RESTWebService {
+public class ServiceResourcesManager extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

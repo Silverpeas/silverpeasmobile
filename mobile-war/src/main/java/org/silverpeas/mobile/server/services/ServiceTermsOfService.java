@@ -33,7 +33,6 @@ import org.silverpeas.core.template.SilverpeasTemplateFactory;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.logging.SilverLogger;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 
@@ -47,7 +46,7 @@ import javax.ws.rs.core.MediaType;
 @WebService
 @Authorized
 @Path(ServiceTermsOfService.PATH)
-public class ServiceTermsOfService extends RESTWebService {
+public class ServiceTermsOfService extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

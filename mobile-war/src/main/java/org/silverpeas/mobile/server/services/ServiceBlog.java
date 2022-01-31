@@ -27,7 +27,6 @@ package org.silverpeas.mobile.server.services;
 import org.silverpeas.components.blog.model.PostDetail;
 import org.silverpeas.components.blog.service.BlogServiceFactory;
 import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 
@@ -46,7 +45,7 @@ import java.util.List;
 @WebService
 @Authorized
 @Path(ServiceBlog.PATH + "/{appId}")
-public class ServiceBlog extends RESTWebService {
+public class ServiceBlog extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

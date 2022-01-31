@@ -28,7 +28,6 @@ import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +42,7 @@ import javax.ws.rs.core.MediaType;
 @WebService
 @Authorized
 @Path(ServiceHyperLink.PATH + "/{appId}")
-public class ServiceHyperLink extends RESTWebService {
+public class ServiceHyperLink extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

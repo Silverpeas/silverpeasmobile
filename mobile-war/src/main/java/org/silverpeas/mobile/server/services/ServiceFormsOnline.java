@@ -55,7 +55,6 @@ import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -88,7 +87,7 @@ import static java.util.Collections.emptyList;
 @WebService
 @Authorized
 @Path(ServiceFormsOnline.PATH + "/{appId}")
-public class ServiceFormsOnline extends RESTWebService {
+public class ServiceFormsOnline extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

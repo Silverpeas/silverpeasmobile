@@ -30,7 +30,6 @@ import org.silverpeas.core.index.search.PlainSearchResult;
 import org.silverpeas.core.index.search.SearchEngineProvider;
 import org.silverpeas.core.index.search.model.MatchingIndexEntry;
 import org.silverpeas.core.index.search.model.QueryDescription;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -48,7 +47,7 @@ import java.util.List;
 @WebService
 @Authorized
 @Path(ServiceSearch.PATH)
-public class ServiceSearch extends RESTWebService {
+public class ServiceSearch extends AbstractRestWebService {
 
   private final String ALL_SPACES = "*";
   private final String ALL_COMPONENTS = "*";

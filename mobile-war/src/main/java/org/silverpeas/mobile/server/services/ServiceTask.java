@@ -33,7 +33,6 @@ import org.silverpeas.core.personalorganizer.service.SilverpeasCalendar;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
@@ -55,7 +54,7 @@ import java.util.List;
 @WebService
 @Authorized
 @Path(ServiceTask.PATH)
-public class ServiceTask extends RESTWebService {
+public class ServiceTask extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

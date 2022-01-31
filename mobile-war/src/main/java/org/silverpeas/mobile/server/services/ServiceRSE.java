@@ -28,7 +28,6 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.socialnetwork.status.Status;
 import org.silverpeas.core.socialnetwork.status.StatusService;
 import org.silverpeas.core.util.ServiceProvider;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
@@ -46,7 +45,7 @@ import java.util.Date;
 @WebService
 @Authorized
 @Path(ServiceRSE.PATH)
-public class ServiceRSE extends RESTWebService {
+public class ServiceRSE extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

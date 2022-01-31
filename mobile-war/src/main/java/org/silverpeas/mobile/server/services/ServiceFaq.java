@@ -34,7 +34,6 @@ import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
 import org.silverpeas.core.util.logging.SilverLogger;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
@@ -55,7 +54,7 @@ import java.util.List;
 @WebService
 @Authorized
 @Path(ServiceFaq.PATH + "/{appId}")
-public class ServiceFaq extends RESTWebService {
+public class ServiceFaq extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;

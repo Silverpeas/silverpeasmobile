@@ -27,7 +27,6 @@ package org.silverpeas.mobile.server.services;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
@@ -45,7 +44,7 @@ import java.util.List;
 @WebService
 @Authorized
 @Path(ServiceNews.PATH + "/{appId}")
-public class ServiceNews extends RESTWebService {
+public class ServiceNews extends AbstractRestWebService {
 
   @Context
   HttpServletRequest request;
