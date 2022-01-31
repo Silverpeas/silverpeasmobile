@@ -39,7 +39,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * @author svu
  */
-@Path("/rse")
+@Path("/mobile/rse")
 public interface ServiceRSE extends RestService {
 
   @POST

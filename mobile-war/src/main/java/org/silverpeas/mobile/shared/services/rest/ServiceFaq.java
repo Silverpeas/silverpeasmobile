@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * @author svu
  */
-@Path("/faq")
+@Path("/mobile/faq")
 public interface ServiceFaq extends RestService {
 
   @GET

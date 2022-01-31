@@ -34,7 +34,7 @@ import javax.ws.rs.PathParam;
 /**
  * @author svu
  */
-@Path("/hyperlink")
+@Path("/mobile/hyperlink")
 public interface ServiceHyperLink extends RestService {
 
   @GET

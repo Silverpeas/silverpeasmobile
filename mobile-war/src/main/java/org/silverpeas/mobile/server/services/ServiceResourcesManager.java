@@ -80,7 +80,7 @@ public class ServiceResourcesManager extends AbstractRestWebService {
 
   private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
-  static final String PATH = "resourcesManager";
+  static final String PATH = "mobile/resourcesManager";
 
   @GET
   @Produces(MediaType.TEXT_PLAIN)

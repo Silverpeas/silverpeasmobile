@@ -92,7 +92,7 @@ public class ServiceFormsOnline extends AbstractRestWebService {
   @Context
   HttpServletRequest request;
 
-  static final String PATH = "formsOnline";
+  static final String PATH = "mobile/formsOnline";
 
   private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 

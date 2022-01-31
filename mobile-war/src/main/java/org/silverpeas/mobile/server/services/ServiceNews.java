@@ -52,7 +52,7 @@ public class ServiceNews extends AbstractRestWebService {
   @PathParam("appId")
   private String componentId;
 
-  static final String PATH = "news";
+  static final String PATH = "mobile/news";
 
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
   private OrganizationController organizationController = OrganizationController.get();

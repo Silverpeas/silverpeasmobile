@@ -50,7 +50,7 @@ public class ServiceRSE extends AbstractRestWebService {
   @Context
   HttpServletRequest request;
 
-  static final String PATH = "rse";
+  static final String PATH = "mobile/rse";
 
   @POST
   @Produces(MediaType.TEXT_PLAIN)

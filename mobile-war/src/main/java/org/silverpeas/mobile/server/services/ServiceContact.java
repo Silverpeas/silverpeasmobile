@@ -79,7 +79,7 @@ public class ServiceContact extends AbstractRestWebService {
   @Context
   HttpServletRequest request;
 
-  static final String PATH = "contact";
+  static final String PATH = "mobile/contact";
 
   private OrganizationController organizationController = OrganizationController.get();
   private RelationShipService relationShipService = RelationShipService.get();

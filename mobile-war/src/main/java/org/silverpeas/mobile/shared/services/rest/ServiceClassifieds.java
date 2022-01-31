@@ -40,7 +40,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * @author svu
  */
-@Path("/classifieds")
+@Path("/mobile/classifieds")
 public interface ServiceClassifieds extends RestService {
 
   @GET

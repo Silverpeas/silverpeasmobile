@@ -59,7 +59,7 @@ public class ServiceFaq extends AbstractRestWebService {
   @Context
   HttpServletRequest request;
 
-  static final String PATH = "faq";
+  static final String PATH = "mobile/faq";
 
   @PathParam("appId")
   private String componentId;

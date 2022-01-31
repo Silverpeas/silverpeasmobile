@@ -55,7 +55,7 @@ public class ServiceBlog extends AbstractRestWebService {
 
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 
-  static final String PATH = "blog";
+  static final String PATH = "mobile/blog";
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

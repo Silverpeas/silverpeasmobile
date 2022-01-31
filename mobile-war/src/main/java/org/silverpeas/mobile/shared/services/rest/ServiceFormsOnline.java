@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author svu
  */
-@Path("/formsOnline")
+@Path("/mobile/formsOnline")
 public interface ServiceFormsOnline extends RestService {
 
 

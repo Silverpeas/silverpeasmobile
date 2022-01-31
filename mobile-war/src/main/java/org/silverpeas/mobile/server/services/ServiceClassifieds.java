@@ -82,7 +82,7 @@ public class ServiceClassifieds extends AbstractRestWebService {
   @PathParam("appId")
   private String componentId;
 
-  static final String PATH = "classifieds";
+  static final String PATH = "mobile/classifieds";
 
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 

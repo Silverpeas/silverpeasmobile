@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author svu
  */
-@Path("/resourcesManager")
+@Path("/mobile/resourcesManager")
 public interface ServiceResourcesManager extends RestService {
 
   @GET
