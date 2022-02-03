@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
 /**
  * @author svu
@@ -50,4 +51,17 @@ public class FormsHelper {
     var fd = new FormData();
     return fd;
   }-*/;
+
+  public static boolean isStoreValueId(FormFieldDTO f) {
+    if (f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") ||
+            f.getType().equalsIgnoreCase("group")) return true;
+
+    if (f.getDisplayerName() != null) {
+      boolean r = f.getDisplayerName().equalsIgnoreCase("checkbox") ||
+          f.getDisplayerName().equalsIgnoreCase("radio") ||
+          f.getDisplayerName().equalsIgnoreCase("listbox");
+      return r;
+    }
+    return false;
+  }
 }

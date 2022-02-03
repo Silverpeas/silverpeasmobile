@@ -33,7 +33,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
-import org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormSaveEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
@@ -44,6 +43,7 @@ import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePag
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineRequestValidatedEvent;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.components.UnorderedList;
@@ -137,7 +137,7 @@ public class FormOnlineEditPage extends PageContent implements FormsOnlinePagesE
               errors.add(f.getLabel());
             }
           }
-        } else if (FormsOnlineApp.isStoreValueId(f)) {
+        } else if (FormsHelper.isStoreValueId(f)) {
           if (f.getValueId() == null || f.getValueId().isEmpty()) {
             errors.add(f.getLabel());
           }

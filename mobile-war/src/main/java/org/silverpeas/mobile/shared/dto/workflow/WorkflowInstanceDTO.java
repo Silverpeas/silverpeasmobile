@@ -24,21 +24,31 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkflowInstanceDTO extends BaseDTO implements Serializable {
+public class WorkflowInstanceDTO implements Serializable {
 
-  private static final long serialVersionUID = 2921606984249560882L;
 
   private String title;
   private String state;
   private List<String> headerFieldsValues = new ArrayList<String>();
+  private String id;
 
   public WorkflowInstanceDTO() {
+  }
+
+  public void setHeaderFieldsValues(final List<String> headerFieldsValues) {
+    this.headerFieldsValues = headerFieldsValues;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
   }
 
   @Override

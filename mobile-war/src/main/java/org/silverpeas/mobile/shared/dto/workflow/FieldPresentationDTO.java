@@ -24,19 +24,17 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
 
-public class FieldPresentationDTO extends BaseDTO implements Serializable{
-
-  private static final long serialVersionUID = 5388415881024885835L;
+public class FieldPresentationDTO implements Serializable{
 
   private String label;
   private String value;
   private String type;
   private String displayerName;
   private String instanceId;
+  private String id;
 
   public FieldPresentationDTO() {
   }
@@ -47,6 +45,14 @@ public class FieldPresentationDTO extends BaseDTO implements Serializable{
     setId(id);
     this.type = type;
     this.displayerName = displayerName;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
   }
 
   public String getLabel() {

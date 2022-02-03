@@ -28,15 +28,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gwt.dom.client.Element;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * @author svu
  */
-@JsonIgnoreProperties("objectValue")
-public class FormFieldDTO extends BaseDTO {
 
-  private static final long serialVersionUID = 2921606984249560882L;
+@JsonIgnoreProperties("objectValue")
+public class FormFieldDTO implements Serializable {
+
   private boolean readOnly;
   private boolean mandatory;
   private String displayerName;
@@ -48,7 +49,15 @@ public class FormFieldDTO extends BaseDTO {
   private Map<String, String> values;
   private String instanceId;
   private transient Element objectValue = null;
+  private String id;
 
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
   @Override
   public boolean equals(Object obj) {
     return ((WorkflowFieldDTO) obj).getId().equals(getId());

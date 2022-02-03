@@ -27,7 +27,6 @@ package org.silverpeas.mobile.client.apps.formsonline;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.*;
@@ -160,7 +159,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
     for (FormFieldDTO f : formSaveEvent.getData()) {
       if (f.getType().equalsIgnoreCase("file")) {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getObjectValue());
-      } else if(isStoreValueId(f)) {
+      } else if(FormsHelper.isStoreValueId(f)) {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValueId());
       } else {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
@@ -174,16 +173,6 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
     saveForm(this, formData, SpMobil.getUserToken(),
           AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN),
           getApplicationInstance().getId(), currentForm.getId());
-  }
-
-  public static boolean isStoreValueId(FormFieldDTO f) {
-    boolean r =
-        f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") ||
-            f.getType().equalsIgnoreCase("group") ||
-            f.getDisplayerName().equalsIgnoreCase("checkbox") ||
-            f.getDisplayerName().equalsIgnoreCase("radio") ||
-            f.getDisplayerName().equalsIgnoreCase("listbox");
-    return r;
   }
 
   private static native void saveForm(FormsOnlineApp app, JavaScriptObject fd, String token, String stkn, String instanceId, String formId) /*-{

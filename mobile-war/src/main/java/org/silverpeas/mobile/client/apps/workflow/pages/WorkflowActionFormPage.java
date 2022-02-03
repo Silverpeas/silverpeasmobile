@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEven
 import org.silverpeas.mobile.client.apps.workflow.pages.widgets.WorkflowFieldEditable;
 import org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.components.UnorderedList;
@@ -120,12 +121,10 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
     for (WorkflowFieldDTO f : data.getFields()) {
       if (f.isMandatory()) {
         if (f.getType().equalsIgnoreCase("file")) {
-          if (f.getValueId() == null || f.getValueId().isEmpty()) {
-            if (f.getObjectValue() == null) {
-              errors.add(f.getLabel());
-            }
+          if (f.getObjectValue() == null) {
+            errors.add(f.getLabel());
           }
-        } else if (f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("group") ||f.getType().equalsIgnoreCase("multipleUser")) {
+        } else if(FormsHelper.isStoreValueId(f)) {
           if (f.getValueId() == null || f.getValueId().isEmpty()) {
             errors.add(f.getLabel());
           }

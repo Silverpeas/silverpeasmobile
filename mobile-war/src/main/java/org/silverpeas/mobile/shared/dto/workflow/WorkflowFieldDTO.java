@@ -24,16 +24,14 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
-import java.io.Serializable;
 
-public class WorkflowFieldDTO extends FormFieldDTO implements Serializable {
+@JsonIgnoreProperties("objectValue")
+public class WorkflowFieldDTO extends FormFieldDTO {
 
   private String actionName;
-
-  public WorkflowFieldDTO() {
-  }
 
   public String getActionName() {
     return actionName;

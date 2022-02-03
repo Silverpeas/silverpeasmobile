@@ -24,20 +24,18 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Serializable {
+public class WorkflowInstancePresentationFormDTO implements Serializable {
 
-  private static final long serialVersionUID = 2921606984249560882L;
   private String instanceId;
   private List<FieldPresentationDTO> fields;
   private Map<String, String> actions;
   private String title;
   private String state;
+  private String id;
 
   public WorkflowInstancePresentationFormDTO() {
   }
@@ -47,6 +45,13 @@ public class WorkflowInstancePresentationFormDTO extends BaseDTO implements Seri
     return ((WorkflowInstancePresentationFormDTO) obj).getId().equals(getId());
   }
 
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
 
   public List<FieldPresentationDTO> getFields() {
     return fields;

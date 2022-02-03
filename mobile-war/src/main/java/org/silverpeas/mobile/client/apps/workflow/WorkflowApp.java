@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -53,7 +54,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -104,24 +105,25 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   @Override
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component")) {
-      ServicesLocator.getServiceNavigation().isWorkflowApp(event.getContent().getInstanceId(), new AsyncCallback<Boolean>() {
-        @Override
-        public void onFailure(final Throwable t) {
-          EventBus.getInstance().fireEvent(new ErrorEvent(t));
-        }
+      ServicesLocator.getServiceNavigation()
+          .isWorkflowApp(event.getContent().getInstanceId(), new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(final Throwable t) {
+              EventBus.getInstance().fireEvent(new ErrorEvent(t));
+            }
 
-        @Override
-        public void onSuccess(final Boolean workflow) {
-          if (workflow) {
-            ApplicationInstanceDTO app = new ApplicationInstanceDTO();
-            app.setId(event.getContent().getInstanceId());
-            app.setWorkflow(true);
-            NavigationAppInstanceChangedEvent ev = new NavigationAppInstanceChangedEvent(app);
-            appInstanceChanged(ev);
-          }
-          Notification.activityStop();
-        }
-      });
+            @Override
+            public void onSuccess(final Boolean workflow) {
+              if (workflow) {
+                ApplicationInstanceDTO app = new ApplicationInstanceDTO();
+                app.setId(event.getContent().getInstanceId());
+                app.setWorkflow(true);
+                NavigationAppInstanceChangedEvent ev = new NavigationAppInstanceChangedEvent(app);
+                appInstanceChanged(ev);
+              }
+              Notification.activityStop();
+            }
+          });
     } else if (event.getContent().getType().equals("ProcessInstance")) {
       ApplicationInstanceDTO app = new ApplicationInstanceDTO();
       app.setId(event.getContent().getInstanceId());
@@ -138,40 +140,48 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstances(final WorkflowLoadInstancesEvent event) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<WorkflowInstancesDTO>() {
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceWorkflow()
-            .getInstances(getApplicationInstance().getId(), event.getRole(), this);
-      }
+    MethodCallbackOnlineOrOffline action =
+        new MethodCallbackOnlineOrOffline<WorkflowInstancesDTO>(null) {
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceWorkflow()
+                .getInstances(getApplicationInstance().getId(), event.getRole(), this);
+          }
 
-      public void onSuccess(WorkflowInstancesDTO dto) {
-        super.onSuccess(dto);
-        WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
-        //currentRole = dto.getRoles().entrySet().iterator().next().getKey();
-        event.setData(dto);
-        event.setInstanceId(getApplicationInstance().getId());
-        EventBus.getInstance().fireEvent(event);
-      }
-    };
+          @Override
+          public void onSuccess(final Method method, final WorkflowInstancesDTO dto) {
+            super.onSuccess(method, dto);
+            WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
+            //currentRole = dto.getRoles().entrySet().iterator().next().getKey();
+            event.setData(dto);
+            event.setInstanceId(getApplicationInstance().getId());
+            EventBus.getInstance().fireEvent(event);
+          }
+        };
     action.attempt();
   }
 
   @Override
   public void loadInstance(final WorkflowLoadInstanceEvent event) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<WorkflowInstancePresentationFormDTO>() {
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceWorkflow().getPresentationForm(event.getId(), event.getRole(), this);
-      }
+    MethodCallbackOnlineOrOffline action =
+        new MethodCallbackOnlineOrOffline<WorkflowInstancePresentationFormDTO>(null) {
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceWorkflow()
+                .getPresentationForm(event.getId(), event.getRole(), this);
+          }
 
-      public void onSuccess(WorkflowInstancePresentationFormDTO form) {
-        super.onSuccess(form);
-        WorkflowPresentationPage page = new WorkflowPresentationPage();
-        page.setData(form, getApplicationInstance());
-        page.show();
-      }
-    };
+          @Override
+          public void onSuccess(final Method method,
+              final WorkflowInstancePresentationFormDTO form) {
+            super.onSuccess(method, form);
+            WorkflowPresentationPage page = new WorkflowPresentationPage();
+            page.setData(form, getApplicationInstance());
+            page.show();
+          }
+        };
     action.attempt();
   }
 
@@ -179,14 +189,17 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   public void loadActionForm(final WorkflowLoadActionFormEvent event) {
     currentAction = event.getActionName();
     currentState = event.getState();
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<WorkflowFormActionDTO>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<WorkflowFormActionDTO>(null) {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceWorkflow().getActionForm(event.getInstanceId(), currentRole, event.getActionName(), this);
+        super.attempt();
+        ServicesLocator.getServiceWorkflow()
+            .getActionForm(event.getInstanceId(), currentRole, event.getActionName(), this);
       }
 
-      public void onSuccess(WorkflowFormActionDTO dto) {
-        super.onSuccess(dto);
+      @Override
+      public void onSuccess(final Method method, final WorkflowFormActionDTO dto) {
+        super.onSuccess(method, dto);
         dto.setActionName(currentAction);
         WorkflowActionFormPage page = new WorkflowActionFormPage();
         page.setData(dto, getApplicationInstance());
@@ -198,14 +211,18 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadUserField(final WorkflowLoadUserFieldEvent event) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<List<BaseDTO>>() {
+    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<BaseDTO>>(null) {
       @Override
       public void attempt() {
-        ServicesLocator.getServiceWorkflow().getUserField(event.getInstanceId(), event.getActionName(), event.getFieldName(), currentRole, this);
+        super.attempt();
+        ServicesLocator.getServiceWorkflow()
+            .getUserField(event.getInstanceId(), event.getActionName(), event.getFieldName(),
+                currentRole, this);
       }
 
-      public void onSuccess(List<BaseDTO> users) {
-        super.onSuccess(users);
+      @Override
+      public void onSuccess(final Method method, final List<BaseDTO> users) {
+        super.onSuccess(method, users);
         AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users);
         EventBus.getInstance().fireEvent(ev);
       }
@@ -219,15 +236,17 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
     for (WorkflowFieldDTO f : event.getData()) {
       if (f.getType().equalsIgnoreCase("file")) {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getObjectValue());
-      } else if(f.getType().equalsIgnoreCase("user") || f.getType().equalsIgnoreCase("multipleUser") || f.getType().equalsIgnoreCase("group")) {
+      } else if (f.getType().equalsIgnoreCase("user") ||
+          f.getType().equalsIgnoreCase("multipleUser") || f.getType().equalsIgnoreCase("group")) {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValueId());
       } else {
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
       }
     }
     String url = UrlUtils.getUploadLocation();
-    url +=  "FormAction";
-    processAction(this, url, formData, SpMobil.getUserToken(), getApplicationInstance().getId(), currentAction, currentRole, currentState, event.getProcessId());
+    url += "FormAction";
+    processAction(this, url, formData, SpMobil.getUserToken(), getApplicationInstance().getId(),
+        currentAction, currentRole, currentState, event.getProcessId());
   }
 
   @Override
@@ -243,7 +262,9 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
     EventBus.getInstance().fireEvent(new ErrorEvent(new RequestException("Error " + error)));
   }
 
-  private static native void processAction(WorkflowApp app, String url, JavaScriptObject fd, String token, String instanceId, String currentAction, final String currentRole, String currentState, String processId) /*-{
+  private static native void processAction(WorkflowApp app, String url, JavaScriptObject fd,
+      String token, String instanceId, String currentAction, final String currentRole,
+      String currentState, String processId) /*-{
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, false);
     xhr.setRequestHeader("X-Silverpeas-Session", token);
@@ -252,7 +273,8 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
         // Every thing ok, file uploaded
         app.@org.silverpeas.mobile.client.apps.workflow.WorkflowApp::actionProcessed()();
       } else {
-        app.@org.silverpeas.mobile.client.apps.workflow.WorkflowApp::actionNotProcessed(I)(xhr.status);
+        app.@org.silverpeas.mobile.client.apps.workflow.WorkflowApp::actionNotProcessed(I)(
+            xhr.status);
       }
     };
     fd.append("instanceId", instanceId);

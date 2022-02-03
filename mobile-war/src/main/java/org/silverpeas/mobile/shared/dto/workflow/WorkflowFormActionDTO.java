@@ -24,15 +24,13 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkflowFormActionDTO extends BaseDTO implements Serializable {
+public class WorkflowFormActionDTO implements Serializable {
 
-  private static final long serialVersionUID = 2921606984249560882L;
+  private String id;
   private List<WorkflowFieldDTO> fields = new ArrayList<WorkflowFieldDTO>();
   private String title;
   private String actionName;
@@ -43,6 +41,16 @@ public class WorkflowFormActionDTO extends BaseDTO implements Serializable {
   @Override
   public boolean equals(Object obj) {
     return ((WorkflowFormActionDTO) obj).getId().equals(getId());
+  }
+
+  public void setFields(final List<WorkflowFieldDTO> fields) { this.fields = fields; }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
   }
 
   public List<WorkflowFieldDTO> getFields() {
