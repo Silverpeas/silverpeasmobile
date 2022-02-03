@@ -89,9 +89,8 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
     @Override
     public void onCalendarEventsLoaded(final CalendarLoadedEvent event) {
-      contributionId = contributionId.substring(0,contributionId.indexOf("@"));
       for (CalendarEventDTO ev : getAppEvents()) {
-        if (ev.getEventId().equals(contributionId)) {
+        if (ev.getEventId().endsWith(contributionId)) {
           CalendarDTO cal = null;
           for (CalendarDTO ca : calendars) {
             if (ca.getId().equals(ev.getCalendarId())) {
