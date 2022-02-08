@@ -621,6 +621,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .carroussel-news li > a:first-child {
   float: left;
   max-width: 40%;
+  display: flex;
 }
 
 .carroussel-news li {
