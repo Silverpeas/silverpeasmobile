@@ -118,11 +118,12 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
       int max = newsDTOList.size();
       for (NewsDTO newsDTO : newsDTOList) {
         NewsItem item = new NewsItem();
+        item.setDisplayPager(data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL));
         item.setData(i, max, newsDTO);
         item.setVisible(v);
         news.add(item);
         i++;
-        v = false;
+        if (data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) v = false;
       }
     }
 
@@ -195,7 +196,7 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     HTML html2 = new HTML(data.getHtmlFreeZoneThin());
     freeZoneThinSection.add(html2);
 
-    if (MobilUtils.isMobil()) {
+    if (MobilUtils.isMobil() && data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) {
       //Element e = Document.get().getElementById("actus");
       //HTML actus = HTML.wrap(e);
       swipeRecognizer = new SwipeRecognizer(actus);
@@ -296,8 +297,10 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   }
 
   private void updateNewsView() {
-    for (int i = 0; i < news.getWidgetCount(); i++) {
-      ((NewsItem) news.getWidget(i)).setVisible(i == currentNewsIndex);
+    if(data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) {
+      for (int i = 0; i < news.getWidgetCount(); i++) {
+        ((NewsItem) news.getWidget(i)).setVisible(i == currentNewsIndex);
+      }
     }
   }
 }

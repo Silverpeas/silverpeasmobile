@@ -245,6 +245,9 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     SettingBundle settings = GraphicElementFactory.getLookSettings(look);
 
     HomePageDTO data = new HomePageDTO();
+
+    data.setNewsDisplayer(settings.getString("home.news.displayer", HomePageDTO.NEWS_DISPLAYER_CARROUSEL));
+
     if (spaceId == null) {
       data.setId("root");
     } else {

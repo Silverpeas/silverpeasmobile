@@ -44,6 +44,7 @@ public class NewsItem extends Composite implements ClickHandler {
 
   private NewsDTO data;
   private int max, index;
+  private boolean displayPager = true;
   private static FavoriteItemUiBinder uiBinder = GWT.create(FavoriteItemUiBinder.class);
   @UiField
   Anchor picto;
@@ -67,8 +68,10 @@ public class NewsItem extends Composite implements ClickHandler {
     content.setHTML(
         "<h2><a href='#'>" + data.getTitle() + "</a></h2><p>" + data.getDescription() + "</p>");
     content.addClickHandler(this);
-    indicator.setHTML("<span>" + index + "</span>/" + max);
-    indicator.addClickHandler(this);
+    if (displayPager) {
+      indicator.setHTML("<span>" + index + "</span>/" + max);
+      indicator.addClickHandler(this);
+    }
   }
 
   @Override
@@ -81,4 +84,9 @@ public class NewsItem extends Composite implements ClickHandler {
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
 
   }
+
+  public void setDisplayPager(boolean displayPager) {
+    this.displayPager = displayPager;
+  }
+
 }

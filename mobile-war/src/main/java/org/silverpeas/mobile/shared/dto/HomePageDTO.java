@@ -47,6 +47,10 @@ public class HomePageDTO extends BaseDTO implements Serializable{
   private List<ShortCutLinkDTO> shortCuts = new ArrayList<>();
   private List<ShortCutLinkDTO> tools = new ArrayList<>();
   private String htmlFreeZone;
+  private String newsDisplayer;
+
+  public final static String NEWS_DISPLAYER_CARROUSEL = "carrousel";
+  public final static String NEWS_DISPLAYER_LIST = "list";
 
   public String getHtmlFreeZoneThin() {
     return htmlFreeZoneThin;
@@ -127,5 +131,13 @@ public class HomePageDTO extends BaseDTO implements Serializable{
 
   public void setTools(final List<ShortCutLinkDTO> tools) {
     this.tools = tools;
+  }
+
+  public String getNewsDisplayer() {
+    return newsDisplayer;
+  }
+
+  public void setNewsDisplayer(final String newsDisplayer) {
+    this.newsDisplayer = newsDisplayer;
   }
 }
