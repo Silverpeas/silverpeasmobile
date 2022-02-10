@@ -39,6 +39,7 @@ import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.User;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
@@ -60,16 +61,22 @@ import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.file.FileServerUtils;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
-import org.silverpeas.mobile.shared.exceptions.DocumentsException;
-import org.silverpeas.mobile.shared.services.ServiceDocuments;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,24 +87,37 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Service de gestion des GED.
+ *
  * @author svuillet
  */
-public class ServiceDocumentsImpl extends AbstractAuthenticateService implements ServiceDocuments {
+@WebService
+@Authorized
+@Path(ServiceDocuments.PATH + "/{appId}")
+public class ServiceDocuments extends AbstractRestWebService {
 
-  private static final long serialVersionUID = 1L;
+  static final String PATH = "mobile/documents";
   private OrganizationController organizationController = OrganizationController.get();
+
+  @Context
+  HttpServletRequest request;
+
+  @PathParam("appId")
+  private String componentId;
 
   /**
    * Retourne tous les topics de premier niveau d'un topic.
    */
-  @Override
-  public List<TopicDTO> getTopics(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("topicsAndPublications/{rootTopicId}")
+  public List<TopicDTO> getTopics(@PathParam("appId") String instanceId,
+      @PathParam("rootTopicId") String rootTopicId) throws Exception {
     List<TopicDTO> topicsList = new ArrayList<TopicDTO>();
     boolean coWriting = false;
     try {
       coWriting = isCoWritingEnabled(instanceId);
-    } catch (Exception e) { }
+    } catch (Exception e) {
+    }
     try {
       if (rootTopicId == null || rootTopicId.isEmpty()) {
         rootTopicId = "0";
@@ -144,27 +164,35 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
                 }
               }
               PublicationPK pubPK = new PublicationPK("useless", instanceId);
-              List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(ids, pubPK.getInstanceId(), false);
+              List<PublicationDetail> publications =
+                  (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(ids,
+                      pubPK.getInstanceId(), false);
               int nbPubNotVisible = 0;
               for (PublicationDetail publication : publications) {
                 if (coWriting) {
                   if (isRightsOnTopicsEnabled(instanceId)) {
-                    NodePK f = KmeliaService.get().getBestLocationOfPublicationForUser(publication.getPK(), getUserInSession().getId());
+                    NodePK f = KmeliaService.get()
+                        .getBestLocationOfPublicationForUser(publication.getPK(),
+                            getUser().getId());
                     NodeDetail node = NodeService.get().getHeader(f, false);
-                    ProfiledObjectId profiledObjectId = ProfiledObjectId.fromNode(node.getRightsDependsOn());
-                    String[] profiles = organizationController
-                        .getUserProfiles(getUserInSession().getId(), instanceId, profiledObjectId);
+                    ProfiledObjectId profiledObjectId =
+                        ProfiledObjectId.fromNode(node.getRightsDependsOn());
+                    String[] profiles =
+                        organizationController.getUserProfiles(getUser().getId(), instanceId,
+                            profiledObjectId);
                     if (isSingleReader(profiles) && publication.isDraft()) {
                       nbPubNotVisible++;
                     }
                   } else {
-                    String [] profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId);
+                    String[] profiles =
+                        organizationController.getUserProfiles(getUser().getId(), instanceId);
                     if (isSingleReader(profiles) && publication.isDraft()) {
                       nbPubNotVisible++;
                     }
                   }
                 } else {
-                  if (publication.isDraft() && !publication.getUpdaterId().equals(getUserInSession().getId())) {
+                  if (publication.isDraft() &&
+                      !publication.getUpdaterId().equals(getUser().getId())) {
                     nbPubNotVisible++;
                   }
                 }
@@ -193,32 +221,46 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       }
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
-      throw new DocumentsException(e.getMessage());
+      throw e;
     }
     return topicsList;
   }
 
   private boolean isSingleReader(final String[] profiles) {
     for (String profile : profiles) {
-      if (profile.equals("admin")) return false;
-      if (profile.equals("publisher")) return false;
-      if (profile.equals("writer")) return false;
+      if (profile.equals("admin")) {
+        return false;
+      }
+      if (profile.equals("publisher")) {
+        return false;
+      }
+      if (profile.equals("writer")) {
+        return false;
+      }
     }
     return true;
   }
 
   private boolean isManager(final String[] profiles) {
     for (String profile : profiles) {
-      if (profile.equals("admin")) return true;
+      if (profile.equals("admin")) {
+        return true;
+      }
     }
     return false;
   }
 
   private boolean isManagerOrPublisherOrWriter(final String[] profiles) {
     for (String profile : profiles) {
-      if (profile.equals("admin")) return true;
-      if (profile.equals("publisher")) return true;
-      if (profile.equals("writer")) return true;
+      if (profile.equals("admin")) {
+        return true;
+      }
+      if (profile.equals("publisher")) {
+        return true;
+      }
+      if (profile.equals("writer")) {
+        return true;
+      }
     }
     return false;
   }
@@ -235,7 +277,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   }
 
   public String getUserTopicProfile(String nodeId, String componentId) {
-    return KmeliaService.get().getUserTopicProfile(new NodePK(nodeId, componentId), getUserInSession().getId());
+    return KmeliaService.get()
+        .getUserTopicProfile(new NodePK(nodeId, componentId), getUser().getId());
   }
 
   public boolean isTreeStructure(String componentId) {
@@ -243,7 +286,8 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   }
 
   public int getDefaultSortValue(String instanceId) throws Exception {
-    String defaultSortValue = getMainSessionController().getComponentParameterValue(instanceId, "publicationSort");
+    String defaultSortValue =
+        getMainSessionController().getComponentParameterValue(instanceId, "publicationSort");
     if (!StringUtil.isDefined(defaultSortValue)) {
       defaultSortValue = getSettings().getString("publications.sort.default", "2");
     }
@@ -264,8 +308,10 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     for (int i = pubs.length; --i >= 0; ) {
       boolean swapped = false;
       for (int j = 0; j < i; j++) {
-        if (pubs[j].getDetail().getName(getUserInSession().getUserPreferences().getLanguage())
-            .compareToIgnoreCase(pubs[j + 1].getDetail().getName(getUserInSession().getUserPreferences().getLanguage())) > 0) {
+        if (pubs[j].getDetail().getName(getUser().getUserPreferences().getLanguage())
+            .compareToIgnoreCase(
+                pubs[j + 1].getDetail().getName(getUser().getUserPreferences().getLanguage())) >
+            0) {
           KmeliaPublication pub = pubs[j];
           pubs[j] = pubs[j + 1];
           pubs[j + 1] = pub;
@@ -284,11 +330,13 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     for (int i = pubs.length; --i >= 0; ) {
       boolean swapped = false;
       for (int j = 0; j < i; j++) {
-        String p1 = pubs[j].getDetail().getDescription(getUserInSession().getUserPreferences().getLanguage());
+        String p1 =
+            pubs[j].getDetail().getDescription(getUser().getUserPreferences().getLanguage());
         if (p1 == null) {
           p1 = "";
         }
-        String p2 = pubs[j + 1].getDetail().getDescription(getUserInSession().getUserPreferences().getLanguage());
+        String p2 =
+            pubs[j + 1].getDetail().getDescription(getUser().getUserPreferences().getLanguage());
         if (p2 == null) {
           p2 = "";
         }
@@ -309,11 +357,14 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   /**
    * Retourne les publications d'un topic (au niveau 1).
    */
-  @Override
-  public List<PublicationDTO> getPublications(String instanceId, String topicId) throws DocumentsException, AuthenticationException {
-    checkUserInSession();
-    LocalizationBundle resource = ResourceLocator
-        .getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle", getUserInSession().getUserPreferences().getLanguage());
+  @GET
+  @Path("publications/{topicId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<PublicationDTO> getPublications(@PathParam("appId") String instanceId,
+      @PathParam("topicId") String topicId) throws Exception {
+    LocalizationBundle resource =
+        ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle",
+            getUser().getUserPreferences().getLanguage());
     ArrayList<PublicationDTO> pubs = new ArrayList<PublicationDTO>();
 
     try {
@@ -326,9 +377,12 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       ArrayList<String> nodeIds = new ArrayList<String>();
       nodeIds.add(nodePK.getId());
 
-      //List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm().getDetailsByFatherIds(nodeIds, pubPK.getInstanceId(), false);
+      //List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm()
+      // .getDetailsByFatherIds(nodeIds, pubPK.getInstanceId(), false);
 
-      List<KmeliaPublication> publications = KmeliaService.get().getPublicationsOfFolder(nodePK, getUserTopicProfile(nodePK.getId(),pubPK.getInstanceId()), getUserInSession().getId(), isTreeStructure(pubPK.getInstanceId()));
+      List<KmeliaPublication> publications = KmeliaService.get().getPublicationsOfFolder(nodePK,
+          getUserTopicProfile(nodePK.getId(), pubPK.getInstanceId()), getUser().getId(),
+          isTreeStructure(pubPK.getInstanceId()));
       int sort = -1;
       if (isManualSortingUsed(publications) && sort == -1) {
         // display publications according to manual order defined by admin
@@ -377,22 +431,25 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       if (isRightsOnTopicsEnabled(instanceId)) {
         NodeDetail node = NodeService.get().getHeader(nodePK, false);
         ProfiledObjectId nodeRef = ProfiledObjectId.fromNode(node.getRightsDependsOn());
-        profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId, nodeRef);
+        profiles = organizationController.getUserProfiles(getUser().getId(), instanceId, nodeRef);
       } else {
-        profiles = organizationController.getUserProfiles(getUserInSession().getId(), instanceId);
+        profiles = organizationController.getUserProfiles(getUser().getId(), instanceId);
       }
 
       for (KmeliaPublication publication : publications) {
         PublicationDetail publicationDetail = publication.getDetail();
         boolean visible = publicationDetail.isVisible();
-        if (isManager(profiles)) visible = true;
+        if (isManager(profiles)) {
+          visible = true;
+        }
         PublicationDTO dto = new PublicationDTO();
         dto.setId(publicationDetail.getId());
         dto.setVignette(getVignetteUrl(publicationDetail));
 
         if (publicationDetail.isDraft()) {
-          if (publicationDetail.getUpdaterId().equals(getUserInSession().getId())) {
-            dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.draft") + ")");
+          if (publicationDetail.getUpdaterId().equals(getUser().getId())) {
+            dto.setName(
+                publicationDetail.getName() + " (" + resource.getString("publication.draft") + ")");
           } else {
             visible = false;
           }
@@ -400,16 +457,23 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
           dto.setName(publicationDetail.getName());
         } else if (publicationDetail.isValidationRequired()) {
           visible = isManagerOrPublisherOrWriter(profiles);
-          dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.tovalidate") + ")");
+          dto.setName(
+              publicationDetail.getName() + " (" + resource.getString("publication.tovalidate") +
+                  ")");
         } else if (publicationDetail.isRefused()) {
           visible = isManagerOrPublisherOrWriter(profiles); //TODO manage other cases than coediting
-          dto.setName(publicationDetail.getName() + " (" + resource.getString("publication.unvalidate") + ")");
+          dto.setName(
+              publicationDetail.getName() + " (" + resource.getString("publication.unvalidate") +
+                  ")");
         }
-        if (visible) pubs.add(dto);
+        if (visible) {
+          pubs.add(dto);
+        }
       }
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);
-      throw new DocumentsException(e.getMessage());
+      SilverLogger.getLogger(this)
+          .error("ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);
+      throw e;
     }
 
     return pubs;
@@ -418,14 +482,15 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   private boolean isCurrentTopicAvailable(NodeDetail node) throws Exception {
     if (isRightsOnTopicsEnabled(node.getNodePK().getInstanceId())) {
       if (node.haveRights()) {
-        return node.canBeAccessedBy(getUserInSession());
+        return node.canBeAccessedBy(getUser());
       }
     }
     return true;
   }
 
   private boolean isRightsOnTopicsEnabled(String instanceId) throws Exception {
-    String value = getMainSessionController().getComponentParameterValue(instanceId, "rightsOnTopics");
+    String value =
+        getMainSessionController().getComponentParameterValue(instanceId, "rightsOnTopics");
     return StringUtil.getBooleanValue(value);
   }
 
@@ -435,24 +500,30 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
   }
 
   private PublicationService getPubBm() {
-   return PublicationService.get();
+    return PublicationService.get();
   }
 
   private NodeService getNodeBm() {
     return NodeService.get();
   }
 
-  private StatisticService getStatisticService() { return ServiceProvider.getService(StatisticService.class); }
+  private StatisticService getStatisticService() {
+    return ServiceProvider.getService(StatisticService.class);
+  }
 
-  @Override
-  public PublicationDTO getPublication(ContentDTO content) throws DocumentsException, AuthenticationException {
-    SilverLogger.getLogger(this).debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + content.getId());
-    checkUserInSession();
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("publication/{id}")
+  public PublicationDTO getPublication(@PathParam("id") String id,
+      @QueryParam("contributionId") String contributionId, @QueryParam("type") String type)
+      throws Exception {
+    SilverLogger.getLogger(this)
+        .debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + id);
 
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-      PublicationDetail pub = getPubBm().getDetail(new PublicationPK(content.getId()));
+      PublicationDetail pub = getPubBm().getDetail(new PublicationPK(id));
 
       PublicationDTO dto = new PublicationDTO();
       dto.setId(pub.getId());
@@ -464,38 +535,41 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
 
-      if (content.getType().equals(ContentsTypes.Publication.toString())) {
+      if (type.equals(ContentsTypes.Publication.toString())) {
         try {
-          KmeliaPublication kPub =
-              KmeliaService.get().getPublication(new PublicationPK(content.getId()), null);
+          KmeliaPublication kPub = KmeliaService.get().getPublication(new PublicationPK(id), null);
           dto.setViewsNumber(kPub.getNbAccess());
         } catch (Exception e) {
           SilverLogger.getLogger(this).warn("Unable to get views number", e);
         }
-      } else if (content.getType().equals(ContentsTypes.News.toString())) {
-        dto.setViewsNumber(QuickInfoService.get().getNews(content.getContributionId()).getNbAccess());
+      } else if (type.equals(ContentsTypes.News.toString())) {
+        dto.setViewsNumber(QuickInfoService.get().getNews(contributionId).getNbAccess());
       } else {
         dto.setViewsNumber(0);
       }
 
-      if (content.getType().equals("News")) {
-        final ResourceReference ref = new ResourceReference(new PublicationPK(content.getContributionId()));
-        dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(content.getType(), ref));
+      if (type.equals("News")) {
+        final ResourceReference ref = new ResourceReference(new PublicationPK(contributionId));
+        dto.setCommentsNumber(
+            CommentServiceProvider.getCommentService().getCommentsCountOnResource(type, ref));
       } else {
-        final ResourceReference ref = new ResourceReference(new PublicationPK(content.getId()));
-        dto.setCommentsNumber(CommentServiceProvider.getCommentService().getCommentsCountOnResource(content.getType(), ref));
+        final ResourceReference ref = new ResourceReference(new PublicationPK(id));
+        dto.setCommentsNumber(
+            CommentServiceProvider.getCommentService().getCommentsCountOnResource(type, ref));
       }
       dto.setInstanceId(pub.getInstanceId());
       String wysiwyg = pub.getContent().getRenderer().renderView();
-      if (wysiwyg == null|| !wysiwyg.trim().isEmpty() || !pub.getInfoId().equals("0")) {
+      if (wysiwyg == null || !wysiwyg.trim().isEmpty() || !pub.getInfoId().equals("0")) {
         dto.setContent(true);
       }
 
-      CompletePublication completePublication = PublicationService.get().getCompletePublication(pub.getPK());
+      CompletePublication completePublication =
+          PublicationService.get().getCompletePublication(pub.getPK());
       List<PublicationLink> linkedPublications = completePublication.getLinkList();
       List<PublicationDTO> linkedPub = new ArrayList<>();
-      for (PublicationLink link :linkedPublications) {        
-        PublicationDetail pubLinked = getPubBm().getDetail(new PublicationPK(link.getTarget().getId()));
+      for (PublicationLink link : linkedPublications) {
+        PublicationDetail pubLinked =
+            getPubBm().getDetail(new PublicationPK(link.getTarget().getId()));
         PublicationDTO linkDto = new PublicationDTO();
         linkDto.setId(link.getId());
         linkDto.setName(pubLinked.getName());
@@ -504,13 +578,14 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
       }
       dto.setLinkedPublications(linkedPub);
 
-      ResourceReference resourceReference = new ResourceReference(content.getId(), pub.getComponentInstanceId());
-      getStatisticService().addStat(getUserInSession().getId(), resourceReference, 1, "Publication");
+      ResourceReference resourceReference = new ResourceReference(id, pub.getInstanceId());
+      getStatisticService().addStat(getUser().getId(), resourceReference, 1, "Publication");
 
       return dto;
     } catch (Throwable e) {
-      SilverLogger.getLogger(this).error("ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
-      throw new DocumentsException(e.getMessage());
+      SilverLogger.getLogger(this)
+          .error("ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
+      throw e;
     }
   }
 
@@ -522,37 +597,46 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
 
     int width = kmeliaSettings.getInteger("vignetteWidth", -1);
     int height = kmeliaSettings.getInteger("vignetteHeight", -1);
-    ThumbnailSettings thumbnailSettings = ThumbnailSettings.getInstance(pub.getComponentInstanceId(), width, height);
+    ThumbnailSettings thumbnailSettings =
+        ThumbnailSettings.getInstance(pub.getInstanceId(), width, height);
 
     String vignetteUrl;
     String w = String.valueOf(thumbnailSettings.getWidth());
     String h = String.valueOf(thumbnailSettings.getHeight());
 
-    if (pub.getImage() == null) return null;
+    if (pub.getImage() == null) {
+      return null;
+    }
 
     if (pub.getImage().startsWith("/")) {
       vignetteUrl = pub.getImage();
     } else {
-      vignetteUrl = FileServerUtils.getUrl(pub.getPK().
-              getComponentName(), "vignette", pub.getImage(), pub.getImageMimeType(),
-          publicationSettings.getString("imagesSubDirectory"));
+      vignetteUrl =
+          FileServerUtils.getUrl(pub.getPK().getComponentName(), "vignette", pub.getImage(),
+              pub.getImageMimeType(), publicationSettings.getString("imagesSubDirectory"));
       if (StringUtil.isDefined(pub.getThumbnail().getCropFileName())) {
         // thumbnail is cropped, no resize
         w = null;
         h = null;
       } else {
-        vignetteUrl += "&Size=" + StringUtil.defaultStringIfNotDefined(w) + "x" + StringUtil.defaultStringIfNotDefined(h);
+        vignetteUrl += "&Size=" + StringUtil.defaultStringIfNotDefined(w) + "x" +
+            StringUtil.defaultStringIfNotDefined(h);
       }
     }
 
     return vignetteUrl;
   }
 
-  @Override
-  public AttachmentDTO getAttachment(String attachmentId, String appId) throws DocumentsException, AuthenticationException {
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("attachment/{attachmentId}")
+  public AttachmentDTO getAttachment(@PathParam("attachmentId") String attachmentId,
+      @PathParam("appId") String appId) throws Exception {
     SimpleDocumentPK pk = new SimpleDocumentPK(attachmentId, appId);
-    SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(pk, getUserInSession().getUserPreferences().getLanguage());
-    return populate(doc, getUserInSession());
+    SimpleDocument doc = AttachmentServiceProvider.getAttachmentService()
+        .searchDocumentById(pk, getUser().getUserPreferences().getLanguage());
+    return populate(doc, getUser());
   }
 
   private AttachmentDTO populate(SimpleDocument attachment, User user) {
@@ -577,12 +661,24 @@ public class ServiceDocumentsImpl extends AbstractAuthenticateService implements
     return attach;
   }
 
-  @Override
-  public List<BaseDTO> getTopicsAndPublications(String instanceId, String rootTopicId) throws DocumentsException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Path("topicsAndPublications/{rootTopicId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public List<BaseDTO> getTopicsAndPublications(@PathParam("appId") String instanceId,
+      @PathParam("rootTopicId") String rootTopicId) throws Exception {
     ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();
     list.addAll(getTopics(instanceId, rootTopicId));
     list.addAll(getPublications(instanceId, rootTopicId));
     return list;
+  }
+
+  @Override
+  protected String getResourceBasePath() {
+    return PATH;
+  }
+
+  @Override
+  public String getComponentId() {
+    return this.componentId;
   }
 }

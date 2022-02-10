@@ -85,15 +85,6 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>serviceDocumentsImpl</servlet-name>
-    <servlet-class>org.silverpeas.mobile.server.services.ServiceDocumentsImpl</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>serviceDocumentsImpl</servlet-name>
-    <url-pattern>/services/spmobile/Documents</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>serviceConnectionImpl</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.services.ServiceConnectionImpl</servlet-class>
   </servlet>

@@ -46,8 +46,7 @@ public class ServicesLocator {
   private static ServiceNavigationAsync serviceNavigation =
       (ServiceNavigationAsync) GWT.create(ServiceNavigation.class);
   private static ServiceRSE serviceRSE = GWT.create(ServiceRSE.class);
-  private static ServiceDocumentsAsync serviceDocuments =
-      (ServiceDocumentsAsync) GWT.create(ServiceDocuments.class);
+  private static ServiceDocuments serviceDocuments = GWT.create(ServiceDocuments.class);
   private static ServiceMediaAsync serviceMedia =
       (ServiceMediaAsync) GWT.create(ServiceMedia.class);
   private static ServiceSearch serviceSearch = GWT.create(ServiceSearch.class);
@@ -198,9 +197,8 @@ public class ServicesLocator {
     return serviceMedia;
   }
 
-  public static ServiceDocumentsAsync getServiceDocuments() {
-    ((ServiceDefTarget) serviceDocuments).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceDocuments);
+  public static ServiceDocuments getServiceDocuments() {
+    initRestContext();
     return serviceDocuments;
   }
 

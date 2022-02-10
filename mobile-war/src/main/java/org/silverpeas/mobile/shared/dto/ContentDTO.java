@@ -24,13 +24,14 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gwt.user.client.ui.Anchor;
 
 import java.io.Serializable;
 
+@JsonIgnoreProperties("link")
 public class ContentDTO implements  Serializable {
 
-  private static final long serialVersionUID = 3763707876636751540L;
   private String id;
   private String instanceId;
   private String type;

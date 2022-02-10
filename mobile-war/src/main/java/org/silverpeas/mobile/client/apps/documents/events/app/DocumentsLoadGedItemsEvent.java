@@ -31,7 +31,8 @@ public class DocumentsLoadGedItemsEvent extends AbstractDocumentsAppEvent {
 	
 	public DocumentsLoadGedItemsEvent(String instanceId, String rootTopicId) {
 		super();
-		this.rootTopicId = rootTopicId;
+		if (rootTopicId == null) rootTopicId = "0";
+    this.rootTopicId = rootTopicId;
 		this.instanceId = instanceId;
 	}
 
