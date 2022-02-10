@@ -87,8 +87,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Service de gestion des GED.
- *
- * @author svuillet
  */
 @WebService
 @Authorized
