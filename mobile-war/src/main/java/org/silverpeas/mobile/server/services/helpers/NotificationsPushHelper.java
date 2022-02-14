@@ -112,7 +112,7 @@ public class NotificationsPushHelper {
         Map<String, Object> data = mapper.readValue(serviceAccount, Map.class);
         String projectId = (String) data.get("project_id");
         serviceAccount = new FileInputStream(configFile);
-        FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
+        FirebaseOptions options = FirebaseOptions.builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
             .setDatabaseUrl("https://" + projectId + ".firebaseio.com").build();
         FirebaseApp.initializeApp(options);
         configPresent = true;

@@ -107,7 +107,7 @@ public class ServiceDocuments extends AbstractRestWebService {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("topicsAndPublications/{rootTopicId}")
+  @Path("topics/{rootTopicId}")
   public List<TopicDTO> getTopics(@PathParam("appId") String instanceId,
       @PathParam("rootTopicId") String rootTopicId) throws Exception {
     List<TopicDTO> topicsList = new ArrayList<TopicDTO>();
