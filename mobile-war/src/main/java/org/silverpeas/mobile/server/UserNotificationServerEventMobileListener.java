@@ -40,6 +40,7 @@ public class UserNotificationServerEventMobileListener extends
 
   private static ObjectMapper mapper = new ObjectMapper();
 
+  @SuppressWarnings("unchecked")
   @Override
   public void on(final UserNotificationServerEvent event) {
     try {
@@ -47,7 +48,7 @@ public class UserNotificationServerEventMobileListener extends
       String json = event.getData("", null);
       Map<String, Object> data = mapper.readValue(json, Map.class);
       Boolean isCreation = (Boolean) data.get("isCreation");
-      if (isCreation) {
+      if (Boolean.TRUE.equals(isCreation)) {
         NotificationsPushHelper.getInstance().sendNotification(emitterUserId, data);
       }
     } catch(Exception e) {

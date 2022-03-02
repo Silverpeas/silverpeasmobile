@@ -31,6 +31,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
+import org.silverpeas.core.SilverpeasRuntimeException;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
 import org.silverpeas.core.util.ResourceLocator;
@@ -45,23 +46,27 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+import static org.silverpeas.core.util.StringUtil.EMPTY;
 
 /**
- * @author: svu
+ * @author svu
  */
 @Singleton
 @Named("notificationsPushHelper")
 public class NotificationsPushHelper {
 
+  private final ObjectMapper mapper = new ObjectMapper();
+
   @Inject
   private TokenDAO tokenDAO;
 
-  private static FileInputStream serviceAccount;
-  private static boolean configPresent;
-
-  private static ObjectMapper mapper = new ObjectMapper();
+  private FileInputStream serviceAccount;
+  private boolean configPresent;
 
   public static NotificationsPushHelper getInstance() {
     return ServiceProvider.getSingleton(NotificationsPushHelper.class);
@@ -83,27 +88,21 @@ public class NotificationsPushHelper {
     if (token != null) getTokenDAO().saveToken(userId, token);
   }
 
-  public void sendNotification(String userId, Map<String, Object> dataNotifcation) {
+  public void sendNotification(String userId, Map<String, Object> notifData) {
     try {
       init();
       if (configPresent) {
-        List<String> tokens = getTokenDAO().getTokens(userId);
-        for (String token : tokens) {
-          if (token != null) {
-            try {
-              sendToToken(token, dataNotifcation);
-            } catch(FirebaseMessagingException fe) {
-              removeToken(userId, token);
-              SilverLogger.getLogger(this).error(fe);
-            }
-          }
-        }
+        getTokenDAO().getTokens(userId)
+            .stream()
+            .filter(Objects::nonNull)
+            .forEach(t -> sendToToken(userId, t, notifData));
       }
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void init() throws IOException {
     if (serviceAccount == null) {
       String configFile = getSettings().getString("push.notification.serviceAccount", "");
@@ -112,8 +111,10 @@ public class NotificationsPushHelper {
         Map<String, Object> data = mapper.readValue(serviceAccount, Map.class);
         String projectId = (String) data.get("project_id");
         serviceAccount = new FileInputStream(configFile);
-        FirebaseOptions options = FirebaseOptions.builder().setCredentials(GoogleCredentials.fromStream(serviceAccount))
-            .setDatabaseUrl("https://" + projectId + ".firebaseio.com").build();
+        FirebaseOptions options = FirebaseOptions.builder()
+            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+            .setDatabaseUrl("https://" + projectId + ".firebaseio.com")
+            .build();
         FirebaseApp.initializeApp(options);
         configPresent = true;
       } else {
@@ -122,27 +123,43 @@ public class NotificationsPushHelper {
     }
   }
 
-  public String sendToToken(String registrationToken, Map<String, Object> dataNotifcation) throws FirebaseMessagingException {
-    // [START send_to_token]
-    // This registration token comes from the client FCM SDKs.
+  public String sendToToken(final String userId, String token, Map<String, Object> notifData) {
+    String response = EMPTY;
+    try {
+      // [START send_to_token]
+      // This registration token comes from the client FCM SDKs.
 
-    // See documentation on defining a message payload.
-    Message message = Message.builder()
-        .putData("subject", String.valueOf(dataNotifcation.get("subject")))
-        .putData("sender", String.valueOf(dataNotifcation.get("sender")))
-        .putData("permalink", getNotificationPermalink(String.valueOf(dataNotifcation.get("id"))))
-        .setToken(registrationToken)
-        .build();
-
-    // Send a message to the device corresponding to the provided
-    // registration token.
-    String response = FirebaseMessaging.getInstance().send(message);
-
+      // See documentation on defining a message payload.
+      response = getNotificationPermalink(String.valueOf(notifData.get("id")))
+          // No push if no permalink
+          .map(l -> Message.builder()
+              .putData("subject", String.valueOf(notifData.get("subject")))
+              .putData("sender", String.valueOf(notifData.get("sender")))
+              .putData("permalink", l))
+          .map(m -> m.setToken(token))
+          .map(Message.Builder::build)
+          .map(m -> {
+            try {
+              // Send a message to the device corresponding to the provided
+              // registration token.
+              return FirebaseMessaging.getInstance().send(m);
+            } catch (FirebaseMessagingException e) {
+              throw new SilverpeasRuntimeException(e);
+            }
+          })
+          // empty string when no message sent
+          .orElse(EMPTY);
+    } catch (Exception fe) {
+      removeToken(userId, token);
+      SilverLogger.getLogger(this).error(fe);
+    }
     return response;
   }
 
-  private String getNotificationPermalink(String id) {
-    SILVERMAILMessage notif = SILVERMAILPersistence.getMessage(Long.decode(id));
-    return notif.getUrl();
+  private Optional<String> getNotificationPermalink(String id) {
+    return ofNullable(id)
+        .map(Long::decode)
+        .map(SILVERMAILPersistence::getMessage)
+        .map(SILVERMAILMessage::getUrl);
   }
 }
