@@ -22,7 +22,6 @@
   --%>
 
 <%@ page import="org.silverpeas.core.chat.ChatLocalizationProvider" %>
-<%@ page import="org.silverpeas.core.admin.user.model.User" %>
 <%@ page import="org.silverpeas.core.chat.servers.ChatServer" %>
 <%@ page import="org.silverpeas.core.chat.ChatUser" %>
 <%@ page import="org.silverpeas.core.util.file.FileServerUtils" %>
@@ -66,7 +65,6 @@
     function init() {
       <c:choose>
       <c:when test="${sessionScope.get('Silverpeas.Chat') and chatUser.chatEnabled and chatServer.isUserExisting(chatUser)}">
-      /*window.USERSESSION_PROMISE.then(function() {*/
         const chatOptions = {
           viewMode : 'mobile',
           url : '${chatUrl}',
@@ -109,7 +107,6 @@
                 });
               }
             });
-            /* SP_openUserPanel(webContext + '/chat/users/select', '', 'menubar=no,scrollbars=no,statusbar=no'); */
           }
         };
         if (typeof SilverChat === 'undefined') {
@@ -117,17 +114,6 @@
           return;
         }
         SilverChat.init(chatOptions).start();
-        /*spUserSession.addLogoutPromise(new Promise(function(resolve, reject) {
-          spUserSession.addEventListener('current-user-logout', function() {
-            spProgressMessage.show();
-            SilverChat.stop().then(function() {
-              resolve();
-            }, function() {
-              reject();
-            });
-          }, 'silverchat-user-logout');
-        }));
-      });*/
       </c:when>
       <c:otherwise>
       console.log('${silfn:escapeJs(chatBundle.getString("chat.server.notAvailable"))}');

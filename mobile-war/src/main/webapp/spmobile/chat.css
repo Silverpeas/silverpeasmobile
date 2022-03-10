@@ -41,23 +41,3 @@ body {
 .logout {
   display: none;
 }
-
-#jsxc_toggleRoster {
-  background-color: rgba(153, 153, 153, 0.5);
-}
-
-.jsxc_onlineHelp, .jsxc_settings, .jsxc_about, .jsxc_addBuddy, .jsxc_joinChat {
-  display: none;
-}
-
-.jsxc_more {
-  display: none;
-}
-
-#jsxc_roster, #jsxc_buddylist {
-  width: 100%;
-}
-
-.jsxc_rosteritem.jsxc_bookmarked {
-  display: none;
-}

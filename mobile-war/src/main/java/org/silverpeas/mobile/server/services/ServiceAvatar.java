@@ -22,35 +22,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.server.servlets;
+package org.silverpeas.mobile.server.services;
 
 import org.apache.commons.fileupload.FileItem;
 import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.file.FileUploadUtil;
-import org.silverpeas.core.web.http.HttpRequest;
+import org.silverpeas.core.web.rs.UserPrivilegeValidation;
+import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
+import org.silverpeas.mobile.server.servlets.ImageProfil;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
 
-public class AvatarServlet extends AbstractSilverpeasMobileServlet {
+@WebService
+@Authorized
+@Path(ServiceAvatar.PATH)
+public class ServiceAvatar extends AbstractRestWebService {
 
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    try {
-      checkUserInSession(request, response);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    UserDetail user = getUserInSession(request);
+  @Context
+  HttpServletRequest request;
+
+  static final String PATH = "mobile/avatar";
+
+  @POST
+  @Path("")
+  public void updateAvatar() throws Exception {
+    UserDetail user = Administration.get().getUserDetail(getUser().getId());
 
     // Process the uploaded items
-    List<FileItem> parameters = ((HttpRequest) request).getFileItems();
+    List<FileItem> parameters =  getHttpRequest().getFileItems();
     FileItem file = FileUploadUtil.getFile(parameters, "upload_file0");
     ImageProfil img = new ImageProfil(user.getAvatarFileName());
 
@@ -63,17 +75,32 @@ public class AvatarServlet extends AbstractSilverpeasMobileServlet {
 
       if (!"gif".equalsIgnoreCase(extension) && !"jpg".equalsIgnoreCase(extension) && !"png".
           equalsIgnoreCase(extension)) {
-        response.sendError(response.SC_UNSUPPORTED_MEDIA_TYPE);
+        throw new WebApplicationException(Response.Status.UNSUPPORTED_MEDIA_TYPE);
       }
       try (InputStream fis = file.getInputStream()) {
         img.saveImage(fis);
-        user = Administration.get().getUserDetail(user.getId());
+
         String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), getSettings().getString("big.avatar.size", "40x"));
-        response.addHeader("avatar", avatar);
+
+        getHttpServletResponse().addHeader("avatar", avatar);
       } catch (Exception e) {
-        response.sendError(response.SC_INTERNAL_SERVER_ERROR);
+        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
       }
     }
+}
 
+  @Override
+  protected String getResourceBasePath() {
+    return PATH;
   }
+
+  @Override
+  public String getComponentId() {
+    return null;
+  }
+
+  @Override
+  public void validateUserAuthorization(final UserPrivilegeValidation validation) {
+  }
+
 }

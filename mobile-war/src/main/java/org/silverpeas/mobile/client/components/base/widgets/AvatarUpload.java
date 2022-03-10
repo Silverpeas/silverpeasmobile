@@ -32,6 +32,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Image;
@@ -76,11 +77,11 @@ public class AvatarUpload extends Composite {
   @UiHandler("file")
   void upload(ChangeEvent event) {
     Notification.activityStartImmediately();
-    String url = UrlUtils.getUploadLocation();
-    url += "AvatarAction";
+    String url = UrlUtils.getSilverpeasServicesLocation();
+    url += "mobile/avatar";
 
     if (!NetworkHelper.getInstance().isOffline()) {
-      upload(this, file.getElement(), url, SpMobil.getUserToken());
+      upload(this, file.getElement(), url, AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN), AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSilverpeasSession), SpMobil.getUserToken());
     } else {
       Notification.activityStop();
       Notification.alert(msg.needToBeOnline());
@@ -129,13 +130,15 @@ public class AvatarUpload extends Composite {
     }
   }
 
-  private static native void upload(AvatarUpload button, Element input, String url, String token) /*-{
+  private static native void upload(AvatarUpload button, Element input, String url, String token, String session, String userToken) /*-{
     var xhr = new XMLHttpRequest();
     var fd = new FormData();
     xhr.open("POST", url, false);
-    xhr.setRequestHeader("X-Silverpeas-Session", token);
+    xhr.setRequestHeader("X-Silverpeas-Session", session);
+    xhr.setRequestHeader("Authorization", "Bearer " + userToken);
+    xhr.setRequestHeader("X-STKN", token);
     xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4 && xhr.status == 200) {
+      if (xhr.readyState == 4 && xhr.status == 204) {
         // Every thing ok, file uploaded
         var avatar = xhr.getResponseHeader("avatar");
         button.@org.silverpeas.mobile.client.components.base.widgets.AvatarUpload::avatarUploadedSuccessfully(Ljava/lang/String;)(avatar);
