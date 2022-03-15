@@ -32,6 +32,6 @@
     <g:Anchor stylePrimaryName="btn-list-favoris" ui:field="favoris"><ui:safehtml from="{msg.appFavortis}"/></g:Anchor>
     <g:Anchor stylePrimaryName="btn-find-contact" ui:field="contact"><ui:safehtml from="{msg.appContact}"/></g:Anchor>
     <g:Anchor stylePrimaryName="btn-list-task" ui:field="tasks">{msg.tasks}/></g:Anchor>
-    <g:Anchor stylePrimaryName="btn-update-statut" ui:field="statut"><ui:safehtml from="{msg.appStatut}"/></g:Anchor>
+    <g:Anchor stylePrimaryName="btn-update-tchat" ui:field="tchat" href="chat.jsp" target="_blank"><ui:safehtml from="{msg.tchat}"/></g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder> 

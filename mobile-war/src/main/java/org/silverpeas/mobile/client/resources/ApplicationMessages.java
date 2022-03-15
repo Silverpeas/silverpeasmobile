@@ -60,7 +60,7 @@ public interface ApplicationMessages extends Messages {
   String home();
 
   @DefaultMessage("Discussions")
-  String tchat();
+  SafeHtml tchat();
 
   @DefaultMessage("Go")
   String search();

@@ -51,7 +51,7 @@ public class PageFooter extends Composite {
   }
 
   @UiField protected HTMLPanel footer;
-  @UiField protected Anchor statut, contact, tasks, favoris, browse;
+  @UiField protected Anchor tchat, contact, tasks, favoris, browse;
   @UiField(provided = true) protected ApplicationMessages msg = null;
   protected ApplicationResources ressources = null;
 
@@ -63,6 +63,7 @@ public class PageFooter extends Composite {
     footer.getElement().setId("navigation-footer");
     ressources.css().ensureInjected();
 
+    tchat.setVisible(Boolean.parseBoolean(ResourcesManager.getParam("chat.enable")));
     addCustomButtons();
   }
 
@@ -96,12 +97,6 @@ public class PageFooter extends Composite {
     ContentDTO content = new ContentDTO();
     content.setType(ContentsTypes.Tasks.toString());
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
-  }
-
-  @UiHandler("statut")
-  void status(ClickEvent e) {
-    App app = new ProfileApp();
-    app.start();
   }
 
   @UiHandler("contact")
