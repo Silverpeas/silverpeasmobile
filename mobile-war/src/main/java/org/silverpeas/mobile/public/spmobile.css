@@ -459,7 +459,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url(packImagesNavigation.png) center -709px no-repeat;
 }
 
-#navigation-footer .btn-update-tchat {
+#navigation-footer .btn-update-statut {
   background: transparent url(packImagesNavigation.png) center -771px no-repeat;
 }
 
@@ -781,7 +781,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border-right: 1px solid #d1d1d1;
 }
 
-#btn-update-tchat a {
+#btn-update-statut a {
   background: transparent url(packImage.png) 20px -419px no-repeat;
 }
 
