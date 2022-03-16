@@ -30,8 +30,8 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
+    <h2 class="appHeader"><ui:text from="{msg.availablesResources}"/></h2>
     <div id="resourcesManager" class="content-navigation" style="min-height:100vh;">
-      <g:Label><ui:text from="{msg.availablesResources}"/></g:Label>
 
       <components:UnorderedList ui:field="resources" styleName="list-resources"/>
       <div class=" ui-controlgroup ui-controlgroup-horizontal">
