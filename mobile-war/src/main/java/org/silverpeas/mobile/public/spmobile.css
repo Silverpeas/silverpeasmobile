@@ -44,7 +44,6 @@ body, input, select, textarea, button, .ui-btn {
 
 legend, .ui-input-text input, .ui-input-search input {
   color: inherit;
-  text-shadow: inherit;
 }
 
 /* Form labels (overrides font-weight bold in bars, and mini font-size) */
@@ -230,7 +229,6 @@ legend, .ui-input-text input, .ui-input-search input {
   background-color: #313131 /*{a-bar-background-color}*/;
   border-color: #000000 /*{a-bar-border}*/;
   color: #fffff /*{a-bar-color}*/;
-  text-shadow: 0 /*{a-bar-shadow-x}*/ 1px /*{a-bar-shadow-y}*/ 0 /*{a-bar-shadow-radius}*/ #000000 /*{a-bar-shadow-color}*/;
   font-weight: bold;
 }
 
@@ -244,7 +242,6 @@ legend, .ui-input-text input, .ui-input-search input {
   background-color: #ececec /*{a-page-background-color}*/;
   border-color: #bbbbbb /*{a-page-border}*/;
   color: #333 /*{a-page-color}*/;
-  text-shadow: 0 /*{a-page-shadow-x}*/ 1px /*{a-page-shadow-y}*/ 0 /*{a-page-shadow-radius}*/ #f3f3f3 /*{a-page-shadow-color}*/;
 }
 
 /* Body: Read-only lists, text inputs, collapsible content */
@@ -252,8 +249,7 @@ legend, .ui-input-text input, .ui-input-search input {
   background-color: #ececec /*{a-body-background-color}*/;
   border-color: #dddddd /*{a-body-border}*/;
   color: #333333 /*{a-body-color}*/;
-  text-shadow: 0 /*{a-body-shadow-x}*/ 1px /*{a-body-shadow-y}*/ 0 /*{a-body-shadow-radius}*/ #f3f3f3 /*{a-body-shadow-color}*/;
-}
+ }
 
 .ui-page-theme-a .ui-body-inherit.filter-contacts {
   background-color: #FFF;
@@ -285,8 +281,7 @@ legend, .ui-input-text input, .ui-input-search input {
   background-color: #f6f6f6 /*{a-bup-background-color}*/;
   border-color: #dddddd /*{a-bup-border}*/;
   color: #333333 /*{a-bup-color}*/;
-  text-shadow: 0 /*{a-bup-shadow-x}*/ 1px /*{a-bup-shadow-y}*/ 0 /*{a-bup-shadow-radius}*/ #f3f3f3 /*{a-bup-shadow-color}*/;
-}
+ }
 
 /* Button up */
 html .ui-header .ui-btn {
@@ -320,8 +315,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-color: #e8e8e8 /*{a-bdown-background-color}*/;
   border-color: #dddddd /*{a-bdown-border}*/;
   color: #333333 /*{a-bdown-color}*/;
-  text-shadow: 0 /*{a-bdown-shadow-x}*/ 1px /*{a-bdown-shadow-y}*/ 0 /*{a-bdown-shadow-radius}*/ #f3f3f3 /*{a-bdown-shadow-color}*/;
-}
+ }
 
 /* Active button */
 .ui-page-theme-a .ui-btn.ui-btn-active, html .ui-bar-a .ui-btn.ui-btn-active, html .ui-body-a .ui-btn.ui-btn-active, html body .ui-group-theme-a .ui-btn.ui-btn-active, html head + body .ui-btn.ui-btn-a.ui-btn-active,
@@ -334,7 +328,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-color: #7eb73b /*{a-active-background-color}*/;
   border-color: #70a72e /*{a-active-border}*/;
   color: #ffffff /*{a-active-color}*/;
-  text-shadow: 0 /*{a-active-shadow-x}*/ 1px /*{a-active-shadow-y}*/ 0 /*{a-active-shadow-radius}*/ #005599 /*{a-active-shadow-color}*/;
 }
 
 /* Active radio button icon */
@@ -677,7 +670,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding: 0;
   color: #333333;
   background-color: #f4f4f4;
-  text-shadow: none;
   position: fixed;
   font-size: 0.8em;
 }
@@ -1037,12 +1029,22 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .list-comments li,
 .list-notifications li,
 .list-resources li,
-list-reservations li,
+.list-reservations li,
 .list-detail-event {
   background-color: #FFF;
   border-bottom: 1px solid #e0e0e0;
-  padding: 1em;
+  padding: 0;
   margin: 0;
+}
+
+#attachments li > *,
+.list-contacts li > *,
+.list-comments li > *,
+.list-notifications li > *,
+.list-resources li > *,
+.list-reservations li > *,
+.list-detail-event  > * {
+  padding:1em;
 }
 
 #linkedPublications li {
@@ -1094,10 +1096,21 @@ list-reservations li,
   color: #666
 }
 
-#event .reccurence {
-  background: #fff url(packImagesNavigation.png) 1em -1946px no-repeat;
+#event .reccurence::before {
+	content:'';
+	width:20px;
+	height:20px;
+	display:block;
+  background: #fff url(packImagesNavigation.png) 0 -1959px no-repeat;
+  position:absolute;
+  top:0.75em;
+  left:1em;
+}
+
+#event .reccurence  {
   padding-left: 2.5625em;
   line-height: 1.15em;
+  position:relative;
 }
 
 #event #participation {
@@ -1221,8 +1234,9 @@ list-reservations li,
 }
 
 #attachments li a.downloadable {
-  background: transparent url(download.png) right 10px no-repeat;
-  display: block;
+	background: transparent url(download.png) right 1em no-repeat;
+	display: block;
+	margin-right: 1.5em;
 }
 
 #attachments li a span {
@@ -1441,7 +1455,6 @@ input.filter-contacts {
   border: 1px solid #6fa800;
   padding: 1em;
   color: #fff !important;
-  text-shadow: 0 1px 0 #6fa800;
   text-decoration: none;
   display: block;
 }
@@ -1982,7 +1995,7 @@ a.popin-btn {
 }
 
 .workflow-list > tbody > tr:nth-child(1) {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .workflow-list > tbody > tr:nth-child(odd) {
@@ -1998,8 +2011,11 @@ a.popin-btn {
   border-bottom: 1px solid #ddd;
 }
 
-.workflow-roles {
-  margin-bottom: 1em;
+.workflow-roles {  
+	position: absolute;
+	margin-bottom: 1em;
+	top: 1em;
+	left: .5em;
 }
 
 .workflow-anchor {
@@ -2014,8 +2030,12 @@ a.popin-btn {
 .workflow-form li, .formOnline-form li {
   padding:1em;
 }
-.workflow-form .gwt-Label, .formOnline-form  .gwt-Label {
+.workflow-form .gwt-Label, 
+.formOnline-form  .gwt-Label ,
+.forms-list   .gwt-Label{
 	padding-bottom:0.5em;
+	color:#333;
+	font-size:11pt;
 }
 
 .workflow-form li:nth-child(odd),
@@ -2154,17 +2174,20 @@ a.popin-btn {
 .liste-billet h2 a,
 .forms-list h2 a,
 .liste-news li h2 a,
+.forms-list h2,
 .liste-annonces li h2 a {
   font-size: 14px;
   line-height: 16px;
   color: #555;
   text-decoration: none;
+  font-weight:500;
 }
 
 .liste-billet, .forms-list {
   font-size: 0.9em;
   color: #999;
 }
+
 
 /* GENERAL */
 .clear {
@@ -2245,7 +2268,6 @@ a.popin-btn {
 
 .ui-list-graduate li.open {
   background: #4c4c4c url(packImagesNavigation.png) right -2133px no-repeat;
-  text-shadow: none;
   border: 0;
 }
 
@@ -2303,7 +2325,7 @@ a.popin-btn {
   font-size: 0.9em;
   padding: 0.5em;
   margin-top: 0.5em;
-  mmax-width: 80%;
+  max-width: 80%;
   text-overflow: ellipsis;
   height: 1em;
   overflow: hidden;
@@ -2504,7 +2526,6 @@ a.popin-btn {
 .survey .liste-enquete li:first-child {
   background-color:#333 !important;
   color:#fff;
-  text-shadow: none;
 }
 .survey .liste-enquete li {
   display:table-row;
@@ -2572,22 +2593,26 @@ a.popin-btn {
 /******** Resources Manager ********/
 
 #resourcesManager .list-resources li.category {
-  font-weight: bold;
-  background-color: #6fa800;
-  color: white;
-  padding-bottom: 0px;
+	font-weight: 600;
+	color: white;
+	background-color: #6fa800;
 }
+#resourcesManager .list-resources li .gwt-HTML{
+	display:block;
+} 
 
 #resourcesManager .list-reservations {
   margin-top: 3em;
 }
 
 #resourcesManager .reservationDate {
-  font-weight: bold;
+	font-weight: 600;
+	font-size: 11pt;
+	padding-bottom: 0.5em;
 }
 
 #resourcesManager .reservationEvent {
-  margin-bottom: 5px;
+	padding-bottom:1em;
 }
 
 #resourcesManager ul .reservation {
@@ -2599,8 +2624,9 @@ a.popin-btn {
   padding-left: 0;
 }
 
-#resourcesManager .reservationRessources li {
-  display: inline;
+#resourcesManager .reservationRessources li,
+#reservationDetail .reservationRessources li {
+  display: inline-block;
   margin-right: 5px;
 }
 
@@ -2639,6 +2665,13 @@ a.popin-btn {
 
 #reservationDetail ul.reservationRessources {
   list-style-type: none;
-  width: fit-content;
-  padding-bottom: 5px;
+  padding: 1em;
+  margin:0;
+}
+
+#reservationDetail ul.reservationRessources::after {
+	content:' ';
+	display:block;
+	clear:left;
+	height:1em;
 }

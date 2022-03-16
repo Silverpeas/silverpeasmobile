@@ -30,18 +30,28 @@
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <div id="resourcesManager" class="content-navigation" style="min-height:100vh;">
-      <g:Label ui:field="labelTitle"><ui:text from="{msg.event}"/></g:Label>
-      <g:TextBox ui:field="title"></g:TextBox>
-      <g:Image styleName="mandatory"></g:Image>
-      <g:Label ui:field="labelStartDate"><ui:text from="{msg.startDate}"/></g:Label>
-      <g:TextBox ui:field="start"></g:TextBox>
-      <g:Image styleName="mandatory"></g:Image>
-      <g:Label ui:field="labelEndDate"><ui:text from="{msg.endDate}"/></g:Label>
-      <g:TextBox ui:field="end"></g:TextBox>
-      <g:Image styleName="mandatory"></g:Image>
-      <g:Label><ui:text from="{msg.reason}"/></g:Label>
-      <g:TextArea ui:field="reason" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
-      <div class=" ui-controlgroup ui-controlgroup-horizontal">
+		<ul class="forms-list">
+			<li>
+				<g:Label ui:field="labelTitle"><ui:text from="{msg.event}"/></g:Label>
+				<g:TextBox ui:field="title"></g:TextBox>
+				<g:Image styleName="mandatory"></g:Image>
+			</li>
+			<li>
+				<g:Label ui:field="labelStartDate"><ui:text from="{msg.startDate}"/></g:Label>
+				<g:TextBox ui:field="start"></g:TextBox>
+				<g:Image styleName="mandatory"></g:Image>
+			</li>
+			<li>
+				<g:Label ui:field="labelEndDate"><ui:text from="{msg.endDate}"/></g:Label>
+				<g:TextBox ui:field="end"></g:TextBox>
+				<g:Image styleName="mandatory"></g:Image>
+			</li>
+			<li>
+				<g:Label><ui:text from="{msg.reason}"/></g:Label>
+				<g:TextArea ui:field="reason" styleName="ui-input-text  ui-body-inherit"></g:TextArea>
+			</li>
+		</ul>
+     <div class=" ui-controlgroup ui-controlgroup-horizontal">
         <div class="ui-controlgroup-controls ">
           <g:Anchor ui:field="validate" styleName="btn-validate ui-link">
             <span class="ui-btn-text"><ui:text from="{msg.validate}"/></span>
