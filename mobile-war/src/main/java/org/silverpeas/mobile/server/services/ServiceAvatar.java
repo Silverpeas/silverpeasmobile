@@ -26,7 +26,6 @@ package org.silverpeas.mobile.server.services;
 
 import org.apache.commons.fileupload.FileItem;
 import org.silverpeas.core.admin.service.Administration;
-import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.util.StringUtil;
@@ -35,7 +34,7 @@ import org.silverpeas.core.util.file.FileUploadUtil;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
-import org.silverpeas.mobile.server.servlets.ImageProfil;
+import org.silverpeas.mobile.server.helpers.ImageProfil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.POST;

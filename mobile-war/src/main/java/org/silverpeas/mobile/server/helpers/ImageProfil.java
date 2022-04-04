@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.silverpeas.mobile.server.servlets;
+package org.silverpeas.mobile.server.helpers;
 
 import org.silverpeas.core.util.file.FileUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
