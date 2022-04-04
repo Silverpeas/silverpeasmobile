@@ -39,7 +39,7 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -69,7 +69,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
 
   @Override
   public void loadContacts(final ContactsLoadEvent event) {
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<DetailUserDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<DetailUserDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -101,7 +101,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
     page.setPersonnalContactsVisible(false);
     page.init(true);
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<DetailUserDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<DetailUserDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -129,7 +129,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals(ContentsTypes.Contacts.toString())) {
 
-      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<ContactFilters>(null) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ContactFilters>() {
         @Override
         public void attempt() {
           super.attempt();

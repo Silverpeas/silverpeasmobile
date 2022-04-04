@@ -52,7 +52,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -132,8 +132,8 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     } else if (content.getType().equals(ContentsTypes.Attachment.toString())) {
       final DocumentsApp app = this;
 
-      MethodCallbackOnlineOrOffline action =
-          new MethodCallbackOnlineOrOffline<AttachmentDTO>(null) {
+      MethodCallbackOnlineOnly action =
+          new MethodCallbackOnlineOnly<AttachmentDTO>() {
             @Override
             public void attempt() {
               super.attempt();
@@ -217,7 +217,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
    */
   @Override
   public void loadTopics(final DocumentsLoadGedItemsEvent event) {
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<BaseDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -241,7 +241,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   @Override
   public void loadPublication(final DocumentsLoadPublicationEvent event) {
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<PublicationDTO>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<PublicationDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -265,8 +265,8 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void loadAttachments(final DocumentsLoadAttachmentsEvent event) {
-    MethodCallbackOnlineOrOffline action =
-        new MethodCallbackOnlineOrOffline<List<SimpleDocumentDTO>>(null) {
+    MethodCallbackOnlineOnly action =
+        new MethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
           @Override
           public void attempt() {
             super.attempt();

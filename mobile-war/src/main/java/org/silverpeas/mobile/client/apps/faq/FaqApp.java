@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.faq;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.faq.events.app.AbstractFaqAppEvent;
@@ -44,7 +43,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.documents.DocumentType;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
@@ -82,21 +80,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
     if (event.getInstance().getType().equals(Apps.questionReply.name())) {
       this.setApplicationInstance(event.getInstance());
 
-      Command offlineAction = new Command() {
-        @Override
-        public void execute() {
-          List<QuestionDTO> questions = LocalStorageHelper.load(keysQuestions+getApplicationInstance().getId(), List.class);
-          if (questions == null) {
-            questions = new ArrayList<QuestionDTO>();
-          }
-          FaqPage page = new FaqPage();
-          page.setApp(FaqApp.this);
-          page.setData(questions);
-          page.show();
-        }
-      };
-
-      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<QuestionDTO>>(offlineAction) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<QuestionDTO>>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -126,18 +110,8 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
 
   @Override
   public void loadCategories(final FaqCategoriesLoadEvent event) {
-    Command offlineAction = new Command() {
-      @Override
-      public void execute() {
-        List<CategoryDTO> categories = LocalStorageHelper.load(keysCategories+getApplicationInstance().getId(), List.class);
-        if (categories == null) {
-          categories = new ArrayList<CategoryDTO>();
-        }
-        EventBus.getInstance().fireEvent(new FaqCategoriesLoadedEvent(categories));
-      }
-    };
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CategoryDTO>>(offlineAction) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CategoryDTO>>() {
       @Override
       public void attempt() {
         super.attempt();

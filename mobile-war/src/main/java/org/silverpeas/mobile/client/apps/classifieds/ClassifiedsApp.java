@@ -43,7 +43,6 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
@@ -73,7 +72,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
 
   @Override
   public void loadClassifieds(final ClassifiedsLoadEvent event) {
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<ClassifiedsDTO>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ClassifiedsDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -119,7 +118,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
     appDTO.setId(content.getInstanceId());
     setApplicationInstance(appDTO);
     if (content.getType().equals(ContentsTypes.Classified.toString())) {
-      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<ClassifiedsDTO>(null) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ClassifiedsDTO>() {
         @Override
         public void attempt() {
           super.attempt();

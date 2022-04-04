@@ -44,7 +44,6 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
@@ -74,7 +73,7 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
     @Override
     public void loadFavorites(final FavoritesLoadEvent event) {
-      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<MyLinkDTO>>(null) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<MyLinkDTO>>() {
         @Override
         public void onSuccess(final Method method, final List<MyLinkDTO> result) {
           super.onSuccess(method, result);

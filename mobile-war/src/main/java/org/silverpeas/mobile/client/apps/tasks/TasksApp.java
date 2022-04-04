@@ -44,7 +44,6 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
@@ -75,7 +74,7 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
   public void loadTasks(final TasksLoadEvent event) {
     Notification.activityStart();
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<TaskDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TaskDTO>>() {
       @Override
       public void attempt() {
         super.attempt();

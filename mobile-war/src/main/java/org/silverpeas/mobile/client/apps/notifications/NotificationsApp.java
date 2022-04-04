@@ -34,12 +34,9 @@ import org.silverpeas.mobile.client.apps.notifications.events.pages.Notification
 import org.silverpeas.mobile.client.apps.notifications.pages.NotificationPage;
 import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -85,7 +82,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
 
   public void loadUsersAndGroups() {
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<BaseDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
         super.attempt();

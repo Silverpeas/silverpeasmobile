@@ -54,7 +54,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -140,8 +140,8 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstances(final WorkflowLoadInstancesEvent event) {
-    MethodCallbackOnlineOrOffline action =
-        new MethodCallbackOnlineOrOffline<WorkflowInstancesDTO>(null) {
+    MethodCallbackOnlineOnly action =
+        new MethodCallbackOnlineOnly<WorkflowInstancesDTO>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -164,8 +164,8 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstance(final WorkflowLoadInstanceEvent event) {
-    MethodCallbackOnlineOrOffline action =
-        new MethodCallbackOnlineOrOffline<WorkflowInstancePresentationFormDTO>(null) {
+    MethodCallbackOnlineOnly action =
+        new MethodCallbackOnlineOnly<WorkflowInstancePresentationFormDTO>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -189,7 +189,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   public void loadActionForm(final WorkflowLoadActionFormEvent event) {
     currentAction = event.getActionName();
     currentState = event.getState();
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<WorkflowFormActionDTO>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<WorkflowFormActionDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -211,7 +211,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadUserField(final WorkflowLoadUserFieldEvent event) {
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<BaseDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
         super.attempt();

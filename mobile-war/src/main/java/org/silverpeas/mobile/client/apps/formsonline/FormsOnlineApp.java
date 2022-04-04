@@ -53,7 +53,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -96,7 +96,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
   @Override
   public void loadFormsOnline(final FormsOnlineLoadEvent event) {
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -129,7 +129,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
     page.setPageTitle(event.getForm().getTitle());
     page.show();
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormFieldDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormFieldDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -207,7 +207,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
   public void loadUserField(final FormOnlineLoadUserFieldEvent event) {
 
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<BaseDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -233,7 +233,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
   public void loadFormsOnlineAsReceiver(
       final FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent) {
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -259,7 +259,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
    */
   @Override
   public void loadFormOnlineAsReceiver(final FormOnlineAsReceiverLoadEvent event) {
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormRequestDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -305,7 +305,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
   @Override
   public void loadMyRequests(final FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent) {
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<FormRequestDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
       @Override
       public void attempt() {
         super.attempt();

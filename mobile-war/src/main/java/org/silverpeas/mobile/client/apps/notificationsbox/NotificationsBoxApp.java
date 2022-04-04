@@ -43,7 +43,7 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBox
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
@@ -79,8 +79,8 @@ public class NotificationsBoxApp extends App
 
   @Override
   public void loadNotifications(final NotificationsLoadEvent notificationsLoadEvent) {
-    MethodCallbackOnlineOrOffline action =
-        new MethodCallbackOnlineOrOffline<List<NotificationReceivedDTO>>(null) {
+    MethodCallbackOnlineOnly action =
+        new MethodCallbackOnlineOnly<List<NotificationReceivedDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -100,7 +100,7 @@ public class NotificationsBoxApp extends App
 
   @Override
   public void readenNotification(final NotificationReadenEvent event) {
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<Void>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -113,7 +113,7 @@ public class NotificationsBoxApp extends App
   @Override
   public void deleteNotifications(final DeleteNotificationsEvent event) {
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<Void>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -135,7 +135,7 @@ public class NotificationsBoxApp extends App
 
   @Override
   public void markAsReadNotifications(final MarkAsReadNotificationsEvent event) {
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<Void>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -155,8 +155,8 @@ public class NotificationsBoxApp extends App
   public void loadNotificationsSended(
       final NotificationsSendedLoadEvent notificationsSendedLoadEvent) {
 
-    MethodCallbackOnlineOrOffline action =
-        new MethodCallbackOnlineOrOffline<List<NotificationSendedDTO>>(null) {
+    MethodCallbackOnlineOnly action =
+        new MethodCallbackOnlineOnly<List<NotificationSendedDTO>>() {
           @Override
           public void attempt() {
             super.attempt();

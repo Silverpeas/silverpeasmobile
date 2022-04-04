@@ -46,7 +46,6 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -121,8 +120,8 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
   @Override
   public void loadSurveys(final SurveysLoadEvent event) {
 
-    MethodCallbackOnlineOrOffline action =
-        new MethodCallbackOnlineOrOffline<List<SurveyDTO>>(null) {
+    MethodCallbackOnlineOnly action =
+        new MethodCallbackOnlineOnly<List<SurveyDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -141,8 +140,8 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void loadSurvey(final SurveyLoadEvent event) {
-    MethodCallbackOnlineOrOffline action =
-        new MethodCallbackOnlineOrOffline<SurveyDetailDTO>(null) {
+    MethodCallbackOnlineOnly action =
+        new MethodCallbackOnlineOnly<SurveyDetailDTO>() {
           @Override
           public void attempt() {
             super.attempt();

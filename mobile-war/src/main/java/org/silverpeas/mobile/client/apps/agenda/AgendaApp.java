@@ -60,8 +60,6 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
@@ -143,7 +141,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       AgendaPage page = new AgendaPage();
       page.setPageTitle(event.getInstance().getLabel());
 
-      MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CalendarDTO>>(null) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CalendarDTO>>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -199,7 +197,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   public void loadCalendarEvents(final CalendarLoadEvent event) {
     getAppEvents().clear();
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CalendarEventDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CalendarEventDTO>>() {
 
       private int retainUntil = 1;
       private int callNumber = 0;
@@ -305,7 +303,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   public void loadReminders(final RemindersLoadEvent event) {
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<ReminderDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ReminderDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -316,9 +314,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       @Override
       public void onSuccess(final Method method, final List<ReminderDTO> reminders) {
         super.onSuccess(method, reminders);
-        LocalStorageHelper.store("reminders" + event.getEvent().getEventId(), List.class, reminders);
-
-        MethodCallbackOnlineOrOffline action2 = new MethodCallbackOnlineOrOffline<List<String>>(null) {
+        MethodCallbackOnlineOnly action2 = new MethodCallbackOnlineOnly<List<String>>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -404,7 +400,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   public void loadAttachments(final AttachmentsLoadEvent event) {
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
 
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<SimpleDocumentDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
       @Override
       public void attempt() {
         super.attempt();

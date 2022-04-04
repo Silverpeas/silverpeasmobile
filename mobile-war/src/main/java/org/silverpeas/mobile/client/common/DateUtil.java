@@ -27,7 +27,6 @@ package org.silverpeas.mobile.client.common;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**

@@ -39,7 +39,7 @@ import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
@@ -69,7 +69,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
 
   @Override
   public void loadNews(final NewsLoadEvent event) {
-    MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<NewsDTO>>(null) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<NewsDTO>>() {
       @Override
       public void attempt() {
         super.attempt();

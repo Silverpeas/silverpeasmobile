@@ -24,7 +24,6 @@
 
 package org.silverpeas.mobile.client.apps.comments;
 
-import com.google.gwt.user.client.Command;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.comments.events.app.AbstractCommentsAppEvent;
@@ -39,11 +38,8 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,7 +72,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
     @Override
     public void loadComments(final CommentsLoadEvent event) {
-        MethodCallbackOnlineOrOffline action = new MethodCallbackOnlineOrOffline<List<CommentDTO>>(null) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CommentDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
