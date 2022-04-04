@@ -50,7 +50,7 @@
   <add-linker name="xsiframe"/>
 
   <set-configuration-property name="devModeRedirectEnabled" value="true"/>
-  set-property name="compiler.useSourceMaps" value="true"/>
+  <set-property name="compiler.useSourceMaps" value="true"/>
 
 
   <inherits name="com.seanchenxi.gwt.storage.Storage"/>
