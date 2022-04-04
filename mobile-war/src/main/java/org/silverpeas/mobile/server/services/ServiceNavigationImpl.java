@@ -135,7 +135,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
   @Override
   public boolean setTabletMode() throws NavigationException, AuthenticationException {
     if (!isUserGUIMobileForTablets()) {
-      getThreadLocalRequest().getSession().setAttribute("tablet", new Boolean(true));
+      getThreadLocalRequest().getSession().setAttribute("tablet", Boolean.valueOf(true));
       return true;
     }
     return false;
@@ -712,7 +712,7 @@ public class ServiceNavigationImpl extends AbstractAuthenticateService
     String helperClassName = settings
         .getString("publicationHelper", "org.silverpeas.components.kmelia.KmeliaTransversal");
     Class<?> helperClass = Class.forName(helperClassName);
-    PublicationHelper kmeliaTransversal = (PublicationHelper) helperClass.newInstance();
+    PublicationHelper kmeliaTransversal = (PublicationHelper) helperClass.getDeclaredConstructor().newInstance();
     kmeliaTransversal.setMainSessionController(getMainSessionController());
 
     return kmeliaTransversal;

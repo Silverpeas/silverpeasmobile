@@ -139,7 +139,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
   @Override
   public boolean setTabletMode() throws NavigationException, AuthenticationException {
     if (!isUserGUIMobileForTablets()) {
-      getThreadLocalRequest().getSession().setAttribute("tablet", new Boolean(true));
+      getThreadLocalRequest().getSession().setAttribute("tablet", Boolean.valueOf(true));
       return true;
     }
     return false;

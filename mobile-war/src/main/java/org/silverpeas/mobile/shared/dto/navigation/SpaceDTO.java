@@ -64,7 +64,7 @@ public class SpaceDTO extends SilverpeasObjectDTO implements Serializable {
       if (isPersonal()) {
         return 100;
       } else {
-        return new Integer(getOrderNum()).compareTo(((SpaceDTO) o).getOrderNum());
+        return Integer.valueOf(getOrderNum()).compareTo(((SpaceDTO) o).getOrderNum());
       }
     } else {
       return super.compareTo(o);

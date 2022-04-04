@@ -62,14 +62,15 @@ public class MobilFilter implements Filter {
   //private static final SilverLogger logger = SilverLogger.getLogger("silverpeas.core.security");
   public static final String SESSION_TOKEN_KEY = "X-STKN";
   public static final String SESSION_PARAMS_KEY = "SESSION_PARAMS_KEY";
-  private static String [] urlsAllowed = null;
+  private static String[] urlsAllowed = null;
 
   @Override
   public void destroy() {
   }
 
   @Override
-  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+      throws IOException, ServletException {
 
     String url = ((HttpServletRequest) req).getRequestURL().toString();
 
@@ -90,10 +91,12 @@ public class MobilFilter implements Filter {
     String userAgent = ((HttpServletRequest) req).getHeader("User-Agent");
     if (userAgent != null) {
       boolean isMobile = userAgent.contains("Android") || userAgent.contains("iPhone");
-      ((HttpServletRequest) req).getSession().setAttribute("isMobile", new Boolean(isMobile));
+      ((HttpServletRequest) req).getSession().setAttribute("isMobile", Boolean.valueOf(isMobile));
 
       Boolean tablet = (Boolean) ((HttpServletRequest) req).getSession().getAttribute("tablet");
-      if (tablet == null) tablet = new Boolean(false);
+      if (tablet == null) {
+        tablet = Boolean.valueOf(false);
+      }
 
       boolean redirect = isRedirect(url);
 
@@ -115,39 +118,47 @@ public class MobilFilter implements Filter {
           Media media = getGalleryService().getMedia(new MediaPK(id));
           String appId = media.getInstanceId();
           params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
-        } else if(url.contains("RprocessManager")) {
+        } else if (url.contains("RprocessManager")) {
           params = extractWorkflowParameters(req);
         } else if (url.toLowerCase().contains("survey")) {
           params = extractSurveyParameters(req);
         } else if (url.contains("autoRedirect.jsp")) {
           QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
-          String subUrl = ((HttpServletRequest) req).getParameter("goto");
+          String subUrl = req.getParameter("goto");
           if (subUrl.contains("Rquickinfo")) {
             String appId = subUrl.replace("/Rquickinfo/", "");
             appId = appId.substring(0, appId.indexOf("/"));
-            String contributionId = subUrl.substring(subUrl.indexOf("Id=")+3);
+            String contributionId = subUrl.substring(subUrl.indexOf("Id=") + 3);
             News n = service.getNews(contributionId);
             String id = n.getPublicationId();
-            params = "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId +
-                "&shortcutContributionId=" + contributionId;
+            params =
+                "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId +
+                    "&shortcutContributionId=" + contributionId;
           } else if (subUrl.contains("Rblog")) {
             String appId = subUrl.replace("/Rblog/", "");
             appId = appId.substring(0, appId.indexOf("/"));
-            String id = subUrl.substring(subUrl.indexOf("Id=")+3);
-            params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" + appId;
-          } else if(subUrl.contains("Rgallery")) {
+            String id = subUrl.substring(subUrl.indexOf("Id=") + 3);
+            params =
+                "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" +
+                    appId;
+          } else if (subUrl.contains("Rgallery")) {
             String appId = subUrl.replace("/Rgallery/", "");
             appId = appId.substring(0, appId.indexOf("/"));
-            String id = subUrl.substring(subUrl.indexOf("Id=")+3);
-            params = "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
-          } else if(subUrl.contains("Rkmelia")) {
+            String id = subUrl.substring(subUrl.indexOf("Id=") + 3);
+            params =
+                "?shortcutContentType=Media&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+          } else if (subUrl.contains("Rkmelia")) {
             /*
-              Example : /silverpeas/autoRedirect.jsp?domainId=0&goto=%2FRkmelia%2Fkmelia1%2FsearchResult%3FType%3DPublication%26Id%3D24
+              Example : /silverpeas/autoRedirect
+              .jsp?domainId=0&goto=%2FRkmelia%2Fkmelia1%2FsearchResult%3FType%3DPublication%26Id
+              %3D24
             */
             String appId = subUrl.replace("/Rkmelia/", "");
             appId = appId.substring(0, appId.indexOf("/"));
-            String id = subUrl.substring(subUrl.indexOf("Id=")+3);
-            params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+            String id = subUrl.substring(subUrl.indexOf("Id=") + 3);
+            params =
+                "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" +
+                    appId;
           }
         } else if (url.contains("Contribution")) {
           String contributionId = url.substring(url.lastIndexOf("/") + 1);
@@ -155,7 +166,9 @@ public class MobilFilter implements Filter {
         } else if (url.contains("Component")) {
           String appId = url.substring(url.lastIndexOf("/") + 1);
           params = "?shortcutContentType=Component&shortcutAppId=" + appId;
-        } else if(!url.contains("AuthenticationServlet") && (url.endsWith("silverpeas") || url.endsWith("silverpeas/") || url.contains("/silverpeas/"))) {
+        } else if (!url.contains("AuthenticationServlet") &&
+            (url.endsWith("silverpeas") || url.endsWith("silverpeas/") ||
+                url.contains("/silverpeas/"))) {
           // simple redirection on mobile login page
           params = "";
         } else {
@@ -165,11 +178,13 @@ public class MobilFilter implements Filter {
 
         HttpSession session = ((HttpServletRequest) req).getSession(false);
         SynchronizerToken token = (SynchronizerToken) session.getAttribute(SESSION_TOKEN_KEY);
-        MainSessionController controller = (MainSessionController) session.getAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
+        MainSessionController controller = (MainSessionController) session.getAttribute(
+            MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
         if (controller != null && token == null) {
           //logger.warn("security.web.protection.token is disable");
           // generate fake token for auto login without token security
-          TokenGenerator generator = TokenGeneratorProvider.getTokenGenerator(SynchronizerToken.class);
+          TokenGenerator generator =
+              TokenGeneratorProvider.getTokenGenerator(SynchronizerToken.class);
           token = generator.generate();
           session.setAttribute(SESSION_TOKEN_KEY, token);
         }
@@ -181,7 +196,8 @@ public class MobilFilter implements Filter {
 
         String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
         session.setAttribute(SESSION_PARAMS_KEY, params);
-        String urlWithSessionID = ((HttpServletResponse) res).encodeRedirectURL(aDestinationPage.toString());
+        String urlWithSessionID =
+            ((HttpServletResponse) res).encodeRedirectURL(aDestinationPage.toString());
         ((HttpServletResponse) res).sendRedirect(urlWithSessionID);
         return;
 
@@ -208,10 +224,13 @@ public class MobilFilter implements Filter {
     } else {
       id = url.substring(url.lastIndexOf("/") + 1);
       QuestionContainerPK pk = new QuestionContainerPK(id, null, null);
-      appId = QuestionContainerService.get().getQuestionContainer(pk, null).getComponentInstanceId();
+      appId =
+          QuestionContainerService.get().getQuestionContainer(pk, null).getComponentInstanceId();
       contentType = "QuestionContainer";
     }
-    String params = "?shortcutContentType="+contentType+"&shortcutContentId=" + id + "&shortcutAppId=" + appId;
+    String params =
+        "?shortcutContentType=" + contentType + "&shortcutContentId=" + id + "&shortcutAppId=" +
+            appId;
     return params;
   }
 
@@ -230,7 +249,9 @@ public class MobilFilter implements Filter {
     String id = ((HttpServletRequest) req).getParameter("Id");
     String role = ((HttpServletRequest) req).getParameter("role");
 
-    String params = "?shortcutContentType="+contentType+"&shortcutContentId=" + id + "&shortcutAppId=" + appId + "&shortcutRole=" + role;
+    String params =
+        "?shortcutContentType=" + contentType + "&shortcutContentId=" + id + "&shortcutAppId=" +
+            appId + "&shortcutRole=" + role;
     return params;
   }
 
@@ -245,11 +266,21 @@ public class MobilFilter implements Filter {
       }
     }
 
-    if (urlRes.contains("weblib")) return false;
-    if (urlRes.toLowerCase().endsWith(".css")) return false;
-    if (urlRes.toLowerCase().endsWith(".gif")) return false;
-    if (urlRes.toLowerCase().endsWith(".jpg")) return false;
-    if (urlRes.toLowerCase().endsWith(".png")) return false;
+    if (urlRes.contains("weblib")) {
+      return false;
+    }
+    if (urlRes.toLowerCase().endsWith(".css")) {
+      return false;
+    }
+    if (urlRes.toLowerCase().endsWith(".gif")) {
+      return false;
+    }
+    if (urlRes.toLowerCase().endsWith(".jpg")) {
+      return false;
+    }
+    if (urlRes.toLowerCase().endsWith(".png")) {
+      return false;
+    }
 
     return true;
   }
