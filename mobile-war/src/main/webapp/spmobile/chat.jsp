@@ -91,6 +91,7 @@
           avatar : '/silverpeas/display/avatar/60x/',
           userAvatarUrl : '/silverpeas/<%=FileServerUtils.getImageURL(((ChatUser)pageContext.getAttribute("chatUser")).getAvatar(), "60x60")%>', notificationLogo : (window.SilverChatSettings ? window.SilverChatSettings.get('un.d.i.u') : ''),
           nbMsgMaxCachedPerRoom : ${chatSettings.maxCachedMsgThresholdPerRoom},
+          clearMessagesOnReconnection : ${chatSettings.clearMessagesOnReconnection()},
           replyToEnabled : ${chatSettings.replyToEnabled},
           reactionToEnabled : ${chatSettings.reactionToEnabled},
           visioEnabled : ${chatSettings.visioEnabled},
