@@ -65,5 +65,4 @@ public interface ServiceWorkflow extends RestService {
   @Path("{appId}/actionForm/{role}/{action}")
   void getActionForm(@PathParam("appId") String instanceId, @PathParam("role") String role,
       @PathParam("action") String action, MethodCallback<WorkflowFormActionDTO> callback);
-
 }

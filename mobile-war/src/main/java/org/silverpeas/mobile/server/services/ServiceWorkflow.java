@@ -71,6 +71,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +105,23 @@ public class ServiceWorkflow extends AbstractRestWebService {
       groups.add(Administration.get().getGroup(id));
     }
     return groups;
+  }
+
+  private Map<String, String> getWorkflowUserRoles() throws Exception {
+    String[] roles = getOrganisationController().getUserProfiles(getUser().getId(), getComponentId());
+    TreeMap<String, String> userRoles = new TreeMap<String, String>();
+    Role[] allRoles = Workflow.getProcessModelManager().getProcessModel(getComponentId()).getRoles();
+
+    for (String role : roles) {
+      for (Role r : allRoles) {
+        if (r.getName().equals(role)){
+          userRoles.put(r.getName(), r.getLabel(r.getName(), getUser().getUserPreferences().getLanguage()));
+          break;
+        }
+      }
+    }
+
+    return userRoles;
   }
 
   @GET
@@ -191,12 +209,15 @@ public class ServiceWorkflow extends AbstractRestWebService {
   public WorkflowInstancesDTO getInstances(@PathParam("role") String userRole) throws Exception {
     WorkflowInstancesDTO data = new WorkflowInstancesDTO();
     try {
+      if (userRole.equals("null")) userRole = null;
       ArrayList<WorkflowInstanceDTO> instances = new ArrayList<WorkflowInstanceDTO>();
       User user = Workflow.getUserManager().getUser(getUser().getId());
       Role[] roles = Workflow.getProcessModelManager().getProcessModel(getComponentId()).getRoles();
       if (userRole == null || userRole.isEmpty()) {
         userRole = roles[0].getName();
       }
+      String[] pr = Administration.get().getAllProfilesNames(getComponentId());
+
       List<ProcessInstance> processInstances =
           Workflow.getProcessInstanceManager().getProcessInstances(getComponentId(), user, userRole);
 
@@ -208,13 +229,7 @@ public class ServiceWorkflow extends AbstractRestWebService {
         instances.add(populate(processInstance, userRole));
       }
       data.setInstances(instances);
-
-      TreeMap<String, String> r = new TreeMap<String, String>();
-      for (Role role : roles) {
-        r.put(role.getName(),
-            role.getLabel(role.getName(), getUser().getUserPreferences().getLanguage()));
-      }
-      data.setRoles(r);
+      data.setRoles(getWorkflowUserRoles());
       data.setRolesAllowedToCreate(new ArrayList(Arrays.asList(
           Workflow.getProcessModelManager().getProcessModel(getComponentId()).getCreationRoles())));
       data.setHeaderLabels(getHeaderLabels(getComponentId(), userRole));
