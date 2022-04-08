@@ -115,20 +115,27 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
   @Override
   public void gotoApp(final GotoAppEvent event) {
-    ServicesLocator.getServiceNavigation().getApp(event.getInstanceId(), null, null,
-        new AsyncCallback<ApplicationInstanceDTO>() {
-          @Override
-          public void onFailure(final Throwable caught) {
-            Notification.activityStop();
-            EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-          }
 
-          @Override
-          public void onSuccess(final ApplicationInstanceDTO applicationInstanceDTO) {
-            Notification.activityStop();
-            EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(applicationInstanceDTO));
-          }
-        });
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+        @Override
+        public void attempt() {
+          super.attempt();
+          ServicesLocator.getServiceNavigation().getApp(event.getInstanceId(), null, null, this);
+        }
+
+        @Override
+        public void onFailure(final Method method, final Throwable t) {
+          super.onFailure(method, t);
+          EventBus.getInstance().fireEvent(new ErrorEvent(t));
+        }
+
+        @Override
+        public void onSuccess(final Method method,
+            final ApplicationInstanceDTO applicationInstanceDTO) {
+          super.onSuccess(method, applicationInstanceDTO);
+          EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(applicationInstanceDTO));
+        }
+      };
   }
 
   @Override

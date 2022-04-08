@@ -24,8 +24,8 @@
 
 package org.silverpeas.mobile.client.common.app;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
@@ -33,6 +33,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.events.apps.AbstractAppEvent;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
@@ -112,18 +113,27 @@ public abstract class App implements AppEventHandler, NavigationEventHandler {
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    ServicesLocator.getServiceNavigation().getApp(event.getContent().getInstanceId(), null, null,
-        new AsyncCallback<ApplicationInstanceDTO>() {
-          @Override
-          public void onFailure(final Throwable throwable) {
-            EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-          }
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceNavigation().getApp(event.getContent().getInstanceId(), null, null, this);
+      }
 
-          @Override
-          public void onSuccess(final ApplicationInstanceDTO instance) {
-            NavigationAppInstanceChangedEvent evt = new NavigationAppInstanceChangedEvent(instance);
-            appInstanceChanged(evt);
-          }
-    });
+      @Override
+      public void onSuccess(final Method method,
+          final ApplicationInstanceDTO applicationInstanceDTO) {
+        super.onSuccess(method, applicationInstanceDTO);
+        NavigationAppInstanceChangedEvent evt = new NavigationAppInstanceChangedEvent(instance);
+        appInstanceChanged(evt);
+      }
+
+      @Override
+      public void onFailure(final Method method, final Throwable t) {
+        super.onFailure(method, t);
+        EventBus.getInstance().fireEvent(new ErrorEvent(t));
+      }
+    };
+
   }
 }

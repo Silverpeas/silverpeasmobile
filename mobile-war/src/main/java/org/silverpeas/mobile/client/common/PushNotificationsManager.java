@@ -28,6 +28,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ScriptElement;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 
 /**
  * @author svu
@@ -57,7 +58,7 @@ public class PushNotificationsManager {
   }
 
   public static void storeToken(String token) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         ServicesLocator.getServiceNavigation().storeTokenMessaging(token, this);

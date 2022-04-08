@@ -40,7 +40,8 @@ public class RestDispatcher implements Dispatcher {
   @Override
   public Request send(final Method method, final RequestBuilder builder) throws RequestException {
     builder.setTimeoutMillis(SpMobileRequestBuilder.TIMEOUT);
-    builder.setHeader("Authorization", "Bearer " + SpMobil.getUser().getToken());
+    builder.setHeader("Authorization", "Bearer " + AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
+
     AuthentificationManager.getInstance().injectAuthenticationHttpHeaders(builder);
     return builder.send();
   }

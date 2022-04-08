@@ -27,7 +27,6 @@ package org.silverpeas.mobile.client.apps.workflow;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -49,7 +48,6 @@ import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowPage;
 import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowPresentationPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.FormsHelper;
-import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
@@ -94,7 +92,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
-    if (event.getInstance().isWorkflow()) {
+    if (event.getInstance().getWorkflow()) {
       setApplicationInstance(event.getInstance());
       WorkflowPage page = new WorkflowPage();
       page.show();
@@ -105,25 +103,28 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   @Override
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component")) {
-      ServicesLocator.getServiceNavigation()
-          .isWorkflowApp(event.getContent().getInstanceId(), new AsyncCallback<Boolean>() {
-            @Override
-            public void onFailure(final Throwable t) {
-              EventBus.getInstance().fireEvent(new ErrorEvent(t));
-            }
 
-            @Override
-            public void onSuccess(final Boolean workflow) {
-              if (workflow) {
-                ApplicationInstanceDTO app = new ApplicationInstanceDTO();
-                app.setId(event.getContent().getInstanceId());
-                app.setWorkflow(true);
-                NavigationAppInstanceChangedEvent ev = new NavigationAppInstanceChangedEvent(app);
-                appInstanceChanged(ev);
-              }
-              Notification.activityStop();
-            }
-          });
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
+        @Override
+        public void attempt() {
+          super.attempt();
+          ServicesLocator.getServiceNavigation()
+              .isWorkflowApp(event.getContent().getInstanceId(), this);
+        }
+
+        @Override
+        public void onSuccess(final Method method, final Boolean workflow) {
+          super.onSuccess(method, workflow);
+          if (workflow) {
+            ApplicationInstanceDTO app = new ApplicationInstanceDTO();
+            app.setId(event.getContent().getInstanceId());
+            app.setWorkflow(true);
+            NavigationAppInstanceChangedEvent ev = new NavigationAppInstanceChangedEvent(app);
+            appInstanceChanged(ev);
+          }
+        }
+      };
+      action.attempt();
     } else if (event.getContent().getType().equals("ProcessInstance")) {
       ApplicationInstanceDTO app = new ApplicationInstanceDTO();
       app.setId(event.getContent().getInstanceId());

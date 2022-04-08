@@ -52,6 +52,7 @@ import org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp;
 import org.silverpeas.mobile.client.apps.hyperlink.HyperLinkApp;
 import org.silverpeas.mobile.client.apps.media.MediaApp;
 import org.silverpeas.mobile.client.apps.navigation.NavigationApp;
+import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import org.silverpeas.mobile.client.apps.news.NewsApp;
 import org.silverpeas.mobile.client.apps.notificationsbox.NotificationsBoxApp;
@@ -264,9 +265,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
         || (shortcutContentType != null && shortcutContentType.equals("Component") && shortcutAppId != null) ) {
       ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId, shortcutContributionId, shortcutRole);
     } else {
-      final String key = "MainHomePage_";
-      AsyncCallbackOnlineOrOffline action =
-          new AsyncCallbackOnlineOrOffline<HomePageDTO>(getOfflineAction(key)) {
+      MethodCallbackOnlineOnly action =
+          new MethodCallbackOnlineOnly<HomePageDTO>() {
 
             @Override
             public void attempt() {
@@ -274,15 +274,12 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
             }
 
             @Override
-            public void onSuccess(HomePageDTO result) {
-              super.onSuccess(result);
+            public void onSuccess(final Method method, final HomePageDTO result) {
+              super.onSuccess(method, result);
               // send event to main home page
               EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
 
-              LocalStorageHelper.store(key, HomePageDTO.class, result);
-
               // caching for offline mode
-              LocalStorageHelper.store(key, HomePageDTO.class, result);
               for (ShortCutLinkDTO shortCut : result.getShortCuts()) {
                 CacheStorageHelper.store(shortCut.getIcon());
               }
@@ -298,45 +295,26 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     SpMobil.getMainPage().setContent(new TermsOfServicePage());
   }
 
-  private static Command getOfflineAction(final String key) {
-    Command offlineAction = new Command() {
-
-      public void execute() {
-        HomePageDTO result = LocalStorageHelper.load(key, HomePageDTO.class);
-        if (result == null) {
-          result = new HomePageDTO();
-        }
-        // send event to main home page
-        EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
-      }
-    };
-    return offlineAction;
-  }
-
   /**
    * Load ids in SQL Web Storage.
    */
   public void loadIds(Command attempt) {
     if (token != null) {
-      ServicesLocator.getServiceNavigation().getUser(Cookies.getCookie("svpLogin"), Cookies.getCookie("defaultDomain"), new AsyncCallback
-          <DetailUserDTO>() {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
         @Override
-        public void onFailure(final Throwable throwable) {
-          FullUserDTO user = AuthentificationManager.getInstance().loadUser();
-          if (user != null) {
-            String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
-            if (password != null) {
-              login(user, password, attempt);
-            }
+        public void attempt() {
+          super.attempt();
+          FullUserDTO u = AuthentificationManager.getInstance().loadUser();
+          if (u != null) {
+            ServicesLocator.getServiceNavigation().getUser(u.getLogin(), u.getDomainId(), this);
           } else {
-            //Login
-            tabletGesture(false);
-            displayLoginPage(null);
+            tryToRelogin(attempt);
           }
         }
 
         @Override
-        public void onSuccess(final DetailUserDTO detailUserDTO) {
+        public void onSuccess(final Method method, final DetailUserDTO detailUserDTO) {
+          super.onSuccess(method, detailUserDTO);
           setUser(detailUserDTO);
           setUserProfile(LocalStorageHelper.load(AuthentificationManager.USER_PROFIL, UserProfileDTO.class));
 
@@ -357,7 +335,28 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
             }
           });
         }
-      });
+
+        @Override
+        public void onFailure(final Method method, final Throwable t) {
+          super.onFailure(method, t);
+          tryToRelogin(attempt);
+        }
+      };
+      action.attempt();
+    } else {
+      //Login
+      tabletGesture(false);
+      displayLoginPage(null);
+    }
+  }
+
+  private void tryToRelogin(final Command attempt) {
+    FullUserDTO user = AuthentificationManager.getInstance().loadUser();
+    if (user != null) {
+      String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
+      if (password != null) {
+        login(user, password, attempt);
+      }
     } else {
       //Login
       tabletGesture(false);
@@ -368,22 +367,25 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   public static void tabletGesture(boolean connected) {
     if (MobilUtils.isTablet()) {
       if (connected) {
-        ServicesLocator.getServiceNavigation().setTabletMode(new AsyncCallback<Boolean>() {
+
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
           @Override
-          public void onFailure(final Throwable throwable) {
-            Notification.activityStop();
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceNavigation().setTabletMode(this);
           }
 
           @Override
-          public void onSuccess(final Boolean desktopMode) {
-            Notification.activityStop();
+          public void onSuccess(final Method method, final Boolean desktopMode) {
+            super.onSuccess(method, desktopMode);
             if (desktopMode) {
               String url = Window.Location.getHref();
               url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());
               Window.Location.replace(url);
             }
           }
-        });
+        };
+        action.attempt();
       } else {
         ServicesLocator.getServiceConnection().setTabletMode(new AsyncCallback<Boolean>() {
           @Override

@@ -31,14 +31,20 @@ import java.io.Serializable;
  */
 public class RightDTO implements Serializable {
 
-  private static final long serialVersionUID = 1186851689918190659L;
-
   private boolean reader = false;
   private boolean writer = false;
   private boolean publisher = false;
   private boolean manager = false;
 
-  public boolean isWriter() {
+  public boolean getReader() {
+    return reader;
+  }
+
+  public void setReader(final boolean reader) {
+    this.reader = reader;
+  }
+
+  public boolean getWriter() {
     return writer;
   }
 
@@ -46,7 +52,7 @@ public class RightDTO implements Serializable {
     this.writer = writer;
   }
 
-  public boolean isPublisher() {
+  public boolean getPublisher() {
     return publisher;
   }
 
@@ -54,19 +60,11 @@ public class RightDTO implements Serializable {
     this.publisher = publisher;
   }
 
-  public boolean isManager() {
+  public boolean getManager() {
     return manager;
   }
 
   public void setManager(final boolean manager) {
     this.manager = manager;
-  }
-
-  public boolean isReader() {
-    return reader;
-  }
-
-  public void setReader(final boolean reader) {
-    this.reader = reader;
   }
 }

@@ -27,7 +27,7 @@ package org.silverpeas.mobile.client.apps.media;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaPreviewLoadEvent;
@@ -55,6 +55,7 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
@@ -99,26 +100,35 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void startWithContent(final ContentDTO content) {
-    ServicesLocator.getServiceNavigation()
-        .getApp(content.getInstanceId(), content.getId(), content.getType(), new AsyncCallback<ApplicationInstanceDTO>() {
-          @Override
-          public void onFailure(final Throwable caught) {
-            Notification.activityStop();
-            if (OfflineHelper.needToGoOffine(caught)) {
-              Notification.alert(globalMsg.needToBeOnline());
-            } else {
-              EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-            }
-          }
 
-          @Override
-          public void onSuccess(final ApplicationInstanceDTO app) {
-            Notification.activityStop();
-            commentable = app.isCommentable();
-            notifiable = app.isNotifiable();
-            displayContent(content);
-          }
-        });
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceNavigation()
+            .getApp(content.getInstanceId(), content.getId(), content.getType(), this);
+      }
+
+      @Override
+      public void onFailure(final Method method, final Throwable t) {
+        super.onFailure(method, t);
+        if (OfflineHelper.needToGoOffine(t)) {
+          Notification.alert(globalMsg.needToBeOnline());
+        } else {
+          EventBus.getInstance().fireEvent(new ErrorEvent(t));
+        }
+      }
+
+      @Override
+      public void onSuccess(final Method method,
+            final ApplicationInstanceDTO app) {
+        super.onSuccess(method, app);
+        commentable = app.getCommentable();
+        notifiable = app.getNotifiable();
+        displayContent(content);
+      }
+    };
+    action.attempt();
   }
 
   private void displayContent(ContentDTO contentSource) {
@@ -195,8 +205,8 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   @Override
   public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.gallery.name())) {
-      this.commentable = event.getInstance().isCommentable();
-      this.notifiable = event.getInstance().isNotifiable();
+      this.commentable = event.getInstance().getCommentable();
+      this.notifiable = event.getInstance().getNotifiable();
       MediaNavigationPage page = new MediaNavigationPage();
       page.setApp(this);
       page.setPageTitle(event.getInstance().getLabel());
@@ -216,23 +226,30 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         event.getContent().getType().equals(ContentsTypes.Streaming.name())) {
       startWithContent(event.getContent());
     } else if (event.getContent().getType().equals(ContentsTypes.Album.name())) {
-      ServicesLocator.getServiceNavigation().getApp(event.getContent().getInstanceId(), null, null,
-          new AsyncCallback<ApplicationInstanceDTO>() {
-            @Override
-            public void onFailure(final Throwable caught) {
-              Notification.activityStop();
-              EventBus.getInstance().fireEvent(new ErrorEvent(caught));
-            }
 
-            @Override
-            public void onSuccess(final ApplicationInstanceDTO applicationInstanceDTO) {
-              Notification.activityStop();
-              MediaNavigationPage page = new MediaNavigationPage();
-              page.setApp(MediaApp.this);
-              page.init(event.getContent().getInstanceId(), event.getContent().getId(), applicationInstanceDTO.getRights());
-              page.show();
-            }
-          });
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+        @Override
+        public void attempt() {
+          super.attempt();
+          ServicesLocator.getServiceNavigation().getApp(event.getContent().getInstanceId(), null, null, this);
+        }
+
+        @Override
+        public void onFailure(final Method method, final Throwable t) {
+          super.onFailure(method, t);
+          EventBus.getInstance().fireEvent(new ErrorEvent(t));
+        }
+
+        @Override
+        public void onSuccess(final Method method,
+            final ApplicationInstanceDTO applicationInstanceDTO) {
+          super.onSuccess(method, applicationInstanceDTO);
+          MediaNavigationPage page = new MediaNavigationPage();
+          page.setApp(MediaApp.this);
+          page.init(event.getContent().getInstanceId(), event.getContent().getId(), applicationInstanceDTO.getRights());
+          page.show();
+        }
+      };
     }
   }
 

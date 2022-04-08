@@ -172,7 +172,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       super.showContent(event);
     } else if (event.getContent().getType().equals(ContentsTypes.Event.name())) {
       final String contributionId = event.getContent().getContributionId();
-      AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
         @Override
         public void attempt() {
@@ -181,8 +181,9 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         }
 
         @Override
-        public void onSuccess(final ApplicationInstanceDTO app) {
-          super.onSuccess(app);
+        public void onSuccess(final Method method,
+            final ApplicationInstanceDTO app) {
+          super.onSuccess(method, app);
           setApplicationInstance(app);
           NavigationAppInstanceChangedEvent e1 = new NavigationAppInstanceChangedEvent(getApplicationInstance());
           appInstanceChanged(e1);

@@ -78,6 +78,7 @@
               </modules>
               <extraJvmArgs>-Xms1024m -Xmx2048m</extraJvmArgs>
               <localWorkers>3</localWorkers>
+              <logLevel>INFO</logLevel>
             </configuration>
             <goals>
               <goal>compile</goal>

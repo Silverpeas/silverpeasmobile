@@ -91,7 +91,7 @@ public class MyLinkDTO implements Serializable {
     this.url = url;
   }
 
-  public boolean isVisible() {
+  public boolean getVisible() {
     return visible;
   }
 
@@ -99,7 +99,7 @@ public class MyLinkDTO implements Serializable {
     this.visible = visible;
   }
 
-  public boolean isPopup() {
+  public boolean getPopup() {
     return popup;
   }
 

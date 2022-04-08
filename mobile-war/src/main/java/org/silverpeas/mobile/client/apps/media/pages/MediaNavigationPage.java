@@ -92,7 +92,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     Notification.activityStart();
     if (isVisible() && ((event.getLocationId() == null && rootAlbumId == null) || event.getLocationId().equals(rootAlbumId))) {
       list.clear();
-      if (rights.isWriter() || rights.isPublisher() || rights.isManager()) {
+      if (rights.getWriter() || rights.getPublisher() || rights.getManager()) {
         if (rootAlbumId != null) list.add(buttonImport);
       }
       List<BaseDTO> dataItems = event.getData();

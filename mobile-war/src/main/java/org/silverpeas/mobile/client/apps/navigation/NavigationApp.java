@@ -25,7 +25,7 @@
 package org.silverpeas.mobile.client.apps.navigation;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppEventHandler;
@@ -36,11 +36,9 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import org.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
@@ -79,9 +77,8 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
     @Override
     public void loadSpacesAndApps(final LoadSpacesAndAppsEvent event) {
       //TODO : replace call getSpaceAndApps by getHomePage
-      final String key = "spaceapp_" + event.getRootSpaceId();
 
-      AsyncCallbackOnlineOrOffline action = new AsyncCallbackOnlineOrOffline<HomePageDTO>(getOfflineAction(key)) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<HomePageDTO>() {
 
         @Override
         public void attempt() {
@@ -89,28 +86,12 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
         }
 
         @Override
-        public void onSuccess(HomePageDTO result) {
-          Notification.activityStop();
-          super.onSuccess(result);
+        public void onSuccess(final Method method, final HomePageDTO result) {
+          super.onSuccess(method, result);
           EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
-          LocalStorageHelper.store(key, HomePageDTO.class, result);
         }
       };
       action.attempt();
-    }
-
-    private Command getOfflineAction(final String key) {
-        Command offlineAction = new Command() {
-
-            public void execute() {
-                HomePageDTO result = LocalStorageHelper.load(key, HomePageDTO.class);
-                if (result == null) {
-                    result = new HomePageDTO();
-                }
-                EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
-            }
-        };
-        return offlineAction;
     }
 
   @Override

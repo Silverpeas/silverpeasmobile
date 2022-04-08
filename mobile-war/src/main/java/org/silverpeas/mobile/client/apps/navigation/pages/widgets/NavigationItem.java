@@ -75,7 +75,7 @@ public class NavigationItem extends Composite {
         setStyleName("app-pageWeb");
       } else if (type.equalsIgnoreCase(Apps.blog.name())) {
         setStyleName("app-blog");
-      } else if (((ApplicationInstanceDTO) data).isWorkflow()) {
+      } else if (((ApplicationInstanceDTO) data).getWorkflow()) {
         setStyleName("app-workflow");
       } else if (type.equalsIgnoreCase(Apps.hyperlink.name())) {
         setStyleName("app-link");

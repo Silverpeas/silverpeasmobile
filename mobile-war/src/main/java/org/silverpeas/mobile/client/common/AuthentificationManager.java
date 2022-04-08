@@ -24,8 +24,13 @@
 
 package org.silverpeas.mobile.client.common;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
@@ -36,6 +41,7 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.event.authentication.AuthenticationErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -71,7 +77,8 @@ public class AuthentificationManager {
     return LocalStorageHelper.load(key, String.class);
   }
 
-  public void storeUser(final DetailUserDTO user, final UserProfileDTO profil, String login, String password, String domainId) {
+  public void storeUser(final DetailUserDTO user, final UserProfileDTO profil, String login,
+      String password, String domainId) {
     String encryptedPassword = null;
     try {
       encryptedPassword = encryptPassword(password);
@@ -111,6 +118,7 @@ public class AuthentificationManager {
 
   /**
    * Decrypt password in local storage.
+   *
    * @param passwordEncrysted
    * @return
    */
@@ -133,7 +141,8 @@ public class AuthentificationManager {
     return encryptedPassword;
   }
 
-  public void authenticateOnSilverpeas(String login, String password, String domainId, Command attempt) {
+  public void authenticateOnSilverpeas(String login, String password, String domainId,
+      Command attempt) {
     Notification.activityStart();
     ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
 
@@ -146,25 +155,28 @@ public class AuthentificationManager {
               SpMobil.displayMainPage();
             } else if (statusError == 401 || statusError == 500) {
 
-              ServicesLocator.getServiceConnection().userExist(login, domainId, new AsyncCallback<Boolean>() {
-                @Override
-                public void onFailure(final Throwable throwable) {
-                  EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
-                }
+              ServicesLocator.getServiceConnection()
+                  .userExist(login, domainId, new AsyncCallback<Boolean>() {
+                    @Override
+                    public void onFailure(final Throwable throwable) {
+                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+                    }
 
-                @Override
-                public void onSuccess(final Boolean exist) {
-                  if (exist) {
-                    AuthenticationException ex = new AuthenticationException(AuthenticationException.AuthenticationError.PwdNotAvailable);
-                    ex.setLogin(login);
-                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
-                  } else {
-                    AuthenticationException ex = new AuthenticationException(AuthenticationException.AuthenticationError.LoginNotAvailable);
-                    ex.setLogin(login);
-                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
-                  }
-                }
-              });
+                    @Override
+                    public void onSuccess(final Boolean exist) {
+                      if (exist) {
+                        AuthenticationException ex = new AuthenticationException(
+                            AuthenticationException.AuthenticationError.PwdNotAvailable);
+                        ex.setLogin(login);
+                        EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+                      } else {
+                        AuthenticationException ex = new AuthenticationException(
+                            AuthenticationException.AuthenticationError.LoginNotAvailable);
+                        ex.setLogin(login);
+                        EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+                      }
+                    }
+                  });
             } else if (statusError == 0) {
               loadUser();
               SpMobil.displayMainPage();
@@ -179,28 +191,17 @@ public class AuthentificationManager {
             LocalStorageHelper.clear(); // clear offline data
             AuthentificationManager.getInstance().clearLocalStorage();
 
-            AuthentificationManager.getInstance().addHeader("X-STKN", method.getResponse().getHeader("X-STKN"));
-            AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session", method.getResponse().getHeader("X-Silverpeas-Session"));
+            AuthentificationManager.getInstance()
+                .addHeader("X-STKN", method.getResponse().getHeader("X-STKN"));
+            AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session",
+                method.getResponse().getHeader("X-Silverpeas-Session"));
 
             SpMobil.setUserProfile(userProfile);
-            ServicesLocator.getServiceConnection().login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
+            ServicesLocator.getServiceConnection()
+                .login(login, password, domainId, new AsyncCallback<DetailUserDTO>() {
 
-              @Override
-              public void onFailure(final Throwable throwable) {
-                if (throwable instanceof AuthenticationException) {
-                  EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
-                } else {
-                  EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-                }
-              }
-
-              @Override
-              public void onSuccess(final DetailUserDTO user) {
-                SpMobil.setUser(user);
-
-                ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
                   @Override
-                  public void onFailure(final Method method, final Throwable throwable) {
+                  public void onFailure(final Throwable throwable) {
                     if (throwable instanceof AuthenticationException) {
                       EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
                     } else {
@@ -209,24 +210,39 @@ public class AuthentificationManager {
                   }
 
                   @Override
-                  public void onSuccess(final Method method, final Boolean showTermsOfServices) {
+                  public void onSuccess(final DetailUserDTO user) {
+                    SpMobil.setUser(user);
 
-                    Notification.activityStop();
-                    AuthentificationManager.getInstance().storeUser(user, userProfile, login, password,
-                        domainId);
-                    if (showTermsOfServices) {
-                      SpMobil.displayTermsOfServicePage();
-                    } else {
-                      if (attempt == null) {
-                        SpMobil.displayMainPage();
-                      } else {
-                        attempt.execute();
+                    ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
+                      @Override
+                      public void onFailure(final Method method, final Throwable throwable) {
+                        if (throwable instanceof AuthenticationException) {
+                          EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+                        } else {
+                          EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                        }
                       }
-                    }
+
+                      @Override
+                      public void onSuccess(final Method method,
+                          final Boolean showTermsOfServices) {
+
+                        Notification.activityStop();
+                        AuthentificationManager.getInstance()
+                            .storeUser(user, userProfile, login, password, domainId);
+                        if (showTermsOfServices) {
+                          SpMobil.displayTermsOfServicePage();
+                        } else {
+                          if (attempt == null) {
+                            SpMobil.displayMainPage();
+                          } else {
+                            attempt.execute();
+                          }
+                        }
+                      }
+                    });
                   }
                 });
-              }
-            });
           }
         });
   }
@@ -236,27 +252,46 @@ public class AuthentificationManager {
       builder.setHeader(AuthentificationManager.XSTKN, getHeader(AuthentificationManager.XSTKN));
     }
     if (getHeader(AuthentificationManager.XSilverpeasSession) != null) {
-      builder.setHeader(AuthentificationManager.XSilverpeasSession, getHeader(AuthentificationManager.XSilverpeasSession));
+      builder.setHeader(AuthentificationManager.XSilverpeasSession,
+          getHeader(AuthentificationManager.XSilverpeasSession));
     }
   }
 
   public void logout() {
-    ServicesLocator.getServiceNavigation().logout(new AsyncCallback<Void>() {
-      @Override
-      public void onFailure(final Throwable throwable) {
-        Notification.activityStop();
-      }
-      @Override
-      public void onSuccess(final Void aVoid) {
-        AuthentificationManager.getInstance().clearLocalStorage();
-        PageHistory.getInstance().clear();
-        Notification.activityStop();
-        ConnexionPage connexionPage = new ConnexionPage();
-        RootPanel.get().clear();
-        RootPanel.get().add(connexionPage);
-        SpMobil.destroyMainPage();
-      }
-    });
-  }
 
+    // clear app cache
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceNavigation().clearAppCache(this);
+      }
+    };
+    action.attempt();
+
+    // logout
+    RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/silverpeas/Logout");
+    try {
+      builder.sendRequest("", new RequestCallback() {
+        @Override
+        public void onResponseReceived(final Request request, final Response response) {
+          Notification.activityStop();
+          AuthentificationManager.getInstance().clearLocalStorage();
+          PageHistory.getInstance().clear();
+          Notification.activityStop();
+          ConnexionPage connexionPage = new ConnexionPage();
+          RootPanel.get().clear();
+          RootPanel.get().add(connexionPage);
+          SpMobil.destroyMainPage();
+        }
+
+        @Override
+        public void onError(final Request request, final Throwable throwable) {
+
+        }
+      });
+    } catch (RequestException e) {
+      Window.alert(e.getMessage());
+    }
+  }
 }

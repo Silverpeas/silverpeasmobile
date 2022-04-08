@@ -95,7 +95,7 @@ public class NewsDTO extends BaseDTO implements Serializable {
     return instanceId;
   }
 
-  public boolean isManagable() {
+  public boolean getManagable() {
     return managable;
   }
 
@@ -104,7 +104,7 @@ public class NewsDTO extends BaseDTO implements Serializable {
   }
 
 
-  public boolean isVisible() {
+  public boolean getVisible() {
     return visible;
   }
 
@@ -112,7 +112,7 @@ public class NewsDTO extends BaseDTO implements Serializable {
     this.visible = visible;
   }
 
-  public boolean isDraft() {
+  public boolean getDraft() {
     return draft;
   }
 

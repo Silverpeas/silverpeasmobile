@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.news.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -67,10 +66,10 @@ public class NewsItem extends Composite implements ClickHandler {
     this.max = max;
     this.data = data;
     String status = "";
-    if (data.isManagable()) {
-      if (data.isDraft()) {
+    if (data.getManagable()) {
+      if (data.getDraft()) {
         status = " ("+msg.draft()+")";
-      } else if (!data.isVisible()) {
+      } else if (!data.getVisible()) {
         status = " ("+msg.notVisible()+")";
       }
     }

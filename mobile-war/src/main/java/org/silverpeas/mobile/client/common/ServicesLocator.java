@@ -31,8 +31,6 @@ import org.silverpeas.mobile.client.common.network.RestAuthenticationDispatcher;
 import org.silverpeas.mobile.client.common.network.RestDispatcher;
 import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
 import org.silverpeas.mobile.shared.services.*;
-import org.silverpeas.mobile.shared.services.navigation.ServiceNavigation;
-import org.silverpeas.mobile.shared.services.navigation.ServiceNavigationAsync;
 import org.silverpeas.mobile.shared.services.rest.*;
 
 public class ServicesLocator {
@@ -43,8 +41,7 @@ public class ServicesLocator {
       (ServiceConnectionAsync) GWT.create(ServiceConnection.class);
   private static ServiceContact serviceContact = GWT.create(ServiceContact.class);
   private static ServiceTask serviceTasks = GWT.create(ServiceTask.class);
-  private static ServiceNavigationAsync serviceNavigation =
-      (ServiceNavigationAsync) GWT.create(ServiceNavigation.class);
+  private static ServiceNavigation serviceNavigation = GWT.create(ServiceNavigation.class);
   private static ServiceRSE serviceRSE = GWT.create(ServiceRSE.class);
   private static ServiceDocuments serviceDocuments = GWT.create(ServiceDocuments.class);
   private static ServiceMediaAsync serviceMedia =
@@ -207,9 +204,8 @@ public class ServicesLocator {
     return serviceRSE;
   }
 
-  public static ServiceNavigationAsync getServiceNavigation() {
-    ((ServiceDefTarget) serviceNavigation).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceNavigation);
+  public static ServiceNavigation getServiceNavigation() {
+    initRestContext();
     return serviceNavigation;
   }
 

@@ -31,7 +31,6 @@ import java.io.Serializable;
 
 public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
 	private String type;
   private RightDTO rights;
   private boolean commentable;
@@ -40,12 +39,13 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   private boolean workflow;
   private String extraId;
 
-  public String getType(){
-		return type;
-	}
-	public void setType(String type){
-		this.type = type;
-	}
+  public String getType() {
+    return type;
+  }
+
+  public void setType(final String type) {
+    this.type = type;
+  }
 
   public RightDTO getRights() {
     return rights;
@@ -55,7 +55,7 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
     this.rights = rights;
   }
 
-  public boolean isCommentable() {
+  public boolean getCommentable() {
     return commentable;
   }
 
@@ -63,31 +63,35 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
     this.commentable = commentable;
   }
 
+  public boolean getNotifiable() {
+    return notifiable;
+  }
+
+  public void setNotifiable(final boolean notifiable) {
+    this.notifiable = notifiable;
+  }
+
+  public boolean getAbleToStoreContent() {
+    return ableToStoreContent;
+  }
+
   public void setAbleToStoreContent(final boolean ableToStoreContent) {
     this.ableToStoreContent = ableToStoreContent;
   }
 
-  public boolean isAbleToStoreContent() {
-    return ableToStoreContent;
-  }
-
-  public boolean isNotifiable() {
-    return notifiable;
-  }
-
-  public void setNotifiable(boolean notifiable) {
-    this.notifiable = notifiable;
-  }
-
-  public void setWorkflow(boolean workflow) {
-    this.workflow = workflow;
-  }
-
-  public boolean isWorkflow() {
+  public boolean getWorkflow() {
     return workflow;
   }
 
-  public void setExtraId(final String extraId) { this.extraId = extraId; }
+  public void setWorkflow(final boolean workflow) {
+    this.workflow = workflow;
+  }
 
-  public String getExtraId() { return extraId; }
+  public String getExtraId() {
+    return extraId;
+  }
+
+  public void setExtraId(final String extraId) {
+    this.extraId = extraId;
+  }
 }

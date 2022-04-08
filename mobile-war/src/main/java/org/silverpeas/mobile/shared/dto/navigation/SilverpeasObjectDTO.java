@@ -24,28 +24,29 @@
 
 package org.silverpeas.mobile.shared.dto.navigation;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.io.Serializable;
+
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = ApplicationInstanceDTO.class, name = "ApplicationInstanceDTO"),
+    @JsonSubTypes.Type(value = SpaceDTO.class, name = "SpaceDTO")
+})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 
 public abstract class SilverpeasObjectDTO implements Serializable, Comparable<SilverpeasObjectDTO> {
 
-  private static final long serialVersionUID = 1L;
   private String id;
   private String label;
   private Integer orderNum;
 
-  public int getOrderNum() {
-    return orderNum;
-  }
-
-  public void setOrderNum(final int orderNum) {
-    this.orderNum = orderNum;
-  }
 
   public String getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(final String id) {
     this.id = id;
   }
 
@@ -53,8 +54,16 @@ public abstract class SilverpeasObjectDTO implements Serializable, Comparable<Si
     return label;
   }
 
-  public void setLabel(String label) {
+  public void setLabel(final String label) {
     this.label = label;
+  }
+
+  public Integer getOrderNum() {
+    return orderNum;
+  }
+
+  public void setOrderNum(final Integer orderNum) {
+    this.orderNum = orderNum;
   }
 
   @Override

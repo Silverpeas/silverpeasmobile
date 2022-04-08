@@ -51,7 +51,6 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -101,7 +100,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   }
 
   private void loadAppInstance(final ContentDTO content, Command callback) {
-    AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<ApplicationInstanceDTO>() {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
       @Override
       public void attempt() {
@@ -110,8 +109,9 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
 
       @Override
-      public void onSuccess(final ApplicationInstanceDTO app) {
-        super.onSuccess(app);
+      public void onSuccess(final Method method,
+          final ApplicationInstanceDTO app) {
+        super.onSuccess(method, app);
         setApplicationInstance(app);
         displayContent(content);
         callback.execute();
@@ -254,9 +254,9 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       public void onSuccess(final Method method, final PublicationDTO result) {
         super.onSuccess(method, result);
         EventBus.getInstance().fireEvent(
-            new PublicationLoadedEvent(result, getApplicationInstance().isCommentable(),
-                getApplicationInstance().isAbleToStoreContent(),
-                getApplicationInstance().isNotifiable(), event.getContent().getType()));
+            new PublicationLoadedEvent(result, getApplicationInstance().getCommentable(),
+                getApplicationInstance().getAbleToStoreContent(),
+                getApplicationInstance().getNotifiable(), event.getContent().getType()));
 
       }
     };
