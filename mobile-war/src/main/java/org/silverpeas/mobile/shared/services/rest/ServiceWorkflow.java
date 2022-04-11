@@ -43,8 +43,8 @@ public interface ServiceWorkflow extends RestService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/userField/{actionName}/{fieldName}/{role}")
-  void getUserField(@PathParam("appId") String instanceId,
+  @Path("{appId}/userField/{instanceId}/{actionName}/{fieldName}/{role}")
+  void getUserField(@PathParam("appId") String appId, @PathParam("instanceId") String instanceId,
       @PathParam("actionName") String actionName, @PathParam("fieldName") String fieldName,
       @PathParam("role") String role, MethodCallback<List<BaseDTO>> callback);
 
@@ -56,13 +56,14 @@ public interface ServiceWorkflow extends RestService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/presentationForm/{role}")
-  void getPresentationForm(@PathParam("appId") String instanceId, @PathParam("role") String role,
+  @Path("{appId}/presentationForm/{instanceId}/{role}")
+  void getPresentationForm(@PathParam("appId") String appId,
+      @PathParam("instanceId") String instanceId, @PathParam("role") String role,
       MethodCallback<WorkflowInstancePresentationFormDTO> callback);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/actionForm/{role}/{action}")
-  void getActionForm(@PathParam("appId") String instanceId, @PathParam("role") String role,
+  @Path("{appId}/actionForm/{instanceId}/{role}/{action}")
+  void getActionForm(@PathParam("appId") String appId, @PathParam("instanceId") String instanceId, @PathParam("role") String role,
       @PathParam("action") String action, MethodCallback<WorkflowFormActionDTO> callback);
 }

@@ -126,13 +126,13 @@ public class ServiceWorkflow extends AbstractRestWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("userField/{actionName}/{fieldName}/{role}")
-  public List<BaseDTO> getUserField(@PathParam("actionName") String actionName,
+  @Path("userField/{instanceId}/{actionName}/{fieldName}/{role}")
+  public List<BaseDTO> getUserField(@PathParam("instanceId") String instanceId, @PathParam("actionName") String actionName,
       @PathParam("fieldName") String fieldName, @PathParam("role") String role) throws Exception {
     HashSet<BaseDTO> result = new HashSet<BaseDTO>();
     try {
       boolean group = false;
-      ProcessModel model = Workflow.getProcessModelManager().getProcessModel(getComponentId());
+      ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
 
       org.silverpeas.core.workflow.api.model.Form form = null;
       if (actionName.equals("create")) {
@@ -242,17 +242,18 @@ public class ServiceWorkflow extends AbstractRestWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("presentationForm/{role}")
-  public WorkflowInstancePresentationFormDTO getPresentationForm(@PathParam("role") String role)
+  @Path("presentationForm/{instanceId}/{role}")
+  public WorkflowInstancePresentationFormDTO getPresentationForm(@PathParam("instanceId") String instanceId, @PathParam("role") String role)
       throws Exception {
     WorkflowInstancePresentationFormDTO dto = new WorkflowInstancePresentationFormDTO();
     List<FieldPresentationDTO> fields = new ArrayList<FieldPresentationDTO>();
     Map<String, String> mapActions = new TreeMap<String, String>();
     try {
       ProcessInstance instance =
-          Workflow.getProcessInstanceManager().getProcessInstance(getComponentId());
+          Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
       Form form = instance.getProcessModel().getPresentationForm("presentationForm", role,
           getUser().getUserPreferences().getLanguage());
+      dto.setId(instance.getInstanceId());
       DataRecord data = instance.getFormRecord("presentationForm", role,
           getUser().getUserPreferences().getLanguage());
 
@@ -355,8 +356,8 @@ public class ServiceWorkflow extends AbstractRestWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("actionForm/{role}/{action}")
-  public WorkflowFormActionDTO getActionForm(@PathParam("role") String role, @PathParam("action") String action)
+  @Path("actionForm/{instanceId}/{role}/{action}")
+  public WorkflowFormActionDTO getActionForm(@PathParam("instanceId") String instanceId, @PathParam("role") String role, @PathParam("action") String action)
       throws Exception {
     WorkflowFormActionDTO dto = new WorkflowFormActionDTO();
     try {
@@ -368,8 +369,8 @@ public class ServiceWorkflow extends AbstractRestWebService {
         dto.setId(model.getModelId());
       } else {
         ProcessInstance instance =
-            Workflow.getProcessInstanceManager().getProcessInstance(getComponentId());
-        String instanceId = instance.getModelId();
+            Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
+
         form = instance.getProcessModel().getActionForm(action);
         data = instance.getFolder();
         dto.setId(instance.getInstanceId());

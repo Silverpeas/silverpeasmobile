@@ -73,7 +73,7 @@ public class WorkflowPresentationPage extends PageContent {
     for (Map.Entry<String, String> action : data.getActions().entrySet()) {
       ActionButton act = new ActionButton();
       act.setId(action.getKey());
-      act.init(data.getInstanceId(), action.getKey(), action.getValue(), data.getState());
+      act.init(data.getId(), action.getKey(), action.getValue(), data.getState());
       actionsMenu.addAction(act);
     }
   }

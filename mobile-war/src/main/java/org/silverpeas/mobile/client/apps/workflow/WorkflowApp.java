@@ -171,7 +171,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
           public void attempt() {
             super.attempt();
             ServicesLocator.getServiceWorkflow()
-                .getPresentationForm(event.getId(), event.getRole(), this);
+                .getPresentationForm(getApplicationInstance().getId() ,event.getId(), event.getRole(), this);
           }
 
           @Override
@@ -195,7 +195,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       public void attempt() {
         super.attempt();
         ServicesLocator.getServiceWorkflow()
-            .getActionForm(event.getInstanceId(), currentRole, event.getActionName(), this);
+            .getActionForm(getApplicationInstance().getId(), event.getInstanceId(), currentRole, event.getActionName(), this);
       }
 
       @Override
@@ -217,7 +217,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       public void attempt() {
         super.attempt();
         ServicesLocator.getServiceWorkflow()
-            .getUserField(event.getInstanceId(), event.getActionName(), event.getFieldName(),
+            .getUserField(getApplicationInstance().getId(), event.getInstanceId(), event.getActionName(), event.getFieldName(),
                 currentRole, this);
       }
 
