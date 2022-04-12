@@ -39,7 +39,9 @@ public class AuthenticationException extends Exception {
   }
 
   public enum AuthenticationError {
-    BadCredential, Host, PwdNotAvailable, NotAuthenticate, LoginNotAvailable, CanCreateMainSessionController, PwdExpired, PwdMustBeChanged;
+    BadCredential, Host, PwdNotAvailable, NotAuthenticate, LoginNotAvailable,
+    CanCreateMainSessionController, PwdExpired, PwdMustBeChanged, PwdMustBeChangedOnFirstLogin,
+    UserAccountBlocked, UserAccountDeactivated;
   }
 
   public AuthenticationException() {

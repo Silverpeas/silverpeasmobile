@@ -37,8 +37,9 @@ public class ServicesLocator {
   private static SpMobileRpcRequestBuilder builder = new SpMobileRpcRequestBuilder();
   private static RestDispatcher dispatcher = new RestDispatcher();
 
-  private static ServiceConnectionAsync serviceConnection =
-      (ServiceConnectionAsync) GWT.create(ServiceConnection.class);
+  private static org.silverpeas.mobile.shared.services.rest.ServiceConnection serviceConnectionRest = GWT.create(
+      org.silverpeas.mobile.shared.services.rest.ServiceConnection.class);
+
   private static ServiceContact serviceContact = GWT.create(ServiceContact.class);
   private static ServiceTask serviceTasks = GWT.create(ServiceTask.class);
   private static ServiceNavigation serviceNavigation = GWT.create(ServiceNavigation.class);
@@ -214,19 +215,14 @@ public class ServicesLocator {
     return serviceTasks;
   }
 
-  public static ServiceConnectionAsync getServiceConnection() {
-    ((ServiceDefTarget) serviceConnection).setRpcRequestBuilder(builder);
-    changeAuthentificationServiceEntryPoint((ServiceDefTarget) serviceConnection);
-    return serviceConnection;
+  public static ServiceConnection getServiceConnection() {
+    initRestContext();
+    return serviceConnectionRest;
   }
 
   public static ServiceContact getServiceContact() {
     initRestContext();
     return serviceContact;
-  }
-
-  private static void changeServiceEntryPoint(ServiceDefTarget service) {
-    changeServiceEntryPoint(service, true);
   }
 
   private static void changeServiceEntryPoint(ServiceDefTarget service, boolean guiWaiting) {
@@ -238,11 +234,4 @@ public class ServicesLocator {
     service.setServiceEntryPoint(serviceEntryPoint);
   }
 
-  private static void changeAuthentificationServiceEntryPoint(ServiceDefTarget service) {
-    String serviceEntryPoint = service.getServiceEntryPoint();
-    if (!serviceEntryPoint.contains("AuthenticationServlet")) {
-      serviceEntryPoint = serviceEntryPoint.replace("spmobile", "AuthenticationServlet/spmobile");
-    }
-    service.setServiceEntryPoint(serviceEntryPoint);
-  }
 }

@@ -36,7 +36,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
@@ -105,14 +105,16 @@ public class ProfileApp extends App {
                 @Override
                 public void onSuccess(final Method method, final PasswordControlDTO passwordControlDTO) {
                     if (passwordControlDTO.isCorrect()) {
-                      AsyncCallbackOnlineOnly action = new AsyncCallbackOnlineOnly<Void>() {
+                      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
                         @Override
                         public void attempt() {
+                          super.attempt();
                           ServicesLocator.getServiceConnection().changePwd(pwd, this);
                         }
 
-                        public void onSuccess(Void result) {
-                          super.onSuccess(result);
+                        @Override
+                        public void onSuccess(final Method method, final Void unused) {
+                          super.onSuccess(method, unused);
                           EventBus.getInstance().fireEvent(new PageEvent(ProfileApp.this, ProfileEvents.POSTED.toString(), ""));
                         }
                       };

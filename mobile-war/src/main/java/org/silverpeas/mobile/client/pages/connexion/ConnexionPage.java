@@ -27,11 +27,9 @@ package org.silverpeas.mobile.client.pages.connexion;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -40,18 +38,17 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
-import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -110,6 +107,8 @@ public class ConnexionPage extends PageContent {
     domains.getElement().setId("DomainId");
     form.getElement().setId("formLogin");
     form.getElement().setAttribute("autocomplete","off");
+
+
 
     Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
@@ -184,29 +183,20 @@ public class ConnexionPage extends PageContent {
    * Récupération de la liste des domaines.
    */
   private void loadDomains() {
-    Command offlineAction = new Command() {
+
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<DomainDTO>>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceConnection().getDomains(this);
+      }
 
       @Override
-      public void execute() {
-        List<DomainDTO> result = loadInLocalStorage();
+      public void onSuccess(final Method method, final List<DomainDTO> result) {
+        super.onSuccess(method, result);
         displayDomains(result);
       }
     };
-
-    AsyncCallbackOnlineOrOffline action =
-        new AsyncCallbackOnlineOrOffline<List<DomainDTO>>(offlineAction) {
-          @Override
-          public void attempt() {
-            ServicesLocator.getServiceConnection().getDomains(this);
-          }
-
-          @Override
-          public void onSuccess(List<DomainDTO> result) {
-            super.onSuccess(result);
-            storeInLocalStorage(result);
-            displayDomains(result);
-          }
-        };
     action.attempt();
   }
 
@@ -226,19 +216,6 @@ public class ConnexionPage extends PageContent {
     if (domains.getItemCount() == 1) {
       domains.setVisible(false);
     }
-  }
-
-  private List<DomainDTO> loadInLocalStorage() {
-    Storage storage = Storage.getLocalStorageIfSupported();
-    List<DomainDTO> result = LocalStorageHelper.load("domains", List.class);
-    if (result == null) {
-      result = new ArrayList<DomainDTO>();
-    }
-    return result;
-  }
-
-  private void storeInLocalStorage(final List<DomainDTO> result) {
-    LocalStorageHelper.store("domains", List.class, result);
   }
 
 }

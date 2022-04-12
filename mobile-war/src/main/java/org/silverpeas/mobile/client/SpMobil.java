@@ -34,9 +34,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.fusesource.restygwt.client.Method;
@@ -52,7 +50,6 @@ import org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp;
 import org.silverpeas.mobile.client.apps.hyperlink.HyperLinkApp;
 import org.silverpeas.mobile.client.apps.media.MediaApp;
 import org.silverpeas.mobile.client.apps.navigation.NavigationApp;
-import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import org.silverpeas.mobile.client.apps.news.NewsApp;
 import org.silverpeas.mobile.client.apps.notificationsbox.NotificationsBoxApp;
@@ -75,7 +72,6 @@ import org.silverpeas.mobile.client.common.event.authentication.AuthenticationEv
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.mobil.Orientation;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackOnlineOrOffline;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
@@ -387,22 +383,24 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
         };
         action.attempt();
       } else {
-        ServicesLocator.getServiceConnection().setTabletMode(new AsyncCallback<Boolean>() {
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
           @Override
-          public void onFailure(final Throwable throwable) {
-            Notification.activityStop();
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceConnection().setTabletMode(this);
           }
 
           @Override
-          public void onSuccess(final Boolean desktopMode) {
-            Notification.activityStop();
+          public void onSuccess(final Method method, final Boolean desktopMode) {
+            super.onSuccess(method, desktopMode);
             if (desktopMode) {
               String url = Window.Location.getHref();
               url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());
               Window.Location.replace(url);
             }
           }
-        });
+        };
+        action.attempt();
       }
     }
   }

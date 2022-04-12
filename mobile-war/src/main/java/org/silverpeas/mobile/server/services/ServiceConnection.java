@@ -31,19 +31,37 @@ import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
+import org.silverpeas.core.security.authentication.exception.AuthenticationPasswordExpired;
+import org.silverpeas.core.security.authentication.exception.AuthenticationPasswordMustBeChangedAtNextLogon;
+import org.silverpeas.core.security.authentication.exception.AuthenticationPasswordMustBeChangedOnFirstLogin;
+import org.silverpeas.core.security.authentication.exception.AuthenticationPwdNotAvailException;
+import org.silverpeas.core.security.authentication.exception.AuthenticationUserAccountBlockedException;
+import org.silverpeas.core.security.authentication.exception.AuthenticationUserAccountDeactivatedException;
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
+import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
-import org.silverpeas.mobile.shared.exceptions.NavigationException;
-import org.silverpeas.mobile.shared.services.ServiceConnection;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,22 +69,33 @@ import java.util.List;
  * Service de gestion des connexions.
  * @author svuillet
  */
-public class ServiceConnectionImpl extends AbstractAuthenticateService
-    implements ServiceConnection {
+@WebService
+@Path(ServiceConnection.PATH)
+public class ServiceConnection extends AbstractRestWebService {
 
   @Inject
   ChatUserAuthenticationListener chatUserAuthenticationListener;
 
-  private static final long serialVersionUID = 1L;
+  @Context
+  HttpServletRequest request;
 
   private OrganizationController organizationController = OrganizationController.get();
+
+  static final String PATH = "mobile/connection";
 
   private boolean isUserGUIMobileForTablets() {
     return getSettings().getBoolean("guiMobileForTablets", true);
   }
 
-  public DetailUserDTO login(String login, String password, String domainId)
-      throws AuthenticationException {
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("login")
+  public DetailUserDTO login(List<String> ids) {
+
+    String login = ids.get(0);
+    String password = ids.get(1);
+    String domainId = ids.get(2);
 
     // vérification
     AuthenticationCredential credential =
@@ -75,21 +104,21 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     String key = AuthenticationServiceProvider.getService().authenticate(credential);
     //SilverLogger.getLogger(this).debug("mobile authentification : {0} {1}", login, key);
     if (key == null || key.startsWith("Error_")) {
-      if (key.equals("Error_1")) {
-        throw new AuthenticationException(AuthenticationError.BadCredential);
-      } else if (key.equals("Error_2")) {
-        throw new AuthenticationException(AuthenticationError.Host);
-      } else if (key.equals("Error_5")) {
-        throw new AuthenticationException(AuthenticationError.PwdNotAvailable);
-      } else if (key.equals("Error_6")) {
-        throw new AuthenticationException(AuthenticationError.LoginNotAvailable);
+      if (key.equals("Error_5")) {
+        throw new WebApplicationException(AuthenticationError.PwdNotAvailable.name());
       } else if (key.equals("Error_PwdExpired")) {
-        throw new AuthenticationException(AuthenticationError.PwdExpired);
+        throw new WebApplicationException(AuthenticationError.PwdExpired.name());
       } else if(key.equals("Error_PwdMustBeChanged")) {
-        throw new AuthenticationException(AuthenticationError.PwdMustBeChanged);
+        throw new WebApplicationException(AuthenticationError.PwdMustBeChanged.name());
+      } else if (key.equals("Error_PwdMustBeChangedOnFirstLogin")) {
+        throw new WebApplicationException(AuthenticationError.PwdMustBeChangedOnFirstLogin.name());
+      } else if (key.equals("Error_UserAccountBlocked")) {
+        throw new WebApplicationException(AuthenticationError.UserAccountBlocked.name());
+      } else if (key.equals("Error_UserAccountDeactivated")) {
+        throw new WebApplicationException(AuthenticationError.UserAccountDeactivated.name());
+      } else  {
+        throw new WebApplicationException(AuthenticationError.BadCredential.name());
       }
-
-      throw new AuthenticationException();
     }
 
     // récupération des informations de l'utilisateur
@@ -97,7 +126,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     try {
       userId = getUserId(login, domainId);
     } catch (Exception e) {
-      throw new AuthenticationException(AuthenticationError.Host);
+      throw new WebApplicationException(AuthenticationError.Host.name());
     }
     UserDetail user = getUserDetail(userId);
     setUserInSession(user);
@@ -105,7 +134,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     try {
       setMainsessioncontroller(login, password, domainId);
     } catch (SilverpeasException e) {
-      throw new AuthenticationException(AuthenticationError.CanCreateMainSessionController);
+      throw new WebApplicationException(AuthenticationError.CanCreateMainSessionController.name());
     }
 
     DetailUserDTO userDTO = new DetailUserDTO();
@@ -120,14 +149,15 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     }
 
     // chat init
-    chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(getThreadLocalRequest(), user, "");
+    chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, user, "");
 
     return userDTO;
   }
 
-  @Override
-  public boolean userExist(final String login, final String domainId)
-      throws AuthenticationException {
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("userExist/{login}/{domainId}")
+  public Boolean userExist(@PathParam("login") String login, @PathParam("domainId") String domainId) {
     try {
       String id = getUserId(login, domainId);
       return !(id == null);
@@ -136,15 +166,20 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     }
   }
 
-  @Override
-  public boolean setTabletMode() throws NavigationException, AuthenticationException {
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("setTabletMode")
+  public Boolean setTabletMode() {
     if (!isUserGUIMobileForTablets()) {
-      getThreadLocalRequest().getSession().setAttribute("tablet", Boolean.valueOf(true));
+      request.getSession().setAttribute("tablet", Boolean.valueOf(true));
       return true;
     }
     return false;
   }
 
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("domains")
   public List<DomainDTO> getDomains() {
     Domain[] allDomains = organizationController.getAllDomains();
     ArrayList<DomainDTO> domains = new ArrayList<>();
@@ -158,7 +193,7 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     return Administration.get().getUserIdByLoginAndDomain(login, domainId);
   }
 
-  public UserDetail getUserDetail(String userId) {
+  private UserDetail getUserDetail(String userId) {
     return organizationController.getUserDetail(userId);
   }
 
@@ -169,24 +204,52 @@ public class ServiceConnectionImpl extends AbstractAuthenticateService
     return dto;
   }
 
-  @Override
-  public void changePwd(String newPwd) throws AuthenticationException {
+  @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("changePwd/")
+  public void changePwd(String newPwd) {
+    if (getUserInSession() == null) throw new NotAuthorizedException(getHttpServletResponse());
     UserFull user = null;
     try {
       user = Administration.get().getUserFull(getUserInSession().getId());
       user.setPassword(newPwd);
       Administration.get().updateUserFull(user);
     } catch (AdminException e) {
-      throw  new AuthenticationException(e);
+      throw  new WebApplicationException(e);
     }
   }
 
-  @Override
-  public void userAcceptsTermsOfService() throws AuthenticationException {
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("userAcceptsTermsOfService")
+  public void userAcceptsTermsOfService() {
     try {
       Administration.get().userAcceptsTermsOfService(getUserInSession().getId());
     } catch (AdminException e) {
-      throw new AuthenticationException(e);
+      throw new WebApplicationException(e);
     }
+  }
+
+  protected void setUserInSession(UserDetail user) {
+    request.getSession().setAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME, user);
+  }
+
+  protected UserDetail getUserInSession() {
+    return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+  }
+
+  @Override
+  protected String getResourceBasePath() {
+    return PATH;
+  }
+
+  @Override
+  public String getComponentId() {
+    return null;
+  }
+
+  @Override
+  public void validateUserAuthorization(final UserPrivilegeValidation validation) {
   }
 }

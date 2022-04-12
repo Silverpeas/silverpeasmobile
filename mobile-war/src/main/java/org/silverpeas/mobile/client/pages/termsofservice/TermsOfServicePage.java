@@ -40,7 +40,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
-import org.silverpeas.mobile.client.common.network.AsyncCallbackEmpty;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
@@ -83,9 +83,21 @@ public class TermsOfServicePage extends PageContent {
 
   @UiHandler("accept")
   void accept(ClickEvent e) {
-    ServicesLocator.getServiceConnection().userAcceptsTermsOfService(new AsyncCallbackEmpty<>());
-    SpMobil.getMainPage().showFooter();
-    SpMobil.displayMainPage();
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceConnection().userAcceptsTermsOfService(this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final Void unused) {
+        super.onSuccess(method, unused);
+        SpMobil.getMainPage().showFooter();
+        SpMobil.displayMainPage();
+      }
+    };
+    action.attempt();
   }
 
   @UiHandler("refuse")
