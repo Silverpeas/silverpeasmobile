@@ -284,32 +284,6 @@ public class AuthentificationManager {
   }
 
   public void logout() {
-
-    // clear app cache
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceNavigation().clearAppCache(this);
-      }
-
-      @Override
-      public void onFailure(final Method method, final Throwable t) {
-        super.onFailure(method, t);
-        spLogout();
-      }
-
-      @Override
-      public void onSuccess(final Method method, final Void unused) {
-        super.onSuccess(method, unused);
-        spLogout();
-      }
-    };
-    action.attempt();
-
-  }
-
-  private void spLogout() {
     // logout
     RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/silverpeas/Logout");
     try {
@@ -324,15 +298,40 @@ public class AuthentificationManager {
           RootPanel.get().clear();
           RootPanel.get().add(connexionPage);
           SpMobil.destroyMainPage();
+          clearCache();
         }
 
         @Override
         public void onError(final Request request, final Throwable throwable) {
-
+          clearCache();
         }
       });
     } catch (RequestException e) {
       Window.alert(e.getMessage());
     }
+  }
+
+  private void clearCache() {
+    // clear app cache
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceNavigation().clearAppCache(this);
+      }
+
+      @Override
+      public void onFailure(final Method method, final Throwable t) {
+        super.onFailure(method, t);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final Void unused) {
+        super.onSuccess(method, unused);
+      }
+    };
+    action.attempt();
+
+
   }
 }
