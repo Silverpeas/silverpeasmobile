@@ -38,8 +38,6 @@
 
 
 <jsp:useBean id="chatSettings" type="org.silverpeas.core.chat.ChatSettings"/>
-<c:set var="chatServer" value="<%=ChatServer.get()%>"/>
-<jsp:useBean id="chatServer" type="org.silverpeas.core.chat.servers.ChatServer"/>
 <c:set var="userLanguage" value="${currentUser.userPreferences.language}"/>
 <jsp:useBean id="userLanguage" type="java.lang.String"/>
 <c:set var="chatBundle" value="<%=ChatLocalizationProvider.getLocalizationBundle(userLanguage)%>"/>
@@ -64,7 +62,7 @@
   <script type="text/javascript">
     function init() {
       <c:choose>
-      <c:when test="${sessionScope.get('Silverpeas.Chat') and chatUser.chatEnabled and chatServer.isUserExisting(chatUser)}">
+      <c:when test="${sessionScope.get('Silverpeas.Chat') and chatUser.registered}">
         const chatOptions = {
           viewMode : 'mobile',
           url : '${chatUrl}',
