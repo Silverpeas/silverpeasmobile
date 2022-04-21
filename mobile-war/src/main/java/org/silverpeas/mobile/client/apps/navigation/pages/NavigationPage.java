@@ -50,7 +50,8 @@ import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class NavigationPage extends PageContent implements NavigationPagesEventHandler {
 
-  @UiField ActionsMenu actionsMenu;
+  @UiField
+  ActionsMenu actionsMenu;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
@@ -63,8 +64,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   @UiField
   HomePageContent content;
 
-  interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {
-  }
+  interface NavigationPageUiBinder extends UiBinder<Widget, NavigationPage> {}
 
   public NavigationPage() {
     initWidget(uiBinder.createAndBindUi(this));
@@ -110,8 +110,10 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   public void clickItem(ClickItemEvent event) {
     if (isVisible()) {
       if (event.getData() instanceof SpaceDTO) {
-        SpaceDTO space =(SpaceDTO) event.getData();
-        if (space.getHomePageType() == HomePages.SILVERPEAS.getValue() || space.getHomePageType() == HomePages.URL.getValue()) {
+        SpaceDTO space = (SpaceDTO) event.getData();
+        if (space.getHomePageType() == HomePages.SILVERPEAS.getValue() ||
+            space.getHomePageType() == HomePages.URL.getValue() ||
+            space.getHomePageType() == HomePages.PORTLET.getValue()) {
           NavigationPage subPage = new NavigationPage();
           if (space.isPersonal()) {
             subPage.setPageTitle(msg.personalSpace());
@@ -122,10 +124,12 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
           subPage.show();
         } else if (space.getHomePageType() == HomePages.APP.getValue()) {
           // App home
-          ShortCutRouter.route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null, null, null);
+          ShortCutRouter.route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null,
+              null, null);
         }
       } else {
-        EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
+        EventBus.getInstance().fireEvent(
+            new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO) event.getData()));
       }
     }
   }

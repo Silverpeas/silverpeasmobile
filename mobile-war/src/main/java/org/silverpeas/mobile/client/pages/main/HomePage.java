@@ -52,19 +52,20 @@ import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.HomePages;
 import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
-public class HomePage extends PageContent implements ConfigAppEventHandler, NavigationPagesEventHandler {
+public class HomePage extends PageContent
+    implements ConfigAppEventHandler, NavigationPagesEventHandler {
 
   private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
   private int currentNewsIndex = 0;
 
-  @UiField(provided = true) protected ApplicationMessages msg = null;
+  @UiField(provided = true)
+  protected ApplicationMessages msg = null;
   private boolean dataLoaded = false;
 
   @UiField
   HomePageContent content;
 
-  interface HomePageUiBinder extends UiBinder<Widget, HomePage> {
-  }
+  interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
   public HomePage() {
     msg = GWT.create(ApplicationMessages.class);
@@ -92,8 +93,10 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
   public void clickItem(final ClickItemEvent event) {
     if (isVisible()) {
       if (event.getData() instanceof SpaceDTO) {
-        SpaceDTO space =(SpaceDTO) event.getData();
-        if (space.getHomePageType() == HomePages.SILVERPEAS.getValue() || space.getHomePageType() == HomePages.URL.getValue()) {
+        SpaceDTO space = (SpaceDTO) event.getData();
+        if (space.getHomePageType() == HomePages.SILVERPEAS.getValue() ||
+            space.getHomePageType() == HomePages.URL.getValue() ||
+            space.getHomePageType() == HomePages.PORTLET.getValue()) {
           NavigationPage subPage = new NavigationPage();
           if (space.isPersonal()) {
             subPage.setPageTitle(msg.personalSpace());
@@ -104,11 +107,12 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
           subPage.show();
         } else if (space.getHomePageType() == HomePages.APP.getValue()) {
           // App home
-          ShortCutRouter
-              .route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null, null, null);
+          ShortCutRouter.route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null,
+              null, null);
         }
       } else {
-        EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO)event.getData()));
+        EventBus.getInstance().fireEvent(
+            new NavigationAppInstanceChangedEvent((ApplicationInstanceDTO) event.getData()));
       }
     }
   }
@@ -127,5 +131,6 @@ public class HomePage extends PageContent implements ConfigAppEventHandler, Navi
   }
 
   @Override
-  public void loadConfig(LoadConfigEvent event) {}
+  public void loadConfig(LoadConfigEvent event) {
+  }
 }
