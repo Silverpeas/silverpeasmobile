@@ -90,7 +90,6 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
         @Override
         public void onSuccess(final Method method, final List<QuestionDTO> questions) {
           super.onSuccess(method, questions);
-          LocalStorageHelper.store(keysQuestions+getApplicationInstance().getId(), List.class, questions);
           FaqPage page = new FaqPage();
           page.setApp(FaqApp.this);
           page.setData(questions);
@@ -121,7 +120,6 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
       @Override
       public void onSuccess(final Method method, final List<CategoryDTO> categories) {
         super.onSuccess(method, categories);
-        LocalStorageHelper.store(keysCategories+getApplicationInstance().getId(), List.class, categories);
         EventBus.getInstance().fireEvent(new FaqCategoriesLoadedEvent(categories));
       }
     };
