@@ -26,11 +26,7 @@ package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.kmelia.KmeliaPublicationHelper;
 import org.silverpeas.components.kmelia.model.KmeliaPublication;
-import org.silverpeas.components.kmelia.model.PubliAuthorComparatorAsc;
-import org.silverpeas.components.kmelia.model.PubliCreationDateComparatorAsc;
-import org.silverpeas.components.kmelia.model.PubliImportanceComparatorDesc;
-import org.silverpeas.components.kmelia.model.PubliRankComparatorAsc;
-import org.silverpeas.components.kmelia.model.PubliUpdateDateComparatorAsc;
+import org.silverpeas.components.kmelia.model.KmeliaPublicationSort;
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.core.ResourceReference;
@@ -79,9 +75,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -110,7 +104,7 @@ public class ServiceDocuments extends AbstractRestWebService {
   @Path("topics/{rootTopicId}")
   public List<TopicDTO> getTopics(@PathParam("appId") String instanceId,
       @PathParam("rootTopicId") String rootTopicId) throws Exception {
-    List<TopicDTO> topicsList = new ArrayList<TopicDTO>();
+    List<TopicDTO> topicsList = new ArrayList<>();
     boolean coWriting = false;
     try {
       coWriting = isCoWritingEnabled(instanceId);
@@ -146,7 +140,7 @@ public class ServiceDocuments extends AbstractRestWebService {
 
               // count publications
               Collection<NodePK> pks = getAllSubNodePKs(nodeDetail.getNodePK());
-              List<String> ids = new ArrayList<String>();
+              List<String> ids = new ArrayList<>();
               ids.add(nodeDetail.getId());
               if (isRightsOnTopicsEnabled(instanceId)) {
                 for (NodePK onePk : pks) {
@@ -264,7 +258,7 @@ public class ServiceDocuments extends AbstractRestWebService {
   }
 
   private Collection<NodePK> getAllSubNodePKs(final NodePK pk) throws Exception {
-    CopyOnWriteArrayList<NodePK> subNodes = new CopyOnWriteArrayList<NodePK>();
+    CopyOnWriteArrayList<NodePK> subNodes = new CopyOnWriteArrayList<>();
     if (pk != null) {
       subNodes.addAll(getNodeBm().getChildrenPKs(pk));
       for (NodePK subNode : subNodes) {
@@ -301,57 +295,6 @@ public class ServiceDocuments extends AbstractRestWebService {
     return false;
   }
 
-  private List<KmeliaPublication> sortByTitle(List<KmeliaPublication> publications) {
-    KmeliaPublication[] pubs = publications.toArray(new KmeliaPublication[publications.size()]);
-    for (int i = pubs.length; --i >= 0; ) {
-      boolean swapped = false;
-      for (int j = 0; j < i; j++) {
-        if (pubs[j].getDetail().getName(getUser().getUserPreferences().getLanguage())
-            .compareToIgnoreCase(
-                pubs[j + 1].getDetail().getName(getUser().getUserPreferences().getLanguage())) >
-            0) {
-          KmeliaPublication pub = pubs[j];
-          pubs[j] = pubs[j + 1];
-          pubs[j + 1] = pub;
-          swapped = true;
-        }
-      }
-      if (!swapped) {
-        break;
-      }
-    }
-    return Arrays.asList(pubs);
-  }
-
-  private List<KmeliaPublication> sortByDescription(List<KmeliaPublication> publications) {
-    KmeliaPublication[] pubs = publications.toArray(new KmeliaPublication[publications.size()]);
-    for (int i = pubs.length; --i >= 0; ) {
-      boolean swapped = false;
-      for (int j = 0; j < i; j++) {
-        String p1 =
-            pubs[j].getDetail().getDescription(getUser().getUserPreferences().getLanguage());
-        if (p1 == null) {
-          p1 = "";
-        }
-        String p2 =
-            pubs[j + 1].getDetail().getDescription(getUser().getUserPreferences().getLanguage());
-        if (p2 == null) {
-          p2 = "";
-        }
-        if (p1.compareToIgnoreCase(p2) > 0) {
-          KmeliaPublication pub = pubs[j];
-          pubs[j] = pubs[j + 1];
-          pubs[j + 1] = pub;
-          swapped = true;
-        }
-      }
-      if (!swapped) {
-        break;
-      }
-    }
-    return Arrays.asList(pubs);
-  }
-
   /**
    * Retourne les publications d'un topic (au niveau 1).
    */
@@ -360,10 +303,11 @@ public class ServiceDocuments extends AbstractRestWebService {
   @Produces(MediaType.APPLICATION_JSON)
   public List<PublicationDTO> getPublications(@PathParam("appId") String instanceId,
       @PathParam("topicId") String topicId) throws Exception {
+    final String userLanguage = getUser().getUserPreferences().getLanguage();
     LocalizationBundle resource =
         ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle",
-            getUser().getUserPreferences().getLanguage());
-    ArrayList<PublicationDTO> pubs = new ArrayList<PublicationDTO>();
+            userLanguage);
+    ArrayList<PublicationDTO> pubs = new ArrayList<>();
 
     try {
       if (topicId == null || topicId.isEmpty()) {
@@ -371,58 +315,19 @@ public class ServiceDocuments extends AbstractRestWebService {
       }
       NodePK nodePK = new NodePK(topicId, instanceId);
       PublicationPK pubPK = new PublicationPK("useless", instanceId);
-      String status = "Valid";
-      ArrayList<String> nodeIds = new ArrayList<String>();
-      nodeIds.add(nodePK.getId());
-
-      //List<PublicationDetail> publications = (List<PublicationDetail>) getPubBm()
-      // .getDetailsByFatherIds(nodeIds, pubPK.getInstanceId(), false);
-
       List<KmeliaPublication> publications = KmeliaService.get().getPublicationsOfFolder(nodePK,
           getUserTopicProfile(nodePK.getId(), pubPK.getInstanceId()), getUser().getId(),
           isTreeStructure(pubPK.getInstanceId()));
-      int sort = -1;
-      if (isManualSortingUsed(publications) && sort == -1) {
+      final int sort;
+      if (isManualSortingUsed(publications)) {
         // display publications according to manual order defined by admin
         sort = 99;
-      } else if (sort == -1) {
+      } else {
         // display publications according to default sort defined on application level or instance
         // level
         sort = getDefaultSortValue(pubPK.getInstanceId());
       }
-
-      switch (sort) {
-        case 0:
-          Collections.sort(publications, new PubliAuthorComparatorAsc());
-          break;
-        case 1:
-          Collections.sort(publications, new PubliUpdateDateComparatorAsc());
-          break;
-        case 2:
-          Collections.sort(publications, new PubliUpdateDateComparatorAsc());
-          Collections.reverse(publications);
-          break;
-        case 3:
-          Collections.sort(publications, new PubliImportanceComparatorDesc());
-          break;
-        case 4:
-          publications = sortByTitle(publications);
-          break;
-        case 5:
-          Collections.sort(publications, new PubliCreationDateComparatorAsc());
-          break;
-        case 6:
-          Collections.sort(publications, new PubliCreationDateComparatorAsc());
-          Collections.reverse(publications);
-          break;
-        case 7:
-          publications = sortByDescription(publications);
-          break;
-        default:
-          // display publications according to manual order defined by admin
-          Collections.sort(publications, new PubliRankComparatorAsc());
-      }
-
+      new KmeliaPublicationSort(sort).withContentLanguage(userLanguage).sort(publications);
 
       String[] profiles;
 
@@ -513,8 +418,7 @@ public class ServiceDocuments extends AbstractRestWebService {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("publication/{id}")
   public PublicationDTO getPublication(@PathParam("id") String id,
-      @QueryParam("contributionId") String contributionId, @QueryParam("type") String type)
-      throws Exception {
+      @QueryParam("contributionId") String contributionId, @QueryParam("type") String type) {
     SilverLogger.getLogger(this)
         .debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + id);
 
@@ -664,7 +568,7 @@ public class ServiceDocuments extends AbstractRestWebService {
   @Produces(MediaType.APPLICATION_JSON)
   public List<BaseDTO> getTopicsAndPublications(@PathParam("appId") String instanceId,
       @PathParam("rootTopicId") String rootTopicId) throws Exception {
-    ArrayList<BaseDTO> list = new ArrayList<BaseDTO>();
+    ArrayList<BaseDTO> list = new ArrayList<>();
     list.addAll(getTopics(instanceId, rootTopicId));
     list.addAll(getPublications(instanceId, rootTopicId));
     return list;
