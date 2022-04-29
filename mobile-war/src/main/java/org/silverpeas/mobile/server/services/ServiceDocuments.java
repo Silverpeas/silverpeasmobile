@@ -315,7 +315,7 @@ public class ServiceDocuments extends AbstractRestWebService {
       }
       NodePK nodePK = new NodePK(topicId, instanceId);
       PublicationPK pubPK = new PublicationPK("useless", instanceId);
-      List<KmeliaPublication> publications = KmeliaService.get().getPublicationsOfFolder(nodePK,
+      List<KmeliaPublication> publications = KmeliaService.get().getAuthorizedPublicationsOfFolder(nodePK,
           getUserTopicProfile(nodePK.getId(), pubPK.getInstanceId()), getUser().getId(),
           isTreeStructure(pubPK.getInstanceId()));
       final int sort;
