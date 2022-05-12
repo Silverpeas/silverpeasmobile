@@ -131,7 +131,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   private void populateList(final List<BaseDTO> dataItems) {
     for (BaseDTO dataItem : dataItems) {
       if (dataItem instanceof AlbumDTO) {
-        if (((AlbumDTO) dataItem).isRoot()) {
+        if (((AlbumDTO) dataItem).getRoot()) {
           setPageTitle(((AlbumDTO) dataItem).getName());
           root = (AlbumDTO) dataItem;
         } else {

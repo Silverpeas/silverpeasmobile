@@ -27,15 +27,18 @@ package org.silverpeas.mobile.shared;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author: svu
  */
-public class StreamingList<B> extends ArrayList implements Serializable {
+public class StreamingList<BaseDTO> implements Serializable {
   private boolean moreElement;
+  private List<BaseDTO> list = new ArrayList<>();
 
   public StreamingList(final Collection collection, final boolean moreElement) {
-    super(collection);
+    super();
+    list.addAll(collection);
     this.moreElement = moreElement;
   }
 
@@ -43,8 +46,20 @@ public class StreamingList<B> extends ArrayList implements Serializable {
     super();
   }
 
-  public boolean hasMoreElement() {
+  public boolean getMoreElement() {
     return moreElement;
 
+  }
+
+  public void setMoreElement(final boolean moreElement) {
+    this.moreElement = moreElement;
+  }
+
+  public List<BaseDTO> getList() {
+    return list;
+  }
+
+  public void setList(final List<BaseDTO> list) {
+    this.list = list;
   }
 }

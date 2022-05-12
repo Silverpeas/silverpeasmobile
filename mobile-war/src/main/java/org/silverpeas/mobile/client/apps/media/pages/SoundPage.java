@@ -159,7 +159,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiHandler("download")
   void download(ClickEvent event) {
-    if (sound.isDownload()) {
+    if (sound.getDownload()) {
       if (!clicked) {
         clicked = true;
         try {

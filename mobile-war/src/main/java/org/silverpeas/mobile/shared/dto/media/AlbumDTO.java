@@ -26,11 +26,8 @@ package org.silverpeas.mobile.shared.dto.media;
 
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 
-import java.io.Serializable;
+public class AlbumDTO extends BaseDTO implements Comparable<AlbumDTO> {
 
-public class AlbumDTO extends BaseDTO implements Serializable, Comparable<AlbumDTO> {
-
-  private static final long serialVersionUID = 1L;
   private String name;
   private int countMedia;
   private boolean root = false;
@@ -56,7 +53,7 @@ public class AlbumDTO extends BaseDTO implements Serializable, Comparable<AlbumD
     this.countMedia = countMedia;
   }
 
-  public boolean isRoot() {
+  public boolean getRoot() {
     return root;
   }
 

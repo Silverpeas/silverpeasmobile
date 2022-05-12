@@ -178,7 +178,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiHandler("download")
   void download(ClickEvent event) {
-    if (video.isDownload()) {
+    if (video.getDownload()) {
       if (!clicked) {
         clicked = true;
         try {

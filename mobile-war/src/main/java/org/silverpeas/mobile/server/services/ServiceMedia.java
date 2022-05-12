@@ -41,10 +41,12 @@ import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.service.OrganizationControllerProvider;
+import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.core.webapi.media.streaming.StreamingProviderDataEntity;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
@@ -60,9 +62,18 @@ import org.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.MediaException;
-import org.silverpeas.mobile.shared.services.ServiceMedia;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -82,18 +93,31 @@ import static org.silverpeas.core.util.StringUtil.EMPTY;
  * Service de gestion des galleries d'images.
  * @author svuillet
  */
-public class ServiceMediaImpl extends AbstractAuthenticateService implements ServiceMedia {
 
-  private static final long serialVersionUID = 1L;
+@WebService
+@Authorized
+@Path(ServiceMedia.PATH + "/{appId}")
+public class ServiceMedia extends AbstractRestWebService {
+
+  @Context
+  HttpServletRequest request;
+
+  @PathParam("appId")
+  private String componentId;
+
+  static final String PATH = "mobile/medialib";
+
+
   private OrganizationController organizationController = OrganizationControllerProvider.getOrganisationController();
 
   /**
    * Importation d'une image dans un album.
    */
-  public void uploadPicture(String name, String data, String idGallery, String idAlbum) throws
-                                                                                        MediaException, AuthenticationException {
-    checkUserInSession();
-
+  @POST
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Consumes(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("add/{name}/{data}/{idGallery}/{idAlbum}")
+  public void uploadPicture(@PathParam("name") String name, @PathParam("data") String data, @PathParam("idGallery") String idGallery, @PathParam("idAlbum") String idAlbum) {
     String extension = "jpg";
     if (data.indexOf("data:image/jpeg;base64,") != -1) {
       data = data.substring("data:image/jpeg;base64,".length());
@@ -124,7 +148,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
       }
 
       // creation de la photo dans l'albums
-      createPhoto(name, getUserInSession().getId(), idGallery, idAlbum, file, watermark, watermarkHD, watermarkOther, download);
+      createPhoto(name, getUser().getId(), idGallery, idAlbum, file, watermark, watermarkHD, watermarkOther, download);
       file.delete();
 
     } catch (Exception e) {
@@ -145,7 +169,7 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     MediaDataCreateDelegate
         delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
 
-    Media newMedia = getGalleryService().createMedia(getUserInSession(), componentId, GalleryComponentSettings.getWatermark(componentId), delegate);
+    Media newMedia = getGalleryService().createMedia(Administration.get().getUserDetail(getUser().getId()), componentId, GalleryComponentSettings.getWatermark(componentId), delegate);
 
     return newMedia.getId();
   }
@@ -154,8 +178,10 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
   /**
    * Retourne la listes des galleries accessibles.
    */
-  public List<ApplicationInstanceDTO> getAllGalleries() throws MediaException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("allGalleries")
+  public List<ApplicationInstanceDTO> getAllGalleries(){
 
     ArrayList<ApplicationInstanceDTO> results = new ArrayList<ApplicationInstanceDTO>();
     try {
@@ -184,10 +210,10 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
    * Retourne la liste des albums d'une appli media.
    */
   private List<AlbumDTO> getAlbums(String instanceId, String rootAlbumId) throws MediaException, AuthenticationException {
-    checkUserInSession();
 
     ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
     try {
+      if (rootAlbumId.equalsIgnoreCase("null")) rootAlbumId = null;
       if (rootAlbumId == null) {
         AlbumDTO rootAlbum = new AlbumDTO();
         ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
@@ -247,9 +273,9 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
   }
 
   private List<MediaDTO> getMedias(String instanceId, String albumId) throws MediaException, AuthenticationException {
-    checkUserInSession();
 
     ArrayList<MediaDTO> results = new ArrayList<MediaDTO>();
+    if (albumId.equalsIgnoreCase("null")) albumId = null;
     if (albumId == null) return results;
     try {
       Collection<Media> medias = getGalleryService().getAllMedia(new NodePK(albumId, instanceId),
@@ -267,15 +293,17 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     }
   }
 
-  @Override
-  public MediaDTO getMedia(String id) throws MediaException, AuthenticationException {
+  @GET
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("media/{id}")
+  public MediaDTO getMedia(@PathParam("id") String id) {
     MediaDTO dto = null;
     try {
       Media media = getGalleryService().getMedia(new MediaPK(id));
       dto = getMedia(media);
     } catch (Exception e) {
       SilverLogger.getLogger(this).error("ServiceMediaImpl.getMedia", "root.EX_NO_MESSAGE", e);
-      throw new MediaException(e);
+      throw new WebApplicationException(e);
     }
     return dto;
   }
@@ -297,10 +325,12 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     return null;
   }
 
-  public StreamingList<BaseDTO> getAlbumsAndPictures(String instanceId, String rootAlbumId, int callNumber) throws
-                                                                                   MediaException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("albumsandpics/{rootAlbumId}/{callNumber}")
+  public StreamingList<BaseDTO> getAlbumsAndPictures(@PathParam("appId") String instanceId, @PathParam("rootAlbumId") String rootAlbumId, @PathParam("callNumber") int callNumber) {
     int callSize = 25;
+
     String cacheKey = instanceId+rootAlbumId;
     CommandCreateList command = new CommandCreateList() {
       @Override
@@ -315,16 +345,19 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     try {
       streamingList = createStreamingList(command, callNumber, callSize, cacheKey);
     } catch (AuthenticationException e) {
-      throw e;
+      throw new NotAuthorizedException(e);
     } catch (Exception e) {
       SilverLogger.getLogger(this).error("ServiceMediaImpl.getAlbumsAndPictures", "root.EX_NO_MESSAGE", e);
-      throw new MediaException(e);
+      throw new WebApplicationException(e);
     }
     return streamingList;
   }
 
-  public SoundDTO getSound(String instanceId, String soundId) throws MediaException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("sound/{id}")
+  public SoundDTO getSound(@PathParam("appId") String instanceId, @PathParam("id") String soundId){
+
     Media sound = null;
     try {
       sound = getGalleryService().getMedia(new MediaPK(soundId));
@@ -334,9 +367,11 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     return getSound(sound);
   }
 
-  @Override
-  public VideoDTO getVideo(final String instanceId, final String videoId) throws MediaException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("video/{videoId}")
+  public VideoDTO getVideo(@PathParam("appId") String instanceId, @PathParam("videoId") String videoId) {
+
     Media video = null;
     try {
       video = getGalleryService().getMedia(new MediaPK(videoId));
@@ -346,9 +381,11 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
     return getVideo(video);
   }
 
-  @Override
-  public VideoStreamingDTO getVideoStreaming(final String instanceId, final String videoId) throws MediaException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("videostream/{videoId}")
+  public VideoStreamingDTO getVideoStreaming(@PathParam("appId") String instanceId, @PathParam("videoId") String videoId) {
+
     Media video = null;
     try {
       video = getGalleryService().getMedia(new MediaPK(videoId));
@@ -361,8 +398,10 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
   /**
    * Retourne la photo preview.
    */
-  public PhotoDTO getPreviewPicture(String instanceId, String pictureId) throws MediaException, AuthenticationException {
-    checkUserInSession();
+  @GET
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("videostream/{pictureId}")
+  public PhotoDTO getPreviewPicture(@PathParam("appId") String instanceId, @PathParam("pictureId") String pictureId) {
 
     PhotoDTO picture = null;
     try {
@@ -576,5 +615,15 @@ public class ServiceMediaImpl extends AbstractAuthenticateService implements Ser
 
   private GalleryService getGalleryService() throws Exception {
     return MediaServiceProvider.getMediaService();
+  }
+
+  @Override
+  protected String getResourceBasePath() {
+    return PATH;
+  }
+
+  @Override
+  public String getComponentId() {
+    return this.componentId;
   }
 }

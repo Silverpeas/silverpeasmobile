@@ -192,7 +192,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
 
   @UiHandler("download")
   void download(ClickEvent event) {
-    if (photo.isDownload()) {
+    if (photo.getDownload()) {
       if (!clicked) {
         clicked = true;
         try {

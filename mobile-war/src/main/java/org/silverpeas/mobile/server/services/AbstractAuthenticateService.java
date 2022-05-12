@@ -97,7 +97,7 @@ public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
       callSize = list.size() - calledSize;
     }
     StreamingList<BaseDTO> streamingList = new StreamingList<BaseDTO>(list.subList(calledSize, calledSize + callSize), moreElements);
-    if (!streamingList.hasMoreElement()) getThreadLocalRequest().getSession().removeAttribute(cacheKey);
+    if (!streamingList.getMoreElement()) getThreadLocalRequest().getSession().removeAttribute(cacheKey);
     return streamingList;
   }
 }

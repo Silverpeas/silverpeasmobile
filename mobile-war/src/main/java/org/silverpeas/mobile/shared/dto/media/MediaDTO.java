@@ -43,7 +43,7 @@ public class MediaDTO extends BaseDTO implements Serializable {
   private String mimeType;
   private long size;
 
-  public boolean isDownload() {
+  public boolean getDownload() {
     return download;
   }
   public void setDownload(boolean download) {

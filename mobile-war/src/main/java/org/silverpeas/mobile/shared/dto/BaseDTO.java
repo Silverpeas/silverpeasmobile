@@ -31,6 +31,12 @@ import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import org.silverpeas.mobile.shared.dto.media.AlbumDTO;
+import org.silverpeas.mobile.shared.dto.media.MediaDTO;
+import org.silverpeas.mobile.shared.dto.media.PhotoDTO;
+import org.silverpeas.mobile.shared.dto.media.SoundDTO;
+import org.silverpeas.mobile.shared.dto.media.VideoDTO;
+import org.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.io.Serializable;
@@ -48,7 +54,13 @@ import java.io.Serializable;
     @JsonSubTypes.Type(value = NewsDTO.class, name = "NewsDTO"),
     @JsonSubTypes.Type(value = TopicDTO.class, name = "TopicDTO"),
     @JsonSubTypes.Type(value = PublicationDTO.class, name = "PublicationDTO"),
-    @JsonSubTypes.Type(value = HomePageDTO.class, name = "HomePageDTO")})
+    @JsonSubTypes.Type(value = HomePageDTO.class, name = "HomePageDTO"),
+    @JsonSubTypes.Type(value = AlbumDTO.class, name = "AlbumDTO"),
+    @JsonSubTypes.Type(value = MediaDTO.class, name = "MediaDTO"),
+    @JsonSubTypes.Type(value = PhotoDTO.class, name = "PhotoDTO"),
+    @JsonSubTypes.Type(value = SoundDTO.class, name = "SoundDTO"),
+    @JsonSubTypes.Type(value = VideoDTO.class, name = "VideoDTO"),
+    @JsonSubTypes.Type(value = VideoStreamingDTO.class, name = "VideoStreamingDTO")})
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class BaseDTO implements Serializable {
 

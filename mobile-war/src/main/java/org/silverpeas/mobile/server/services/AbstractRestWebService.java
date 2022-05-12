@@ -8,6 +8,12 @@ import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.core.web.rs.RESTWebService;
+import org.silverpeas.mobile.server.common.CommandCreateList;
+import org.silverpeas.mobile.shared.StreamingList;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author svu
@@ -33,5 +39,28 @@ public abstract class AbstractRestWebService extends RESTWebService {
         authService.authenticate(credential.withAsPassword(password).withAsDomainId(domainId));
     MainSessionController mainSessionController =
         new MainSessionController(key, getHttpRequest().getSession());
+  }
+
+  protected StreamingList createStreamingList(CommandCreateList command, int callNumber, int callSize, String cacheKey) throws Exception {
+    List list;
+    if (callNumber == 0) {
+      list = command.execute();
+      getHttpRequest().getSession().setAttribute(cacheKey, list);
+    } else {
+      list = (ArrayList<BaseDTO>) getHttpRequest().getSession().getAttribute(cacheKey);
+    }
+
+
+    int calledSize = 0;
+    boolean moreElements = true;
+    if (callNumber > 0) calledSize = callSize * callNumber;
+
+    if ((calledSize + callSize) >= list.size()) {
+      moreElements = false;
+      callSize = list.size() - calledSize;
+    }
+    StreamingList<BaseDTO> streamingList = new StreamingList<BaseDTO>(list.subList(calledSize, calledSize + callSize), moreElements);
+    if (!streamingList.getMoreElement()) getHttpRequest().getSession().removeAttribute(cacheKey);
+    return streamingList;
   }
 }

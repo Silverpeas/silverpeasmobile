@@ -30,7 +30,6 @@ import org.fusesource.restygwt.client.Defaults;
 import org.silverpeas.mobile.client.common.network.RestAuthenticationDispatcher;
 import org.silverpeas.mobile.client.common.network.RestDispatcher;
 import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
-import org.silverpeas.mobile.shared.services.*;
 import org.silverpeas.mobile.shared.services.rest.*;
 
 public class ServicesLocator {
@@ -45,8 +44,7 @@ public class ServicesLocator {
   private static ServiceNavigation serviceNavigation = GWT.create(ServiceNavigation.class);
   private static ServiceRSE serviceRSE = GWT.create(ServiceRSE.class);
   private static ServiceDocuments serviceDocuments = GWT.create(ServiceDocuments.class);
-  private static ServiceMediaAsync serviceMedia =
-      (ServiceMediaAsync) GWT.create(ServiceMedia.class);
+  private static ServiceMedia serviceMedia = GWT.create(ServiceMedia.class);
   private static ServiceSearch serviceSearch = GWT.create(ServiceSearch.class);
   private static ServiceNotifications serviceNotifications = GWT.create(ServiceNotifications.class);
   private static ServiceNews serviceNews = GWT.create(ServiceNews.class);
@@ -185,13 +183,8 @@ public class ServicesLocator {
     return serviceSearch;
   }
 
-  public static ServiceMediaAsync getServiceMedia() {
-    return getServiceMedia(true);
-  }
-
-  public static ServiceMediaAsync getServiceMedia(boolean guiWaiting) {
-    ((ServiceDefTarget) serviceMedia).setRpcRequestBuilder(builder);
-    changeServiceEntryPoint((ServiceDefTarget) serviceMedia, guiWaiting);
+  public static ServiceMedia getServiceMedia() {
+    initRestContext();
     return serviceMedia;
   }
 
