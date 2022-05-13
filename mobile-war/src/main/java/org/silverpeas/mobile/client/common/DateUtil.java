@@ -39,6 +39,7 @@ public class DateUtil {
   private static final int DAYS_IN_WEEK = 7;
   private static final long MILLIS_DAY = 86400000;
 
+  @SuppressWarnings("deprecation")
   public static int getWeek(Date date) {
     int dayOfWeek = 1 + (date.getDay() + MAX_DAY_OF_WEEK) % DAYS_IN_WEEK;
     Date nearestThu = addDays(date, ISO_THURSDAY - dayOfWeek);
