@@ -45,6 +45,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
@@ -78,21 +79,28 @@ public class NotificationsBoxApp extends App
   }
 
   @Override
-  public void loadNotifications(final NotificationsLoadEvent notificationsLoadEvent) {
+  public void loadNotifications(final NotificationsLoadEvent event) {
+    loadNotifications(event,0);
+  }
+
+  private void loadNotifications(NotificationsLoadEvent event, int nbCall) {
     MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<List<NotificationReceivedDTO>>() {
+        new MethodCallbackOnlineOnly<StreamingList<NotificationReceivedDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
-            ServicesLocator.getServiceNotifications().getUserNotifications(this);
+            ServicesLocator.getServiceNotifications().getUserNotifications(0, this);
           }
 
           @Override
           public void onSuccess(final Method method,
-              final List<NotificationReceivedDTO> notificationReceivedDTOS) {
+              final StreamingList<NotificationReceivedDTO> notificationReceivedDTOS) {
             super.onSuccess(method, notificationReceivedDTOS);
             EventBus.getInstance()
                 .fireEvent(new NotificationsLoadedEvent(notificationReceivedDTOS));
+            if (notificationReceivedDTOS.getMoreElement()) {
+              loadNotifications(event, nbCall+1);
+            }
           }
         };
     action.attempt();
@@ -126,7 +134,7 @@ public class NotificationsBoxApp extends App
         if (event.getSelection().get(0) instanceof NotificationSendedDTO) {
           loadNotificationsSended(new NotificationsSendedLoadEvent());
         } else {
-          loadNotifications(new NotificationsLoadEvent());
+          loadNotifications(new NotificationsLoadEvent(), 0);
         }
       }
     };
@@ -145,7 +153,7 @@ public class NotificationsBoxApp extends App
       @Override
       public void onSuccess(final Method method, final Void unused) {
         super.onSuccess(method, unused);
-        loadNotifications(new NotificationsLoadEvent());
+        loadNotifications(new NotificationsLoadEvent(), 0);
       }
     };
     action.attempt();
@@ -154,18 +162,21 @@ public class NotificationsBoxApp extends App
   @Override
   public void loadNotificationsSended(
       final NotificationsSendedLoadEvent notificationsSendedLoadEvent) {
+    loadNotificationsSended(notificationsSendedLoadEvent, 0);
+  }
 
+  private void loadNotificationsSended(NotificationsSendedLoadEvent event, int nbCall) {
     MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<List<NotificationSendedDTO>>() {
+        new MethodCallbackOnlineOnly<StreamingList<NotificationSendedDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
-            ServicesLocator.getServiceNotifications().getUserSendedNotifications(this);
+            ServicesLocator.getServiceNotifications().getUserSendedNotifications(0, this);
           }
 
           @Override
           public void onSuccess(final Method method,
-              final List<NotificationSendedDTO> notificationSendedDTOS) {
+              final StreamingList<NotificationSendedDTO> notificationSendedDTOS) {
             super.onSuccess(method, notificationSendedDTOS);
             EventBus.getInstance()
                 .fireEvent(new NotificationsSendedLoadedEvent(notificationSendedDTOS));

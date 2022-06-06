@@ -25,15 +25,16 @@
 package org.silverpeas.mobile.client.apps.notificationsbox.events.pages;
 
 
+import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
 import java.util.List;
 
 public class NotificationsSendedLoadedEvent extends AbstractNotificationsBoxPagesEvent {
 
-  List<NotificationSendedDTO> notifications;
+  StreamingList<NotificationSendedDTO> notifications;
 
-  public NotificationsSendedLoadedEvent(List<NotificationSendedDTO> notifications) {
+  public NotificationsSendedLoadedEvent(StreamingList<NotificationSendedDTO> notifications) {
     super();
     this.notifications = notifications;
   }
@@ -43,7 +44,7 @@ public class NotificationsSendedLoadedEvent extends AbstractNotificationsBoxPage
     handler.onNotificationsSendedLoaded(this);
   }
 
-  public List<NotificationSendedDTO> getNotifications() {
+  public StreamingList<NotificationSendedDTO> getNotifications() {
     return notifications;
   }
 }

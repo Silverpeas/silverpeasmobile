@@ -59,6 +59,7 @@ import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
+import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
@@ -68,6 +69,8 @@ import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationToSendDTO;
 
+
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -75,6 +78,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,56 +100,113 @@ public class ServiceNotifications extends AbstractRestWebService {
   private OrganizationController organizationController = OrganizationController.get();
   static final String PATH = "mobile/notification";
 
+  @Context
+  HttpServletRequest request;
+
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("sended/")
-  public List<NotificationSendedDTO> getUserSendedNotifications() throws Exception {
-    List<NotificationSendedDTO> notifs = new ArrayList<>();
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    try {
-      List<SentNotificationDetail> notifications =
-          SentNotificationInterface.get().getAllNotifByUser(getUser().getId());
-      for (SentNotificationDetail notif : notifications) {
-        NotificationSendedDTO dto = new NotificationSendedDTO();
-        dto.setSource(notif.getSource());
-        dto.setDate(sdf.format(notif.getNotifDate()));
-        dto.setLink(notif.getLink());
-        dto.setTitle(notif.getTitle());
-        dto.setIdNotif(notif.getNotifId());
-        notifs.add(dto);
+  @Path("sended/{callNumber}")
+  public StreamingList<NotificationSendedDTO> getUserSendedNotifications(
+      @PathParam("callNumber") int callNumber) throws Exception {
+    int callSize = 25;
+
+    List<NotificationSendedDTO> list = (List<NotificationSendedDTO>) request.getSession()
+        .getAttribute("Cache_userNotificationsSended");
+    if (list == null) {
+      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+      list = new ArrayList<>();
+      try {
+        List<SentNotificationDetail> notifications =
+            SentNotificationInterface.get().getAllNotifByUser(getUser().getId());
+        for (SentNotificationDetail notif : notifications) {
+          NotificationSendedDTO dto = new NotificationSendedDTO();
+          dto.setSource(notif.getSource());
+          dto.setDate(sdf.format(notif.getNotifDate()));
+          dto.setLink(notif.getLink());
+          dto.setTitle(notif.getTitle());
+          dto.setIdNotif(notif.getNotifId());
+          list.add(dto);
+        }
+        request.getSession().setAttribute("Cache_userNotificationsSended", list);
+      } catch (NotificationException e) {
+        SilverLogger.getLogger(this).error(e);
+        throw e;
       }
-    } catch (NotificationException e) {
-      SilverLogger.getLogger(this).error(e);
-      throw e;
     }
 
-    return notifs;
+    int calledSize = 0;
+    boolean moreElements = true;
+    if (callNumber > 0) {
+      calledSize = callSize * callNumber;
+    }
+
+    if ((calledSize + callSize) >= list.size()) {
+      moreElements = false;
+      callSize = list.size() - calledSize;
+    }
+
+    List<NotificationSendedDTO> notifs = list.subList(calledSize, calledSize + callSize);
+    StreamingList<NotificationSendedDTO> streamingList =
+        new StreamingList<NotificationSendedDTO>(notifs, moreElements);
+    if (!streamingList.getMoreElement()) {
+      getHttpRequest().getSession().removeAttribute("Cache_userNotificationsSended");
+    }
+
+    return streamingList;
   }
 
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("received/")
-  public List<NotificationReceivedDTO> getUserNotifications() {
-    List<NotificationReceivedDTO> notifs = new ArrayList<>();
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    Collection<SILVERMAILMessage> messages =
-        SILVERMAILPersistence.getMessageOfFolder(getUser().getId(), "INBOX", null,
-            SilvermailCriteria.QUERY_ORDER_BY.RECEPTION_DATE_ASC);
-    for (SILVERMAILMessage message : messages) {
-      NotificationReceivedDTO dto = new NotificationReceivedDTO();
-      dto.setSource(message.getSource());
-      dto.setAuthor(message.getSenderName());
-      dto.setDate(sdf.format(message.getDate()));
-      dto.setLink(message.getUrl());
-      dto.setReaden(message.getReaden());
-      dto.setTitle(message.getSubject());
-      dto.setIdNotif(message.getId());
-      notifs.add(dto);
-    }
-    Collections.reverse(notifs);
+  @Path("received/{callNumber}")
+  public StreamingList<NotificationReceivedDTO> getUserNotifications(
+      @PathParam("callNumber") int callNumber) {
+    int callSize = 25;
 
-    return notifs;
+    List<NotificationReceivedDTO> list = (List<NotificationReceivedDTO>) request.getSession()
+        .getAttribute("Cache_userNotificationsReceived");
+    if (list == null) {
+      list = new ArrayList<>();
+      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+      Collection<SILVERMAILMessage> messages =
+          SILVERMAILPersistence.getMessageOfFolder(getUser().getId(), "INBOX", null,
+              SilvermailCriteria.QUERY_ORDER_BY.RECEPTION_DATE_ASC);
+      for (SILVERMAILMessage message : messages) {
+        NotificationReceivedDTO dto = new NotificationReceivedDTO();
+        dto.setSource(message.getSource());
+        dto.setAuthor(message.getSenderName());
+        dto.setDate(sdf.format(message.getDate()));
+        dto.setLink(message.getUrl());
+        dto.setReaden(message.getReaden());
+        dto.setTitle(message.getSubject());
+        dto.setIdNotif(message.getId());
+        list.add(dto);
+      }
+      Collections.reverse(list);
+      request.getSession().setAttribute("Cache_userNotificationsReceived", list);
+    }
+
+    int calledSize = 0;
+    boolean moreElements = true;
+    if (callNumber > 0) {
+      calledSize = callSize * callNumber;
+    }
+
+    if ((calledSize + callSize) >= list.size()) {
+      moreElements = false;
+      callSize = list.size() - calledSize;
+    }
+
+    List<NotificationReceivedDTO> notifs = list.subList(calledSize, calledSize + callSize);
+    StreamingList<NotificationReceivedDTO> streamingList =
+        new StreamingList<NotificationReceivedDTO>(notifs, moreElements);
+    if (!streamingList.getMoreElement()) {
+      getHttpRequest().getSession().removeAttribute("Cache_userNotificationsReceived");
+    }
+
+    StreamingList s = new StreamingList();
+    s.setList(notifs);
+    return s;
   }
 
   @GET

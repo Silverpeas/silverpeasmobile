@@ -93,7 +93,7 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
   @Override
   public void onNotificationsLoaded(final NotificationsLoadedEvent event) {
     notifications.clear();
-    List<NotificationReceivedDTO> notifs = event.getNotifications();
+    List<NotificationReceivedDTO> notifs = event.getNotifications().getList();
     for (NotificationReceivedDTO notif : notifs) {
       NotificationItem item = new NotificationItem();
       item.setData(notif);
@@ -105,7 +105,7 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
   public void onNotificationsSendedLoaded(
       final NotificationsSendedLoadedEvent event) {
     notifications.clear();
-    List<NotificationSendedDTO> notifs = event.getNotifications();
+    List<NotificationSendedDTO> notifs = event.getNotifications().getList();
     for (NotificationSendedDTO notif : notifs) {
       NotificationItem item = new NotificationItem();
       item.setData(notif);

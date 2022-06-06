@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.services.rest;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
@@ -75,11 +76,11 @@ public interface ServiceNotifications extends RestService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("sended/")
-  void getUserSendedNotifications(MethodCallback<List<NotificationSendedDTO>> callback);
+  @Path("sended/{callNumber}")
+  void getUserSendedNotifications(@PathParam("callNumber") int callNumber, MethodCallback<StreamingList<NotificationSendedDTO>> callback);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("received/")
-  void getUserNotifications(MethodCallback<List<NotificationReceivedDTO>> callback);
+  @Path("received/{callNumber}")
+  void getUserNotifications(@PathParam("callNumber") int callNumber, MethodCallback<StreamingList<NotificationReceivedDTO>> callback);
 }
