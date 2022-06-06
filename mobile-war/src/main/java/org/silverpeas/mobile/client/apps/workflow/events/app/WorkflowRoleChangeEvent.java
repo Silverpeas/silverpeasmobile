@@ -38,6 +38,9 @@ public class WorkflowRoleChangeEvent extends AbstractWorkflowAppEvent {
     return role;
   }
 
+  public void setRole(String r) {
+    role = r;
+  }
 
 
   @Override

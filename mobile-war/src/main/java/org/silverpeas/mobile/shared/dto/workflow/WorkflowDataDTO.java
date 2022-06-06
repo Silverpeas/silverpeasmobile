@@ -25,21 +25,20 @@
 package org.silverpeas.mobile.shared.dto.workflow;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class WorkflowInstancesDTO implements Serializable {
+public class WorkflowDataDTO implements Serializable {
 
 
 
-  private List<String> headerLabels = new ArrayList<String>();
-  private List<WorkflowInstanceDTO> instances;
+  private Map<String,List<String>> headerLabels;
+
   private Map<String,String> roles;
   private List<String> rolesAllowedToCreate;
   private String id;
 
-  public WorkflowInstancesDTO() {
+  public WorkflowDataDTO() {
   }
 
   public String getId() {
@@ -50,14 +49,6 @@ public class WorkflowInstancesDTO implements Serializable {
     this.id = id;
   }
 
-  public List<WorkflowInstanceDTO> getInstances() {
-    return instances;
-  }
-
-  public void setInstances(final List<WorkflowInstanceDTO> instances) {
-    this.instances = instances;
-  }
-
   public Map<String, String> getRoles() {
     return roles;
   }
@@ -66,11 +57,11 @@ public class WorkflowInstancesDTO implements Serializable {
     this.roles = roles;
   }
 
-  public List<String> getHeaderLabels() {
+  public Map<String,List<String>> getHeaderLabels() {
     return headerLabels;
   }
 
-  public void setHeaderLabels(final List<String> headerLabels) {
+  public void setHeaderLabels(final Map<String,List<String>> headerLabels) {
     this.headerLabels = headerLabels;
   }
 

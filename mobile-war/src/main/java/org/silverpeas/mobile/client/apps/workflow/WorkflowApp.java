@@ -42,6 +42,7 @@ import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadUserFie
 import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowProcessFormEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowRoleChangeEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
+import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedDataEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowActionFormPage;
 import org.silverpeas.mobile.client.apps.workflow.pages.WorkflowPage;
@@ -55,12 +56,14 @@ import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 
 import java.util.List;
 
@@ -142,25 +145,53 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   @Override
   public void loadInstances(final WorkflowLoadInstancesEvent event) {
     MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<WorkflowInstancesDTO>() {
+        new MethodCallbackOnlineOnly<WorkflowDataDTO>() {
           @Override
           public void attempt() {
             super.attempt();
             ServicesLocator.getServiceWorkflow()
-                .getInstances(getApplicationInstance().getId(), event.getRole(), this);
+                .getDataInstances(getApplicationInstance().getId(), event.getRole(), this);
           }
 
           @Override
-          public void onSuccess(final Method method, final WorkflowInstancesDTO dto) {
+          public void onSuccess(final Method method, final WorkflowDataDTO dto) {
             super.onSuccess(method, dto);
-            WorkflowLoadedInstancesEvent event = new WorkflowLoadedInstancesEvent();
-            //currentRole = dto.getRoles().entrySet().iterator().next().getKey();
-            event.setData(dto);
-            event.setInstanceId(getApplicationInstance().getId());
-            EventBus.getInstance().fireEvent(event);
+            WorkflowLoadedDataEvent e = new WorkflowLoadedDataEvent();
+            e.setData(dto);
+            EventBus.getInstance().fireEvent(e);
+
+            WorkflowRoleChangeEvent ev = new WorkflowRoleChangeEvent(dto.getRoles().values().iterator().next());
+
+            loadWorkflowInstances(ev, 0);
           }
         };
     action.attempt();
+  }
+
+  private void loadWorkflowInstances(final WorkflowRoleChangeEvent event, final int nbCall) {
+    MethodCallbackOnlineOnly action2 = new MethodCallbackOnlineOnly<StreamingList<WorkflowInstanceDTO>>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceWorkflow()
+            .getWorkflowInstances(getApplicationInstance().getId(), event.getRole(), nbCall, this);
+      }
+
+      @Override
+      public void onSuccess(final Method method,
+          final StreamingList<WorkflowInstanceDTO> instances) {
+        super.onSuccess(method, instances);
+        WorkflowLoadedInstancesEvent eventPage = new WorkflowLoadedInstancesEvent();
+
+        eventPage.setData(instances);
+        eventPage.setInstanceId(getApplicationInstance().getId());
+        EventBus.getInstance().fireEvent(eventPage);
+        if (instances.getMoreElement()) {
+          loadWorkflowInstances(event, nbCall+1);
+        }
+      }
+    };
+    action2.attempt();
   }
 
   @Override
@@ -253,6 +284,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   @Override
   public void roleChanged(final WorkflowRoleChangeEvent workflowRoleChangeEvent) {
     this.currentRole = workflowRoleChangeEvent.getRole();
+    loadWorkflowInstances(workflowRoleChangeEvent, 0);
   }
 
   public void actionProcessed() {

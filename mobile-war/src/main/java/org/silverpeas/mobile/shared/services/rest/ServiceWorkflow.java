@@ -26,10 +26,12 @@ package org.silverpeas.mobile.shared.services.rest;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -50,9 +52,14 @@ public interface ServiceWorkflow extends RestService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/instances/{role}")
-  void getInstances(@PathParam("appId") String instanceId, @PathParam("role") String userRole,
-      MethodCallback<WorkflowInstancesDTO> callback);
+  @Path("{appId}/instances/{role}/{callNumber}")
+  void getWorkflowInstances(@PathParam("appId") String appId, @PathParam("role") String userRole, @PathParam("callNumber") int callNumber, MethodCallback<StreamingList<WorkflowInstanceDTO>> callback);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{appId}/datainstances/{role}")
+  void getDataInstances(@PathParam("appId") String appId, @PathParam("role") String userRole,
+      MethodCallback<WorkflowDataDTO> callback);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

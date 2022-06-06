@@ -51,13 +51,14 @@ import org.silverpeas.core.workflow.api.model.Role;
 import org.silverpeas.core.workflow.api.task.Task;
 import org.silverpeas.core.workflow.api.user.User;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
+import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.workflow.FieldPresentationDTO;
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -122,6 +123,15 @@ public class ServiceWorkflow extends AbstractRestWebService {
     }
 
     return userRoles;
+  }
+
+  private Map<String, List<String>> getHeaderLabels(Map<String, String> roles) throws Exception {
+
+    Map<String, List<String>> headerLabels = new TreeMap<>();
+    for (Map.Entry<String, String> role : roles.entrySet()) {
+      headerLabels.put(role.getKey(), getHeaderLabels(getComponentId(), role.getKey()));
+    }
+    return headerLabels;
   }
 
   @GET
@@ -205,34 +215,63 @@ public class ServiceWorkflow extends AbstractRestWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("instances/{role}")
-  public WorkflowInstancesDTO getInstances(@PathParam("role") String userRole) throws Exception {
-    WorkflowInstancesDTO data = new WorkflowInstancesDTO();
+  @Path("instances/{role}/{callNumber}")
+  public StreamingList<WorkflowInstanceDTO> getWorkflowInstances(@PathParam("role") String userRole, @PathParam("callNumber") int callNumber) throws Exception {
+    int callSize = 25;
+
+    User user = Workflow.getUserManager().getUser(getUser().getId());
+
+    List<ProcessInstance> list = (List<ProcessInstance>) request.getSession().getAttribute("Cache_processInstances_"+userRole);
+    if (list == null) {
+      list =
+          Workflow.getProcessInstanceManager().getProcessInstances(getComponentId(), user, userRole);
+      request.getSession().setAttribute("Cache_processInstances_"+userRole, list);
+    }
+
+    Role[] roles = Workflow.getProcessModelManager().getProcessModel(getComponentId()).getRoles();
+    if (userRole == null || userRole.isEmpty()) {
+      userRole = roles[0].getName();
+    }
+
+
+    int calledSize = 0;
+    boolean moreElements = true;
+    if (callNumber > 0) calledSize = callSize * callNumber;
+
+    if ((calledSize + callSize) >= list.size()) {
+      moreElements = false;
+      callSize = list.size() - calledSize;
+    }
+
+    ArrayList<WorkflowInstanceDTO> instances = new ArrayList<WorkflowInstanceDTO>();
+    for (ProcessInstance processInstance : list.subList(calledSize, calledSize + callSize)) {
+      instances.add(populate(processInstance, userRole));
+    }
+
+    StreamingList<WorkflowInstanceDTO> streamingList = new StreamingList<WorkflowInstanceDTO>(instances, moreElements);
+    if (!streamingList.getMoreElement()) getHttpRequest().getSession().removeAttribute("Cache_processInstances_"+userRole);
+
+    return streamingList;
+  }
+
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("datainstances/{role}")
+  public WorkflowDataDTO getDataInstances(@PathParam("role") String userRole) throws Exception {
+    WorkflowDataDTO data = new WorkflowDataDTO();
     try {
       if (userRole.equals("null")) userRole = null;
-      ArrayList<WorkflowInstanceDTO> instances = new ArrayList<WorkflowInstanceDTO>();
-      User user = Workflow.getUserManager().getUser(getUser().getId());
       Role[] roles = Workflow.getProcessModelManager().getProcessModel(getComponentId()).getRoles();
       if (userRole == null || userRole.isEmpty()) {
         userRole = roles[0].getName();
       }
-      String[] pr = Administration.get().getAllProfilesNames(getComponentId());
 
-      List<ProcessInstance> processInstances =
-          Workflow.getProcessInstanceManager().getProcessInstances(getComponentId(), user, userRole);
-
-      if (userRole == null) {
-        userRole = roles[0].getName();
-      }
-
-      for (ProcessInstance processInstance : processInstances) {
-        instances.add(populate(processInstance, userRole));
-      }
-      data.setInstances(instances);
       data.setRoles(getWorkflowUserRoles());
       data.setRolesAllowedToCreate(new ArrayList(Arrays.asList(
           Workflow.getProcessModelManager().getProcessModel(getComponentId()).getCreationRoles())));
-      data.setHeaderLabels(getHeaderLabels(getComponentId(), userRole));
+      data.setHeaderLabels(getHeaderLabels(data.getRoles()));
+
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
       throw e;

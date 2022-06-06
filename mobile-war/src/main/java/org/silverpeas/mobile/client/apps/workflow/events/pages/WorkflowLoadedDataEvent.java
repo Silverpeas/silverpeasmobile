@@ -22,44 +22,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared;
+package org.silverpeas.mobile.client.apps.workflow.events.pages;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-/**
- * @author: svu
- */
-public class StreamingList<B> implements Serializable {
-  private boolean moreElement;
-  private List<B> list = new ArrayList<>();
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
 
-  public StreamingList(final Collection collection, final boolean moreElement) {
-    super();
-    list.addAll(collection);
-    this.moreElement = moreElement;
-  }
+public class WorkflowLoadedDataEvent extends AbstractWorkflowPagesEvent {
 
-  public StreamingList() {
+  private WorkflowDataDTO data;
+  private String instanceId;
+
+  public WorkflowLoadedDataEvent() {
     super();
   }
 
-  public boolean getMoreElement() {
-    return moreElement;
-
+  @Override
+  protected void dispatch(WorkflowPagesEventHandler handler) {
+    handler.loadDataInstances(this);
   }
 
-  public void setMoreElement(final boolean moreElement) {
-    this.moreElement = moreElement;
+  public WorkflowDataDTO getData() {
+    return data;
   }
 
-  public List<B> getList() {
-    return list;
+  public void setData(final WorkflowDataDTO data) {
+    this.data = data;
   }
 
-  public void setList(final List<B> list) {
-    this.list = list;
+  public void setInstanceId(final String instanceId) {
+    this.instanceId = instanceId;
+  }
+
+  public String getInstanceId() {
+    return instanceId;
   }
 }

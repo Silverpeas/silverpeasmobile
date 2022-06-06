@@ -25,11 +25,12 @@
 package org.silverpeas.mobile.client.apps.workflow.events.pages;
 
 
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancesDTO;
+import org.silverpeas.mobile.shared.StreamingList;
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 
 public class WorkflowLoadedInstancesEvent extends AbstractWorkflowPagesEvent {
 
-  private WorkflowInstancesDTO data;
+  private StreamingList<WorkflowInstanceDTO> data;
   private String instanceId;
 
   public WorkflowLoadedInstancesEvent() {
@@ -41,11 +42,11 @@ public class WorkflowLoadedInstancesEvent extends AbstractWorkflowPagesEvent {
     handler.loadInstances(this);
   }
 
-  public WorkflowInstancesDTO getData() {
+  public StreamingList<WorkflowInstanceDTO> getData() {
     return data;
   }
 
-  public void setData(final WorkflowInstancesDTO data) {
+  public void setData(final StreamingList<WorkflowInstanceDTO> data) {
     this.data = data;
   }
 

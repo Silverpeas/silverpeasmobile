@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowProcessFormEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.pages.AbstractWorkflowPagesEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowActionProcessedEvent;
+import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedDataEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowLoadedInstancesEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEventHandler;
 import org.silverpeas.mobile.client.apps.workflow.pages.widgets.WorkflowFieldEditable;
@@ -80,6 +81,11 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
       f.setData(field);
       fields.add(f);
     }
+  }
+
+  @Override
+  public void loadDataInstances(final WorkflowLoadedDataEvent event) {
+
   }
 
   @Override
