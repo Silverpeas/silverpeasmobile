@@ -89,7 +89,7 @@ public class NotificationsBoxApp extends App
           @Override
           public void attempt() {
             super.attempt();
-            ServicesLocator.getServiceNotifications().getUserNotifications(0, this);
+            ServicesLocator.getServiceNotifications().getUserNotifications(nbCall+1, this);
           }
 
           @Override
@@ -171,7 +171,7 @@ public class NotificationsBoxApp extends App
           @Override
           public void attempt() {
             super.attempt();
-            ServicesLocator.getServiceNotifications().getUserSendedNotifications(0, this);
+            ServicesLocator.getServiceNotifications().getUserSendedNotifications(nbCall+1, this);
           }
 
           @Override

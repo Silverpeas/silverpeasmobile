@@ -34,6 +34,7 @@ import java.util.List;
  */
 public class StreamingList<B> implements Serializable {
   private boolean moreElement;
+  private boolean firstCall = false;
   private List<B> list = new ArrayList<>();
 
   public StreamingList(final Collection collection, final boolean moreElement) {
@@ -61,5 +62,13 @@ public class StreamingList<B> implements Serializable {
 
   public void setList(final List<B> list) {
     this.list = list;
+  }
+
+  public boolean isFirstCall() {
+    return firstCall;
+  }
+
+  public void setFirstCall(final boolean firstCall) {
+    this.firstCall = firstCall;
   }
 }

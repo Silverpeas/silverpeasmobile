@@ -108,51 +108,33 @@ public class ServiceNotifications extends AbstractRestWebService {
   @Path("sended/{callNumber}")
   public StreamingList<NotificationSendedDTO> getUserSendedNotifications(
       @PathParam("callNumber") int callNumber) throws Exception {
-    int callSize = 25;
 
-    List<NotificationSendedDTO> list = (List<NotificationSendedDTO>) request.getSession()
-        .getAttribute("Cache_userNotificationsSended");
-    if (list == null) {
-      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-      list = new ArrayList<>();
-      try {
-        List<SentNotificationDetail> notifications =
-            SentNotificationInterface.get().getAllNotifByUser(getUser().getId());
-        for (SentNotificationDetail notif : notifications) {
-          NotificationSendedDTO dto = new NotificationSendedDTO();
-          dto.setSource(notif.getSource());
-          dto.setDate(sdf.format(notif.getNotifDate()));
-          dto.setLink(notif.getLink());
-          dto.setTitle(notif.getTitle());
-          dto.setIdNotif(notif.getNotifId());
-          list.add(dto);
+    StreamingList<NotificationSendedDTO> s = (StreamingList<NotificationSendedDTO>) makeStreamingList(callNumber, "Cache_userNotificationsSended", request, new Populator() {
+      @Override
+      public List<?> execute() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        List<NotificationSendedDTO> list = new ArrayList<>();
+        try {
+          List<SentNotificationDetail> notifications =
+              SentNotificationInterface.get().getAllNotifByUser(getUser().getId());
+          for (SentNotificationDetail notif : notifications) {
+            NotificationSendedDTO dto = new NotificationSendedDTO();
+            dto.setSource(notif.getSource());
+            dto.setDate(sdf.format(notif.getNotifDate()));
+            dto.setLink(notif.getLink());
+            dto.setTitle(notif.getTitle());
+            dto.setIdNotif(notif.getNotifId());
+            list.add(dto);
+          }
+        } catch (NotificationException e) {
+          SilverLogger.getLogger(this).error(e);
         }
-        request.getSession().setAttribute("Cache_userNotificationsSended", list);
-      } catch (NotificationException e) {
-        SilverLogger.getLogger(this).error(e);
-        throw e;
+        return list;
       }
-    }
+    });
 
-    int calledSize = 0;
-    boolean moreElements = true;
-    if (callNumber > 0) {
-      calledSize = callSize * callNumber;
-    }
+    return s;
 
-    if ((calledSize + callSize) >= list.size()) {
-      moreElements = false;
-      callSize = list.size() - calledSize;
-    }
-
-    List<NotificationSendedDTO> notifs = list.subList(calledSize, calledSize + callSize);
-    StreamingList<NotificationSendedDTO> streamingList =
-        new StreamingList<NotificationSendedDTO>(notifs, moreElements);
-    if (!streamingList.getMoreElement()) {
-      getHttpRequest().getSession().removeAttribute("Cache_userNotificationsSended");
-    }
-
-    return streamingList;
   }
 
 
@@ -161,51 +143,31 @@ public class ServiceNotifications extends AbstractRestWebService {
   @Path("received/{callNumber}")
   public StreamingList<NotificationReceivedDTO> getUserNotifications(
       @PathParam("callNumber") int callNumber) {
-    int callSize = 25;
 
-    List<NotificationReceivedDTO> list = (List<NotificationReceivedDTO>) request.getSession()
-        .getAttribute("Cache_userNotificationsReceived");
-    if (list == null) {
-      list = new ArrayList<>();
-      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-      Collection<SILVERMAILMessage> messages =
-          SILVERMAILPersistence.getMessageOfFolder(getUser().getId(), "INBOX", null,
-              SilvermailCriteria.QUERY_ORDER_BY.RECEPTION_DATE_ASC);
-      for (SILVERMAILMessage message : messages) {
-        NotificationReceivedDTO dto = new NotificationReceivedDTO();
-        dto.setSource(message.getSource());
-        dto.setAuthor(message.getSenderName());
-        dto.setDate(sdf.format(message.getDate()));
-        dto.setLink(message.getUrl());
-        dto.setReaden(message.getReaden());
-        dto.setTitle(message.getSubject());
-        dto.setIdNotif(message.getId());
-        list.add(dto);
+    StreamingList<NotificationReceivedDTO> s = (StreamingList<NotificationReceivedDTO>) makeStreamingList(callNumber, "Cache_userNotificationsReceived", request, new Populator() {
+      @Override
+      public List<?> execute() {
+        List<NotificationReceivedDTO> list = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Collection<SILVERMAILMessage> messages =
+            SILVERMAILPersistence.getMessageOfFolder(getUser().getId(), "INBOX", null,
+                SilvermailCriteria.QUERY_ORDER_BY.RECEPTION_DATE_ASC);
+        for (SILVERMAILMessage message : messages) {
+          NotificationReceivedDTO dto = new NotificationReceivedDTO();
+          dto.setSource(message.getSource());
+          dto.setAuthor(message.getSenderName());
+          dto.setDate(sdf.format(message.getDate()));
+          dto.setLink(message.getUrl());
+          dto.setReaden(message.getReaden());
+          dto.setTitle(message.getSubject());
+          dto.setIdNotif(message.getId());
+          list.add(dto);
+        }
+        Collections.reverse(list);
+        return list;
       }
-      Collections.reverse(list);
-      request.getSession().setAttribute("Cache_userNotificationsReceived", list);
-    }
+    });
 
-    int calledSize = 0;
-    boolean moreElements = true;
-    if (callNumber > 0) {
-      calledSize = callSize * callNumber;
-    }
-
-    if ((calledSize + callSize) >= list.size()) {
-      moreElements = false;
-      callSize = list.size() - calledSize;
-    }
-
-    List<NotificationReceivedDTO> notifs = list.subList(calledSize, calledSize + callSize);
-    StreamingList<NotificationReceivedDTO> streamingList =
-        new StreamingList<NotificationReceivedDTO>(notifs, moreElements);
-    if (!streamingList.getMoreElement()) {
-      getHttpRequest().getSession().removeAttribute("Cache_userNotificationsReceived");
-    }
-
-    StreamingList s = new StreamingList();
-    s.setList(notifs);
     return s;
   }
 

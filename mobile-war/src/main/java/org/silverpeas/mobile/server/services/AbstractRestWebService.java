@@ -66,14 +66,14 @@ public abstract class AbstractRestWebService extends RESTWebService {
     return streamingList;
   }
 
-  protected StreamingList<?> makeStreamingList(int callNumber, String CACHE_NAME, HttpServletRequest request, Populator populator) throws Exception {
+  protected StreamingList<?> makeStreamingList(int callNumber, String CACHE_NAME, HttpServletRequest request, Populator populator) {
     int callSize = 25;
 
     List<?> list = (List<?>) request.getSession()
         .getAttribute(CACHE_NAME);
     if (list == null) {
-        List<?> l = populator.execute();
-        request.getSession().setAttribute(CACHE_NAME, l);
+        list = populator.execute();
+        request.getSession().setAttribute(CACHE_NAME, list);
     }
 
     int calledSize = 0;
@@ -90,6 +90,7 @@ public abstract class AbstractRestWebService extends RESTWebService {
     List<?> sbList = list.subList(calledSize, calledSize + callSize);
     StreamingList<?> streamingList =
         new StreamingList<>(sbList, moreElements);
+    if (callNumber == 0) streamingList.setFirstCall(true);
     if (!streamingList.getMoreElement()) {
       getHttpRequest().getSession().removeAttribute(CACHE_NAME);
     }
