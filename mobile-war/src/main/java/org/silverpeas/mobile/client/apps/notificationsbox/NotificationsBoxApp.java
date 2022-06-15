@@ -43,6 +43,7 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBox
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineBackground;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.StreamingList;
@@ -84,8 +85,8 @@ public class NotificationsBoxApp extends App
   }
 
   private void loadNotifications(NotificationsLoadEvent event, int nbCall) {
-    MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<StreamingList<NotificationReceivedDTO>>() {
+    MethodCallbackOnlineBackground action =
+        new MethodCallbackOnlineBackground<StreamingList<NotificationReceivedDTO>>() {
           @Override
           public void attempt() {
             super.attempt();

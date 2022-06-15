@@ -53,6 +53,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineBackground;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -144,8 +145,8 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstances(final WorkflowLoadInstancesEvent event) {
-    MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<WorkflowDataDTO>() {
+    MethodCallbackOnlineBackground action =
+        new MethodCallbackOnlineBackground<WorkflowDataDTO>() {
           @Override
           public void attempt() {
             super.attempt();
