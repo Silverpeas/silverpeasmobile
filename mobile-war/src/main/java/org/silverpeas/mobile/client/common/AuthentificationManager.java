@@ -287,6 +287,7 @@ public class AuthentificationManager {
     // logout
     RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/silverpeas/Logout");
     try {
+      clearCache();
       builder.sendRequest("", new RequestCallback() {
         @Override
         public void onResponseReceived(final Request request, final Response response) {
@@ -298,12 +299,12 @@ public class AuthentificationManager {
           RootPanel.get().clear();
           RootPanel.get().add(connexionPage);
           SpMobil.destroyMainPage();
-          clearCache();
+
         }
 
         @Override
         public void onError(final Request request, final Throwable throwable) {
-          clearCache();
+
         }
       });
     } catch (RequestException e) {
