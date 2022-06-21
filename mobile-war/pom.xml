@@ -286,12 +286,12 @@
       <version>1.14.3</version>
     </dependency>
 
-    <dependency>
+    <!--dependency>
       <groupId>com.seanchenxi.gwt</groupId>
       <artifactId>gwt-storage</artifactId>
       <version>1.4.0</version>
       <scope>provided</scope>
-    </dependency>
+    </dependency-->
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

@@ -24,6 +24,9 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+
 public class FullUserDTO extends DetailUserDTO {
   private String login;
   private String password;
@@ -86,5 +89,52 @@ public class FullUserDTO extends DetailUserDTO {
   @Override
   public void setToken(final String token) {
     this.token = token;
+  }
+
+  public AutoBean<IFullUser> getAutoBean () {
+    AutoBean<IFullUser> b = LocalStorageHelper.factory.ifulluser();
+    b.as().setConnected(getConnected());
+    b.as().setAvatar(getAvatar());
+    b.as().setId(getId());
+    b.as().seteMail(geteMail());
+    b.as().setDomainId(getDomainId());
+    b.as().setFirstName(getFirstName());
+    b.as().setLogin(getLogin());
+    b.as().setToken(getToken());
+    b.as().setCellularPhoneNumber(getCellularPhoneNumber());
+    b.as().setNotificationBox(isNotificationBox());
+    b.as().setSessionKey(getSessionKey());
+    b.as().setZone(getZone());
+    b.as().setLanguage(getLanguage());
+    b.as().setStatus(getStatus());
+    b.as().setFaxPhoneNumber(getFaxPhoneNumber());
+    b.as().setPhoneNumber(getPhoneNumber());
+    b.as().setLastName(getLastName());
+    b.as().setPassword(getPassword());
+    return b;
+  }
+
+  public static FullUserDTO getBean (AutoBean<IFullUser> b) {
+    if (b == null) return null;
+    FullUserDTO user = new FullUserDTO();
+    user.setConnected(b.as().getConnected());
+    user.setAvatar(b.as().getAvatar());
+    user.setId(b.as().getId());
+    user.seteMail(b.as().geteMail());
+    user.setDomainId(b.as().getDomainId());
+    user.setFirstName(b.as().getFirstName());
+    user.setLogin(b.as().getLogin());
+    user.setToken(b.as().getToken());
+    user.setCellularPhoneNumber(b.as().getCellularPhoneNumber());
+    user.setNotificationBox(b.as().isNotificationBox());
+    user.setSessionKey(b.as().getSessionKey());
+    user.setZone(b.as().getZone());
+    user.setLanguage(b.as().getLanguage());
+    user.setStatus(b.as().getStatus());
+    user.setFaxPhoneNumber(b.as().getFaxPhoneNumber());
+    user.setPhoneNumber(b.as().getPhoneNumber());
+    user.setLastName(b.as().getLastName());
+    user.setPassword(b.as().getPassword());
+    return user;
   }
 }

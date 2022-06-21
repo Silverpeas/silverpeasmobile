@@ -24,12 +24,13 @@
 
 package org.silverpeas.mobile.shared.dto.authentication;
 
-import java.io.Serializable;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 
 /**
  * @author svu
  */
-public class UserProfileDTO implements Serializable {
+public class UserProfileDTO implements IUserProfile {
   private String uri;
   private String contactsUri;
   private String webPage;
@@ -220,4 +221,59 @@ public class UserProfileDTO implements Serializable {
   public void setDeactivatedState(final boolean deactivatedState) {
     this.deactivatedState = deactivatedState;
   }
+
+  public AutoBean<IUserProfile> getAutoBean () {
+    AutoBean<IUserProfile> b = LocalStorageHelper.factory.iuserprofile();
+    b.as().setAnonymous(isAnonymous());
+    b.as().setAccessLevel(getAccessLevel());
+    b.as().setAvatar(getAvatar());
+    b.as().setId(getId());
+    b.as().setConnected(isConnected());
+    b.as().setApiToken(getApiToken());
+    b.as().setContactsUri(getContactsUri());
+    b.as().setDeletedState(isDeletedState());
+    b.as().setDomainId(getDomainId());
+    b.as().seteMail(geteMail());
+    b.as().setLanguage(getLanguage());
+    b.as().setLogin(getLogin());
+    b.as().setFirstName(getFirstName());
+    b.as().setDomainName(getDomainName());
+    b.as().setFullName(getFullName());
+    b.as().setStatus(getStatus());
+    b.as().setUri(getUri());
+    b.as().setLastName(getLastName());
+    b.as().setSpecificId(getSpecificId());
+    b.as().setWebPage(getWebPage());
+    b.as().setDeactivatedState(isDeactivatedState());
+    return b;
+  }
+
+  public static UserProfileDTO getBean (AutoBean<IUserProfile> b) {
+    UserProfileDTO user = new UserProfileDTO();
+    user.setAnonymous(b.as().isAnonymous());
+    user.setAccessLevel(b.as().getAccessLevel());
+    user.setAvatar(b.as().getAvatar());
+    user.setId(b.as().getId());
+    user.setConnected(b.as().isConnected());
+    user.setApiToken(b.as().getApiToken());
+    user.setContactsUri(b.as().getContactsUri());
+    user.setDeletedState(b.as().isDeletedState());
+    user.setDomainId(b.as().getDomainId());
+    user.seteMail(b.as().geteMail());
+    user.setLanguage(b.as().getLanguage());
+    user.setLogin(b.as().getLogin());
+    user.setFirstName(b.as().getFirstName());
+    user.setDomainName(b.as().getDomainName());
+    user.setFullName(b.as().getFullName());
+    user.setStatus(b.as().getStatus());
+    user.setUri(b.as().getUri());
+    user.setLastName(b.as().getLastName());
+    user.setSpecificId(b.as().getSpecificId());
+    user.setWebPage(b.as().getWebPage());
+    user.setDeactivatedState(b.as().isDeactivatedState());
+
+    return user;
+  }
+
+
 }

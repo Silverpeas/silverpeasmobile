@@ -69,7 +69,7 @@ public class ConfigApp extends App implements ConfigAppEventHandler {
   @Override
   public void updateConfig(UpdateConfigEvent event) {
     Config conf = event.getConfig();
-    LocalStorageHelper.store("config", Config.class, conf);
+    LocalStorageHelper.store("config", conf.getAutoBean());
   }
 
   @Override

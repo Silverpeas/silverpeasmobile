@@ -37,6 +37,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.autobean.shared.AutoBean;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.apps.agenda.AgendaApp;
@@ -87,8 +88,10 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
 import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
+import org.silverpeas.mobile.shared.dto.authentication.IUserProfile;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
+import org.silverpeas.mobile.shared.dto.configuration.IConfig;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
@@ -237,6 +240,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   /**
    * Auto login.
+   *
    * @param user
    * @param password
    */
@@ -257,30 +261,32 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     RootPanel.get().add(getMainPage());
     PageHistory.getInstance().goTo(new HomePage());
 
-    if ( (shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) || shortcutContributionId != null
-        || (shortcutContentType != null && shortcutContentType.equals("Component") && shortcutAppId != null) ) {
-      ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId, shortcutContributionId, shortcutRole);
+    if ((shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) ||
+        shortcutContributionId != null ||
+        (shortcutContentType != null && shortcutContentType.equals("Component") &&
+            shortcutAppId != null)) {
+      ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId,
+          shortcutContributionId, shortcutRole);
     } else {
-      MethodCallbackOnlineOnly action =
-          new MethodCallbackOnlineOnly<HomePageDTO>() {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<HomePageDTO>() {
 
-            @Override
-            public void attempt() {
-              ServicesLocator.getServiceNavigation().getHomePageData(null, this);
-            }
+        @Override
+        public void attempt() {
+          ServicesLocator.getServiceNavigation().getHomePageData(null, this);
+        }
 
-            @Override
-            public void onSuccess(final Method method, final HomePageDTO result) {
-              super.onSuccess(method, result);
-              // send event to main home page
-              EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
+        @Override
+        public void onSuccess(final Method method, final HomePageDTO result) {
+          super.onSuccess(method, result);
+          // send event to main home page
+          EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
 
-              // caching for offline mode
-              for (ShortCutLinkDTO shortCut : result.getShortCuts()) {
-                CacheStorageHelper.store(shortCut.getIcon());
-              }
-            }
-          };
+          // caching for offline mode
+          for (ShortCutLinkDTO shortCut : result.getShortCuts()) {
+            CacheStorageHelper.store(shortCut.getIcon());
+          }
+        }
+      };
       action.attempt();
     }
   }
@@ -312,7 +318,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
         public void onSuccess(final Method method, final DetailUserDTO detailUserDTO) {
           super.onSuccess(method, detailUserDTO);
           setUser(detailUserDTO);
-          setUserProfile(LocalStorageHelper.load(AuthentificationManager.USER_PROFIL, UserProfileDTO.class));
+          setUserProfile(UserProfileDTO.getBean(
+              LocalStorageHelper.load(AuthentificationManager.USER_PROFIL, IUserProfile.class)));
 
           ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
             @Override
@@ -481,11 +488,15 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   }
 
   public static Config getConfiguration() {
-    Config conf = LocalStorageHelper.load("config", Config.class);
+    AutoBean<IConfig> conf = LocalStorageHelper.load("config", IConfig.class);
+    Config config = null;
     if (conf == null) {
-      conf = Config.getDefaultConfig();
+      config = Config.getDefaultConfig();
+    } else {
+      config = Config.getBean(conf);
     }
-    return conf;
+
+    return config;
   }
 
   @Override

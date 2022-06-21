@@ -24,13 +24,11 @@
 
 package org.silverpeas.mobile.shared.dto.configuration;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 
-import java.io.Serializable;
+public class Config {
 
-public class Config extends BaseDTO implements Serializable {
-
-  private int newsNumber;
   private boolean newsDisplay;
   private boolean lastPublicationsDisplay;
   private boolean lastEventsDisplay;
@@ -118,6 +116,32 @@ public class Config extends BaseDTO implements Serializable {
 
   public void setShortCutsToolsDisplay(final boolean shortCutsToolsDisplay) {
     this.shortCutsToolsDisplay = shortCutsToolsDisplay;
+  }
+
+  public AutoBean<IConfig> getAutoBean () {
+    AutoBean<IConfig> b = LocalStorageHelper.factory.iconfig();
+    b.as().setFreeZoneDisplay(isFreeZoneDisplay());
+    b.as().setFavoritesDisplay(isFavoritesDisplay());
+    b.as().setFreeZoneThinDisplay(isFreeZoneThinDisplay());
+    b.as().setLastEventsDisplay(isLastEventsDisplay());
+    b.as().setNewsDisplay(isNewsDisplay());
+    b.as().setLastPublicationsDisplay(isLastPublicationsDisplay());
+    b.as().setShortCutsDisplay(isShortCutsDisplay());
+    b.as().setShortCutsToolsDisplay(isShortCutsToolsDisplay());
+    return b;
+  }
+
+  public static Config getBean (AutoBean<IConfig> b) {
+    Config conf = new Config();
+    conf.setFreeZoneDisplay(b.as().isFreeZoneDisplay());
+    conf.setFavoritesDisplay(b.as().isFavoritesDisplay());
+    conf.setFreeZoneThinDisplay(b.as().isFreeZoneThinDisplay());
+    conf.setLastEventsDisplay(b.as().isLastEventsDisplay());
+    conf.setNewsDisplay(b.as().isNewsDisplay());
+    conf.setLastPublicationsDisplay(b.as().isLastPublicationsDisplay());
+    conf.setShortCutsDisplay(b.as().isShortCutsDisplay());
+    conf.setShortCutsToolsDisplay(b.as().isShortCutsToolsDisplay());
+    return conf;
   }
 }
 

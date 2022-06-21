@@ -53,9 +53,8 @@
   <set-property name="compiler.useSourceMaps" value="true"/>
 
 
-  <inherits name="com.seanchenxi.gwt.storage.Storage"/>
-  <set-property name="storage.cache" value="false" />
-  <set-configuration-property name="storage.type.finder" value="mix" />
+  <inherits name="com.google.web.bindery.autobean.AutoBean"/>
+
 
   <set-property name="user.agent" value="safari,gecko1_8" />
 

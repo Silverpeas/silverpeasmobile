@@ -26,7 +26,8 @@ package org.silverpeas.mobile.client.common.storage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.storage.client.Storage;
-import com.seanchenxi.gwt.storage.client.serializer.StorageSerializer;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 
 /**
@@ -34,28 +35,49 @@ import com.seanchenxi.gwt.storage.client.serializer.StorageSerializer;
  */
 public class LocalStorageHelper {
 
-  private static StorageSerializer serializer = GWT.create(StorageSerializer.class);
+  public static AutoBeanFactory factory = GWT.create(AutoBeanFactory.class);
 
-  public static <T> void store(String key, Class<? super T> cBean , T bean) {
+
+  public static <T> void store(String key, AutoBean<T> autobean) {
     Storage storage = Storage.getLocalStorageIfSupported();
-    Class<T> c;
+
     if (storage != null) {
       String data = null;
       try {
-        data = serializer.serialize(cBean , bean);
+        data = AutoBeanCodex.encode(autobean).getPayload();
         storage.setItem(key, data);
       } catch (Throwable t) {GWT.log("error store", t);}
 
     }
   }
 
-  public static <T> T load(String key, Class<T> beanClass) {
+  public static void store(String key, String data) {
+    Storage storage = Storage.getLocalStorageIfSupported();
+    if (storage != null) {
+      try {
+        storage.setItem(key, data);
+      } catch (Throwable t) {GWT.log("error store", t);}
+
+    }
+  }
+  public static String load(String key) {
+    Storage storage = Storage.getLocalStorageIfSupported();
+    if (storage != null) {
+      String dataItem = storage.getItem(key);
+      return dataItem;
+    }
+    return  null;
+  }
+  public static <T> AutoBean<T> load(String key, Class<T> beanClass) {
     Storage storage = Storage.getLocalStorageIfSupported();
     if (storage != null) {
       String dataItem = storage.getItem(key);
       if (dataItem != null) {
         try {
-          return serializer.deserialize(beanClass, dataItem);
+
+          AutoBean<T> bean = AutoBeanCodex.decode(factory, beanClass, dataItem);
+          return bean;
+
         } catch (Throwable t) {
         }
       }

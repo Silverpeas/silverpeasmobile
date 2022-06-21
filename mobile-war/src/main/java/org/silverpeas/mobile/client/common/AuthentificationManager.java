@@ -45,6 +45,8 @@ import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
+import org.silverpeas.mobile.shared.dto.IFullUser;
+import org.silverpeas.mobile.shared.dto.authentication.IUserProfile;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
@@ -72,11 +74,11 @@ public class AuthentificationManager {
   }
 
   public void addHeader(String key, String value) {
-    LocalStorageHelper.store(key, String.class, value);
+    LocalStorageHelper.store(key, value);
   }
 
   public String getHeader(String key) {
-    return LocalStorageHelper.load(key, String.class);
+    return LocalStorageHelper.load(key);
   }
 
   public void storeUser(final DetailUserDTO user, final UserProfileDTO profil, String login,
@@ -90,17 +92,17 @@ public class AuthentificationManager {
     SpMobil.setUser(user);
 
     FullUserDTO u = new FullUserDTO(login, encryptedPassword, domainId, user);
-    LocalStorageHelper.store(USER_CONNECTED_KEY, FullUserDTO.class, u);
-    LocalStorageHelper.store(USER_PROFIL, UserProfileDTO.class, profil);
+    LocalStorageHelper.store(USER_CONNECTED_KEY, u.getAutoBean());
+    LocalStorageHelper.store(USER_PROFIL, profil.getAutoBean());
   }
 
   public void updateAvatarInCache(final String avatarData) {
     SpMobil.getUser().setAvatar(avatarData);
     SpMobil.getUserProfile().setAvatar(avatarData);
-    FullUserDTO user = LocalStorageHelper.load(USER_CONNECTED_KEY, FullUserDTO.class);
+    FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.load(USER_CONNECTED_KEY, IFullUser.class));
     user.setAvatar(avatarData);
-    LocalStorageHelper.store(USER_CONNECTED_KEY, FullUserDTO.class, user);
-    LocalStorageHelper.store(USER_PROFIL, UserProfileDTO.class, SpMobil.getUserProfile());
+    LocalStorageHelper.store(USER_CONNECTED_KEY, user.getAutoBean());
+    LocalStorageHelper.store(USER_PROFIL, SpMobil.getUserProfile().getAutoBean());
   }
 
   /**
@@ -111,9 +113,10 @@ public class AuthentificationManager {
   }
 
   public FullUserDTO loadUser() {
-    FullUserDTO user = LocalStorageHelper.load(USER_CONNECTED_KEY, FullUserDTO.class);
+    FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.load(USER_CONNECTED_KEY, IFullUser.class));
     SpMobil.setUser(user);
-    UserProfileDTO profil = LocalStorageHelper.load(USER_PROFIL, UserProfileDTO.class);
+    UserProfileDTO profil =
+        UserProfileDTO.getBean(LocalStorageHelper.load(USER_PROFIL, IUserProfile.class));
     SpMobil.setUserProfile(profil);
     return user;
   }
@@ -198,8 +201,6 @@ public class AuthentificationManager {
 
           @Override
           public void onSuccess(final Method method, final UserProfileDTO userProfile) {
-            LocalStorageHelper.clear(); // clear offline data
-            AuthentificationManager.getInstance().clearLocalStorage();
 
             AuthentificationManager.getInstance()
                 .addHeader("X-STKN", method.getResponse().getHeader("X-STKN"));
@@ -237,8 +238,7 @@ public class AuthentificationManager {
                   }
 
                   @Override
-                  public void onSuccess(final Method method,
-                      final Boolean showTermsOfServices) {
+                  public void onSuccess(final Method method, final Boolean showTermsOfServices) {
 
                     Notification.activityStop();
                     AuthentificationManager.getInstance()
@@ -259,7 +259,8 @@ public class AuthentificationManager {
               @Override
               public void onFailure(final Method method, final Throwable t) {
                 //super.onFailure(method, t);
-                Window.alert("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
+                Window.alert(
+                    "Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
 
                 if (t instanceof AuthenticationException) {
                   EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
