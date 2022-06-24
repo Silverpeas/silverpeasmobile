@@ -70,10 +70,10 @@ public class ProfileApp extends App {
                   TextCallback action = new TextCallback() {
                     @Override
                     public void onFailure(final Method method, final Throwable t) {
-                      if (NetworkHelper.getInstance().isOffline()) {
-                        Notification.alert(msg.needToBeOnline());
-                      } else {
+                      if (NetworkHelper.isOnline()) {
                         EventBus.getInstance().fireEvent(new ErrorEvent(t));
+                      } else {
+                        Notification.alert(msg.needToBeOnline());
                       }
                     }
 
@@ -86,7 +86,7 @@ public class ProfileApp extends App {
                       EventBus.getInstance().fireEvent(new PageEvent(ProfileApp.this, ProfileEvents.POSTED.toString(), status));
                     }
                   };
-                  if (!NetworkHelper.getInstance().isOffline()) {
+                  if (NetworkHelper.isOnline()) {
                     ServicesLocator.getServiceRSE().updateStatus(postStatus, action);
                   } else {
                     Notification.alert(msg.needToBeOnline());

@@ -43,11 +43,7 @@ public abstract class TextCallbackOnlineOnly implements TextCallback {
 
   public void attempt() {
     Notification.activityStart();
-    if (NetworkHelper.getInstance().isOffline()) {
-      Notification.activityStop();
-      Notification.alert(msg.needToBeOnline());
-      return;
-    }
+    NetworkHelper.updateConnexionIndicator();
   }
 
   @Override
@@ -67,7 +63,7 @@ public abstract class TextCallbackOnlineOnly implements TextCallback {
         }
       });
     } else {
-      if (OfflineHelper.needToGoOffine(t)) {
+      if (NetworkHelper.needToGoOffine(t)) {
         // Lost connexion during requesting
         Notification.alert(msg.needToBeOnline());
       } else {

@@ -42,7 +42,6 @@ import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
-import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
@@ -80,7 +79,7 @@ public class AvatarUpload extends Composite {
     String url = UrlUtils.getSilverpeasServicesLocation();
     url += "mobile/avatar";
 
-    if (!NetworkHelper.getInstance().isOffline()) {
+    if (NetworkHelper.isOnline()) {
       upload(this, file.getElement(), url, AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN), AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSilverpeasSession), SpMobil.getUserToken());
     } else {
       Notification.activityStop();
@@ -111,7 +110,7 @@ public class AvatarUpload extends Composite {
   @UiHandler("avatar")
   void upload(ClickEvent event) {
     if (Boolean.parseBoolean(ResourcesManager.getParam("avatar.updatable"))) {
-      if (OfflineHelper.isOffLine() == false) {
+      if (!NetworkHelper.isOnline()) {
         clickOnInputFile(file.getElement());
       } else {
         Notification.alert(msg.needToBeOnline());

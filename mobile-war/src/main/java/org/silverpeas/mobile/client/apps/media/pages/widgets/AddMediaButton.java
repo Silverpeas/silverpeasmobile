@@ -44,6 +44,7 @@ import org.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.network.OfflineHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
@@ -103,7 +104,7 @@ public class AddMediaButton extends Composite {
 
     @UiHandler("link")
     void upload(ClickEvent event) {
-        if (OfflineHelper.isOffLine() == false ) {
+        if (!NetworkHelper.isOnline()) {
             clickOnInputFile(file.getElement());
         } else {
             Notification.alert(globalMsg.needToBeOnline());

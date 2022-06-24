@@ -25,11 +25,6 @@
 package org.silverpeas.mobile.client.common.network;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.RequestTimeoutException;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.StatusCodeException;
-import org.fusesource.restygwt.client.FailedResponseException;
-import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 /**
@@ -40,37 +35,7 @@ public class OfflineHelper {
     private static ApplicationMessages msg = GWT.create(ApplicationMessages.class);
     private static boolean offLine;
 
-    public static boolean needToGoOffine (Throwable reason) {
-        if (reason instanceof FailedResponseException) {
-          if (((FailedResponseException) reason).getStatusCode() == 0) {
-            SpMobil.getMainPage().showOfflineIndicator();
-            offLine = true;
-            return offLine;
-          }
-        }
-
-        if (reason instanceof StatusCodeException) {
-            if (((StatusCodeException) reason).getStatusCode() == 0) {
-                SpMobil.getMainPage().showOfflineIndicator();
-                offLine = true;
-                return offLine;
-            }
-        }
-        if (reason instanceof RequestTimeoutException) {
-            SpMobil.getMainPage().showOfflineIndicator();
-            offLine = true;
-            return offLine;
-        }
-        SpMobil.getMainPage().hideOfflineIndicator();
-        offLine = false;
-        return offLine;
-    }
-
-    public static void hideOfflineIndicator() {
-        SpMobil.getMainPage().hideOfflineIndicator();
-    }
-
-    public static boolean isOffLine() {
+  public static boolean isOffLine() {
         return offLine;
     }
 }

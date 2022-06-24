@@ -33,7 +33,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
 
 /**
  * @author: svu
@@ -43,10 +42,7 @@ public abstract class MethodCallbackOnlineBackground<T> implements MethodCallbac
   private static ApplicationMessages msg = GWT.create(ApplicationMessages.class);
 
   public void attempt() {
-    if (NetworkHelper.getInstance().isOffline()) {
-      Notification.alert(msg.needToBeOnline());
-      return;
-    }
+    NetworkHelper.updateConnexionIndicator();
   }
 
   @Override
@@ -60,7 +56,7 @@ public abstract class MethodCallbackOnlineBackground<T> implements MethodCallbac
         }
       });
     } else {
-      if (OfflineHelper.needToGoOffine(t)) {
+      if (NetworkHelper.needToGoOffine(t)) {
         // Lost connexion during requesting
         Notification.alert(msg.needToBeOnline());
       } else {

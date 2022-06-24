@@ -24,6 +24,9 @@
 
 package org.silverpeas.mobile.client.common.network;
 
+import com.google.gwt.http.client.RequestTimeoutException;
+import com.google.gwt.user.client.rpc.StatusCodeException;
+import org.fusesource.restygwt.client.FailedResponseException;
 import org.silverpeas.mobile.client.SpMobil;
 
 /**
@@ -33,7 +36,6 @@ public class NetworkHelper {
 
     private static NetworkHelper instance = null;
     private String connectionType = null;
-    private boolean offline = false;
 
     public static NetworkHelper getInstance() {
         if (instance == null) {
@@ -43,7 +45,7 @@ public class NetworkHelper {
     }
 
     public NetworkHelper() {
-      watchConnectionState(this);
+      watchConnectionState();
       watchConnectionType(this);
     }
 
@@ -63,12 +65,12 @@ public class NetworkHelper {
         }
     }-*/;
 
-    private static native void watchConnectionState(NetworkHelper i) /*-{
+    private static native void watchConnectionState() /*-{
       $wnd.addEventListener("offline", function () {
-        i.@org.silverpeas.mobile.client.common.network.NetworkHelper::updateConnexionIndicator(*)(true);
+        @org.silverpeas.mobile.client.common.network.NetworkHelper::updateConnexionIndicator(*)(true);
       }, false);
       $wnd.addEventListener("online", function () {
-        i.@org.silverpeas.mobile.client.common.network.NetworkHelper::updateConnexionIndicator(*)(false);
+        @org.silverpeas.mobile.client.common.network.NetworkHelper::updateConnexionIndicator(*)(false);
       }, false);
     }-*/;
 
@@ -77,21 +79,46 @@ public class NetworkHelper {
         return (connection == null);
     }-*/;
 
-    private void updateConnexionIndicator(boolean offline) {
-      if (offline) {
-        SpMobil.getMainPage().showOfflineIndicator();
-        this.offline = true;
-      } else {
+  public static native boolean isOnline() /*-{
+    var connection = window.navigator.onLine;
+    return connection;
+  }-*/;
+
+    public static void updateConnexionIndicator() {
+      if (isOnline()) {
         SpMobil.getMainPage().hideOfflineIndicator();
-        this.offline = false;
+      } else {
+        SpMobil.getMainPage().showOfflineIndicator();
       }
     }
 
-    public boolean isOffline() {
-      return offline;
-    }
+  public static boolean needToGoOffine (Throwable reason) {
+      if (reason instanceof FailedResponseException) {
+        if (((FailedResponseException) reason).getStatusCode() == 0) {
+          SpMobil.getMainPage().showOfflineIndicator();
+          return true;
+        }
+      }
 
-    public String getConnectionType() {
+      if (reason instanceof StatusCodeException) {
+          if (((StatusCodeException) reason).getStatusCode() == 0) {
+              SpMobil.getMainPage().showOfflineIndicator();
+              return true;
+          }
+      }
+      if (reason instanceof RequestTimeoutException) {
+          SpMobil.getMainPage().showOfflineIndicator();
+          return true;
+      }
+      SpMobil.getMainPage().hideOfflineIndicator();
+      return false;
+  }
+
+  public static void hideOfflineIndicator() {
+      SpMobil.getMainPage().hideOfflineIndicator();
+  }
+
+  public String getConnectionType() {
         return connectionType;
     }
 
@@ -102,7 +129,4 @@ public class NetworkHelper {
             return false;
         }
     }
-
-
-
 }

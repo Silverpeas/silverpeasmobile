@@ -53,7 +53,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.OfflineHelper;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
 import org.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
 import org.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
@@ -108,7 +108,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       @Override
       public void onFailure(final Method method, final Throwable t) {
         super.onFailure(method, t);
-        if (OfflineHelper.needToGoOffine(t)) {
+        if (NetworkHelper.needToGoOffine(t)) {
           Notification.alert(globalMsg.needToBeOnline());
         } else {
           EventBus.getInstance().fireEvent(new ErrorEvent(t));

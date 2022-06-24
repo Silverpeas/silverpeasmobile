@@ -36,7 +36,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
-import org.silverpeas.mobile.client.common.network.OfflineHelper;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
@@ -80,7 +80,7 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
 
   private void openLink(String url) {
     Notification.activityStop();
-    OfflineHelper.hideOfflineIndicator();
+    NetworkHelper.hideOfflineIndicator();
     LinksManager.processLink(url);
   }
 

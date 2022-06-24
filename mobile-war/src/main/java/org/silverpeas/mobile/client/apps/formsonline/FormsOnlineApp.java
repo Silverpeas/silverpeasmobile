@@ -165,7 +165,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
         formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
       }
     }
-    if (NetworkHelper.getInstance().isOffline()) {
+    if (!NetworkHelper.isOnline()) {
       Notification.activityStop();
       Notification.alert(msgApp.needToBeOnline());
       return;
