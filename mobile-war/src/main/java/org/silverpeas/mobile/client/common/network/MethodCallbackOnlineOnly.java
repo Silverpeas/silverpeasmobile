@@ -26,7 +26,6 @@ package org.silverpeas.mobile.client.common.network;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
@@ -50,8 +49,6 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
   @Override
   public void onFailure(final Method method, final Throwable t) {
     Notification.activityStop();
-    Window.alert(t.getMessage() + t.getClass().getCanonicalName());
-    Window.alert("" + method.getResponse().getStatusCode());
     if (method.getResponse().getStatusCode() == 403 || method.getResponse().getStatusCode() == 401) {
       // Session expired, need to re-authent
       SpMobil.getInstance().loadIds(new Command() {
