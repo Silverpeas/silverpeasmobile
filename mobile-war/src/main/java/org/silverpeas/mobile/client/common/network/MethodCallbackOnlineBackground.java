@@ -58,6 +58,7 @@ public abstract class MethodCallbackOnlineBackground<T> implements MethodCallbac
     } else {
       if (NetworkHelper.needToGoOffine(t)) {
         // Lost connexion during requesting
+        GWT.log(method.builder.getHTTPMethod() + " " + method.builder.getUrl());
         Notification.alert(msg.needToBeOnline());
       } else {
         EventBus.getInstance().fireEvent(new ErrorEvent(t));

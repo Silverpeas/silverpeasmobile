@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.event.authentication.AuthenticationErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -149,129 +150,131 @@ public class AuthentificationManager {
   public void authenticateOnSilverpeas(String login, String password, String domainId,
       Command attempt) {
     Notification.activityStart();
-    ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
+    if (NetworkHelper.isOnline()) {
+      ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
 
-        new MethodCallback<UserProfileDTO>() {
-          @Override
-          public void onFailure(final Method method, final Throwable throwable) {
-            int statusError = method.getResponse().getStatusCode();
-            if (statusError == 403) {
-              Notification.activityStop();
-              SpMobil.displayMainPage();
-            } else if (statusError == 401 || statusError == 500) {
+          new MethodCallback<UserProfileDTO>() {
+            @Override
+            public void onFailure(final Method method, final Throwable throwable) {
+              int statusError = method.getResponse().getStatusCode();
+              if (statusError == 403) {
+                Notification.activityStop();
+                SpMobil.displayMainPage();
+              } else if (statusError == 401 || statusError == 500) {
 
-              MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
+                MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
+                  @Override
+                  public void attempt() {
+                    super.attempt();
+                    ServicesLocator.getServiceConnection().userExist(login, domainId, this);
+                  }
+
+                  @Override
+                  public void onFailure(final Method method, final Throwable t) {
+                    super.onFailure(method, t);
+                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
+                  }
+
+                  @Override
+                  public void onSuccess(final Method method, final Boolean exist) {
+                    super.onSuccess(method, exist);
+                    if (exist) {
+                      AuthenticationException ex = new AuthenticationException(
+                          AuthenticationException.AuthenticationError.PwdNotAvailable);
+                      ex.setLogin(login);
+                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+                    } else {
+                      AuthenticationException ex = new AuthenticationException(
+                          AuthenticationException.AuthenticationError.LoginNotAvailable);
+                      ex.setLogin(login);
+                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+                    }
+                  }
+                };
+                action.attempt();
+              } else {
+                EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+              }
+            }
+
+            @Override
+            public void onSuccess(final Method method, final UserProfileDTO userProfile) {
+
+              AuthentificationManager.getInstance().addHeader("X-STKN", method.getResponse().getHeader("X-STKN"));
+              AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session",
+                  method.getResponse().getHeader("X-Silverpeas-Session"));
+
+              SpMobil.setUserProfile(userProfile);
+
+
+              MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
                 @Override
                 public void attempt() {
                   super.attempt();
-                  ServicesLocator.getServiceConnection().userExist(login, domainId, this);
+                  List<String> ids = new ArrayList<>();
+                  ids.add(login);
+                  ids.add(password);
+                  ids.add(domainId);
+
+                  ServicesLocator.getServiceConnection().login(ids, this);
+                }
+
+                @Override
+                public void onSuccess(final Method method, final DetailUserDTO user) {
+                  super.onSuccess(method, user);
+                  SpMobil.setUser(user);
+
+                  ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
+                    @Override
+                    public void onFailure(final Method method, final Throwable throwable) {
+                      if (throwable instanceof AuthenticationException) {
+                        EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+                      } else {
+                        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                      }
+                    }
+
+                    @Override
+                    public void onSuccess(final Method method, final Boolean showTermsOfServices) {
+
+                      Notification.activityStop();
+                      AuthentificationManager.getInstance().storeUser(user, userProfile, login,
+                          password, domainId);
+                      if (showTermsOfServices) {
+                        SpMobil.displayTermsOfServicePage();
+                      } else {
+                        if (attempt == null) {
+                          SpMobil.displayMainPage();
+                        } else {
+                          attempt.execute();
+                        }
+                      }
+                    }
+                  });
                 }
 
                 @Override
                 public void onFailure(final Method method, final Throwable t) {
-                  super.onFailure(method, t);
-                  EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
-                }
+                  //super.onFailure(method, t);
+                  Window.alert(
+                      "Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
 
-                @Override
-                public void onSuccess(final Method method, final Boolean exist) {
-                  super.onSuccess(method, exist);
-                  if (exist) {
-                    AuthenticationException ex = new AuthenticationException(
-                        AuthenticationException.AuthenticationError.PwdNotAvailable);
-                    ex.setLogin(login);
-                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+                  if (t instanceof AuthenticationException) {
+                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
                   } else {
-                    AuthenticationException ex = new AuthenticationException(
-                        AuthenticationException.AuthenticationError.LoginNotAvailable);
-                    ex.setLogin(login);
-                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+                    EventBus.getInstance().fireEvent(new ErrorEvent(t));
                   }
                 }
               };
               action.attempt();
-            } else if (statusError == 0) {
-              loadUser();
-              SpMobil.displayMainPage();
-              //TODO : display termsofservice
-            } else {
-              EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
             }
-          }
-
-          @Override
-          public void onSuccess(final Method method, final UserProfileDTO userProfile) {
-
-            AuthentificationManager.getInstance()
-                .addHeader("X-STKN", method.getResponse().getHeader("X-STKN"));
-            AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session",
-                method.getResponse().getHeader("X-Silverpeas-Session"));
-
-            SpMobil.setUserProfile(userProfile);
-
-
-            MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
-              @Override
-              public void attempt() {
-                super.attempt();
-                List<String> ids = new ArrayList<>();
-                ids.add(login);
-                ids.add(password);
-                ids.add(domainId);
-
-                ServicesLocator.getServiceConnection().login(ids, this);
-              }
-
-              @Override
-              public void onSuccess(final Method method, final DetailUserDTO user) {
-                super.onSuccess(method, user);
-                SpMobil.setUser(user);
-
-                ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
-                  @Override
-                  public void onFailure(final Method method, final Throwable throwable) {
-                    if (throwable instanceof AuthenticationException) {
-                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
-                    } else {
-                      EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-                    }
-                  }
-
-                  @Override
-                  public void onSuccess(final Method method, final Boolean showTermsOfServices) {
-
-                    Notification.activityStop();
-                    AuthentificationManager.getInstance()
-                        .storeUser(user, userProfile, login, password, domainId);
-                    if (showTermsOfServices) {
-                      SpMobil.displayTermsOfServicePage();
-                    } else {
-                      if (attempt == null) {
-                        SpMobil.displayMainPage();
-                      } else {
-                        attempt.execute();
-                      }
-                    }
-                  }
-                });
-              }
-
-              @Override
-              public void onFailure(final Method method, final Throwable t) {
-                //super.onFailure(method, t);
-                Window.alert(
-                    "Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
-
-                if (t instanceof AuthenticationException) {
-                  EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
-                } else {
-                  EventBus.getInstance().fireEvent(new ErrorEvent(t));
-                }
-              }
-            };
-            action.attempt();
-          }
-        });
+          });
+    } else {
+      //TODO : terms of service ?
+      Notification.activityStop();
+      loadUser();
+      SpMobil.displayMainPage();
+    }
   }
 
   public void injectAuthenticationHttpHeaders(RequestBuilder builder) {

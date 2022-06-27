@@ -28,6 +28,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ScriptElement;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 
 /**
  * @author svu
@@ -57,12 +58,14 @@ public class PushNotificationsManager {
   }
 
   public static void storeToken(String token) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceNavigation().storeTokenMessaging(token, this);
-      }
-    };
-    action.attempt();
+    if (NetworkHelper.isOnline()) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+        @Override
+        public void attempt() {
+          ServicesLocator.getServiceNavigation().storeTokenMessaging(token, this);
+        }
+      };
+      action.attempt();
+    }
   }
 }
