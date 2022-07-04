@@ -526,9 +526,11 @@ public class ServiceNavigation extends AbstractRestWebService {
         String[] spaceIds = Administration.get().getAllSpaceIds(getUser().getId());
         for (String spaceId : spaceIds) {
           SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-          if (space.getLevel() == 0) {
-            if (containApp(space)) {
-              results.add(populate(space));
+          if (!space.isRemoved()) {
+            if (space.getLevel() == 0) {
+              if (containApp(space)) {
+                results.add(populate(space));
+              }
             }
           }
         }
@@ -538,10 +540,12 @@ public class ServiceNavigation extends AbstractRestWebService {
             Administration.get().getAllowedSubSpaceIds(getUser().getId(), rootSpaceId);
         for (String spaceId : spaceIds) {
           SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-          if (("WA" + space.getDomainFatherId()).equals(rootSpaceId) ||
-              space.getDomainFatherId().equals(rootSpaceId)) {
-            if (containApp(space)) {
-              results.add(populate(space));
+          if (!space.isRemoved()) {
+            if (("WA" + space.getDomainFatherId()).equals(rootSpaceId) ||
+                space.getDomainFatherId().equals(rootSpaceId)) {
+              if (containApp(space)) {
+                results.add(populate(space));
+              }
             }
           }
         }
