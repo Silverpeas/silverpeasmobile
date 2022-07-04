@@ -98,6 +98,7 @@ public class NewsHelper {
       return news;
     } else {
       // News on main page
+      List<News> news = new ArrayList<>();
       SettingBundle settings = GraphicElementFactory.getLookSettings(UserHelper.getInstance().getUserLook(userId));
       String newsSource = null;
       try{
@@ -105,14 +106,16 @@ public class NewsHelper {
       } catch (MissingResourceException e) {}
       if (newsSource != null && newsSource.isEmpty() == false) {
           if (newsSource.trim().startsWith("quickinfo")) {
-            return getNewsByComponentId(newsSource, false, userId);
+            news = getNewsByComponentId(newsSource, false, userId);
           } else if (newsSource.trim().equals("*")) {
-            return getAllNews(userId);
+            news = getAllNews(userId);
           } else {
-            return getDelegatedNews(userId);
+            news = getDelegatedNews(userId);
           }
       }
-      return null;
+      Collections.sort(news, (o1, o2) -> o1.getUpdateDate().compareTo(o2.getUpdateDate()));
+
+      return news;
     }
   }
 
@@ -154,6 +157,7 @@ public class NewsHelper {
     for (String appId : apps) {
       news.addAll(getNewsByComponentId(appId, false, userId));
     }
+    //TODO sort list
 
     return news;
   }
