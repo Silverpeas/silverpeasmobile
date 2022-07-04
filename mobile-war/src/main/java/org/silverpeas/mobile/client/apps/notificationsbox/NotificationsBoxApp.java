@@ -90,7 +90,7 @@ public class NotificationsBoxApp extends App
           @Override
           public void attempt() {
             super.attempt();
-            ServicesLocator.getServiceNotifications().getUserNotifications(nbCall+1, this);
+            ServicesLocator.getServiceNotifications().getUserNotifications(nbCall, this);
           }
 
           @Override
@@ -100,7 +100,7 @@ public class NotificationsBoxApp extends App
             EventBus.getInstance()
                 .fireEvent(new NotificationsLoadedEvent(notificationReceivedDTOS));
             if (notificationReceivedDTOS.getMoreElement()) {
-              loadNotifications(event, nbCall+1);
+              loadNotifications(event, nbCall);
             }
           }
         };
@@ -172,7 +172,7 @@ public class NotificationsBoxApp extends App
           @Override
           public void attempt() {
             super.attempt();
-            ServicesLocator.getServiceNotifications().getUserSendedNotifications(nbCall+1, this);
+            ServicesLocator.getServiceNotifications().getUserSendedNotifications(nbCall, this);
           }
 
           @Override
