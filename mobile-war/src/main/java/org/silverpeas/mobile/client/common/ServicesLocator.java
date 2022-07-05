@@ -218,13 +218,4 @@ public class ServicesLocator {
     return serviceContact;
   }
 
-  private static void changeServiceEntryPoint(ServiceDefTarget service, boolean guiWaiting) {
-    if (guiWaiting) Notification.activityStart();
-    String serviceEntryPoint = service.getServiceEntryPoint();
-    if (!serviceEntryPoint.contains("services")) {
-      serviceEntryPoint = serviceEntryPoint.replace("spmobile", "services/spmobile");
-    }
-    service.setServiceEntryPoint(serviceEntryPoint);
-  }
-
 }

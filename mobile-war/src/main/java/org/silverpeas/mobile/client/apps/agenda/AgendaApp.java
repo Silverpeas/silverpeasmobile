@@ -336,7 +336,6 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void updateReminder(final ReminderUpdateEvent event) {
-    Notification.activityStart();
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
       @Override
@@ -356,7 +355,6 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void createReminder(final ReminderCreateEvent event) {
-    Notification.activityStart();
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
       @Override
@@ -377,7 +375,6 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void deleteReminder(final ReminderDeleteEvent event) {
-    Notification.activityStart();
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
