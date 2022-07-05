@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.agenda;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
@@ -259,6 +260,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
                       endDateOfWindowTime, SpMobil.getUser().getZone(), this);
             }
           }
+          if (calendars.isEmpty()) Notification.activityStop();
         }
       }
 
