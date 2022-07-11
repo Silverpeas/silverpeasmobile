@@ -139,4 +139,8 @@ public class FormRequestDTO implements Serializable {
   public void setStateLabel(final String stateLabel) {
     this.stateLabel = stateLabel;
   }
+
+  public boolean isReadOnly() {
+    return state == STATE_READ || state == STATE_UNREAD;
+  }
 }

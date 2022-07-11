@@ -135,12 +135,12 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
     EventBus.getInstance().fireEvent(new FormsOnlineValidationRequestEvent(data, validation));
   }
 
-  public void setData(FormRequestDTO data, boolean readOnly) {
+  public void setData(FormRequestDTO data) {
     this.data = data;
-    reject.setVisible(!readOnly);
-    accept.setVisible(!readOnly);
-    labelComment.setVisible(!readOnly);
-    comment.setVisible(!readOnly);
+    reject.setVisible(data.isReadOnly());
+    accept.setVisible(data.isReadOnly());
+    labelComment.setVisible(data.isReadOnly());
+    comment.setVisible(data.isReadOnly());
 
     for (FormFieldDTO f : data.getData()) {
       FieldViewable item = new FieldViewable();

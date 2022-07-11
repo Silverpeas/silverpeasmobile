@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.formsonline;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.*;
@@ -53,7 +54,6 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -61,6 +61,7 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 import java.util.List;
@@ -344,7 +345,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
         super.onSuccess(method, data);
         EventBus.getInstance().fireEvent(new FormRequestStatusChangedEvent(data));
         FormOnlineViewPage page = new FormOnlineViewPage();
-        page.setData(data, loadEvent.isReadOnly());
+        page.setData(data);
         page.setPageTitle(data.getTitle() + " " + data.getCreationDate() + " " + data.getCreator());
         page.show();
       }
@@ -367,8 +368,14 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
   @Override
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.formsOnline.name())) {
-      super.showContent(event);
+      ApplicationInstanceDTO appInst = new ApplicationInstanceDTO();
+      appInst.setId(event.getContent().getInstanceId());
+      this.setApplicationInstance(appInst);
+      FormRequestDTO data = new FormRequestDTO();
+      data.setId(event.getContent().getId());
+
+      FormsOnlineLoadRequestEvent ev = new FormsOnlineLoadRequestEvent(data, false);
+      EventBus.getInstance().fireEvent(ev);
     }
   }
-
 }

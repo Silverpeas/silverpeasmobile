@@ -134,6 +134,12 @@ public class MobilFilter implements Filter {
             params =
                 "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId +
                     "&shortcutContributionId=" + contributionId;
+          } else if (subUrl.contains("RformsOnline")) {
+            String appId = subUrl.replace("/RformsOnline/", "");
+            appId = appId.substring(0, appId.indexOf("/"));
+            String id = subUrl.substring(subUrl.indexOf("Id=") + 3);
+            params =
+                "?shortcutContentType=Component&shortcutContentId=" + id + "&shortcutAppId=" + appId;
           } else if (subUrl.contains("Rblog")) {
             String appId = subUrl.replace("/Rblog/", "");
             appId = appId.substring(0, appId.indexOf("/"));
