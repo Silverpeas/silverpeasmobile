@@ -37,7 +37,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Widget;
-import org.apache.tools.ant.taskdefs.condition.Not;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
 import org.silverpeas.mobile.client.apps.media.resources.MediaMessages;

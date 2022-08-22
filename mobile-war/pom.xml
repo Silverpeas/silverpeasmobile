@@ -40,8 +40,8 @@
 
 
   <properties>
-    <gwtVersion>2.9.0</gwtVersion>
-    <gwtMojoPluginVersion>2.9.0</gwtMojoPluginVersion>
+    <gwtVersion>2.10.0</gwtVersion>
+    <gwtMojoPluginVersion>2.10.0</gwtMojoPluginVersion>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
   </properties>
@@ -96,19 +96,19 @@
       <version>2.3.0</version>
     </dependency>
     <dependency>
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-user</artifactId>
       <version>${gwtVersion}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>${gwtVersion}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-servlet</artifactId>
       <version>${gwtVersion}</version>
       <type>jar</type>
