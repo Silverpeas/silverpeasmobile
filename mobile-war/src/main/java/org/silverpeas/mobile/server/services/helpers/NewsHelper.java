@@ -114,7 +114,7 @@ public class NewsHelper {
           }
       }
       Collections.sort(news, (o1, o2) -> o1.getUpdateDate().compareTo(o2.getUpdateDate()));
-
+      Collections.reverse(news);
       return news;
     }
   }
