@@ -47,10 +47,10 @@ public class ServiceHyperLink extends AbstractRestWebService {
   @Context
   HttpServletRequest request;
 
-  @PathParam("mobile/appId")
+  @PathParam("appId")
   private String componentId;
 
-  static final String PATH = "hyperlink";
+  static final String PATH = "mobile/hyperlink";
 
   @GET
   @Produces(MediaType.TEXT_PLAIN)
