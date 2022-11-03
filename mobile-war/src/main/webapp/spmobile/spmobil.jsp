@@ -105,6 +105,11 @@
         ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.mobileSettings", l);
     Map<String, String> mapConfig = ResourceBundleHelper.convertResourceBundleToMap(resource);
     String jsonParams = new ObjectMapper().writeValueAsString(mapConfig);
+    
+    String nocache = resource.getString("nocache");
+    if (nocache.equalsIgnoreCase("true")) {
+      response.setHeader("Clear-Site-Data", "\"cache\", \"storage\"");
+    }
   %>
 
   <meta name="gwt:property" content="locale=<%=l%>">
