@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.server.services;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.silverpeas.components.formsonline.FormsOnlineComponentSettings;
 import org.silverpeas.components.formsonline.model.FormDetail;
 import org.silverpeas.components.formsonline.model.FormInstance;
@@ -352,6 +353,11 @@ public class ServiceFormsOnline extends AbstractRestWebService {
     List<FormFieldDTO> fields = new ArrayList<>();
 
     try {
+      if (NumberUtils.isDigits(formName)) {
+        FormPK pk = new FormPK(formName, componentId);
+        FormDetail fd = FormsOnlineService.get().loadForm(pk);
+        formName = fd.getXmlFormName();
+      }
       PublicationTemplate template = getPublicationTemplate(formName, true);
       Form formUpdate = getEmptyForm(template);
 
