@@ -367,6 +367,19 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
+    if (event.getContent().getType().equals("Form")) {
+      ApplicationInstanceDTO appInst = new ApplicationInstanceDTO();
+      appInst.setId(event.getContent().getInstanceId());
+      this.setApplicationInstance(appInst);
+
+      String id = event.getContent().getId();
+      FormOnlineLoadEvent ev = new FormOnlineLoadEvent();
+      FormDTO form = new FormDTO();
+      form.setXmlFormName(id);
+      ev.setForm(form);
+      loadFormOnline(ev);
+    }
+
     if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.formsOnline.name())) {
       ApplicationInstanceDTO appInst = new ApplicationInstanceDTO();
       appInst.setId(event.getContent().getInstanceId());
