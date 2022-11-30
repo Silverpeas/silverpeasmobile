@@ -120,6 +120,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Erreur système")
   String systemError();
 
+  @DefaultMessage("Ressource non trouvée")
+  String notfoundError();
+
   @DefaultMessage("Login ou mot de passe incorrect")
   String badLoginOrPassword();
 

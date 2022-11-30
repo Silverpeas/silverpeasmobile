@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.impl.StackTracePrintStream;
+import com.google.gwt.user.client.Window;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.event.ErrorEventHandler;
 import org.silverpeas.mobile.client.common.event.ExceptionEvent;

@@ -26,12 +26,14 @@ package org.silverpeas.mobile.client.common.network;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 /**
@@ -57,6 +59,8 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
           attempt();
         }
       });
+    } else if (method.getResponse().getStatusCode() == 404) {
+      new Popin(msg.notfoundError()).show();
     } else {
       if (NetworkHelper.needToGoOffine(t)) {
         // Lost connexion during requesting
