@@ -186,4 +186,7 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Envoyées")
   SafeHtml sended();
 
+  @DefaultMessage("Ressource non trouvée")
+  String notfoundError();
+
 }

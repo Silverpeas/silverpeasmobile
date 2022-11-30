@@ -80,14 +80,7 @@ import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
@@ -580,18 +573,22 @@ public class ServiceNavigation extends AbstractRestWebService {
     if (instanceId == null) {
       if (contentType.equals(ContentsTypes.Publication.name())) {
         PublicationDetail pub = PublicationService.get().getDetail(new PublicationPK(contentId));
+        if (pub == null) throw new NotFoundException();
         instanceId = pub.getInstanceId();
       } else if (contentType.equals(ContentsTypes.Media.name())) {
         Media media = MediaServiceProvider.getMediaService().getMedia(new MediaPK(contentId));
+        if (media == null) throw new NotFoundException();
         instanceId = media.getInstanceId();
       } else if (contentType.equals(ContentsTypes.Event.name())) {
         ContributionIdentifier contributionId =
             ContributionIdentifier.decode(new String(StringUtil.fromBase64(contentId)));
         localId = contributionId.getLocalId();
         instanceId = contributionId.getComponentInstanceId();
+        if (instanceId.equals("?")) throw new NotFoundException();
       }
     }
     ApplicationInstanceDTO dto = getApplicationInstanceDTO(instanceId);
+    if (dto == null) throw new NotFoundException();
     dto.setExtraId(localId);
     return dto;
   }

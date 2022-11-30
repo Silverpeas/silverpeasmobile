@@ -32,6 +32,7 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 /**
@@ -57,6 +58,8 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
           attempt();
         }
       });
+    } else if (method.getResponse().getStatusCode() == 404) {
+      new Popin(msg.notfoundError()).show();
     } else {
       if (NetworkHelper.needToGoOffine(t)) {
         // Lost connexion during requesting
