@@ -129,6 +129,12 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       setMainPage(page);
       page.show();
       EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
+    } else if (content.getType().equals(ContentsTypes.Component.toString())) {
+      ApplicationInstanceDTO data = new ApplicationInstanceDTO();
+      data.setId(content.getInstanceId());
+      data.setType(Apps.kmelia.name());
+      NavigationAppInstanceChangedEvent event = new NavigationAppInstanceChangedEvent(data);
+      appInstanceChanged(event);
     } else if (content.getType().equals(ContentsTypes.Attachment.toString())) {
       final DocumentsApp app = this;
 
