@@ -100,6 +100,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   }
 
   private void loadAppInstance(final ContentDTO content, Command callback) {
+
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
       @Override
@@ -129,6 +130,12 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       setMainPage(page);
       page.show();
       EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
+    } else if (content.getType().equals(ContentsTypes.Component.toString())) {
+      ApplicationInstanceDTO data = new ApplicationInstanceDTO();
+      data.setId(content.getInstanceId());
+      data.setType(Apps.kmelia.name());
+      NavigationAppInstanceChangedEvent event = new NavigationAppInstanceChangedEvent(data);
+      appInstanceChanged(event);
     } else if (content.getType().equals(ContentsTypes.Attachment.toString())) {
       final DocumentsApp app = this;
 
@@ -179,6 +186,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void appInstanceChanged(NavigationAppInstanceChangedEvent event) {
+
     if (event.getInstance().getType().equals(Apps.kmelia.name())) {
       setApplicationInstance(event.getInstance());
       GedNavigationPage page = new GedNavigationPage();
@@ -217,6 +225,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
    */
   @Override
   public void loadTopics(final DocumentsLoadGedItemsEvent event) {
+
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
