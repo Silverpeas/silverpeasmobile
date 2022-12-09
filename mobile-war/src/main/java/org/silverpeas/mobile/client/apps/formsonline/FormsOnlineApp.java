@@ -177,7 +177,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
   }
 
   private static native void saveForm(FormsOnlineApp app, JavaScriptObject fd, String token, String stkn, String instanceId, String formId) /*-{
-    var url = "/silverpeas/services/formsOnline/"+instanceId+"/saveForm/" + formId;
+    var url = "/silverpeas/services/mobile/formsOnline/"+instanceId+"/saveForm/" + formId;
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, false);
     xhr.setRequestHeader("X-Silverpeas-Session", token);

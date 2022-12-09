@@ -165,7 +165,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
       t.setReadOnly(data.isReadOnly());
       t.addChangeHandler(this);
       w = t;
-    }  else if(type.equalsIgnoreCase("text") || type.equalsIgnoreCase("simpletext")) {
+    }  else if(type.equalsIgnoreCase("text") || type.equalsIgnoreCase("simpletext") || type.equalsIgnoreCase("map")) {
       TextBox t = new TextBox();
       t.setText(data.getValue());
       t.setReadOnly(data.isReadOnly());
