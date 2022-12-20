@@ -29,6 +29,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.*;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
@@ -68,327 +69,352 @@ import java.util.List;
 
 public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, NavigationEventHandler {
 
-  private FormsOnlineMessages msg;
-  private FormDTO currentForm;
+    private FormsOnlineMessages msg;
+    private FormDTO currentForm;
 
-private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class);
+    private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class);
 
-  public FormsOnlineApp(){
-    super();
-    msg = GWT.create(FormsOnlineMessages.class);
-    EventBus.getInstance().addHandler(AbstractFormsOnlineAppEvent.TYPE, this);
-    EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
-  }
-
-  public void start() {
-    // always start
-  }
-
-  @Override
-  public void stop() {
-    // nevers stop
-  }
-
-  /**
-   * Loads all forms published.
-   *
-   * @param event
-   */
-  @Override
-  public void loadFormsOnline(final FormsOnlineLoadEvent event) {
-
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormDTO>>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceFormsOnline().getSendablesForms(getApplicationInstance().getId(), this);
-      }
-
-      @Override
-      public void onSuccess(final Method method, final List<FormDTO> forms) {
-        super.onSuccess(method, forms);
-        FormsOnlineLoadedEvent event = new FormsOnlineLoadedEvent();
-        event.setForms(forms);
-        EventBus.getInstance().fireEvent(event);
-      }
-    };
-    action.attempt();
-
-  }
-
-  /**
-   * Loads one form for create a new request.
-   *
-   * @param event
-   */
-  @Override
-  public void loadFormOnline(final FormOnlineLoadEvent event) {
-
-    currentForm = event.getForm();
-
-    FormOnlineEditPage page = new FormOnlineEditPage();
-    page.setPageTitle(event.getForm().getTitle());
-    page.show();
-
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormFieldDTO>>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceFormsOnline().getForm(getApplicationInstance().getId(),
-            event.getForm().getXmlFormName(), this);
-      }
-
-      @Override
-      public void onSuccess(final Method method, final List<FormFieldDTO> formFieldsDTO) {
-        super.onSuccess(method, formFieldsDTO);
-        FormLoadedEvent event = new FormLoadedEvent();
-        event.setFormFields(formFieldsDTO);
-        EventBus.getInstance().fireEvent(event);
-      }
-    };
-    action.attempt();
-  }
-
-  /**
-   * Save new request.
-   *
-   * @param formSaveEvent
-   */
-  @Override
-  public void saveForm(final FormSaveEvent formSaveEvent) {
-    JavaScriptObject formData = FormsHelper.createFormData();
-    for (FormFieldDTO f : formSaveEvent.getData()) {
-      if (f.getType().equalsIgnoreCase("file")) {
-        formData = FormsHelper.populateFormData(formData, f.getName(), f.getObjectValue());
-      } else if(FormsHelper.isStoreValueId(f)) {
-        formData = FormsHelper.populateFormData(formData, f.getName(), f.getValueId());
-      } else {
-        formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
-      }
+    public FormsOnlineApp() {
+        super();
+        msg = GWT.create(FormsOnlineMessages.class);
+        EventBus.getInstance().addHandler(AbstractFormsOnlineAppEvent.TYPE, this);
+        EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
     }
-    if (!NetworkHelper.isOnline()) {
-      Notification.activityStop();
-      Notification.alert(msgApp.needToBeOnline());
-      return;
+
+    public void start() {
+        // always start
     }
-    saveForm(this, formData, SpMobil.getUserToken(),
-          AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN),
-          getApplicationInstance().getId(), currentForm.getId());
-  }
 
-  private static native void saveForm(FormsOnlineApp app, JavaScriptObject fd, String token, String stkn, String instanceId, String formId) /*-{
-    var url = "/silverpeas/services/mobile/formsOnline/"+instanceId+"/saveForm/" + formId;
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, false);
-    xhr.setRequestHeader("X-Silverpeas-Session", token);
-    xhr.setRequestHeader("Authorization", "Bearer " + token);
-    xhr.setRequestHeader("X-STKN", stkn);
+    @Override
+    public void stop() {
+        // nevers stop
+    }
 
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        // Every thing ok, file uploaded
-        app.@org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp::formSaved()();
-      } else {
-        app.@org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp::formNotSaved(I)(xhr.status);
-      }
-    };
+    /**
+     * Loads all forms published.
+     *
+     * @param event
+     */
+    @Override
+    public void loadFormsOnline(final FormsOnlineLoadEvent event) {
 
-    xhr.send(fd);
-  }-*/;
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormDTO>>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getServiceFormsOnline().getSendablesForms(getApplicationInstance().getId(), this);
+            }
 
-  public void formSaved() {
-    EventBus.getInstance().fireEvent(new FormSavedEvent());
-  }
+            @Override
+            public void onSuccess(final Method method, final List<FormDTO> forms) {
+                super.onSuccess(method, forms);
+                FormsOnlineLoadedEvent event = new FormsOnlineLoadedEvent();
+                event.setForms(forms);
+                EventBus.getInstance().fireEvent(event);
+            }
+        };
+        action.attempt();
 
-  public void formNotSaved(int error) {
-    EventBus.getInstance().fireEvent(new ErrorEvent(new RequestException("Error " + error)));
-  }
+    }
 
-  @Override
-  public void loadUserField(final FormOnlineLoadUserFieldEvent event) {
+    /**
+     * Loads one form for create a new request.
+     *
+     * @param event
+     */
+    @Override
+    public void loadFormOnline(final FormOnlineLoadEvent event) {
 
+        currentForm = event.getForm();
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceFormsOnline().getUserField(getApplicationInstance().getId(), currentForm.getXmlFormName(), event.getFieldName(), this);
-      }
-
-      @Override
-      public void onSuccess(final Method method, final List<BaseDTO> users) {
-        super.onSuccess(method, users);
-        AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users);
-        EventBus.getInstance().fireEvent(ev);
-      }
-    };
-    action.attempt();
-  }
-
-  /**
-   * Loads all forms where the current user is receiver.
-   *
-   * @param formsOnlineAsReceiverLoadEvent
-   */
-  @Override
-  public void loadFormsOnlineAsReceiver(
-      final FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent) {
-
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormDTO>>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceFormsOnline().getReceivablesForms(getApplicationInstance().getId(), this);
-      }
-
-      @Override
-      public void onSuccess(final Method method, final List<FormDTO> forms) {
-        super.onSuccess(method, forms);
-        FormsOnlineAsReceiverPage page = new FormsOnlineAsReceiverPage();
-        page.setPageTitle(getApplicationInstance().getLabel());
-        page.setData(forms);
+        FormOnlineEditPage page = new FormOnlineEditPage();
+        page.setPageTitle(event.getForm().getTitle());
         page.show();
-      }
-    };
-    action.attempt();
-  }
 
-  /**
-   * Loads all requests of selected form where the current user is receiver.
-   *
-   * @param event
-   */
-  @Override
-  public void loadFormOnlineAsReceiver(final FormOnlineAsReceiverLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceFormsOnline().getRequests(getApplicationInstance().getId(), event.getForm().getId(), this);
-      }
+        ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(),
+                event.getForm().getXmlFormName(), "update", new TextCallback() {
+                    @Override
+                    public void onFailure(Method method, Throwable throwable) {
+                        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                    }
 
-      @Override
-      public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
-        super.onSuccess(method, requests);
-        FormOnlineRequestsPage page = new FormOnlineRequestsPage();
-        page.setTitle(getApplicationInstance().getLabel());
-        page.setData(requests, false);
-        page.show();
-      }
-    };
-    action.attempt();
-  }
+                    @Override
+                    public void onSuccess(Method method, String html) {
 
-  @Override
-  public void validationRequest(final FormsOnlineValidationRequestEvent event) {
+                        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormFieldDTO>>() {
+                            @Override
+                            public void attempt() {
+                                super.attempt();
+                                ServicesLocator.getServiceFormsOnline().getForm(getApplicationInstance().getId(),
+                                        event.getForm().getXmlFormName(), this);
+                            }
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceFormsOnline().processRequest(getApplicationInstance().getId(), event.getData().getId(), event.getValidation(), this);
-      }
-
-      @Override
-      public void onSuccess(final Method method, final Void aVoid) {
-        super.onSuccess(method, aVoid);
-        EventBus.getInstance().fireEvent(new FormsOnlineRequestValidatedEvent(event.getData()));
-      }
-    };
-    action.attempt();
-  }
-
-  /**
-   * Load all requests created by the current user.
-   *
-   * @param formOnlineMyRequestLoadEvent
-   */
-  @Override
-  public void loadMyRequests(final FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent) {
-
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceFormsOnline().getMyRequests(getApplicationInstance().getId(), this);
-      }
-
-      @Override
-      public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
-        super.onSuccess(method, requests);
-        FormOnlineRequestsPage page = new FormOnlineRequestsPage();
-        page.setData(requests, true);
-        page.show();
-      }
-    };
-    action.attempt();
-
-  }
-
-  /**
-   * Loads a form request.
-   *
-   * @param loadEvent
-   */
-  @Override
-  public void loadFormRequest(
-      final FormsOnlineLoadRequestEvent loadEvent) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<FormRequestDTO>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceFormsOnline().loadRequest(getApplicationInstance().getId(), loadEvent.getData().getId(), this);
-      }
-
-      @Override
-      public void onSuccess(final Method method, final FormRequestDTO data) {
-        super.onSuccess(method, data);
-        EventBus.getInstance().fireEvent(new FormRequestStatusChangedEvent(data));
-        FormOnlineViewPage page = new FormOnlineViewPage();
-        page.setData(data);
-        page.setPageTitle(data.getTitle() + " " + data.getCreationDate() + " " + data.getCreator());
-        page.show();
-      }
-    };
-    action.attempt();
-  }
-
-  @Override
-  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
-    if (event.getInstance().getType().equals(Apps.formsOnline.name())) {
-      this.setApplicationInstance(event.getInstance());
-
-      FormsOnlinePage page = new FormsOnlinePage();
-      page.setApp(this);
-      page.setPageTitle(event.getInstance().getLabel());
-      page.show();
-    }
-  }
-
-  @Override
-  public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals("Form")) {
-      ApplicationInstanceDTO appInst = new ApplicationInstanceDTO();
-      appInst.setId(event.getContent().getInstanceId());
-      this.setApplicationInstance(appInst);
-
-      String id = event.getContent().getId();
-      FormOnlineLoadEvent ev = new FormOnlineLoadEvent();
-      FormDTO form = new FormDTO();
-      form.setXmlFormName(id);
-      ev.setForm(form);
-      loadFormOnline(ev);
+                            @Override
+                            public void onSuccess(final Method method, final List<FormFieldDTO> formFieldsDTO) {
+                                super.onSuccess(method, formFieldsDTO);
+                                FormLoadedEvent event = new FormLoadedEvent();
+                                event.setFormFields(formFieldsDTO);
+                                event.setHtml(html);
+                                EventBus.getInstance().fireEvent(event);
+                            }
+                        };
+                        action.attempt();
+                    }
+                });
     }
 
-    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.formsOnline.name())) {
-      ApplicationInstanceDTO appInst = new ApplicationInstanceDTO();
-      appInst.setId(event.getContent().getInstanceId());
-      this.setApplicationInstance(appInst);
-      FormRequestDTO data = new FormRequestDTO();
-      data.setId(event.getContent().getId());
-
-      FormsOnlineLoadRequestEvent ev = new FormsOnlineLoadRequestEvent(data, false);
-      EventBus.getInstance().fireEvent(ev);
+    /**
+     * Save new request.
+     *
+     * @param formSaveEvent
+     */
+    @Override
+    public void saveForm(final FormSaveEvent formSaveEvent) {
+        JavaScriptObject formData = FormsHelper.createFormData();
+        for (FormFieldDTO f : formSaveEvent.getData()) {
+            if (f.getType().equalsIgnoreCase("file")) {
+                formData = FormsHelper.populateFormData(formData, f.getName(), f.getObjectValue());
+            } else if (FormsHelper.isStoreValueId(f)) {
+                formData = FormsHelper.populateFormData(formData, f.getName(), f.getValueId());
+            } else {
+                formData = FormsHelper.populateFormData(formData, f.getName(), f.getValue());
+            }
+        }
+        if (!NetworkHelper.isOnline()) {
+            Notification.activityStop();
+            Notification.alert(msgApp.needToBeOnline());
+            return;
+        }
+        saveForm(this, formData, SpMobil.getUserToken(),
+                AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN),
+                getApplicationInstance().getId(), currentForm.getId());
     }
-  }
+
+    private static native void saveForm(FormsOnlineApp app, JavaScriptObject fd, String token, String stkn, String instanceId, String formId) /*-{
+        var url = "/silverpeas/services/mobile/formsOnline/" + instanceId + "/saveForm/" + formId;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, false);
+        xhr.setRequestHeader("X-Silverpeas-Session", token);
+        xhr.setRequestHeader("Authorization", "Bearer " + token);
+        xhr.setRequestHeader("X-STKN", stkn);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Every thing ok, file uploaded
+                app.@org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp::formSaved()();
+            } else {
+                app.@org.silverpeas.mobile.client.apps.formsonline.FormsOnlineApp::formNotSaved(I)(xhr.status);
+            }
+        };
+
+        xhr.send(fd);
+    }-*/;
+
+    public void formSaved() {
+        EventBus.getInstance().fireEvent(new FormSavedEvent());
+    }
+
+    public void formNotSaved(int error) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(new RequestException("Error " + error)));
+    }
+
+    @Override
+    public void loadUserField(final FormOnlineLoadUserFieldEvent event) {
+
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getServiceFormsOnline().getUserField(getApplicationInstance().getId(), currentForm.getXmlFormName(), event.getFieldName(), this);
+            }
+
+            @Override
+            public void onSuccess(final Method method, final List<BaseDTO> users) {
+                super.onSuccess(method, users);
+                AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users);
+                EventBus.getInstance().fireEvent(ev);
+            }
+        };
+        action.attempt();
+    }
+
+    /**
+     * Loads all forms where the current user is receiver.
+     *
+     * @param formsOnlineAsReceiverLoadEvent
+     */
+    @Override
+    public void loadFormsOnlineAsReceiver(
+            final FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent) {
+
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormDTO>>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getServiceFormsOnline().getReceivablesForms(getApplicationInstance().getId(), this);
+            }
+
+            @Override
+            public void onSuccess(final Method method, final List<FormDTO> forms) {
+                super.onSuccess(method, forms);
+                FormsOnlineAsReceiverPage page = new FormsOnlineAsReceiverPage();
+                page.setPageTitle(getApplicationInstance().getLabel());
+                page.setData(forms);
+                page.show();
+            }
+        };
+        action.attempt();
+    }
+
+    /**
+     * Loads all requests of selected form where the current user is receiver.
+     *
+     * @param event
+     */
+    @Override
+    public void loadFormOnlineAsReceiver(final FormOnlineAsReceiverLoadEvent event) {
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getServiceFormsOnline().getRequests(getApplicationInstance().getId(), event.getForm().getId(), this);
+            }
+
+            @Override
+            public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
+                super.onSuccess(method, requests);
+                FormOnlineRequestsPage page = new FormOnlineRequestsPage();
+                page.setTitle(getApplicationInstance().getLabel());
+                page.setData(requests, false);
+                page.show();
+            }
+        };
+        action.attempt();
+    }
+
+    @Override
+    public void validationRequest(final FormsOnlineValidationRequestEvent event) {
+
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getServiceFormsOnline().processRequest(getApplicationInstance().getId(), event.getData().getId(), event.getValidation(), this);
+            }
+
+            @Override
+            public void onSuccess(final Method method, final Void aVoid) {
+                super.onSuccess(method, aVoid);
+                EventBus.getInstance().fireEvent(new FormsOnlineRequestValidatedEvent(event.getData()));
+            }
+        };
+        action.attempt();
+    }
+
+    /**
+     * Load all requests created by the current user.
+     *
+     * @param formOnlineMyRequestLoadEvent
+     */
+    @Override
+    public void loadMyRequests(final FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent) {
+
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getServiceFormsOnline().getMyRequests(getApplicationInstance().getId(), this);
+            }
+
+            @Override
+            public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
+                super.onSuccess(method, requests);
+                FormOnlineRequestsPage page = new FormOnlineRequestsPage();
+                page.setData(requests, true);
+                page.show();
+            }
+        };
+        action.attempt();
+
+    }
+
+    /**
+     * Loads a form request.
+     *
+     * @param loadEvent
+     */
+    @Override
+    public void loadFormRequest(
+            final FormsOnlineLoadRequestEvent loadEvent) {
+
+        ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(), loadEvent.getData().getFormName(), "view", new TextCallback() {
+            @Override
+            public void onFailure(Method method, Throwable throwable) {
+                EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+            }
+
+            @Override
+            public void onSuccess(Method method, String html) {
+                MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<FormRequestDTO>() {
+                    @Override
+                    public void attempt() {
+                        super.attempt();
+                        ServicesLocator.getServiceFormsOnline().loadRequest(getApplicationInstance().getId(), loadEvent.getData().getId(), this);
+                    }
+
+                    @Override
+                    public void onSuccess(final Method method, final FormRequestDTO data) {
+                        super.onSuccess(method, data);
+                        data.setHtmlLayer(html);
+                        EventBus.getInstance().fireEvent(new FormRequestStatusChangedEvent(data));
+                        FormOnlineViewPage page = new FormOnlineViewPage();
+                        page.setApp(FormsOnlineApp.this);
+                        page.setData(data);
+                        page.setPageTitle(data.getTitle() + " " + data.getCreationDate() + " " + data.getCreator());
+                        page.show();
+                    }
+                };
+                action.attempt();
+            }
+        });
+    }
+
+    @Override
+    public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+        if (event.getInstance().getType().equals(Apps.formsOnline.name())) {
+            this.setApplicationInstance(event.getInstance());
+
+            FormsOnlinePage page = new FormsOnlinePage();
+            page.setApp(this);
+            page.setPageTitle(event.getInstance().getLabel());
+            page.show();
+        }
+    }
+
+    @Override
+    public void showContent(final NavigationShowContentEvent event) {
+        if (event.getContent().getType().equals("Form")) {
+            ApplicationInstanceDTO appInst = new ApplicationInstanceDTO();
+            appInst.setId(event.getContent().getInstanceId());
+            this.setApplicationInstance(appInst);
+
+            String id = event.getContent().getId();
+            FormOnlineLoadEvent ev = new FormOnlineLoadEvent();
+            FormDTO form = new FormDTO();
+            form.setXmlFormName(id);
+            ev.setForm(form);
+            loadFormOnline(ev);
+        }
+
+        if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.formsOnline.name())) {
+            ApplicationInstanceDTO appInst = new ApplicationInstanceDTO();
+            appInst.setId(event.getContent().getInstanceId());
+            this.setApplicationInstance(appInst);
+            FormRequestDTO data = new FormRequestDTO();
+            data.setId(event.getContent().getId());
+
+            FormsOnlineLoadRequestEvent ev = new FormsOnlineLoadRequestEvent(data, false);
+            EventBus.getInstance().fireEvent(ev);
+        }
+    }
 }

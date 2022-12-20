@@ -30,10 +30,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.*;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineValidationRequestEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
@@ -45,6 +44,7 @@ import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineReq
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -57,12 +57,17 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
 
   private static FormOnlineEditPageUiBinder uiBinder = GWT.create(FormOnlineEditPageUiBinder.class);
 
+  private boolean hasHtmlLayer;
+
   @UiField(provided = true) protected FormsOnlineMessages msg = null;
   @UiField
   ActionsMenu actionsMenu;
 
   @UiField
   UnorderedList fields;
+
+  @UiField
+  static HTML layer;
 
   @UiField
   TextArea comment;
@@ -142,10 +147,30 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
     labelComment.setVisible(data.isReadOnly());
     comment.setVisible(data.isReadOnly());
 
-    for (FormFieldDTO f : data.getData()) {
-      FieldViewable item = new FieldViewable();
-      item.setData(f);
-      fields.add(item);
+    if (data.getHtmlLayer() != null && !data.getHtmlLayer().isEmpty()
+            && ResourcesManager.getParam("form.htmllayer.display").equalsIgnoreCase("true")) {
+      hasHtmlLayer = true;
+      String html = data.getHtmlLayer();
+      for (FormFieldDTO f : data.getData()) {
+        if (f.getValue() == null || f.getValue().equalsIgnoreCase("null")) f.setValue("");
+        if (f.getType().equalsIgnoreCase("file") && !f.getValue().isEmpty()) {
+            html = html.replaceFirst("<%=" + f.getName() + "%>",
+                    "<a class='downloadable' href='/silverpeas/attached_file/componentId/" +
+                            getApp().getApplicationInstance().getId() + "/attachmentId/" +
+                            f.getValueId() + "/lang/" + SpMobil.getUser().getLanguage() + "/name/" + f.getValue() +
+                            "' target='_self' download='" + f.getValue() + "'>" + f.getValue() + "</a>");
+        } else {
+          html = html.replaceFirst("<%=" + f.getName() + "%>", f.getValue());
+        }
+      }
+      layer.setHTML(html);
+    } else {
+      hasHtmlLayer = false;
+      for (FormFieldDTO f : data.getData()) {
+        FieldViewable item = new FieldViewable();
+        item.setData(f);
+        fields.add(item);
+      }
     }
   }
 }

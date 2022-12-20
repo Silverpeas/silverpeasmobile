@@ -33,6 +33,7 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <base:ActionsMenu ui:field="actionsMenu"/>
     <components:UnorderedList ui:field="fields" styleName="formOnline-form"/>
+    <g:HTML ui:field="layer"/>
     <div class=" ui-controlgroup ui-controlgroup-horizontal">
       <div class="ui-controlgroup-controls ">
         <g:Anchor ui:field="validate" styleName="btn-validate ui-link">

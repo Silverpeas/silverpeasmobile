@@ -38,6 +38,8 @@ public class FormsHelper {
       formData.append(name, null);
     } else {
       formData.append(name, value.files[0]);
+      formData.append(name+'$$id', '');
+      formData.append(name+'Operation', 'ADD');
     }
     return formData;
   }-*/;

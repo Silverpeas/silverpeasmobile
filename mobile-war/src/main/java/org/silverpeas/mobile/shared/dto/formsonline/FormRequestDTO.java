@@ -47,10 +47,21 @@ public class FormRequestDTO implements Serializable {
   private String description;
   private String creator;
   private String creationDate;
+  private String formName;
   private int state;
   private String stateLabel;
   private String formId;
   private List<FormFieldDTO> data;
+
+  public String getHtmlLayer() {
+    return htmlLayer;
+  }
+
+  public void setHtmlLayer(String htmlLayer) {
+    this.htmlLayer = htmlLayer;
+  }
+
+  private String htmlLayer;
 
   public String getId() {
     return id;
@@ -142,5 +153,13 @@ public class FormRequestDTO implements Serializable {
 
   public boolean isReadOnly() {
     return state == STATE_READ || state == STATE_UNREAD;
+  }
+
+  public void setFormName(String formName) {
+    this.formName = formName;
+  }
+
+  public String getFormName() {
+    return formName;
   }
 }

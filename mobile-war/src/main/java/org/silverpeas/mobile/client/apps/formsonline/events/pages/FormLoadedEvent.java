@@ -45,8 +45,15 @@ public class FormLoadedEvent extends AbstractFormsOnlinePagesEvent {
   }
 
   private List<FormFieldDTO> fields;
+  private String html;
 
+  public String getHtml() {
+    return html;
+  }
 
+  public void setHtml(String html) {
+    this.html = html;
+  }
   @Override
   protected void dispatch(FormsOnlinePagesEventHandler handler) {
     handler.onFormLoaded(this);

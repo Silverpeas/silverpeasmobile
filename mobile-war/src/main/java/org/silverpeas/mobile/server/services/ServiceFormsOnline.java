@@ -42,19 +42,25 @@ import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.ProfileInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.annotation.WebService;
+import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.content.form.DataRecord;
 import org.silverpeas.core.contribution.content.form.Field;
 import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.FormException;
 import org.silverpeas.core.contribution.content.form.RecordSet;
+import org.silverpeas.core.contribution.content.form.form.HtmlForm;
 import org.silverpeas.core.contribution.content.form.form.XmlForm;
 import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplateImpl;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
@@ -74,6 +80,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -231,6 +240,7 @@ public class ServiceFormsOnline extends AbstractRestWebService {
     dto.setCreator(f.getCreator().getDisplayedName());
     dto.setCreationDate(sdf.format(f.getCreationDate()));
     dto.setFormId(String.valueOf(f.getFormId()));
+    dto.setFormName(f.getForm().getName()+".xml");
     switch (f.getState()) {
       case FormInstance.STATE_VALIDATED :
           dto.setStateLabel(formsOnlineBundle.getString("formsOnline.stateValidated"));
@@ -248,9 +258,21 @@ public class ServiceFormsOnline extends AbstractRestWebService {
         dto.setStateLabel(formsOnlineBundle.getString("formsOnline.stateUnread"));
         break;
     }
-    XmlForm formXml = ((XmlForm) f.getFormWithData());
-    if (formXml != null) {
-      DataRecord record = formXml.getData();
+    if (f.getFormWithData() instanceof XmlForm) {
+      XmlForm formXml = ((XmlForm) f.getFormWithData());
+      if (formXml != null) {
+        DataRecord record = formXml.getData();
+        List<FormFieldDTO> dataForm = new ArrayList<>();
+        for (String name : record.getFieldNames()) {
+          Field field = record.getField(name);
+          FormFieldDTO fieldDTO = populateField(f, field);
+          dataForm.add(fieldDTO);
+        }
+        dto.setData(dataForm);
+      }
+    } else {
+      HtmlForm formHTML = ((HtmlForm) f.getFormWithData());
+      DataRecord record = formHTML.getData();
       List<FormFieldDTO> dataForm = new ArrayList<>();
       for (String name : record.getFieldNames()) {
         Field field = record.getField(name);
@@ -259,6 +281,7 @@ public class ServiceFormsOnline extends AbstractRestWebService {
       }
       dto.setData(dataForm);
     }
+
     return dto;
   }
 
@@ -271,30 +294,54 @@ public class ServiceFormsOnline extends AbstractRestWebService {
         if (params.containsKey("keys")) {
           String [] keys = params.get("keys").split("##");
           String [] values = params.get("values").split("##");
-          if (field.getValue().contains("##")) {
-            String [] fiedValues = field.getValue().split("##");
-            String fieldDisplayValue = "";
-            for (String fieldValue : fiedValues) {
-              int index = Arrays.asList(keys).indexOf(fieldValue);
-              fieldDisplayValue += values[index] + " ";
+          if (field.getValue() != null) {
+            if (field.getValue().contains("##")) {
+              String[] fiedValues = field.getValue().split("##");
+              String fieldDisplayValue = "";
+              for (String fieldValue : fiedValues) {
+                int index = Arrays.asList(keys).indexOf(fieldValue);
+                fieldDisplayValue += values[index] + " ";
+              }
+              fieldDTO.setValue(fieldDisplayValue);
+              fieldDTO.setValueId(field.getValue());
+            } else {
+              int index = Arrays.asList(keys).indexOf(field.getValue());
+              if (index != -1) {
+                fieldDTO.setValue(values[index]);
+                fieldDTO.setValueId(field.getValue());
+              }
             }
-            fieldDTO.setValue(fieldDisplayValue);
-            fieldDTO.setValueId(field.getValue());
-          } else {
-            int index = Arrays.asList(keys).indexOf(field.getValue());
-            fieldDTO.setValue(values[index]);
-            fieldDTO.setValueId(field.getValue());
           }
-
         } else {
           if (field.getTypeName().equalsIgnoreCase("multipleUser") || field.getTypeName().equalsIgnoreCase("user") || field.getTypeName().equalsIgnoreCase("group")) {
             fieldDTO.setValue(field.getValue());
           } else {
-            fieldDTO.setValue(field.getStringValue());
+            if (field.getValue() != null && field.getValue().startsWith("xmlWysiwygField")) {
+              String wysiwygFile = field.getValue().substring(field.getValue().indexOf('_') + 1);
+              try {
+                String path = FileRepositoryManager.getAbsolutePath(f.getComponentInstanceId()) +
+                        "xmlWysiwyg" + File.separator + wysiwygFile;
+                fieldDTO.setValue(new String(Files.readAllBytes(Paths.get(path))));
+              } catch (Exception e) {
+                SilverLogger.getLogger(this).error(e);
+              }
+            } else {
+              fieldDTO.setValue(field.getStringValue());
+            }
           }
         }
       }
     }
+    fieldDTO.setType(field.getTypeName());
+    fieldDTO.setName(field.getName());
+    if (field.getTypeName().equalsIgnoreCase("file")) {
+      if (fieldDTO.getValue() != null) {
+        fieldDTO.setValueId(fieldDTO.getValue());
+        SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(fieldDTO.getValueId(), componentId), null);
+        fieldDTO.setValue(doc.getFilename());
+      }
+    }
+
     return fieldDTO;
   }
 
@@ -346,6 +393,112 @@ public class ServiceFormsOnline extends AbstractRestWebService {
 
 
   @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("formlayer/{formName}/{layerType}")
+  public String getFormLayer(@PathParam("formName") String formName, @PathParam("layerType") String layerType) {
+    String html = "";
+    try {
+      PublicationTemplate template = getPublicationTemplate(formName, true);
+      String spHome = System.getenv("SILVERPEAS_HOME");
+      if (layerType.equalsIgnoreCase("view")) {
+        boolean layer = template.isViewLayerExist();
+        String file = ((PublicationTemplateImpl) template).getViewFileName();
+        file = spHome + "/data/templateRepository/" + file;
+        html = Files.readString(java.nio.file.Path.of(file));
+        Form formUpdate = getEmptyForm(template);
+        for (FieldTemplate field : formUpdate.getFieldTemplates()) {
+          String fieldName = field.getFieldName();
+          html = html.replaceFirst("<%="+fieldName+".label%>", field.getLabel(getMainSessionController()
+                  .getCurrentUserDetail().getUserPreferences().getLanguage()));
+        }
+      } else {
+        boolean layer = template.isUpdateLayerExist();
+        if (!layer) return html;
+        String file = ((PublicationTemplateImpl) template).getUpdateFileName();
+        file = spHome + "/data/templateRepository/" + file;
+        html = Files.readString(java.nio.file.Path.of(file));
+        Form formUpdate = getEmptyForm(template);
+        for (FieldTemplate field : formUpdate.getFieldTemplates()) {
+          String fieldName = field.getFieldName();
+          String htmlField = getHtmlUpdateTagByDisplayerName(field);
+          html = html.replaceFirst("<%="+fieldName+"%>", htmlField);
+          html = html.replaceFirst("<%="+fieldName+".label%>", field.getLabel(getMainSessionController()
+                  .getCurrentUserDetail().getUserPreferences().getLanguage()));
+        }
+      }
+    } catch(Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return html;
+  }
+  private String getHtmlUpdateTagByDisplayerName(FieldTemplate field) {
+    String htmlField = "";
+    String displayerName = field.getDisplayerName();
+    if (displayerName.equalsIgnoreCase("text") || displayerName.equalsIgnoreCase("simpletext")
+            || displayerName.equalsIgnoreCase("map")) {
+      htmlField = "<input type='text' id='" + field.getFieldName() + "' name='" + field.getFieldName()
+              + "' onchange='javascript:updateModel(\""+field.getFieldName()+"\", \""+field.getFieldName()+"\");'></input>";
+    } else if (displayerName.equalsIgnoreCase("textarea") || displayerName.equalsIgnoreCase("wysiwyg")) {
+      htmlField = "<textarea id='" + field.getFieldName() + "' name='" + field.getFieldName()
+              + "' onchange='javascript:updateModel(\""+field.getFieldName()+"\", \""+field.getFieldName()+"\");'></textarea>";
+    } else if (displayerName.equalsIgnoreCase("radio")) {
+      Map<String, String> params = field.getParameters(getUser().getId());
+      String[] keys = params.get("keys").split("##");
+      String[] values = params.get("values").split("##");
+      for (int i = 0; i < values.length; i++) {
+        String value = values[i];
+        String key = keys[i];
+        htmlField += "<input type='radio' id='" + field.getFieldName()+value + "' name='" + field.getFieldName()
+                + "' value='"+key+"'"
+                + "' onchange='javascript:updateModel(\""+field.getFieldName()+value+"\", \""+field.getFieldName()+"\");'>";
+        htmlField += "<label for='"+field.getFieldName()+"'>"+value+"</label>";
+      }
+    } else if (displayerName.equalsIgnoreCase("checkbox")) {
+      Map<String, String> params = field.getParameters(getUser().getId());
+      String[] keys = params.get("keys").split("##");
+      String[] values = params.get("values").split("##");
+      for (int i = 0; i < values.length; i++) {
+        String value = values[i];
+        String key = keys[i];
+        htmlField += "<input type='checkbox' id='" + field.getFieldName()+value + "' name='" + field.getFieldName()
+                + "' value='" + key
+                + "' onchange='javascript:updateModel(\""+field.getFieldName()+value+"\",\""+field.getFieldName()+"\");'>";
+        htmlField += "<label for='"+field.getFieldName()+"'>"+value+"</label>";
+      }
+    } else if (displayerName.equalsIgnoreCase("listbox")) {
+      Map<String, String> params = field.getParameters(getUser().getId());
+      String[] keys = params.get("keys").split("##");
+      String[] values = params.get("values").split("##");
+      htmlField += "<select name='"+field.getFieldName()+"' id='"+field.getFieldName()
+              + "' onchange='javascript:updateModel(\""+field.getFieldName()+"\",\""+field.getFieldName()+"\");'>";
+      for (int i = 0; i < values.length; i++) {
+        String value = values[i];
+        String key = keys[i];
+        htmlField += "<option value='"+key+"'>" + value + "</option>";
+      }
+      htmlField += "</select>";
+    } else if (displayerName.equalsIgnoreCase("file") || displayerName.equalsIgnoreCase("image")
+                || displayerName.equalsIgnoreCase("video")) {
+      htmlField = "<input type='file' id='" + field.getFieldName() + "' name='" + field.getFieldName()
+              + "' onchange='javascript:updateModel(\""+field.getFieldName()+"\",\""+field.getFieldName()+"\");'></input>";
+    }  else if (displayerName.equalsIgnoreCase("date")) {
+      htmlField = "<input type='date' id='" + field.getFieldName() + "' name='" + field.getFieldName()
+              + "' onchange='javascript:updateModel(\""+field.getFieldName()+"\", \""+field.getFieldName()+"\");'></input>";
+    } else if (displayerName.equalsIgnoreCase("time")) {
+      htmlField = "<input type='time' id='" + field.getFieldName() + "' name='" + field.getFieldName()
+              + "' onchange='javascript:updateModel(\""+field.getFieldName()+"\", \""+field.getFieldName()+"\");'></input>";
+    } else if (displayerName.equalsIgnoreCase("email")) {
+      htmlField = "<input type='email' id='" + field.getFieldName() + "' name='" + field.getFieldName()
+              + "' onchange='javascript:updateModel(\""+field.getFieldName()+"\", \""+field.getFieldName()+"\");'></input>";
+    } else if (displayerName.equalsIgnoreCase("user") || displayerName.equalsIgnoreCase("multipleUser")
+            || displayerName.equalsIgnoreCase("group")) {
+      htmlField = "<textarea id='" + field.getFieldName() + "' name='" + field.getFieldName()
+              + "' onclick='javascript:showUserSelection(\""+field.getFieldName()+"\",\""+field.getTypeName()+"\");'></textarea>";
+    }
+    return htmlField;
+  }
+
+  @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("form/{formName}")
   public List<FormFieldDTO> getForm(@PathParam("formName") String formName) {
@@ -360,7 +513,6 @@ public class ServiceFormsOnline extends AbstractRestWebService {
       }
       PublicationTemplate template = getPublicationTemplate(formName, true);
       Form formUpdate = getEmptyForm(template);
-
       for(FieldTemplate field : formUpdate.getFieldTemplates()) {
         FormFieldDTO f = new FormFieldDTO();
         f.setDisplayerName(field.getDisplayerName());

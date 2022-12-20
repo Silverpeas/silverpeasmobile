@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.services.rest;
 
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
@@ -60,6 +61,12 @@ public interface ServiceFormsOnline extends RestService {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{appId}/myrequests")
   public void getMyRequests(@PathParam("appId") String appId, MethodCallback<List<FormRequestDTO>> callback);
+
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("{appId}/formlayer/{formName}/{layerType}")
+  public void getFormLayer(@PathParam("appId") String appId, @PathParam("formName") String formName,
+                             @PathParam("layerType") String layerType, TextCallback callback);
 
   @GET
   @Path("{appId}/form/{formName}")
