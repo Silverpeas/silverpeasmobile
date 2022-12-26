@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.formsonline.events.pages;
 
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 
 import java.util.List;
 
@@ -45,14 +46,14 @@ public class FormLoadedEvent extends AbstractFormsOnlinePagesEvent {
   }
 
   private List<FormFieldDTO> fields;
-  private String html;
+  private FormLayerDTO layer;
 
-  public String getHtml() {
-    return html;
+  public FormLayerDTO getLayer() {
+    return layer;
   }
 
-  public void setHtml(String html) {
-    this.html = html;
+  public void setLayer(FormLayerDTO layer) {
+    this.layer = layer;
   }
   @Override
   protected void dispatch(FormsOnlinePagesEventHandler handler) {

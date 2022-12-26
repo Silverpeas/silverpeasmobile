@@ -117,12 +117,21 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
 
   @Override
   public void onFormLoaded(final FormLoadedEvent formLoadedEvent) {
-    if (formLoadedEvent.getHtml() != null && !formLoadedEvent.getHtml().isEmpty()
+    if (formLoadedEvent.getLayer().getHtml() != null && !formLoadedEvent.getLayer().getHtml().isEmpty()
             && ResourcesManager.getParam("form.htmllayer.display").equalsIgnoreCase("true")) {
       hasHtmlLayer = true;
       data = formLoadedEvent.getFormFields();
-      layer.setHTML(formLoadedEvent.getHtml());
-      //ScriptInjector.fromString("alert('run');").inject();
+      layer.setHTML(formLoadedEvent.getLayer().getHtml());
+
+      for (String script : formLoadedEvent.getLayer().getScripts()) {
+        if (script.contains("src=")) {
+          script = script.substring(script.indexOf("src=")+5);
+          script = script.substring(0, script.indexOf(">")-1);
+          ScriptInjector.fromUrl(script).inject();
+        } else {
+          ScriptInjector.fromString(script).inject();
+        }
+      }
     } else {
       hasHtmlLayer = false;
       data = formLoadedEvent.getFormFields();

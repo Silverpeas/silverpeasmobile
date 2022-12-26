@@ -53,15 +53,15 @@ public class FormRequestDTO implements Serializable {
   private String formId;
   private List<FormFieldDTO> data;
 
-  public String getHtmlLayer() {
+  private FormLayerDTO htmlLayer;
+
+  public FormLayerDTO getHtmlLayer() {
     return htmlLayer;
   }
 
-  public void setHtmlLayer(String htmlLayer) {
+  public void setHtmlLayer(FormLayerDTO htmlLayer) {
     this.htmlLayer = htmlLayer;
   }
-
-  private String htmlLayer;
 
   public String getId() {
     return id;

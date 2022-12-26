@@ -30,6 +30,7 @@ import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
@@ -63,10 +64,10 @@ public interface ServiceFormsOnline extends RestService {
   public void getMyRequests(@PathParam("appId") String appId, MethodCallback<List<FormRequestDTO>> callback);
 
   @GET
-  @Produces(MediaType.TEXT_PLAIN)
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("{appId}/formlayer/{formName}/{layerType}")
   public void getFormLayer(@PathParam("appId") String appId, @PathParam("formName") String formName,
-                             @PathParam("layerType") String layerType, TextCallback callback);
+                             @PathParam("layerType") String layerType, MethodCallback<FormLayerDTO> callback);
 
   @GET
   @Path("{appId}/form/{formName}")

@@ -26,6 +26,9 @@ package org.silverpeas.mobile.server.services;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.silverpeas.components.formsonline.FormsOnlineComponentSettings;
 import org.silverpeas.components.formsonline.model.FormDetail;
 import org.silverpeas.components.formsonline.model.FormInstance;
@@ -68,6 +71,7 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
@@ -393,9 +397,10 @@ public class ServiceFormsOnline extends AbstractRestWebService {
 
 
   @GET
-  @Produces(MediaType.TEXT_PLAIN)
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("formlayer/{formName}/{layerType}")
-  public String getFormLayer(@PathParam("formName") String formName, @PathParam("layerType") String layerType) {
+  public FormLayerDTO getFormLayer(@PathParam("formName") String formName, @PathParam("layerType") String layerType) {
+    FormLayerDTO dto = new FormLayerDTO();
     String html = "";
     try {
       PublicationTemplate template = getPublicationTemplate(formName, true);
@@ -413,23 +418,37 @@ public class ServiceFormsOnline extends AbstractRestWebService {
         }
       } else {
         boolean layer = template.isUpdateLayerExist();
-        if (!layer) return html;
-        String file = ((PublicationTemplateImpl) template).getUpdateFileName();
-        file = spHome + "/data/templateRepository/" + file;
-        html = Files.readString(java.nio.file.Path.of(file));
-        Form formUpdate = getEmptyForm(template);
-        for (FieldTemplate field : formUpdate.getFieldTemplates()) {
-          String fieldName = field.getFieldName();
-          String htmlField = getHtmlUpdateTagByDisplayerName(field);
-          html = html.replaceFirst("<%="+fieldName+"%>", htmlField);
-          html = html.replaceFirst("<%="+fieldName+".label%>", field.getLabel(getMainSessionController()
-                  .getCurrentUserDetail().getUserPreferences().getLanguage()));
+        if (layer) {
+          String file = ((PublicationTemplateImpl) template).getUpdateFileName();
+          file = spHome + "/data/templateRepository/" + file;
+          html = Files.readString(java.nio.file.Path.of(file));
+          Form formUpdate = getEmptyForm(template);
+          for (FieldTemplate field : formUpdate.getFieldTemplates()) {
+            String fieldName = field.getFieldName();
+            String htmlField = getHtmlUpdateTagByDisplayerName(field);
+            html = html.replaceFirst("<%=" + fieldName + "%>", htmlField);
+            html = html.replaceFirst("<%=" + fieldName + ".label%>", field.getLabel(getMainSessionController()
+                    .getCurrentUserDetail().getUserPreferences().getLanguage()));
+          }
         }
       }
+
+      ArrayList<String> scripts = new ArrayList<>();
+      Elements els = Jsoup.parse(html).select("script");
+      for (int i = 0; i < els.size(); i++) {
+        Element el = els.get(i);
+        String script = el.outerHtml();
+        if (!script.contains("src=")) {
+          script = el.html();
+        }
+        scripts.add(script);
+      }
+      dto.setHtml(html);
+      dto.setScripts(scripts);
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
-    return html;
+    return dto;
   }
   private String getHtmlUpdateTagByDisplayerName(FieldTemplate field) {
     String htmlField = "";

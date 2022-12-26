@@ -29,6 +29,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.*;
@@ -61,6 +62,7 @@ import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
+import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -132,14 +134,14 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
         page.show();
 
         ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(),
-                event.getForm().getXmlFormName(), "update", new TextCallback() {
+                event.getForm().getXmlFormName(), "update", new MethodCallback<FormLayerDTO>() {
                     @Override
                     public void onFailure(Method method, Throwable throwable) {
                         EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
                     }
 
                     @Override
-                    public void onSuccess(Method method, String html) {
+                    public void onSuccess(Method method, final FormLayerDTO layer) {
 
                         MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormFieldDTO>>() {
                             @Override
@@ -154,7 +156,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
                                 super.onSuccess(method, formFieldsDTO);
                                 FormLoadedEvent event = new FormLoadedEvent();
                                 event.setFormFields(formFieldsDTO);
-                                event.setHtml(html);
+                                event.setLayer(layer);
                                 EventBus.getInstance().fireEvent(event);
                             }
                         };
@@ -347,14 +349,17 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     public void loadFormRequest(
             final FormsOnlineLoadRequestEvent loadEvent) {
 
-        ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(), loadEvent.getData().getFormName(), "view", new TextCallback() {
+        ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(), loadEvent.getData().getFormName(), "view", new MethodCallback<FormLayerDTO>() {
+
             @Override
             public void onFailure(Method method, Throwable throwable) {
                 EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
             }
 
+
             @Override
-            public void onSuccess(Method method, String html) {
+            public void onSuccess(Method method, final FormLayerDTO layer) {
+
                 MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<FormRequestDTO>() {
                     @Override
                     public void attempt() {
@@ -365,7 +370,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
                     @Override
                     public void onSuccess(final Method method, final FormRequestDTO data) {
                         super.onSuccess(method, data);
-                        data.setHtmlLayer(html);
+                        data.setHtmlLayer(layer);
                         EventBus.getInstance().fireEvent(new FormRequestStatusChangedEvent(data));
                         FormOnlineViewPage page = new FormOnlineViewPage();
                         page.setApp(FormsOnlineApp.this);
