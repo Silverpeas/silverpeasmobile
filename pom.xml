@@ -39,7 +39,7 @@
   <name>Silverpeas Mobile component</name>
 
   <properties>
-    <silverpeas.version>6.4-build221225</silverpeas.version>
+    <silverpeas.version>6.4-build221228</silverpeas.version>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
      <next.release>6.4</next.release>
