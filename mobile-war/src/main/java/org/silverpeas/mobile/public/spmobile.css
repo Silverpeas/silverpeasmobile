@@ -1239,6 +1239,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	margin-right: 1.5em;
 }
 
+#attachments li a.share {
+  background: transparent url(share.png) right 1em no-repeat;
+  display: block;
+  margin-right: 1.5em;
+  margin-bottom: 1em;
+}
+
 #attachments li a span {
   display: inline-block;
 }

@@ -22,26 +22,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.documents.resources;
+package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.i18n.client.Messages;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-public interface DocumentsMessages extends Messages {
-  String title();
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import java.util.List;
 
-  // Publication page
-  String lastUpdate(String updateDate, String updater);
-  String publicationTitle();
-  String sizeK(String size);
-  String sizeM(String size);
+/**
+ * @author svu
+ */
+@Path("/mytickets")
+public interface ServiceTickets extends RestService {
 
-  String content();
 
-  String creation(String creationDate, String creator);
+  @POST
+  @Path("{componentId}/")
+  public void createTicket(@PathParam("componentId") String componentId, TicketDTO dto, MethodCallback<TicketDTO> callback);
 
-  String views(int number);
-  String view();
-  String noview();
-
-  String share();
 }

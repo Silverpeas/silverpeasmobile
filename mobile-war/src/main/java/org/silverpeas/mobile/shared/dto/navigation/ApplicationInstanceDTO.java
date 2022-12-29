@@ -31,13 +31,16 @@ import java.io.Serializable;
 
 public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Serializable {
 
-	private String type;
+  private String type;
   private RightDTO rights;
   private boolean commentable;
   private boolean notifiable;
   private boolean ableToStoreContent;
   private boolean workflow;
   private String extraId;
+  private int folderSharing;
+  private int publicationSharing;
+  private int fileSharing;
 
   public String getType() {
     return type;
@@ -94,4 +97,12 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   public void setExtraId(final String extraId) {
     this.extraId = extraId;
   }
+
+  public void setFolderSharing(int folderSharing) { this.folderSharing = folderSharing; }
+  public void setPublicationSharing(int publicationSharing) { this.publicationSharing = publicationSharing; }
+  public void setFileSharing(int fileSharing) { this.fileSharing = fileSharing; }
+  public int getFolderSharing() { return folderSharing; }
+  public int getPublicationSharing() { return publicationSharing; }
+  public int getFileSharing() { return fileSharing; }
+
 }

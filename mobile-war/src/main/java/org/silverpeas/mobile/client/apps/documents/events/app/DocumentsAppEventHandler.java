@@ -30,4 +30,5 @@ public interface DocumentsAppEventHandler extends EventHandler {
 	void loadTopics(DocumentsLoadGedItemsEvent event);
 	void loadPublication(DocumentsLoadPublicationEvent event);
   void loadAttachments(DocumentsLoadAttachmentsEvent event);
+  void share(DocumentsSharingEvent event);
 }

@@ -31,10 +31,13 @@ import java.util.List;
 public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 
 	private List<BaseDTO> topicsAndPublications;
+
+	private int sharing;
 	
-	public GedItemsLoadedEvent(List<BaseDTO> topicsAndPublications) {
+	public GedItemsLoadedEvent(List<BaseDTO> topicsAndPublications, int sharing) {
 		super();
 		this.topicsAndPublications = topicsAndPublications;
+		this.sharing = sharing;
 	}
 
 	@Override
@@ -44,5 +47,9 @@ public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 
 	public List<BaseDTO> getTopicsAndPublications() {
 		return topicsAndPublications;
+	}
+
+	public int getSharing() {
+		return sharing;
 	}
 }

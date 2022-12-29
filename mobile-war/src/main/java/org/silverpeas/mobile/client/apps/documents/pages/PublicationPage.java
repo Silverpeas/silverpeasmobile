@@ -34,6 +34,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -45,6 +46,7 @@ import org.silverpeas.mobile.client.apps.documents.events.pages.publication.Publ
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.LinkedPublicationItem;
+import org.silverpeas.mobile.client.apps.documents.pages.widgets.ShareButton;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
@@ -92,6 +94,8 @@ public class PublicationPage extends PageContent
 
   private NotifyButton notification = new NotifyButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
+
+  private ShareButton share = new ShareButton();
   private ContentDTO contentDTO = null;
 
 
@@ -138,6 +142,12 @@ public class PublicationPage extends PageContent
       actionsMenu.addAction(notification);
     }
 
+    if (event.getSharing() > 0) {
+      share.init(event.getSharing(), event.getPublication().getInstanceId(),
+              event.getPublication().getId(), "Publication", "", "");
+      actionsMenu.addAction(share);
+    }
+
     if (Boolean.parseBoolean(ResourcesManager.getParam("content.display.embedded")) && publication.getContent()) {
       PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
     }
@@ -149,6 +159,7 @@ public class PublicationPage extends PageContent
     for (SimpleDocumentDTO attachment : event.getAttachments()) {
       Attachment a = new Attachment();
       a.setAttachment(attachment);
+      a.setSharing(event.getShare());
       attachments.add(a);
     }
   }

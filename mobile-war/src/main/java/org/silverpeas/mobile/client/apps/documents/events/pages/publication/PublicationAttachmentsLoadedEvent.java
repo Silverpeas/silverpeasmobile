@@ -32,10 +32,12 @@ import java.util.List;
 public class PublicationAttachmentsLoadedEvent extends AbstractPublicationPagesEvent {
 
   private List<SimpleDocumentDTO> attachments;
+  private int share;
 
-  public PublicationAttachmentsLoadedEvent(List<SimpleDocumentDTO> attachments) {
+  public PublicationAttachmentsLoadedEvent(List<SimpleDocumentDTO> attachments, int share) {
     super();
     this.attachments = attachments;
+    this.share = share;
   }
 
   @Override
@@ -45,5 +47,9 @@ public class PublicationAttachmentsLoadedEvent extends AbstractPublicationPagesE
 
   public List<SimpleDocumentDTO> getAttachments() {
     return attachments;
+  }
+
+  public int getShare() {
+    return share;
   }
 }

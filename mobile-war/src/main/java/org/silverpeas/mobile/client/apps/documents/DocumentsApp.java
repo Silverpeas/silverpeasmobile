@@ -30,12 +30,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
-import org.silverpeas.mobile.client.apps.documents.events.app.AbstractDocumentsAppEvent;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsAppEventHandler;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadAttachmentsEvent;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
+import org.silverpeas.mobile.client.apps.documents.events.app.*;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
@@ -53,6 +50,8 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.IframePage;
+import org.silverpeas.mobile.client.components.PopinConfirmation;
+import org.silverpeas.mobile.client.components.PopinInformation;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
@@ -63,6 +62,7 @@ import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 import java.util.List;
 
@@ -237,8 +237,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       @Override
       public void onSuccess(final Method method, final List<BaseDTO> result) {
         super.onSuccess(method, result);
-        EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result));
-
+        EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result, getApplicationInstance().getFolderSharing()));
       }
     };
     action.attempt();
@@ -265,7 +264,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         EventBus.getInstance().fireEvent(
             new PublicationLoadedEvent(result, getApplicationInstance().getCommentable(),
                 getApplicationInstance().getAbleToStoreContent(),
-                getApplicationInstance().getNotifiable(), event.getContent().getType()));
+                getApplicationInstance().getNotifiable(), getApplicationInstance().getPublicationSharing(), event.getContent().getType()));
 
       }
     };
@@ -287,11 +286,28 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
           @Override
           public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
             super.onSuccess(method, attachments);
-            EventBus.getInstance().fireEvent(new PublicationAttachmentsLoadedEvent(attachments));
+            EventBus.getInstance().fireEvent(new PublicationAttachmentsLoadedEvent(attachments, getApplicationInstance().getFileSharing()));
           }
         };
 
     action.attempt();
   }
 
+  @Override
+  public void share(DocumentsSharingEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<TicketDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getRestServiceTickets().createTicket(event.getTicket().getComponentId(), event.getTicket(), this);
+      }
+      @Override
+      public void onSuccess(Method method, TicketDTO dto) {
+        super.onSuccess(method, dto);
+        PopinInformation popin = new PopinInformation(dto.getUrl());
+        popin.show();
+      }
+    };
+    action.attempt();
+  }
 }

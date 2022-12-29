@@ -33,13 +33,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsSharingEvent;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
+import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
@@ -47,12 +50,13 @@ import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 public class Attachment extends Composite {
 
   private static AttachmentUiBinder uiBinder = GWT.create(AttachmentUiBinder.class);
   @UiField
-  Anchor link;
+  Anchor link, share;
   @UiField
   SpanElement size, name, description;
   @UiField
@@ -63,6 +67,8 @@ public class Attachment extends Composite {
   private ApplicationMessages globalMsg = null;
   private SimpleDocumentDTO data = null;
 
+  private int sharing;
+
   interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {}
 
   public Attachment() {
@@ -71,6 +77,13 @@ public class Attachment extends Composite {
     ressources = GWT.create(DocumentsResources.class);
     ressources.css().ensureInjected();
     initWidget(uiBinder.createAndBindUi(this));
+  }
+
+  public void setSharing(int sharing) {
+    this.sharing = sharing;
+    if (sharing == 0) {
+      share.setVisible(false);
+    }
   }
 
   public void setAttachment(SimpleDocumentDTO data) {
@@ -159,5 +172,14 @@ public class Attachment extends Composite {
       Notification.alert(e.getMessage());
     }
 
+  }
+  @UiHandler("share")
+  protected void share(ClickEvent event) {
+    TicketDTO dto = new TicketDTO();
+    dto.setValidity("0");
+    dto.setComponentId(data.getInstanceId());
+    dto.setSharedObjectType("Attachment");
+    dto.setSharedObjectId(data.getSpId());
+    EventBus.getInstance().fireEvent(new DocumentsSharingEvent(dto));
   }
 }

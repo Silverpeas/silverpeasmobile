@@ -721,6 +721,22 @@ public class ServiceNavigation extends AbstractRestWebService {
       dto.setAbleToStoreContent(false);
     }
 
+    if (app.getName().equals("kmelia")) {
+      try {
+        String value = "";
+        value = getMainSessionController().getComponentParameterValue(app.getId(), "useFolderSharing");
+        dto.setFolderSharing(Integer.parseInt(value));
+        value = getMainSessionController().getComponentParameterValue(app.getId(), "usePublicationSharing");
+        dto.setPublicationSharing(Integer.parseInt(value));
+        value = getMainSessionController().getComponentParameterValue(app.getId(), "useFileSharing");
+        dto.setFileSharing(Integer.parseInt(value));
+      } catch(Exception e) {
+        dto.setFolderSharing(0);
+        dto.setPublicationSharing(0);
+        dto.setFileSharing(0);
+      }
+    }
+
     return dto;
   }
 

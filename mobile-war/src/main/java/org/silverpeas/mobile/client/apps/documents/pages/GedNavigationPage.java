@@ -37,6 +37,7 @@ import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedIt
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation
     .GedNavigationPagesEventHandler;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.GedItem;
+import org.silverpeas.mobile.client.apps.documents.pages.widgets.ShareButton;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -64,6 +65,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   private String rootTopicId, instanceId;
   private boolean dataLoaded = false;
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private ShareButton share = new ShareButton();
 
   private static GedNavigationPageUiBinder uiBinder = GWT.create(GedNavigationPageUiBinder.class);
 
@@ -117,6 +119,12 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
       } else {
         favorite.init(instanceId, root.getId(), ContentsTypes.Folder.name(), root.getName());
       }
+
+      if (event.getSharing() > 0) {
+        share.init(event.getSharing(), instanceId, root.getId(),"Node", "","");
+        actionsMenu.addAction(share);
+      }
+
       Notification.activityStop();
     }
 

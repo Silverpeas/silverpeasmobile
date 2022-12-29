@@ -22,26 +22,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.documents.resources;
+package org.silverpeas.mobile.client.apps.documents.events.app;
 
-import com.google.gwt.i18n.client.Messages;
 
-public interface DocumentsMessages extends Messages {
-  String title();
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-  // Publication page
-  String lastUpdate(String updateDate, String updater);
-  String publicationTitle();
-  String sizeK(String size);
-  String sizeM(String size);
+public class DocumentsSharingEvent extends AbstractDocumentsAppEvent {
 
-  String content();
+  private TicketDTO ticket;
 
-  String creation(String creationDate, String creator);
+  public DocumentsSharingEvent(TicketDTO ticket) {
+    super();
+    this.ticket = ticket;
+  }
 
-  String views(int number);
-  String view();
-  String noview();
+  @Override
+  protected void dispatch(DocumentsAppEventHandler handler) {
+    handler.share(this);
+  }
 
-  String share();
+  public TicketDTO getTicket() {
+    return ticket;
+  }
+
+  public void setTicket(TicketDTO ticket) {
+    this.ticket = ticket;
+  }
 }
