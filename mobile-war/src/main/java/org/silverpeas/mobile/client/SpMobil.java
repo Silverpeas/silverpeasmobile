@@ -103,7 +103,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static Page mainPage = null;
   private static DetailUserDTO user;
   private static UserProfileDTO userProfile;
-
+  private static int nbRetryLogin = 0;
   private static String viewport, bodyClass, bodyId;
   private static ApplicationMessages msg;
   private static String shortcutAppId;
@@ -308,9 +308,13 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           super.attempt();
           FullUserDTO u = AuthentificationManager.getInstance().loadUser();
           if (u != null) {
+            nbRetryLogin = 0;
             ServicesLocator.getServiceNavigation().getUser(u.getLogin(), u.getDomainId(), this);
           } else {
-            tryToRelogin(attempt);
+            if (nbRetryLogin < 5) {
+              tryToRelogin(attempt);
+              nbRetryLogin++;
+            }
           }
         }
 
@@ -320,7 +324,6 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           setUser(detailUserDTO);
           setUserProfile(UserProfileDTO.getBean(
               LocalStorageHelper.load(AuthentificationManager.USER_PROFIL, IUserProfile.class)));
-
           ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
             @Override
             public void onFailure(final Method method, final Throwable throwable) {
