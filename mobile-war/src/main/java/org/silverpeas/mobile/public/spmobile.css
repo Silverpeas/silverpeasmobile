@@ -2691,3 +2691,13 @@ a.popin-btn {
 	clear:left;
 	height:1em;
 }
+
+/* sharing */
+
+#sharing {
+  padding: 1em;
+}
+
+#sharing .label {
+  padding-top: 1em;
+}

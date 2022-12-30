@@ -28,10 +28,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiHandler;
 import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
+import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.event.selection.UsersSelectionSendedEvent;
 import org.silverpeas.mobile.client.components.userselection.UserSelectionPage;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.components.userselection.widgets.UserGroupItem;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 
 import java.util.ArrayList;
@@ -45,6 +48,8 @@ public class NotificationPage extends UserSelectionPage {
 
   private NotificationsMessages msgNotification = null;
 
+  private boolean standAlone = true;
+
   public NotificationPage() {
     super();
     msgNotification = GWT.create(NotificationsMessages.class);
@@ -54,6 +59,9 @@ public class NotificationPage extends UserSelectionPage {
   public void onAllowedUsersAndGroupsLoaded(AllowedUsersAndGroupsLoadedEvent allowedUsersAndGroupsLoadedEvent) {
     setTitle();
     for (BaseDTO data : allowedUsersAndGroupsLoadedEvent.getListAllowedUsersAndGroups()) {
+      if (allowedUsersAndGroupsLoadedEvent.isUserOnly() && data instanceof GroupDTO) {
+        continue;
+      }
       UserGroupItem item = new UserGroupItem();
       item.setData(data);
       list.add(item);
@@ -75,12 +83,16 @@ public class NotificationPage extends UserSelectionPage {
       }
     }
 
-    NotificationSenderPage page = new NotificationSenderPage();
-    page.setPageTitle(msgNotification.notifyContent());
-    page.setSelection(receivers);
-    page.setTitle(getTitle());
-    page.show();
-
+    if (standAlone) {
+      NotificationSenderPage page = new NotificationSenderPage();
+      page.setPageTitle(msgNotification.notifyContent());
+      page.setSelection(receivers);
+      page.setTitle(getTitle());
+      page.show();
+    } else {
+      EventBus.getInstance().fireEvent(new UsersSelectionSendedEvent(receivers));
+      back();
+    }
   }
 
   @Override
@@ -91,5 +103,9 @@ public class NotificationPage extends UserSelectionPage {
   @Override
   public void stop() {
     super.stop();
+  }
+
+  public void setStandAlone(boolean standAlone) {
+    this.standAlone = standAlone;
   }
 }

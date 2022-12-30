@@ -233,7 +233,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
             @Override
             public void onSuccess(final Method method, final List<BaseDTO> users) {
                 super.onSuccess(method, users);
-                AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users);
+                AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users, true);
                 EventBus.getInstance().fireEvent(ev);
             }
         };

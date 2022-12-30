@@ -40,6 +40,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsSharingEvent;
+import org.silverpeas.mobile.client.apps.documents.pages.SharingPage;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -175,11 +176,9 @@ public class Attachment extends Composite {
   }
   @UiHandler("share")
   protected void share(ClickEvent event) {
-    TicketDTO dto = new TicketDTO();
-    dto.setValidity("0");
-    dto.setComponentId(data.getInstanceId());
-    dto.setSharedObjectType("Attachment");
-    dto.setSharedObjectId(data.getSpId());
-    EventBus.getInstance().fireEvent(new DocumentsSharingEvent(dto));
+    SharingPage page = new SharingPage();
+    page.setData("Attachment", data.getSpId(), data.getInstanceId());
+    page.show();
+
   }
 }

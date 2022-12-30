@@ -32,10 +32,7 @@ import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInst;
-import org.silverpeas.core.admin.user.model.Group;
-import org.silverpeas.core.admin.user.model.ProfileInst;
-import org.silverpeas.core.admin.user.model.User;
-import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.admin.user.model.*;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
@@ -181,23 +178,38 @@ public class ServiceNotifications extends AbstractRestWebService {
     ArrayList<GroupDTO> groups = new ArrayList<>();
 
     try {
-      ComponentInst componentInst = Administration.get().getComponentInst(componentId);
-      List<ProfileInst> profiles = new ArrayList<ProfileInst>();
+      if (componentId.equalsIgnoreCase("null")) {
+        for (UserDetail user : Administration.get().getAllUsers()) {
+          users.add(populate(user));
+        }
+        for (GroupDetail group : Administration.get().getAllGroups()) {
+          GroupDTO g = new GroupDTO();
+          g.setId(group.getId());
+          g.setName(group.getName());
+          groups.add(g);
+        }
+      } else {
+        ComponentInst componentInst = Administration.get().getComponentInst(componentId);
+        List<ProfileInst> profiles = new ArrayList<ProfileInst>();
 
-      if (componentId.toLowerCase().startsWith("kmelia") && isRightsOnTopicsEnabled(componentId)) {
-        TopicDetail topic = getKmeliaService().getBestTopicDetailOfPublicationForUser(
-            new PublicationPK(contentId, componentId), true, getUser().getId());
-        if (topic != null) {
-          NodePK pk = topic.getNodePK();
-          NodeDetail node = getNodeService().getDetail(pk);
-          if (node.haveRights()) {
-            if (node.haveLocalRights()) {
-              profiles.addAll(getTopicProfiles(pk.getId(), componentId));
-            } else if (node.haveInheritedRights()) {
-              profiles.addAll(
-                  getTopicProfiles(String.valueOf(node.getRightsDependsOn()), componentId));
+        if (componentId.toLowerCase().startsWith("kmelia") && isRightsOnTopicsEnabled(componentId)) {
+          TopicDetail topic = getKmeliaService().getBestTopicDetailOfPublicationForUser(
+                  new PublicationPK(contentId, componentId), true, getUser().getId());
+          if (topic != null) {
+            NodePK pk = topic.getNodePK();
+            NodeDetail node = getNodeService().getDetail(pk);
+            if (node.haveRights()) {
+              if (node.haveLocalRights()) {
+                profiles.addAll(getTopicProfiles(pk.getId(), componentId));
+              } else if (node.haveInheritedRights()) {
+                profiles.addAll(
+                        getTopicProfiles(String.valueOf(node.getRightsDependsOn()), componentId));
+              }
+
+            } else {
+              profiles.addAll(componentInst.getInheritedProfiles());
+              profiles.addAll(componentInst.getProfiles());
             }
-
           } else {
             profiles.addAll(componentInst.getInheritedProfiles());
             profiles.addAll(componentInst.getProfiles());
@@ -206,36 +218,33 @@ public class ServiceNotifications extends AbstractRestWebService {
           profiles.addAll(componentInst.getInheritedProfiles());
           profiles.addAll(componentInst.getProfiles());
         }
-      } else {
-        profiles.addAll(componentInst.getInheritedProfiles());
-        profiles.addAll(componentInst.getProfiles());
-      }
 
-      for (ProfileInst profile : profiles) {
-        for (String groupId : profile.getAllGroups()) {
-          if (!isGroupPresent(groups, groupId)) {
-            Group group = organizationController.getGroup(groupId);
-            GroupDTO g = new GroupDTO();
-            g.setId(group.getId());
-            g.setName(group.getName());
-            groups.add(g);
+        for (ProfileInst profile : profiles) {
+          for (String groupId : profile.getAllGroups()) {
+            if (!isGroupPresent(groups, groupId)) {
+              Group group = organizationController.getGroup(groupId);
+              GroupDTO g = new GroupDTO();
+              g.setId(group.getId());
+              g.setName(group.getName());
+              groups.add(g);
+            }
           }
         }
-      }
 
-      for (ProfileInst profile : profiles) {
-        for (String userId : profile.getAllUsers()) {
-          if (!isUserPresent(users, userId)) {
-            UserDTO u = populate(userId);
-            users.add(u);
-          }
-        }
-        for (String groupId : profile.getAllGroups()) {
-          Group group = organizationController.getGroup(groupId);
-          for (User user : group.getAllUsers()) {
-            if (!isUserPresent(users, user.getId())) {
-              UserDTO u = populate(user.getId());
+        for (ProfileInst profile : profiles) {
+          for (String userId : profile.getAllUsers()) {
+            if (!isUserPresent(users, userId)) {
+              UserDTO u = populate(userId);
               users.add(u);
+            }
+          }
+          for (String groupId : profile.getAllGroups()) {
+            Group group = organizationController.getGroup(groupId);
+            for (User user : group.getAllUsers()) {
+              if (!isUserPresent(users, user.getId())) {
+                UserDTO u = populate(user.getId());
+                users.add(u);
+              }
             }
           }
         }
@@ -272,13 +281,17 @@ public class ServiceNotifications extends AbstractRestWebService {
 
   private UserDTO populate(final String userId) {
     UserDetail userDetail = organizationController.getUserDetail(userId);
+    return populate(userDetail);
+  }
+
+  private UserDTO populate(UserDetail userDetail) {
     UserDTO u = new UserDTO();
     u.setId(userDetail.getId());
     u.setFirstName(userDetail.getFirstName());
     u.setLastName(userDetail.getLastName());
     u.seteMail(userDetail.geteMail());
     String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
-        getSettings().getString("avatar.size", "24x"));
+            getSettings().getString("avatar.size", "24x"));
     u.setAvatar(avatar);
     return u;
   }

@@ -256,7 +256,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       @Override
       public void onSuccess(final Method method, final List<BaseDTO> users) {
         super.onSuccess(method, users);
-        AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users);
+        AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users, true);
         EventBus.getInstance().fireEvent(ev);
       }
     };

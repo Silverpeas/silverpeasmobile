@@ -22,33 +22,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.components.userselection.events.pages;
+package org.silverpeas.mobile.client.common.event.selection;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
+import com.google.gwt.event.shared.GwtEvent;
 
-import java.util.List;
+public abstract class AbstractSelectionPagesEvent extends GwtEvent<SelectionPagesEventHandler>{
 
-public class AllowedUsersAndGroupsLoadedEvent extends AbstractUserSelectionPagesEvent {
+	public static Type<SelectionPagesEventHandler> TYPE = new Type<SelectionPagesEventHandler>();
 
-  List<BaseDTO> list;
-  boolean userOnly;
+	public AbstractSelectionPagesEvent(){
+	}
 
-  public AllowedUsersAndGroupsLoadedEvent(List<BaseDTO> list, boolean userOnly) {
-    super();
-    this.list = list;
-    this.userOnly = userOnly;
-  }
-
-  @Override
-  protected void dispatch(UserSelectionPagesEventHandler handler) {
-    handler.onAllowedUsersAndGroupsLoaded(this);
-  }
-
-  public List<BaseDTO> getListAllowedUsersAndGroups() {
-    return list;
-  }
-
-  public boolean isUserOnly() {
-    return userOnly;
-  }
+	@Override
+	public Type<SelectionPagesEventHandler> getAssociatedType() {
+		return TYPE;
+	}
 }

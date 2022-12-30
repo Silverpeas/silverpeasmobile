@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.documents.resources;
 
 import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.safehtml.shared.SafeHtml;
 
 public interface DocumentsMessages extends Messages {
   String title();
@@ -44,4 +45,16 @@ public interface DocumentsMessages extends Messages {
   String noview();
 
   String share();
+
+  String validityPermanent();
+  String validityTemporary();
+
+  String validityMandatory();
+
+  SafeHtml validityLabel();
+  SafeHtml endValidityLabel();
+  SafeHtml maxAccessLabel();
+  SafeHtml usersLabel();
+  SafeHtml emailsLabel();
+  SafeHtml commentsLabel();
 }

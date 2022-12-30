@@ -55,6 +55,9 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
   private ApplicationMessages globalMsg = null;
   private NotificationsMessages msg = null;
 
+  private boolean standAlone = true;
+  private boolean userOnly = false;
+
   public NotificationsApp(String instanceId, String contentId, String contentType, String title,
       String pageTitle) {
     super();
@@ -94,7 +97,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
       public void onSuccess(final Method method, final List<BaseDTO> baseDTOS) {
         super.onSuccess(method, baseDTOS);
         // Notify view
-        EventBus.getInstance().fireEvent(new AllowedUsersAndGroupsLoadedEvent(baseDTOS));
+        EventBus.getInstance().fireEvent(new AllowedUsersAndGroupsLoadedEvent(baseDTOS, userOnly));
       }
     };
     action.attempt();
@@ -132,5 +135,14 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
 
+  }
+
+  public void setStandAlone(boolean standAlone) {
+    this.standAlone = standAlone;
+    if (mainPage != null) mainPage.setStandAlone(standAlone);
+  }
+
+  public void setUserOnly(boolean userOnly) {
+    this.userOnly = userOnly;
   }
 }

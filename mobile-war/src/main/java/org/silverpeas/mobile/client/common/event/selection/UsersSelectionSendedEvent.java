@@ -22,33 +22,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.components.userselection.events.pages;
+package org.silverpeas.mobile.client.common.event.selection;
 
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.util.List;
 
-public class AllowedUsersAndGroupsLoadedEvent extends AbstractUserSelectionPagesEvent {
+public class UsersSelectionSendedEvent extends AbstractSelectionPagesEvent {
 
-  List<BaseDTO> list;
-  boolean userOnly;
+  private List<BaseDTO> selection;
 
-  public AllowedUsersAndGroupsLoadedEvent(List<BaseDTO> list, boolean userOnly) {
+  public UsersSelectionSendedEvent(List<BaseDTO> selection){
     super();
-    this.list = list;
-    this.userOnly = userOnly;
+    this.selection = selection;
   }
 
   @Override
-  protected void dispatch(UserSelectionPagesEventHandler handler) {
-    handler.onAllowedUsersAndGroupsLoaded(this);
+  protected void dispatch(SelectionPagesEventHandler handler) {
+    handler.onUsersSelected(this);
   }
 
-  public List<BaseDTO> getListAllowedUsersAndGroups() {
-    return list;
-  }
-
-  public boolean isUserOnly() {
-    return userOnly;
+  public List<BaseDTO> getSelection() {
+    return selection;
   }
 }

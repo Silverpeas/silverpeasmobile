@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsSharingEvent;
+import org.silverpeas.mobile.client.apps.documents.pages.SharingPage;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.notifications.NotificationsApp;
 import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
@@ -78,12 +79,9 @@ public class ShareButton extends ActionItem {
 
     @UiHandler("share")
     void displaySharePage(ClickEvent event) {
-        TicketDTO dto = new TicketDTO();
-        dto.setValidity("0");
-        dto.setComponentId(instanceId);
-        dto.setSharedObjectType(contentType);
-        dto.setSharedObjectId(contentId);
-        EventBus.getInstance().fireEvent(new DocumentsSharingEvent(dto));
+        SharingPage page = new SharingPage();
+        page.setData(contentType, contentId, instanceId);
+        page.show();
 
         // hide menu
         getElement().getParentElement().removeAttribute("style");
