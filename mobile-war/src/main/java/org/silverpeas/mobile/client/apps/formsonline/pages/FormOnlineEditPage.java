@@ -307,24 +307,23 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
   @UiHandler("validate")
   protected void validate(ClickEvent event) {
     ArrayList<String> errors = new ArrayList<String>();
-    if (!hasHtmlLayer) {
-      // manage mandatory fields
-      for (FormFieldDTO f : data) {
-        if (f.isMandatory()) {
-          if (f.getType().equalsIgnoreCase("file")) {
-            if (f.getValueId() == null || f.getValueId().isEmpty()) {
-              if (f.getObjectValue() == null) {
-                errors.add(f.getLabel());
-              }
-            }
-          } else if (FormsHelper.isStoreValueId(f)) {
-            if (f.getValueId() == null || f.getValueId().isEmpty()) {
+
+    // manage mandatory fields
+    for (FormFieldDTO f : data) {
+      if (f.isMandatory()) {
+        if (f.getType().equalsIgnoreCase("file")) {
+          if (f.getValueId() == null || f.getValueId().isEmpty()) {
+            if (f.getObjectValue() == null) {
               errors.add(f.getLabel());
             }
-          } else {
-            if (f.getValue() == null || f.getValue().isEmpty()) {
-              errors.add(f.getLabel());
-            }
+          }
+        } else if (FormsHelper.isStoreValueId(f)) {
+          if (f.getValueId() == null || f.getValueId().isEmpty()) {
+            errors.add(f.getLabel());
+          }
+        } else {
+          if (f.getValue() == null || f.getValue().isEmpty()) {
+            errors.add(f.getLabel());
           }
         }
       }
