@@ -117,6 +117,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static Orientation orientation = null;
   private static List<App> apps = new ArrayList<App>();
 
+  private static int nbRetryLogin = 0;
+
   public static DetailUserDTO getUser() {
     return user;
   }
@@ -308,9 +310,13 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           super.attempt();
           FullUserDTO u = AuthentificationManager.getInstance().loadUser();
           if (u != null) {
+            nbRetryLogin = 0;
             ServicesLocator.getServiceNavigation().getUser(u.getLogin(), u.getDomainId(), this);
           } else {
-            tryToRelogin(attempt);
+            if (nbRetryLogin < 5) {
+              tryToRelogin(attempt);
+              nbRetryLogin++;
+            }
           }
         }
 
