@@ -48,6 +48,7 @@ import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.FormException;
 import org.silverpeas.core.contribution.content.form.RecordSet;
+import org.silverpeas.core.contribution.content.form.form.HtmlForm;
 import org.silverpeas.core.contribution.content.form.form.XmlForm;
 import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
@@ -248,16 +249,30 @@ public class ServiceFormsOnline extends AbstractRestWebService {
         dto.setStateLabel(formsOnlineBundle.getString("formsOnline.stateUnread"));
         break;
     }
-    XmlForm formXml = ((XmlForm) f.getFormWithData());
-    if (formXml != null) {
-      DataRecord record = formXml.getData();
-      List<FormFieldDTO> dataForm = new ArrayList<>();
-      for (String name : record.getFieldNames()) {
-        Field field = record.getField(name);
-        FormFieldDTO fieldDTO = populateField(f, field);
-        dataForm.add(fieldDTO);
+    if (f.getFormWithData() instanceof XmlForm) {
+      XmlForm formXml = ((XmlForm) f.getFormWithData());
+      if (formXml != null) {
+        DataRecord record = formXml.getData();
+        List<FormFieldDTO> dataForm = new ArrayList<>();
+        for (String name : record.getFieldNames()) {
+          Field field = record.getField(name);
+          FormFieldDTO fieldDTO = populateField(f, field);
+          dataForm.add(fieldDTO);
+        }
+        dto.setData(dataForm);
       }
-      dto.setData(dataForm);
+    } else {
+      HtmlForm formHTML = ((HtmlForm) f.getFormWithData());
+      if (formHTML != null) {
+        DataRecord record = formHTML.getData();
+        List<FormFieldDTO> dataForm = new ArrayList<>();
+        for (String name : record.getFieldNames()) {
+          Field field = record.getField(name);
+          FormFieldDTO fieldDTO = populateField(f, field);
+          dataForm.add(fieldDTO);
+        }
+        dto.setData(dataForm);
+      }
     }
     return dto;
   }
@@ -282,8 +297,10 @@ public class ServiceFormsOnline extends AbstractRestWebService {
             fieldDTO.setValueId(field.getValue());
           } else {
             int index = Arrays.asList(keys).indexOf(field.getValue());
-            fieldDTO.setValue(values[index]);
-            fieldDTO.setValueId(field.getValue());
+            if (index != -1) {
+              fieldDTO.setValue(values[index]);
+              fieldDTO.setValueId(field.getValue());
+            }
           }
 
         } else {
