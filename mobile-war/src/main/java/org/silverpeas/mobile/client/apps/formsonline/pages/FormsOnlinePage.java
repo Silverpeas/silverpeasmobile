@@ -112,7 +112,6 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
     msg = GWT.create(FormsOnlineMessages.class);
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
-    container.getElement().getStyle().setHeight(12, Style.Unit.EM);
     EventBus.getInstance().addHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
     EventBus.getInstance().fireEvent(new FormsOnlineLoadEvent());
   }
