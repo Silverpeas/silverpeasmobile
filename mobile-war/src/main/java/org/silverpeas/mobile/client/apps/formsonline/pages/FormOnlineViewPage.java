@@ -147,7 +147,7 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
     labelComment.setVisible(data.isReadOnly());
     comment.setVisible(data.isReadOnly());
 
-    if (data.getHtmlLayer() != null && !data.getHtmlLayer().getHtml().isEmpty()
+    if (data.getHtmlLayer() != null && data.getHtmlLayer().getHtml() != null && !data.getHtmlLayer().getHtml().isEmpty()
             && ResourcesManager.getParam("form.htmllayer.display").equalsIgnoreCase("true")) {
       hasHtmlLayer = true;
       String html = data.getHtmlLayer().getHtml();
