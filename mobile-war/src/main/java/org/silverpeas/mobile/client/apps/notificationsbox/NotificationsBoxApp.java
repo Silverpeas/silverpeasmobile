@@ -100,7 +100,7 @@ public class NotificationsBoxApp extends App
             EventBus.getInstance()
                 .fireEvent(new NotificationsLoadedEvent(notificationReceivedDTOS));
             if (notificationReceivedDTOS.getMoreElement()) {
-              loadNotifications(event, nbCall);
+              loadNotifications(event, nbCall+1);
             }
           }
         };
