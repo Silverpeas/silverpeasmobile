@@ -22,29 +22,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services.rest;
+package org.silverpeas.mobile.client.apps.sharesbox.events.pages;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
-import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
+import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsSendedLoadedEvent;
 
-import javax.ws.rs.*;
-import java.util.List;
+public interface SharesBoxPagesEventHandler extends EventHandler {
 
-/**
- * @author svu
- */
-@Path("/mytickets")
-public interface ServiceTickets extends RestService {
-
-
-  @POST
-  @Path("{componentId}/")
-  public void createTicket(@PathParam("componentId") String componentId, TicketDTO dto, MethodCallback<TicketDTO> callback);
-
-
-  @GET
-  public void getMyTickets(@QueryParam("page") final String page, MethodCallback<List<TicketDTO>> callback);
 
 }

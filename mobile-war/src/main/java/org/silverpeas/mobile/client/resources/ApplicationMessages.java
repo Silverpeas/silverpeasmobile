@@ -189,4 +189,6 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Envoyées")
   SafeHtml sended();
 
+  @DefaultMessage("Mes partages")
+  String shares();
 }

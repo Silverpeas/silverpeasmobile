@@ -37,12 +37,16 @@ public class TicketDTO implements Serializable {
   private String componentId;
   private String validity;
   private String url;
+
+  private String uri;
   private String endDateStr;
   private String endDateFormat;
   private String nbAccessMax;
   private String users;
   private String externalEmails;
   private String additionalMessage;
+
+  private String creationDate;
 
   /****/
 
@@ -178,5 +182,21 @@ public class TicketDTO implements Serializable {
 
   public void setAdditionalMessage(String additionalMessage) {
     this.additionalMessage = additionalMessage;
+  }
+
+  public String getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(String creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  public String getUri() {
+    return uri;
+  }
+
+  public void setUri(String uri) {
+    this.uri = uri;
   }
 }

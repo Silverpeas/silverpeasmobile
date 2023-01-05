@@ -73,7 +73,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
   @UiField HTMLPanel container, user;
-  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, calendar, notifications;
+  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, calendar, notifications, shares;
   @UiField SpanElement status;
   @UiField TextBox search;
   @UiField AvatarUpload avatar;
@@ -166,6 +166,14 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     } else {
       PageHistory.getInstance().goBackToFirst();
     }
+  }
+
+  @UiHandler("shares")
+  protected void goSharesBox(ClickEvent event) {
+    ContentDTO content = new ContentDTO();
+    content.setType(ContentsTypes.SharesBox.toString());
+    EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+    closeMenu();
   }
 
   @UiHandler("notifications")
