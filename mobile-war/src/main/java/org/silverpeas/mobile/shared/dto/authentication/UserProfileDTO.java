@@ -249,28 +249,31 @@ public class UserProfileDTO implements IUserProfile {
   }
 
   public static UserProfileDTO getBean (AutoBean<IUserProfile> b) {
-    UserProfileDTO user = new UserProfileDTO();
-    user.setAnonymous(b.as().isAnonymous());
-    user.setAccessLevel(b.as().getAccessLevel());
-    user.setAvatar(b.as().getAvatar());
-    user.setId(b.as().getId());
-    user.setConnected(b.as().isConnected());
-    user.setApiToken(b.as().getApiToken());
-    user.setContactsUri(b.as().getContactsUri());
-    user.setDeletedState(b.as().isDeletedState());
-    user.setDomainId(b.as().getDomainId());
-    user.seteMail(b.as().geteMail());
-    user.setLanguage(b.as().getLanguage());
-    user.setLogin(b.as().getLogin());
-    user.setFirstName(b.as().getFirstName());
-    user.setDomainName(b.as().getDomainName());
-    user.setFullName(b.as().getFullName());
-    user.setStatus(b.as().getStatus());
-    user.setUri(b.as().getUri());
-    user.setLastName(b.as().getLastName());
-    user.setSpecificId(b.as().getSpecificId());
-    user.setWebPage(b.as().getWebPage());
-    user.setDeactivatedState(b.as().isDeactivatedState());
+    UserProfileDTO user = null;
+    if (b!= null) {
+      user = new UserProfileDTO();
+      user.setAnonymous(b.as().isAnonymous());
+      user.setAccessLevel(b.as().getAccessLevel());
+      user.setAvatar(b.as().getAvatar());
+      user.setId(b.as().getId());
+      user.setConnected(b.as().isConnected());
+      user.setApiToken(b.as().getApiToken());
+      user.setContactsUri(b.as().getContactsUri());
+      user.setDeletedState(b.as().isDeletedState());
+      user.setDomainId(b.as().getDomainId());
+      user.seteMail(b.as().geteMail());
+      user.setLanguage(b.as().getLanguage());
+      user.setLogin(b.as().getLogin());
+      user.setFirstName(b.as().getFirstName());
+      user.setDomainName(b.as().getDomainName());
+      user.setFullName(b.as().getFullName());
+      user.setStatus(b.as().getStatus());
+      user.setUri(b.as().getUri());
+      user.setLastName(b.as().getLastName());
+      user.setSpecificId(b.as().getSpecificId());
+      user.setWebPage(b.as().getWebPage());
+      user.setDeactivatedState(b.as().isDeactivatedState());
+    }
 
     return user;
   }

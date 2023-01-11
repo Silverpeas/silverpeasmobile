@@ -42,6 +42,7 @@ import org.silverpeas.mobile.client.common.event.authentication.AuthenticationEr
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -93,8 +94,12 @@ public class AuthentificationManager {
     SpMobil.setUser(user);
 
     FullUserDTO u = new FullUserDTO(login, encryptedPassword, domainId, user);
-    LocalStorageHelper.store(USER_CONNECTED_KEY, u.getAutoBean());
-    LocalStorageHelper.store(USER_PROFIL, profil.getAutoBean());
+
+    String maintainSession = ResourcesManager.getParam("maintain.session");
+    if (maintainSession.equalsIgnoreCase("true")) {
+      LocalStorageHelper.store(USER_CONNECTED_KEY, u.getAutoBean());
+      LocalStorageHelper.store(USER_PROFIL, profil.getAutoBean());
+    }
   }
 
   public void updateAvatarInCache(final String avatarData) {
@@ -102,8 +107,11 @@ public class AuthentificationManager {
     SpMobil.getUserProfile().setAvatar(avatarData);
     FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.load(USER_CONNECTED_KEY, IFullUser.class));
     user.setAvatar(avatarData);
-    LocalStorageHelper.store(USER_CONNECTED_KEY, user.getAutoBean());
-    LocalStorageHelper.store(USER_PROFIL, SpMobil.getUserProfile().getAutoBean());
+    String maintainSession = ResourcesManager.getParam("maintain.session");
+    if (maintainSession.equalsIgnoreCase("true")) {
+      LocalStorageHelper.store(USER_CONNECTED_KEY, user.getAutoBean());
+      LocalStorageHelper.store(USER_PROFIL, SpMobil.getUserProfile().getAutoBean());
+    }
   }
 
   /**
