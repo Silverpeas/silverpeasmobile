@@ -37,6 +37,7 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
+import org.silverpeas.core.contribution.attachment.AttachmentService;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
@@ -57,20 +58,17 @@ import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.file.FileServerUtils;
 import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
@@ -529,6 +527,27 @@ public class ServiceDocuments extends AbstractRestWebService {
     return vignetteUrl;
   }
 
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("tickets")
+  public List<TicketDTO> getTickets(@PathParam("appId") String appId, List<TicketDTO> tickets) throws Exception {
+    for (TicketDTO dto : tickets) {
+      if (dto.getSharedObjectType().equalsIgnoreCase("Node")) {
+        NodeDetail node = NodeService.get().getDetail(new NodePK(dto.getSharedObjectId(), dto.getComponentId()));
+        dto.setName(node.getName());
+      } else if (dto.getSharedObjectType().equalsIgnoreCase("Publication")) {
+        PublicationDetail pub = PublicationService.get().getDetail(new PublicationPK(dto.getSharedObjectId()));
+        dto.setName(pub.getName());
+      } else {
+        SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(
+                dto.getSharedObjectId()), getUser().getUserPreferences().getLanguage());
+        dto.setName(doc.getFilename());
+      }
+    }
+    return tickets;
+  }
+
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -577,6 +596,13 @@ public class ServiceDocuments extends AbstractRestWebService {
   @Override
   protected String getResourceBasePath() {
     return PATH;
+  }
+
+  @Override
+  public void validateUserAuthorization(UserPrivilegeValidation validation) {
+    if (getComponentId() != null && !getComponentId().equalsIgnoreCase("null")) {
+      super.validateUserAuthorization(validation);
+    }
   }
 
   @Override

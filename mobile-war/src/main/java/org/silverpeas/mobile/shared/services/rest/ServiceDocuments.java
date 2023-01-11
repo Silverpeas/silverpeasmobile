@@ -30,13 +30,9 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -71,4 +67,11 @@ public interface ServiceDocuments extends RestService {
   @Path("{appId}/attachment/{attachmentId}")
   public void getAttachment(@PathParam("appId") String appId,
       @PathParam("attachmentId") String attachmentId, MethodCallback<AttachmentDTO> callback);
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{appId}/tickets")
+  public void getTickets(@PathParam("appId") String appId, List<TicketDTO> tickets,
+                         MethodCallback<List<TicketDTO>> callback);
 }

@@ -83,10 +83,23 @@ public class SharesBoxApp extends App
         @Override
         public void onSuccess(Method method, List<TicketDTO> ticketDTOS) {
           super.onSuccess(method, ticketDTOS);
-          SharesBoxPage page = new SharesBoxPage();
-          page.setData(ticketDTOS);
-          setMainPage(page);
-          page.show();
+
+          MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TicketDTO>>() {
+            @Override
+            public void attempt() {
+              super.attempt();
+              ServicesLocator.getServiceDocuments().getTickets(null, ticketDTOS, this);
+            }
+            @Override
+            public void onSuccess(Method method, List<TicketDTO> ticketDTOS) {
+              super.onSuccess(method, ticketDTOS);
+              SharesBoxPage page = new SharesBoxPage();
+              page.setData(ticketDTOS);
+              setMainPage(page);
+              page.show();
+            }
+          };
+          action.attempt();
         }
       };
       action.attempt();

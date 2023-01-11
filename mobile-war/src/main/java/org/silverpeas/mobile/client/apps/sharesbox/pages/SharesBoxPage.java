@@ -28,9 +28,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.DeleteButton;
-import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.MarkAsReadButton;
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.AbstractSharesBoxPagesEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.SharesBoxPagesEventHandler;
 import org.silverpeas.mobile.client.apps.sharesbox.pages.widgets.ShareItem;
@@ -39,7 +36,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
-import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 import java.util.List;
@@ -58,17 +54,6 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
 
   public void setData(List<TicketDTO> data) {
     this.data = data;
-
-    ShareItem headerItem = new ShareItem();
-    headerItem.setHeader(true);
-    TicketDTO header = new TicketDTO();
-    header.setCreationDate("date de création");
-    header.setUri("Lien");
-    header.setNbAccess("Nb accès");
-    header.setNbAccessMax("Nb max accès");
-    headerItem.setData(header);
-    shares.add(headerItem);
-
     for (TicketDTO d : data) {
       ShareItem item = new ShareItem();
       item.setData(d);
@@ -81,8 +66,9 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
 
   public SharesBoxPage() {
     msg = GWT.create(ShareMessages.class);
-    //setPageTitle(msg.notifications());
+    setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
+    shares.getElement().setId("shares");
     EventBus.getInstance().addHandler(AbstractSharesBoxPagesEvent.TYPE, this);
   }
 

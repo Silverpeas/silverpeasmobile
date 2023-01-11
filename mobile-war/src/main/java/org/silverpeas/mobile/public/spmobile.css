@@ -1243,6 +1243,18 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	margin-right: 1.5em;
 }
 
+#shares li {
+  width: max-content;
+}
+#shares li a.share-link {
+  background: transparent url(download.png) right 1em no-repeat;
+  display: inline-block;
+  width: 10px;
+  height: 24px;
+  margin-right: 1em;
+  margin-left: 1em;
+}
+
 #attachments li a.share {
   background: transparent url(share.png) right 1em no-repeat;
   display: block;

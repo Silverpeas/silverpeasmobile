@@ -25,7 +25,7 @@
 package org.silverpeas.mobile.client.apps.sharesbox.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -33,13 +33,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
+import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
-import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 import java.util.Date;
@@ -47,12 +42,11 @@ import java.util.Date;
 public class ShareItem extends Composite implements ClickHandler {
 
   private static ShareItemUiBinder uiBinder = GWT.create(ShareItemUiBinder.class);
-  private boolean header = false;
 
   @UiField HTMLPanel container;
 
   @UiField
-  InlineHTML date, name, validity, access;
+  InlineHTML date, name;
 
   @UiField
   Anchor link;
@@ -61,16 +55,11 @@ public class ShareItem extends Composite implements ClickHandler {
   CheckBox select;
 
   @UiField(provided = true) protected ShareMessages msg = null;
-
   private TicketDTO data;
 
   @Override
   public void onClick(final ClickEvent clickEvent) {
-
-  }
-
-  public void setHeader(boolean header) {
-    this.header = header;
+    //TODO
   }
 
   interface ShareItemUiBinder extends UiBinder<Widget, ShareItem> {
@@ -80,9 +69,7 @@ public class ShareItem extends Composite implements ClickHandler {
     msg = GWT.create(ShareMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     date.addClickHandler(this);
-    access.addClickHandler(this);
     name.addClickHandler(this);
-    validity.addClickHandler(this);
   }
 
   public boolean isSelected() {
@@ -91,21 +78,18 @@ public class ShareItem extends Composite implements ClickHandler {
 
   public void setData(TicketDTO data) {
     this.data = data;
+    Date dt = new Date();
+    dt.setTime(Long.parseLong(data.getCreationDate()));
+    DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy");
+    date.setText(fmt.format(dt));
+    name.setText(data.getName());
 
-    if (header) {
-      select.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-      date.setText(data.getCreationDate());
+    link.setHref("/silverpeas/Ticket?Key=" + data.getToken());
+    if (data.getSharedObjectType().equalsIgnoreCase("Attachment")) {
+      link.getElement().setAttribute("download", data.getName());
     } else {
-      Date dt = new Date();
-      dt.setTime(Long.parseLong(data.getCreationDate()));
-      DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy");
-      date.setText(fmt.format(dt));
+      link.setTarget("_blank");
     }
-    access.setText(data.getNbAccess());
-    //name.setText(data.get);
-    validity.setText(data.getValidity());
-    link.setText(data.getUri());
-    link.setHref(data.getUri());
   }
 
 

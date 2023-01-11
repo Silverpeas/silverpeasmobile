@@ -33,6 +33,6 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-body-a notificationBox">
     <base:ActionsMenu ui:field="actionsMenu"/>
 
-    <components:UnorderedList ui:field="shares" stylePrimaryName="ui-listview ui-listview-inset ui-corner-all ui-shadow shares"></components:UnorderedList>
+    <components:UnorderedList ui:field="shares" stylePrimaryName="ui-listview ui-listview-inset ui-corner-all ui-shadow"></components:UnorderedList>
   </g:HTMLPanel>
 </ui:UiBinder> 

@@ -56,6 +56,8 @@ public class TicketDTO implements Serializable {
   private String modified;
   private String continuous;
 
+  private String name;
+
   public String getNbAccess() {
     return nbAccess;
   }
@@ -198,5 +200,13 @@ public class TicketDTO implements Serializable {
 
   public void setUri(String uri) {
     this.uri = uri;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
   }
 }
