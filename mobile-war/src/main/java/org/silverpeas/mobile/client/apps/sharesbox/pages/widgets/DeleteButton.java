@@ -26,71 +26,58 @@ package org.silverpeas.mobile.client.apps.sharesbox.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import org.silverpeas.mobile.client.apps.sharesbox.events.app.DeleteSharesEvent;
+import org.silverpeas.mobile.client.apps.sharesbox.pages.SharesBoxPage;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
+import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-import java.util.Date;
+import java.util.List;
 
-public class ShareItem extends Composite implements ClickHandler {
+/**
+ * @author: svu
+ */
+public class DeleteButton extends ActionItem {
 
-  private static ShareItemUiBinder uiBinder = GWT.create(ShareItemUiBinder.class);
+  interface DeleteButtonUiBinder extends UiBinder<HTMLPanel, DeleteButton> {}
 
-  @UiField HTMLPanel container;
+  private static DeleteButtonUiBinder uiBinder = GWT.create(DeleteButtonUiBinder.class);
+
+  private SharesBoxPage parentPage;
 
   @UiField
-  InlineHTML date, name;
-
+  HTMLPanel container;
   @UiField
-  Anchor link;
+  Anchor delete;
 
-  @UiField
-  CheckBox select;
+  @UiField(provided = true)
+  protected ShareMessages msg = null;
 
-  @UiField(provided = true) protected ShareMessages msg = null;
-  private TicketDTO data;
 
-  @Override
-  public void onClick(final ClickEvent clickEvent) {
-    //TODO
-  }
-
-  interface ShareItemUiBinder extends UiBinder<Widget, ShareItem> {
-  }
-
-  public ShareItem() {
+  public DeleteButton() {
     msg = GWT.create(ShareMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
-    date.addClickHandler(this);
-    name.addClickHandler(this);
+    setId("delete");
   }
 
-  public boolean isSelected() {
-    return select.getValue();
+  @UiHandler("delete")
+  void delete(ClickEvent event) {
+    List<TicketDTO> selection = parentPage.getSelectedShares();
+    DeleteSharesEvent deleteEvent = new DeleteSharesEvent();
+    deleteEvent.setSelection(selection);
+    if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
+
+    // hide menu
+    getElement().getParentElement().removeAttribute("style");
   }
 
-  public void setData(TicketDTO data) {
-    this.data = data;
-    Date dt = new Date();
-    dt.setTime(Long.parseLong(data.getCreationDate()));
-    DateTimeFormat fmt = DateTimeFormat.getFormat("dd/MM/yyyy");
-    date.setText(fmt.format(dt));
-    name.setText(data.getName());
-
-    link.setHref("/silverpeas/Ticket?Key=" + data.getToken());
-    if (data.getSharedObjectType().equalsIgnoreCase("Attachment")) {
-      link.getElement().setAttribute("download", data.getName());
-    } else {
-      link.setTarget("_blank");
-    }
-  }
-
-
-  public TicketDTO getData() {
-    return data;
+  public void setParentPage(final SharesBoxPage parentPage) {
+    this.parentPage = parentPage;
   }
 }

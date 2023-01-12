@@ -50,6 +50,8 @@ import org.silverpeas.core.io.media.image.thumbnail.ThumbnailSettings;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
+import org.silverpeas.core.sharing.services.SharingServiceProvider;
+import org.silverpeas.core.sharing.services.SharingTicketService;
 import org.silverpeas.core.silverstatistics.access.service.StatisticService;
 import org.silverpeas.core.util.LocalizationBundle;
 import org.silverpeas.core.util.ResourceLocator;
@@ -544,6 +546,17 @@ public class ServiceDocuments extends AbstractRestWebService {
                 dto.getSharedObjectId()), getUser().getUserPreferences().getLanguage());
         dto.setName(doc.getFilename());
       }
+    }
+    return tickets;
+  }
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("deletetickets")
+  public List<TicketDTO> deleteTickets(@PathParam("appId") String appId, List<TicketDTO> tickets) throws Exception {
+    for (TicketDTO t : tickets) {
+      SharingServiceProvider.getSharingTicketService().deleteTicket(t.getToken());
     }
     return tickets;
   }

@@ -22,13 +22,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.sharesbox.events.app;
+package org.silverpeas.mobile.client.apps.sharesbox.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
 
-/**
- * @author svu
- */
-public interface SharesBoxAppEventHandler extends EventHandler {
-    public void deleteShares(DeleteSharesEvent event);
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
+
+import java.util.List;
+
+public class SharesDeletedEvent extends AbstractSharesBoxPagesEvent {
+
+  List<TicketDTO> shares;
+
+  public SharesDeletedEvent(List<TicketDTO> shares) {
+    super();
+    this.shares = shares;
+  }
+
+  public List<TicketDTO> getShares() {
+    return shares;
+  }
+
+  @Override
+  protected void dispatch(SharesBoxPagesEventHandler handler) {
+    handler.onSharesDeleted(this);
+  }
 }

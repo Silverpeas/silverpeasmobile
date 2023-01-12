@@ -25,14 +25,15 @@
 package org.silverpeas.mobile.client.apps.sharesbox;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.events.app.AbstractSharesBoxAppEvent;
+import org.silverpeas.mobile.client.apps.sharesbox.events.app.DeleteSharesEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.events.app.SharesBoxAppEventHandler;
+import org.silverpeas.mobile.client.apps.sharesbox.events.pages.SharesDeletedEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.pages.SharesBoxPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
@@ -104,5 +105,23 @@ public class SharesBoxApp extends App
       };
       action.attempt();
     }
+  }
+
+  @Override
+  public void deleteShares(DeleteSharesEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TicketDTO>>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceDocuments().deleteTickets(null,event.getSelection(), this);
+      }
+
+      @Override
+      public void onSuccess(Method method, List<TicketDTO> ticketDTOS) {
+        super.onSuccess(method, ticketDTOS);
+        EventBus.getInstance().fireEvent(new SharesDeletedEvent(ticketDTOS));
+      }
+    };
+    action.attempt();
   }
 }

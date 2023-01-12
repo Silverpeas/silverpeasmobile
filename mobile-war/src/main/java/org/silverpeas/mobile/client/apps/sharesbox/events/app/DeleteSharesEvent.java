@@ -24,11 +24,28 @@
 
 package org.silverpeas.mobile.client.apps.sharesbox.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-/**
- * @author svu
- */
-public interface SharesBoxAppEventHandler extends EventHandler {
-    public void deleteShares(DeleteSharesEvent event);
+import java.util.List;
+
+public class DeleteSharesEvent extends AbstractSharesBoxAppEvent {
+
+  private List<TicketDTO> selection;
+
+  public DeleteSharesEvent(){
+    super();
+  }
+
+  @Override
+  protected void dispatch(SharesBoxAppEventHandler handler) {
+    handler.deleteShares(this);
+  }
+
+  public List<TicketDTO> getSelection() {
+    return selection;
+  }
+
+  public void setSelection(final List<TicketDTO> selection) {
+    this.selection = selection;
+  }
 }

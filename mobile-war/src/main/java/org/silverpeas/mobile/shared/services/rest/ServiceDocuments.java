@@ -74,4 +74,12 @@ public interface ServiceDocuments extends RestService {
   @Path("{appId}/tickets")
   public void getTickets(@PathParam("appId") String appId, List<TicketDTO> tickets,
                          MethodCallback<List<TicketDTO>> callback);
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{appId}/deletetickets")
+  public void deleteTickets(@PathParam("appId") String appId,
+                            List<TicketDTO> tickets, MethodCallback<List<TicketDTO>> callback);
+
 }

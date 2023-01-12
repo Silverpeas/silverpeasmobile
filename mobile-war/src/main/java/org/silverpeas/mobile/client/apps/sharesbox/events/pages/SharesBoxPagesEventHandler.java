@@ -25,10 +25,8 @@
 package org.silverpeas.mobile.client.apps.sharesbox.events.pages;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsSendedLoadedEvent;
 
 public interface SharesBoxPagesEventHandler extends EventHandler {
 
-
+    void onSharesDeleted(SharesDeletedEvent event);
 }

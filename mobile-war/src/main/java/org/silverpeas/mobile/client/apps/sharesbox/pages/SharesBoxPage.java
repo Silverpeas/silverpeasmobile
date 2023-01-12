@@ -30,6 +30,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.AbstractSharesBoxPagesEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.SharesBoxPagesEventHandler;
+import org.silverpeas.mobile.client.apps.sharesbox.events.pages.SharesDeletedEvent;
+import org.silverpeas.mobile.client.apps.sharesbox.pages.widgets.DeleteButton;
 import org.silverpeas.mobile.client.apps.sharesbox.pages.widgets.ShareItem;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -38,6 +40,8 @@ import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHandler {
@@ -52,12 +56,38 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
   ActionsMenu actionsMenu;
   private List<TicketDTO> data;
 
+  private DeleteButton delete = new DeleteButton();
+
   public void setData(List<TicketDTO> data) {
     this.data = data;
     for (TicketDTO d : data) {
       ShareItem item = new ShareItem();
       item.setData(d);
       shares.add(item);
+    }
+  }
+
+  public List<TicketDTO> getSelectedShares() {
+    List<TicketDTO> selection = new ArrayList<>();
+    for (int i = 0; i < shares.getCount(); i++) {
+      ShareItem item = (ShareItem) shares.getWidget(i);
+      if (item.isSelected()) {
+        selection.add(item.getData());
+      }
+    }
+    return selection;
+  }
+
+  @Override
+  public void onSharesDeleted(SharesDeletedEvent event) {
+    for (TicketDTO t : event.getShares()) {
+      Iterator<Widget> it = shares.iterator();
+      while (it.hasNext()) {
+        ShareItem w = (ShareItem) it.next();
+        if (w.getData().getToken().equalsIgnoreCase(t.getToken())) {
+          w.removeFromParent();
+        }
+      }
     }
   }
 
@@ -70,6 +100,8 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
     initWidget(uiBinder.createAndBindUi(this));
     shares.getElement().setId("shares");
     EventBus.getInstance().addHandler(AbstractSharesBoxPagesEvent.TYPE, this);
+    delete.setParentPage(this);
+    actionsMenu.addAction(delete);
   }
 
   @Override
