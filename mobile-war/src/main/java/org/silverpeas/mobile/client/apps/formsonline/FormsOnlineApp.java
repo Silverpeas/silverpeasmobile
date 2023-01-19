@@ -377,6 +377,7 @@ private static ApplicationMessages msgApp = GWT.create(ApplicationMessages.class
       FormDTO form = new FormDTO();
       form.setXmlFormName(id);
       ev.setForm(form);
+      ev.getForm().setId(id);
       loadFormOnline(ev);
     }
 

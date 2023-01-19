@@ -98,6 +98,7 @@ public class FormOnlineEditPage extends PageContent implements FormsOnlinePagesE
   @Override
   public void onFormLoaded(final FormLoadedEvent formLoadedEvent) {
     data = formLoadedEvent.getFormFields();
+    fields.clear();
       for (FormFieldDTO f : formLoadedEvent.getFormFields()) {
         FieldEditable field = new FieldEditable();
         field.setData(f);
