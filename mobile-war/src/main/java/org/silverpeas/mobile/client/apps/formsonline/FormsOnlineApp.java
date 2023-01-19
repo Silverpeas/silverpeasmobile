@@ -408,6 +408,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
             FormDTO form = new FormDTO();
             form.setXmlFormName(id);
             ev.setForm(form);
+            ev.getForm().setId(id);
             loadFormOnline(ev);
         }
 

@@ -135,6 +135,7 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
     } else {
       hasHtmlLayer = false;
       data = formLoadedEvent.getFormFields();
+      fields.clear();
       for (FormFieldDTO f : formLoadedEvent.getFormFields()) {
         FieldEditable field = new FieldEditable();
         field.setData(f);
