@@ -50,6 +50,7 @@ import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.PopinInformation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -288,9 +289,9 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
 
   @Override
   public void onFormSaved(final FormSavedEvent formSavedEvent) {
-    Notification.activityStop();
     stopAllFields();
     Notification.activityStop();
+    new Popin(msg.saved(), Popin.LONG_DURATION).show();
     back();
   }
 

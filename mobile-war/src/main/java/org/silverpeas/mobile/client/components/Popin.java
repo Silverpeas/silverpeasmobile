@@ -33,8 +33,17 @@ import com.google.gwt.user.client.ui.PopupPanel;
  */
 public class Popin extends PopupPanel {
 
+    public static final int NORMAL_DURATION = 2000;
+    public static final int LONG_DURATION = 3000;
+    public static final int EXTRALONG_DURATION = 5000;
 
+    public Popin(String message, int duration) {
+        init(message, duration);
+    }
     public Popin(String message) {
+        init(message, NORMAL_DURATION);
+    }
+    private void init(String message, int duration) {
         setWidget(new Label(message));
         center();
         setAutoHideEnabled(true);
@@ -45,8 +54,6 @@ public class Popin extends PopupPanel {
                 hide();
                 return false;
             }
-        }, 2000);
-
-
+        }, duration);
     }
 }

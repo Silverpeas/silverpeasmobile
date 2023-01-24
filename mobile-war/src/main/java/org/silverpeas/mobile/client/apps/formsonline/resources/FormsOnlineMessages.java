@@ -38,4 +38,6 @@ public interface FormsOnlineMessages extends Messages {
   String comment();
   String accept();
   String viewMyRequests();
+
+  String saved();
 }
