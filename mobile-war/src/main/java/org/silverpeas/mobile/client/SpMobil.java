@@ -34,6 +34,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -313,6 +314,11 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
             nbRetryLogin = 0;
             ServicesLocator.getServiceNavigation().getUser(u.getLogin(), u.getDomainId(), this);
           } else {
+            String login = Cookies.getCookie("svpLogin");
+            String domainId = Cookies.getCookie("defaultDomain");
+            if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty()) {
+              ServicesLocator.getServiceNavigation().getUser(login, domainId, this);
+            }
             if (nbRetryLogin < 5) {
               tryToRelogin(attempt);
               nbRetryLogin++;
