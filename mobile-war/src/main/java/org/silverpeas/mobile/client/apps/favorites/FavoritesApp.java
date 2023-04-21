@@ -136,6 +136,7 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
           EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(applicationInstanceDTO));
         }
       };
+      action.attempt();
   }
 
   @Override
