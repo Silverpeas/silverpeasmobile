@@ -318,10 +318,11 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
             String domainId = Cookies.getCookie("defaultDomain");
             if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty()) {
               ServicesLocator.getServiceNavigation().getUser(login, domainId, this);
-            }
-            if (nbRetryLogin < 5) {
-              tryToRelogin(attempt);
-              nbRetryLogin++;
+            } else {
+              if (nbRetryLogin < 5) {
+                tryToRelogin(attempt);
+                nbRetryLogin++;
+              }
             }
           }
         }
