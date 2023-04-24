@@ -333,6 +333,17 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           setUser(detailUserDTO);
           setUserProfile(UserProfileDTO.getBean(
               LocalStorageHelper.load(AuthentificationManager.USER_PROFIL, IUserProfile.class)));
+          if (getUserProfile() == null) {
+            UserProfileDTO p = new UserProfileDTO();
+            p.setFullName(detailUserDTO.getFirstName() + " " + detailUserDTO.getLastName());
+            p.setAvatar(detailUserDTO.getAvatar());
+            p.setFirstName(detailUserDTO.getFirstName());
+            p.setLastName(detailUserDTO.getLastName());
+            p.setLanguage(detailUserDTO.getLanguage());
+            p.setId(detailUserDTO.getId());
+            p.seteMail(detailUserDTO.geteMail());
+            setUserProfile(p);
+          }
           ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
             @Override
             public void onFailure(final Method method, final Throwable throwable) {
