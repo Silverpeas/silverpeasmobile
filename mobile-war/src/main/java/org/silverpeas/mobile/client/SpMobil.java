@@ -369,6 +369,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           tryToRelogin(attempt);
         }
       };
+      action.setRelogin(false);
       action.attempt();
     } else {
       //Login

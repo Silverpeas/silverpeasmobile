@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.resources.ApplicationMessages;
 public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
 
   private static ApplicationMessages msg = GWT.create(ApplicationMessages.class);
+  private boolean relogin = true;
 
   public void attempt() {
     Notification.activityStart();
@@ -52,12 +53,14 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
     Notification.activityStop();
     if (method.getResponse().getStatusCode() == 403 || method.getResponse().getStatusCode() == 401) {
       // Session expired, need to re-authent
-      SpMobil.getInstance().loadIds(new Command() {
-        @Override
-        public void execute() {
-          attempt();
-        }
-      });
+      if (relogin) {
+        SpMobil.getInstance().loadIds(new Command() {
+          @Override
+          public void execute() {
+            attempt();
+          }
+        });
+      }
     } else if (method.getResponse().getStatusCode() == 404) {
       new Popin(msg.notfoundError()).show();
     } else {
@@ -77,4 +80,7 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
   }
 
 
+  public void setRelogin(boolean relogin) {
+    this.relogin = relogin;
+  }
 }
