@@ -93,8 +93,13 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     user.getElement().setId("user");
     String url = ResourcesManager.getParam("help.url");
     if (url != null && !url.isEmpty()) {
+      String target = ResourcesManager.getParam("help.target");
       help.setHref(url);
-      help.setTarget("_self");
+      if (target != null && !target.isEmpty()) {
+        help.setTarget(target);
+      } else {
+        help.setTarget("_blank");
+      }
     }
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
