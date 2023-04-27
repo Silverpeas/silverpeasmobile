@@ -26,8 +26,10 @@ package org.silverpeas.mobile.client.common.resources;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import org.silverpeas.mobile.client.apps.documents.DocumentsApp;
 
 /**
  * @author: svu
@@ -61,6 +63,10 @@ public class ResourcesManager {
       param = param.substring(1, param.length()-1);
     }
     return param;
+  }
+
+  public static String getSSOPath() {
+    return Document.get().getElementById("ssoPath").getAttribute("value");
   }
 
   public static native JavaScriptObject getLabels() /*-{

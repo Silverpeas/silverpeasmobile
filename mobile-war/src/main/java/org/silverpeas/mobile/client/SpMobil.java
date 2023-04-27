@@ -119,6 +119,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static List<App> apps = new ArrayList<App>();
 
   private static int nbRetryLogin = 0;
+  private static boolean SSO = false;
 
   public static DetailUserDTO getUser() {
     return user;
@@ -369,13 +370,17 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           tryToRelogin(attempt);
         }
       };
-      action.setRelogin(false);
+      SSO = true;
       action.attempt();
     } else {
       //Login
       tabletGesture(false);
       displayLoginPage(null);
     }
+  }
+
+  public static boolean isSSO() {
+      return SSO;
   }
 
   private void tryToRelogin(final Command attempt) {
