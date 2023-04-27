@@ -116,6 +116,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static String token;
   private static String XSession;
   private static SpMobil instance = null;
+
+  private static boolean SSO = false;
   private static Orientation orientation = null;
   private static List<App> apps = new ArrayList<App>();
 
@@ -368,13 +370,17 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           tryToRelogin(attempt);
         }
       };
-      action.setRelogin(false);
+      SSO = true;
       action.attempt();
     } else {
       //Login
       tabletGesture(false);
       displayLoginPage(null);
     }
+  }
+
+  public static boolean isSSO() {
+    return SSO;
   }
 
   private void tryToRelogin(final Command attempt) {

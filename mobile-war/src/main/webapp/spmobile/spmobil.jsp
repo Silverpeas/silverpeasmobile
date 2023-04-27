@@ -156,6 +156,12 @@
 
 </head>
 <body class="ui-panel-wrapper ui-page-theme-a csspinner traditional" onload="resize();">
+<%
+  String fullSsoPath = request.getRequestURL().toString();
+  fullSsoPath = fullSsoPath.replace("/spmobile/spmobil.jsp","");
+  fullSsoPath = fullSsoPath + ssoPath;
+%>
+<input type="hidden" id="ssoPath" value="<%=fullSsoPath%>">
 <div id="oneinch"
      style="position: absolute;padding: 0;visibility: hidden;width: 1in;height: 1in;"></div>
 

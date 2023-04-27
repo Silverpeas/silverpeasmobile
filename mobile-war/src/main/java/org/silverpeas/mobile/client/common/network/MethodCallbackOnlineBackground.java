@@ -26,12 +26,14 @@ package org.silverpeas.mobile.client.common.network;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 /**
@@ -49,12 +51,16 @@ public abstract class MethodCallbackOnlineBackground<T> implements MethodCallbac
   public void onFailure(final Method method, final Throwable t) {
     if (method.getResponse().getStatusCode() == 403 || method.getResponse().getStatusCode() == 401) {
       // Session expired, need to re-authent
-      SpMobil.getInstance().loadIds(new Command() {
-        @Override
-        public void execute() {
-          attempt();
-        }
-      });
+      if (SpMobil.isSSO()) {
+        Window.Location.assign(ResourcesManager.getSSOPath());
+      } else {
+        SpMobil.getInstance().loadIds(new Command() {
+          @Override
+          public void execute() {
+            attempt();
+          }
+        });
+      }
     } else {
       if (NetworkHelper.needToGoOffine(t)) {
         // Lost connexion during requesting
