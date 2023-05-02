@@ -35,7 +35,7 @@
   <groupId>org.silverpeas.components</groupId>
   <artifactId>mobile</artifactId>
   <packaging>pom</packaging>
-  <version>6.4-SNAPSHOT</version>
+  <version>6.4-JR-SNAPSHOT</version>
   <name>Silverpeas Mobile component</name>
 
   <properties>
