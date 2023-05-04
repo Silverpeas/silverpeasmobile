@@ -33,20 +33,15 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
+import org.silverpeas.core.security.authentication.AuthenticationResponse;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
-import org.silverpeas.core.security.authentication.exception.AuthenticationPasswordExpired;
-import org.silverpeas.core.security.authentication.exception.AuthenticationPasswordMustBeChangedAtNextLogon;
-import org.silverpeas.core.security.authentication.exception.AuthenticationPasswordMustBeChangedOnFirstLogin;
-import org.silverpeas.core.security.authentication.exception.AuthenticationPwdNotAvailException;
-import org.silverpeas.core.security.authentication.exception.AuthenticationUserAccountBlockedException;
-import org.silverpeas.core.security.authentication.exception.AuthenticationUserAccountDeactivatedException;
+import org.silverpeas.core.security.authentication.exception.AuthenticationException;
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 
 import javax.inject.Inject;
@@ -79,7 +74,8 @@ public class ServiceConnection extends AbstractRestWebService {
   @Context
   HttpServletRequest request;
 
-  private OrganizationController organizationController = OrganizationController.get();
+  @Inject
+  private OrganizationController organizationController;
 
   static final String PATH = "mobile/connection";
 
@@ -98,27 +94,37 @@ public class ServiceConnection extends AbstractRestWebService {
     String domainId = ids.get(2);
 
     // vérification
-    AuthenticationCredential credential =
-        AuthenticationCredential.newWithAsLogin(login).withAsPassword(password)
-            .withAsDomainId(domainId);
-    String key = AuthenticationServiceProvider.getService().authenticate(credential);
-    //SilverLogger.getLogger(this).debug("mobile authentification : {0} {1}", login, key);
-    if (key == null || key.startsWith("Error_")) {
-      if (key.equals("Error_5")) {
-        throw new WebApplicationException(AuthenticationError.PwdNotAvailable.name());
-      } else if (key.equals("Error_PwdExpired")) {
-        throw new WebApplicationException(AuthenticationError.PwdExpired.name());
-      } else if(key.equals("Error_PwdMustBeChanged")) {
-        throw new WebApplicationException(AuthenticationError.PwdMustBeChanged.name());
-      } else if (key.equals("Error_PwdMustBeChangedOnFirstLogin")) {
-        throw new WebApplicationException(AuthenticationError.PwdMustBeChangedOnFirstLogin.name());
-      } else if (key.equals("Error_UserAccountBlocked")) {
-        throw new WebApplicationException(AuthenticationError.UserAccountBlocked.name());
-      } else if (key.equals("Error_UserAccountDeactivated")) {
-        throw new WebApplicationException(AuthenticationError.UserAccountDeactivated.name());
-      } else  {
-        throw new WebApplicationException(AuthenticationError.BadCredential.name());
+    AuthenticationCredential credential = getCredentials(login, password, domainId);
+    AuthenticationResponse result =
+        AuthenticationServiceProvider.getService().authenticate(credential);
+    if (result == null || result.getStatus().isInError()) {
+      AuthenticationResponse.Status status =
+          result == null ? AuthenticationResponse.Status.BAD_LOGIN_PASSWORD : result.getStatus();
+      WebApplicationException e;
+      switch (status) {
+        case NO_PASSWORD:
+          e = new WebApplicationException(AuthenticationError.PwdNotAvailable.name());
+          break;
+        case PASSWORD_EXPIRED:
+          e = new WebApplicationException(AuthenticationError.PwdExpired.name());
+          break;
+        case PASSWORD_TO_CHANGE:
+          e = new WebApplicationException(AuthenticationError.PwdMustBeChanged.name());
+          break;
+        case PASSWORD_EMAIL_TO_CHANGE_ON_FIRST_LOGIN:
+          e = new WebApplicationException(AuthenticationError.PwdMustBeChangedOnFirstLogin.name());
+          break;
+        case USER_ACCOUNT_BLOCKED:
+          e = new WebApplicationException(AuthenticationError.UserAccountBlocked.name());
+          break;
+        case USER_ACCOUNT_DEACTIVATED:
+          e = new WebApplicationException(AuthenticationError.UserAccountDeactivated.name());
+          break;
+        default:
+          e = new WebApplicationException(AuthenticationError.BadCredential.name());
+          break;
       }
+      throw e;
     }
 
     // récupération des informations de l'utilisateur
@@ -137,10 +143,10 @@ public class ServiceConnection extends AbstractRestWebService {
       throw new WebApplicationException(AuthenticationError.CanCreateMainSessionController.name());
     }
 
-    DetailUserDTO userDTO = new DetailUserDTO();
-    userDTO = UserHelper.getInstance().populate(user);
+    DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
 
-    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(), getSettings().getString("big.avatar.size", "40x"));
+    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
+        getSettings().getString("big.avatar.size", "40x"));
     userDTO.setAvatar(avatar);
     try {
       userDTO.setStatus(new ServiceRSE().getStatus().getDescription());
@@ -157,10 +163,11 @@ public class ServiceConnection extends AbstractRestWebService {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("userExist/{login}/{domainId}")
-  public Boolean userExist(@PathParam("login") String login, @PathParam("domainId") String domainId) {
+  public Boolean userExist(@PathParam("login") String login,
+      @PathParam("domainId") String domainId) {
     try {
       String id = getUserId(login, domainId);
-      return !(id == null);
+      return id != null;
     } catch (Exception e) {
       return false;
     }
@@ -171,7 +178,7 @@ public class ServiceConnection extends AbstractRestWebService {
   @Path("setTabletMode")
   public Boolean setTabletMode() {
     if (!isUserGUIMobileForTablets()) {
-      request.getSession().setAttribute("tablet", Boolean.valueOf(true));
+      request.getSession().setAttribute("tablet", Boolean.TRUE);
       return true;
     }
     return false;
@@ -189,7 +196,7 @@ public class ServiceConnection extends AbstractRestWebService {
     return domains;
   }
 
-  private String getUserId(String login, String domainId) throws Exception {
+  private String getUserId(String login, String domainId) throws AdminException {
     return Administration.get().getUserIdByLoginAndDomain(login, domainId);
   }
 
@@ -209,14 +216,16 @@ public class ServiceConnection extends AbstractRestWebService {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("changePwd/")
   public void changePwd(String newPwd) {
-    if (getUserInSession() == null) throw new NotAuthorizedException(getHttpServletResponse());
-    UserFull user = null;
+    if (getUserInSession() == null) {
+      throw new NotAuthorizedException(getHttpServletResponse());
+    }
+    UserFull user;
     try {
       user = Administration.get().getUserFull(getUserInSession().getId());
       user.setPassword(newPwd);
       Administration.get().updateUserFull(user);
     } catch (AdminException e) {
-      throw  new WebApplicationException(e);
+      throw new WebApplicationException(e);
     }
   }
 
@@ -236,7 +245,8 @@ public class ServiceConnection extends AbstractRestWebService {
   }
 
   protected UserDetail getUserInSession() {
-    return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+    return (UserDetail) request.getSession()
+        .getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
   }
 
   @Override
@@ -251,5 +261,16 @@ public class ServiceConnection extends AbstractRestWebService {
 
   @Override
   public void validateUserAuthorization(final UserPrivilegeValidation validation) {
+    // no need to validate the authorization
+  }
+
+  private AuthenticationCredential getCredentials(String login, String password, String domainId) {
+    try {
+      return AuthenticationCredential.newWithAsLogin(login)
+          .withAsPassword(password)
+          .withAsDomainId(domainId);
+    } catch (AuthenticationException e) {
+      throw new WebApplicationException(AuthenticationError.BadCredential.name());
+    }
   }
 }

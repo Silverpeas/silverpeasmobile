@@ -28,6 +28,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
+import org.silverpeas.core.security.authentication.AuthenticationResponse;
 import org.silverpeas.core.security.authentication.AuthenticationService;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 import org.silverpeas.core.util.ResourceLocator;
@@ -65,20 +66,31 @@ public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
     return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
   }
 
-  protected void setMainsessioncontroller(String login, String password, String domainId) throws SilverpeasException {
+  protected void setMainsessioncontroller(String login, String password, String domainId)
+      throws SilverpeasException {
     AuthenticationService authService = AuthenticationServiceProvider.getService();
     AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(login);
-    String key = authService.authenticate(credential
-        .withAsPassword(password)
-        .withAsDomainId(domainId));
-    MainSessionController mainSessionController = new MainSessionController(key, getThreadLocalRequest().getSession());
+    AuthenticationResponse response =
+        authService.authenticate(credential.withAsPassword(password).withAsDomainId(domainId));
+    String key;
+    if (response == null) {
+      key = null;
+    } else if (response.getStatus().succeeded()) {
+      key = response.getToken();
+    } else {
+      key = response.getStatus().getCode();
+    }
+    MainSessionController mainSessionController =
+        new MainSessionController(key, getThreadLocalRequest().getSession());
   }
 
   protected MainSessionController getMainSessionController() throws Exception {
-    return (MainSessionController) getThreadLocalRequest().getSession().getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
+    return (MainSessionController) getThreadLocalRequest().getSession()
+        .getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
   }
 
-  protected StreamingList createStreamingList(CommandCreateList command, int callNumber, int callSize, String cacheKey) throws Exception {
+  protected StreamingList createStreamingList(CommandCreateList command, int callNumber,
+      int callSize, String cacheKey) throws Exception {
     List list;
     if (callNumber == 0) {
       list = command.execute();
@@ -90,14 +102,19 @@ public abstract class AbstractAuthenticateService extends RemoteServiceServlet {
 
     int calledSize = 0;
     boolean moreElements = true;
-    if (callNumber > 0) calledSize = callSize * callNumber;
+    if (callNumber > 0) {
+      calledSize = callSize * callNumber;
+    }
 
     if ((calledSize + callSize) >= list.size()) {
       moreElements = false;
       callSize = list.size() - calledSize;
     }
-    StreamingList<BaseDTO> streamingList = new StreamingList<BaseDTO>(list.subList(calledSize, calledSize + callSize), moreElements);
-    if (!streamingList.getMoreElement()) getThreadLocalRequest().getSession().removeAttribute(cacheKey);
+    StreamingList<BaseDTO> streamingList =
+        new StreamingList<BaseDTO>(list.subList(calledSize, calledSize + callSize), moreElements);
+    if (!streamingList.getMoreElement()) {
+      getThreadLocalRequest().getSession().removeAttribute(cacheKey);
+    }
     return streamingList;
   }
 }

@@ -26,6 +26,7 @@ package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
+import org.silverpeas.core.security.authentication.exception.AuthenticationException;
 import org.silverpeas.core.security.authentication.exception.AuthenticationUserMustAcceptTermsOfService;
 import org.silverpeas.core.security.authentication.verifier.AuthenticationUserVerifierFactory;
 import org.silverpeas.core.template.SilverpeasTemplate;
@@ -75,7 +76,7 @@ public class ServiceTermsOfService extends AbstractRestWebService {
         AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(getUser().getLogin());
         credential.setDomainId(getUser().getDomainId());
         AuthenticationUserVerifierFactory.getUserMustAcceptTermsOfServiceVerifier(credential).verify();
-      } catch (AuthenticationUserMustAcceptTermsOfService authenticationUserMustAcceptTermsOfService) {
+      } catch (AuthenticationException e) {
         return true;
       }
     }
