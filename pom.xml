@@ -42,7 +42,7 @@
     <silverpeas.version>6.4-JR-build230505</silverpeas.version>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-     <next.release>6.4</next.release>
+     <next.release>6.4-JR</next.release>
   </properties>
 
   <repositories>
