@@ -52,7 +52,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,31 +71,35 @@ public class MobilFilter implements Filter {
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
       throws IOException, ServletException {
 
-    String url = ((HttpServletRequest) req).getRequestURL().toString();
+    final HttpServletRequest request = (HttpServletRequest) req;
+    final HttpServletResponse response = (HttpServletResponse) res;
+    String url = request.getRequestURL().toString();
 
     if (url.contains("spmobile") && res != null) {
-      String csp = ((HttpServletResponse) res).getHeader("Content-Security-Policy");
+      String csp = response.getHeader("Content-Security-Policy");
       if (csp != null && !csp.contains("img-src")) {
         csp += "; img-src * data: blob:;";
-        ((HttpServletResponse) res).setHeader("Content-Security-Policy", csp);
+        response.setHeader("Content-Security-Policy", csp);
       }
     }
 
-    Boolean mob = (Boolean) ((HttpServletRequest) req).getSession().getAttribute("isMobile");
-    if (mob != null && !mob) {
+    // the session could not exist
+    final SafeSessionManager session = new SafeSessionManager(request);
+
+    final Boolean mobileAlreadyDetected = session.getAttribute("isMobile", Boolean.class);
+    if (mobileAlreadyDetected != null && !mobileAlreadyDetected) {
       chain.doFilter(req, res);
       return;
     }
 
-    String userAgent = ((HttpServletRequest) req).getHeader("User-Agent");
+    final String userAgent = request.getHeader("User-Agent");
     if (userAgent != null) {
-      boolean isMobile = userAgent.contains("Android") || userAgent.contains("iPhone");
-      ((HttpServletRequest) req).getSession().setAttribute("isMobile", Boolean.valueOf(isMobile));
+      final boolean isMobile = Boolean.TRUE.equals(mobileAlreadyDetected)
+                               || userAgent.contains("Android")
+                               || userAgent.contains("iPhone");
+      session.setAttribute("isMobile", isMobile);
 
-      Boolean tablet = (Boolean) ((HttpServletRequest) req).getSession().getAttribute("tablet");
-      if (tablet == null) {
-        tablet = Boolean.valueOf(false);
-      }
+      final boolean tablet = session.getAttribute("tablet", Boolean.class, false);
 
       boolean redirect = isRedirect(url);
 
@@ -187,10 +190,9 @@ public class MobilFilter implements Filter {
           return;
         }
 
-        HttpSession session = ((HttpServletRequest) req).getSession(false);
-        SynchronizerToken token = (SynchronizerToken) session.getAttribute(SESSION_TOKEN_KEY);
-        MainSessionController controller = (MainSessionController) session.getAttribute(
-            MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
+        SynchronizerToken token = session.getAttribute(SESSION_TOKEN_KEY, SynchronizerToken.class);
+        MainSessionController controller = session.getAttribute(
+            MainSessionController.MAIN_SESSION_CONTROLLER_ATT, MainSessionController.class);
         if (controller != null && token == null) {
           //logger.warn("security.web.protection.token is disable");
           // generate fake token for auto login without token security
@@ -200,26 +202,18 @@ public class MobilFilter implements Filter {
           session.setAttribute(SESSION_TOKEN_KEY, token);
         }
 
-        if (session.getAttribute(SESSION_PARAMS_KEY) != null && params.isEmpty()) {
-          params = (String) session.getAttribute(SESSION_PARAMS_KEY);
-          session.removeAttribute(SESSION_PARAMS_KEY);
+        if (session.getAttribute(SESSION_PARAMS_KEY, String.class) != null && params.isEmpty()) {
+          params = session.removeAttribute(SESSION_PARAMS_KEY, String.class);
         }
 
         String aDestinationPage = "/silverpeas/spmobile/spmobil.jsp" + params;
         session.setAttribute(SESSION_PARAMS_KEY, params);
-        String urlWithSessionID =
-            ((HttpServletResponse) res).encodeRedirectURL(aDestinationPage.toString());
-        ((HttpServletResponse) res).sendRedirect(urlWithSessionID);
-        return;
-
-      } else {
-        chain.doFilter(req, res);
+        String urlWithSessionID = response.encodeRedirectURL(aDestinationPage);
+        response.sendRedirect(urlWithSessionID);
         return;
       }
-    } else {
-      chain.doFilter(req, res);
-      return;
     }
+    chain.doFilter(req, res);
   }
 
   private String extractSurveyParameters(final ServletRequest req) {
