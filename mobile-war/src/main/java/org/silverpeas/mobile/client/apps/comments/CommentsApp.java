@@ -97,7 +97,6 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
       dto.setComponentId(event.getInstanceId());
       dto.setResourceId(event.getContentId());
       dto.setResourceType(event.getContentType());
-      dto.setTextForHtml(event.getMessage());
 
       MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
         @Override

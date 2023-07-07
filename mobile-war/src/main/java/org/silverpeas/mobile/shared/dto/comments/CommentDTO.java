@@ -98,14 +98,14 @@ public class CommentDTO implements Serializable {
 
   public void setText(final String text) {
     this.text = text;
+    this.textForHtml = "";
   }
 
   public String getTextForHtml() {
+    if (textForHtml.isEmpty()) {
+      textForHtml = text;
+    }
     return textForHtml;
-  }
-
-  public void setTextForHtml(final String textForHtml) {
-    this.textForHtml = textForHtml;
   }
 
   public UserProfileDTO getAuthor() {
