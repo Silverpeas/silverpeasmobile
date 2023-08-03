@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
+import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
 
 public class FavoriteItem extends Composite {
 
@@ -68,7 +69,9 @@ public class FavoriteItem extends Composite {
 
   @UiHandler("link")
   protected void onClick(ClickEvent event) {
-    LinksManager.processLink(data.getUrl());
+    HyperLinkDTO link = new HyperLinkDTO();
+    link.setUrl(data.getUrl());
+    LinksManager.processLink(link);
   }
 
 }

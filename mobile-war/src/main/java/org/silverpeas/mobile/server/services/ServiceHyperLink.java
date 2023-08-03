@@ -29,6 +29,7 @@ import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -53,17 +54,21 @@ public class ServiceHyperLink extends AbstractRestWebService {
   static final String PATH = "mobile/hyperlink";
 
   @GET
-  @Produces(MediaType.TEXT_PLAIN)
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("/")
-  public String getUrl() {
-    String url = "";
+  public HyperLinkDTO getUrl() {
+    HyperLinkDTO dto = new HyperLinkDTO();
     try {
       ComponentInstLight app = Administration.get().getComponentInstLight(componentId);
-      url = app.getParameterValue("URL");
+      dto.setUrl(app.getParameterValue("URL"));
+      String v = app.getParameterValue("openNewWindow");
+      dto.setOpenNewWindow(v.equalsIgnoreCase("yes"));
+      v = app.getParameterValue("isInternalLink");
+      dto.setInternalLink(v.equalsIgnoreCase("yes"));
     } catch (AdminException e) {
       throw new WebApplicationException(e);
     }
-    return url;
+    return dto;
   }
 
 
