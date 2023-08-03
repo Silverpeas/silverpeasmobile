@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.hyperlink;
 
 import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.TextCallback;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -37,6 +38,7 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
@@ -64,21 +66,21 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
     if (event.getInstance().getType().equals(Apps.hyperlink.name())) {
       this.instance = event.getInstance();
 
-      ServicesLocator.getServiceHyperLink().getUrl(instance.getId(), new TextCallback() {
+      ServicesLocator.getServiceHyperLink().getUrl(instance.getId(), new MethodCallback<HyperLinkDTO>() {
         @Override
         public void onFailure(final Method method, final Throwable t) {
           EventBus.getInstance().fireEvent(new ErrorEvent(t));
         }
 
         @Override
-        public void onSuccess(final Method method, final String url) {
-          openLink(url);
+        public void onSuccess(Method method, HyperLinkDTO hyperLinkDTO) {
+          openLink(hyperLinkDTO);
         }
       });
     }
   }
 
-  private void openLink(String url) {
+  private void openLink(HyperLinkDTO url) {
     Notification.activityStop();
     NetworkHelper.hideOfflineIndicator();
     LinksManager.processLink(url);

@@ -22,23 +22,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services.rest;
+package org.silverpeas.mobile.shared.dto.hyperlink;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import java.io.Serializable;
 
-/**
- * @author svu
- */
-@Path("/mobile/hyperlink")
-public interface ServiceHyperLink extends RestService {
+public class HyperLinkDTO implements Serializable {
 
-  @GET
-  @Path("{appId}/")
-  public void getUrl(@PathParam("appId") String appId, MethodCallback<HyperLinkDTO> callback);
+  private String url;
+  private boolean openNewWindow;
+  private boolean internalLink;
+
+  public HyperLinkDTO() {
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public boolean getOpenNewWindow() {
+    return openNewWindow;
+  }
+
+  public void setOpenNewWindow(boolean openNewWindow) {
+    this.openNewWindow = openNewWindow;
+  }
+
+  public boolean getInternalLink() {
+    return internalLink;
+  }
+
+  public void setInternalLink(boolean internalLink) {
+    this.internalLink = internalLink;
+  }
 }

@@ -35,6 +35,7 @@ import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.contact.ContactScope;
+import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
 
 /**
  * @author svu
@@ -43,7 +44,8 @@ public class LinksManager {
 
   private static Boolean iosShowIframe = Boolean.parseBoolean(ResourcesManager.getParam("ios.link.open.in.iframe"));
 
-  public static void processLink(String url) {
+  public static void processLink(HyperLinkDTO hyperLinkDTO) {
+    String url = hyperLinkDTO.getUrl();
     if(sameContext(url)) {
       String shortcutContentType = "";
       String shortcutAppId = null;
@@ -91,7 +93,7 @@ public class LinksManager {
         }
         EventBus.getInstance().fireEvent(new ContactsFilteredLoadEvent(type, filter));
       } else {
-        openExternalLink(url);
+        openExternalLink(url, hyperLinkDTO.getOpenNewWindow(), hyperLinkDTO.getInternalLink());
         return;
       }
 
@@ -99,7 +101,7 @@ public class LinksManager {
           .route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId, null, null);
       return;
     }
-    openExternalLink(url);
+    openExternalLink(url, hyperLinkDTO.getOpenNewWindow(), hyperLinkDTO.getInternalLink());
   }
 
   private static boolean sameContext(String url) {
@@ -113,18 +115,33 @@ public class LinksManager {
     return ((url.startsWith("/") || url.startsWith(context)));
   }
 
-  public static void openExternalLink(String url) {
+  public static void openExternalLink(String url, boolean openNewWindow, boolean internalLink) {
     if (MobilUtils.isIOS()) {
       if (iosShowIframe) {
-        IframePage page = new IframePage(url);
-        page.setPageTitle("");
-        page.show();
+        openIframePage(url);
       } else {
-        //Window.Location.assign(url);
-        Window.open(url, "_self", "");
+        openExternalLinkStandard(url, openNewWindow, internalLink);
       }
     } else {
-      Window.open(url, "_blank", "");
+      openExternalLinkStandard(url, openNewWindow, internalLink);
+    }
+  }
+
+  private static void openIframePage(String url) {
+    IframePage page = new IframePage(url);
+    page.setPageTitle("");
+    page.show();
+  }
+
+  private static void openExternalLinkStandard(String url, boolean openNewWindow, boolean internalLink) {
+    if (internalLink) {
+      openIframePage(url);
+    } else {
+      if (openNewWindow) {
+        Window.open(url, "_blank", "");
+      } else {
+        Window.open(url, "_self", "");
+      }
     }
   }
 
