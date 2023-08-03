@@ -55,6 +55,7 @@ public class IframePage extends PageContent implements View, WindowEventHandler 
     frame.getElement().getStyle().setTop(SpMobil.getMainPage().getHeaderHeight(), Style.Unit.PX);
     setViewport();
     initWidget(frame);
+    setSize("100vw", "100vh");
     EventBus.getInstance().addHandler(AbstractWindowEvent.TYPE, this);
   }
 

@@ -28,88 +28,36 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
 
-public class HyperLinkDTO extends BaseDTO implements Serializable {
+public class HyperLinkDTO implements Serializable {
 
-  private static final long serialVersionUID = 2921606984249560882L;
-
-  private String title;
-  private String description;
-  private String categoryId;
-  private String categoryName;
-  private String creatorName;
-  private String dateEvent;
-  private String creationDate;
-  private String instanceId;
+  private String url;
+  private boolean openNewWindow;
+  private boolean internalLink;
 
   public HyperLinkDTO() {
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return ((HyperLinkDTO) obj).getId().equals(getId());
+  public String getUrl() {
+    return url;
   }
 
-  public String getTitle() {
-    return title;
+  public void setUrl(String url) {
+    this.url = url;
   }
 
-  public void setTitle(final String title) {
-    this.title = title;
+  public boolean getOpenNewWindow() {
+    return openNewWindow;
   }
 
-  public String getDescription() {
-    return description;
+  public void setOpenNewWindow(boolean openNewWindow) {
+    this.openNewWindow = openNewWindow;
   }
 
-  public void setDescription(final String description) {
-    this.description = description;
+  public boolean getInternalLink() {
+    return internalLink;
   }
 
-  public void setCategoryId(final String categoryId) {
-    this.categoryId = categoryId;
-  }
-
-  public void setCategoryName(final String categoryName) {
-    this.categoryName = categoryName;
-  }
-
-  public String getCategoryId() {
-    return categoryId;
-  }
-
-  public String getCategoryName() {
-    return categoryName;
-  }
-
-  public void setCreatorName(final String creatorName) {
-    this.creatorName = creatorName;
-  }
-
-  public String getCreatorName() {
-    return creatorName;
-  }
-
-  public void setDateEvent(final String dateEvent) {
-    this.dateEvent = dateEvent;
-  }
-
-  public void setCreationDate(final String creationDate) {
-    this.creationDate = creationDate;
-  }
-
-  public String getDateEvent() {
-    return dateEvent;
-  }
-
-  public String getCreationDate() {
-    return creationDate;
-  }
-
-  public String getInstanceId() {
-    return instanceId;
-  }
-
-  public void setInstanceId(final String instanceId) {
-    this.instanceId = instanceId;
+  public void setInternalLink(boolean internalLink) {
+    this.internalLink = internalLink;
   }
 }

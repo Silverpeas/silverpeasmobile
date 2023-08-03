@@ -24,8 +24,9 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
+import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.client.TextCallback;
+import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -39,5 +40,5 @@ public interface ServiceHyperLink extends RestService {
 
   @GET
   @Path("{appId}/")
-  public void getUrl(@PathParam("appId") String appId, TextCallback callback);
+  public void getUrl(@PathParam("appId") String appId, MethodCallback<HyperLinkDTO> callback);
 }
