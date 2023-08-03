@@ -400,11 +400,10 @@ public class ServiceNavigation extends AbstractRestWebService {
         }
       } else if (spaceId != null) {
         SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-        if (space.getFirstPageType() == HomePages.URL.getValue()) {
+        if (space.getFirstPageType() == HomePages.URL.getValue() &&
+                getSettings().getBoolean("spacehomepage.displayUrlType")) {
           String html =
-              "<iframe frameborder='0' onLoad='javaScript:this.height = this.contentWindow" +
-                  ".document.body" +
-                  ".scrollHeight ;' style='width:100%;' src='" + space.getFirstPageExtraParam() +
+              "<iframe frameborder='0' style='width:100vw;height:100vh' src='" + space.getFirstPageExtraParam() +
                   "'></iframe>";
           data.setHtmlFreeZone(html);
         }
