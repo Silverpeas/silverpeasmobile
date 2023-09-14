@@ -235,6 +235,7 @@ public class ServiceNavigation extends AbstractRestWebService {
     if (spaceId.equals("null")) spaceId = null;
 
     initSilverpeasSession();
+    request.getSession().setAttribute("Silverpeas_Portlet_SpaceId", spaceId);
 
     String look = "";
     try {
