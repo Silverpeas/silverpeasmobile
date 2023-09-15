@@ -403,9 +403,11 @@ public class ServiceNavigation extends AbstractRestWebService {
         SpaceInst space = Administration.get().getSpaceInstById(spaceId);
         if (space.getFirstPageType() == HomePages.URL.getValue() &&
                 getSettings().getBoolean("spacehomepage.displayUrlType")) {
+          String url = space.getFirstPageExtraParam();
+          if (url.startsWith("/") && !url.startsWith("/silverpeas") && !url.startsWith("$")) url = "/silverpeas" + url;
           String html =
-              "<iframe frameborder='0' style='width:100vw;height:100vh' src='" + space.getFirstPageExtraParam() +
-                  "'></iframe>";
+                  "<iframe frameborder='0' style='width:100vw;height:100vh' src='" + url +
+                          "'></iframe>";
           data.setHtmlFreeZone(html);
         }
       }
