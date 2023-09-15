@@ -36,6 +36,7 @@ import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.io.file.ImageResizingProcessor;
@@ -55,12 +56,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.MissingResourceException;
+import java.util.*;
 
 /**
  * @author: svu
@@ -126,12 +122,13 @@ public class NewsHelper {
   private List<News> getDelegatedNews(String userId) throws Exception {
     List<News> news = new ArrayList();
     List<DelegatedNews> delegatedNews = DelegatedNewsServiceProvider.getDelegatedNewsService().getAllValidDelegatedNews();
-
+    UserDetail u = Administration.get().getUserDetail(userId);
+    Date now = new Date();
     for (DelegatedNews delegated : delegatedNews) {
-      PublicationDetail pub = delegated.getPublicationDetail();
-      if (pub.canBeAccessedBy(Administration.get().getUserDetail(userId))) {
+      if (delegated.isValidated() && (delegated.getBeginDate() != null && now.after(delegated.getBeginDate()))
+              && (delegated.getEndDate() != null && now.before(delegated.getEndDate()))) {
         News aNews = QuickInfoService.get().getNewsByForeignId(delegated.getPubId());
-        news.add(aNews);
+        if (aNews.canBeAccessedBy(u)) news.add(aNews);
       }
     }
 
