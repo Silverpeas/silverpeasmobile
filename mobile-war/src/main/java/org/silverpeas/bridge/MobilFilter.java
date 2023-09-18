@@ -177,6 +177,9 @@ public class MobilFilter implements Filter {
         } else if (url.contains("Component")) {
           String appId = url.substring(url.lastIndexOf("/") + 1);
           params = "?shortcutContentType=Component&shortcutAppId=" + appId;
+        } else if (url.contains("Space")) {
+          String spaceId = url.substring(url.lastIndexOf("/") + 1);
+          params = "?shortcutContentType=Space&shortcutAppId=" + spaceId;
         } else if (!url.contains("AuthenticationServlet") &&
             (url.endsWith("silverpeas") || url.endsWith("silverpeas/") ||
                 url.contains("/silverpeas/"))) {
