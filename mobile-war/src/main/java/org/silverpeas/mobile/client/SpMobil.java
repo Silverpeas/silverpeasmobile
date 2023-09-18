@@ -265,11 +265,11 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     RootPanel.get().clear();
     RootPanel.get().add(getMainPage());
     PageHistory.getInstance().goTo(new HomePage());
-
+    
     if ((shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) ||
-        shortcutContributionId != null ||
-        (shortcutContentType != null && shortcutContentType.equals("Component") &&
-            shortcutAppId != null)) {
+              shortcutContributionId != null ||
+              (shortcutContentType != null && (shortcutContentType.equals("Component") || shortcutContentType.equals("Space")) &&
+                      shortcutAppId != null)) {
       ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId,
           shortcutContributionId, shortcutRole);
     } else {
