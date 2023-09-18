@@ -102,7 +102,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals(ContentsTypes.Space.name())) {
       NavigationPage page = new NavigationPage();
-      page.setRootSpaceId(event.getContent().getId());
+      page.setRootSpaceId(event.getContent().getInstanceId());
       page.show();
     }
   }
