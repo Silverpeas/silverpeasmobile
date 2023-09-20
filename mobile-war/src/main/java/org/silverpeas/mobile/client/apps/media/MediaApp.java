@@ -215,10 +215,28 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     }
   }
 
+  private void loadAppInstance(final ContentDTO content) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNavigation()
+                .getApp(content.getInstanceId(), content.getId(), content.getType(), this);
+      }
+      @Override
+      public void onSuccess(final Method method,
+                            final ApplicationInstanceDTO app) {
+        super.onSuccess(method, app);
+        setApplicationInstance(app);
+        appInstanceChanged(new NavigationAppInstanceChangedEvent(app));
+      }
+    };
+    action.attempt();
+  }
+
   @Override
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.gallery.name())) {
-      super.showContent(event);
+      loadAppInstance(event.getContent());
     } else if (event.getContent().getType().equals(ContentsTypes.Media.name()) ||
         event.getContent().getType().equals(ContentsTypes.Photo.name()) ||
         event.getContent().getType().equals(ContentsTypes.Sound.name()) ||
