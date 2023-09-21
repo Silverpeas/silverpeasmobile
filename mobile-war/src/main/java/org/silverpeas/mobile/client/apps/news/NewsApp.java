@@ -40,6 +40,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
@@ -98,6 +99,25 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       page.show();
 
     }
+  }
+  private void loadAppInstance(final ContentDTO content) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNavigation()
+                .getApp(content.getInstanceId(), content.getId(), content.getType(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method,
+                            final ApplicationInstanceDTO app) {
+        super.onSuccess(method, app);
+        setApplicationInstance(app);
+        appInstanceChanged(new NavigationAppInstanceChangedEvent(app));
+      }
+    };
+    action.attempt();
   }
 
   @Override
