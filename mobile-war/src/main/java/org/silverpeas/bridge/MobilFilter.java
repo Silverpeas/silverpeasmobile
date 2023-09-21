@@ -43,6 +43,7 @@ import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -113,6 +114,11 @@ public class MobilFilter implements Filter {
           String appId = pub.getInstanceId();
           params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" +
               appId;
+        } else if (url.contains("/Topic/")) {
+          // sample : /silverpeas/Topic/6278?ComponentId=kmelia2431
+          String id = url.substring(url.lastIndexOf("/")+1);
+          String appId = ((HttpServletRequest) req).getParameter("ComponentId");
+          params = "?shortcutContentType=Folder&shortcutContentId=" + id + "&shortcutAppId=" + appId;
         } else if (url.contains("Form")) {
           // sample : /silverpeas/Form/1?ComponentId=formsOnline1
           String id = url.substring(url.lastIndexOf("/") + 1);
