@@ -116,6 +116,11 @@ public class MobilFilter implements Filter {
           String appId = pub.getInstanceId();
           params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" +
                   appId;
+        } else if (url.contains("/Topic/")) {
+            // sample : /silverpeas/Topic/6278?ComponentId=kmelia2431
+            String id = url.substring(url.lastIndexOf("/")+1);
+            String appId = ((HttpServletRequest) req).getParameter("ComponentId");
+            params = "?shortcutContentType=Folder&shortcutContentId=" + id + "&shortcutAppId=" + appId;
         } else if (url.contains("Form")) {
           // sample : /silverpeas/Form/1?ComponentId=formsOnline1
           String id = url.substring(url.lastIndexOf("/") + 1);
