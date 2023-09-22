@@ -152,9 +152,12 @@
 </head>
 <body class="ui-panel-wrapper ui-page-theme-a csspinner traditional" onload="resize();">
 <%
-  String fullSsoPath = request.getRequestURL().toString();
-  fullSsoPath = fullSsoPath.replace("/spmobile/spmobil.jsp","");
-  fullSsoPath = fullSsoPath + ssoPath;
+  String fullSsoPath = "";
+  if (!ssoPath.trim().isEmpty()) {
+    fullSsoPath = request.getRequestURL().toString();
+    fullSsoPath = fullSsoPath.replace("/spmobile/spmobil.jsp", "");
+    fullSsoPath = fullSsoPath + ssoPath;
+  }
 %>
 <input type="hidden" id="ssoPath" value="<%=fullSsoPath%>">
 <div id="oneinch"

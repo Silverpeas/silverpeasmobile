@@ -76,6 +76,7 @@ import org.silverpeas.mobile.client.common.mobil.Orientation;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.Page;
@@ -177,6 +178,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
     EventBus.getInstance().addHandler(AbstractAuthenticationErrorEvent.TYPE, this);
 
+    SSO = !ResourcesManager.getSSOPath().isEmpty();
+
     loadIds(null);
 
     NodeList<Element> tags = Document.get().getElementsByTagName("meta");
@@ -262,6 +265,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     }
     getMainPage().setUser(user);
     RootPanel.get().clear();
+    PageHistory.getInstance().clear();
     RootPanel.get().add(getMainPage());
     PageHistory.getInstance().goTo(new HomePage());
 
@@ -370,7 +374,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           tryToRelogin(attempt);
         }
       };
-      SSO = true;
+
       action.attempt();
     } else {
       //Login
