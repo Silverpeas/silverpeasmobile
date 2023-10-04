@@ -142,6 +142,7 @@ public class ServiceConnection extends AbstractRestWebService {
     } catch (SilverpeasException e) {
       throw new WebApplicationException(AuthenticationError.CanCreateMainSessionController.name());
     }
+    initSilverpeasSession(request);
 
     DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
 

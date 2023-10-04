@@ -193,33 +193,6 @@ public class ServiceNavigation extends AbstractRestWebService {
     }
   }
 
-  private void initSilverpeasSession() {
-    MainSessionController controller = (MainSessionController) request.getSession()
-        .getAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
-    if (controller == null) {
-      SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
-      SessionInfo sessionInfo = sessionManagement.validateSession(request.getSession().getId());
-      if (sessionInfo.getSessionId() == null) {
-        sessionInfo = sessionManagement.openSession(getUser(), request);
-      }
-
-      try {
-        controller = new MainSessionController(sessionInfo, request.getSession());
-      } catch (SilverpeasException e) {
-        SilverLogger.getLogger(this).error(e);
-      }
-      request.getSession()
-          .setAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT, controller);
-    }
-
-    GraphicElementFactory gef = (GraphicElementFactory) request.getSession()
-        .getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
-    if (gef == null && controller != null) {
-      gef = new GraphicElementFactory(controller);
-      request.getSession().setAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT, gef);
-    }
-  }
-
   protected void setUserInSession(UserDetail user) {
     request.getSession().setAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME, user);
   }
@@ -234,7 +207,7 @@ public class ServiceNavigation extends AbstractRestWebService {
   public HomePageDTO getHomePageData(@PathParam("spaceId") String spaceId) {
     if (spaceId.equals("null")) spaceId = null;
 
-    initSilverpeasSession();
+    initSilverpeasSession(request);
     request.getSession().setAttribute("Silverpeas_Portlet_SpaceId", spaceId);
 
     String look = "";
