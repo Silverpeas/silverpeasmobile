@@ -4,10 +4,15 @@ import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationService;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
+import org.silverpeas.core.security.session.SessionInfo;
+import org.silverpeas.core.security.session.SessionManagement;
+import org.silverpeas.core.security.session.SessionManagementProvider;
 import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.core.web.rs.RESTWebService;
+import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -41,6 +46,33 @@ public abstract class AbstractRestWebService extends RESTWebService {
         authService.authenticate(credential.withAsPassword(password).withAsDomainId(domainId));
     MainSessionController mainSessionController =
         new MainSessionController(key, getHttpRequest().getSession());
+  }
+
+  protected void initSilverpeasSession(HttpServletRequest request) {
+    MainSessionController controller = (MainSessionController) request.getSession()
+            .getAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
+    if (controller == null) {
+      SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
+      SessionInfo sessionInfo = sessionManagement.validateSession(request.getSession().getId());
+      if (sessionInfo.getSessionId() == null) {
+        sessionInfo = sessionManagement.openSession(getUser(), request);
+      }
+
+      try {
+        controller = new MainSessionController(sessionInfo, request.getSession());
+      } catch (SilverpeasException e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+      request.getSession()
+              .setAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT, controller);
+    }
+
+    GraphicElementFactory gef = (GraphicElementFactory) request.getSession()
+            .getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
+    if (gef == null && controller != null) {
+      gef = new GraphicElementFactory(controller);
+      request.getSession().setAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT, gef);
+    }
   }
 
   protected StreamingList createStreamingList(CommandCreateList command, int callNumber, int callSize, String cacheKey) throws Exception {

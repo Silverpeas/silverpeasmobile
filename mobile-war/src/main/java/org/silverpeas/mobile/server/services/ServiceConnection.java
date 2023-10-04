@@ -40,8 +40,14 @@ import org.silverpeas.core.security.authentication.exception.AuthenticationPassw
 import org.silverpeas.core.security.authentication.exception.AuthenticationPwdNotAvailException;
 import org.silverpeas.core.security.authentication.exception.AuthenticationUserAccountBlockedException;
 import org.silverpeas.core.security.authentication.exception.AuthenticationUserAccountDeactivatedException;
+import org.silverpeas.core.security.session.SessionInfo;
+import org.silverpeas.core.security.session.SessionManagement;
+import org.silverpeas.core.security.session.SessionManagementProvider;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
+import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
+import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -137,6 +143,8 @@ public class ServiceConnection extends AbstractRestWebService {
       throw new WebApplicationException(AuthenticationError.CanCreateMainSessionController.name());
     }
 
+    initSilverpeasSession();
+
     DetailUserDTO userDTO = new DetailUserDTO();
     userDTO = UserHelper.getInstance().populate(user);
 
@@ -152,6 +160,33 @@ public class ServiceConnection extends AbstractRestWebService {
     chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, user, "");
 
     return userDTO;
+  }
+
+  private void initSilverpeasSession() {
+    MainSessionController controller = (MainSessionController) request.getSession()
+            .getAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT);
+    if (controller == null) {
+      SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
+      SessionInfo sessionInfo = sessionManagement.validateSession(request.getSession().getId());
+      if (sessionInfo.getSessionId() == null) {
+        sessionInfo = sessionManagement.openSession(getUser(), request);
+      }
+
+      try {
+        controller = new MainSessionController(sessionInfo, request.getSession());
+      } catch (SilverpeasException e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+      request.getSession()
+              .setAttribute(MainSessionController.MAIN_SESSION_CONTROLLER_ATT, controller);
+    }
+
+    GraphicElementFactory gef = (GraphicElementFactory) request.getSession()
+            .getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
+    if (gef == null && controller != null) {
+      gef = new GraphicElementFactory(controller);
+      request.getSession().setAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT, gef);
+    }
   }
 
   @GET
