@@ -127,7 +127,7 @@ public class LinksManager {
     }
   }
 
-  private static void openIframePage(String url) {
+  public static void openIframePage(String url) {
     IframePage page = new IframePage(url);
     page.setPageTitle("");
     page.show();

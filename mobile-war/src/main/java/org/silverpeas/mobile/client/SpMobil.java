@@ -74,6 +74,7 @@ import org.silverpeas.mobile.client.common.event.authentication.AbstractAuthenti
 import org.silverpeas.mobile.client.common.event.authentication.AuthenticationEventHandler;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.mobil.Orientation;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
@@ -275,6 +276,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
                     shortcutAppId != null)) {
       ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId,
           shortcutContributionId, shortcutRole);
+    } else if (shortcutContentType != null && shortcutContentType.equalsIgnoreCase("Url") && shortcutAppId != null) {
+      LinksManager.openIframePage(shortcutAppId);
     } else {
       MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<HomePageDTO>() {
 
