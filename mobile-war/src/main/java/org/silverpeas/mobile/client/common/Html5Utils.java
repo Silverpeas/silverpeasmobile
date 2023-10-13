@@ -24,7 +24,13 @@
 
 package org.silverpeas.mobile.client.common;
 
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.Window;
+import org.silverpeas.mobile.client.common.event.speech.SpeechErrorEvent;
+import org.silverpeas.mobile.client.common.event.speech.SpeechResultEvent;
+import org.silverpeas.mobile.client.common.event.speech.SpeechStartEvent;
+import org.silverpeas.mobile.client.common.event.speech.SpeechStopEvent;
 
 /**
  * @author: svu
@@ -65,4 +71,100 @@ public class Html5Utils {
   public static native void vibrate(int duration) /*-{
     $wnd.navigator.vibrate(duration);
   }-*/;
+  public static native boolean isSpeechSupported() /*-{
+    return ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+  }-*/;
+
+  public static native boolean isSpeechSynthesisSupported() /*-{
+    return ('speechSynthesis' in window);
+  }-*/;
+
+  public static native void startListening() /*-{
+    window.recognition.start();
+  }-*/;
+
+  public static native void stopListening() /*-{
+    window.recognition.stop();
+  }-*/;
+
+  public static native boolean initSpeech(boolean continuous, String language) /*-{
+    window.recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = language;
+    recognition.continuous = continuous;
+
+    recognition.onresult = function (event) {
+      // Récupère le texte reconnu
+      var text = event.results[0][0].transcript;
+      @org.silverpeas.mobile.client.common.Html5Utils::onSpeechResult(Ljava/lang/String;)(text);
+    }
+
+    recognition.onstart = function () {
+      // envoie d'un evenement sur le bus pour mise à jour GUI selon le contexte
+      @org.silverpeas.mobile.client.common.Html5Utils::onSpeechStart(*)();
+    };
+
+    // Événement déclenché lorsqu'une reconnaissance vocale s'arrête
+    recognition.onend = function () {
+      // envoie d'un evenement sur le bus pour mise à jour GUI selon le contexte
+      @org.silverpeas.mobile.client.common.Html5Utils::onSpeechStop(*)();
+    };
+
+    recognition.onerror = function(event) {
+      @org.silverpeas.mobile.client.common.Html5Utils::onSpeechError(*)();
+    };
+
+  }-*/;
+  public static native JsArray<Voice> getVoices() /*-{
+    return window.speechSynthesis.getVoices();
+  }-*/;
+
+  public static native void speak(String text) /*-{
+    var msg = new SpeechSynthesisUtterance();
+    msg.text = text;
+    speechSynthesis.speak(msg);
+  }-*/;
+
+  public static native void cancelSpeaking() /*-{
+    speechSynthesis.cancel();
+  }-*/;
+  public static native void speak(String text, double volume, double rate, double pitch, String language) /*-{
+        var msg = new SpeechSynthesisUtterance();
+        msg.volume = volume; // From 0 to 1
+        msg.rate = rate; // From 0.1 to 10
+        msg.pitch = pitch; // From 0 to 2
+        msg.text = text;
+        msg.lang = language;
+        speechSynthesis.speak(msg);
+    }-*/;
+
+  public static native void speak(String text, double volume, double rate, double pitch, String language, String desiredVoice) /*-{
+    var msg = new SpeechSynthesisUtterance();
+    for (var i = 0; i < speechSynthesis.getVoices().length; i++) {
+        if (speechSynthesis.getVoices()[i].name === desiredVoice) {
+        msg.voice = speechSynthesis.getVoices()[i];
+      }
+    }
+    msg.volume = volume; // From 0 to 1
+    msg.rate = rate; // From 0.1 to 10
+    msg.pitch = pitch; // From 0 to 2
+    msg.text = text;
+    msg.lang = language;
+    speechSynthesis.speak(msg);
+  }-*/;
+
+  public static void onSpeechResult(String result) {
+    EventBus.getInstance().fireEvent(new SpeechResultEvent(result));
+  }
+
+  public static void onSpeechStart() {
+    EventBus.getInstance().fireEvent(new SpeechStartEvent());
+  }
+
+  public static void onSpeechStop() {
+    EventBus.getInstance().fireEvent(new SpeechStopEvent());
+  }
+
+  public static void onSpeechError() {
+    EventBus.getInstance().fireEvent(new SpeechErrorEvent());
+  }
 }
