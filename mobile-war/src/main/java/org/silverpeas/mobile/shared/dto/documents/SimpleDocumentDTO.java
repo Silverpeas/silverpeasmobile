@@ -50,6 +50,8 @@ public class SimpleDocumentDTO implements Serializable {
 
   private String spId;
 
+  private boolean downloadable;
+
 
   public String getId() {
     return id;
@@ -193,5 +195,12 @@ public class SimpleDocumentDTO implements Serializable {
 
   public void setSpId(String spId) {
     this.spId = spId;
+  }
+
+  public void setDownloadable(boolean downloadable) {
+    this.downloadable = downloadable;
+  }
+  public boolean isDownloadable() {
+    return this.downloadable;
   }
 }

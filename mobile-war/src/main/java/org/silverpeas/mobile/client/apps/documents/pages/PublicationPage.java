@@ -157,6 +157,16 @@ public class PublicationPage extends PageContent
   @Override
   public void onLoadedPublicationAttachments(final PublicationAttachmentsLoadedEvent event) {
     for (SimpleDocumentDTO attachment : event.getAttachments()) {
+      if (!publication.getNotAllowedDownloads().isEmpty()) {
+        attachment.setDownloadable(true);
+        for (String idNotAllowed : publication.getNotAllowedDownloads()) {
+          if (idNotAllowed.equals(attachment.getId())) {
+            attachment.setDownloadable(false);
+          }
+        }
+      } else {
+        attachment.setDownloadable(true);
+      }
       Attachment a = new Attachment();
       a.setAttachment(attachment);
       a.setSharing(event.getShare());

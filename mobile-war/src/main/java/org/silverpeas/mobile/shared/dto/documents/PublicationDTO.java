@@ -47,6 +47,8 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   private String vignette;
   private int viewsNumber;
 
+  private List<String> notAllowedDownloads;
+
   public String getName() {
     return name;
   }
@@ -136,4 +138,11 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   public int getViewsNumber() { return viewsNumber; }
 
   public void setViewsNumber(final int viewsNumber) { this.viewsNumber = viewsNumber; }
+
+  public void setNotAllowedDownloads(List<String> notAllowedDownloads) {
+    this.notAllowedDownloads = notAllowedDownloads;
+  }
+  public List<String> getNotAllowedDownloads() {
+    return notAllowedDownloads;
+  }
 }
