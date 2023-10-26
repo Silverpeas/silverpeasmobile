@@ -49,6 +49,7 @@ import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
+import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
@@ -95,9 +96,9 @@ public class Attachment extends Composite {
   private void render() {
     Image img = null;
     String sizeValue;
-      /*if (!data..isDownloadAllowed()) {
-        link.setStylePrimaryName("not-downloadable");
-      }*/
+    if (!data.isDownloadable()) {
+      link.setStylePrimaryName("not-downloadable");
+    }
     if (data.getSize() < 1024 * 1024) {
       sizeValue = String.valueOf(data.getSize() / 1024);
       size.setInnerHTML(msg.sizeK(sizeValue));
@@ -135,45 +136,71 @@ public class Attachment extends Composite {
     // link generation
     try {
       String url = UrlUtils.getAttachedFileLocation();
-      url += "componentId/";
-      url += data.getInstanceId();
-      url += "/attachmentId/";
-      url += data.getId();
-      url += "/lang/";
-      url += data.getLang();
-      url += "/name/";
-      url += data.getFileName();
-
+      if (data.isDownloadable()) {
+        url += "componentId/";
+        url += data.getInstanceId();
+        url += "/attachmentId/";
+        url += data.getId();
+        url += "/lang/";
+        url += data.getLang();
+        url += "/name/";
+        url += data.getFileName();
+      } else {
+        url = "#";
+      }
       link.setHref(url);
       if (MobilUtils.isIOS()) {
-        //link.setTarget("_blank");
-        link.addClickHandler(new ClickHandler() {
-          @Override
-          public void onClick(final ClickEvent clickEvent) {
-            String u = ((Anchor) clickEvent.getSource()).getHref();
-            if (NetworkHelper.isOnline()) {
-              CacheStorageHelper.store(u);
+        if (data.isDownloadable()) {
+          link.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(final ClickEvent clickEvent) {
+              String u = ((Anchor) clickEvent.getSource()).getHref();
+              if (NetworkHelper.isOnline()) {
+                CacheStorageHelper.store(u);
+              }
+              Window.open(u, "_blank", "fullscreen=yes");
             }
-            Window.open(u, "_blank", "fullscreen=yes");
-          }
-        });
+          });
+        } else {
+          link.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(final ClickEvent clickEvent) {
+              viewDocument();
+            }
+          });
+        }
       } else {
-        link.setTarget("_self");
-        link.getElement().setAttribute("download", data.getFileName());
-        link.addClickHandler(new ClickHandler() {
-          @Override
-          public void onClick(final ClickEvent clickEvent) {
-            if (NetworkHelper.isOnline()) {
-              CacheStorageHelper.store(((Anchor) clickEvent.getSource()).getHref());
+        if (data.isDownloadable()) {
+          link.setTarget("_self");
+          link.getElement().setAttribute("download", data.getFileName());
+          link.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(final ClickEvent clickEvent) {
+              if (NetworkHelper.isOnline()) {
+                CacheStorageHelper.store(((Anchor) clickEvent.getSource()).getHref());
+              }
             }
-          }
-        });
+          });
+        } else {
+          link.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(final ClickEvent clickEvent) {
+              viewDocument();
+            }
+          });
+        }
       }
     } catch (JavaScriptException e) {
       Notification.alert(e.getMessage());
     }
 
   }
+
+  private void viewDocument() {
+    IframePage page = new IframePage("/silverpeas/services/media/viewer/embed/pdf?documentId="+data.getId()+"&documentType=attachment&language="+data.getLang()+"&embedPlayer=true");
+    page.show();
+  }
+
   @UiHandler("share")
   protected void share(ClickEvent event) {
     SharingPage page = new SharingPage();
