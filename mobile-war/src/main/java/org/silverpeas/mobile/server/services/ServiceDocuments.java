@@ -40,6 +40,7 @@ import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
+import org.silverpeas.core.contribution.attachment.util.SimpleDocumentList;
 import org.silverpeas.core.contribution.publication.model.CompletePublication;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationLink;
@@ -444,6 +445,18 @@ public class ServiceDocuments extends AbstractRestWebService {
         } catch (Exception e) {
           SilverLogger.getLogger(this).warn("Unable to get views number", e);
         }
+
+        // List all attachements not downloadable for readers
+        ResourceReference foreignKey = new ResourceReference(id, componentId);
+        SimpleDocumentList<SimpleDocument> attachements = AttachmentServiceProvider.getAttachmentService().listAllDocumentsByForeignKey(foreignKey, null);
+        ArrayList<String> notAllowedDownloads = new ArrayList<>();
+        for (SimpleDocument attachement : attachements) {
+          if (!attachement.isDownloadAllowedForReaders() && !attachement.canBeModifiedBy(getUser())) {
+            notAllowedDownloads.add(attachement.getId());
+          }
+        }
+        dto.setNotAllowedDownloads(notAllowedDownloads);
+
       } else if (type.equals(ContentsTypes.News.toString())) {
         dto.setViewsNumber(QuickInfoService.get().getNews(contributionId).getNbAccess());
       } else {

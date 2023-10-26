@@ -48,6 +48,10 @@ public class SimpleDocumentDTO implements Serializable {
   private String comment;
   private long size, creationDate, updateDate;
 
+  private String spId;
+
+  private boolean downloadable;
+
 
   public String getId() {
     return id;
@@ -183,5 +187,12 @@ public class SimpleDocumentDTO implements Serializable {
 
   public void setUpdateDate(final long updateDate) {
     this.updateDate = updateDate;
+  }
+
+public void setDownloadable(boolean downloadable) {
+    this.downloadable = downloadable;
+  }
+  public boolean isDownloadable() {
+    return this.downloadable;
   }
 }
