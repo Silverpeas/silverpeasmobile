@@ -97,6 +97,7 @@ public class MobilFilter implements Filter {
       final boolean isMobile = Boolean.TRUE.equals(mobileAlreadyDetected)
                                || userAgent.contains("Android")
                                || userAgent.contains("iPhone");
+
       session.setAttribute("isMobile", isMobile);
 
       final boolean tablet = session.getAttribute("tablet", Boolean.class, false);
@@ -105,6 +106,7 @@ public class MobilFilter implements Filter {
 
       if (isMobile && !url.contains("sso") && !url.contains("services") &&
           !url.contains("spmobile") && !url.contains(URLUtil.getApplicationURL() + "/chat/") &&
+          !url.contains(URLUtil.getApplicationURL() + "/media/") &&
           !url.contains(URLUtil.getApplicationURL() + "/visio/") &&
           !url.contains(URLUtil.getApplicationURL() + "/util/") && (!tablet) &&
           !url.contains("attached_file") && !url.contains("Ticket") &&
