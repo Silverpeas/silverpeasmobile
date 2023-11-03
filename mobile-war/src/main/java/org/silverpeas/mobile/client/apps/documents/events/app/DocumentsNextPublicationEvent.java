@@ -24,13 +24,27 @@
 
 package org.silverpeas.mobile.client.apps.documents.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
 
-public interface DocumentsAppEventHandler extends EventHandler {	
-	void loadTopics(DocumentsLoadGedItemsEvent event);
-	void loadPublication(DocumentsLoadPublicationEvent event);
-  void loadAttachments(DocumentsLoadAttachmentsEvent event);
-  void share(DocumentsSharingEvent event);
+import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
-  void nextPublication(DocumentsNextPublicationEvent event);
+public class DocumentsNextPublicationEvent extends AbstractDocumentsAppEvent {
+
+  private PublicationDTO publication;
+  private String direction;
+
+  public DocumentsNextPublicationEvent(PublicationDTO publication, String direction) {
+    super();
+    this.publication = publication;
+    this.direction = direction;
+  }
+  @Override
+  protected void dispatch(DocumentsAppEventHandler handler) {
+    handler.nextPublication(this);
+  }
+  public PublicationDTO getPublication() {
+    return publication;
+  }
+  public String getDirection() {
+    return direction;
+  }
 }

@@ -35,12 +35,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadAttachmentsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
+import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsNextPublicationEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
@@ -54,6 +53,10 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.PublicationContentHelper;
 import org.silverpeas.mobile.client.common.app.View;
+import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
+import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
+import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
+import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
@@ -66,7 +69,7 @@ import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 public class PublicationPage extends PageContent
-    implements View, PublicationNavigationPagesEventHandler {
+    implements View, PublicationNavigationPagesEventHandler, SwipeEndHandler {
 
   private static PublicationPageUiBinder uiBinder = GWT.create(PublicationPageUiBinder.class);
 
@@ -74,6 +77,8 @@ public class PublicationPage extends PageContent
 
   @UiField
   HeadingElement title;
+  @UiField
+  FocusPanel supercontainer;
   @UiField
   HTMLPanel container;
   @UiField
@@ -98,17 +103,37 @@ public class PublicationPage extends PageContent
   private ShareButton share = new ShareButton();
   private ContentDTO contentDTO = null;
 
+  private SwipeRecognizer swipeRecognizer;
+
+  @Override
+  public void onSwipeEnd(SwipeEndEvent event) {
+    if (!isVisible()) return;
+    String direction = "left";
+    if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
+      // next
+      direction = "right";
+    } else if (event.getDirection() == SwipeEvent.DIRECTION.LEFT_TO_RIGHT) {
+      // previous
+      direction = "left";
+    }
+    if (!direction.isEmpty()) {
+      EventBus.getInstance().fireEvent(new DocumentsNextPublicationEvent(publication, direction));
+    }
+  }
 
   interface PublicationPageUiBinder extends UiBinder<Widget, PublicationPage> {}
 
   public PublicationPage() {
     msg = GWT.create(DocumentsMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+    supercontainer.getElement().setAttribute("style","height:100vh;");
     container.getElement().setId("publication");
     attachments.getElement().setId("attachments");
     linkedPublications.getElement().setId("linkedPublications");
     content.setId("content");
+    content.getStyle().setDisplay(Style.Display.NONE);
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
+    EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
   }
 
   @Override
@@ -116,6 +141,7 @@ public class PublicationPage extends PageContent
     super.stop();
     comments.stop();
     EventBus.getInstance().removeHandler(AbstractPublicationPagesEvent.TYPE, this);
+    EventBus.getInstance().removeHandler(SwipeEndEvent.getType(), this);
   }
 
   public void setContent(final ContentDTO content) {
@@ -152,6 +178,7 @@ public class PublicationPage extends PageContent
       PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
     }
     contentLink.setVisible(publication.getContent());
+    swipeRecognizer = new SwipeRecognizer(supercontainer);
   }
 
   @Override
@@ -237,7 +264,6 @@ public class PublicationPage extends PageContent
   public static void showWebPageContent(String pubId, String appId, String title) {
     PublicationContentHelper.showContent(pubId, appId, title);
   }
-
   private static void showPublicationContent(String pubId, String appId, String title) {
     PublicationContentHelper.showContent(pubId, appId, title);
   }

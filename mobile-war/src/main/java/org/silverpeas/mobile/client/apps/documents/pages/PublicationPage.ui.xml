@@ -30,20 +30,21 @@
              xmlns:widgets="urn:import:org.silverpeas.mobile.client.apps.comments.pages.widgets">
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages'/>
 
-  <g:HTMLPanel ui:field="container" styleName="content">
+  <g:FocusPanel ui:field="supercontainer">
+    <g:HTMLPanel ui:field="container" styleName="content">
+      <base:ActionsMenu ui:field="actionsMenu"/>
 
-    <base:ActionsMenu ui:field="actionsMenu"/>
-
-    <h2 ui:field="title" class="publiName"></h2>
-    <p ui:field="desc" class="publiDesc"></p>
-    <widgets:CommentsButton ui:field="comments" visible="false"/>
-    <div ui:field="content" style="display:none;">
-      <g:Anchor ui:field="contentLink" styleName="ui-btn ui-btn-icon-right" text="{msg.content}"/>
-    </div>
-    <components:UnorderedList ui:field="attachments"/>
-    <components:UnorderedList ui:field="linkedPublications"/>
-    <p ui:field="creator" class="lastUpdate"></p>
-    <p ui:field="lastUpdate" class="lastUpdate"></p>
-    <p ui:field="nbViews" class="nbViews"></p>
-  </g:HTMLPanel>
+      <h2 ui:field="title" class="publiName"></h2>
+      <p ui:field="desc" class="publiDesc"></p>
+      <widgets:CommentsButton ui:field="comments" visible="false"/>
+      <div ui:field="content" style="display:none;">
+        <g:Anchor ui:field="contentLink" styleName="ui-btn ui-btn-icon-right" text="{msg.content}"/>
+      </div>
+      <components:UnorderedList ui:field="attachments"/>
+      <components:UnorderedList ui:field="linkedPublications"/>
+      <p ui:field="creator" class="lastUpdate"></p>
+      <p ui:field="lastUpdate" class="lastUpdate"></p>
+      <p ui:field="nbViews" class="nbViews"></p>
+    </g:HTMLPanel>
+  </g:FocusPanel>
 </ui:UiBinder>

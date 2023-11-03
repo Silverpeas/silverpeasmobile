@@ -47,6 +47,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.IframePage;
@@ -309,5 +310,26 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
     };
     action.attempt();
+  }
+
+  @Override
+  public void nextPublication(DocumentsNextPublicationEvent event) {
+    ServicesLocator.getServiceDocuments().getNextPublication(event.getPublication().getInstanceId(), event.getPublication().getId(), event.getDirection(), new MethodCallback<PublicationDTO>() {
+      @Override
+      public void onFailure(Method method, Throwable throwable) {
+        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+      }
+
+      @Override
+      public void onSuccess(Method method, PublicationDTO publicationDTO) {
+        PublicationPage page = new PublicationPage();
+        page.setPageTitle(msg.publicationTitle());
+        page.show();
+        ContentDTO content = new ContentDTO();
+        content.setId(publicationDTO.getId());
+        content.setType(ContentsTypes.Publication.toString());
+        EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
+      }
+    });
   }
 }
