@@ -42,10 +42,8 @@ import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.attachment.util.SimpleDocumentList;
-import org.silverpeas.core.contribution.publication.model.CompletePublication;
-import org.silverpeas.core.contribution.publication.model.PublicationDetail;
-import org.silverpeas.core.contribution.publication.model.PublicationLink;
-import org.silverpeas.core.contribution.publication.model.PublicationPK;
+import org.silverpeas.core.contribution.publication.dao.PublicationCriteria;
+import org.silverpeas.core.contribution.publication.model.*;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.io.media.image.thumbnail.ThumbnailSettings;
 import org.silverpeas.core.node.model.NodeDetail;
@@ -78,6 +76,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -617,6 +616,72 @@ public class ServiceDocuments extends AbstractRestWebService {
     list.addAll(getTopics(instanceId, rootTopicId));
     list.addAll(getPublications(instanceId, rootTopicId));
     return list;
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("nextpublication/{id}/{direction}")
+  public PublicationDTO getNextPublication(@PathParam("appId") String instanceId, @PathParam("id") String id, @PathParam("direction") String direction) throws Exception {
+
+    PublicationDTO dto = new PublicationDTO();
+    try {
+      PublicationPK pubPK = new PublicationPK(id);
+      PublicationDetail pub = getPubBm().getDetail(pubPK);
+
+      List<Location> locations = getPubBm().getAllLocations(pubPK);
+      //int order = locations.get(0).getPubOrder();
+      String folderId = locations.get(0).getLocalId();
+
+
+      NodePK nodePK = new NodePK(folderId, instanceId);
+      List<KmeliaPublication> publications = KmeliaService.get().getAuthorizedPublicationsOfFolder(nodePK,
+              getUserTopicProfile(nodePK.getId(), instanceId), getUser().getId(),
+              isTreeStructure(instanceId));
+
+
+      int sort;
+      if (isManualSortingUsed(publications)) {
+        sort = 99;
+      } else {
+        sort = getDefaultSortValue(pubPK.getInstanceId());
+      }
+      new KmeliaPublicationSort(sort).withContentLanguage(getUser().getUserPreferences().getLanguage()).sort(publications);
+
+
+      KmeliaPublication next = null;
+      for (int i = 0; i < publications.size(); i++) {
+        if (publications.get(i).getId().equals(id)) {
+          if (direction.equalsIgnoreCase("right")) {
+            if (i == publications.size() - 1) {
+              next = publications.get(0);
+            } else {
+              next = publications.get(i + 1);
+            }
+          } else if (direction.equalsIgnoreCase("left")) {
+            if (i == 0) {
+              next = publications.get(publications.size() - 1);
+            } else {
+              next = publications.get(i - 1);
+            }
+          }
+        }
+      }
+
+
+      dto.setId(next.getId());
+      dto.setName(next.getName());
+      //dto.setCreator(pub.getCreator().getDisplayedName());
+      //dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName());
+      //dto.setVersion(next.getVersion());
+      dto.setDescription(next.getDescription());
+
+    } catch(Throwable e) {
+      SilverLogger.getLogger(this)
+              .error("ServiceDocumentsImpl.getNextPublication", "root.EX_NO_MESSAGE", e);
+      throw e;
+    }
+    //TODO
+    return dto;
   }
 
   @Override
