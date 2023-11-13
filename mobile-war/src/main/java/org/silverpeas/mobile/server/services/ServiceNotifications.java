@@ -368,7 +368,7 @@ public class ServiceNotifications extends AbstractRestWebService {
     if (selection.get(0) instanceof NotificationSendedDTO) {
       for (NotificationBoxDTO dto : selection) {
         try {
-          SentNotificationInterface.get().deleteNotif((int) dto.getIdNotif(), getUser().getId());
+          SentNotificationInterface.get().deleteNotif(String.valueOf(dto.getIdNotif()), Integer.parseInt(getUser().getId()));
         } catch (NotificationException e) {
           SilverLogger.getLogger(this).error(e);
         }
