@@ -25,7 +25,9 @@
 package org.silverpeas.mobile.shared.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Set;
 
 public class DetailUserDTO implements Serializable{
@@ -46,18 +48,19 @@ public class DetailUserDTO implements Serializable{
   private String sessionKey;
   private boolean connected;
   private boolean notificationBox;
-  private LinkedHashMap<String, String> properties = new LinkedHashMap<String, String>();
+  private List<PropertyDTO> properties = new ArrayList<>();
 
   public void addProperty(String key, String value) {
-    properties.put(key, value);
+    PropertyDTO dto = new PropertyDTO();
+    dto.setKey(key);
+    dto.setValue(value);
+    this.properties.add(dto);
   }
-
-  public Set<String> getProperties() {
-    return properties.keySet();
+  public void setProperties(List<PropertyDTO> properties) {
+    this.properties = properties;
   }
-
-  public String getPropertieValue(String key) {
-    return properties.get(key);
+  public List<PropertyDTO> getProperties() {
+    return properties;
   }
 
   public String getId() {

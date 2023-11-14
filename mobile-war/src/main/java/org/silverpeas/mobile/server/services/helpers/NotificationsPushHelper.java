@@ -130,7 +130,7 @@ public class NotificationsPushHelper {
       // This registration token comes from the client FCM SDKs.
 
       // See documentation on defining a message payload.
-      response = getNotificationPermalink(String.valueOf(notifData.get("id")))
+      response = getNotificationPermalink(userId, String.valueOf(notifData.get("id")))
           // No push if no permalink
           .map(l -> Message.builder()
               .putData("subject", String.valueOf(notifData.get("subject")))
@@ -156,10 +156,8 @@ public class NotificationsPushHelper {
     return response;
   }
 
-  private Optional<String> getNotificationPermalink(String id) {
-    return ofNullable(id)
-        .map(Long::decode)
-        .map(SILVERMAILPersistence::getMessage)
-        .map(SILVERMAILMessage::getUrl);
+  private Optional<String> getNotificationPermalink(String userId, String id) {
+    SILVERMAILMessage m = SILVERMAILPersistence.getMessage(userId, Long.valueOf(id));
+    return ofNullable(m.getUrl());
   }
 }
