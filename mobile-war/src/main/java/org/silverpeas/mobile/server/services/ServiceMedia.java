@@ -400,7 +400,7 @@ public class ServiceMedia extends AbstractRestWebService {
    */
   @GET
   @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("videostream/{pictureId}")
+  @Path("photo/{pictureId}")
   public PhotoDTO getPreviewPicture(@PathParam("appId") String instanceId, @PathParam("pictureId") String pictureId) {
 
     PhotoDTO picture = null;

@@ -92,6 +92,6 @@ public interface ServiceMedia extends RestService {
 
   @GET
   @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("{appId}/videostream/{pictureId}")
+  @Path("{appId}/photo/{pictureId}")
   public void getPreviewPicture(@PathParam("appId") String instanceId, @PathParam("pictureId") String pictureId, MethodCallback<PhotoDTO> callback);
 }
