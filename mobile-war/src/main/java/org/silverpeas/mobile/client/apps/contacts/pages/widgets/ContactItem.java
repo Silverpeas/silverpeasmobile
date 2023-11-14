@@ -39,6 +39,7 @@ import org.silverpeas.mobile.client.apps.contacts.resources.ContactsResources;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
+import org.silverpeas.mobile.shared.dto.PropertyDTO;
 
 public class ContactItem extends Composite {
 
@@ -125,9 +126,9 @@ public class ContactItem extends Composite {
       tel.add(new InlineHTML("&nbsp;"));
     }
 
-    for (String prop :userData.getProperties()) {
+    for (PropertyDTO prop :userData.getProperties()) {
+      String value = prop.getValue();
 
-      String value = userData.getPropertieValue(prop);
       if (isPhoneNumber(value)) {
         HTMLPanel field = new HTMLPanel("");
         Anchor tel = new Anchor();
@@ -145,7 +146,7 @@ public class ContactItem extends Composite {
         container.add(field);
       } else {
         HTML field = new HTML(value);
-        field.setStylePrimaryName(prop);
+        field.setStylePrimaryName(prop.getKey());
         container.add(field);
       }
     }
