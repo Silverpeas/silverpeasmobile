@@ -103,7 +103,7 @@ public class AddMediaButton extends Composite {
 
     @UiHandler("link")
     void upload(ClickEvent event) {
-        if (!NetworkHelper.isOnline()) {
+        if (NetworkHelper.isOnline()) {
             clickOnInputFile(file.getElement());
         } else {
             Notification.alert(globalMsg.needToBeOnline());
