@@ -62,11 +62,10 @@ public class GedItem extends Composite {
       dataTopic = (TopicDTO) data;
       if (dataTopic.getId().equals("1")) {
         setStyleName("trash");
-        link.setText(dataTopic.getName() + " (" + dataTopic.getPubCount() + ")");
       } else {
         setStyleName("folder-ged");
-        link.setText(dataTopic.getName() + " (" + dataTopic.getPubCount() + ")");
       }
+      link.setText(dataTopic.getName() + " (" + dataTopic.getPubCount() + ")");
     } else if (data instanceof PublicationDTO) {
       dataPublication = (PublicationDTO) data;
       link.setHTML(dataPublication.getName());
