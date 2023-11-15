@@ -65,8 +65,8 @@ public class GedItem extends Composite {
         link.setText(dataTopic.getName());
       } else {
         setStyleName("folder-ged");
-        link.setText(dataTopic.getName() + " (" + dataTopic.getPubCount() + ")");
       }
+      link.setText(dataTopic.getName() + " (" + dataTopic.getPubCount() + ")");
     } else if (data instanceof PublicationDTO) {
       dataPublication = (PublicationDTO) data;
       link.setHTML(dataPublication.getName());
