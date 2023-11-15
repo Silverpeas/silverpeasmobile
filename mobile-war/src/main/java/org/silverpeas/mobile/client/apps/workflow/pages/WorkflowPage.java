@@ -94,8 +94,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
     for (Map.Entry<String, String> role : metaData.getRoles().entrySet()) {
       roles.addItem(role.getValue(), role.getKey());
     }
-    roles.setVisible(true);
-
+    roles.setVisible(roles.getItemCount()>1);
     EventBus.getInstance().fireEvent(new WorkflowRoleChangeEvent(roles.getSelectedValue()));
   }
 
@@ -107,6 +106,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       this.data.getList().addAll(event.getData().getList());
     }
 
+    instances.removeAllRows();
     int c = 0;
     for (String label : metaData.getHeaderLabels().get(roles.getSelectedValue())) {
       instances.setHTML(0, c, label);
