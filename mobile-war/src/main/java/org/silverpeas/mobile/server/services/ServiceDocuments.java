@@ -629,7 +629,6 @@ public class ServiceDocuments extends AbstractRestWebService {
       PublicationDetail pub = getPubBm().getDetail(pubPK);
 
       List<Location> locations = getPubBm().getAllLocations(pubPK);
-      //int order = locations.get(0).getPubOrder();
       String folderId = locations.get(0).getLocalId();
 
 
@@ -670,9 +669,6 @@ public class ServiceDocuments extends AbstractRestWebService {
 
       dto.setId(next.getId());
       dto.setName(next.getName());
-      //dto.setCreator(pub.getCreator().getDisplayedName());
-      //dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName());
-      //dto.setVersion(next.getVersion());
       dto.setDescription(next.getDescription());
 
     } catch(Throwable e) {
@@ -680,7 +676,7 @@ public class ServiceDocuments extends AbstractRestWebService {
               .error("ServiceDocumentsImpl.getNextPublication", "root.EX_NO_MESSAGE", e);
       throw e;
     }
-    //TODO
+
     return dto;
   }
 
