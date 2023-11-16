@@ -123,31 +123,32 @@ public class ContactItem extends Composite {
       nbTel++;
     }
     if (nbTel == 0) {
-      tel.add(new InlineHTML("&nbsp;"));
+      tel.setVisible(false);
     }
 
     for (PropertyDTO prop :userData.getProperties()) {
       String value = prop.getValue();
+      if (value != null & !value.isEmpty()) {
+        if (isPhoneNumber(value)) {
+          HTMLPanel field = new HTMLPanel("");
+          Anchor tel = new Anchor();
+          tel.setStyleName("tel-link");
+          tel.setText(value);
+          tel.setHref("tel:" + value);
+          field.add(tel);
 
-      if (isPhoneNumber(value)) {
-        HTMLPanel field = new HTMLPanel("");
-        Anchor tel = new Anchor();
-        tel.setStyleName("tel-link");
-        tel.setText(value);
-        tel.setHref("tel:" + value);
-        field.add(tel);
+          Anchor sms = new Anchor();
+          sms.setHref("sms:" + value);
+          Image smsImg = new Image(resourcesContact.sms());
+          sms.getElement().appendChild(smsImg.getElement());
+          field.add(sms);
 
-        Anchor sms = new Anchor();
-        sms.setHref("sms:" + value);
-        Image smsImg = new Image(resourcesContact.sms());
-        sms.getElement().appendChild(smsImg.getElement());
-        field.add(sms);
-
-        container.add(field);
-      } else {
-        HTML field = new HTML(value);
-        field.setStylePrimaryName(prop.getKey());
-        container.add(field);
+          container.add(field);
+        } else {
+          HTML field = new HTML(value);
+          field.setStylePrimaryName(prop.getKey());
+          container.add(field);
+        }
       }
     }
   }
