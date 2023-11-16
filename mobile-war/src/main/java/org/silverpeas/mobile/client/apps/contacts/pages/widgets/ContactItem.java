@@ -86,12 +86,12 @@ public class ContactItem extends Composite {
 
     int nbTel = 0;
     if (userData.getPhoneNumber() != null && !userData.getPhoneNumber().isEmpty()) {
-      Anchor tel1 = new Anchor();
-      tel1.setStyleName("tel-link");
-      tel1.setText(userData.getPhoneNumber());
-      tel1.setHref("tel:" + userData.getPhoneNumber());
-      tel.add(tel1);
-      nbTel++;
+        Anchor tel1 = new Anchor();
+        tel1.setStyleName("tel-link");
+        tel1.setText(userData.getPhoneNumber());
+        tel1.setHref("tel:" + userData.getPhoneNumber());
+        tel.add(tel1);
+        nbTel++;
     }
     if (userData.getCellularPhoneNumber() != null && !userData.getCellularPhoneNumber().isEmpty()) {
       if (nbTel == 1) {
@@ -123,30 +123,32 @@ public class ContactItem extends Composite {
       nbTel++;
     }
     if (nbTel == 0) {
-      tel.add(new InlineHTML("&nbsp;"));
+      tel.setVisible(false);
     }
 
     for (PropertyDTO prop :userData.getProperties()) {
       String value = prop.getValue();
-      if (isPhoneNumber(value)) {
-        HTMLPanel field = new HTMLPanel("");
-        Anchor tel = new Anchor();
-        tel.setStyleName("tel-link");
-        tel.setText(value);
-        tel.setHref("tel:" + value);
-        field.add(tel);
+      if (value != null & !value.isEmpty()) {
+        if (isPhoneNumber(value)) {
+          HTMLPanel field = new HTMLPanel("");
+          Anchor tel = new Anchor();
+          tel.setStyleName("tel-link");
+          tel.setText(value);
+          tel.setHref("tel:" + value);
+          field.add(tel);
 
-        Anchor sms = new Anchor();
-        sms.setHref("sms:" + value);
-        Image smsImg = new Image(resourcesContact.sms());
-        sms.getElement().appendChild(smsImg.getElement());
-        field.add(sms);
+          Anchor sms = new Anchor();
+          sms.setHref("sms:" + value);
+          Image smsImg = new Image(resourcesContact.sms());
+          sms.getElement().appendChild(smsImg.getElement());
+          field.add(sms);
 
-        container.add(field);
-      } else {
-        HTML field = new HTML(value);
-        field.setStylePrimaryName(prop.getKey());
-        container.add(field);
+          container.add(field);
+        } else {
+          HTML field = new HTML(value);
+          field.setStylePrimaryName(prop.getKey());
+          container.add(field);
+        }
       }
     }
   }
