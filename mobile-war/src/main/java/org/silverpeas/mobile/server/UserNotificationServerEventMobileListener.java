@@ -25,8 +25,11 @@
 package org.silverpeas.mobile.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jsoup.Jsoup;
 import org.silverpeas.core.notification.sse.CDIServerEventListener;
 import org.silverpeas.core.notification.user.UserNotificationServerEvent;
+import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
+import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
 
@@ -48,7 +51,10 @@ public class UserNotificationServerEventMobileListener extends
       String json = event.getData("", null);
       Map<String, Object> data = mapper.readValue(json, Map.class);
       Boolean isCreation = (Boolean) data.get("isCreation");
+      String id = (String) data.get("id");
       if (Boolean.TRUE.equals(isCreation)) {
+        SILVERMAILMessage msg =  SILVERMAILPersistence.getMessage(event.getEmitterUserId(), Long.valueOf(id));
+        data.put("body", Jsoup.parse(msg.getBody()).wholeText());
         NotificationsPushHelper.getInstance().sendNotification(emitterUserId, data);
       }
     } catch(Exception e) {
