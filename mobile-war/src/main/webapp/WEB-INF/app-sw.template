@@ -10,9 +10,9 @@ if (firebaseConfig != null) {
 
   messaging.setBackgroundMessageHandler(function(payload) {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    const notificationTitle = payload.data["sender"];
+    const notificationTitle = payload.data["subject"];
     const notificationOptions = {
-      body : payload.data["subject"], icon : '/silverpeas/util/icons/desktop-user-notification.png',
+      body : payload.data["body"], icon : '/silverpeas/util/icons/desktop-user-notification.png',
       data : payload.data
     };
 

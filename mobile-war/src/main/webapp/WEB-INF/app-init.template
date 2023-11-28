@@ -22,12 +22,12 @@ if (firebaseConfig != null) {
 
   messaging.onMessage(payload => {
     const notificationOptions = {
-      body : payload.data["subject"], icon : '/silverpeas/util/icons/desktop-user-notification.png',
+      body : payload.data["body"], icon : '/silverpeas/util/icons/desktop-user-notification.png',
       data : payload.data
     };
 
     navigator.serviceWorker.getRegistration('/silverpeas/spmobile/').then(registration => {
-            registration.showNotification(payload.data["sender"], notificationOptions)
+            registration.showNotification(payload.data["subject"], notificationOptions)
     });
   });
 } else {
