@@ -22,7 +22,8 @@ if (firebaseConfig != null) {
 
   messaging.onMessage(payload => {
     const notificationOptions = {
-      body : payload.data["subject"], icon : '/silverpeas/util/icons/desktop-user-notification.png'
+      body : payload.data["subject"], icon : '/silverpeas/util/icons/desktop-user-notification.png',
+      data : payload.data
     };
 
     navigator.serviceWorker.getRegistration('/silverpeas/spmobile/').then(registration => {
