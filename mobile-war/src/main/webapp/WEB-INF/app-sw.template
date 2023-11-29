@@ -24,7 +24,10 @@ if (firebaseConfig != null) {
      const pushData = event.notification.data;
      event.notification.close();
      if (!pushData["permalink"].endsWith("/null")) {
-      event.waitUntil(self.clients.openWindow(pushData["permalink"]));
+       fetch('/silverpeas/services/mobile/notification/readed/' + pushData["notificationId"], {
+           method: 'PUT'
+       });
+       event.waitUntil(self.clients.openWindow(pushData["permalink"]));
      }
   });
 
