@@ -136,6 +136,7 @@ public class NotificationsPushHelper {
               .putData("subject", String.valueOf(notifData.get("subject")))
               .putData("sender", String.valueOf(notifData.get("sender")))
               .putData("body", String.valueOf(notifData.get("body")))
+              .putData("notificationId", String.valueOf(notifData.get("notificationId")))
               .putData("permalink", l))
           .map(m -> m.setToken(token))
           .map(Message.Builder::build)
