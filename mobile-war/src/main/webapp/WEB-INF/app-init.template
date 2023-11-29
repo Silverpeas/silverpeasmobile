@@ -3,22 +3,24 @@ if (firebaseConfig != null) {
   firebase.initializeApp(firebaseConfig);
 
   const messaging = firebase.messaging();
-  navigator.serviceWorker.register('/silverpeas/spmobile/app-sw.js')
-      .then((registration) => {
-        messaging.useServiceWorker(registration);
+    navigator.serviceWorker.register('/silverpeas/spmobile/app-sw.js')
+        .then((registration) => {
+         navigator.serviceWorker.ready.then(function(reg) {
+             messaging.useServiceWorker(registration);
 
-        // Request permission and get token.....
-        Notification.requestPermission().then(function(permission) {
-          if (permission === "granted") {
-            messaging.getToken().then(token => {
-              console.log("Token Is : " + token);
-              storeToken(token);
-            });
-          } else {
-            console.log("No permission to send push");
-          }
+              // Request permission and get token.....
+              Notification.requestPermission().then(function(permission) {
+                if (permission === "granted") {
+                  messaging.getToken().then(token => {
+                    console.log("Token Is : " + token);
+                    storeToken(token);
+                  });
+                } else {
+                  console.log("No permission to send push");
+                }
+              });
+          });
         });
-      });
 
   messaging.onMessage(payload => {
     const notificationOptions = {
