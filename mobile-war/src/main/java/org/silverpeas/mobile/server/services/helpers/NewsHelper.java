@@ -38,17 +38,11 @@ import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
-import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.io.file.ImageResizingProcessor;
 import org.silverpeas.core.io.file.SilverpeasFileProcessor;
-import org.silverpeas.core.util.CollectionUtil;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.ServiceProvider;
-import org.silverpeas.core.util.SettingBundle;
-import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.*;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.logging.SilverLogger;
-import org.silverpeas.core.web.look.PublicationUpdateDateComparator;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
@@ -76,8 +70,8 @@ public class NewsHelper {
     return instance;
   }
 
-  public List<News> getLastNews(String userId, String spaceId) throws Exception {
-    if(spaceId != null) {
+  public List<News> getLastNews(String userId, String spaceId, int maxNews) throws Exception {
+    if (spaceId != null) {
       List<String> appIds = new ArrayList<String>();
       String[] cIds = organizationController.getAvailCompoIds(spaceId, userId);
       for (String id : cIds) {
@@ -102,15 +96,15 @@ public class NewsHelper {
       } catch (MissingResourceException e) {}
       if (newsSource != null && newsSource.isEmpty() == false) {
           if (newsSource.trim().startsWith("quickinfo")) {
-            news = getNewsByComponentId(newsSource, false, userId);
+            news = getNewsByComponentId(newsSource, false, userId, maxNews);
+            news = sortAndTruncate(maxNews, news);
           } else if (newsSource.trim().equals("*")) {
-            news = getAllNews(userId);
+            news = getAllNews(userId, maxNews);
+            news = sortAndTruncate(maxNews, news);
           } else {
-            news = getDelegatedNews(userId);
+            news = getDelegatedNews(userId, maxNews);
           }
       }
-      Collections.sort(news, (o1, o2) -> o1.getUpdateDate().compareTo(o2.getUpdateDate()));
-      Collections.reverse(news);
       return news;
     }
   }
@@ -119,20 +113,37 @@ public class NewsHelper {
     return news.isValid() && news.isVisible();
   }
 
-  private List<News> getDelegatedNews(String userId) throws Exception {
+  private List<News> getDelegatedNews(String userId, int maxNews) throws Exception {
     List<News> news = new ArrayList();
     List<DelegatedNews> delegatedNews = DelegatedNewsServiceProvider.getDelegatedNewsService().getAllValidDelegatedNews();
     UserDetail u = Administration.get().getUserDetail(userId);
     Date now = new Date();
+    int count = 0;
     for (DelegatedNews delegated : delegatedNews) {
-      if (delegated.isValidated() && (delegated.getBeginDate() != null && now.after(delegated.getBeginDate()))
-              && (delegated.getEndDate() != null && now.before(delegated.getEndDate()))) {
-        News aNews = QuickInfoService.get().getNewsByForeignId(delegated.getPubId());
-        if (aNews.canBeAccessedBy(u)) news.add(aNews);
+      if (count >= maxNews) break;
+      News aNews = null;
+      if (delegated.getBeginDate() == null && delegated.getEndDate() == null) {
+        aNews = getNews(delegated, u);
+      } else if (delegated.getBeginDate() != null && now.after(delegated.getBeginDate())
+              && delegated.getEndDate() != null && now.before(delegated.getEndDate())) {
+        aNews = getNews(delegated, u);
+      } else if (delegated.getBeginDate() != null && now.after(delegated.getBeginDate()) && delegated.getEndDate() == null) {
+        aNews = getNews(delegated, u);
+      } else if (delegated.getEndDate() != null && now.before(delegated.getEndDate())) {
+         aNews = getNews(delegated, u);
+      }
+      if (aNews != null) {
+        news.add(aNews);
+        count++;
       }
     }
-
     return news;
+  }
+
+  private News getNews(DelegatedNews delegated, UserDetail u) {
+    News aNews = QuickInfoService.get().getNewsByForeignId(delegated.getPubId());
+    if (!aNews.canBeAccessedBy(u)) aNews = null;
+    return aNews;
   }
 
   public List<News> getNewsByAppId(String appId, boolean managerAccess) {
@@ -147,19 +158,19 @@ public class NewsHelper {
     return news;
   }
 
-  private List<News> getAllNews(String userId) throws AdminException {
+  private List<News> getAllNews(String userId, int maxNews) throws AdminException {
     List<News> news = new ArrayList<>();
     List<String> apps = CollectionUtil
         .asList(organizationController.getComponentIdsForUser(userId, "quickinfo"));
     for (String appId : apps) {
-      news.addAll(getNewsByComponentId(appId, false, userId));
+      news.addAll(getNewsByComponentId(appId, false, userId, maxNews));
     }
-    //TODO sort list
+    news = sortAndTruncate(maxNews, news);
 
     return news;
   }
 
-  private List<News> getNewsByComponentId(String appId, boolean managerAccess, String userId) throws AdminException {
+  private List<News> getNewsByComponentId(String appId, boolean managerAccess, String userId, int maxNews) throws AdminException {
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
     List<News> news = new ArrayList<>();
 
@@ -169,6 +180,17 @@ public class NewsHelper {
       } else {
         news = service.getVisibleNews(appId);
       }
+    }
+    news = sortAndTruncate(maxNews, news);
+
+    return news;
+  }
+
+  private static List<News> sortAndTruncate(int maxNews, List<News> news) {
+    Collections.sort(news, (o1, o2) -> o1.getUpdateDate().compareTo(o2.getUpdateDate()));
+    //Collections.reverse(news);
+    if (news != null && news.size() > maxNews) {
+      news = news.subList(0, maxNews);
     }
     return news;
   }

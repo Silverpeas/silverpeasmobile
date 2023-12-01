@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.client.common;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -263,9 +264,7 @@ public class AuthentificationManager {
                 @Override
                 public void onFailure(final Method method, final Throwable t) {
                   //super.onFailure(method, t);
-                  Window.alert(
-                      "Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
-
+                  GWT.log("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
                   if (t instanceof AuthenticationException) {
                     EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
                   } else {
