@@ -25,14 +25,10 @@
 package org.silverpeas.mobile.server.services;
 
 import org.apache.commons.lang3.EnumUtils;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.quickinfo.model.News;
-import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.AdminException;
@@ -47,15 +43,11 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.mylinks.model.LinkDetail;
-import org.silverpeas.core.security.session.SessionInfo;
-import org.silverpeas.core.security.session.SessionManagement;
-import org.silverpeas.core.security.session.SessionManagementProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.PublicationHelper;
-import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
@@ -66,24 +58,15 @@ import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.server.services.helpers.events.EventsHelper;
 import org.silverpeas.mobile.server.services.helpers.events.NextEvents;
-import org.silverpeas.mobile.shared.dto.ContentsTypes;
-import org.silverpeas.mobile.shared.dto.DetailUserDTO;
-import org.silverpeas.mobile.shared.dto.HomePageDTO;
-import org.silverpeas.mobile.shared.dto.RightDTO;
-import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
+import org.silverpeas.mobile.shared.dto.*;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
-import org.silverpeas.mobile.shared.dto.navigation.Apps;
-import org.silverpeas.mobile.shared.dto.navigation.HomePages;
-import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
-import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
+import org.silverpeas.mobile.shared.dto.navigation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -249,11 +232,7 @@ public class ServiceNavigation extends AbstractRestWebService {
       } else {
         maxNews = settings.getInteger("home.news.size", 3);
       }
-      List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId);
-      if (lastNews != null && lastNews.size() > maxNews) {
-        lastNews = lastNews.subList(0, maxNews);
-      }
-
+      List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId, maxNews);
       data.setNews(NewsHelper.getInstance().populate(lastNews, false));
 
       if (spaceId == null || spaceId.isEmpty()) {
@@ -491,7 +470,7 @@ public class ServiceNavigation extends AbstractRestWebService {
     if (rootSpaceId !=null && rootSpaceId.equals("null")) rootSpaceId = null;
     try {
       if (rootSpaceId == null) {
-        String[] spaceIds = Administration.get().getAllSpaceIds(getUser().getId());
+        String[] spaceIds = Administration.get().getAllRootSpaceIds(getUser().getId());
         for (String spaceId : spaceIds) {
           SpaceInst space = Administration.get().getSpaceInstById(spaceId);
           if (!space.isRemoved()) {
