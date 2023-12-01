@@ -264,7 +264,8 @@ public class AuthentificationManager {
 
                 @Override
                 public void onFailure(final Method method, final Throwable t) {
-                  GWT.log("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage(), t);
+                  //super.onFailure(method, t);
+                  GWT.log("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
                   if (t instanceof AuthenticationException) {
                     EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
                   } else {
