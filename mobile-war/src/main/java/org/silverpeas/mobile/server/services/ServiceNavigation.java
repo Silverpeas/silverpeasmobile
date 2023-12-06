@@ -230,7 +230,7 @@ public class ServiceNavigation extends AbstractRestWebService {
       if (spaceId == null) {
         maxNews = settings.getInteger("home.news.size", 3);
       } else {
-        maxNews = settings.getInteger("home.news.size", 3);
+        maxNews = settings.getInteger("space.homepage.news.nb", 3);
       }
       List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId, maxNews);
       data.setNews(NewsHelper.getInstance().populate(lastNews, false));
