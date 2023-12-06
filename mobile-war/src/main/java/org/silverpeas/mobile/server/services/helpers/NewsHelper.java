@@ -84,7 +84,7 @@ public class NewsHelper {
       for (String appId : appIds) {
         news.addAll(service.getVisibleNews(appId));
       }
-      Collections.sort(news, (o1, o2) -> o1.getUpdateDate().compareTo(o2.getUpdateDate()));
+      news = sortAndTruncate(maxNews, news);
       return news;
     } else {
       // News on main page
