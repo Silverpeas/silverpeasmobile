@@ -232,9 +232,13 @@ public class ServiceNavigation extends AbstractRestWebService {
       } else {
         maxNews = settings.getInteger("space.homepage.news.nb", 3);
       }
-      List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId, maxNews);
-      data.setNews(NewsHelper.getInstance().populate(lastNews, false));
 
+      if ((spaceId == null && getSettings().getBoolean("homepage.lastnews", true)) ||
+              (spaceId != null && getSettings().getBoolean("spacehomepage.lastnews", true))) {
+        List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId, maxNews);
+        data.setNews(NewsHelper.getInstance().populate(lastNews, false));
+      }
+            
       if (spaceId == null || spaceId.isEmpty()) {
         List<LinkDetail> links =
             FavoritesHelper.getInstance().getBookmarkPersoVisible(getUser().getId());
