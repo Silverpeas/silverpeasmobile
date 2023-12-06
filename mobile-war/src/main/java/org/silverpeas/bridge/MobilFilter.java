@@ -107,7 +107,8 @@ public class MobilFilter implements Filter {
           !url.contains(URLUtil.getApplicationURL() + "/visio/") &&
           !url.contains(URLUtil.getApplicationURL() + "/util/") && (!tablet) &&
           !url.contains("attached_file") && !url.contains("Ticket") &&
-          !url.contains("LinkFile/Key") && redirect) {
+          !url.contains("LinkFile/Key")  &&
+          !url.contains("FileServer/thumbnail") && redirect) {
         String params = "";
         if (url.contains("Publication")) {
           String id = url.substring(url.lastIndexOf("/") + 1);
