@@ -32,7 +32,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwt.crypto.bouncycastle.InvalidCipherTextException;
 import com.googlecode.gwt.crypto.client.TripleDesCipher;
 import org.fusesource.restygwt.client.Method;
@@ -45,7 +44,6 @@ import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
-import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.IFullUser;
@@ -306,13 +304,9 @@ public class AuthentificationManager {
           AuthentificationManager.getInstance().clearLocalStorage();
           PageHistory.getInstance().clear();
           Notification.activityStop();
-          ConnexionPage connexionPage = new ConnexionPage();
-          RootPanel.get().clear();
-          RootPanel.get().add(connexionPage);
+          SpMobil.getInstance().displayFirstPage();
           SpMobil.destroyMainPage();
-
         }
-
         @Override
         public void onError(final Request request, final Throwable throwable) {
 
@@ -343,7 +337,5 @@ public class AuthentificationManager {
       }
     };
     action.attempt();
-
-
   }
 }

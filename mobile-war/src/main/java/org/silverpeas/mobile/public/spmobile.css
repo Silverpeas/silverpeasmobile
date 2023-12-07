@@ -1480,6 +1480,7 @@ input.filter-contacts {
   color: #fff !important;
   text-decoration: none;
   display: block;
+  font-weight: bold;
 }
 
 .btn-validate.smaller {
@@ -2716,4 +2717,29 @@ a.popin-btn {
 
 #sharing .label {
   padding-top: 1em;
+}
+
+/**** Cookies information page ****/
+.cookiesTextContainer {
+  background-color: white;
+  height: 25vh;
+  padding: 2em;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: 2em;
+  border-radius: 0.25em;
+}
+
+.cookiesText {
+  height: 20vh;
+  text-align: justify;
+  line-height: 1.2em;
+}
+.cookiesTextActions {
+  text-align: right;
+}
+
+#header #page-cookies-title {
+  left: 1em;
+  right: 1em;
 }
