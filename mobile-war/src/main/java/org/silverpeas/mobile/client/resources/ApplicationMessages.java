@@ -30,7 +30,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 
 public interface ApplicationMessages extends Messages {
 
-  @DefaultMessage("Pour son fonctionnement cette application utilise des Cookies. Les informations stockées sont uniquement techniques et ne contiennent pas de données personnelles, ou de suivi.")
+  @DefaultMessage("Pour son fonctionnement, cette application utilise des Cookies. Les informations stockées sont uniquement techniques et ne contiennent pas de données personnelles, ou de suivi.")
   SafeHtml cookiesInformation();
 
   @DefaultMessage("Login")
