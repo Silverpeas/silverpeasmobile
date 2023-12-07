@@ -1570,15 +1570,18 @@ textarea.ui-input-text {
 
 #formLogin {
   text-align: center;
-  padding-top: 1em;
+  padding-top: 4em;
 }
 
 #page-login #Login, #page-login #Password {
   background: #FFF url(bg-input-login.png) 0 0 no-repeat;
-  padding-left: 24px;
+  padding-left: 2em;
   border: 1px solid #dddddd;
-  width: 210px;
-  margin: 0 0 1em 0;
+  width: 70vw;
+  margin: 0 0 1.5em 0;
+  line-height: 2em;
+  border-radius: 0.25em;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
 }
 
 #page-login #Password {
@@ -1586,11 +1589,11 @@ textarea.ui-input-text {
 }
 
 #page-login #DomainId {
-  width: 237px;
+  width: 70vw;
 }
 
 #page-login #password-visibility {
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
 }
 
 #page-login #copyright {
@@ -1605,7 +1608,7 @@ textarea.ui-input-text {
 #page-login .btn-validate,
 #page-login .btn-validate:visited {
   padding: 0.5em 0;
-  width: 235px;
+  width: 10em;
   margin: 1em 0 0
 }
 
