@@ -84,6 +84,7 @@ import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.Page;
 import org.silverpeas.mobile.client.components.base.events.window.OrientationChangeEvent;
 import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
+import org.silverpeas.mobile.client.pages.cookies.CookiesPage;
 import org.silverpeas.mobile.client.pages.main.HomePage;
 import org.silverpeas.mobile.client.pages.search.SearchResultPage;
 import org.silverpeas.mobile.client.pages.termsofservice.TermsOfServicePage;
@@ -181,7 +182,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
     SSO = !ResourcesManager.getSSOPath().isEmpty();
 
-    loadIds(null);
+    displayFirstPage();
 
     NodeList<Element> tags = Document.get().getElementsByTagName("meta");
     for (int i = 0; i < tags.getLength(); i++) {
@@ -226,6 +227,16 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     apps.add(new ResourcesManagerApp());
   }
 
+  public void displayFirstPage() {
+    boolean displayCookiesInformation = Boolean.parseBoolean(ResourcesManager.getParam("displayCookiesInformation"));
+    String cookie = Cookies.getCookie("accept_cookies");
+    if (displayCookiesInformation && (cookie == null || cookie.isEmpty())) {
+      displayCookiesPage();
+    } else {
+      loadIds(null);
+    }
+  }
+
   public static Page getMainPage() {
     if (mainPage == null) {
       mainPage = new Page();
@@ -267,14 +278,13 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     }
     getMainPage().setUser(user);
     RootPanel.get().clear();
-    PageHistory.getInstance().clear();
     RootPanel.get().add(getMainPage());
     PageHistory.getInstance().goTo(new HomePage());
-    
+
     if ((shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) ||
-              shortcutContributionId != null ||
-              (shortcutContentType != null && (shortcutContentType.equals("Component") || shortcutContentType.equals("Space")) &&
-                      shortcutAppId != null)) {
+            shortcutContributionId != null ||
+            (shortcutContentType != null && (shortcutContentType.equals("Component") || shortcutContentType.equals("Space")) &&
+                    shortcutAppId != null)) {
       ShortCutRouter.route(user, shortcutAppId, shortcutContentType, shortcutContentId,
           shortcutContributionId, shortcutRole);
     } else if (shortcutContentType != null && shortcutContentType.equalsIgnoreCase("Url") && shortcutAppId != null) {
@@ -307,6 +317,12 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     RootPanel.get().clear();
     RootPanel.get().add(getMainPage());
     SpMobil.getMainPage().setContent(new TermsOfServicePage());
+  }
+
+  public static void displayCookiesPage() {
+    RootPanel.get().clear();
+    RootPanel.get().add(getMainPage());
+    SpMobil.getMainPage().setContent(new CookiesPage());
   }
 
   /**
@@ -452,6 +468,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     ConnexionPage connexionPage = new ConnexionPage();
     connexionPage.setAuthenticateError(error);
     RootPanel.get().clear();
+    PageHistory.getInstance().clear();
     RootPanel.get().add(connexionPage);
   }
 

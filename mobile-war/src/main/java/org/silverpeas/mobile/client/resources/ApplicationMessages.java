@@ -29,6 +29,10 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 
 
 public interface ApplicationMessages extends Messages {
+
+  @DefaultMessage("Pour son fonctionnement cette application utilise des Cookies. Les informations stockées sont uniquement techniques et ne contiennent pas de données personnelles, ou de suivi.")
+  SafeHtml cookiesInformation();
+
   @DefaultMessage("Login")
   SafeHtml loginLabel();
 
@@ -37,6 +41,9 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Silverpeas &gt; Ecran de connexion")
   SafeHtml loginTitle();
+
+  @DefaultMessage("Information")
+  SafeHtml informationTitle();
 
   @DefaultMessage("Confirmer")
   String confirmBtnLabel();
@@ -92,7 +99,7 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Espace personnel")
   String personalSpace();
 
-  @Messages.DefaultMessage("Modifier mon statut")
+  @DefaultMessage("Modifier mon statut")
   String editStatus();
 
   @DefaultMessage("Contenus trouvés")
