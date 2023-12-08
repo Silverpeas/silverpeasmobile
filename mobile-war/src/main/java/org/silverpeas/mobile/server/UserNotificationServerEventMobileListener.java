@@ -54,7 +54,9 @@ public class UserNotificationServerEventMobileListener extends
       String id = (String) data.get("id");
       if (Boolean.TRUE.equals(isCreation)) {
         SILVERMAILMessage msg =  SILVERMAILPersistence.getMessage(event.getEmitterUserId(), Long.valueOf(id));
-        data.put("body", Jsoup.parse(msg.getBody()).wholeText());
+        String body = msg.getBody();
+        body = body.replace("<!--BEFORE_MESSAGE_FOOTER-->", "<!--BEFORE_MESSAGE_FOOTER--> ");
+        data.put("body", Jsoup.parse(body).wholeText());
         data.put("notificationId", (String) id);
         NotificationsPushHelper.getInstance().sendNotification(emitterUserId, data);
       }
