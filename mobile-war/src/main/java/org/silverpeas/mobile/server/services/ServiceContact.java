@@ -132,7 +132,8 @@ public class ServiceContact extends AbstractRestWebService {
         List tabUserDetail = getUsersByQuery(filter, "UserFull");
         for (int i = 0; i < tabUserDetail.size(); i++) {
           if (i >= startIndex && i < startIndex + pageSize) {
-            listUsers.add(populate(tabUserDetail.get(i)));
+            DetailUserDTO dto = populate(tabUserDetail.get(i));
+            if (dto != null) listUsers.add(dto);
           }
         }
       } else if (type.equals(ContactFilters.ALL_EXT)) {
@@ -320,19 +321,20 @@ public class ServiceContact extends AbstractRestWebService {
       SilverLogger.getLogger(this).debug(SpMobileLogModule.getName(), "ServiceContact.populate",
           "User id=" + userDetail.getId());
       UserFull userFull = UserFull.getById(userDetail.getId());
-      DetailUserDTO dto = new DetailUserDTO();
-      dto.setId(userFull.getId());
-      dto.setFirstName(userFull.getFirstName());
-      dto.setLastName(userFull.getLastName());
-      dto.seteMail(userFull.geteMail());
-      dto.setStatus(userFull.getStatus());
-      dto.setAvatar(userFull.getAvatar());
-      dto.setLanguage(userFull.getUserPreferences().getLanguage());
-      dto.setConnected(userFull.isConnected());
-      String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
-          getSettings().getString("avatar.size", "24x"));
-      dto.setAvatar(avatar);
+      DetailUserDTO dto = null;
       if (userFull != null) {
+        dto = new DetailUserDTO();
+        dto.setId(userFull.getId());
+        dto.setFirstName(userFull.getFirstName());
+        dto.setLastName(userFull.getLastName());
+        dto.seteMail(userFull.geteMail());
+        dto.setStatus(userFull.getStatus());
+        dto.setAvatar(userFull.getAvatar());
+        dto.setLanguage(userFull.getUserPreferences().getLanguage());
+        dto.setConnected(userFull.isConnected());
+        String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
+            getSettings().getString("avatar.size", "24x"));
+        dto.setAvatar(avatar);
         for (String prop : getUserProperties()) {
           dto.addProperty(prop, userFull.getValue(prop));
         }
