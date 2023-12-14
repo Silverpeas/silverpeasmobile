@@ -31,13 +31,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.Notification;
@@ -71,6 +65,9 @@ public class ConnexionPage extends PageContent {
   FormPanel form;
   @UiField
   CheckBox tooglePasswordView;
+
+  @UiField
+  InlineHTML labelTooglePasswordView;
 
   public void setAuthenticateError(final AuthenticationException authenticateError) {
     if (authenticateError == null) {
@@ -140,10 +137,8 @@ public class ConnexionPage extends PageContent {
   void changePasswordVisibity(ClickEvent e) {
     if (passwordField.getElement().getAttribute("type").equals("password")) {
       passwordField.getElement().setAttribute("type", "text");
-      tooglePasswordView.setText(msg.hidePwd());
     } else {
       passwordField.getElement().setAttribute("type", "password");
-      tooglePasswordView.setText(msg.showPwd());
     }
   }
 

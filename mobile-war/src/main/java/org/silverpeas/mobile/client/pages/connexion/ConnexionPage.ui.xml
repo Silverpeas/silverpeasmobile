@@ -44,7 +44,8 @@
           <g:PasswordTextBox ui:field="passwordField" name="Password"/>
         </div>
         <div id="password-visibility">
-          <g:CheckBox ui:field="tooglePasswordView" text="{msg.showPwd}"/>
+          <g:InlineHTML ui:field="labelTooglePasswordView" text="{msg.showPwd}"/>
+          <g:CheckBox ui:field="tooglePasswordView" stylePrimaryName="checkbox-wrapper"/>
         </div>
 
         <div id="domain-formLogin">
