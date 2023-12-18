@@ -84,6 +84,7 @@ public class MobilFilter implements Filter {
     }
 
     Boolean mob = (Boolean) ((HttpServletRequest) req).getSession().getAttribute("isMobile");
+    mob = true;
     if (mob != null && !mob) {
       chain.doFilter(req, res);
       return;
@@ -92,6 +93,7 @@ public class MobilFilter implements Filter {
     String userAgent = ((HttpServletRequest) req).getHeader("User-Agent");
     if (userAgent != null) {
       boolean isMobile = userAgent.contains("Android") || userAgent.contains("iPhone");
+      isMobile = true;
       ((HttpServletRequest) req).getSession().setAttribute("isMobile", Boolean.valueOf(isMobile));
 
       Boolean tablet = (Boolean) ((HttpServletRequest) req).getSession().getAttribute("tablet");

@@ -185,6 +185,13 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       }
       img.attr("src", newSource);
     }
+    Elements anchors = doc.getElementsByTag("a");
+    for (Element a : anchors) {
+      String target = a.attr("target");
+      if (!target.equalsIgnoreCase("_blank")) {
+        a.attr("target", "_top");
+      }
+    }
 
     html = doc.outerHtml();
     OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
