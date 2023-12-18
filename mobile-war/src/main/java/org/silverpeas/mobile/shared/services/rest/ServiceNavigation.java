@@ -31,6 +31,7 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
+import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -47,6 +48,11 @@ import java.util.List;
  */
 @Path("/mobile/navigation")
 public interface ServiceNavigation extends RestService {
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("space/{spaceId}/")
+  public void getSpace(@PathParam("spaceId") String spaceId, MethodCallback<SpaceDTO> callback);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

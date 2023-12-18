@@ -465,6 +465,22 @@ public class ServiceNavigation extends AbstractRestWebService {
     }
   }
 
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("space/{spaceId}/")
+  public SpaceDTO getSpace(@PathParam("spaceId") String spaceId) {
+    try {
+      SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+      SpaceDTO dto = new SpaceDTO();
+      dto.setHomePageType(space.getFirstPageType());
+      dto.setHomePageParameter(space.getFirstPageExtraParam());
+      return dto;
+    } catch (AdminException e) {
+      SilverLogger.getLogger(this).error(e);
+      throw new WebApplicationException(e);
+    }
+  }
+
   //TODO : remove appType
   @GET
   @Produces(MediaType.APPLICATION_JSON)
