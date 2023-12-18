@@ -25,7 +25,9 @@
 package org.silverpeas.mobile.client.apps.navigation;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.LoadSpacesAndAppsEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.NavigationAppEventHandler;
@@ -37,11 +39,14 @@ import org.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedE
 import org.silverpeas.mobile.client.apps.navigation.pages.NavigationPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
+import org.silverpeas.mobile.client.common.ShortCutRouter;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
+import org.silverpeas.mobile.shared.dto.navigation.HomePages;
+import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class NavigationApp extends App implements NavigationAppEventHandler,NavigationEventHandler {
 
@@ -100,10 +105,24 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals(ContentsTypes.Space.name())) {
-      NavigationPage page = new NavigationPage();
-      page.setRootSpaceId(event.getContent().getInstanceId());
-      page.show();
-    }
+      if (event.getContent().getType().equals(ContentsTypes.Space.name())) {
+          MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<SpaceDTO>() {
+              @Override
+              public void attempt() {
+                  ServicesLocator.getServiceNavigation().getSpace(event.getContent().getInstanceId(), this);
+              }
+              @Override
+              public void onSuccess(Method method, SpaceDTO space) {
+                  if (space.getHomePageType() == HomePages.APP.getValue()) {
+                      ShortCutRouter.route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null, null, null);
+                  } else {
+                      NavigationPage page = new NavigationPage();
+                      page.setRootSpaceId(event.getContent().getInstanceId());
+                      page.show();
+                  }
+              }
+          };
+          action.attempt();
+      }
   }
 }

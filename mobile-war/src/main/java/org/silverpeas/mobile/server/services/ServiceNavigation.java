@@ -231,6 +231,7 @@ public class ServiceNavigation extends AbstractRestWebService {
       } else {
         maxNews = settings.getInteger("space.homepage.news.nb", 3);
       }
+
       if ((spaceId == null && getSettings().getBoolean("homepage.lastnews", true)) ||
               (spaceId != null && getSettings().getBoolean("spacehomepage.lastnews", true))) {
         List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId, maxNews);
@@ -460,6 +461,22 @@ public class ServiceNavigation extends AbstractRestWebService {
       return app.isWorkflow();
     } catch (Throwable t) {
       throw new WebApplicationException(t);
+    }
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("space/{spaceId}/")
+  public SpaceDTO getSpace(@PathParam("spaceId") String spaceId) {
+    try {
+      SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+      SpaceDTO dto = new SpaceDTO();
+      dto.setHomePageType(space.getFirstPageType());
+      dto.setHomePageParameter(space.getFirstPageExtraParam());
+      return dto;
+    } catch (AdminException e) {
+      SilverLogger.getLogger(this).error(e);
+      throw new WebApplicationException(e);
     }
   }
 
