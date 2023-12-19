@@ -109,7 +109,9 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
           MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<SpaceDTO>() {
               @Override
               public void attempt() {
-                  ServicesLocator.getServiceNavigation().getSpace(event.getContent().getInstanceId(), this);
+                  String id = event.getContent().getInstanceId();
+                  if (id == null || id.isEmpty()) id = event.getContent().getId();
+                  ServicesLocator.getServiceNavigation().getSpace(id, this);
               }
               @Override
               public void onSuccess(Method method, SpaceDTO space) {

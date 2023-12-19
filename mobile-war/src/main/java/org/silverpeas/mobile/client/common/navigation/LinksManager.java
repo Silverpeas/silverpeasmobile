@@ -44,6 +44,14 @@ public class LinksManager {
 
   private static Boolean iosShowIframe = Boolean.parseBoolean(ResourcesManager.getParam("ios.link.open.in.iframe"));
 
+  public static void navigateToPermalink(String url) {
+    HyperLinkDTO dto = new HyperLinkDTO();
+    dto.setUrl(url);
+    dto.setInternalLink(true);
+    dto.setOpenNewWindow(false);
+    processLink(dto);
+  }
+
   public static void processLink(HyperLinkDTO hyperLinkDTO) {
     String url = hyperLinkDTO.getUrl();
     if(sameContext(url)) {
@@ -98,7 +106,7 @@ public class LinksManager {
       }
 
       ShortCutRouter
-          .route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId, null, null);
+              .route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId, null, null);
       return;
     }
     openExternalLink(url, hyperLinkDTO.getOpenNewWindow(), hyperLinkDTO.getInternalLink());
