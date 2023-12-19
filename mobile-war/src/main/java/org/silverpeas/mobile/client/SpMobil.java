@@ -145,6 +145,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
    * Init. spmobile.
    */
   public void onModuleLoad() {
+    exportNativeFunctions();
     // init connexion supervision
     NetworkHelper.getInstance();
 
@@ -556,4 +557,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   public void onAuthenticationError(final AbstractAuthenticationErrorEvent event) {
     displayLoginPage(((AuthenticationException) event.getException()));
   }
+
+  public static native void exportNativeFunctions()/*-{
+    $wnd.navigateTo = $entry(@org.silverpeas.mobile.client.common.navigation.LinksManager::navigateToPermalink(*));
+  }-*/;
 }

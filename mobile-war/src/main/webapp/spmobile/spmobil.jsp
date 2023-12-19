@@ -144,6 +144,9 @@
       var windowHeight = window.innerHeight;
       document.body.style.height = windowHeight + "px";
     }
+    function navigate(url) {
+      window.navigateTo(url);
+    }
   </script>
 
   <%

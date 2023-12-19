@@ -187,9 +187,13 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     }
     Elements anchors = doc.getElementsByTag("a");
     for (Element a : anchors) {
+      String href = a.attr("href");
       String target = a.attr("target");
       if (!target.equalsIgnoreCase("_blank")) {
-        a.attr("target", "_top");
+        if (href.contains("/silverpeas/") && !href.contains(".jsp")) {
+          a.attr("href", "#");
+          a.attr("onclick", "parent.navigate('" + href + "');");
+        }
       }
     }
 
