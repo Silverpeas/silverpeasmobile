@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.navigation;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
@@ -109,7 +108,9 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
           MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<SpaceDTO>() {
               @Override
               public void attempt() {
-                  ServicesLocator.getServiceNavigation().getSpace(event.getContent().getInstanceId(), this);
+                  String id = event.getContent().getInstanceId();
+                  if (id == null || id.isEmpty()) id = event.getContent().getId();
+                  ServicesLocator.getServiceNavigation().getSpace(id, this);
               }
               @Override
               public void onSuccess(Method method, SpaceDTO space) {
