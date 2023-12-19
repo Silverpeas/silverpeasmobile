@@ -65,7 +65,7 @@ public class UserHelper {
     dto.setId(user.getId());
     dto.setFirstName(user.getFirstName());
     dto.setLastName(user.getLastName());
-    dto.seteMail(user.geteMail());
+    dto.seteMail(user.getEmailAddress());
     dto.setStatus(user.getStatus());
     dto.setAvatar(user.getAvatar());
     dto.setLanguage(user.getUserPreferences().getLanguage());
@@ -97,7 +97,7 @@ public class UserHelper {
     dto.setId(user.getId());
     dto.setFirstName(user.getFirstName());
     dto.setLastName(user.getLastName());
-    dto.seteMail(user.geteMail());
+    dto.seteMail(user.getEmailAddress());
     String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
         getSettings().getString("avatar.size", "24x"));
     dto.setAvatar(avatar);

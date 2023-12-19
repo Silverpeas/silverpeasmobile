@@ -289,7 +289,7 @@ public class ServiceNotifications extends AbstractRestWebService {
     u.setId(userDetail.getId());
     u.setFirstName(userDetail.getFirstName());
     u.setLastName(userDetail.getLastName());
-    u.seteMail(userDetail.geteMail());
+    u.seteMail(userDetail.getEmailAddress());
     String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
             getSettings().getString("avatar.size", "24x"));
     u.setAvatar(avatar);
@@ -432,7 +432,7 @@ public class ServiceNotifications extends AbstractRestWebService {
       }
       metaData.setAnswerAllowed(false);
       metaData.setContent(notificationToSendDTO.getNotification().getMessage());
-      metaData.setSender(getUser().geteMail());
+      metaData.setSender(getUser().getEmailAddress());
 
       ComponentInst app = Administration.get()
           .getComponentInst(notificationToSendDTO.getNotification().getInstanceId());

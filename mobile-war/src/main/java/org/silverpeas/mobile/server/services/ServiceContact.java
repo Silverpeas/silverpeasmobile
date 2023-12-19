@@ -327,7 +327,7 @@ public class ServiceContact extends AbstractRestWebService {
         dto.setId(userFull.getId());
         dto.setFirstName(userFull.getFirstName());
         dto.setLastName(userFull.getLastName());
-        dto.seteMail(userFull.geteMail());
+        dto.seteMail(userFull.getEmailAddress());
         dto.setStatus(userFull.getStatus());
         dto.setAvatar(userFull.getAvatar());
         dto.setLanguage(userFull.getUserPreferences().getLanguage());
