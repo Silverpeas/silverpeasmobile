@@ -35,15 +35,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsSharingEvent;
+import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.documents.pages.SharingPage;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
@@ -52,17 +47,22 @@ import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
-import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 public class Attachment extends Composite {
 
   private static AttachmentUiBinder uiBinder = GWT.create(AttachmentUiBinder.class);
   @UiField
-  Anchor link, share;
+  Anchor link, download;
   @UiField
   SpanElement size, name, description;
   @UiField
   ImageElement icon;
+
+  @UiField
+  HTMLPanel operations;
+
+  @UiField
+  HTML share, view;
 
   protected DocumentsResources ressources = null;
   private DocumentsMessages msg = null;
@@ -94,10 +94,15 @@ public class Attachment extends Composite {
   }
 
   private void render() {
+    operations.getElement().setId("operations");
+    view.getElement().setId("view");
+    share.getElement().setId("share");
+    download.getElement().setId("download");
+
     Image img = null;
     String sizeValue;
     if (!data.isDownloadable()) {
-      link.setStylePrimaryName("not-downloadable");
+      download.setVisible(false);
     }
     if (data.getSize() < 1024 * 1024) {
       sizeValue = String.valueOf(data.getSize() / 1024);
@@ -148,52 +153,27 @@ public class Attachment extends Composite {
       } else {
         url = "#";
       }
-      link.setHref(url);
-      if (MobilUtils.isIOS()) {
-        if (data.isDownloadable()) {
-          link.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent clickEvent) {
-              String u = ((Anchor) clickEvent.getSource()).getHref();
-              if (NetworkHelper.isOnline()) {
-                CacheStorageHelper.store(u);
-              }
-              Window.open(u, "_blank", "fullscreen=yes");
-            }
-          });
-        } else {
-          link.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent clickEvent) {
-              viewDocument();
-            }
-          });
+      download.setHref(url);
+      link.addClickHandler(new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent clickEvent) {
+          toogleOperations();
         }
-      } else {
-        if (data.isDownloadable()) {
-          link.setTarget("_self");
-          link.getElement().setAttribute("download", data.getFileName());
-          link.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent clickEvent) {
-              if (NetworkHelper.isOnline()) {
-                CacheStorageHelper.store(((Anchor) clickEvent.getSource()).getHref());
-              }
-            }
-          });
-        } else {
-          link.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent clickEvent) {
-              viewDocument();
-            }
-          });
-        }
-      }
+      });
     } catch (JavaScriptException e) {
       Notification.alert(e.getMessage());
     }
 
+  }
+
+  private void toogleOperations() {
+    if (operations.getStylePrimaryName().equalsIgnoreCase("ops-closed")) {
+      operations.setStylePrimaryName("ops-open");
+      link.setStylePrimaryName("expand-less");
+    } else {
+      operations.setStylePrimaryName("ops-closed");
+      link.setStylePrimaryName("expand-more");
+    }
   }
 
   private void viewDocument() {
@@ -206,6 +186,35 @@ public class Attachment extends Composite {
     SharingPage page = new SharingPage();
     page.setData("Attachment", data.getSpId(), data.getInstanceId());
     page.show();
+  }
 
+  @UiHandler("download")
+  protected void download(ClickEvent event) {
+    if (MobilUtils.isIOS()) {
+        if (data.isDownloadable()) {
+          String u = link.getHref();
+          if (NetworkHelper.isOnline()) {
+            CacheStorageHelper.store(u);
+          }
+          Window.open(u, "_blank", "fullscreen=yes");
+        } else {
+          viewDocument();
+        }
+      } else {
+        if (data.isDownloadable()) {
+          link.setTarget("_self");
+          link.getElement().setAttribute("download", data.getFileName());
+          if (NetworkHelper.isOnline()) {
+            CacheStorageHelper.store(((Anchor) event.getSource()).getHref());
+          }
+        } else {
+          viewDocument();
+        }
+      }
+  }
+
+  @UiHandler("view")
+  protected void view(ClickEvent event) {
+    viewDocument();
   }
 }

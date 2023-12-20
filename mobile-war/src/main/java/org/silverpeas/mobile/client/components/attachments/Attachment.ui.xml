@@ -26,13 +26,16 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <g:HTMLPanel tag="li">
-    <g:Anchor ui:field="link" styleName="downloadable">
+    <g:Anchor ui:field="link" styleName="expand-more" href="#">
       <img ui:field="icon" src=""/>
       <span ui:field="name"></span><span ui:field="size" class="weight"></span>
       <span ui:field="description"></span>
     </g:Anchor>
-    <g:Anchor ui:field="share" styleName="share">
+    <g:HTMLPanel ui:field="operations" stylePrimaryName="ops-closed">
+      <g:HTML ui:field="share"></g:HTML>
+      <g:Anchor ui:field="download"></g:Anchor>
+      <g:HTML ui:field="view"></g:HTML>
+    </g:HTMLPanel>
 
-    </g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder> 

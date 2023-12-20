@@ -162,7 +162,7 @@ legend, .ui-input-text input, .ui-input-search input {
 /* Icons
 -----------------------------------------------------------------------------------------------------------*/
 .ui-btn-icon-left:after, .ui-btn-icon-right:after, .ui-btn-icon-top:after, .ui-btn-icon-bottom:after, .ui-btn-icon-notext:after {
-  background: transparent url(packImagesNavigation.png) right -963px;
+  background: transparent url('icons/arrow_forward.svg') right;
   content: " ";
 }
 
@@ -1239,38 +1239,78 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   margin-right: 8px;
 }
 
-#attachments li a.downloadable {
-	background: transparent url(download.png) right 1em no-repeat;
+#attachments li a.expand-more {
+	background: transparent url(icons/expand_more.svg) right 1em no-repeat;
 	display: block;
-	margin-right: 1.5em;
+	margin-right: 0.5em;
+}
+
+#attachments li a.expand-less {
+  background: transparent url(icons/expand_less.svg) right 1em no-repeat;
+  display: block;
+  margin-right: 0.5em;
 }
 
 #shares li {
   width: max-content;
-}
-#shares li a.share-link {
-  background: transparent url(download.png) right 1em no-repeat;
-  display: inline-block;
-  width: 10px;
-  height: 24px;
-  margin-right: 1em;
-  margin-left: 1em;
-}
-
-#attachments li a.share {
-  background: transparent url(share.png) right 1em no-repeat;
-  display: block;
-  margin-right: 1.5em;
-  margin-bottom: 1em;
 }
 
 #attachments li a span {
   display: inline-block;
 }
 
-#attachments li a.not-downloadable {
-  background: transparent url(forbidden-download.png) right 10px no-repeat;
-  display: block;
+.ops-open, .ops-open #share, .ops-open #download, .ops-open #view {
+  transition: all .25s ease-in-out;
+  color: transparent;
+  height: 30px;
+  line-height:30px;
+  transform: scaleY(1);
+  margin-bottom:10px;
+}
+
+.ops-closed, .ops-closed #share, .ops-closed #download, .ops-closed #view {
+  transition: all .25s ease-in-out;
+  height: 0px;
+  line-height:0px;
+  transform: scaleY(1);
+  margin-bottom:0px;
+}
+
+li > #operations {
+  padding:0em;
+}
+
+#download {
+  background : transparent url(icons/download.svg) no-repeat;
+  background-position: 50% 50%;
+  background-color:#ececec;
+  width: 30px;
+  height: 30px;
+  border-radius: 0.25em;
+  margin-right: 1.5em;
+  float : right;
+}
+
+#view {
+  background: transparent url(icons/view.svg) no-repeat;
+  background-position: 50% 50%;
+  background-color:#ececec;
+  width: 30px;
+  height: 30px;
+  border-radius: 0.25em;
+  margin-right: 1.5em;
+  float : right;
+}
+
+#share {
+  background: transparent url(icons/share.svg) no-repeat;
+  background-position: 50% 50%;
+  background-color:#ececec;
+  width: 30px;
+  height: 30px;
+  border-radius: 0.25em;
+  margin-right: 1.5em;
+  float : right;
 }
 
 /********** CONTACT *******/
@@ -1923,7 +1963,7 @@ form .forms .fields > li:nth-child(even) {
   text-indent: -3000px;
   top: 1em;
   right: 1em;
-  background: transparent url("qvf.png") 0 0 no-repeat;
+  background: transparent url("qvf.svg") 0 0 no-repeat;
   outline: none;
   z-index: 999;
 }
@@ -2755,3 +2795,4 @@ a.popin-btn {
   left: 1em;
   right: 1em;
 }
+
