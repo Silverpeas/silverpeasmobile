@@ -409,7 +409,11 @@ public class ServiceNotifications extends AbstractRestWebService {
       if (notificationToSendDTO.getNotification().getContentType()
           .equals(NotificationDTO.TYPE_PUBLICATION)) {
         String url = silverpeasServerUrl + "/Publication/" +
-            notificationToSendDTO.getNotification().getContentId();
+                notificationToSendDTO.getNotification().getContentId();
+        metaData.setLink(url);
+      } else if (notificationToSendDTO.getNotification().getContentType().equals(NotificationDTO.TYPE_DOCUMENT)) {
+        String url = silverpeasServerUrl + "/services/media/viewer/embed/pdf?documentId=" +
+                notificationToSendDTO.getNotification().getContentId() + "&documentType=attachment&embedPlayer=true";
         metaData.setLink(url);
       } else if (notificationToSendDTO.getNotification().getContentType()
           .equals(NotificationDTO.TYPE_PHOTO) ||

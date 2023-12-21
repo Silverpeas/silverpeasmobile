@@ -34,6 +34,8 @@ import java.io.Serializable;
 public class NotificationDTO implements Serializable {
 
   public final static String TYPE_PUBLICATION = "Publication";
+
+  public final static String TYPE_DOCUMENT = "Document";
   public final static String TYPE_PHOTO = "Photo";
   public final static String TYPE_VIDEO = "Video";
   public final static String TYPE_SOUND = "Sound";

@@ -74,6 +74,7 @@ public class PublicationPage extends PageContent
   private static PublicationPageUiBinder uiBinder = GWT.create(PublicationPageUiBinder.class);
 
   private PublicationDTO publication;
+  private boolean notifiable;
 
   @UiField
   HeadingElement title;
@@ -162,6 +163,7 @@ public class PublicationPage extends PageContent
   public void onLoadedPublication(PublicationLoadedEvent event) {
     Notification.activityStop();
     this.publication = event.getPublication();
+    this.notifiable = event.isNotifiable();
     display(event.isCommentable(), event.isAbleToStoreContent(), event.getType());
     actionsMenu.addAction(favorite);
     if (event.isNotifiable()) {
@@ -195,6 +197,7 @@ public class PublicationPage extends PageContent
         attachment.setDownloadable(true);
       }
       Attachment a = new Attachment();
+      a.setNotifiable(this.notifiable);
       a.setAttachment(attachment);
       a.setSharing(event.getShare());
       attachments.add(a);
