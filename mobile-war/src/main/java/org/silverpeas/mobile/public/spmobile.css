@@ -1259,7 +1259,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   display: inline-block;
 }
 
-.ops-open, .ops-open #share, .ops-open #download, .ops-open #view {
+.ops-open, .ops-open #share, .ops-open #download, .ops-open #view, .ops-open #notify {
   transition: all .25s ease-in-out;
   color: transparent;
   height: 30px;
@@ -1268,7 +1268,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   margin-bottom:10px;
 }
 
-.ops-closed, .ops-closed #share, .ops-closed #download, .ops-closed #view {
+.ops-closed, .ops-closed #share, .ops-closed #download, .ops-closed #view, .ops-closed #notify {
   transition: all .25s ease-in-out;
   height: 0px;
   line-height:0px;
@@ -1304,6 +1304,17 @@ li > #operations {
 
 #share {
   background: transparent url(icons/share.svg) no-repeat;
+  background-position: 50% 50%;
+  background-color:#ececec;
+  width: 30px;
+  height: 30px;
+  border-radius: 0.25em;
+  margin-right: 1.5em;
+  float : right;
+}
+
+#notify {
+  background: transparent url(icons/send.svg) no-repeat;
   background-position: 50% 50%;
   background-color:#ececec;
   width: 30px;

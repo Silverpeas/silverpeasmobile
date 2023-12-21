@@ -32,6 +32,7 @@
       <span ui:field="description"></span>
     </g:Anchor>
     <g:HTMLPanel ui:field="operations" stylePrimaryName="ops-closed">
+      <g:HTML ui:field="notify"></g:HTML>
       <g:HTML ui:field="share"></g:HTML>
       <g:Anchor ui:field="download"></g:Anchor>
       <g:HTML ui:field="view"></g:HTML>

@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.documents.pages.SharingPage;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
+import org.silverpeas.mobile.client.apps.notifications.NotificationsApp;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
@@ -47,6 +48,7 @@ import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 
 public class Attachment extends Composite {
 
@@ -62,7 +64,7 @@ public class Attachment extends Composite {
   HTMLPanel operations;
 
   @UiField
-  HTML share, view;
+  HTML share, view, notify;
 
   protected DocumentsResources ressources = null;
   private DocumentsMessages msg = null;
@@ -70,6 +72,14 @@ public class Attachment extends Composite {
   private SimpleDocumentDTO data = null;
 
   private int sharing;
+  private boolean notifiable;
+
+  public void setNotifiable(boolean notifiable) {
+    this.notifiable = notifiable;
+    if (!notifiable) {
+      notify.setVisible(false);
+    }
+  }
 
   interface AttachmentUiBinder extends UiBinder<Widget, Attachment> {}
 
@@ -87,7 +97,6 @@ public class Attachment extends Composite {
       share.setVisible(false);
     }
   }
-
   public void setAttachment(SimpleDocumentDTO data) {
     this.data = data;
     render();
@@ -98,6 +107,7 @@ public class Attachment extends Composite {
     view.getElement().setId("view");
     share.getElement().setId("share");
     download.getElement().setId("download");
+    notify.getElement().setId("notify");
 
     Image img = null;
     String sizeValue;
@@ -216,5 +226,11 @@ public class Attachment extends Composite {
   @UiHandler("view")
   protected void view(ClickEvent event) {
     viewDocument();
+  }
+
+  @UiHandler("notify")
+  protected void notify(ClickEvent event) {
+    NotificationsApp app = new NotificationsApp(data.getInstanceId(), data.getId(), NotificationDTO.TYPE_DOCUMENT, data.getFileName(), data.getFileName());
+    app.start();
   }
 }
