@@ -475,7 +475,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #header h1 {
   color: #fff;
-  font-size: 0.8em;
+  font-size: 1em;
   font-weight: normal;
   left: 60px;
   line-height: 44px;
@@ -703,13 +703,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 #silverpeas-navmenu-panel #user .edit-my-statut {
   display: inline-block;
   text-indent: -3000px;
-  background: transparent url(packPictos.png) 4px 0 no-repeat;
-  width: 20px;
+  background: transparent url('icons/edit.svg') no-repeat;
+  width: 18px;
+  height: 18px;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel {
   border-top: 1px solid #d3d3d3;
-  border-bottom: 1px solid #d3d3d3;
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -724,49 +724,50 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   text-decoration: none;
   color: #333333;
   display: block;
-  padding: 0.5em 0 0.5em 32px;
-  font-size: 0.9em;
+  padding: 0.25em 0 0.5em 32px;
+  font-size: 1.25em;
   line-height: 1.6em;
+  margin-left: 0.5em;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-config a {
-  background: transparent url(packPictos.png) 8px -520px no-repeat;
+  background: transparent url('icons/settings.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-tasks a {
-  background: transparent url(packPictos.png) 8px -394px no-repeat;
+  background: transparent url('icons/tasks.svg') 8px -394px no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-help a {
-  background: transparent url(packPictos.png) 8px -134px no-repeat;
+  background: transparent url('icons/help.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-notificationsbox a {
-  background: transparent url(packPictos.png) 8px -515px no-repeat;
+  background: transparent url('icons/inbox.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-sharesbox a {
-  background: transparent url(packPictos.png) 8px -539px no-repeat;
+  background: transparent url('icons/share.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-parameter a {
-  background: transparent url(packPictos.png) 8px -98px no-repeat;
+  background: transparent url('icons/settings.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-home a {
-  background: transparent url(packPictos.png) 8px -25px no-repeat;
+  background: transparent url('icons/home.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-logout a {
-  background: transparent url(packPictos.png) 8px -63px no-repeat;
+  background: transparent url('icons/logout.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-tchat a {
-  background: transparent url(packPictos.png) 8px -276px no-repeat;
+  background: transparent url('icons/chat.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-usercalendar a {
-  background: transparent url(packImagesNavigation.png) -20px -2171px no-repeat;
+  background: transparent url('icons/calendar.svg') no-repeat;
 }
 
 #menu-principal li a strong {
@@ -1959,7 +1960,7 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .content > .ui-listview.ui-listview-inset {
-  padding-top: 3em;
+  padding-top: 3.25em;
 }
 
 .content-navigation {
