@@ -42,6 +42,7 @@ import org.silverpeas.mobile.client.apps.media.pages.widgets.MediaItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.LoadingItem;
@@ -49,6 +50,7 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
 import org.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
 import org.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
+import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.RightDTO;
@@ -69,6 +71,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   private RightDTO rights;
   private AlbumDTO root;
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private ShareButton share = new ShareButton();
 
   interface MediaNavigationPageUiBinder extends UiBinder<Widget, MediaNavigationPage> {
   }
@@ -100,10 +103,13 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
       list.add(endline);
 
       actionsMenu.addAction(favorite);
+      actionsMenu.addAction(share);
       if (root.getId() == null) {
         favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
+        share.init(root.getName(), root.getName(), LinksManager.createApplicationPermalink(instanceId));
       } else {
         favorite.init(instanceId, root.getId(), ContentsTypes.Album.name(), root.getName());
+        share.init(root.getName(), root.getName(),LinksManager.createAlbumPermalink(instanceId, root.getId()));
       }
     }
     Notification.activityStop();

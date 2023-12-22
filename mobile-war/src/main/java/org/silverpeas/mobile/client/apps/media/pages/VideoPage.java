@@ -59,6 +59,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Html5Utils;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
@@ -66,6 +67,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -92,6 +94,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   @UiField ActionsMenu actionsMenu;
 
   private NotifyButton notification = new NotifyButton();
+  private ShareButton share = new ShareButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   private static VideoPageUiBinder uiBinder = GWT.create(VideoPageUiBinder.class);
@@ -173,6 +176,8 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
         notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_VIDEO, video.getName(), getPageTitle());
         actionsMenu.addAction(notification);
       }
+      share.init(video.getTitle(),video.getTitle(), LinksManager.createMediaPermalink(video.getId()));
+      actionsMenu.addAction(share);
     }
   }
 

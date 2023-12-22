@@ -194,4 +194,7 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Mes partages")
   String shares();
+
+  @DefaultMessage("Partager")
+  String share();
 }

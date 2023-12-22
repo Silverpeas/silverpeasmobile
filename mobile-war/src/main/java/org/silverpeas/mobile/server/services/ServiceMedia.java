@@ -174,38 +174,6 @@ public class ServiceMedia extends AbstractRestWebService {
     return newMedia.getId();
   }
 
-
-  /**
-   * Retourne la listes des galleries accessibles.
-   */
-  @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("allGalleries")
-  public List<ApplicationInstanceDTO> getAllGalleries(){
-
-    ArrayList<ApplicationInstanceDTO> results = new ArrayList<ApplicationInstanceDTO>();
-    try {
-      String [] rootSpaceIds = Administration.get().getAllRootSpaceIds();
-      for (String rootSpaceId : rootSpaceIds) {
-        String [] componentIds = Administration.get().getAvailCompoIds(rootSpaceId);
-        for (String componentId : componentIds) {
-          ComponentInstLight instance = Administration.get().getComponentInstLight(componentId);
-          if (instance.getName().equals("gallery")) {
-            ApplicationInstanceDTO i = new ApplicationInstanceDTO();
-            i.setId(instance.getId());
-            i.setLabel(instance.getLabel());
-            results.add(i);
-          }
-        }
-      }
-    } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getAllGalleries", "root.EX_NO_MESSAGE", e);
-    }
-
-    Collections.sort(results);
-    return results;
-  }
-
   /**
    * Retourne la liste des albums d'une appli media.
    */
@@ -296,7 +264,7 @@ public class ServiceMedia extends AbstractRestWebService {
   @GET
   @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("media/{id}")
-  public MediaDTO getMedia(@PathParam("id") String id) {
+  public MediaDTO getMedia(@PathParam("appId") String instanceId, @PathParam("id") String id) {
     MediaDTO dto = null;
     try {
       Media media = getGalleryService().getMedia(new MediaPK(id));

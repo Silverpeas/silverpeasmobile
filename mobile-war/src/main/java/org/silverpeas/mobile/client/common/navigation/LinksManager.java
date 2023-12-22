@@ -52,6 +52,17 @@ public class LinksManager {
     processLink(dto);
   }
 
+  public static String createApplicationPermalink(String instanceId) {
+    return "/silverpeas/Component/" + instanceId;
+  }
+
+  public static String createAlbumPermalink(String instanceId, String id) {
+    return "/silverpeas/Topic/"+id+"?ComponentId=" + instanceId;
+  }
+
+  public static String createMediaPermalink(String id) {
+    return "/silverpeas/Media/"+id;
+  }
   public static void processLink(HyperLinkDTO hyperLinkDTO) {
     String url = hyperLinkDTO.getUrl();
     if(sameContext(url)) {
