@@ -167,4 +167,22 @@ public class Html5Utils {
   public static void onSpeechError() {
     EventBus.getInstance().fireEvent(new SpeechErrorEvent());
   }
+
+  public static native boolean canShare(String title, String text, String url) /*-{
+    var shareData = {
+      title: title,
+      text: text,
+      url: url
+    };
+    return $wnd.navigator.canShare(shareData);
+  }-*/;
+
+  public static native void share(String title, String text, String url) /*-{
+    var shareData = {
+      title: title,
+      text: text,
+      url: url
+    };
+    $wnd.navigator.share(shareData);
+  }-*/;
 }

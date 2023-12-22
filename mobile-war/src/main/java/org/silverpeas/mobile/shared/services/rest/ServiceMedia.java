@@ -49,25 +49,13 @@ import java.util.List;
 public interface ServiceMedia extends RestService {
 
   @GET
-  @Path("{appId}/question/all")
-  public void getAllQuestions(@PathParam("appId") String appId,
-      MethodCallback<List<QuestionDTO>> callback);
-
-
-
-  @GET
   @Path("add/{name}/{data}/{idGallery}/{idAlbum}")
   public void uploadPicture(@PathParam("name") String name, @PathParam("data") String data, @PathParam("idGallery") String idGallery, @PathParam("idAlbum") String idAlbum, MethodCallback<Void> callback);
 
   @GET
   @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("allGalleries")
-  public void getAllGalleries(MethodCallback<List<ApplicationInstanceDTO>> callback);
-
-  @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("media/{id}")
-  public void getMedia(@PathParam("id") String id, MethodCallback<MediaDTO> callback);
+  @Path("{appId}/media/{id}")
+  public void getMedia(@PathParam("appId") String instanceId, @PathParam("id") String id, MethodCallback<MediaDTO> callback);
 
   @GET
   @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)

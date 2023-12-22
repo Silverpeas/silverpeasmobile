@@ -756,6 +756,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-home a {
   background: transparent url('icons/home.svg') no-repeat;
+
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-logout a {
@@ -817,8 +818,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .ui-listview > li.add-media a::after,
 .ui-listview > li.add-task a::after {
-  background-position: right -599px;
-  width: 3em;
+  background: transparent url('icons/add.svg') no-repeat;
 }
 
 .publication.ui-input-text {

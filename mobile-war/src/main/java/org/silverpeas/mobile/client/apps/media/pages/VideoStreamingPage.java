@@ -51,12 +51,14 @@ import org.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.View;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -85,6 +87,7 @@ public class VideoStreamingPage extends PageContent
   ActionsMenu actionsMenu;
 
   private NotifyButton notification = new NotifyButton();
+  private ShareButton share = new ShareButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private static VideoStreamingPageUiBinder uiBinder = GWT.create(VideoStreamingPageUiBinder.class);
   private VideoStreamingDTO video;
@@ -135,6 +138,8 @@ public class VideoStreamingPage extends PageContent
         notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_STREAMING, video.getName(), getPageTitle());
         actionsMenu.addAction(notification);
       }
+      share.init(video.getTitle(),video.getTitle(), LinksManager.createMediaPermalink(video.getId()));
+      actionsMenu.addAction(share);
     }
   }
 

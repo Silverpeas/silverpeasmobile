@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.apps.media;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.media.events.app.AbstractMediaAppEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaAppEventHandler;
@@ -96,35 +97,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   @Override
   public void startWithContent(final ContentDTO content) {
-
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceNavigation()
-            .getApp(content.getInstanceId(), content.getId(), content.getType(), this);
-      }
-
-      @Override
-      public void onFailure(final Method method, final Throwable t) {
-        super.onFailure(method, t);
-        if (NetworkHelper.needToGoOffine(t)) {
-          Notification.alert(globalMsg.needToBeOnline());
-        } else {
-          EventBus.getInstance().fireEvent(new ErrorEvent(t));
-        }
-      }
-
-      @Override
-      public void onSuccess(final Method method,
-            final ApplicationInstanceDTO app) {
-        super.onSuccess(method, app);
-        commentable = app.getCommentable();
-        notifiable = app.getNotifiable();
-        displayContent(content);
-      }
-    };
-    action.attempt();
+    displayContent(content);
   }
 
   private void displayContent(ContentDTO contentSource) {
@@ -133,13 +106,39 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
       @Override
       public void attempt() {
-        ServicesLocator.getServiceMedia().getMedia(contentSource.getId(), this);
+        ServicesLocator.getServiceMedia().getMedia(contentSource.getInstanceId(), contentSource.getId(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final MediaDTO media) {
         super.onSuccess(method, media);
-        displayContent(media);
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceNavigation()
+                    .getApp(media.getInstance(), media.getId(), contentSource.getType(), this);
+          }
+          @Override
+          public void onFailure(final Method method, final Throwable t) {
+            super.onFailure(method, t);
+            if (NetworkHelper.needToGoOffine(t)) {
+              Notification.alert(globalMsg.needToBeOnline());
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(t));
+            }
+          }
+
+          @Override
+          public void onSuccess(final Method method,
+                                final ApplicationInstanceDTO app) {
+            super.onSuccess(method, app);
+            commentable = app.getCommentable();
+            notifiable = app.getNotifiable();
+            displayContent(media);
+          }
+        };
+        action.attempt();
       }
     };
     action.attempt();
@@ -243,8 +242,8 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         event.getContent().getType().equals(ContentsTypes.Video.name()) ||
         event.getContent().getType().equals(ContentsTypes.Streaming.name())) {
       startWithContent(event.getContent());
-    } else if (event.getContent().getType().equals(ContentsTypes.Album.name())) {
-
+    } else if (event.getContent().getType().equals(ContentsTypes.Album.name()) ||
+            event.getContent().getType().equals(ContentsTypes.Folder.name())) {
       MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
         @Override
         public void attempt() {
@@ -268,6 +267,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           page.show();
         }
       };
+      action.attempt();
     }
   }
 

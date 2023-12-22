@@ -212,12 +212,16 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         event.getContent().getType().equals(ContentsTypes.News.name()) ||
         event.getContent().getType().equals(ContentsTypes.Attachment.name()) ||
         event.getContent().getType().equals(ContentsTypes.Folder.name())) {
-      loadAppInstance(event.getContent(), new Command() {
-        @Override
-        public void execute() {
-          startWithContent(event.getContent());
-        }
-      });
+
+      if (event.getContent().getInstanceId().startsWith("kmelia") ||
+              event.getContent().getInstanceId().startsWith("quickinfo")) {
+        loadAppInstance(event.getContent(), new Command() {
+          @Override
+          public void execute() {
+            startWithContent(event.getContent());
+          }
+        });
+      }
     }
   }
 

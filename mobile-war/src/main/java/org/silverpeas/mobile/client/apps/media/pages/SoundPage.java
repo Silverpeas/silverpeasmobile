@@ -56,6 +56,7 @@ import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButto
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
@@ -63,6 +64,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
@@ -89,6 +91,7 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
   @UiField ActionsMenu actionsMenu;
 
   private NotifyButton notification = new NotifyButton();
+  private ShareButton share = new ShareButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private static SoundPageUiBinder uiBinder = GWT.create(SoundPageUiBinder.class);
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
@@ -154,6 +157,8 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
         notification.init(sound.getInstance(), sound.getId(), NotificationDTO.TYPE_SOUND, sound.getName(), getPageTitle());
         actionsMenu.addAction(notification);
       }
+      share.init(sound.getTitle(),sound.getTitle(), LinksManager.createMediaPermalink(sound.getId()));
+      actionsMenu.addAction(share);
     }
   }
 

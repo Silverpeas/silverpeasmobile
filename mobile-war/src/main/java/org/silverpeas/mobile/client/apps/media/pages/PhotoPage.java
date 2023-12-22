@@ -63,6 +63,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.media.PhotoDTO;
@@ -89,6 +90,8 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
 
   private NotifyButton notification = new NotifyButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
+
+  private ShareButton share = new ShareButton();
 
   private static PhotoPageUiBinder uiBinder = GWT.create(PhotoPageUiBinder.class);
   private PhotoDTO photo;
@@ -172,6 +175,8 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
         notification.init(photo.getInstance(), photo.getId(), NotificationDTO.TYPE_PHOTO, photo.getName(), getPageTitle());
         actionsMenu.addAction(notification);
       }
+      share.init(photo.getTitle(),photo.getTitle(),"/silverpeas/Media/"+photo.getId());
+      actionsMenu.addAction(share);
     }
   }
 
