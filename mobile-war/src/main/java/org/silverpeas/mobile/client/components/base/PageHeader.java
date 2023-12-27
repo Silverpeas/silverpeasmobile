@@ -85,11 +85,11 @@ public class PageHeader extends Composite {
   }
 
   public void showOfflineIndicator() {
-    menu.addStyleName(ressources.css().offline());
+    header.addStyleName(ressources.css().offline());
   }
 
   public void hideOfflineIndicator() {
-    menu.removeStyleName(ressources.css().offline());
+    header.removeStyleName(ressources.css().offline());
   }
 
   public void setVisibleBackButton(boolean visible) {
