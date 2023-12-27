@@ -40,9 +40,11 @@ import org.silverpeas.mobile.client.apps.blog.pages.widgets.BlogItem;
 import org.silverpeas.mobile.client.apps.blog.resources.BlogMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 
@@ -67,6 +69,7 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
   ListBox categories;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private ShareButton share = new ShareButton();
   private String instanceId;
 
   interface BlogPageUiBinder extends UiBinder<Widget, BlogPage> {
@@ -131,6 +134,8 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
 
     actionsMenu.addAction(favorite);
     favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), getPageTitle());
+    actionsMenu.addAction(share);
+    share.init(getPageTitle(), getPageTitle(), LinksManager.createApplicationPermalink(instanceId));
   }
 
   @UiHandler("categories")
