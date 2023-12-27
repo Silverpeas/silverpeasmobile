@@ -160,7 +160,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   @UiHandler("home")
   protected void goHome(ClickEvent event) {
     goHome();
-    closeMenu();
+    SpMobil.getMainPage().closeMenu();
   }
 
   static void goHome() {
@@ -178,7 +178,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     ContentDTO content = new ContentDTO();
     content.setType(ContentsTypes.SharesBox.toString());
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
-    closeMenu();
+    SpMobil.getMainPage().closeMenu();
   }
 
   @UiHandler("notifications")
@@ -186,31 +186,31 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     ContentDTO content = new ContentDTO();
     content.setType(ContentsTypes.NotificationsBox.toString());
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
-    closeMenu();
+    SpMobil.getMainPage().closeMenu();
   }
 
   @UiHandler("help")
   protected void goHelp(ClickEvent event) {
-    closeMenu();
+    SpMobil.getMainPage().closeMenu();
   }
 
   @UiHandler("config")
   protected void goConfig(ClickEvent event) {
     App app = new ConfigApp();
     app.start();
-    closeMenu();
+    SpMobil.getMainPage().closeMenu();
   }
 
   @UiHandler("updateStatus")
   protected void updateStatus(ClickEvent event) {
     App app = new ProfileApp();
     app.start();
-    closeMenu();
+    SpMobil.getMainPage().closeMenu();
   }
 
   @UiHandler("disconnect")
   protected void disconnect(ClickEvent event) {
-    closeMenu();
+    SpMobil.getMainPage().closeMenu();
     AuthentificationManager.getInstance().logout();
   }
 
@@ -220,7 +220,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     app.setId("userCalendar" + SpMobil.getUser().getId() + "_PCI");
     app.setType(Apps.userCalendar.name());
     EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(app));
-    closeMenu();
+    SpMobil.getMainPage().closeMenu();
   }
 
   public void setUser(DetailUserDTO currentUser) {

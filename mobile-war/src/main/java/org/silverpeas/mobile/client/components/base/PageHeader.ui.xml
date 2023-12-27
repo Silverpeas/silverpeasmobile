@@ -28,7 +28,14 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.resources.ApplicationMessages'/>
 
   <g:HTMLPanel ui:field="header">
-    <g:Anchor ui:field="menu" styleName="ui-icon-bars"></g:Anchor>
+    <div class="box">
+      <g:HTML ui:field="menu" stylePrimaryName="not-active">
+        <span></span>
+        <span></span>
+        <span></span>
+      </g:HTML>
+    </div>
+
     <h1 ui:field="title" class="ui-title">Silverpeas</h1>
     <g:Anchor ui:field="back" styleName="ui-btn-right ui-btn-corner-all ui-btn ui-icon-grid ui-shadow back" text="{msg.back}"/>
   </g:HTMLPanel>

@@ -83,6 +83,7 @@ public class Page extends Composite implements Window.ScrollHandler {
 
   public void closeMenu() {
     menu.closeMenu();
+    header.closeMenuButton();
   }
 
   public void setUser(DetailUserDTO user) {
