@@ -77,6 +77,7 @@ public class BlogItem extends Composite implements ClickHandler {
     ContentDTO content = new ContentDTO();
     content.setId(data.getId());
     content.setType(ContentsTypes.Publication.toString());
+    content.setInstanceId(data.getInstanceId());
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
   }
 }
