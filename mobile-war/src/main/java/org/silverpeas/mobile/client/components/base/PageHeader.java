@@ -30,10 +30,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
@@ -48,8 +45,9 @@ public class PageHeader extends Composite {
   }
 
   @UiField protected HTMLPanel header;
-  @UiField protected Anchor menu, back;
+  @UiField protected Anchor back;
   @UiField protected HeadingElement title;
+  @UiField protected HTML menu;
   @UiField(provided = true) protected ApplicationMessages msg = null;
   protected ApplicationResources ressources = null;
 
@@ -60,19 +58,30 @@ public class PageHeader extends Composite {
     header.getElement().setId("header");
     menu.getElement().setId("menu");
     ressources.css().ensureInjected();
-
     title.setInnerText(ResourcesManager.getLabel("mainpage.title"));
   }
 
-
   @UiHandler("menu")
   void onMenu(ClickEvent event) {
+    toogleMenuButton();
     SpMobil.getMainPage().toogleMenu();
   }
 
   @UiHandler("back")
   void onBack(ClickEvent event) {
     PageHistory.getInstance().back();
+  }
+
+  public void toogleMenuButton() {
+    if (menu.getStylePrimaryName().equals("active")) {
+      closeMenuButton();
+    } else {
+      menu.setStylePrimaryName("active");
+    }
+  }
+
+  public void closeMenuButton() {
+    menu.setStylePrimaryName("not-active");
   }
 
   public void showOfflineIndicator() {
