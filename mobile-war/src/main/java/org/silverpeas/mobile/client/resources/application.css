@@ -27,4 +27,6 @@
 	overflow: inherit;
 	height: inherit;
 	width: inherit;
+	background-position-x: -5px;
+	background-position-y: -5px;
 }
