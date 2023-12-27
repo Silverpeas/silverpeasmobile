@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.blog;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.blog.events.app.AbstractBlogAppEvent;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogAppEventHandler;
@@ -98,8 +99,6 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.blog.name())) {
-      super.showContent(event);
-    }
+    // Managed by Document app
   }
 }
