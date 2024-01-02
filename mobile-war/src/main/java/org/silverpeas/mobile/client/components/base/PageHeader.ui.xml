@@ -37,6 +37,6 @@
     </div>
 
     <h1 ui:field="title" class="ui-title">Silverpeas</h1>
-    <g:Anchor ui:field="back" styleName="ui-btn-right ui-btn-corner-all ui-btn ui-icon-grid ui-shadow back" text="{msg.back}"/>
+    <g:Anchor ui:field="back" styleName="ui-btn-right ui-btn-corner-all ui-btn ui-icon-grid back" text=""/>
   </g:HTMLPanel>
 </ui:UiBinder> 

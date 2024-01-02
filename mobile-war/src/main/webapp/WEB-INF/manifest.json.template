@@ -1,12 +1,14 @@
 {
   "name": "Silverpeas Mobile",
   "short_name": "SpMobile",
+  "id": "spmobile",
   "background_color": "#FFFFFF",
   "description": "Version mobile de Silverpeas",
   "orientation": "portrait-primary",
   "scope": "/silverpeas/spmobile/",
   "start_url": "/silverpeas/spmobile/spmobil.jsp",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "theme_color": "#00FF00",
   "icons": [
     {

@@ -490,14 +490,12 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .ui-btn-right.back {
-  background: #4c4c4c url(bg-degrade.png) bottom center repeat-x;
-  color: #FFF;
-  text-shadow: 0 1px 0 #000;
-  border: 1px solid #000;
-  height: 28px;
-  line-height: 28px;
-  padding: 0 1em;
-  font-size: 0.8em;
+  background: url('icons/arrow_back.svg') no-repeat;
+  border: none;
+  height: 44px;
+  width: 36px;
+  margin: 4px 0 0 0;
+  padding: 0 0 0 0;
 }
 
 /* HOME */
