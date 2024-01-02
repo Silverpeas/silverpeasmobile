@@ -43,10 +43,15 @@ import org.silverpeas.mobile.client.resources.ApplicationMessages;
 public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
 
   private static ApplicationMessages msg = GWT.create(ApplicationMessages.class);
+  private boolean relogin = true;
 
   public void attempt() {
     Notification.activityStart();
     NetworkHelper.updateConnexionIndicator();
+  }
+
+  public void setRelogin(boolean relogin) {
+    this.relogin = relogin;
   }
 
   @Override
@@ -57,12 +62,14 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
       if (SpMobil.isSSO()) {
         Window.Location.assign(ResourcesManager.getSSOPath());
       } else {
-        SpMobil.getInstance().loadIds(new Command() {
-          @Override
-          public void execute() {
-            attempt();
-          }
-        });
+        if (relogin) {
+          SpMobil.getInstance().loadIds(new Command() {
+            @Override
+            public void execute() {
+              attempt();
+            }
+          });
+        }
       }
     } else if (method.getResponse().getStatusCode() == 404) {
       new Popin(msg.notfoundError()).show();

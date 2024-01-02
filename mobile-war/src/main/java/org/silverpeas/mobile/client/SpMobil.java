@@ -280,6 +280,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     getMainPage().setUser(user);
     RootPanel.get().clear();
     RootPanel.get().add(getMainPage());
+    PageHistory.getInstance().clear();
     PageHistory.getInstance().goTo(new HomePage());
 
     if ((shortcutAppId != null && shortcutContentType != null && shortcutContentId != null) ||
@@ -394,6 +395,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           tryToRelogin(attempt);
         }
       };
+      action.setRelogin(false);
       action.attempt();
     } else {
       //Login
