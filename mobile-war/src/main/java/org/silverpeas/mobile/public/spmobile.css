@@ -449,28 +449,29 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   top: auto;
   flex: 1;
   text-indent: -300em;
-  border-left: 1px solid #151515;
-  border-right: 1px solid #444444;
+  transform: scale(1.5);
 }
 
 #navigation-footer .btn-list-navigation {
-  background: transparent url(packImagesNavigation.png) center -640px no-repeat;
+  background: transparent url('icons/home_shortcut.svg') center no-repeat;
 }
 
 #navigation-footer .btn-find-contact {
-  background: transparent url(packImagesNavigation.png) center -709px no-repeat;
+  background: transparent url('icons/contacts_shortcut.svg') center no-repeat;
+    transform: scale(1.2);
 }
 
 #navigation-footer .btn-update-tchat {
-  background: transparent url(packImagesNavigation.png) center -771px no-repeat;
+  background: transparent url('icons/chat_shortcut.svg') center no-repeat;
+    transform: scale(1.2);
 }
 
 #navigation-footer .btn-list-task {
-  background: transparent url(packImagesNavigation.png) center -835px no-repeat;
+  background: transparent url('icons/tasks_shortcut.svg') center no-repeat;
 }
 
 #navigation-footer .btn-list-favoris {
-  background: transparent url(packImagesNavigation.png) center -892px no-repeat;
+  background: transparent url('icons/favorites_shortcut.svg') center no-repeat;
 }
 
 #header h1 {
