@@ -1986,6 +1986,14 @@ form .forms .fields > li:nth-child(even) {
   padding: 1em;
 }
 
+#actions {
+  position: absolute;
+  top: -44px;
+  right: 0.5em;
+  filter: invert(1);
+  z-index: 9999;
+}
+
 #action-button {
   border: 0;
   position: absolute;
