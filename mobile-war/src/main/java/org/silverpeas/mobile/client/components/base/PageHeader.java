@@ -93,6 +93,8 @@ public class PageHeader extends Composite {
   }
 
   public void setVisibleBackButton(boolean visible) {
+    // hide menu if not home page
+    menu.setVisible(!visible);
     // remove active state
     header.remove(back);
     header.add(back);
