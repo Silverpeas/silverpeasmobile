@@ -476,7 +476,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #header h1 {
   color: #fff;
-  font-size: 1em;
+  font-size: 1.1em;
   font-weight: normal;
   left: 60px;
   line-height: 44px;
@@ -487,7 +487,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   right: 94px;
   top: 1px;
   height: 44px;
-  text-shadow: 0 1px 0 #000;
 }
 
 .ui-btn-right.back {
@@ -1565,6 +1564,7 @@ textarea.ui-input-text {
 .ui-controlgroup-horizontal .ui-controlgroup-controls {
   display: inline-block;
   vertical-align: middle;
+  margin-top:0.5em;
 }
 
 .ui-controlgroup-controls, .ui-controlgroup-controls .ui-radio, .ui-controlgroup-controls .ui-checkbox, .ui-controlgroup-controls .ui-select, .ui-controlgroup-controls li {
@@ -1934,7 +1934,7 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .content > .ui-listview.ui-listview-inset {
-  padding-top: 3.25em;
+  padding-top: 3em;
 }
 
 .content-navigation {
