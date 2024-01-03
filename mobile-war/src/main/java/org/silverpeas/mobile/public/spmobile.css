@@ -494,8 +494,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border: none;
   height: 44px;
   width: 36px;
-  margin: 4px 0 0 0;
+  margin: 3px 0 0 0;
   padding: 0 0 0 0;
+  left:0;
 }
 
 /* HOME */
@@ -1219,11 +1220,19 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #ec9c01;
   display: block;
   text-align: right;
+  background: url("icons/send.svg") no-repeat right;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  margin-right: 15px ;
 }
 
 #add-comment .btn-publicate.inactif {
   color: #999;
   text-decoration: none;
+  filter: opacity(0.5);
 }
 
 #attachments li a {

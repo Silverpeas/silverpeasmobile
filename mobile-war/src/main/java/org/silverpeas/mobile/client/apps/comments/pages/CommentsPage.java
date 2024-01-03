@@ -78,7 +78,6 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractCommentsPagesEvent.TYPE, this);
     container.getElement().setId("publication");
-    addCommentTitle.setInnerHTML(msg.addComment());
   }
 
   public void setContentInfos(final String contentId, final String instanceId, final String contentType) {
