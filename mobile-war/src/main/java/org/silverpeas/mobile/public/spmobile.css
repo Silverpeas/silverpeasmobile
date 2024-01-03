@@ -773,7 +773,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-image: url(packImagesNavigation.png);
   background-position: 0.5625em 0.5625em;
   background-repeat: no-repeat;
-  padding-left: 2.056em
+  padding-left: 2.5em
 }
 
 .add-media,
@@ -799,71 +799,105 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .app-formsOnline a {
-  background-position: 0.65em -2208px;
+  background: transparent url('icons/apps/form.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-almanach a {
-  background-position: -20px -2167px;
+  background: transparent url('icons/apps/calendar.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-link a {
-  background-position: 0.65em -1684px;
+  background: transparent url('icons/apps/link.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-actuality a {
-  background-position: 0.5em -1026px;
+  background: transparent url('icons/apps/news.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .folder-ged a {
-  background-position: 0.5em 0.5em;
+  background: transparent url('icons/apps/folder.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-pageWeb a {
-  background-position: 0.7em -1395px;
+  background: transparent url('icons/apps/webpage.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-blog a {
-  background-position: 0.65em -1509px;
+  background: transparent url('icons/apps/blog.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-classifieds a {
-  background-position: 0.65em -2240px;
+  background: transparent url('icons/apps/classifieds.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-survey a {
-  background-position: 0.65em -2270px;
+  background: transparent url('icons/apps/quiz.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-polling a {
-  background-position: 0.65em -2330px;
+  background: transparent url('icons/apps/poll.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-faq a {
-  background-position: 0.65em -2300px;
+  background: transparent url('icons/apps/faq.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-workflow a {
-  background-position: 0.65em -1595px;
+  background: transparent url('icons/apps/workflow.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .app-resourcesManager a {
-  background-position: 0.65em -2360px;
+  background: transparent url('icons/apps/book_online.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .folder-galery a {
-  background-position: 0.5em -95px;
+  background: transparent url('icons/apps/media_library.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .publication a {
-  background-position: 0.5em -190px;
+  background: transparent url('icons/publication.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .trash a {
-  background-position: 0.5em -495px;
+  background: transparent url('icons/trash.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .media a {
-  background-position: 0.5em -287px;
+  background: transparent url('icons/media.svg') no-repeat;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 .media-thumb:first-child {
@@ -981,7 +1015,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .comments .publiName, .comments .mediaName {
   margin-right: 1em;
-  background: transparent url(packImagesNavigation.png) right -400px no-repeat;
+  background: transparent url('icons/comment.svg') no-repeat right;
 }
 
 .cadrePhoto {
@@ -1056,8 +1090,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border: 0 none;
   margin: 0;
   text-align: left;
-  background: #fff url(packImagesNavigation.png) 0.5625em -390px no-repeat;
-  padding-left: 2.5625em;
+  background: url('icons/comment.svg') no-repeat;
+  padding-left: 3em;
+  background-position-y: center;
+  background-position-x: 0.5em;
 }
 
 #info-event, .elts-pub {
