@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.components.base;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -45,7 +46,6 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 public class Page extends Composite implements Window.ScrollHandler {
 
   private static PageUiBinder uiBinder = GWT.create(PageUiBinder.class);
-
   interface PageUiBinder extends UiBinder<Widget, Page> {
   }
 
@@ -64,7 +64,31 @@ public class Page extends Composite implements Window.ScrollHandler {
     container.getElement().setId("home");
   }
 
-  public void setContent(PageContent content) {
+  public DivElement getContentContainer() {
+    return contentContainer;
+  }
+
+  public void setContent(PageContent content, boolean newContent) {
+    if (this.content != null && this.content.hashCode() == content.hashCode()) return;
+    String transitionClass;
+    if (newContent) {
+      transitionClass = "opening-page";
+    } else {
+      transitionClass = "closing-page";
+    }
+
+    getContentContainer().addClassName(transitionClass);
+    Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+      @Override
+      public boolean execute() {
+        displayContent(content);
+        getContentContainer().removeClassName(transitionClass);
+        return false;
+      }
+    }, 300);
+  }
+
+  private void displayContent(PageContent content) {
     this.content = content;
     contentPlace.setWidget(content);
     header.setPageTitle(content.getPageTitle());

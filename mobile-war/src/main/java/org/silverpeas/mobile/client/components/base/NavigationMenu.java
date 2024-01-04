@@ -25,7 +25,9 @@
 package org.silverpeas.mobile.client.components.base;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -128,8 +130,10 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   public void toogleMenu() {
     if (container.getStyleName().contains("ui-panel-close")) {
+      container.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
       container.removeStyleName("ui-panel-close");
       container.addStyleName("ui-panel-open");
+
     } else {
       closeMenu();
     }
@@ -138,6 +142,14 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   public void closeMenu() {
     container.removeStyleName("ui-panel-open");
     container.addStyleName("ui-panel-close");
+    Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+      @Override
+      public boolean execute() {
+        container.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        return false;
+      }
+    }, 400);
+
   }
 
   public void resetSearchField() {
