@@ -318,13 +318,13 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   public static void displayTermsOfServicePage() {
     RootPanel.get().clear();
     RootPanel.get().add(getMainPage());
-    SpMobil.getMainPage().setContent(new TermsOfServicePage());
+    SpMobil.getMainPage().setContent(new TermsOfServicePage(), true);
   }
 
   public static void displayCookiesPage() {
     RootPanel.get().clear();
     RootPanel.get().add(getMainPage());
-    SpMobil.getMainPage().setContent(new CookiesPage());
+    SpMobil.getMainPage().setContent(new CookiesPage(), true);
   }
 
   /**

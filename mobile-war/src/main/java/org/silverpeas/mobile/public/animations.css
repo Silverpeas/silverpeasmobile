@@ -1,0 +1,9 @@
+.closing-page {
+    transition: transform 300ms;
+    transform: translateX(+100%);
+}
+
+.opening-page {
+    transition: transform 300ms;
+    transform: translateX(-100%);
+}
