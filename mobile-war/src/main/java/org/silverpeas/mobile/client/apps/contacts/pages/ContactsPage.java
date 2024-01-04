@@ -122,9 +122,10 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
         allcontacts.setVisible(tabs.contains("allcontacts"));
         allextcontacts.setVisible(tabs.contains("allextcontacts"));
 
-      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+        //Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+      Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
         @Override
-        public void execute() {
+        public boolean execute() {
           if (defaultTab.equals("mycontacts")) {
             EventBus.getInstance().fireEvent(
                 new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(),
@@ -142,6 +143,7 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
                     startIndex));
             currentType = ContactFilters.ALL;
             allcontacts.addStyleName("ui-btn-active");
+            allcontacts.removeStyleName("ui-last-child");
             if (!mycontacts.isVisible()) {
               allcontacts.addStyleName("ui-first-child");
             }
@@ -161,8 +163,9 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
             allextcontacts.addStyleName("ui-last-child");
             filter.setVisible(true);
           }
+          return false;
         }
-      });
+      }, 500);
     } else {
       mycontacts.setVisible(false);
       allextcontacts.setVisible(false);
@@ -307,7 +310,6 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
       item.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
       list.add(item);
       int itemHeight = item.getOffsetHeight();
-
       pageSize =  (available / itemHeight) + 1; // add one for scroll
       list.remove(item);
     }
