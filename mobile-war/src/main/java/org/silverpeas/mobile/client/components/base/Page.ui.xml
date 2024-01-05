@@ -41,6 +41,7 @@
 
       <!-- Content -->
       <g:SimplePanel ui:field="contentPlace"/>
+      <g:SimplePanel ui:field="contentPlaceTmp" visible="false"/>
 
     </div>
 

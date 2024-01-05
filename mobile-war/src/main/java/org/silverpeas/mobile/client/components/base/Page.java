@@ -49,7 +49,7 @@ public class Page extends Composite implements Window.ScrollHandler {
   interface PageUiBinder extends UiBinder<Widget, Page> {
   }
 
-  @UiField protected SimplePanel contentPlace;
+  @UiField protected SimplePanel contentPlace, contentPlaceTmp;
   @UiField protected PageHeader header;
   @UiField protected NavigationMenu menu;
   @UiField protected DivElement contentContainer;
@@ -78,6 +78,7 @@ public class Page extends Composite implements Window.ScrollHandler {
     }
 
     getContentContainer().addClassName(transitionClass);
+    contentPlaceTmp.setWidget(content);
     Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
       @Override
       public boolean execute() {
@@ -90,6 +91,7 @@ public class Page extends Composite implements Window.ScrollHandler {
 
   private void displayContent(PageContent content) {
     this.content = content;
+    //contentPlaceTmp.remove(content);
     contentPlace.setWidget(content);
     header.setPageTitle(content.getPageTitle());
     header.setVisibleBackButton(PageHistory.getInstance().size() > 1);
