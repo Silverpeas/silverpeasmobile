@@ -22,4 +22,11 @@
       "sizes" : "512x512"
     }
   ]
+
+  "capture_links": "existing_client_event",
+      "url_handlers" : [
+          {
+              "origin": "https://intranoo.silverpeas.com"
+          }
+      ]
 }

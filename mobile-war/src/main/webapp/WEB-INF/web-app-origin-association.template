@@ -1,0 +1,11 @@
+{
+    "web_apps": [
+        {
+            "manifest": "https://intranoo.silverpeas.com/silverpeas/spmobile/manifest.json",
+            "details": {
+                "paths": ["/*"],
+                "exclude_paths": []
+            }
+        }
+    ]
+}

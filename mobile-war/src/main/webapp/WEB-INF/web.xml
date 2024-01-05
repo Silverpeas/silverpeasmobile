@@ -72,6 +72,16 @@
   </servlet>
 
   <servlet-mapping>
+    <servlet-name>webAppOriginAssociationServlet</servlet-name>
+    <url-pattern>/spmobile/web-app-origin-association</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>webAppOriginAssociationServlet</servlet-name>
+    <servlet-class>org.silverpeas.mobile.server.servlets.WebAppOriginAssociationServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
     <servlet-name>PublicationContentServlet</servlet-name>
     <url-pattern>/services/spmobile/PublicationContent</url-pattern>
   </servlet-mapping>
