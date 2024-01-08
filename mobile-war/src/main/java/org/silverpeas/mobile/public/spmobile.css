@@ -430,7 +430,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #header,
 #navigation-footer {
-  background-color: #333;
+  background-color: black;
   height: 46px;
   border-bottom: 2px solid #151515;
   position: fixed;
@@ -473,6 +473,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #navigation-footer .btn-list-favoris {
   background: transparent url('icons/favorites_shortcut.svg') center no-repeat;
+  transform: scale(1.4);
 }
 
 #header h1 {
@@ -549,7 +550,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .favoris-bloc a {
   padding-left: 2.5em;
   font-size: 0.95em;
-  background: transparent url(packImagesNavigation.png) 0.5em -1186px no-repeat;
+  background: transparent url('icons/star.svg') no-repeat;
+  background-size: auto;
 }
 
 .racourcis-bloc a {
@@ -2713,6 +2715,20 @@ a.popin-btn {
 
 .ui-listview.notifications  li:nth-child(even){
 	background-color: #FFF;
+}
+
+/******** FAQ ********/
+.faq-categories {
+  width: 90vw;
+  box-sizing: border-box;
+  padding-left: 5vw;
+  background-color: white;
+  border-radius: 0.25em;
+  border: none;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  padding-right: 5vw;
+  line-height: 3em;
+  height: 2em;
 }
 
 /******** Resources Manager ********/
