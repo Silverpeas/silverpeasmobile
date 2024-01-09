@@ -2062,7 +2062,8 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .ui-listview.favoris a {
-  background: transparent url(packImagesNavigation.png) 0.5em -1182px no-repeat;
+  background: transparent url('icons/star.svg') no-repeat;
+  background-size: auto;
   padding-left: 2em;
 }
 
