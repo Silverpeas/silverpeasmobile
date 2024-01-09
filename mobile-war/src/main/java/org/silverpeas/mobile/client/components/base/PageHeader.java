@@ -69,7 +69,9 @@ public class PageHeader extends Composite {
 
   @UiHandler("back")
   void onBack(ClickEvent event) {
-    PageHistory.getInstance().back();
+    if (PageHistory.getInstance().size() > 1) {
+      PageHistory.getInstance().back();
+    }
   }
 
   public void toogleMenuButton() {
