@@ -49,6 +49,10 @@ public class NetworkHelper {
       watchConnectionType(this);
     }
 
+    public static String getContext() {
+        return "/silverpeas/spmobile/";
+    }
+
     private static native void watchConnectionType(NetworkHelper i) /*-{
         var connection = window.navigator.connection || window.navigator.mozConnection || null;
         if (connection != null) {
