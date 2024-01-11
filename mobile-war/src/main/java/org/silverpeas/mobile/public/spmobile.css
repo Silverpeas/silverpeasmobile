@@ -1063,6 +1063,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .list-reservations li > *,
 .list-detail-event  > * {
   padding:1em;
+  padding-left: 0.5em;
 }
 
 #linkedPublications li {
@@ -1196,7 +1197,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #add-comment,
 .introduction {
-  padding: 0 1em;
   position: relative;
   margin-bottom: 1em
 }
@@ -1216,6 +1216,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #add-comment textarea.ui-input-text {
   font-size: 9pt;
+  height: 7em;
 }
 
 #add-comment .btn-publicate {
@@ -1229,7 +1230,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   position: absolute;
   right: 0;
   bottom: 5px;
-  margin-right: 15px ;
+  margin-right: 1em ;
 }
 
 #add-comment .btn-publicate.inactif {
@@ -1243,22 +1244,37 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #000;
 }
 
-#attachments li a .weight,
-#a-media #attachments li a .dimension {
+#attachments li a .weight {
   display: block;
   padding-left: 24px;
   color: #848484;
+  margin-left: 8px;
+}
+
+#a-media #attachments li a .dimension {
+  display: block;
+  color: #848484;
+  padding-left: 0px;
+  margin-left: calc(1em + 24px);
 }
 
 #a-media #attachments li a .weight {
   display: inline-block;
-  padding-left: 4px;
+  padding-left: 0px;
+  margin-left: calc(1em + 24px);
+}
+
+#a-media #attachments li a img {
+  margin-left: 0.5em;
 }
 
 #attachments li a img {
   vertical-align: bottom;
   border: 0;
   margin-right: 8px;
+  float: left;
+  height: 24px;
+  width: 24px;
 }
 
 #attachments li a.expand-more {
@@ -1278,7 +1294,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #attachments li a span {
-  display: inline-block;
+  display: block;
+  padding-right:0.5em;
 }
 
 .ops-open, .ops-open #share, .ops-open #download, .ops-open #view, .ops-open #notify {
@@ -1490,7 +1507,7 @@ input.filter-contacts {
   width: 24px;
   border: 1px solid #ccc;
   float: right;
-  margin-right: 1em;
+  /*margin-right: 1em;*/
 }
 
 .list-contacts .user-name,

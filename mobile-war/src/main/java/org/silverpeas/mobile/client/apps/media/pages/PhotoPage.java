@@ -39,9 +39,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
-import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewGetNextEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewGetPreviousEvent;
@@ -57,6 +55,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
@@ -95,14 +94,11 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
 
   private static PhotoPageUiBinder uiBinder = GWT.create(PhotoPageUiBinder.class);
   private PhotoDTO photo;
-  private DocumentsResources ressources;
   private MediaMessages msg;
   private SwipeRecognizer swipeRecognizer;
 
   public PhotoPage() {
     initWidget(uiBinder.createAndBindUi(this));
-    ressources = GWT.create(DocumentsResources.class);
-    ressources.css().ensureInjected();
     msg = GWT.create(MediaMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
     getElement().setId("a-media");
@@ -143,8 +139,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
     if (isVisible()) {
       this.photo = (PhotoDTO) event.getPreview();
       preview.setSrc(photo.getDataPhoto());
-      Image img = new Image(ressources.image());
-      mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
+      mediaType.setSrc(NetworkHelper.getContext() + "icons/files/file-type-image.svg");
       mediaTitle.setInnerHTML(photo.getTitle());
       mediaFileName.setInnerHTML(photo.getName());
 

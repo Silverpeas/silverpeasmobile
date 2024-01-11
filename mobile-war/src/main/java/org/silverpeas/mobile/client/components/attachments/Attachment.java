@@ -38,7 +38,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.documents.pages.SharingPage;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import org.silverpeas.mobile.client.apps.documents.resources.DocumentsResources;
 import org.silverpeas.mobile.client.apps.notifications.NotificationsApp;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
@@ -65,8 +64,6 @@ public class Attachment extends Composite {
 
   @UiField
   HTML share, view, notify;
-
-  protected DocumentsResources ressources = null;
   private DocumentsMessages msg = null;
   private ApplicationMessages globalMsg = null;
   private SimpleDocumentDTO data = null;
@@ -86,8 +83,6 @@ public class Attachment extends Composite {
   public Attachment() {
     msg = GWT.create(DocumentsMessages.class);
     globalMsg = GWT.create(ApplicationMessages.class);
-    ressources = GWT.create(DocumentsResources.class);
-    ressources.css().ensureInjected();
     initWidget(uiBinder.createAndBindUi(this));
   }
 
@@ -132,21 +127,27 @@ public class Attachment extends Composite {
       description.getStyle().setDisplay(Style.Display.NONE);
     }
 
-    if (data.getContentType().contains("msword")) {
-      img = new Image(ressources.msword());
-    } else if (data.getContentType().contains("sheet")) {
-      img = new Image(ressources.msexcel());
+    if (data.getContentType().contains("msword") || data.getContentType().contains("word")) {
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-word.svg");
+    } else if (data.getContentType().contains("excel")) {
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-excel.svg");
     } else if (data.getContentType().contains("pdf")) {
-      img = new Image(ressources.pdf());
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-pdf.svg");
     } else if (data.getContentType().contains("image")) {
-      img = new Image(ressources.image());
-    } else if (data.getContentType().contains("presentation")) {
-      img = new Image(ressources.mspowerpoint());
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-image.svg");
+    } else if (data.getContentType().contains("presentationml")) {
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-powerpoint.svg");
+    } else if (data.getContentType().contains("zip")) {
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-zip.svg");
+    } else if (data.getContentType().contains("opendocument.text")) {
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-writer.svg");
+    } else if (data.getContentType().contains("opendocument.spreadsheet")) {
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-calc.svg");
+    } else if (data.getContentType().contains("opendocument.presentation")) {
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-presentation.svg");
     } else {
-      img = new Image(ressources.unknown());
+      icon.setSrc(NetworkHelper.getContext() + "icons/files/file-type-unknown.svg");
     }
-    icon.getParentElement().replaceChild(img.getElement(), icon);
-
 
     // link generation
     try {
