@@ -25,11 +25,14 @@
 package org.silverpeas.mobile.client.components.base;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -57,15 +60,23 @@ public class ActionsMenu  extends Composite {
         actions.getElement().setId("action-button");
         container.getElement().setId("actions");
         container.getElement().getStyle().setDisplay(Style.Display.NONE);
+        listActions.getElement().addClassName("closed-qvf-menu");
     }
 
     @UiHandler("actions")
     protected void showActions(ClickEvent event) {
-        if (listActions.getStyleDisplay().equalsIgnoreCase("none") || listActions.getStyleDisplay().isEmpty()) {
-            listActions.setStyledisplay(Style.Display.BLOCK);
+        if (listActions.getElement().getClassName().equals("closed-qvf-menu")) {
+            listActions.getElement().addClassName("open-qvf-menu");
+            listActions.getElement().removeClassName("closed-qvf-menu");
         } else {
-            listActions.setStyledisplay(Style.Display.NONE);
+            listActions.getElement().removeClassName("open-qvf-menu");
+            listActions.getElement().addClassName("closed-qvf-menu");
         }
+    }
+
+    public static void close(Element action) {
+        action.getParentElement().removeClassName("open-qvf-menu");
+        action.getParentElement().addClassName("closed-qvf-menu");
     }
 
     public boolean isEmpty() {

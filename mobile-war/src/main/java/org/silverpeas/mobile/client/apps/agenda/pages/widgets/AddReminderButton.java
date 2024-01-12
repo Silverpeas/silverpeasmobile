@@ -35,6 +35,7 @@ import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersAddingEven
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 
 /**
  * @author svu
@@ -67,7 +68,7 @@ public class AddReminderButton extends ActionItem {
     EventBus.getInstance().fireEvent(new RemindersAddingEvent());
 
     // hide menu
-    getElement().getParentElement().removeAttribute("style");
+    ActionsMenu.close(getElement());
 
   }
 }

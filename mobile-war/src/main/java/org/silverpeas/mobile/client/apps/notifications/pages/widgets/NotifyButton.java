@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import org.silverpeas.mobile.client.apps.notifications.NotificationsApp;
 import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 
 /**
  * @author: svu
@@ -71,7 +72,7 @@ public class NotifyButton extends ActionItem {
         app.start();
 
         // hide menu
-        getElement().getParentElement().removeAttribute("style");
+        ActionsMenu.close(getElement());
 
     }
 

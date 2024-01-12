@@ -27,6 +27,8 @@ package org.silverpeas.mobile.client.apps.media.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
@@ -44,6 +46,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
+import org.silverpeas.mobile.client.components.base.ActionsList;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.LoadingItem;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -66,6 +69,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   private AddMediaButton buttonImport = new AddMediaButton();
   private LoadingItem endline = new LoadingItem();
   @UiField ActionsMenu actionsMenu;
+  @UiField ActionsList actionsShortcuts;
 
   private String rootAlbumId, instanceId;
   private RightDTO rights;
@@ -96,7 +100,10 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     if (isVisible() && ((event.getLocationId() == null && rootAlbumId == null) || event.getLocationId().equals(rootAlbumId))) {
       list.clear();
       if (rights.getWriter() || rights.getPublisher() || rights.getManager()) {
-        if (rootAlbumId != null) list.add(buttonImport);
+        if (rootAlbumId != null) {
+          //list.add(buttonImport);
+          actionsShortcuts.addAction(buttonImport);
+        }
       }
       List<BaseDTO> dataItems = event.getData();
       populateList(dataItems);

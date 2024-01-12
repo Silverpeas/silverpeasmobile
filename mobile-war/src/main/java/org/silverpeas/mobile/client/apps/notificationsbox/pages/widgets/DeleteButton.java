@@ -22,7 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets;
+package org.silverpeas.mobile.client.apps.sharesbox.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,12 +31,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.DeleteNotificationsEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBoxPage;
-import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
+import org.silverpeas.mobile.client.apps.sharesbox.events.app.DeleteSharesEvent;
+import org.silverpeas.mobile.client.apps.sharesbox.pages.SharesBoxPage;
+import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class DeleteButton extends ActionItem {
 
   private static DeleteButtonUiBinder uiBinder = GWT.create(DeleteButtonUiBinder.class);
 
-  private NotificationsBoxPage parentPage;
+  private SharesBoxPage parentPage;
 
   @UiField
   HTMLPanel container;
@@ -57,28 +58,27 @@ public class DeleteButton extends ActionItem {
   Anchor delete;
 
   @UiField(provided = true)
-  protected NotificationsMessages msg = null;
+  protected ShareMessages msg = null;
 
 
   public DeleteButton() {
-    msg = GWT.create(NotificationsMessages.class);
+    msg = GWT.create(ShareMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     setId("delete");
   }
 
   @UiHandler("delete")
   void delete(ClickEvent event) {
-    List<NotificationBoxDTO> selection = parentPage.getSelectedNotification();
-
-    DeleteNotificationsEvent deleteEvent = new DeleteNotificationsEvent();
+    List<TicketDTO> selection = parentPage.getSelectedShares();
+    DeleteSharesEvent deleteEvent = new DeleteSharesEvent();
     deleteEvent.setSelection(selection);
     if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
 
     // hide menu
-    getElement().getParentElement().removeAttribute("style");
+    ActionsMenu.close(getElement());
   }
 
-  public void setParentPage(final NotificationsBoxPage parentPage) {
+  public void setParentPage(final SharesBoxPage parentPage) {
     this.parentPage = parentPage;
   }
 }

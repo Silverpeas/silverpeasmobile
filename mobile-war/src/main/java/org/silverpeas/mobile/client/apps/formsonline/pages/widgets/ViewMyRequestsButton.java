@@ -36,6 +36,7 @@ import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineMyRequ
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 
 /**
  * @author: svu
@@ -68,7 +69,7 @@ public class ViewMyRequestsButton extends ActionItem {
         EventBus.getInstance().fireEvent(new FormOnlineMyRequestLoadEvent());
 
         // hide menu
-        getElement().getParentElement().removeAttribute("style");
+        ActionsMenu.close(getElement());
     }
 
 }

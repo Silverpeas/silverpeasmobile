@@ -36,6 +36,7 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBox
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class MarkAsReadButton extends ActionItem {
     EventBus.getInstance().fireEvent(notReadEvent);
 
     // hide menu
-    getElement().getParentElement().removeAttribute("style");
+    ActionsMenu.close(getElement());
   }
 
   public void setParentPage(final NotificationsBoxPage parentPage) {

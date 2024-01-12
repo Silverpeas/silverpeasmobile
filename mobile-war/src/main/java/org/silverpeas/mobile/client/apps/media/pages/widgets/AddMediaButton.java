@@ -32,9 +32,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
@@ -44,14 +42,14 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
-import org.silverpeas.mobile.client.common.network.OfflineHelper;
+import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 
 /**
  * @author: svu
  */
-public class AddMediaButton extends Composite {
+public class AddMediaButton extends ActionItem {
     interface AddMediaButtonUiBinder extends UiBinder<Widget, AddMediaButton> {
     }
 
@@ -108,7 +106,6 @@ public class AddMediaButton extends Composite {
         } else {
             Notification.alert(globalMsg.needToBeOnline());
         }
-
     }
 
     private static native void upload(AddMediaButton button, Element input, String componentId, String albumId, String url, String token) /*-{

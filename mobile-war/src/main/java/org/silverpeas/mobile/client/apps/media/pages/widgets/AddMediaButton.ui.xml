@@ -28,7 +28,7 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.media.resources.MediaMessages'/>
   
   <g:HTMLPanel tag="li" styleName="add-media">
-    <g:Anchor ui:field="link" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" text="{msg.importMedia}"/>
-    <g:FileUpload ui:field="file" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" title="{msg.importMedia}" name="file"/>
+    <g:Anchor ui:field="link"/>
+    <g:FileUpload ui:field="file" title="{msg.importMedia}" name="file"/>
   </g:HTMLPanel>
 </ui:UiBinder>

@@ -7,3 +7,14 @@
     transition: transform 300ms;
     transform: translateX(-100%);
 }
+
+.open-qvf-menu {
+    opacity: 1.0;
+    transition: opacity 250ms linear;
+}
+
+.closed-qvf-menu {
+    opacity: 0.0;
+    transition: opacity 250ms linear;
+}
+

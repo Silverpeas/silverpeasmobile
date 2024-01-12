@@ -22,28 +22,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.documents.pages.widgets;
+package org.silverpeas.mobile.client.components.base.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsSharingEvent;
-import org.silverpeas.mobile.client.apps.documents.pages.SharingPage;
-import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import org.silverpeas.mobile.client.apps.notifications.NotificationsApp;
-import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
-import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.ServicesLocator;
+import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
+import org.silverpeas.mobile.client.common.Html5Utils;
 import org.silverpeas.mobile.client.components.base.ActionItem;
-import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
+import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 /**
  * @author: svu
@@ -57,34 +50,34 @@ public class ShareButton extends ActionItem {
     @UiField  HTMLPanel container;
     @UiField  Anchor share;
 
-    @UiField(provided = true) protected DocumentsMessages msg = null;
-    private String instanceId, contentId, contentType, title, pageTitle;
-
-    private int shareLevel;
+    @UiField(provided = true) protected ApplicationMessages msg = null;
+    private String title, text, url;
 
     public ShareButton() {
-        msg = GWT.create(DocumentsMessages.class);
+        msg = GWT.create(ApplicationMessages.class);
         initWidget(uiBinder.createAndBindUi(this));
         setId("share");
     }
-
-    public void init(int shareLevel, String instanceId, String contentId, String contentType, String title, String pageTitle) {
-        this.instanceId = instanceId;
-        this.contentId = contentId;
-        this.contentType = contentType;
+    public void init(String title, String text, String url) {
         this.title = title;
-        this.pageTitle = pageTitle;
-        this.shareLevel = shareLevel;
+        this.text = text;
+        this.url = url;
+        try {
+            if (!Html5Utils.canShare(title, text, url)) {
+                setVisible(false);
+            }
+        } catch(Throwable t) {
+            setVisible(false);
+        }
     }
-
     @UiHandler("share")
-    void displaySharePage(ClickEvent event) {
-        SharingPage page = new SharingPage();
-        page.setData(contentType, contentId, instanceId);
-        page.show();
+    void share(ClickEvent event) {
+        Html5Utils.share(title, text, url);
 
         // hide menu
-        getElement().getParentElement().removeAttribute("style");
+        ActionsMenu.close(getElement());
     }
+
+
 
 }

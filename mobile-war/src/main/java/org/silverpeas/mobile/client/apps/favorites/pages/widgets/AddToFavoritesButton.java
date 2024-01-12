@@ -35,6 +35,7 @@ import org.silverpeas.mobile.client.apps.favorites.events.app.AddFavoriteEvent;
 import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 
 /**
  * @author: svu
@@ -75,7 +76,7 @@ public class AddToFavoritesButton extends ActionItem {
         EventBus.getInstance().fireEvent(addEvent);
 
         // hide menu
-        getElement().getParentElement().removeAttribute("style");
+        ActionsMenu.close(getElement());
     }
 
 }
