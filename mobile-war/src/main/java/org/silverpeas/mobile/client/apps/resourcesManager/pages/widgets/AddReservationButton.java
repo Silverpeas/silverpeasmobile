@@ -13,6 +13,7 @@ import org.silverpeas.mobile.client.apps.resourcesManager.pages.ResourcesManager
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 
 /**
  * @author svu
@@ -47,6 +48,6 @@ public class AddReservationButton extends ActionItem {
     page.show();
 
     // hide menu
-    getElement().getParentElement().removeAttribute("style");
+    ActionsMenu.close(getElement());
   }
 }

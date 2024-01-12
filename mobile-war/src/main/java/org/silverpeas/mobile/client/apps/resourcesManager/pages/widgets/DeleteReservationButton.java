@@ -15,6 +15,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 
 /**
@@ -61,6 +62,6 @@ public class DeleteReservationButton extends ActionItem {
     conf.show();
 
     // hide menu
-    getElement().getParentElement().removeAttribute("style");
+    ActionsMenu.close(getElement());
   }
 }

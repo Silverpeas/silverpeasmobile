@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
 import org.silverpeas.mobile.client.common.Html5Utils;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 /**
@@ -74,7 +75,7 @@ public class ShareButton extends ActionItem {
         Html5Utils.share(title, text, url);
 
         // hide menu
-        getElement().getParentElement().removeAttribute("style");
+        ActionsMenu.close(getElement());
     }
 
 

@@ -36,6 +36,7 @@ import org.silverpeas.mobile.client.apps.sharesbox.pages.SharesBoxPage;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 import java.util.List;
@@ -74,7 +75,7 @@ public class DeleteButton extends ActionItem {
     if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
 
     // hide menu
-    getElement().getParentElement().removeAttribute("style");
+    ActionsMenu.close(getElement());
   }
 
   public void setParentPage(final SharesBoxPage parentPage) {

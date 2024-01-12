@@ -43,6 +43,7 @@ import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMe
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 /**
@@ -84,7 +85,7 @@ public class ShareButton extends ActionItem {
         page.show();
 
         // hide menu
-        getElement().getParentElement().removeAttribute("style");
+        ActionsMenu.close(getElement());
     }
 
 }

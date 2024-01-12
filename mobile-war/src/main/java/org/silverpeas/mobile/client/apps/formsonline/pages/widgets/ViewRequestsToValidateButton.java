@@ -35,6 +35,7 @@ import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAsRec
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 
 /**
  * @author: svu
@@ -61,7 +62,7 @@ public class ViewRequestsToValidateButton extends ActionItem {
     void displayNotificationPage(ClickEvent event){
         EventBus.getInstance().fireEvent(new FormsOnlineAsReceiverLoadEvent());
         // hide menu
-        getElement().getParentElement().removeAttribute("style");
+        ActionsMenu.close(getElement());
     }
 
 }

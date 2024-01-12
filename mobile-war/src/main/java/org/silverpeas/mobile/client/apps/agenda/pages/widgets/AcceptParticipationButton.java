@@ -35,6 +35,7 @@ import org.silverpeas.mobile.client.apps.agenda.events.app.ParticipationEvent;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.almanach.ParticipationStatusDTO;
 
@@ -69,7 +70,7 @@ public class AcceptParticipationButton extends ActionItem {
     EventBus.getInstance().fireEvent(new ParticipationEvent(ParticipationStatusDTO.ACCEPTED, eventDTO));
 
     // hide menu
-    getElement().getParentElement().removeAttribute("style");
+    ActionsMenu.close(getElement());
 
   }
 

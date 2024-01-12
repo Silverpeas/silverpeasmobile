@@ -22,15 +22,11 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base"
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:components="urn:import:org.silverpeas.mobile.client.components">
+    <g:HTMLPanel ui:field="container">
+        <components:UnorderedList ui:field="listActions" />
+    </g:HTMLPanel>
 
-  <g:HTMLPanel styleName="content">
-    <base:ActionsList ui:field="actionsShortcuts"/>
-    <base:ActionsMenu ui:field="actionsMenu"/>
-    <components:UnorderedList ui:field="list" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
-  </g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

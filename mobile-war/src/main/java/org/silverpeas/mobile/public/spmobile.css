@@ -772,7 +772,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 /***** NAVIGATION ****/
 
-.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .add-media a, .app-actuality a,
+.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .app-actuality a,
 .publication.ui-input-text, .app-blog a, .app-pageWeb a, .app-workflow a, .app-link a, .app-almanach a, .app-formsOnline a, .app-classifieds a, .app-survey a, .app-faq a, .app-polling a, .app-resourcesManager a {
   background-image: url(packImagesNavigation.png);
   background-position: 0.5625em 0.5625em;
@@ -780,20 +780,17 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 2.5em
 }
 
-.add-media,
 .add-task {
   background-color: #FDF4EF;
   border-bottom: 1px solid #EDBCBB;
   border-top: 1px solid #EDBCBB;
 }
 
-.ui-listview > li.add-media a,
 .ui-listview > li.add-task a {
   background: #FDF4EF none;
   padding-left: 1em
 }
 
-.ui-listview > li.add-media a::after,
 .ui-listview > li.add-task a::after {
   background: transparent url('icons/add.svg') no-repeat;
 }
@@ -902,6 +899,19 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url('icons/media.svg') no-repeat;
   background-position-y: center;
   background-position-x: 0.5em;
+}
+
+.add-media {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/add.svg') no-repeat;
+}
+
+.add-media a {
+  height: 24px;
+  width: 24px;
+  display: block;
 }
 
 .media-thumb:first-child {
@@ -2021,18 +2031,19 @@ form .forms .fields > li:nth-child(even) {
   height: 24px;
   text-indent: -3000px;
   top: 1em;
-  right: 1em;
+  right: 0.5em;
   background: transparent url("qvf.svg") 0 0 no-repeat;
   outline: none;
   z-index: 999;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 #action-bloc {
-  display: none;
   border: 0;
   position: absolute;
-  top: 3em;
-  right: 1em;
+  top: 46px;
+  right: 0.1em;
   padding: 0;
   margin: 0;
   width: 10em;
@@ -2052,6 +2063,22 @@ form .forms .fields > li:nth-child(even) {
   font-size: 0.9em;
   display: block;
   width: 100%;
+}
+
+#actionsList {
+  position: absolute;
+  top: -31px;
+  right: 4em;
+  z-index: 9999;
+}
+
+#actionsList ul {
+  margin: 0;
+  padding: 0;
+}
+
+#actionsList li {
+  list-style: none;
 }
 
 .config .actuality a {

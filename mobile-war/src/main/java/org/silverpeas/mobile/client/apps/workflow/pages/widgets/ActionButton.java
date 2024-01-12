@@ -35,6 +35,7 @@ import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadActionF
 import org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
+import org.silverpeas.mobile.client.components.base.ActionsMenu;
 
 /**
  * @author: svu
@@ -72,7 +73,7 @@ public class ActionButton extends ActionItem {
       ev.setState(state);
       EventBus.getInstance().fireEvent(ev);
         // hide menu
-        getElement().getParentElement().removeAttribute("style");
+        ActionsMenu.close(getElement());
     }
 
 }
