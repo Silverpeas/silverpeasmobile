@@ -27,6 +27,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages'/>
 
   <g:HTMLPanel tag="li" ui:field="container" styleName="add-task">
-    <g:Anchor ui:field="link" styleName="ui-btn ui-btn-icon-right ui-icon-carat-more" text="{msg.create}"/>
+    <g:Anchor ui:field="link"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

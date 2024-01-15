@@ -712,7 +712,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-tasks a {
-  background: transparent url('icons/tasks.svg') 8px -394px no-repeat;
+  background: transparent url('icons/tasks.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-help a {
@@ -780,19 +780,22 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 2.5em
 }
 
+.tasks #actionsList {
+  top: 12px;
+  right: 1em;
+}
+
 .add-task {
-  background-color: #FDF4EF;
-  border-bottom: 1px solid #EDBCBB;
-  border-top: 1px solid #EDBCBB;
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/add.svg') no-repeat;
 }
 
-.ui-listview > li.add-task a {
-  background: #FDF4EF none;
-  padding-left: 1em
-}
-
-.ui-listview > li.add-task a::after {
-  background: transparent url('icons/add.svg') no-repeat;
+.add-task a {
+  height: 24px;
+  width: 24px;
+  display: block;
 }
 
 .publication.ui-input-text {
@@ -1955,30 +1958,6 @@ form .forms .fields > li:nth-child(even) {
 .percentCompleted {
   line-height: 2em;
   float: left;
-}
-
-.ui-listview input[type="range"] {
-  -webkit-appearance: none;
-  -moz-apperance: none;
-  border-radius: 0px;
-  border: 0;
-  height: 4px;
-  margin: 1em 0;
-  background-image: -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      color-stop(0, #72ab0e),
-      color-stop(0, #C5C5C5)
-  );
-}
-
-.ui-listview input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none !important;
-  background-color: transparent;
-  border: 0;
-  height: 1px;
-  width: 1px;
 }
 
 .task-percent-range {

@@ -24,9 +24,11 @@
 
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base"
              xmlns:components="urn:import:org.silverpeas.mobile.client.components">
 
-  <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
+  <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a tasks">
+    <base:ActionsList ui:field="actionsShortcuts"/>
     <components:UnorderedList ui:field="list" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"></components:UnorderedList>
   </g:HTMLPanel>
 

@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.tasks.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
@@ -86,12 +85,6 @@ public class TaskItem extends Composite {
   public TaskDTO getData() {
     return task;
   }
-
-  public native void addListenerInput(Element range, TaskItem item) /*-{
-    range.addEventListener('input', function () {
-      item.@org.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem::updateRange(I)(range.value);
-    }, false);
-  }-*/;
 
   @UiHandler("link")
   protected void edit(ClickEvent event) {

@@ -34,13 +34,14 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
 import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
+import org.silverpeas.mobile.client.components.base.ActionItem;
 
 /**
  * @author: svu
  */
-public class AddTaskItem  extends Composite {
+public class AddTaskButton extends ActionItem {
 
-  interface AddTaskItemUiBinder extends UiBinder<Widget, AddTaskItem> {
+  interface AddTaskItemUiBinder extends UiBinder<Widget, AddTaskButton> {
   }
 
   @UiField Anchor link;
@@ -48,7 +49,7 @@ public class AddTaskItem  extends Composite {
 
   private static AddTaskItemUiBinder uiBinder = GWT.create(AddTaskItemUiBinder.class);
 
-  public AddTaskItem() {
+  public AddTaskButton() {
     msg = GWT.create(TasksMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
   }

@@ -28,17 +28,19 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import org.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton;
 import org.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.AbstractTasksPagesEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TaskCreatedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TaskUpdatedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TasksPagesEventHandler;
-import org.silverpeas.mobile.client.apps.tasks.pages.widgets.AddTaskItem;
+import org.silverpeas.mobile.client.apps.tasks.pages.widgets.AddTaskButton;
 import org.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.UnorderedList;
+import org.silverpeas.mobile.client.components.base.ActionsList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
@@ -52,10 +54,13 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
 
   interface TasksPageUiBinder extends UiBinder<HTMLPanel, TasksPage> { }
   private static TasksPageUiBinder uiBinder = GWT.create(TasksPageUiBinder.class);
-
+  private AddTaskButton buttonCreate = new AddTaskButton();
   @UiField HTMLPanel container;
   @UiField
   UnorderedList list;
+
+  @UiField
+  ActionsList actionsShortcuts;
 
   public TasksPage() {
     initWidget(uiBinder.createAndBindUi(this));
@@ -66,9 +71,9 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
   @Override
   public void onTaskLoad(final TasksLoadedEvent event) {
     Notification.activityStop();
+    actionsShortcuts.addAction(buttonCreate);
 
-
-    list.add(new AddTaskItem());
+    //list.add(new AddTaskButton());
 
     Iterator<TaskDTO> i = event.getTasks().iterator();
     while (i.hasNext()) {
