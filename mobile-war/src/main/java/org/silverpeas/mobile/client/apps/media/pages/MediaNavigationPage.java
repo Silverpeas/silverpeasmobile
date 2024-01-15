@@ -101,7 +101,6 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
       list.clear();
       if (rights.getWriter() || rights.getPublisher() || rights.getManager()) {
         if (rootAlbumId != null) {
-          //list.add(buttonImport);
           actionsShortcuts.addAction(buttonImport);
         }
       }

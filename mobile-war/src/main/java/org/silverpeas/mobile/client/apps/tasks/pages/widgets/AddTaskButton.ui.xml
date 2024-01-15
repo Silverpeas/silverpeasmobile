@@ -26,12 +26,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages'/>
 
-  <g:HTMLPanel tag="li" ui:field="container" styleName="task readonly">
-    <g:Anchor styleName="ui-btn ui-icon-carat-r" ui:field="link">
-      <span ui:field="name"></span>&nbsp;(<span ui:field="priority" class="task-priority"></span>)
-      <br/><span ui:field="delegator"></span><span ui:field="endDate" class="endDate"></span>
-      <br/><span ui:field="percentCompleted" class="percentCompleted"></span><input type="range" ui:field="range" class="task-percent-range"></input>
-    </g:Anchor>
-
+  <g:HTMLPanel tag="li" ui:field="container" styleName="add-task">
+    <g:Anchor ui:field="link"/>
   </g:HTMLPanel>
 </ui:UiBinder> 
