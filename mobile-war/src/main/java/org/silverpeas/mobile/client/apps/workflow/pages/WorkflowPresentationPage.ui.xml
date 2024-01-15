@@ -29,7 +29,6 @@
              xmlns:components="urn:import:org.silverpeas.mobile.client.components">
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <h2 class="appHeader" ui:field="header"></h2>
     <components:UnorderedList ui:field="fields" styleName="workflow-form"/>
   </g:HTMLPanel>

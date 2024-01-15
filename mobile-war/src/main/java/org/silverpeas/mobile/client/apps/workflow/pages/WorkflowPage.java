@@ -46,7 +46,6 @@ import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEven
 import org.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
 import org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
@@ -61,8 +60,6 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
 
   @UiField
   FlexTable instances;
-  @UiField
-  ActionsMenu actionsMenu;
   @UiField
   ListBox roles;
 
@@ -144,9 +141,11 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       ActionButton act = new ActionButton();
       act.setId(ACTION_CREATE);
       act.init(instanceId, "create", msg.create(), null);
-      actionsMenu.addAction(act);
+      addActionMenu(act);
     } else {
-      actionsMenu.removeAction(ACTION_CREATE, false);
+      ActionButton act = new ActionButton();
+      act.setId(ACTION_CREATE);
+      removeActionMenu(act);
     }
   }
 

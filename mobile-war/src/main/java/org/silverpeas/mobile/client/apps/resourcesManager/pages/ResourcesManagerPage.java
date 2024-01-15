@@ -38,7 +38,6 @@ import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.Reservat
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
@@ -50,9 +49,6 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
   private static ResourcesManagerPageUiBinder uiBinder = GWT.create(ResourcesManagerPageUiBinder.class);
 
   @UiField(provided = true) protected ResourcesManagerMessages msg = null;
-
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField
   UnorderedList reservations;
@@ -94,9 +90,9 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
     this.data = reservationsDTO;
     displayList();
 
-    actionsMenu.addAction(favorite);
+    addActionMenu(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
-    actionsMenu.addAction(addReservation);
+    addActionMenu(addReservation);
   }
 
   private void displayList() {

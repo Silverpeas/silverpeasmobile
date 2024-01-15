@@ -31,7 +31,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages'/>
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <h2 class="appHeader" ui:field="header"></h2>
     <components:UnorderedList ui:field="fields" styleName="workflow-form"/>
     <div class=" ui-controlgroup ui-controlgroup-horizontal">

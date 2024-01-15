@@ -31,7 +31,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a formOnlineRequest">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <components:UnorderedList ui:field="fields" styleName="formOnline-form"/>
     <g:HTML ui:field="layer"/>
     <g:Label ui:field="labelComment" text="{msg.comment}" styleName="label-comment"></g:Label>

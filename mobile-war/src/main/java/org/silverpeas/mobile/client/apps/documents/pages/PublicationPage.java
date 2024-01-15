@@ -60,7 +60,6 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -92,8 +91,6 @@ public class PublicationPage extends PageContent
   Anchor contentLink;
   @UiField
   DivElement content;
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField(provided = true)
   protected DocumentsMessages msg;
@@ -165,15 +162,15 @@ public class PublicationPage extends PageContent
     this.publication = event.getPublication();
     this.notifiable = event.isNotifiable();
     display(event.isCommentable(), event.isAbleToStoreContent(), event.getType());
-    actionsMenu.addAction(favorite);
+    addActionMenu(favorite);
     if (event.isNotifiable()) {
-      actionsMenu.addAction(notification);
+      addActionMenu(notification);
     }
 
     if (event.getSharing() > 0) {
       share.init(event.getSharing(), event.getPublication().getInstanceId(),
               event.getPublication().getId(), "Publication", "", "");
-      actionsMenu.addAction(share);
+      addActionMenu(share);
     }
 
     if (Boolean.parseBoolean(ResourcesManager.getParam("content.display.embedded")) && publication.getContent()) {

@@ -33,7 +33,6 @@
            type='org.silverpeas.mobile.client.resources.ApplicationMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-body-a survey">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <components:UnorderedList ui:field="questions" styleName="liste-questions forms-list"/>
     <g:HTMLPanel ui:field="secondPart" styleName="comment-area">
       <g:InlineHTML><ui:text from="{msg.comments}"/></g:InlineHTML>

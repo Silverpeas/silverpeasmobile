@@ -7,11 +7,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.ReservationPage;
-import org.silverpeas.mobile.client.apps.resourcesManager.pages.ResourcesManagerPage;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 

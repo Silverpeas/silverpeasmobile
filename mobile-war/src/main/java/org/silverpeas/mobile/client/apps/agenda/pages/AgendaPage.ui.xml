@@ -31,7 +31,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <h2 class="appHeader"></h2>
 
     <div class="ui-corner-all ui-control-horizontal">

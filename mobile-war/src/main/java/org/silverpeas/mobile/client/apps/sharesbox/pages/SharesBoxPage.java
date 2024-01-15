@@ -36,7 +36,6 @@ import org.silverpeas.mobile.client.apps.sharesbox.pages.widgets.ShareItem;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
@@ -51,9 +50,6 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
   @UiField(provided = true) protected ShareMessages msg = null;
   @UiField
   UnorderedList shares;
-
-  @UiField
-  ActionsMenu actionsMenu;
   private List<TicketDTO> data;
 
   private DeleteButton delete = new DeleteButton();
@@ -101,7 +97,7 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
     shares.getElement().setId("shares");
     EventBus.getInstance().addHandler(AbstractSharesBoxPagesEvent.TYPE, this);
     delete.setParentPage(this);
-    actionsMenu.addAction(delete);
+    addActionMenu(delete);
   }
 
   @Override

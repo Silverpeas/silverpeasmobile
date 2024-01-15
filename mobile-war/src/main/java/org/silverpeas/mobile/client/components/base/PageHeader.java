@@ -41,6 +41,10 @@ public class PageHeader extends Composite {
 
   private static PageHeaderUiBinder uiBinder = GWT.create(PageHeaderUiBinder.class);
 
+  public void closeMenuQVF() {
+    actionsMenu.close();
+  }
+
   interface PageHeaderUiBinder extends UiBinder<Widget, PageHeader> {
   }
 
@@ -48,6 +52,8 @@ public class PageHeader extends Composite {
   @UiField protected Anchor back;
   @UiField protected HeadingElement title;
   @UiField protected HTML menu;
+  @UiField protected ActionsList actionsShortcuts;
+  @UiField protected ActionsMenu actionsMenu;
   @UiField(provided = true) protected ApplicationMessages msg = null;
   protected ApplicationResources ressources = null;
 
@@ -59,6 +65,23 @@ public class PageHeader extends Composite {
     menu.getElement().setId("menu");
     ressources.css().ensureInjected();
     title.setInnerText(ResourcesManager.getLabel("mainpage.title"));
+  }
+
+  public void addActionShortcut(ActionItem action) {
+    actionsShortcuts.addAction(action);
+  }
+
+  public void addActionMenu(ActionItem action) {
+    actionsMenu.addAction(action);
+  }
+
+  public void removeActionMenu(ActionItem action) {
+    actionsMenu.removeAction(action.getId(), true);
+  }
+
+  public void clearActions() {
+    actionsShortcuts.clear();
+    actionsMenu.clear();
   }
 
   @UiHandler("menu")

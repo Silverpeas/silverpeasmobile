@@ -65,7 +65,6 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
@@ -91,7 +90,6 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   @UiField CommentsButton comments;
   @UiField VideoElement player;
   @UiField DivElement previewContainer;
-  @UiField ActionsMenu actionsMenu;
 
   private NotifyButton notification = new NotifyButton();
   private ShareButton share = new ShareButton();
@@ -171,13 +169,13 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
       favorite.init(video.getInstance(), video.getId(), ContentsTypes.Media.name(), video.getTitle());
-      actionsMenu.addAction(favorite);
+      addActionMenu(favorite);
       if (event.isNotifiable()) {
         notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_VIDEO, video.getName(), getPageTitle());
-        actionsMenu.addAction(notification);
+        addActionMenu(notification);
       }
       share.init(video.getTitle(),video.getTitle(), LinksManager.createMediaPermalink(video.getId()));
-      actionsMenu.addAction(share);
+      addActionMenu(share);
     }
   }
 

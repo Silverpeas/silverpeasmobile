@@ -79,6 +79,11 @@ public class ActionsMenu  extends Composite {
         action.getParentElement().addClassName("closed-qvf-menu");
     }
 
+    public void close() {
+        listActions.getElement().removeClassName("open-qvf-menu");
+        listActions.getElement().addClassName("closed-qvf-menu");
+    }
+
     public boolean isEmpty() {
         return (listActions.getWidgetCount() == 0);
     }
@@ -90,6 +95,11 @@ public class ActionsMenu  extends Composite {
         }
         listActions.add(action);
         container.getElement().getStyle().setDisplay(Style.Display.BLOCK);
+    }
+
+    public void clear() {
+        listActions.clear();
+        container.getElement().getStyle().setDisplay(Style.Display.NONE);
     }
 
     public void removeAction(String id, boolean silently) {

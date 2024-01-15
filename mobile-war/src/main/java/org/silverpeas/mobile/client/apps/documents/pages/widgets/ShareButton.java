@@ -29,22 +29,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsSharingEvent;
 import org.silverpeas.mobile.client.apps.documents.pages.SharingPage;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import org.silverpeas.mobile.client.apps.notifications.NotificationsApp;
-import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
-import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
-import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
+
 
 /**
  * @author: svu

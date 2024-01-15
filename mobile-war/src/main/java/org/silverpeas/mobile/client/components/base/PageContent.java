@@ -33,6 +33,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -49,6 +50,9 @@ import org.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEv
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class PageContent extends Composite implements View, NativePreviewHandler, PageEventHandler {
 
   private App app;
@@ -56,6 +60,8 @@ public abstract class PageContent extends Composite implements View, NativePrevi
   protected String pageTitle;
   private HandlerRegistration registration;
   private SwipeRecognizer swipeRecognizer;
+  private List<ActionItem> actionsMenu = new ArrayList<>();
+  private List<ActionItem> actionsShortcuts = new ArrayList<>();
 
   public PageContent() {
     super();
@@ -87,6 +93,21 @@ public abstract class PageContent extends Composite implements View, NativePrevi
     PageHistory.getInstance().goTo(this);
   }
 
+  public void addActionShortcut(ActionItem action) {
+    actionsShortcuts.add(action);
+    SpMobil.getMainPage().getHeader().addActionShortcut(action);
+  }
+
+  public void addActionMenu(ActionItem action) {
+    actionsMenu.add(action);
+    SpMobil.getMainPage().getHeader().addActionMenu(action);
+  }
+
+  public void removeActionMenu(ActionItem action) {
+    actionsMenu.remove(action);
+    SpMobil.getMainPage().getHeader().removeActionMenu(action);
+  }
+
   public boolean isVisible() {
     return PageHistory.getInstance().isVisible(this);
   }
@@ -114,6 +135,18 @@ public abstract class PageContent extends Composite implements View, NativePrevi
     }
   }
 
+  @Override
+  public void setVisible(boolean visible) {
+    super.setVisible(visible);
+    SpMobil.getMainPage().getHeader().closeMenuQVF();
+    SpMobil.getMainPage().getHeader().clearActions();
+    for (ActionItem action : actionsShortcuts) {
+      SpMobil.getMainPage().getHeader().addActionShortcut(action);
+    }
+    for (ActionItem action : actionsMenu) {
+      SpMobil.getMainPage().getHeader().addActionMenu(action);
+    }
+  }
   @Override
   public void stop() {
     EventBus.getInstance().removeHandler(AbstractPageEvent.TYPE, this);
@@ -157,7 +190,6 @@ public abstract class PageContent extends Composite implements View, NativePrevi
   public void loadedDataEvent(final DataLoadedEvent dataLoadedEvent) {
     // to be override if necessary
   }
-
   @Override
   public void loadedMoreDataEvent(final MoreDataLoadedEvent moreDataLoadedEvent) {
     // to be override if necessary

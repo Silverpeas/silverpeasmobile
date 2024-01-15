@@ -46,7 +46,6 @@ import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
@@ -65,8 +64,6 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
 
   @UiField
   UnorderedList fields;
-  @UiField
-  ActionsMenu actionsMenu;
   @UiField HeadingElement header;
   @UiField Anchor validate, cancel;
 

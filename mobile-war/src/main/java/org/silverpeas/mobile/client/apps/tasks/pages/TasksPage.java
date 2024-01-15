@@ -28,7 +28,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton;
 import org.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.AbstractTasksPagesEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TaskCreatedEvent;
@@ -71,10 +70,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
   @Override
   public void onTaskLoad(final TasksLoadedEvent event) {
     Notification.activityStop();
-    actionsShortcuts.addAction(buttonCreate);
-
-    //list.add(new AddTaskButton());
-
+    addActionShortcut(buttonCreate);
     Iterator<TaskDTO> i = event.getTasks().iterator();
     while (i.hasNext()) {
       TaskDTO task = i.next();

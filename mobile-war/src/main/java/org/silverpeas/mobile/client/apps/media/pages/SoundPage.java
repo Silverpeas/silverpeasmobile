@@ -62,7 +62,6 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
@@ -88,7 +87,6 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
   @UiField AudioElement player;
   @UiField CommentsButton comments;
   @UiField DivElement previewContainer;
-  @UiField ActionsMenu actionsMenu;
 
   private NotifyButton notification = new NotifyButton();
   private ShareButton share = new ShareButton();
@@ -152,13 +150,13 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }
       favorite.init(sound.getInstance(), sound.getId(), ContentsTypes.Media.name(), sound.getTitle());
-      actionsMenu.addAction(favorite);
+      addActionMenu(favorite);
       if (event.isNotifiable()) {
         notification.init(sound.getInstance(), sound.getId(), NotificationDTO.TYPE_SOUND, sound.getName(), getPageTitle());
-        actionsMenu.addAction(notification);
+        addActionMenu(notification);
       }
       share.init(sound.getTitle(),sound.getTitle(), LinksManager.createMediaPermalink(sound.getId()));
-      actionsMenu.addAction(share);
+      addActionMenu(share);
     }
   }
 

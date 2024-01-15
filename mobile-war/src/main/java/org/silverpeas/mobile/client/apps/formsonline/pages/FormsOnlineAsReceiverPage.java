@@ -40,7 +40,6 @@ import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.FormOnlineAsR
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 
@@ -51,8 +50,6 @@ public class FormsOnlineAsReceiverPage extends PageContent implements FormsOnlin
   private static FormsOnlineAsReceiverPageUiBinder uiBinder = GWT.create(FormsOnlineAsReceiverPageUiBinder.class);
 
   @UiField(provided = true) protected FormsOnlineMessages msg = null;
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField
   UnorderedList forms;

@@ -48,7 +48,6 @@ import org.silverpeas.mobile.client.apps.survey.resources.SurveyMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
@@ -62,9 +61,6 @@ public class SurveyPage extends PageContent implements SurveyPagesEventHandler {
 
   @UiField(provided = true) protected SurveyMessages msg = null;
   @UiField(provided = true) protected ApplicationMessages msgApp = null;
-
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField
   UnorderedList questions;

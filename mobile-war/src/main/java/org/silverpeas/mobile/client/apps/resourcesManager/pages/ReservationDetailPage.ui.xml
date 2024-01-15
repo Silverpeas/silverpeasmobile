@@ -30,7 +30,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <div id="reservationDetail" class="content-navigation">
       <div class="section">
         <g:Label ui:field="labelTitle" stylePrimaryName="field"><ui:text from="{msg.event}"/></g:Label>

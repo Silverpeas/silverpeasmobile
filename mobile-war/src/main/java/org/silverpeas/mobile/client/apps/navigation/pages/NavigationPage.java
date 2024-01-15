@@ -39,7 +39,6 @@ import org.silverpeas.mobile.client.apps.navigation.events.pages.NavigationPages
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ShortCutRouter;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.homepage.HomePageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -50,8 +49,6 @@ import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
 public class NavigationPage extends PageContent implements NavigationPagesEventHandler {
 
-  @UiField
-  ActionsMenu actionsMenu;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
@@ -87,7 +84,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
 
       dataLoaded = true;
 
-      actionsMenu.addAction(favorite);
+      addActionMenu(favorite);
       favorite.init(null, event.getData().getId(), ContentsTypes.Space.name(), getPageTitle());
     }
     Notification.activityStop();

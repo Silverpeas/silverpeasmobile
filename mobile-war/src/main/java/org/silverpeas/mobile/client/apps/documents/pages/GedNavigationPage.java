@@ -44,7 +44,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
@@ -59,7 +58,6 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   private DocumentsMessages msg;
 
   @UiField UnorderedList list;
-  @UiField ActionsMenu actionsMenu;
 
   private TopicDTO root;
   private String rootTopicId, instanceId;
@@ -112,7 +110,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
       }
       dataLoaded = true;
 
-      actionsMenu.addAction(favorite);
+      addActionMenu(favorite);
 
       if (root.getId() == null) {
         favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
@@ -122,7 +120,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 
       if (event.getSharing() > 0) {
         share.init(event.getSharing(), instanceId, root.getId(),"Node", "","");
-        actionsMenu.addAction(share);
+        addActionMenu(share);
       }
 
       Notification.activityStop();
