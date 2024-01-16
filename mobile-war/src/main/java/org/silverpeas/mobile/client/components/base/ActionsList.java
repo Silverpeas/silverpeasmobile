@@ -66,6 +66,11 @@ public class ActionsList extends Composite {
         container.getElement().getStyle().setDisplay(Style.Display.BLOCK);
     }
 
+    public void clear() {
+        listActions.clear();
+        container.getElement().getStyle().setDisplay(Style.Display.NONE);
+    }
+
     public void removeAction(String id, boolean silently) {
       for (int i = 0; i < listActions.getWidgetCount(); i++) {
         ActionItem act = (ActionItem) listActions.getWidget(i);

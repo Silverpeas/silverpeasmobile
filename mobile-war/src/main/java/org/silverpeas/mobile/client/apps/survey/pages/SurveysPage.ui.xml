@@ -31,7 +31,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.survey.resources.SurveyMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-body-a survey">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <components:UnorderedList ui:field="surveys" styleName="liste-enquete"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

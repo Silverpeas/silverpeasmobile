@@ -31,7 +31,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.faq.resources.FaqMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <div class="content-navigation"><g:ListBox ui:field="categories" stylePrimaryName="faq-categories"/></div>
     <components:UnorderedList ui:field="faqs" styleName="forms-list"/>
   </g:HTMLPanel>

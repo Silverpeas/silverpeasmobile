@@ -50,7 +50,6 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
@@ -65,9 +64,6 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
   private int currentPictureIndex = 0;
 
   @UiField(provided = true) protected ClassifiedsMessages msg = null;
-
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField
   HTML price, time, author;
@@ -148,7 +144,7 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
     }
 
     notification.init(getApp().getApplicationInstance().getId(), data.getId(), NotificationDTO.TYPE_EVENT, data.getTitle(), getPageTitle());
-    actionsMenu.addAction(notification);
+    addActionMenu(notification);
 
     if (hasComments) {
       String contentType = "Classified";

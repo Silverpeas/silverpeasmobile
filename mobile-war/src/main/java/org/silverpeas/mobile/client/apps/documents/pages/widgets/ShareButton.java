@@ -22,21 +22,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.components.base.widgets;
+package org.silverpeas.mobile.client.apps.documents.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
-import org.silverpeas.mobile.client.common.Html5Utils;
+import org.silverpeas.mobile.client.apps.documents.pages.SharingPage;
+import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
-import org.silverpeas.mobile.client.resources.ApplicationMessages;
+
 
 /**
  * @author: svu
@@ -50,34 +49,34 @@ public class ShareButton extends ActionItem {
     @UiField  HTMLPanel container;
     @UiField  Anchor share;
 
-    @UiField(provided = true) protected ApplicationMessages msg = null;
-    private String title, text, url;
+    @UiField(provided = true) protected DocumentsMessages msg = null;
+    private String instanceId, contentId, contentType, title, pageTitle;
+
+    private int shareLevel;
 
     public ShareButton() {
-        msg = GWT.create(ApplicationMessages.class);
+        msg = GWT.create(DocumentsMessages.class);
         initWidget(uiBinder.createAndBindUi(this));
         setId("share");
     }
-    public void init(String title, String text, String url) {
+
+    public void init(int shareLevel, String instanceId, String contentId, String contentType, String title, String pageTitle) {
+        this.instanceId = instanceId;
+        this.contentId = contentId;
+        this.contentType = contentType;
         this.title = title;
-        this.text = text;
-        this.url = url;
-        try {
-            if (!Html5Utils.canShare(title, text, url)) {
-                setVisible(false);
-            }
-        } catch(Throwable t) {
-            setVisible(false);
-        }
+        this.pageTitle = pageTitle;
+        this.shareLevel = shareLevel;
     }
+
     @UiHandler("share")
-    void share(ClickEvent event) {
-        Html5Utils.share(title, text, url);
+    void displaySharePage(ClickEvent event) {
+        SharingPage page = new SharingPage();
+        page.setData(contentType, contentId, instanceId);
+        page.show();
 
         // hide menu
         ActionsMenu.close(getElement());
     }
-
-
 
 }

@@ -44,7 +44,6 @@ import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesB
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
@@ -57,8 +56,6 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
   private static FaqPageUiBinder uiBinder = GWT.create(FaqPageUiBinder.class);
 
   @UiField(provided = true) protected FaqMessages msg = null;
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField
   HTMLPanel container;
@@ -95,7 +92,7 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
   @Override
   public void setApp(final App app) {
     super.setApp(app);
-    actionsMenu.addAction(favorite);
+    addActionMenu(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
   }
 

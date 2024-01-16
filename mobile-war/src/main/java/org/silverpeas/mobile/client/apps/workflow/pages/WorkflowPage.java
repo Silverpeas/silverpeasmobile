@@ -31,7 +31,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.ListBox;
@@ -47,7 +46,6 @@ import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEven
 import org.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
 import org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
@@ -62,8 +60,6 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
 
   @UiField
   FlexTable instances;
-  @UiField
-  ActionsMenu actionsMenu;
   @UiField
   ListBox roles;
 
@@ -96,7 +92,6 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       roles.addItem(role.getValue(), role.getKey());
     }
     roles.setVisible(roles.getItemCount()>1);
-
     EventBus.getInstance().fireEvent(new WorkflowRoleChangeEvent(roles.getSelectedValue()));
   }
 
@@ -146,9 +141,11 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       ActionButton act = new ActionButton();
       act.setId(ACTION_CREATE);
       act.init(instanceId, "create", msg.create(), null);
-      actionsMenu.addAction(act);
+      addActionMenu(act);
     } else {
-      actionsMenu.removeAction(ACTION_CREATE, false);
+      ActionButton act = new ActionButton();
+      act.setId(ACTION_CREATE);
+      removeActionMenu(act);
     }
   }
 

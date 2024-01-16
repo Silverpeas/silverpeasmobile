@@ -48,7 +48,6 @@ import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesB
 import org.silverpeas.mobile.client.common.DateUtil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
@@ -66,9 +65,6 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   private List<GroupItem> groups = new ArrayList<>();
 
   @UiField(provided = true) protected AgendaMessages msg = null;
-
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField
   UnorderedList events;
@@ -215,7 +211,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     } else {
       message.setInnerText(msg.noEvent());
     }
-    actionsMenu.addAction(favorite);
+    addActionMenu(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
   }
 

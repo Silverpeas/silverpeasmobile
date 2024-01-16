@@ -42,7 +42,6 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.MarkAsRe
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.NotificationItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
@@ -63,8 +62,6 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
   @UiField
   Anchor notificationReceived, notificationSended;
 
-  @UiField
-  ActionsMenu actionsMenu;
 
   private DeleteButton delete = new DeleteButton();
   private MarkAsReadButton notRead = new MarkAsReadButton();
@@ -80,8 +77,8 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
     EventBus.getInstance().fireEvent(new NotificationsLoadEvent());
     delete.setParentPage(this);
     notRead.setParentPage(this);
-    actionsMenu.addAction(delete);
-    actionsMenu.addAction(notRead);
+    addActionMenu(delete);
+    addActionMenu(notRead);
   }
 
   @Override

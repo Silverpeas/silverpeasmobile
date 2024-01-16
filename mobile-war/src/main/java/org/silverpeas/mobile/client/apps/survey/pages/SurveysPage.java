@@ -39,7 +39,6 @@ import org.silverpeas.mobile.client.apps.survey.pages.widgets.SurveyItem;
 import org.silverpeas.mobile.client.apps.survey.resources.SurveyMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
@@ -55,8 +54,6 @@ public class SurveysPage extends PageContent implements SurveyPagesEventHandler 
 
   @UiField
   UnorderedList surveys;
-  @UiField
-  ActionsMenu actionsMenu;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private String instanceId;
@@ -98,7 +95,7 @@ public class SurveysPage extends PageContent implements SurveyPagesEventHandler 
       surveys.add(item);
     }
 
-    actionsMenu.addAction(favorite);
+    addActionMenu(favorite);
     favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), getPageTitle());
   }
 

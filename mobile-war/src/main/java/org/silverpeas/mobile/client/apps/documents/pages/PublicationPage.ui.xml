@@ -32,7 +32,6 @@
 
   <g:FocusPanel ui:field="supercontainer">
     <g:HTMLPanel ui:field="container" styleName="content">
-      <base:ActionsMenu ui:field="actionsMenu"/>
 
       <h2 ui:field="title" class="publiName"></h2>
       <p ui:field="desc" class="publiDesc"></p>

@@ -1997,8 +1997,8 @@ form .forms .fields > li:nth-child(even) {
 
 #actions {
   position: absolute;
-  top: -44px;
   right: 0.5em;
+  top: 11px;
   filter: invert(1);
   z-index: 9999;
 }
@@ -2009,7 +2009,6 @@ form .forms .fields > li:nth-child(even) {
   width: 16px;
   height: 24px;
   text-indent: -3000px;
-  top: 1em;
   right: 0.5em;
   background: transparent url("qvf.svg") 0 0 no-repeat;
   outline: none;
@@ -2021,7 +2020,7 @@ form .forms .fields > li:nth-child(even) {
 #action-bloc {
   border: 0;
   position: absolute;
-  top: 46px;
+  top: 37px;
   right: 0.1em;
   padding: 0;
   margin: 0;
@@ -2046,7 +2045,7 @@ form .forms .fields > li:nth-child(even) {
 
 #actionsList {
   position: absolute;
-  top: -31px;
+  top: 11px;
   right: 4em;
   z-index: 9999;
 }

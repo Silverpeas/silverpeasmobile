@@ -31,7 +31,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <div id="resourcesManager" class="content-navigation" style="min-height:100vh;">
       <components:UnorderedList ui:field="reservations" styleName="list-reservations ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
     </div>

@@ -30,6 +30,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
@@ -46,10 +47,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
-import org.silverpeas.mobile.client.components.base.LoadingItem;
-import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.*;
 import org.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
 import org.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
 import org.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
@@ -60,6 +58,7 @@ import org.silverpeas.mobile.shared.dto.RightDTO;
 import org.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import org.silverpeas.mobile.shared.dto.media.MediaDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MediaNavigationPage extends PageContent implements View, MediaNavigationPagesEventHandler {
@@ -68,9 +67,6 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
   @UiField UnorderedList list;
   private AddMediaButton buttonImport = new AddMediaButton();
   private LoadingItem endline = new LoadingItem();
-  @UiField ActionsMenu actionsMenu;
-  @UiField ActionsList actionsShortcuts;
-
   private String rootAlbumId, instanceId;
   private RightDTO rights;
   private AlbumDTO root;
@@ -101,15 +97,12 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
       list.clear();
       if (rights.getWriter() || rights.getPublisher() || rights.getManager()) {
         if (rootAlbumId != null) {
-          actionsShortcuts.addAction(buttonImport);
+          addActionShortcut(buttonImport);
         }
       }
       List<BaseDTO> dataItems = event.getData();
       populateList(dataItems);
       list.add(endline);
-
-      actionsMenu.addAction(favorite);
-      actionsMenu.addAction(share);
       if (root.getId() == null) {
         favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
         share.init(root.getName(), root.getName(), LinksManager.createApplicationPermalink(instanceId));
@@ -117,6 +110,8 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
         favorite.init(instanceId, root.getId(), ContentsTypes.Album.name(), root.getName());
         share.init(root.getName(), root.getName(),LinksManager.createAlbumPermalink(instanceId, root.getId()));
       }
+      addActionMenu(favorite);
+      addActionMenu(share);
     }
     Notification.activityStop();
   }

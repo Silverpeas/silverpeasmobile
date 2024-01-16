@@ -25,26 +25,18 @@
 package org.silverpeas.mobile.client.apps.resourcesManager.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.DeletedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.ResourcesManagerPagesEventHandler;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedReservationEvent;
-import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.AddReservationButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.DeleteReservationButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.Popin;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationStatus;
@@ -58,9 +50,6 @@ public class ReservationDetailPage extends PageContent implements ResourcesManag
   private ReservationDTO data;
 
   private DeleteReservationButton deleteReservation = new DeleteReservationButton();
-
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField(provided = true) protected ResourcesManagerMessages msg = null;
 
@@ -86,7 +75,7 @@ public class ReservationDetailPage extends PageContent implements ResourcesManag
     html += "</ul>";
     resources.setHTML(html);
     deleteReservation.setData(data);
-    actionsMenu.addAction(deleteReservation);
+    addActionMenu(deleteReservation);
   }
 
   @Override

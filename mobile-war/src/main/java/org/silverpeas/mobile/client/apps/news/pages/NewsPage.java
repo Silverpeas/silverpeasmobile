@@ -38,7 +38,6 @@ import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.ShareButton;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -52,7 +51,6 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
 
   @UiField(provided = true) protected NewsMessages msg = null;
   @UiField UnorderedList news;
-  @UiField ActionsMenu actionsMenu;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private ShareButton share = new ShareButton();
@@ -88,9 +86,9 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
       instanceId = newsDTO.getInstanceId();
       i++;
     }
-    actionsMenu.addAction(favorite);
+    addActionMenu(favorite);
     favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), getPageTitle());
-    actionsMenu.addAction(share);
+    addActionMenu(share);
     share.init(getPageTitle(), getPageTitle(), LinksManager.createApplicationPermalink(instanceId));
   }
 

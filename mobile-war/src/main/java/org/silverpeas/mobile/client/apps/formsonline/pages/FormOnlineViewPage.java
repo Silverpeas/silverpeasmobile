@@ -46,7 +46,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.forms.FieldViewable;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
@@ -60,9 +59,6 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
   private boolean hasHtmlLayer;
 
   @UiField(provided = true) protected FormsOnlineMessages msg = null;
-  @UiField
-  ActionsMenu actionsMenu;
-
   @UiField
   UnorderedList fields;
 

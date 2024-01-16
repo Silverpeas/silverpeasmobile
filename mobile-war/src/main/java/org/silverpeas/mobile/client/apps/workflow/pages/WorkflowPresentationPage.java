@@ -32,7 +32,6 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
 import org.silverpeas.mobile.client.apps.workflow.pages.widgets.Field;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.workflow.FieldPresentationDTO;
@@ -49,8 +48,6 @@ public class WorkflowPresentationPage extends PageContent {
 
   @UiField
   UnorderedList fields;
-  @UiField
-  ActionsMenu actionsMenu;
   @UiField HeadingElement header;
 
   public void setData(final WorkflowInstancePresentationFormDTO data) {
@@ -74,7 +71,7 @@ public class WorkflowPresentationPage extends PageContent {
       ActionButton act = new ActionButton();
       act.setId(action.getKey());
       act.init(data.getId(), action.getKey(), action.getValue(), data.getState());
-      actionsMenu.addAction(act);
+      addActionMenu(act);
     }
   }
 

@@ -32,7 +32,6 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <div id="classified" class="content-navigation">
         <g:HTMLPanel tag="h2" ui:field="title" styleName="title"></g:HTMLPanel>
         <g:FocusPanel ui:field="carroussel" styleName="classified_pictures">

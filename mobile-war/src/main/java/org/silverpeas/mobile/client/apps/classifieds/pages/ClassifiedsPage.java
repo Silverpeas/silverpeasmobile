@@ -40,7 +40,6 @@ import org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessag
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
@@ -53,8 +52,6 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
   @UiField(provided = true) protected ClassifiedsMessages msg = null;
   @UiField
   UnorderedList classifieds;
-  @UiField
-  ActionsMenu actionsMenu;
   @UiField
   ListBox categories, types;
 
@@ -94,7 +91,7 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
     }
     displayList();
 
-    actionsMenu.addAction(favorite);
+    addActionMenu(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
   }
 

@@ -29,7 +29,6 @@
              xmlns:base="urn:import:org.silverpeas.mobile.client.components.base">
 
   <g:HTMLPanel styleName="content">
-    <base:ActionsMenu ui:field="actionsMenu"/>
     <homepage:HomePageContent ui:field="content"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

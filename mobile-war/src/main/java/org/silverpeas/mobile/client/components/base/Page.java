@@ -140,6 +140,9 @@ public class Page extends Composite implements Window.ScrollHandler {
   }
   public int getFooterHeight() { return footer.getOffsetHeight() ; }
 
+  public PageHeader getHeader() {
+    return header;
+  }
   public void showOfflineIndicator() {
     header.showOfflineIndicator();
   }

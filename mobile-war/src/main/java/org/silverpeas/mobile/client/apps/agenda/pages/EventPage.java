@@ -69,7 +69,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.PublicationContentHelper;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
@@ -113,9 +112,6 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
   @UiField
   UnorderedList attachments, attendees;
-
-  @UiField
-  ActionsMenu actionsMenu;
 
   private CalendarEventDTO event;
   private CalendarDTO calendar;
@@ -237,9 +233,9 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
 
     for (CalendarEventAttendeeDTO attendee : event.getAttendees()) {
       if (attendee.getId().equals(SpMobil.getUser().getId())) {
-        actionsMenu.addAction(participation);
-        actionsMenu.addAction(rejectParticipation);
-        actionsMenu.addAction(tentativeParticipation);
+        addActionMenu(participation);
+        addActionMenu(rejectParticipation);
+        addActionMenu(tentativeParticipation);
         participation.setVisible(!attendee.getParticipationStatus().equals(ParticipationStatusDTO.ACCEPTED));
         rejectParticipation.setVisible(!attendee.getParticipationStatus().equals(ParticipationStatusDTO.DECLINED));
         tentativeParticipation.setVisible(!attendee.getParticipationStatus().equals(ParticipationStatusDTO.TENTATIVE));
@@ -255,15 +251,15 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     }
 
     // actions
-    actionsMenu.addAction(addReminder);
+    addActionMenu(addReminder);
     notification.init(instance.getId(), event.getEventId(), NotificationDTO.TYPE_EVENT, event.getTitle(), getPageTitle());
-    actionsMenu.addAction(notification);
+    addActionMenu(notification);
   }
 
   @Override
   public void onRemindersLoaded(final RemindersLoadedEvent event) {
     if (event.getDurations().isEmpty()) {
-      actionsMenu.removeAction(addReminder.getId(), true);
+      removeActionMenu(addReminder);
     }
     for (String duration : event.getDurations()) {
       String durationLabel = "";

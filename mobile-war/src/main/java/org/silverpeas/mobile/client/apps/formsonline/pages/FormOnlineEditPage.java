@@ -50,9 +50,7 @@ import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.Popin;
-import org.silverpeas.mobile.client.components.PopinInformation;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.forms.FieldEditable;
 import org.silverpeas.mobile.client.components.userselection.UserSelectionPage;
@@ -75,8 +73,6 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
   private static List<FormFieldDTO> data;
 
   @UiField(provided = true) protected FormsOnlineMessages msg = null;
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField
   UnorderedList fields;

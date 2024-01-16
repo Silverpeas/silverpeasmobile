@@ -49,7 +49,6 @@ import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.ViewRequestsT
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
@@ -59,8 +58,6 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
   private static FormsOnlinePageUiBinder uiBinder = GWT.create(FormsOnlinePageUiBinder.class);
 
   @UiField(provided = true) protected FormsOnlineMessages msg = null;
-  @UiField
-  ActionsMenu actionsMenu;
 
   @UiField
   HTMLPanel container;
@@ -82,11 +79,11 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
       if (form.isReceiver()) canReceive = true;
     }
 
-    actionsMenu.addAction(favorite);
+    addActionMenu(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
-    actionsMenu.addAction(myRequests);
+    addActionMenu(myRequests);
     myRequests.init(getApp().getApplicationInstance().getId());
-    if (canReceive) actionsMenu.addAction(requestsToValidate);
+    if (canReceive) addActionMenu(requestsToValidate);
   }
 
   @Override
