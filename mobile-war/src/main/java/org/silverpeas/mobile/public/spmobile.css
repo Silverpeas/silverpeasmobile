@@ -428,6 +428,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-weight: normal;
 }
 
+#header {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
 #header,
 #navigation-footer {
   background-color: black;
@@ -1429,13 +1433,17 @@ li > #operations {
 }
 
 #edit-notification .ui-input-text.destinataires {
-  background: #FFF url(packPictos.png) 13px -234px no-repeat;
+  background: #FFF url('icons/peoples.svg') no-repeat;
   padding-left: 4em;
   line-height: 1.4em;
   position: relative;
-  color: #AAA;
+  color: #000;
   font-size: 80%;
   min-height: 3.4em;
+}
+
+#edit-notification #message {
+  height: 15em;
 }
 
 #edit-notification .ui-input-text.destinataires .nb-user-sectionne {
@@ -1451,7 +1459,7 @@ li > #operations {
   top: 0.1em;
   right: 0.1em;
   bottom: 0.1em;
-  background: #7eb73a url(packPictos.png) 0.5em 0.5em no-repeat;
+  /*background: #7eb73a url(packPictos.png) 0.5em 0.5em no-repeat;*/
   display: block;
   text-indent: -300em;
   width: 2em;
@@ -1484,6 +1492,10 @@ li > #operations {
   line-height: 2em;
   background-color: #FFF;
   font-size: 80%;
+}
+
+#edit-notification .ui-input-text.publication {
+  background: url('icons/publication.svg') no-repeat #ffff;
 }
 
 .ui-controlgroup-horizontal .ui-controlgroup-controls > .ui-btn, .ui-controlgroup-horizontal .ui-controlgroup-controls li > .ui-btn, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-checkbox, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-radio, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-select {
@@ -1578,6 +1590,8 @@ input.filter-contacts {
 
 .btn-validate {
   text-transform: uppercase;
+  border-radius: 2px;
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
 }
 
 .ui-page-theme-a .btn-validate {
