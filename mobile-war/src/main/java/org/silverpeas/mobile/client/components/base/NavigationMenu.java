@@ -177,6 +177,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   static void goHome() {
     String url = Window.Location.getHref();
+    SpMobil.getMainPage().getHeader().clearActions();
     if (url.contains("shortcutContentType")) {
       String homeUrl = url.substring(0,url.indexOf("?"));
       Window.Location.replace(homeUrl);

@@ -780,8 +780,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 2.5em
 }
 
-.tasks #actionsList {
-  top: 12px;
+#actionsList:has(.add-task) {
   right: 1em;
 }
 
@@ -1575,6 +1574,10 @@ input.filter-contacts {
 #champs-statut textarea,
 #champs-message textarea {
   border-radius: 10px;
+}
+
+.btn-validate {
+  text-transform: uppercase;
 }
 
 .ui-page-theme-a .btn-validate {
