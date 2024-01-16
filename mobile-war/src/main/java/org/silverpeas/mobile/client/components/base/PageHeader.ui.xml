@@ -37,7 +37,7 @@
         <span></span>
       </g:HTML>
     </div>
-    <g:Anchor ui:field="back" styleName="ui-btn-right ui-btn-corner-all ui-btn ui-icon-grid back" text=""/>
+    <g:Anchor ui:field="back" styleName="ui-btn-right back" text=""/>
     <h1 ui:field="title" class="ui-title">Silverpeas</h1>
     <base:ActionsList ui:field="actionsShortcuts"/>
     <base:ActionsMenu ui:field="actionsMenu"/>
