@@ -49,7 +49,7 @@
         <div class=" ui-controlgroup ui-controlgroup-horizontal" >
             <div class="ui-controlgroup-controls ">
 
-                <g:Anchor ui:field="send" styleName="btn-validate ui-link smaller">
+                <g:Anchor ui:field="send" styleName="btn-validate ui-link">
                     <span class="ui-btn-text"><ui:safehtml from="{msg.send}"/></span>
                 </g:Anchor>
             </div>
