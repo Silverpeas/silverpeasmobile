@@ -18,3 +18,31 @@
     transition: opacity 250ms linear;
 }
 
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    /* To make it round */
+    background-color: rgba(0, 0, 0, 0.3);
+
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    /* for positioning */
+    margin-left: -50px;
+
+    animation: ripple 1s;
+    opacity: 0;
+}
+
+/* Add animation */
+@keyframes ripple {
+    from {
+        opacity: 1;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(10);
+    }
+}
