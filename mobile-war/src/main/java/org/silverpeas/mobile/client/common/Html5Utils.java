@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.common;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import org.silverpeas.mobile.client.common.event.speech.SpeechErrorEvent;
 import org.silverpeas.mobile.client.common.event.speech.SpeechResultEvent;
 import org.silverpeas.mobile.client.common.event.speech.SpeechStartEvent;
@@ -36,6 +37,17 @@ import org.silverpeas.mobile.client.common.event.speech.SpeechStopEvent;
  * @author: svu
  */
 public class Html5Utils {
+
+  public static void disableAnchor(Anchor a) {
+    String style = a.getElement().getAttribute("style");
+    a.getElement().setAttribute("style",style + "pointer-events: none;");
+  }
+
+  public static void enableAnchor(Anchor a) {
+    String style = a.getElement().getAttribute("style");
+    style = style.replace("pointer-events: none;","");
+    a.getElement().setAttribute("style",style);
+  }
 
   public static native void setVideoFullScreen(Element element) /*-{
       if (element.requestFullscreen) {
@@ -185,4 +197,5 @@ public class Html5Utils {
     };
     $wnd.navigator.share(shareData);
   }-*/;
+
 }

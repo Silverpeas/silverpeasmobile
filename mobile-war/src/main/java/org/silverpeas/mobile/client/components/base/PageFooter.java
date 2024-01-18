@@ -36,7 +36,10 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.profile.ProfileApp;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Html5Utils;
+import org.silverpeas.mobile.client.common.animation.RippleAnimation;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
@@ -83,27 +86,34 @@ public class PageFooter extends Composite {
   @UiHandler("browse")
   protected void browse(ClickEvent event) {
     NavigationMenu.goHome();
+    RippleAnimation.play(event, 150);
   }
 
   @UiHandler("favoris")
   protected void goFavoris(ClickEvent event) {
+    PageHistory.getInstance().goBackToFirst();
     ContentDTO content = new ContentDTO();
     content.setType(ContentsTypes.Favortis.toString());
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+    RippleAnimation.play(event, 150);
   }
 
   @UiHandler("tasks")
   protected void goTasks(ClickEvent event) {
+    PageHistory.getInstance().goBackToFirst();
     ContentDTO content = new ContentDTO();
     content.setType(ContentsTypes.Tasks.toString());
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+    RippleAnimation.play(event, 150);
   }
 
   @UiHandler("contact")
-  void contacts(ClickEvent e) {
+  void contacts(ClickEvent event) {
+    PageHistory.getInstance().goBackToFirst();
     ContentDTO content = new ContentDTO();
     content.setType(ContentsTypes.Contacts.toString());
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
+    RippleAnimation.play(event, 150);
   }
 
   public int getHeight() {
