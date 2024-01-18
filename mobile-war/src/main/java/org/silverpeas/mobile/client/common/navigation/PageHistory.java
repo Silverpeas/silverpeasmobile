@@ -145,6 +145,7 @@ public class PageHistory implements ValueChangeHandler<String> {
             page.stop();
             page = pages.peek();
             SpMobil.getMainPage().setContent(page, false);
+            page.setVisible(true);
           } else {
             SpMobil.restoreMainPage();
           }
