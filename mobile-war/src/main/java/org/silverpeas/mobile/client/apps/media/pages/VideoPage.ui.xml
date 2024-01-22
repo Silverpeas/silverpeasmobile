@@ -39,10 +39,14 @@
       <ul id="attachments">
         <li>
           <g:Anchor ui:field="download" styleName="downloadable">
-            <img ui:field="mediaType" src=""/>
-            <span ui:field="mediaFileName"></span>
-            <span class="weight" ui:field="weight"></span>
-            <span class="dimension" ui:field="dimensions"></span>
+            <div>
+              <img ui:field="mediaType" src=""/>
+            </div>
+            <div>
+              <span ui:field="mediaFileName"></span>
+              <span class="weight" ui:field="weight"></span>
+              <span class="dimension" ui:field="dimensions"></span>
+            </div>
           </g:Anchor>
         </li>
       </ul>

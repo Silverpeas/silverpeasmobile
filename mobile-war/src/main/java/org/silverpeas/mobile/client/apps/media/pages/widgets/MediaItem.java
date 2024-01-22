@@ -37,7 +37,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemClickEvent;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Html5Utils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.media.MediaDTO;
@@ -82,7 +84,7 @@ public class MediaItem extends Composite {
     } else if (data instanceof VideoStreamingDTO) {
       String url = ((VideoStreamingDTO) data).getUrlPoster();
       if (url.isEmpty()) {
-        thumb.setSrc(resources.streaming().getSafeUri().asString());
+        thumb.setSrc(NetworkHelper.getContext() + "icons/files/file-type-video-ondemand.svg");
       } else {
         thumb.setSrc(url);
       }

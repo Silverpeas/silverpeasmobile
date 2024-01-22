@@ -27,9 +27,13 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <g:HTMLPanel tag="li">
     <g:Anchor ui:field="link" styleName="expand-more" href="javascript:;">
-      <img ui:field="icon" src=""/>
-      <span ui:field="name"></span><span ui:field="size" class="weight"></span>
-      <span ui:field="description"></span>
+      <div>
+        <img ui:field="icon" src=""/>
+      </div>
+      <div>
+        <span ui:field="name"></span><span ui:field="size" class="weight"></span>
+        <span ui:field="description"></span>
+      </div>
     </g:Anchor>
     <g:HTMLPanel ui:field="operations" stylePrimaryName="ops-closed">
       <g:HTML ui:field="notify"></g:HTML>
