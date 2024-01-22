@@ -65,7 +65,7 @@
 #header > div > div > span {
     display: block;
     width: 100%;
-    box-shadow: 0 2px 10px 0 rgba(0,0,0,0.3);
+        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.3);
     border-radius: 2em;
     height: 4px;
     background: #fff;

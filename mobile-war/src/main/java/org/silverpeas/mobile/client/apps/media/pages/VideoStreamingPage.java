@@ -52,6 +52,7 @@ import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButto
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
@@ -115,8 +116,7 @@ public class VideoStreamingPage extends PageContent
       player.setFrameBorder(0);
       player.setAttribute("allowfullscreen", "");
 
-      Image img = new Image(resources.streaming());
-      mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
+      mediaType.setSrc(NetworkHelper.getContext() + "icons/files/file-type-video-ondemand.svg");
       mediaTitle.setInnerHTML(video.getTitle());
       mediaFileName.setInnerHTML(video.getName());
 

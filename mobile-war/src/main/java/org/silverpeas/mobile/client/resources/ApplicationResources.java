@@ -41,12 +41,6 @@ public interface ApplicationResources extends ClientBundle {
   @Source("sound.png")
   ImageResource sound();
 
-  @Source("video.png")
-  ImageResource video();
-
-  @Source("streaming.png")
-  ImageResource streaming();
-
   @Source("offline.png")
   ImageResource offline();
 }

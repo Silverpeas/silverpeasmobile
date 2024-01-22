@@ -61,6 +61,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
@@ -142,9 +143,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
           }
         }
       });
-
-      Image img = new Image(resources.video());
-      mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
+      mediaType.setSrc(NetworkHelper.getContext() + "icons/files/file-type-video.svg");
       mediaTitle.setInnerHTML(video.getTitle());
       mediaFileName.setInnerHTML(video.getName());
 
