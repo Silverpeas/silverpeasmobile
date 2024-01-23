@@ -38,7 +38,7 @@
       <widgets:CommentsButton ui:field="comments"/>
       <ul id="attachments">
         <li>
-          <g:Anchor ui:field="download" styleName="downloadable">
+          <g:Anchor ui:field="link" styleName="expand-more" href="javascript:;">
             <div>
               <img ui:field="mediaType" src=""/>
             </div>
@@ -48,6 +48,9 @@
               <span class="dimension" ui:field="dimensions"></span>
             </div>
           </g:Anchor>
+          <g:HTMLPanel ui:field="operations" stylePrimaryName="ops-closed">
+            <g:Anchor ui:field="download" styleName="downloadable"></g:Anchor>
+          </g:HTMLPanel>
         </li>
       </ul>
       <p ui:field="creator" class="lastUpdate"></p>

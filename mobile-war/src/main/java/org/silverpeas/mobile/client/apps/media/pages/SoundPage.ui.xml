@@ -32,19 +32,26 @@
 
       <div class="cadrePhoto" ui:field="previewContainer">
         <g:Anchor ui:field="mediaFullSize">
-          <img ui:field="mediaPreview" src=""/>
+          <img ui:field="mediaPreview" src="/silverpeas/spmobile/icons/files/file-type-sound.svg" style="width:100%;"/>
           <audio ui:field="player"></audio>
         </g:Anchor>
       </div>
       <widgets:CommentsButton ui:field="comments"/>
       <ul id="attachments">
         <li>
-          <g:Anchor ui:field="download" styleName="downloadable" href="#">
-            <img ui:field="mediaType" src=""/>
-            <span ui:field="mediaFileName"></span>
-            <span class="weight" ui:field="weight"></span>
-            <span class="dimension" ui:field="dimensions"></span>
+          <g:Anchor ui:field="link" styleName="expand-more" href="javascript:;">
+            <div>
+              <img ui:field="mediaType" src=""/>
+            </div>
+            <div>
+              <span ui:field="mediaFileName"></span>
+              <span class="weight" ui:field="weight"></span>
+              <span class="dimension" ui:field="dimensions"></span>
+          </div>
           </g:Anchor>
+          <g:HTMLPanel ui:field="operations" stylePrimaryName="ops-closed">
+            <g:Anchor ui:field="download" styleName="downloadable"></g:Anchor>
+          </g:HTMLPanel>
         </li>
       </ul>
       <p ui:field="creator" class="lastUpdate"></p>
