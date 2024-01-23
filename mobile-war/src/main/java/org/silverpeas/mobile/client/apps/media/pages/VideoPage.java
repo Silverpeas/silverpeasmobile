@@ -41,6 +41,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
@@ -84,7 +85,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   }
 
   @UiField HeadingElement mediaTitle;
-  @UiField Anchor mediaFullSize, download;
+  @UiField Anchor mediaFullSize, download, link;
   @UiField ParagraphElement lastUpdate, creator;
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement mediaType;
@@ -92,8 +93,11 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   @UiField VideoElement player;
   @UiField DivElement previewContainer;
 
+  @UiField
+  HTMLPanel operations;
+
   private NotifyButton notification = new NotifyButton();
-  private ShareButton share = new ShareButton();
+  private ShareButton shareBtn = new ShareButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   private static VideoPageUiBinder uiBinder = GWT.create(VideoPageUiBinder.class);
@@ -107,6 +111,10 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
     msg = GWT.create(MediaMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
     getElement().setId("a-media");
+
+    operations.getElement().setId("operations");
+    download.getElement().setId("download");
+
     /*Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
       public void execute() {
@@ -120,6 +128,7 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
     if (isVisible()) {
       this.video = (VideoDTO) event.getPreview();
+      if (!video.getDownload()) link.getElement().removeClassName("expand-more");
       String url = UrlUtils.getSilverpeasServicesLocation();
       url += "gallery/" + video.getInstance() + "/videos/" + video.getId() + "/content";
       player.setSrc(url);
@@ -173,8 +182,25 @@ public class VideoPage extends PageContent implements View, MediaPagesEventHandl
         notification.init(video.getInstance(), video.getId(), NotificationDTO.TYPE_VIDEO, video.getName(), getPageTitle());
         addActionMenu(notification);
       }
-      share.init(video.getTitle(),video.getTitle(), LinksManager.createMediaPermalink(video.getId()));
-      addActionMenu(share);
+      shareBtn.init(video.getTitle(),video.getTitle(), LinksManager.createMediaPermalink(video.getId()));
+      addActionMenu(shareBtn);
+    }
+  }
+
+  @UiHandler("link")
+  void actions(ClickEvent event) {
+    if (video.getDownload()) {
+      toogleOperations();
+    }
+  }
+
+  private void toogleOperations() {
+    if (operations.getStylePrimaryName().equalsIgnoreCase("ops-closed")) {
+      operations.setStylePrimaryName("ops-open");
+      link.setStylePrimaryName("expand-less");
+    } else {
+      operations.setStylePrimaryName("ops-closed");
+      link.setStylePrimaryName("expand-more");
     }
   }
 

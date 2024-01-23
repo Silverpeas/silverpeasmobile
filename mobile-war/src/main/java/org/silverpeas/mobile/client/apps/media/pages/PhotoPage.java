@@ -38,6 +38,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
@@ -76,13 +77,17 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
   }
 
   @UiField HeadingElement mediaTitle;
-  @UiField Anchor mediaFullSize, download;
+  @UiField Anchor mediaFullSize, download, link;
   @UiField ParagraphElement lastUpdate, creator;
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement preview, mediaType;
   @UiField
   CommentsButton comments;
   @UiField DivElement previewContainer;
+
+  @UiField HTML view;
+
+  @UiField HTMLPanel operations;
 
   private NotifyButton notification = new NotifyButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
@@ -99,6 +104,9 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
     msg = GWT.create(MediaMessages.class);
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
     getElement().setId("a-media");
+    operations.getElement().setId("operations");
+    download.getElement().setId("download");
+    view.getElement().setId("view");
     /*Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
       public void execute() {
@@ -135,6 +143,7 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
     if (isVisible()) {
       this.photo = (PhotoDTO) event.getPreview();
+      if (!photo.getDownload()) link.getElement().removeClassName("expand-more");
       preview.setSrc(photo.getDataPhoto());
       mediaType.setSrc(NetworkHelper.getContext() + "icons/files/file-type-image.svg");
       mediaTitle.setInnerHTML(photo.getTitle());
@@ -185,6 +194,28 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
     PhotoViewerPage page = new PhotoViewerPage();
     page.setDataPhoto(photo);
     page.show();
+  }
+
+  @UiHandler("link")
+  void link(ClickEvent event) {
+    if (photo.getDownload()) {
+      toogleOperations();
+    }
+  }
+
+  private void toogleOperations() {
+    if (operations.getStylePrimaryName().equalsIgnoreCase("ops-closed")) {
+      operations.setStylePrimaryName("ops-open");
+      link.setStylePrimaryName("expand-less");
+    } else {
+      operations.setStylePrimaryName("ops-closed");
+      link.setStylePrimaryName("expand-more");
+    }
+  }
+
+  @UiHandler("view")
+  void view(ClickEvent event) {
+    showFullScreen(event);
   }
 
   @UiHandler("download")

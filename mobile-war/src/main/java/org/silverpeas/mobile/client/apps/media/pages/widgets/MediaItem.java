@@ -76,7 +76,8 @@ public class MediaItem extends Composite {
     if (data instanceof PhotoDTO) {
       thumb.setSrc( ((PhotoDTO)data).getDataPhoto());
     } else if (data instanceof SoundDTO) {
-      thumb.setSrc(resources.sound().getSafeUri().asString());
+      thumb.setSrc(NetworkHelper.getContext() + "icons/files/file-type-sound.svg");
+      thumb.setAttribute("style", "object-fit:unset;");
     } else if (data instanceof VideoDTO) {
       String url = UrlUtils.getSilverpeasServicesLocation();
       url += "gallery/" + ((VideoDTO) data).getInstance() + "/videos/" + ((VideoDTO) data).getId() + "/thumbnail/0";

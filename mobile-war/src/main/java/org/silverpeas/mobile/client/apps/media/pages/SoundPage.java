@@ -58,6 +58,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEndHandler;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
@@ -80,13 +81,15 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
   }
 
   @UiField HeadingElement mediaTitle;
-  @UiField Anchor mediaFullSize, download;
+  @UiField Anchor mediaFullSize, download, link;
   @UiField ParagraphElement lastUpdate, creator;
   @UiField SpanElement mediaFileName, weight, dimensions;
   @UiField ImageElement mediaPreview, mediaType;
   @UiField AudioElement player;
   @UiField CommentsButton comments;
   @UiField DivElement previewContainer;
+
+  @UiField HTMLPanel operations;
 
   private NotifyButton notification = new NotifyButton();
   private ShareButton share = new ShareButton();
@@ -101,6 +104,8 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(MediaMessages.class);
     getElement().setId("a-media");
+    operations.getElement().setId("operations");
+    download.getElement().setId("download");
     EventBus.getInstance().addHandler(AbstractMediaPagesEvent.TYPE, this);
     /*Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       @Override
@@ -114,9 +119,9 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
   @Override
   public void onMediaPreviewLoaded(final MediaPreviewLoadedEvent event) {
     if (isVisible()) {
-      mediaPreview.setSrc(resources.sound().getSafeUri().asString());
       SoundDTO sound = (SoundDTO) event.getPreview();
       this.sound = sound;
+      if (!sound.getDownload()) link.getElement().removeClassName("expand-more");
       String url = UrlUtils.getSilverpeasServicesLocation();
       url += "gallery/" + sound.getInstance() + "/sounds/" + sound.getId() + "/content";
       player.setSrc(url);
@@ -126,8 +131,8 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       player.setAttribute("controlsList", "nodownload");
       player.setAttribute("type", sound.getMimeType());
 
-      Image img = new Image(resources.sound());
-      mediaType.getParentElement().replaceChild(img.getElement(), mediaType);
+      mediaType.setSrc(NetworkHelper.getContext() + "icons/files/file-type-sound.svg");
+
       mediaTitle.setInnerHTML(sound.getTitle());
       mediaFileName.setInnerHTML(sound.getName());
 
@@ -157,6 +162,23 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       }
       share.init(sound.getTitle(),sound.getTitle(), LinksManager.createMediaPermalink(sound.getId()));
       addActionMenu(share);
+    }
+  }
+
+  @UiHandler("link")
+  void link(ClickEvent event) {
+    if (sound.getDownload()) {
+      toogleOperations();
+    }
+  }
+
+  private void toogleOperations() {
+    if (operations.getStylePrimaryName().equalsIgnoreCase("ops-closed")) {
+      operations.setStylePrimaryName("ops-open");
+      link.setStylePrimaryName("expand-less");
+    } else {
+      operations.setStylePrimaryName("ops-closed");
+      link.setStylePrimaryName("expand-more");
     }
   }
 

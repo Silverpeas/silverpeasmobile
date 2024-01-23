@@ -955,7 +955,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-color: #f6f6f6;
   width: 100%;
   color: black;
+}
 
+audio::-webkit-media-controls-enclosure {
+  border-radius: 0;;
 }
 
 .info-nb-sous-elmt {
@@ -1291,12 +1294,12 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #attachments li a.expand-more {
-	background: transparent url(icons/expand_more.svg) right 1em no-repeat;
+	background: transparent url(icons/expand_more.svg) right 0.5em no-repeat;
 	margin-right: 0.5em;
 }
 
 #attachments li a.expand-less {
-  background: transparent url(icons/expand_less.svg) right 1em no-repeat;
+  background: transparent url(icons/expand_less.svg) right 0.5em no-repeat;
   margin-right: 0.5em;
 }
 
@@ -1306,7 +1309,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #attachments li a span {
   display: block;
-  padding-right:0.5em;
+  padding-right:1em;
 }
 
 .ops-open, .ops-open #share, .ops-open #download, .ops-open #view, .ops-open #notify {
@@ -1315,7 +1318,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   height: 30px;
   line-height:30px;
   transform: scaleY(1);
-  margin-bottom:10px;
+  margin-bottom:1em;
 }
 
 .ops-closed, .ops-closed #share, .ops-closed #download, .ops-closed #view, .ops-closed #notify {
@@ -1337,7 +1340,7 @@ li > #operations {
   width: 30px;
   height: 30px;
   border-radius: 0.25em;
-  margin-right: 1.5em;
+  margin-right: 1em;
   float : right;
 }
 
@@ -1348,7 +1351,7 @@ li > #operations {
   width: 30px;
   height: 30px;
   border-radius: 0.25em;
-  margin-right: 1.5em;
+  margin-right: 1em;
   float : right;
 }
 
@@ -1359,7 +1362,7 @@ li > #operations {
   width: 30px;
   height: 30px;
   border-radius: 0.25em;
-  margin-right: 1.5em;
+  margin-right: 1em;
   float : right;
 }
 
@@ -1370,7 +1373,7 @@ li > #operations {
   width: 30px;
   height: 30px;
   border-radius: 0.25em;
-  margin-right: 1.5em;
+  margin-right: 1em;
   float : right;
 }
 

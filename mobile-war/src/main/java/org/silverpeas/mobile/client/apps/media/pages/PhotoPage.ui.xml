@@ -38,12 +38,20 @@
       <widgets:CommentsButton ui:field="comments"/>
       <ul id="attachments">
         <li>
-          <g:Anchor ui:field="download" styleName="downloadable">
-            <img ui:field="mediaType"/>
-            <span ui:field="mediaFileName"></span>
-            <span class="weight" ui:field="weight"></span>
-            <span class="dimension" ui:field="dimensions"></span>
+          <g:Anchor ui:field="link" styleName="expand-more" href="javascript:;">
+            <div>
+              <img ui:field="mediaType"/>
+            </div>
+            <div>
+              <span ui:field="mediaFileName"></span>
+              <span class="weight" ui:field="weight"></span>
+              <span class="dimension" ui:field="dimensions"></span>
+            </div>
           </g:Anchor>
+          <g:HTMLPanel ui:field="operations" stylePrimaryName="ops-closed">
+            <g:Anchor ui:field="download" styleName="downloadable"></g:Anchor>
+            <g:HTML ui:field="view"></g:HTML>
+          </g:HTMLPanel>
         </li>
       </ul>
       <p ui:field="creator" class="lastUpdate"></p>
