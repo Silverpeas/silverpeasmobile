@@ -690,19 +690,19 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   height: 18px;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel {
+#silverpeas-navmenu-panel #navmenu-panel, #silverpeas-navmenu-panel #actions-menu {
   border-top: 1px solid #d3d3d3;
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li {
+#silverpeas-navmenu-panel #navmenu-panel li, #silverpeas-navmenu-panel #actions-menu li {
   padding: 0;
   margin: 0;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li a {
+#silverpeas-navmenu-panel #navmenu-panel li a, #silverpeas-navmenu-panel #actions-menu li a {
   text-decoration: none;
   color: #333333;
   display: block;
@@ -710,6 +710,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-size: 1.25em;
   line-height: 1.6em;
   margin-left: 0.5em;
+}
+
+#actions-menu {
+  position: absolute;
+  bottom: 48px;
+  width: 100%;
+  border: 0;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-config a {
@@ -720,7 +727,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url('icons/tasks.svg') no-repeat;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-help a {
+#silverpeas-navmenu-panel #actions-menu li#menu-help a {
   background: transparent url('icons/help.svg') no-repeat;
 }
 
@@ -732,16 +739,16 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: transparent url('icons/share.svg') no-repeat;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-parameter a {
+#silverpeas-navmenu-panel #actions-menu li#menu-parameter a {
   background: transparent url('icons/settings.svg') no-repeat;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-home a {
+#silverpeas-navmenu-panel #actions-menu li#menu-home a {
   background: transparent url('icons/home.svg') no-repeat;
 
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-logout a {
+#silverpeas-navmenu-panel #actions-menu li#menu-logout a {
   background: transparent url('icons/logout.svg') no-repeat;
 }
 
