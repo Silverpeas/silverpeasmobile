@@ -25,7 +25,9 @@
 package org.silverpeas.mobile.client.resources;
 
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author: svu
@@ -40,4 +42,13 @@ public interface ApplicationResources extends ClientBundle {
 
   @Source("offline.png")
   ImageResource offline();
+
+  @Source("call.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource call();
+
+  @Source("sms.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource sms();
+
 }

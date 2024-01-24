@@ -256,8 +256,7 @@ legend, .ui-input-text input, .ui-input-search input {
 
 .ui-page-theme-a .ui-body-inherit.filter-contacts {
   background-color: #FFF;
-  background-image: url(packPictos.png);
-  background-position: 5px -577px;
+  background-image: url('icons/search.svg');
   background-repeat: no-repeat;
   width: 92%;
   padding-left: 2em;
@@ -1225,6 +1224,11 @@ audio::-webkit-media-controls-enclosure {
   text-decoration: underline;
 }
 
+#add-comment {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
 #add-comment,
 .introduction {
   position: relative;
@@ -1247,6 +1251,7 @@ audio::-webkit-media-controls-enclosure {
 #add-comment textarea.ui-input-text {
   font-size: 9pt;
   height: 7em;
+  border-radius: 10px;
 }
 
 #add-comment .btn-publicate {
@@ -1260,7 +1265,7 @@ audio::-webkit-media-controls-enclosure {
   position: absolute;
   right: 0;
   bottom: 5px;
-  margin-right: 1em ;
+  margin-right: 0.5em ;
 }
 
 #add-comment .btn-publicate.inactif {
@@ -1394,20 +1399,18 @@ li > #operations {
   font-style: italic;
 }
 
-#btn-my-contacts > span, #btn-all-contacts > span {
-  background: transparent url(packPictos.png) 4px -241px no-repeat;
+#btn-my-contacts > span, #btn-all-contactsext > span {
+  background: url('icons/contacts.svg') no-repeat;
   padding-left: 30px;
   display: block;
-  line-height: 0.8em;
   text-align: left;
   font-size: 0.8em;
 }
 
-#btn-all-contactsext > span {
-  background: transparent url(packPictos.png) 4px -170px no-repeat;
+#btn-all-contacts > span {
+  background: url('icons/account.svg') no-repeat;
   padding-left: 30px;
   display: block;
-  line-height: 0.8em;
   text-align: left;
   font-size: 0.8em;
 }
@@ -1464,7 +1467,6 @@ li > #operations {
   top: 0.1em;
   right: 0.1em;
   bottom: 0.1em;
-  /*background: #7eb73a url(packPictos.png) 0.5em 0.5em no-repeat;*/
   display: block;
   text-indent: -300em;
   width: 2em;
@@ -1494,7 +1496,7 @@ li > #operations {
   width: 98%;
   padding-right: 1%;
   padding-left: 1%;
-  line-height: 2em;
+  line-height: 2.5em;
   background-color: #FFF;
   font-size: 80%;
 }
@@ -1536,7 +1538,6 @@ input.filter-contacts {
   width: 24px;
   border: 1px solid #ccc;
   float: right;
-  /*margin-right: 1em;*/
 }
 
 .list-contacts .user-name,
@@ -1557,6 +1558,19 @@ input.filter-contacts {
   color: #ec8001;
   text-decoration: none;
   white-space: nowrap;
+  margin-right: 1em;
+}
+
+.tel-link span {
+  margin-left: 1em;
+}
+
+.tel-link svg {
+  fill:#ec8001;
+}
+
+.sms-link svg {
+  fill:#ec8001;
 }
 
 /***** STATUT & ADD COMMENT***/
@@ -1782,11 +1796,12 @@ textarea.ui-input-text {
 }
 
 .searchButton {
-  width: 20px;
-  height: 17px;
-  background: transparent url(packPictos.png) bottom left no-repeat;
+  width: 24px;
+  height: 24px;
+  background: url('icons/search.svg') no-repeat;
   text-indent: -300em;
   display: inline-block;
+  position: absolute;
 }
 
 #menu-search {

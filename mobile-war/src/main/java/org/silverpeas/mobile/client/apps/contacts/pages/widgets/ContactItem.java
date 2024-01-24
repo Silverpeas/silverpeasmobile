@@ -25,6 +25,8 @@
 package org.silverpeas.mobile.client.apps.contacts.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -36,6 +38,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.contacts.resources.ContactsResources;
+import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -86,40 +89,23 @@ public class ContactItem extends Composite {
 
     int nbTel = 0;
     if (userData.getPhoneNumber() != null && !userData.getPhoneNumber().isEmpty()) {
-      Anchor tel1 = new Anchor();
-      tel1.setStyleName("tel-link");
-      tel1.setText(userData.getPhoneNumber());
-      tel1.setHref("tel:" + userData.getPhoneNumber());
-      tel.add(tel1);
+      createPhoneFragment(tel, userData.getPhoneNumber());
       nbTel++;
     }
     if (userData.getCellularPhoneNumber() != null && !userData.getCellularPhoneNumber().isEmpty()) {
       if (nbTel == 1) {
         tel.add(new InlineHTML(" | "));
       }
-      Anchor tel2 = new Anchor();
-      tel2.setStyleName("tel-link");
-      tel2.setText(userData.getCellularPhoneNumber());
-      tel2.setHref("tel:" + userData.getCellularPhoneNumber());
-      tel.add(tel2);
-
-      Anchor sms = new Anchor();
-      sms.setHref("sms:" + userData.getCellularPhoneNumber());
-      Image smsImg = new Image(resourcesContact.sms());
-      sms.getElement().appendChild(smsImg.getElement());
-      tel.add(sms);
-
+      createPhoneFragment(tel, userData.getCellularPhoneNumber());
+      createSmsFragment(tel, userData.getCellularPhoneNumber());
       nbTel++;
     }
     if (userData.getFaxPhoneNumber() != null && !userData.getFaxPhoneNumber().isEmpty()) {
       if (nbTel == 2) {
         tel.add(new InlineHTML(" | "));
       }
-      Anchor tel3 = new Anchor();
-      tel3.setStyleName("tel-link");
-      tel3.setText(userData.getFaxPhoneNumber());
-      tel3.setHref("tel:" + userData.getFaxPhoneNumber());
-      tel.add(tel3);
+      createPhoneFragment(tel, userData.getPhoneNumber());
+      createPhoneFragment(tel, userData.getFaxPhoneNumber());
       nbTel++;
     }
     if (nbTel == 0) {
@@ -131,18 +117,8 @@ public class ContactItem extends Composite {
       if (value != null & !value.isEmpty()) {
         if (isPhoneNumber(value)) {
           HTMLPanel field = new HTMLPanel("");
-          Anchor tel = new Anchor();
-          tel.setStyleName("tel-link");
-          tel.setText(value);
-          tel.setHref("tel:" + value);
-          field.add(tel);
-
-          Anchor sms = new Anchor();
-          sms.setHref("sms:" + value);
-          Image smsImg = new Image(resourcesContact.sms());
-          sms.getElement().appendChild(smsImg.getElement());
-          field.add(sms);
-
+          createPhoneFragment(field, value);
+          createSmsFragment(field, value);
           container.add(field);
         } else {
           HTML field = new HTML(value);
@@ -151,6 +127,24 @@ public class ContactItem extends Composite {
         }
       }
     }
+  }
+
+  private void createPhoneFragment(HTMLPanel parent, String value) {
+    Anchor tel = new Anchor();
+    tel.setStyleName("tel-link");
+    tel.setHref("tel:" + value);
+    tel.getElement().setInnerHTML(resources.call().getText());
+    SpanElement text = Document.get().createSpanElement();
+    text.setInnerText(value);
+    tel.getElement().appendChild(text);
+    parent.add(tel);
+  }
+  private void createSmsFragment(HTMLPanel parent, String value) {
+    Anchor sms = new Anchor();
+    sms.setStyleName("sms-link");
+    sms.setHref("sms:" + value);
+    sms.getElement().setInnerHTML(resources.sms().getText());
+    parent.add(sms);
   }
 
   private boolean isPhoneNumber(String value) {
