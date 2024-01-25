@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.components.blog.model.PostDetail;
+import org.silverpeas.components.blog.service.BlogFilters;
 import org.silverpeas.components.blog.service.BlogServiceFactory;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
@@ -67,7 +68,7 @@ public class ServiceBlog extends AbstractRestWebService {
     if (categoryId.equalsIgnoreCase("all")) {
       posts = BlogServiceFactory.getBlogService().getAllPosts(componentId);
     } else {
-      posts = BlogServiceFactory.getBlogService().getPostsByCategory(categoryId, componentId);
+      posts = BlogServiceFactory.getBlogService().getPostsByCategory(categoryId, componentId, new BlogFilters(false));
     }
 
     postsDTO = populate(posts);
