@@ -489,7 +489,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   overflow: hidden;
   padding: 0;
   position: absolute;
-  right: 94px;
   top: 1px;
   height: 44px;
 }
@@ -1535,7 +1534,7 @@ input.filter-contacts {
 .list-contacts .user-name img,
 .list-comments .user-name img,
 .list-notifications .user-name img {
-  width: 24px;
+  width: 32px;
   border: 1px solid #ccc;
   float: right;
 }
@@ -1731,7 +1730,7 @@ textarea.ui-input-text {
   background: #FFF url(bg-input-password.png) 0 0 no-repeat;
 }
 
-#page-login #DomainId {
+#page-login #DomainId, .filter-list {
   width: 70vw;
   box-sizing: border-box;
   padding: 0.5em;
@@ -2579,10 +2578,20 @@ a.popin-btn {
   margin:0.50em 0 ;
 }
 
+.filter-classifield {
+  text-align: right;
+}
+
+.filter-classifield span {
+  padding-right: 1em;
+}
+
 .liste-annonces div.thumbnail img{
   margin:auto;
   max-height:125px;
   max-width:125px;
+  border-radius: 2px;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
 }
 
 .classified_form {
