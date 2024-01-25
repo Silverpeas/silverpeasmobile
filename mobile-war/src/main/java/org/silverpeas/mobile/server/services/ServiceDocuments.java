@@ -436,6 +436,7 @@ public class ServiceDocuments extends AbstractRestWebService {
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
+      dto.setNotAllowedDownloads(new ArrayList<>());
 
       if (type.equals(ContentsTypes.Publication.toString())) {
         try {
