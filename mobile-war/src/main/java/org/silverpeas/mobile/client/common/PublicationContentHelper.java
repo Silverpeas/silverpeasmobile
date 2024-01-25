@@ -78,28 +78,12 @@ public class PublicationContentHelper {
   public static void showContent(String pubId, String appId, Element basement) {
     final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId;
     IFrameElement iframeC = Document.get().createIFrameElement();
-    try {
-      new RequestBuilder(RequestBuilder.GET, url).sendRequest(null, new RequestCallback() {
-        @Override
-        public void onResponseReceived(final Request request, final Response response) {
-          iframeC.setSrc("javascript:;");
-          iframeC.getStyle().setBorderStyle(Style.BorderStyle.NONE);
-          iframeC.getStyle().setWidth(100, Style.Unit.PCT);
-          iframeC.getStyle().setOverflow(Style.Overflow.HIDDEN);
-          iframeC.setAttribute("onload", "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));");
-          basement.appendChild(iframeC);
-          write(iframeC.getContentDocument(), response.getText());
-        }
-
-        @Override
-        public void onError(final Request request, final Throwable throwable) {
-          EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-        }
-      });
-
-    } catch (RequestException e) {
-      EventBus.getInstance().fireEvent(new ErrorEvent(e));
-    }
+    iframeC.setSrc(url);
+    iframeC.getStyle().setBorderStyle(Style.BorderStyle.NONE);
+    iframeC.getStyle().setWidth(100, Style.Unit.PCT);
+    iframeC.getStyle().setOverflow(Style.Overflow.HIDDEN);
+    iframeC.setAttribute("onload", "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));");
+    basement.appendChild(iframeC);
   }
 
   private static native void write(Document doc, String newHTML) /*-{
