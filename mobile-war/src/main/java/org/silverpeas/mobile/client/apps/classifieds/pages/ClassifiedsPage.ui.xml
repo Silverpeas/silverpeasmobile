@@ -31,13 +31,13 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <div class="content-navigation">
+    <div class="content-navigation filter-classifield">
       <span class="ui-btn-text"><ui:text from="{msg.category}"/></span>
-      <g:ListBox ui:field="categories"/>
+      <g:ListBox ui:field="categories" styleName="filter-list"/>
     </div>
-    <div class="content-navigation">
+    <div class="content-navigation filter-classifield">
       <span class="ui-btn-text"><ui:text from="{msg.type}"/></span>
-      <g:ListBox ui:field="types"/>
+      <g:ListBox ui:field="types" styleName="filter-list"/>
     </div>
     <components:UnorderedList ui:field="classifieds" styleName="liste-annonces"/>
   </g:HTMLPanel>
