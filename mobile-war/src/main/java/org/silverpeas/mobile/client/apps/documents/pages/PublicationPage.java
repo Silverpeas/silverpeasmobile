@@ -267,15 +267,4 @@ public class PublicationPage extends PageContent
   private static void showPublicationContent(String pubId, String appId, String title) {
     PublicationContentHelper.showContent(pubId, appId, title);
   }
-
-  @Override
-  public void setVisible(final boolean visible) {
-    super.setVisible(visible);
-    Element iframeC = content.getElementsByTagName("iframe").getItem(0);
-    if (iframeC != null) {
-      // need to re display
-      iframeC.removeFromParent();
-      PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
-    }
-  }
 }
