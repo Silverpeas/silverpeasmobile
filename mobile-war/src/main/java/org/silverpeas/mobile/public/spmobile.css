@@ -383,9 +383,9 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 	display:block;
 	width:16px;
 	height:16px;
-	background-image: url(packImagesNavigation.png);
-	background-position:-28px -2174px;
+	background-image: url('icons/calendar_today.svg');
     background-repeat: no-repeat;
+  background-size: contain;
 	position:absolute;
 	top:0;
 	right:1.25em;
@@ -1167,9 +1167,9 @@ audio::-webkit-media-controls-enclosure {
 }
 
 #event #participation .label {
-  background: #fff url(packImagesNavigation.png) 0.15em -1870px no-repeat;
-  padding-left: 1.5625em;
-  line-height: 1.15em;
+  background: #fff url('icons/peoples.svg')  no-repeat;
+  padding-left: 2em;
+  line-height: 2em;
   padding-bottom: 0.5em;
   display: block;
 }
@@ -1207,15 +1207,16 @@ audio::-webkit-media-controls-enclosure {
 
 #event .actions-rappel {
   display: inline-block;
+  vertical-align: middle;
 }
 
 #event .actions-rappel .delete {
   text-indent: -300em;
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   padding: 0 !important;
-  background: transparent url(packImagesNavigation.png) 0em -2054px no-repeat;
+  background: transparent url('icons/remove_circle.svg') no-repeat;
 }
 
 #comments .link-add-comment {
@@ -2424,7 +2425,7 @@ a.popin-btn {
 }
 
 .ui-list-graduate > li {
-  background: #f4f4f4 url(packImagesNavigation.png) right -2104px no-repeat;
+  background: url('icons/expand_more.svg') right no-repeat;
   border-bottom: 1px solid #ddd;
   position: relative;
 }
@@ -2435,13 +2436,16 @@ a.popin-btn {
   display: inline-block
 }
 
+.graduate-time {
+  line-height: 2em;
+}
+
 .ui-list-graduate li .nb-event {
   position: absolute;
-  right: 1.5em;
+  right: 2em;
   top: 0.4em;
-  background: transparent url(packImagesNavigation.png) right -2176px no-repeat;
-  padding-right: 2em;
-  line-height: 14px;
+  background: transparent url('icons/calendar_today.svg') no-repeat right;
+  padding-right: 2.5em;
 }
 
 .ui-list-graduate li.open .nb-event {
