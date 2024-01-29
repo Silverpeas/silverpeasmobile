@@ -2425,7 +2425,7 @@ a.popin-btn {
 }
 
 .ui-list-graduate > li {
-  background: url('icons/expand_more.svg') right no-repeat;
+  background: url('icons/expand_more.svg') top right no-repeat;
   border-bottom: 1px solid #ddd;
   position: relative;
 }
@@ -2449,7 +2449,7 @@ a.popin-btn {
 }
 
 .ui-list-graduate li.open .nb-event {
-  display: none;
+
 }
 
 .ui-list-graduate > li:nth-child(odd) {
@@ -2457,12 +2457,12 @@ a.popin-btn {
 }
 
 .ui-list-graduate li.open {
-  background: #4c4c4c url(packImagesNavigation.png) right -2133px no-repeat;
+  background: url('icons/expand_less.svg') top right no-repeat;
   border: 0;
 }
 
 .ui-list-graduate li.open .label {
-  color: #FFF;
+
 }
 
 .ui-list-graduate li ul {
@@ -2470,8 +2470,7 @@ a.popin-btn {
 }
 
 .ui-list-graduate li.open ul {
-  background-color: #4c4c4c;
-  display: block;
+
 }
 
 #list-events .open .ui-listview {
@@ -2517,7 +2516,7 @@ a.popin-btn {
   margin-top: 0.5em;
   max-width: 80%;
   text-overflow: ellipsis;
-  height: 1em;
+  line-height: 1em;
   overflow: hidden;
   white-space: nowrap;
 }

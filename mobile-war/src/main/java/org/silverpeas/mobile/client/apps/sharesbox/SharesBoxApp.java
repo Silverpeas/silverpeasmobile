@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.sharesbox;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -36,6 +37,7 @@ import org.silverpeas.mobile.client.apps.sharesbox.events.app.SharesBoxAppEventH
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.SharesDeletedEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.pages.SharesBoxPage;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
@@ -73,12 +75,20 @@ public class SharesBoxApp extends App
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals(ContentsTypes.SharesBox.toString())) {
+    if (event.getContent().getType().equals(ContentsTypes.  SharesBox.toString())) {
       MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TicketDTO>>() {
         @Override
         public void attempt() {
           super.attempt();
           ServicesLocator.getRestServiceTickets().getMyTickets("", this);
+        }
+
+        @Override
+        public void onFailure(Method method, Throwable t) {
+          SharesBoxPage page = new SharesBoxPage();
+          setMainPage(page);
+          page.show();
+          Notification.activityStop();
         }
 
         @Override
