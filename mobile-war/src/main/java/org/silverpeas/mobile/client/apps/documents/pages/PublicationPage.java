@@ -124,7 +124,7 @@ public class PublicationPage extends PageContent
   public PublicationPage() {
     msg = GWT.create(DocumentsMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
-    supercontainer.getElement().setAttribute("style","height:100vh;");
+    supercontainer.getElement().setAttribute("style","min-height:100vh;");
     container.getElement().setId("publication");
     attachments.getElement().setId("attachments");
     linkedPublications.getElement().setId("linkedPublications");

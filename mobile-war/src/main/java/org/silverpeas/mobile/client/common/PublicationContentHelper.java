@@ -79,7 +79,8 @@ public class PublicationContentHelper {
     final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId;
     IFrameElement iframeC = Document.get().createIFrameElement();
     iframeC.setSrc(url);
-    String s = "border-style: none; width: 100%; height:50vh; overflow: hidden;";
+    iframeC.setAttribute("onload", "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));");
+    String s = "border-style: none; width: 100%; overflow: hidden;";
     iframeC.setAttribute("style", s);
     basement.appendChild(iframeC);
   }
