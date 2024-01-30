@@ -175,8 +175,10 @@ public class PublicationPage extends PageContent
 
     if (Boolean.parseBoolean(ResourcesManager.getParam("content.display.embedded")) && publication.getContent()) {
       PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
+      contentLink.setVisible(false);
+    } else {
+      contentLink.setVisible(publication.getContent());
     }
-    contentLink.setVisible(publication.getContent());
     swipeRecognizer = new SwipeRecognizer(supercontainer);
   }
 
