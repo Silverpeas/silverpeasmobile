@@ -2097,23 +2097,19 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .config .actuality a {
-  background-image: url(packImagesNavigation.png);
-  background-position: right -1022px;
-  background-repeat: no-repeat;
+
 }
 
 .config .publication a {
-  background-position: right -184px;
+  background:none;
 }
 
 .config .event a {
-  background-image: url(packImagesNavigation.png);
-  background-position: right -1393px;
-  background-repeat: no-repeat;
+
 }
 
 .config .favoris a {
-  background: transparent url(packImagesNavigation.png) right -1182px no-repeat;
+
 }
 
 .config li a {

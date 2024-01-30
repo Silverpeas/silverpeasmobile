@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.components.homepage;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -103,6 +104,9 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     news.setVisible(config.isNewsDisplay());
     freeZoneSection.setVisible(config.isFreeZoneDisplay());
     freeZoneThinSection.setVisible(config.isFreeZoneThinDisplay());
+    shortCutsSection.setVisible(config.isShortCutsDisplay());
+    lastEventsSection.setVisible(config.isLastEventsDisplay());
+    shortCutsToolsSection.setVisible(config.isShortCutsToolsDisplay());
   }
 
   public void setData(HomePageDTO data) {
