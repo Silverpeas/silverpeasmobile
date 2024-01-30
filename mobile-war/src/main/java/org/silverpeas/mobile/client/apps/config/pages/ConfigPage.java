@@ -53,7 +53,7 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
   @UiField
   CheckBox lastPublicationsDisplay, lastEventsDisplay;
   @UiField
-  CheckBox favoritesDisplay, shortCutsDisplay;
+  CheckBox favoritesDisplay, shortCutsDisplay, shortCutsToolsDisplay;
   private Config config;
   public ConfigPage() {
     initWidget(uiBinder.createAndBindUi(this));
@@ -84,6 +84,7 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     favoritesDisplay.setValue(config.isFavoritesDisplay());
     lastEventsDisplay.setValue(config.isLastEventsDisplay());
     shortCutsDisplay.setValue(config.isShortCutsDisplay());
+    shortCutsToolsDisplay.setValue(config.isShortCutsToolsDisplay());
   }
 
   private void save() {
@@ -92,6 +93,7 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     config.setLastPublicationsDisplay(lastPublicationsDisplay.getValue());
     config.setLastEventsDisplay(lastEventsDisplay.getValue());
     config.setShortCutsDisplay(shortCutsDisplay.getValue());
+    config.setShortCutsToolsDisplay(shortCutsToolsDisplay.getValue());
     EventBus.getInstance().fireEvent(new UpdateConfigEvent(config));
   }
 

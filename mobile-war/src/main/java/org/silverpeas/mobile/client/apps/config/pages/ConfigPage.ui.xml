@@ -55,6 +55,11 @@
           <g:CheckBox ui:field="shortCutsDisplay" text="Afficher les raccourcis"></g:CheckBox>
         </a>
       </li>
+      <li class="shortcutools">
+        <a class="ui-btn">
+          <g:CheckBox ui:field="shortCutsToolsDisplay" text="Afficher les outils"></g:CheckBox>
+        </a>
+      </li>
     </ul>
   </g:HTMLPanel>
   </g:HTMLPanel>
