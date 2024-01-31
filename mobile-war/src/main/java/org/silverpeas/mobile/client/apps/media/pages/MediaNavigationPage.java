@@ -87,6 +87,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     this.rootAlbumId = rootAlbumId;
     this.rights = rights;
     buttonImport.init(instanceId, rootAlbumId);
+    buttonImport.setId("import");
     EventBus.getInstance().fireEvent(new MediasLoadMediaItemsEvent(instanceId, rootAlbumId));
   }
 
