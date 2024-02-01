@@ -51,7 +51,6 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.IframePage;
-import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.PopinInformation;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -212,16 +211,12 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         event.getContent().getType().equals(ContentsTypes.News.name()) ||
         event.getContent().getType().equals(ContentsTypes.Attachment.name()) ||
         event.getContent().getType().equals(ContentsTypes.Folder.name())) {
-      if (event.getContent().getInstanceId().startsWith("kmelia") ||
-              event.getContent().getInstanceId().startsWith("quickinfo") ||
-              event.getContent().getInstanceId().startsWith("blog")) {
         loadAppInstance(event.getContent(), new Command() {
           @Override
           public void execute() {
             startWithContent(event.getContent());
           }
         });
-      }
     }
   }
 

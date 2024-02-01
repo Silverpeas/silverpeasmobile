@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.navigation;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
@@ -106,11 +105,15 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
   @Override
   public void showContent(final NavigationShowContentEvent event) {
       if (event.getContent().getType().equals(ContentsTypes.Space.name())) {
+          final String id;
+          if (event.getContent().getInstanceId() == null || event.getContent().getInstanceId().isEmpty()) {
+              id = event.getContent().getId();
+          } else {
+              id = event.getContent().getInstanceId();
+          }
           MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<SpaceDTO>() {
               @Override
               public void attempt() {
-                  String id = event.getContent().getInstanceId();
-                  if (id == null || id.isEmpty()) id = event.getContent().getId();
                   ServicesLocator.getServiceNavigation().getSpace(id, this);
               }
               @Override
@@ -119,7 +122,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
                       ShortCutRouter.route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null, null, null);
                   } else {
                       NavigationPage page = new NavigationPage();
-                      page.setRootSpaceId(event.getContent().getInstanceId());
+                      page.setRootSpaceId(id);
                       page.show();
                   }
               }
