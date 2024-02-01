@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.favorites;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.app.AddFavoriteEvent;
@@ -39,7 +38,6 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
@@ -102,7 +100,11 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
         super.attempt();
         MyLinkDTO dto = new MyLinkDTO();
         dto.setName(event.getDescription());
-        dto.setUrl("/" + event.getObjectType() + "/" + event.getObjectId());
+        if (event.getObjectType().equals(ContentsTypes.Folder.name())) {
+            dto.setUrl("/Topic/" + event.getObjectId() + "?ComponentId="+ event.getInstanceId());
+        } else {
+            dto.setUrl("/" + event.getObjectType() + "/" + event.getObjectId());
+        }
         dto.setVisible(true);
         dto.setPopup(false);
         dto.setDescription(event.getDescription());
