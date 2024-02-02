@@ -31,8 +31,8 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages'/>
 
   <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
-    <label id="validityLabel" style="label"><ui:safehtml from="{msg.validityLabel}"/></label>
-    <g:ListBox ui:field="validity"></g:ListBox>
+    <label id="validityLabel" class="field-label"><ui:safehtml from="{msg.validityLabel}"/></label>
+    <g:ListBox ui:field="validity" styleName="filter-list"></g:ListBox>
 
     <div id="endValidityLabel"><ui:safehtml from="{msg.endValidityLabel}"/></div>
     <g:TextBox ui:field="endValidity" visible="false"></g:TextBox>
