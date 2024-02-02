@@ -39,10 +39,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.app.AttachmentsLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
@@ -70,6 +67,7 @@ import org.silverpeas.mobile.client.common.PublicationContentHelper;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttributeDTO;
@@ -89,6 +87,7 @@ import java.util.Iterator;
  */
 public class EventPage  extends PageContent implements EventPagesEventHandler {
   private static EventPageUiBinder uiBinder = GWT.create(EventPageUiBinder.class);
+  private ApplicationResources resources = GWT.create(ApplicationResources.class);
 
   @UiField(provided = true) protected AgendaMessages msg = null;
 
@@ -113,6 +112,8 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
   @UiField
   UnorderedList attachments, attendees;
 
+  @UiField
+  InlineHTML iconParticipants;
   private CalendarEventDTO event;
   private CalendarDTO calendar;
   private ReminderDTO reminderDTO;
@@ -140,6 +141,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     container.getElement().setId("event");
     dateEvent.setId("date-event");
     attachments.setId("attachments");
+    iconParticipants.setHTML(resources.peoples().getText());
     EventBus.getInstance().addHandler(AbstractEventPagesEvent.TYPE, this);
   }
 

@@ -75,8 +75,10 @@ public class ActionsMenu  extends Composite {
     }
 
     public static void close(Element action) {
-        action.getParentElement().removeClassName("open-qvf-menu");
-        action.getParentElement().addClassName("closed-qvf-menu");
+        if (action.getParentElement() != null) {
+            action.getParentElement().removeClassName("open-qvf-menu");
+            action.getParentElement().addClassName("closed-qvf-menu");
+        }
     }
 
     public void close() {

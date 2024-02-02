@@ -51,6 +51,10 @@ public interface ApplicationResources extends ClientBundle {
   @DataResource.MimeType("image/svg+xml")
   TextResource sms();
 
+  @Source("icons/peoples.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource peoples();
+
 
   /** Applications icons **/
 

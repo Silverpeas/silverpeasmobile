@@ -94,7 +94,11 @@ public class UserGroupItem extends ActionItem {
     } else if (data instanceof GroupDTO) {
       content.setStylePrimaryName("group-name");
       GroupDTO dataGroup = (GroupDTO) data;
-      content.add(new HTML(dataGroup.getName()));
+      HTML icon = new HTML(resources.peoples().getText());
+      icon.setStylePrimaryName("icon-group");
+      content.add(icon);
+      content.add(new HTML(dataGroup.getName() + " (" + dataGroup.getNbMembers() + ")"));
+      mail.setVisible(false);
     }
   }
 
