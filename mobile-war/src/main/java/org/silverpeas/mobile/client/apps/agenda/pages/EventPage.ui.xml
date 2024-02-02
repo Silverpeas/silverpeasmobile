@@ -58,7 +58,9 @@
 
     <components:UnorderedList ui:field="attachments"/>
 
-    <div id="participation" class=" elts-pub "> <span class="label">Participants :</span>
+    <div id="participation" class=" elts-pub ">
+      <g:InlineHTML ui:field="iconParticipants" styleName="icon-participation"/>
+      <span class="label"><ui:text from="{msg.participants}" /></span>
       <components:UnorderedList ui:field="attendees"/>
     </div>
 

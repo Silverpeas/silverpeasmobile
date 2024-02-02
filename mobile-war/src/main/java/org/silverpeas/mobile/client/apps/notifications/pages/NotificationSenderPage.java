@@ -63,10 +63,11 @@ public class NotificationSenderPage extends PageContent implements View, Notific
 
     @UiField protected HTMLPanel container;
     @UiField(provided = true) protected NotificationsMessages msg = null;
-    @UiField protected Anchor modify, send;
+    @UiField protected Anchor send;
     @UiField TextArea message;
     @UiField TextBox subject;
-    @UiField InlineHTML iconFile;
+    @UiField InlineHTML iconFile, iconSelection;
+    @UiField HTML destinataires;
 
     List<BaseDTO> selection = new ArrayList<BaseDTO>();
 
@@ -84,7 +85,7 @@ public class NotificationSenderPage extends PageContent implements View, Notific
              @Override
              public void execute() {
 
-                 Element destinataires = Document.get().getElementById("destinataires");
+                 //Element destinataires = Document.get().getElementById("destinataires");
 
 
                  String dest = "";
@@ -98,8 +99,8 @@ public class NotificationSenderPage extends PageContent implements View, Notific
                  dest = dest.substring(0, dest.length() - 2);
                  dest += "<div id=\"nb-user-sectionne\" class=\"nb-user-sectionne\">"+"(" + selection.size() + ")"+"</div>";
 
-                 destinataires.setInnerHTML(dest);
-
+                 destinataires.setHTML(dest);
+                 iconSelection.setHTML(resources.peoples().getText());
                  subject.setText(getTitle());
              }
          }
@@ -108,11 +109,6 @@ public class NotificationSenderPage extends PageContent implements View, Notific
 
     public void setSelection(List<BaseDTO> selection) {
         this.selection = selection;
-    }
-
-    @UiHandler("modify")
-    protected void modify(ClickEvent event) {
-        back();
     }
 
     @UiHandler("send")

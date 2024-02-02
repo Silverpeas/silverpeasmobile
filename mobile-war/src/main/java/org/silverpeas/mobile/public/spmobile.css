@@ -1142,12 +1142,14 @@ audio::-webkit-media-controls-enclosure {
   line-height: 1.25em;
 }
 
+.icon-participation {
+  position: absolute;
+}
+
 #event #participation .label {
-  background: #fff url('icons/peoples.svg')  no-repeat;
-  padding-left: 2em;
   line-height: 2em;
   padding-bottom: 0.5em;
-  display: block;
+  padding-left: 2em;
 }
 
 #event #participation ul {
@@ -1417,8 +1419,6 @@ li > #operations {
 }
 
 #edit-notification .ui-input-text.destinataires {
-  background: #FFF url('icons/peoples.svg') no-repeat;
-  padding-left: 4em;
   line-height: 1.4em;
   position: relative;
   color: #000;
@@ -1432,7 +1432,7 @@ li > #operations {
 
 #edit-notification .ui-input-text.destinataires .nb-user-sectionne {
   position: absolute;
-  top: 1em;
+  top: 0.5em;
   left: 1.6em;
   font-size: 1.4em;
   color: #333;
@@ -1514,6 +1514,11 @@ input.filter-contacts {
   width: 32px;
   border: 1px solid #ccc;
   float: right;
+}
+
+.icon-group svg {
+  float: right;
+  width: 32px;
 }
 
 .list-contacts .user-name,

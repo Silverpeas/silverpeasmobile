@@ -62,6 +62,8 @@ public interface AgendaMessages extends Messages {
 
   String addReminder();
   String acceptParticipation();
+
+  String participants();
   String rejectParticipation();
   String tentativeParticipation();
 

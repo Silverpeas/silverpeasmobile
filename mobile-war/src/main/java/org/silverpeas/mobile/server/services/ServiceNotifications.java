@@ -56,6 +56,7 @@ import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
+import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
@@ -183,9 +184,7 @@ public class ServiceNotifications extends AbstractRestWebService {
           users.add(populate(user));
         }
         for (GroupDetail group : Administration.get().getAllGroups()) {
-          GroupDTO g = new GroupDTO();
-          g.setId(group.getId());
-          g.setName(group.getName());
+          GroupDTO g =UserHelper.getInstance().populateGroupDTO(group);
           groups.add(g);
         }
       } else {
@@ -223,9 +222,7 @@ public class ServiceNotifications extends AbstractRestWebService {
           for (String groupId : profile.getAllGroups()) {
             if (!isGroupPresent(groups, groupId)) {
               Group group = organizationController.getGroup(groupId);
-              GroupDTO g = new GroupDTO();
-              g.setId(group.getId());
-              g.setName(group.getName());
+              GroupDTO g = UserHelper.getInstance().populateGroupDTO(group);
               groups.add(g);
             }
           }

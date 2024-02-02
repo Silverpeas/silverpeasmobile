@@ -33,7 +33,14 @@ public class GroupDTO extends BaseDTO implements Serializable{
 
   private static final long serialVersionUID = 5388415881024885835L;
   private String name;
+  private int nbMembers;
+  public int getNbMembers() {
+    return nbMembers;
+  }
 
+  public void setNbMembers(int nbMembers) {
+    this.nbMembers = nbMembers;
+  }
   public String getName() {
     return name;
   }

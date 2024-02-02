@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.server.services.helpers;
 
 import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.notification.NotificationException;
@@ -104,10 +105,11 @@ public class UserHelper {
     return dto;
   }
 
-  public GroupDTO populateGroupDTO(GroupDetail group) {
+  public GroupDTO populateGroupDTO(Group group) {
     GroupDTO dto = new GroupDTO();
     dto.setId(group.getId());
     dto.setName(group.getName());
+    dto.setNbMembers(group.getNbUsers());
     return dto;
   }
 
