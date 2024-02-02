@@ -67,10 +67,18 @@ public class LinksManager {
     String url = hyperLinkDTO.getUrl();
     if(sameContext(url)) {
       String shortcutContentType = "";
+      String shortcutContentRole = null;
       String shortcutAppId = null;
       String shortcutContentId = url.substring(url.lastIndexOf("/") + 1);
       if (url.contains("/Publication/")) {
         shortcutContentType = ContentsTypes.Publication.name();
+      } else if (url.contains("/File/")) {
+        shortcutContentType = ContentsTypes.Attachment.name();
+        if (shortcutContentId.contains("?ContentLanguage")) {
+          String[] params = shortcutContentId.split("\\?");
+          shortcutContentId = params[0];
+          shortcutContentRole = params[1].replace("ContentLanguage=","");
+        }
       } else if (url.contains("/Media/")) {
         shortcutContentType = ContentsTypes.Media.name();
       } else if (url.contains("/Topic/")) {
@@ -117,7 +125,7 @@ public class LinksManager {
       }
 
       ShortCutRouter
-              .route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId, null, null);
+              .route(SpMobil.getUser(), shortcutAppId, shortcutContentType, shortcutContentId, null, shortcutContentRole);
       return;
     }
     openExternalLink(url, hyperLinkDTO.getOpenNewWindow(), hyperLinkDTO.getInternalLink());

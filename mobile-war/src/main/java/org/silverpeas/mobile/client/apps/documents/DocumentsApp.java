@@ -52,6 +52,7 @@ import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.components.PopinInformation;
+import org.silverpeas.mobile.client.components.attachments.AttachmentsManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
@@ -209,7 +210,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       });
     } else if (event.getContent().getType().equals(ContentsTypes.Publication.name()) ||
         event.getContent().getType().equals(ContentsTypes.News.name()) ||
-        event.getContent().getType().equals(ContentsTypes.Attachment.name()) ||
         event.getContent().getType().equals(ContentsTypes.Folder.name())) {
         loadAppInstance(event.getContent(), new Command() {
           @Override
@@ -217,6 +217,8 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             startWithContent(event.getContent());
           }
         });
+    } else if (event.getContent().getType().equals(ContentsTypes.Attachment.name())) {
+      AttachmentsManager.viewDocument(event.getContent().getId(), event.getContent().getRole());
     }
   }
 

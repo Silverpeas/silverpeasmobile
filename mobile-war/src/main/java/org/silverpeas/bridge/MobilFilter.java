@@ -97,7 +97,6 @@ public class MobilFilter implements Filter {
       final boolean isMobile = Boolean.TRUE.equals(mobileAlreadyDetected)
                                || userAgent.contains("Android")
                                || userAgent.contains("iPhone");
-
       session.setAttribute("isMobile", isMobile);
 
       final boolean tablet = session.getAttribute("tablet", Boolean.class, false);
@@ -119,6 +118,10 @@ public class MobilFilter implements Filter {
           String appId = pub.getInstanceId();
           params = "?shortcutContentType=Publication&shortcutContentId=" + id + "&shortcutAppId=" +
                   appId;
+        } else if (url.contains("/File/")) {
+          String id = url.substring(url.lastIndexOf("/") + 1);
+          String l = request.getParameter("ContentLanguage");
+          params = "?shortcutContentType=Attachment&shortcutContentId=" + id + "&shortcutRole=" + l;
         } else if (url.contains("/Topic/")) {
             // sample : /silverpeas/Topic/6278?ComponentId=kmelia2431
             String id = url.substring(url.lastIndexOf("/")+1);
