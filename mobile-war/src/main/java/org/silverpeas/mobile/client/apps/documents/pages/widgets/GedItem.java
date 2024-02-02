@@ -31,10 +31,12 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemClickEvent;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
 
@@ -45,8 +47,9 @@ public class GedItem extends Composite {
   private PublicationDTO dataPublication;
   private static GedItemUiBinder uiBinder = GWT.create(GedItemUiBinder.class);
   @UiField Anchor link;
+  @UiField InlineHTML icon;
   protected ApplicationMessages msg = null;
-
+  private ApplicationResources resources = GWT.create(ApplicationResources.class);
 
   interface GedItemUiBinder extends UiBinder<Widget, GedItem> {
   }
@@ -62,14 +65,18 @@ public class GedItem extends Composite {
       dataTopic = (TopicDTO) data;
       if (dataTopic.getId().equals("1")) {
         setStyleName("trash");
+        icon.setHTML(resources.trash().getText());
+        link.setText(dataTopic.getName());
       } else {
         setStyleName("folder-ged");
+        icon.setHTML(resources.folder().getText());
       }
       link.setText(dataTopic.getName() + " (" + dataTopic.getPubCount() + ")");
     } else if (data instanceof PublicationDTO) {
       dataPublication = (PublicationDTO) data;
       link.setHTML(dataPublication.getName());
       setStyleName("publication");
+      icon.setHTML(resources.publication().getText());
       if (dataPublication.getVignette() != null) {
         String style = "background-image:url("+dataPublication.getVignette();
         style += ");background-position:5px 5px;background-size:20px 20px;";

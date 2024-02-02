@@ -37,18 +37,92 @@ public interface ApplicationResources extends ClientBundle {
   @Source("application.css")
   ApplicationCSS css();
 
-  @Source("avatar.png")
+  @Source("icons/avatar.png")
   ImageResource avatar();
 
-  @Source("offline.png")
+  @Source("icons/offline.png")
   ImageResource offline();
 
-  @Source("call.svg")
+  @Source("icons/call.svg")
   @DataResource.MimeType("image/svg+xml")
   TextResource call();
 
-  @Source("sms.svg")
+  @Source("icons/sms.svg")
   @DataResource.MimeType("image/svg+xml")
   TextResource sms();
 
+
+  /** Applications icons **/
+
+  @Source("icons/apps/blog.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource blog();
+
+  @Source("icons/apps/news.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource news();
+
+  @Source("icons/apps/calendar.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource calendar();
+
+  @Source("icons/apps/webpage.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource webpage();
+
+  @Source("icons/apps/ged.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource ged();
+
+  @Source("icons/apps/media_library.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource mediaLib();
+
+  @Source("icons/apps/link.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource link();
+
+  @Source("icons/apps/classifieds.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource classifieds();
+
+  @Source("icons/apps/faq.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource faq();
+
+  @Source("icons/apps/form.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource form();
+
+  @Source("icons/apps/book_online.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource bookonline();
+
+  @Source("icons/apps/poll.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource poll();
+
+  @Source("icons/apps/quiz.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource quizz();
+
+  @Source("icons/apps/workflow.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource workflow();
+
+  /** Applications images ressources **/
+
+  @Source("icons/apps/ged/folder.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource folder();
+
+  @Source("icons/apps/ged/trash.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource trash();
+
+  @Source("icons/apps/ged/publication.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource publication();
+
 }
+

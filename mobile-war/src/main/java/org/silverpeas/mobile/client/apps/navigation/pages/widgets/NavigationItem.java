@@ -31,10 +31,12 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.navigation.events.pages.ClickItemEvent;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
@@ -44,9 +46,11 @@ public class NavigationItem extends Composite {
 
   private SilverpeasObjectDTO data;
   private static NavigationItemUiBinder uiBinder = GWT.create(NavigationItemUiBinder.class);
+  private ApplicationResources resources = GWT.create(ApplicationResources.class);
   @UiField Anchor link;
-  protected ApplicationMessages msg = null;
+  @UiField InlineHTML icon;
 
+  protected ApplicationMessages msg = null;
 
   interface NavigationItemUiBinder extends UiBinder<Widget, NavigationItem> {
   }
@@ -66,33 +70,47 @@ public class NavigationItem extends Composite {
     } else {
       String type = ((ApplicationInstanceDTO) data).getType();
       if (type.equalsIgnoreCase(Apps.kmelia.name())) {
-        setStyleName("folder-ged");
+        setStyleName("app-ged");
+        icon.setHTML(resources.ged().getText());
       } else if (type.equalsIgnoreCase(Apps.gallery.name())) {
-        setStyleName("folder-galery");
+        setStyleName("app-medialib");
+        icon.setHTML(resources.mediaLib().getText());
       } else if (type.equalsIgnoreCase(Apps.quickinfo.name())) {
         setStyleName("app-actuality");
+        icon.setHTML(resources.news().getText());
       } else if (type.equalsIgnoreCase(Apps.webPages.name())) {
         setStyleName("app-pageWeb");
+        icon.setHTML(resources.webpage().getText());
       } else if (type.equalsIgnoreCase(Apps.blog.name())) {
         setStyleName("app-blog");
+        icon.setHTML(resources.blog().getText());
       } else if (((ApplicationInstanceDTO) data).getWorkflow()) {
         setStyleName("app-workflow");
+        icon.setHTML(resources.workflow().getText());
       } else if (type.equalsIgnoreCase(Apps.hyperlink.name())) {
         setStyleName("app-link");
+        icon.setHTML(resources.link().getText());
       } else if (type.equalsIgnoreCase(Apps.almanach.name())) {
         setStyleName("app-almanach");
+        icon.setHTML(resources.calendar().getText());
       } else if (type.equalsIgnoreCase(Apps.formsOnline.name())) {
         setStyleName("app-formsOnline");
+        icon.setHTML(resources.form().getText());
       } else if (type.equalsIgnoreCase(Apps.classifieds.name())) {
         setStyleName("app-classifieds");
+        icon.setHTML(resources.classifieds().getText());
       } else if (type.equalsIgnoreCase(Apps.survey.name())) {
         setStyleName("app-survey");
+        icon.setHTML(resources.quizz().getText());
       } else if (type.equalsIgnoreCase(Apps.pollingStation.name())) {
         setStyleName("app-polling");
+        icon.setHTML(resources.poll().getText());
       } else if (type.equalsIgnoreCase(Apps.questionReply.name())) {
         setStyleName("app-faq");
+        icon.setHTML(resources.faq().getText());
       } else if (type.equalsIgnoreCase(Apps.resourcesManager.name())) {
         setStyleName("app-resourcesManager");
+        icon.setHTML(resources.bookonline().getText());
       }
     }
     link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
