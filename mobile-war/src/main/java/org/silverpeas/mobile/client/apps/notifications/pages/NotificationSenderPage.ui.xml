@@ -33,6 +33,7 @@
 
         <label for="subject"><ui:safehtml from="{msg.subject}"/></label>
         <div class="ui-input-text publication">
+            <g:InlineHTML ui:field="iconFile" styleName="iconFile"/>
             <g:TextBox ui:field="subject"/>
         </div>
         <label for="subject"><ui:safehtml from="{msg.notifiedContacts}"/></label>

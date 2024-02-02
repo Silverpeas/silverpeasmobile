@@ -31,17 +31,21 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.media.events.pages.navigation.MediaItemClickEvent;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.media.AlbumDTO;
 
 public class AlbumItem extends Composite {
 
   private AlbumDTO data;
   private static MediaItemUiBinder uiBinder = GWT.create(MediaItemUiBinder.class);
+  private ApplicationResources resources = GWT.create(ApplicationResources.class);
   @UiField Anchor link;
+  @UiField InlineHTML icon;
   protected ApplicationMessages msg = null;
 
 
@@ -51,6 +55,7 @@ public class AlbumItem extends Composite {
   public AlbumItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
+    icon.setHTML(resources.mediaLib().getText());
   }
 
   public void setData(AlbumDTO data) {

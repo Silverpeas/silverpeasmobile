@@ -782,12 +782,16 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 /***** NAVIGATION ****/
 
-.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .app-actuality a,
+.icon-app, .icon-item {
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+  z-index: 2;
+}
+
+.folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .app-actuality a, .app-ged a, .app-medialib a,
 .publication.ui-input-text, .app-blog a, .app-pageWeb a, .app-workflow a, .app-link a, .app-almanach a, .app-formsOnline a, .app-classifieds a, .app-survey a, .app-faq a, .app-polling a, .app-resourcesManager a {
-  background-image: url(packImagesNavigation.png);
-  background-position: 0.5625em 0.5625em;
-  background-repeat: no-repeat;
-  padding-left: 2.5em
+  padding-left: 2.5em;
 }
 
 #actionsList:has(.add-task) {
@@ -812,99 +816,71 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .app-formsOnline a {
-  background: transparent url('icons/apps/form.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-almanach a {
-  background: transparent url('icons/apps/calendar.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-link a {
-  background: transparent url('icons/apps/link.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-actuality a {
-  background: transparent url('icons/apps/news.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .folder-ged a {
-  background: transparent url('icons/apps/folder.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
+}
+
+.app-ged a {
+
 }
 
 .app-pageWeb a {
-  background: transparent url('icons/apps/webpage.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-blog a {
-  background: transparent url('icons/apps/blog.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-classifieds a {
-  background: transparent url('icons/apps/classifieds.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-survey a {
-  background: transparent url('icons/apps/quiz.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-polling a {
-  background: transparent url('icons/apps/poll.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-faq a {
-  background: transparent url('icons/apps/faq.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-workflow a {
-  background: transparent url('icons/apps/workflow.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .app-resourcesManager a {
-  background: transparent url('icons/apps/book_online.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .folder-galery a {
-  background: transparent url('icons/apps/media_library.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .publication a {
-  background: transparent url('icons/publication.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .trash a {
-  background: transparent url('icons/trash.svg') no-repeat;
-  background-position-y: center;
-  background-position-x: 0.5em;
+
 }
 
 .media a {
@@ -1491,6 +1467,10 @@ li > #operations {
   margin-bottom: 0;
 }
 
+#edit-notification .iconFile {
+  position: absolute;
+}
+
 .filter-contacts,
 #edit-notification .ui-input-text.publication {
   width: 98%;
@@ -1499,10 +1479,6 @@ li > #operations {
   line-height: 2.5em;
   background-color: #FFF;
   font-size: 80%;
-}
-
-#edit-notification .ui-input-text.publication {
-  background: url('icons/publication.svg') no-repeat #ffff;
 }
 
 .ui-controlgroup-horizontal .ui-controlgroup-controls > .ui-btn, .ui-controlgroup-horizontal .ui-controlgroup-controls li > .ui-btn, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-checkbox, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-radio, .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-select {
@@ -2119,6 +2095,7 @@ form .forms .fields > li:nth-child(even) {
 .ui-listview.favoris a {
   background: transparent url('icons/star.svg') no-repeat;
   background-size: auto;
+  background-position-y: center;
   padding-left: 2em;
 }
 

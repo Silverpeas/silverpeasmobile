@@ -32,10 +32,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.notifications.events.app.SendNotificationEvent;
 import org.silverpeas.mobile.client.apps.notifications.events.pages.AbstractNotificationPagesEvent;
 import org.silverpeas.mobile.client.apps.notifications.events.pages.NotificationPagesEventHandler;
@@ -45,6 +42,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
@@ -61,12 +59,14 @@ public class NotificationSenderPage extends PageContent implements View, Notific
     interface NotificationSenderPageUiBinder extends UiBinder<HTMLPanel, NotificationSenderPage> {}
 
     private static NotificationSenderPageUiBinder uiBinder = GWT.create(NotificationSenderPageUiBinder.class);
+    private ApplicationResources resources = GWT.create(ApplicationResources.class);
 
     @UiField protected HTMLPanel container;
     @UiField(provided = true) protected NotificationsMessages msg = null;
     @UiField protected Anchor modify, send;
     @UiField TextArea message;
     @UiField TextBox subject;
+    @UiField InlineHTML iconFile;
 
     List<BaseDTO> selection = new ArrayList<BaseDTO>();
 
@@ -78,6 +78,7 @@ public class NotificationSenderPage extends PageContent implements View, Notific
         container.getElement().setId("edit-notification");
         message.getElement().setId("message");
         subject.getElement().setId("subject");
+        iconFile.setHTML(resources.publication().getText());
 
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
              @Override
