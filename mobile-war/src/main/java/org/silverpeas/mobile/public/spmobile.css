@@ -1717,6 +1717,10 @@ textarea.ui-input-text {
   box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
 }
 
+.field-label {
+  padding-right: 1em;
+}
+
 #page-login #password-visibility {
   margin-bottom: 1.5em;
 }
