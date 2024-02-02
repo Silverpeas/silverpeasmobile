@@ -32,11 +32,18 @@ import com.google.gwt.user.client.ui.Anchor;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
+import org.silverpeas.mobile.client.components.IframePage;
 
 /**
  * @author svu
  */
 public class AttachmentsManager {
+
+  public static void viewDocument(String id, String lang) {
+    IframePage page = new IframePage("/silverpeas/services/media/viewer/embed/pdf?documentId=" + id + "" +
+            "&documentType=attachment&language=" + lang + "&embedPlayer=true");
+    page.show();
+  }
 
   public static void generateLink(String id, String instanceId, String lang, String title, Anchor link) {
     try {

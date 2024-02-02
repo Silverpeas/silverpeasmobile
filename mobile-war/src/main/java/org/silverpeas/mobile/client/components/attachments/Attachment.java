@@ -188,8 +188,7 @@ public class Attachment extends Composite {
   }
 
   private void viewDocument() {
-    IframePage page = new IframePage("/silverpeas/services/media/viewer/embed/pdf?documentId="+data.getId()+"&documentType=attachment&language="+data.getLang()+"&embedPlayer=true");
-    page.show();
+    AttachmentsManager.viewDocument(data.getId(), data.getLang());
   }
 
   @UiHandler("share")
