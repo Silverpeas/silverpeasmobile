@@ -717,6 +717,24 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border: 0;
 }
 
+#personals-apps {
+  padding: inherit;
+  border-top: 1px solid #d3d3d3;
+}
+
+#personals-apps .icon-app {
+  top: auto;
+}
+#personals-apps a {
+  border: none;
+  padding-left: 2em;
+  padding-top: 0.5em;
+}
+
+#personals-apps a:after {
+  background: none;
+}
+
 #silverpeas-navmenu-panel #navmenu-panel li#menu-config a {
   background: transparent url('icons/settings.svg') no-repeat;
 }

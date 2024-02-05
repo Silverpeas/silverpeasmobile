@@ -56,6 +56,11 @@ public interface ServiceNavigation extends RestService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Path("personalSpace/{userId}/")
+  public void getPersonnalSpaceContent(@PathParam("userId") String userId, MethodCallback<List<ApplicationInstanceDTO>> callback);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("spacesAndApps/{rootSpaceId}/")
   public void getSpacesAndApps(@PathParam("rootSpaceId") String rootSpaceId,
       MethodCallback<List<SilverpeasObjectDTO>> callback);

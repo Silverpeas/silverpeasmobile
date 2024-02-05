@@ -23,7 +23,9 @@
   -->
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:w="urn:import:org.silverpeas.mobile.client.components.base.widgets">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:components="urn:import:org.silverpeas.mobile.client.components"
+             xmlns:w="urn:import:org.silverpeas.mobile.client.components.base.widgets">
 
   <ui:with field='msg' type='org.silverpeas.mobile.client.resources.ApplicationMessages'/>
 
@@ -45,6 +47,8 @@
         <li id="menu-notificationsbox"><g:Anchor ui:field="notifications" styleName="ui-link" text="{msg.notifications}"/></li>
         <li id="menu-sharesbox"><g:Anchor ui:field="shares" styleName="ui-link" text="{msg.shares}"/></li>
       </ul>
+
+      <components:UnorderedList ui:field="listApplications" />
 
       <ul id="actions-menu">
         <li id="menu-home"><g:Anchor ui:field="home" styleName="ui-link" text="{msg.home}"/></li>

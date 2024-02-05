@@ -47,6 +47,7 @@ import org.silverpeas.mobile.client.apps.config.ConfigApp;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external
     .NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
+import org.silverpeas.mobile.client.apps.navigation.pages.widgets.NavigationItem;
 import org.silverpeas.mobile.client.apps.profile.ProfileApp;
 import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
@@ -54,6 +55,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
+import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
 import org.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
 import org.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
@@ -70,6 +72,8 @@ import org.silverpeas.mobile.shared.dto.StatusDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
+import java.util.List;
+
 public class NavigationMenu extends Composite implements PageEventHandler {
 
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
@@ -82,7 +86,15 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   @UiField(provided = true) protected ApplicationMessages msg = null;
 
+  @UiField UnorderedList listApplications;
+
+  private boolean personalAppsInitialized = false;
+
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
+
+  public boolean isPersonalAppsInitialized() {
+    return personalAppsInitialized;
+  }
 
   interface NavigationMenuUiBinder extends UiBinder<Widget, NavigationMenu> {
   }
@@ -91,6 +103,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     container.getElement().setId("silverpeas-navmenu-panel");
+    listApplications.getElement().setId("personals-apps");
     container.getElement().getStyle().setHeight(Window.getClientHeight(), Unit.PX);
     user.getElement().setId("user");
     String url = ResourcesManager.getParam("help.url");
@@ -104,6 +117,20 @@ public class NavigationMenu extends Composite implements PageEventHandler {
       }
     }
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
+  }
+
+  public void setPersonalApps(List<ApplicationInstanceDTO> applicationInstanceDTOS) {
+    listApplications.clear();
+    for (ApplicationInstanceDTO app : applicationInstanceDTOS) {
+
+      if (app.getType().equals(Apps.kmelia.name())) {
+        app.setLabel(msg.myDocuments());
+      }
+      NavigationItem item = new NavigationItem();
+      item.setData(app);
+      listApplications.add(item);
+    }
+    personalAppsInitialized = true;
   }
 
   @Override
