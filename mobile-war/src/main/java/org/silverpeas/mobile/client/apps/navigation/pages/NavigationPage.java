@@ -106,6 +106,7 @@ public class NavigationPage extends PageContent implements NavigationPagesEventH
   @Override
   public void clickItem(ClickItemEvent event) {
     if (isVisible()) {
+      SpMobil.getMainPage().closeMenu();
       if (event.getData() instanceof SpaceDTO) {
         SpaceDTO space = (SpaceDTO) event.getData();
         if (space.getHomePageType() == HomePages.SILVERPEAS.getValue() ||

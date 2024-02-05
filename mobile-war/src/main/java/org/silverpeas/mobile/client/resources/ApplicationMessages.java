@@ -99,7 +99,10 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Espace personnel")
   String personalSpace();
 
-  @Messages.DefaultMessage("Modifier mon statut")
+  @DefaultMessage("Mes documents")
+  String myDocuments();
+
+  @DefaultMessage("Modifier mon statut")
   String editStatus();
 
   @DefaultMessage("Contenus trouvés")

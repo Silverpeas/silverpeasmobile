@@ -42,10 +42,14 @@ import org.silverpeas.mobile.client.components.base.events.EndPageEvent;
 import org.silverpeas.mobile.client.components.homepage.HomePageNewsSlider;
 import org.silverpeas.mobile.client.pages.main.HomePage;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+
+import java.util.List;
 
 public class Page extends Composite implements Window.ScrollHandler {
 
   private static PageUiBinder uiBinder = GWT.create(PageUiBinder.class);
+
   interface PageUiBinder extends UiBinder<Widget, Page> {
   }
 
@@ -149,6 +153,14 @@ public class Page extends Composite implements Window.ScrollHandler {
 
   public void hideOfflineIndicator() {
     header.hideOfflineIndicator();
+  }
+
+  public void setPersonalApps(List<ApplicationInstanceDTO> applicationInstanceDTOS) {
+    menu.setPersonalApps(applicationInstanceDTOS);
+  }
+
+  public boolean isPersonalAppsInitialized() {
+    return menu.isPersonalAppsInitialized();
   }
 
 }

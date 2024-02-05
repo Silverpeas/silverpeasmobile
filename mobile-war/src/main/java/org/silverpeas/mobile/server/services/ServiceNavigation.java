@@ -175,6 +175,7 @@ public class ServiceNavigation extends AbstractRestWebService {
       return null;
     }
   }
+
   protected void setUserInSession(UserDetail user) {
     request.getSession().setAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME, user);
   }
@@ -237,7 +238,7 @@ public class ServiceNavigation extends AbstractRestWebService {
         List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId, maxNews);
         data.setNews(NewsHelper.getInstance().populate(lastNews, false));
       }
-
+            
       if (spaceId == null || spaceId.isEmpty()) {
         List<LinkDetail> links =
             FavoritesHelper.getInstance().getBookmarkPersoVisible(getUser().getId());
@@ -466,6 +467,23 @@ public class ServiceNavigation extends AbstractRestWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Path("personalSpace/{userId}/")
+  public List<ApplicationInstanceDTO> getPersonnalSpaceContent(@PathParam("userId") String userId) {
+    try {
+      SpaceInst space = Administration.get().getPersonalSpace(userId);
+      List<ApplicationInstanceDTO> apps = new ArrayList<>();
+      for (ComponentInst app : space.getAllComponentsInst()) {
+        apps.add(populate(app));
+      }
+      return apps;
+    } catch (AdminException e) {
+      SilverLogger.getLogger(this).error(e);
+      throw new WebApplicationException(e);
+    }
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("space/{spaceId}/")
   public SpaceDTO getSpace(@PathParam("spaceId") String spaceId) {
     try {
@@ -625,6 +643,14 @@ public class ServiceNavigation extends AbstractRestWebService {
     }
     dto.setHomePageParameter(space.getFirstPageExtraParam());
 
+    return dto;
+  }
+  private ApplicationInstanceDTO populate(ComponentInst app) {
+    ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
+    dto.setId(app.getId());
+    dto.setLabel(app.getLabel());
+    dto.setType(app.getName());
+    dto.setOrderNum(app.getOrderNum());
     return dto;
   }
 

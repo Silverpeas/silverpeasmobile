@@ -92,6 +92,7 @@ public class HomePage extends PageContent
   @Override
   public void clickItem(final ClickItemEvent event) {
     if (isVisible()) {
+      SpMobil.getMainPage().closeMenu();
       if (event.getData() instanceof SpaceDTO) {
         SpaceDTO space = (SpaceDTO) event.getData();
         if (space.getHomePageType() == HomePages.SILVERPEAS.getValue() ||

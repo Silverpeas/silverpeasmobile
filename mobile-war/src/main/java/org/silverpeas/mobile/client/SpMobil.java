@@ -97,6 +97,8 @@ import org.silverpeas.mobile.shared.dto.authentication.IUserProfile;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.configuration.IConfig;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
@@ -138,6 +140,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   public static void setUser(final DetailUserDTO user) {
     SpMobil.user = user;
+    displayPersonnalApps();
   }
 
 
@@ -310,6 +313,23 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           for (ShortCutLinkDTO shortCut : result.getShortCuts()) {
             CacheStorageHelper.store(shortCut.getIcon());
           }
+        }
+      };
+      action.attempt();
+    }
+  }
+
+  private static void displayPersonnalApps () {
+    if (getUser() != null && !getMainPage().isPersonalAppsInitialized()) {
+      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ApplicationInstanceDTO>>() {
+        @Override
+        public void attempt() {
+          ServicesLocator.getServiceNavigation().getPersonnalSpaceContent(getUser().getId(), this);
+        }
+
+        @Override
+        public void onSuccess(Method method, List<ApplicationInstanceDTO> applicationInstanceDTOS) {
+          getMainPage().setPersonalApps(applicationInstanceDTOS);
         }
       };
       action.attempt();
