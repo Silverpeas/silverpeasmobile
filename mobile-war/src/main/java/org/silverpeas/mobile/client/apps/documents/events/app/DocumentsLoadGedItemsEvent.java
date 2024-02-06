@@ -28,12 +28,21 @@ package org.silverpeas.mobile.client.apps.documents.events.app;
 public class DocumentsLoadGedItemsEvent extends AbstractDocumentsAppEvent {
 	
 	private String rootTopicId, instanceId;
+	private boolean forceReload = false;
 	
 	public DocumentsLoadGedItemsEvent(String instanceId, String rootTopicId) {
 		super();
 		if (rootTopicId == null) rootTopicId = "0";
     this.rootTopicId = rootTopicId;
 		this.instanceId = instanceId;
+	}
+
+	public DocumentsLoadGedItemsEvent(String instanceId, String rootTopicId, boolean forceReload) {
+		super();
+		if (rootTopicId == null) rootTopicId = "0";
+		this.rootTopicId = rootTopicId;
+		this.instanceId = instanceId;
+		this.forceReload = forceReload;
 	}
 
 	@Override
@@ -48,4 +57,6 @@ public class DocumentsLoadGedItemsEvent extends AbstractDocumentsAppEvent {
 	public String getInstanceId() {
 		return instanceId;
 	}
+
+	public boolean isForceReload() { return forceReload; }
 }

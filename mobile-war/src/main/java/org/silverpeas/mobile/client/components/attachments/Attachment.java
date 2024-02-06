@@ -97,6 +97,17 @@ public class Attachment extends Composite {
     render();
   }
 
+  private boolean isViewable() {
+    boolean v = (data.getContentType().contains("msword") || data.getContentType().contains("word"));
+    v = v || data.getContentType().contains("excel");
+    v = v || data.getContentType().contains("pdf");
+    v = v || data.getContentType().contains("presentationml");
+    v = v || data.getContentType().contains("opendocument.text");
+    v = v || data.getContentType().contains("opendocument.spreadsheet");
+    v = v || data.getContentType().contains("opendocument.presentation");
+    return v;
+  }
+
   private void render() {
     operations.getElement().setId("operations");
     view.getElement().setId("view");
@@ -171,6 +182,9 @@ public class Attachment extends Composite {
           toogleOperations();
         }
       });
+
+      if (!isViewable()) view.setVisible(false);
+
     } catch (JavaScriptException e) {
       Notification.alert(e.getMessage());
     }

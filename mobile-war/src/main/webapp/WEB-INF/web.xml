@@ -97,6 +97,16 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>FileServlet</servlet-name>
+    <servlet-class>org.silverpeas.mobile.server.servlets.FileServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>FileServlet</servlet-name>
+    <url-pattern>/services/spmobile/FileAction</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>FormServlet</servlet-name>
     <servlet-class>org.silverpeas.mobile.server.servlets.FormServlet</servlet-class>
   </servlet>

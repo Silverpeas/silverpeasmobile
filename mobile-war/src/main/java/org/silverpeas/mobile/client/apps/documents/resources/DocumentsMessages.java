@@ -57,4 +57,9 @@ public interface DocumentsMessages extends Messages {
   SafeHtml usersLabel();
   SafeHtml emailsLabel();
   SafeHtml commentsLabel();
+
+  String importFile();
+  String maxUploadError();
+
+  String fileNotSupportedError();
 }

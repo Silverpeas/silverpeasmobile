@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.documents.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
@@ -36,10 +37,12 @@ import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedIt
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation
     .GedNavigationPagesEventHandler;
+import org.silverpeas.mobile.client.apps.documents.pages.widgets.AddFileButton;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.GedItem;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.ShareButton;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import org.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
@@ -63,7 +66,11 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   private String rootTopicId, instanceId;
   private boolean dataLoaded = false;
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
+
+  private AddFileButton buttonImport = new AddFileButton();
   private ShareButton share = new ShareButton();
+
+  private boolean canImport = false;
 
   private static GedNavigationPageUiBinder uiBinder = GWT.create(GedNavigationPageUiBinder.class);
 
@@ -73,6 +80,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   public GedNavigationPage() {
     msg = GWT.create(DocumentsMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+    buttonImport.setId("import");
     EventBus.getInstance().addHandler(AbstractGedNavigationPagesEvent.TYPE, this);
   }
 
@@ -88,13 +96,17 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
     EventBus.getInstance().fireEvent(new DocumentsLoadGedItemsEvent(instanceId, rootTopicId));
   }
 
+  public void setCanImport(boolean canImport) {
+    this.canImport = canImport;
+  }
+
   public void setInstanceId(String instanceId) {
     this.instanceId = instanceId;
   }
 
   @Override
   public void onLoadedTopics(GedItemsLoadedEvent event) {
-    if (isVisible() && dataLoaded == false) {
+    if ((isVisible() && dataLoaded == false) || (isVisible() && event.isForceReload())) {
       Notification.activityStart();
       list.clear();
       List<BaseDTO> dataItems = event.getTopicsAndPublications();
@@ -114,8 +126,14 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 
       if (root.getId() == null) {
         favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
+        buttonImport.init(instanceId, "0");
       } else {
         favorite.init(instanceId, root.getId(), ContentsTypes.Folder.name(), root.getName());
+        buttonImport.init(instanceId, rootTopicId);
+      }
+
+      if (canImport) {
+        addActionShortcut(buttonImport);
       }
 
       if (event.getSharing() > 0) {
@@ -135,6 +153,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
         GedNavigationPage page = new GedNavigationPage();
         page.setInstanceId(instanceId);
         page.setTopicId(((TopicDTO)event.getGedItem()).getId());
+        page.setCanImport(canImport);
         page.show();
       } else if (event.getGedItem() instanceof PublicationDTO) {
         PublicationPage page = new PublicationPage();
