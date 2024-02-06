@@ -30,20 +30,11 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
-import org.apache.jackrabbit.webdav.observation.SubscriptionManager;
 import org.silverpeas.components.kmelia.service.KmeliaService;
-import org.silverpeas.components.questionreply.service.notification.SubscriptionNotifier;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
-import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
-import org.silverpeas.core.subscription.SubscriptionFactory;
-import org.silverpeas.core.subscription.SubscriptionServiceProvider;
-import org.silverpeas.core.subscription.service.ComponentSubscriptionResource;
-import org.silverpeas.core.subscription.util.SubscriptionUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.core.webapi.admin.tools.SubscriptionTool;
-import org.silverpeas.core.webapi.subscribe.SubscriptionResource;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -71,15 +62,22 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
     MAX_REQUEST_SIZE = (long) (MAX_FILE_SIZE * 1.1);
   }
 
-  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-  }
-
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
   }
 
+  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    try {
+      checkUserInSession(request, response);
+      processRequest(request, response);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
 
     String componentId = "";
     String folderId = "";
@@ -159,8 +157,6 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
     KmeliaService.get().addAttachmentToPublication(pk, getUserInSession(request).getId(), name, "", FileUtils.readFileToByteArray(file));
 
     //TODO : notification management
-
-    SubscriptionServiceProvider.getSubscribeService().getSubscribers()
     return pubId;
   }
 }
