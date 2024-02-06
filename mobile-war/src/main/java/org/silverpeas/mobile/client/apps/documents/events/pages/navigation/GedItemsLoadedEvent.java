@@ -31,6 +31,7 @@ import java.util.List;
 public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 
 	private List<BaseDTO> topicsAndPublications;
+	private boolean forceReload = false;
 
 	private int sharing;
 	
@@ -38,6 +39,13 @@ public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 		super();
 		this.topicsAndPublications = topicsAndPublications;
 		this.sharing = sharing;
+	}
+
+	public GedItemsLoadedEvent(List<BaseDTO> topicsAndPublications, int sharing, boolean forceReload) {
+		super();
+		this.topicsAndPublications = topicsAndPublications;
+		this.sharing = sharing;
+		this.forceReload = forceReload;
 	}
 
 	@Override
@@ -52,4 +60,6 @@ public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 	public int getSharing() {
 		return sharing;
 	}
+
+	public boolean isForceReload() { return forceReload; }
 }

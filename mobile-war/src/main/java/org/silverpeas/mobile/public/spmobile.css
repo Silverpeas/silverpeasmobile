@@ -907,14 +907,14 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-position-x: 0.5em;
 }
 
-.add-media {
+.add-media, .add-file {
   height: 24px;
   width: 24px;
   filter: invert(1);
   background: url('icons/add.svg') no-repeat;
 }
 
-.add-media a {
+.add-media a, .add-file a {
   height: 24px;
   width: 24px;
   display: block;

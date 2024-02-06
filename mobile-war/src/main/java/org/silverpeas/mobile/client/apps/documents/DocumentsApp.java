@@ -193,6 +193,9 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       GedNavigationPage page = new GedNavigationPage();
       page.setPageTitle(event.getInstance().getLabel());
       page.setInstanceId(event.getInstance().getId());
+      //TODO : if writer manage validation
+      page.setCanImport(getApplicationInstance().getRights().getManager() ||
+              getApplicationInstance().getRights().getPublisher());
       page.setTopicId(null);
       page.show();
     }
@@ -239,7 +242,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       @Override
       public void onSuccess(final Method method, final List<BaseDTO> result) {
         super.onSuccess(method, result);
-        EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result, getApplicationInstance().getFolderSharing()));
+        EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result, getApplicationInstance().getFolderSharing(), event.isForceReload()));
       }
     };
     action.attempt();
