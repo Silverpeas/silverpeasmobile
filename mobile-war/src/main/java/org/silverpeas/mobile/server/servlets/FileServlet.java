@@ -34,6 +34,9 @@ import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.node.model.NodePK;
+import org.silverpeas.core.subscription.SubscriptionServiceProvider;
+import org.silverpeas.core.subscription.service.NodeSubscriptionResource;
+import org.silverpeas.core.subscription.util.SubscriptionSubscriberList;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 
 import javax.servlet.ServletConfig;
@@ -143,8 +146,6 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
     PublicationPK pk = new PublicationPK(publicationId, componentId);
     KmeliaService.get().addAttachmentToPublication(pk, getUserInSession(request).getId(), name, "",
             FileUtils.readFileToByteArray(file));
-
-    //TODO : notification management
   }
 
   private String createPublication(HttpServletRequest request, String name,
@@ -164,7 +165,14 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
 
     KmeliaService.get().addAttachmentToPublication(pk, getUserInSession(request).getId(), name, "", FileUtils.readFileToByteArray(file));
 
-    //TODO : notification management
+
+    SubscriptionSubscriberList l = SubscriptionServiceProvider.getSubscribeService()
+            .getSubscribers(NodeSubscriptionResource.from(node));
+
+
+    KmeliaService.get().getUserNotification(node).send();
+
     return pubId;
   }
+
 }
