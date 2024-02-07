@@ -35,16 +35,13 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.mobile.server.common.LocalDiskFileItem;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -80,6 +77,7 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
 
 
     String componentId = "";
+    String publicationId = "";
     String folderId = "";
     String tempDir = FileRepositoryManager.getTemporaryPath();
 
@@ -119,6 +117,7 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
       {
         if (item.getFieldName().equals("componentId")) componentId = item.getString();
         if (item.getFieldName().equals("folderId")) folderId = item.getString();
+        if (item.getFieldName().equals("publicationId")) publicationId = item.getString();
 
       }
       else {
@@ -126,7 +125,11 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
         File file = new File(tempDir + File.separator + fileName);
         try {
           item.write(file);
-          createPublication(request, response, fileName, getUserInSession(request).getId(), componentId, folderId, file);
+          if(folderId.isEmpty()) {
+            addFileToPublication(request, fileName, componentId, publicationId, file);
+          } else {
+            createPublication(request, fileName, componentId, folderId, file);
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -134,13 +137,18 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
     }
   }
 
-  private String createPublication(HttpServletRequest request, HttpServletResponse response, String name, String userId, String componentId,
-                             String folderId, File file) throws Exception {
+  private void addFileToPublication(HttpServletRequest request, String name, String componentId, String publicationId,
+                                    File file) throws Exception {
 
-    String type = new MimetypesFileTypeMap().getContentType(file);
-    List<FileItem> parameters = new ArrayList<FileItem>();
-    LocalDiskFileItem item = new LocalDiskFileItem(file, type);
-    parameters.add(item);
+    PublicationPK pk = new PublicationPK(publicationId, componentId);
+    KmeliaService.get().addAttachmentToPublication(pk, getUserInSession(request).getId(), name, "",
+            FileUtils.readFileToByteArray(file));
+
+    //TODO : notification management
+  }
+
+  private String createPublication(HttpServletRequest request, String name,
+                                   String componentId, String folderId, File file) throws Exception {
 
     PublicationDetail pub = PublicationDetail.builder().build();
     pub.setName(file.getName());

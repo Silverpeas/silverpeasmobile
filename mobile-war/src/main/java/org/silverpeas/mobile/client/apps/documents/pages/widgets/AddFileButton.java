@@ -32,23 +32,21 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
+import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import org.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
-import org.silverpeas.mobile.client.apps.media.resources.MediaMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.shared.dto.ContentDTO;
+import org.silverpeas.mobile.shared.dto.ContentsTypes;
 
 
 /**
@@ -63,7 +61,8 @@ public class AddFileButton extends ActionItem {
     @UiField(provided = true) protected DocumentsMessages msg = null;
 
 
-    private String instanceIdValue, folderIdValue;
+    private String instanceIdValue, locationIdValue;
+    private boolean locationIsPublication = false;
     private ApplicationMessages globalMsg = GWT.create(ApplicationMessages.class);
 
     private static AddFileButtonUiBinder uiBinder = GWT.create(AddFileButtonUiBinder.class);
@@ -77,9 +76,10 @@ public class AddFileButton extends ActionItem {
         file.getElement().getStyle().setDisplay(Style.Display.NONE);
     }
 
-    public void init(String instanceId, String folderId) {
+    public void init(String instanceId, String locationId, boolean locationIsPublication) {
         this.instanceIdValue = instanceId;
-        this.folderIdValue = folderId;
+        this.locationIdValue = locationId;
+        this.locationIsPublication = locationIsPublication;
     }
 
     @UiHandler("file")
@@ -87,11 +87,20 @@ public class AddFileButton extends ActionItem {
       Notification.activityStartImmediately();
       String url = UrlUtils.getUploadLocation();
       url +=  "FileAction";
-      upload(this, file.getElement(), instanceIdValue, folderIdValue, url, SpMobil.getUserToken());
+      upload(this, file.getElement(), instanceIdValue, locationIdValue, locationIsPublication, url, SpMobil.getUserToken());
     }
 
     public void fileUploadedSuccessfully() {
-      EventBus.getInstance().fireEvent(new DocumentsLoadGedItemsEvent(this.instanceIdValue, this.folderIdValue, true));
+        if (locationIsPublication) {
+            ContentDTO content = new ContentDTO();
+            content.setInstanceId(instanceIdValue);
+            content.setType(ContentsTypes.Publication.name());
+            content.setContributionId(locationIdValue);
+            content.setId(locationIdValue);
+            EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
+        } else {
+            EventBus.getInstance().fireEvent(new DocumentsLoadGedItemsEvent(this.instanceIdValue, this.locationIdValue, true));
+        }
     }
 
     public void fileNotUploaded(int codeError) {
@@ -113,7 +122,7 @@ public class AddFileButton extends ActionItem {
         }
     }
 
-    private static native void upload(AddFileButton button, Element input, String componentId, String folderId, String url, String token) /*-{
+    private static native void upload(AddFileButton button, Element input, String componentId, String locationId, boolean locationIsPublication, String url, String token) /*-{
       var xhr = new XMLHttpRequest();
       var fd = new FormData();
       xhr.open("POST", url, false);
@@ -127,7 +136,11 @@ public class AddFileButton extends ActionItem {
         }
       };
       fd.append("componentId", componentId);
-      fd.append("folderId", folderId);
+      if (locationIsPublication) {
+          fd.append("publicationId", locationId);
+      } else {
+          fd.append("folderId", locationId);
+      }
       for(var i = 0; i < input.files.length ; i++) {
         fd.append("upload_file"+i, input.files[i]);
       }

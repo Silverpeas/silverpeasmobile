@@ -34,17 +34,20 @@ public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 	private boolean forceReload = false;
 
 	private int sharing;
+	private boolean canImport = false;
 	
-	public GedItemsLoadedEvent(List<BaseDTO> topicsAndPublications, int sharing) {
+	public GedItemsLoadedEvent(List<BaseDTO> topicsAndPublications, int sharing, boolean canImport) {
 		super();
 		this.topicsAndPublications = topicsAndPublications;
 		this.sharing = sharing;
+		this.canImport = canImport;
 	}
 
-	public GedItemsLoadedEvent(List<BaseDTO> topicsAndPublications, int sharing, boolean forceReload) {
+	public GedItemsLoadedEvent(List<BaseDTO> topicsAndPublications, int sharing, boolean canImport, boolean forceReload) {
 		super();
 		this.topicsAndPublications = topicsAndPublications;
 		this.sharing = sharing;
+		this.canImport = canImport;
 		this.forceReload = forceReload;
 	}
 
@@ -62,4 +65,6 @@ public class GedItemsLoadedEvent extends AbstractGedNavigationPagesEvent {
 	}
 
 	public boolean isForceReload() { return forceReload; }
+
+	public boolean isCanImport() { return canImport; }
 }
