@@ -26,7 +26,6 @@ package org.silverpeas.mobile.client.apps.documents.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.Style;
@@ -34,7 +33,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadAttachmentsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
@@ -43,6 +45,7 @@ import org.silverpeas.mobile.client.apps.documents.events.pages.publication.Abst
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
+import org.silverpeas.mobile.client.apps.documents.pages.widgets.AddFileButton;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.LinkedPublicationItem;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.ShareButton;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
@@ -97,8 +100,11 @@ public class PublicationPage extends PageContent
   private NotifyButton notification = new NotifyButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
+  private AddFileButton buttonImport = new AddFileButton();
+
   private ShareButton share = new ShareButton();
   private ContentDTO contentDTO = null;
+  private boolean canImport = false;
 
   private SwipeRecognizer swipeRecognizer;
 
@@ -128,6 +134,7 @@ public class PublicationPage extends PageContent
     attachments.getElement().setId("attachments");
     linkedPublications.getElement().setId("linkedPublications");
     content.setId("content");
+    buttonImport.setId("import");
     content.getStyle().setDisplay(Style.Display.NONE);
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
@@ -145,6 +152,10 @@ public class PublicationPage extends PageContent
     this.contentDTO = content;
   }
 
+  private void setCanImport(boolean canImport) {
+    this.canImport = canImport;
+  }
+
   public void setPublicationId(String id, String type) {
     // send event to controler for retrieve pub infos
     Notification.activityStart();
@@ -158,6 +169,8 @@ public class PublicationPage extends PageContent
   @Override
   public void onLoadedPublication(PublicationLoadedEvent event) {
     Notification.activityStop();
+    attachments.clear();
+    setCanImport(event.isCanImport());
     this.publication = event.getPublication();
     this.notifiable = event.isNotifiable();
     display(event.isCommentable(), event.isAbleToStoreContent(), event.getType());
@@ -179,6 +192,11 @@ public class PublicationPage extends PageContent
       contentLink.setVisible(publication.getContent());
     }
     swipeRecognizer = new SwipeRecognizer(supercontainer);
+
+    if (canImport) {
+      buttonImport.init(event.getPublication().getInstanceId(), event.getPublication().getId(), true);
+      addActionShortcut(buttonImport);
+    }
   }
 
   @Override

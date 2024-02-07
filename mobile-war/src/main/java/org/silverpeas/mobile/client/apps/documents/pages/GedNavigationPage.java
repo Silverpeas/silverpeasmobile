@@ -27,22 +27,18 @@ package org.silverpeas.mobile.client.apps.documents.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.navigation
-    .AbstractGedNavigationPagesEvent;
+import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.AbstractGedNavigationPagesEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemClickEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.navigation
-    .GedNavigationPagesEventHandler;
+import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedNavigationPagesEventHandler;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.AddFileButton;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.GedItem;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.ShareButton;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
-import org.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
@@ -96,7 +92,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
     EventBus.getInstance().fireEvent(new DocumentsLoadGedItemsEvent(instanceId, rootTopicId));
   }
 
-  public void setCanImport(boolean canImport) {
+  private void setCanImport(boolean canImport) {
     this.canImport = canImport;
   }
 
@@ -107,6 +103,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   @Override
   public void onLoadedTopics(GedItemsLoadedEvent event) {
     if ((isVisible() && dataLoaded == false) || (isVisible() && event.isForceReload())) {
+      setCanImport(event.isCanImport());
       Notification.activityStart();
       list.clear();
       List<BaseDTO> dataItems = event.getTopicsAndPublications();
@@ -126,10 +123,10 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 
       if (root.getId() == null) {
         favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
-        buttonImport.init(instanceId, "0");
+        buttonImport.init(instanceId, "0", false);
       } else {
         favorite.init(instanceId, root.getId(), ContentsTypes.Folder.name(), root.getName());
-        buttonImport.init(instanceId, rootTopicId);
+        buttonImport.init(instanceId, rootTopicId, false);
       }
 
       if (canImport) {

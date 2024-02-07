@@ -33,7 +33,9 @@ public class PublicationLoadedEvent extends AbstractPublicationPagesEvent {
   private String type;
   private int sharing;
 
-  public PublicationLoadedEvent(PublicationDTO publication, boolean commentable, boolean ableToStoreContent, boolean notifiable, int sharing, String type) {
+  private boolean canImport = false;
+
+  public PublicationLoadedEvent(PublicationDTO publication, boolean commentable, boolean ableToStoreContent, boolean notifiable, int sharing, String type, boolean canImport) {
     super();
     this.notifiable = notifiable;
     this.publication = publication;
@@ -41,6 +43,7 @@ public class PublicationLoadedEvent extends AbstractPublicationPagesEvent {
     this.ableToStoreContent = ableToStoreContent;
     this.sharing = sharing;
     this.type = type;
+    this.canImport = canImport;
   }
 
   @Override
@@ -67,4 +70,6 @@ public class PublicationLoadedEvent extends AbstractPublicationPagesEvent {
   public String getType() { return type; }
 
   public int getSharing() { return sharing; }
+
+  public boolean isCanImport() { return canImport; }
 }

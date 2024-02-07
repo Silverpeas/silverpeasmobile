@@ -193,9 +193,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       GedNavigationPage page = new GedNavigationPage();
       page.setPageTitle(event.getInstance().getLabel());
       page.setInstanceId(event.getInstance().getId());
-      //TODO : if writer manage validation
-      page.setCanImport(getApplicationInstance().getRights().getManager() ||
-              getApplicationInstance().getRights().getPublisher());
       page.setTopicId(null);
       page.show();
     }
@@ -242,10 +239,19 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       @Override
       public void onSuccess(final Method method, final List<BaseDTO> result) {
         super.onSuccess(method, result);
-        EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result, getApplicationInstance().getFolderSharing(), event.isForceReload()));
+
+        EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result, getApplicationInstance().getFolderSharing(),
+                getCanImport(), event.isForceReload()));
       }
     };
     action.attempt();
+  }
+
+  private boolean getCanImport() {
+    //TODO : if writer manage validation and manage topic specific right
+    boolean canImport = getApplicationInstance().getRights().getManager() ||
+            getApplicationInstance().getRights().getPublisher();
+    return canImport;
   }
 
   /**
@@ -269,8 +275,8 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         EventBus.getInstance().fireEvent(
             new PublicationLoadedEvent(result, getApplicationInstance().getCommentable(),
                 getApplicationInstance().getAbleToStoreContent(),
-                getApplicationInstance().getNotifiable(), getApplicationInstance().getPublicationSharing(), event.getContent().getType()));
-
+                getApplicationInstance().getNotifiable(), getApplicationInstance().getPublicationSharing(),
+                    event.getContent().getType(), getCanImport()));
       }
     };
     action.attempt();
