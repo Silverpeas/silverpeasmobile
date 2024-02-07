@@ -122,7 +122,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   public void setPersonalApps(List<ApplicationInstanceDTO> applicationInstanceDTOS) {
     listApplications.clear();
     for (ApplicationInstanceDTO app : applicationInstanceDTOS) {
-
       if (app.getType().equals(Apps.kmelia.name())) {
         app.setLabel(msg.myDocuments());
       }

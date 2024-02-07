@@ -473,7 +473,9 @@ public class ServiceNavigation extends AbstractRestWebService {
       SpaceInst space = Administration.get().getPersonalSpace(userId);
       List<ApplicationInstanceDTO> apps = new ArrayList<>();
       for (ComponentInst app : space.getAllComponentsInst()) {
-        apps.add(populate(app));
+        ApplicationInstanceDTO dto = populate(app);
+        dto.setPersonnal(true);
+        apps.add(dto);
       }
       return apps;
     } catch (AdminException e) {

@@ -194,6 +194,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       page.setPageTitle(event.getInstance().getLabel());
       page.setInstanceId(event.getInstance().getId());
       page.setTopicId(null);
+      page.setPersonnal(event.getInstance().isPersonnal());
       page.show();
     }
   }
@@ -248,6 +249,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   }
 
   private boolean getCanImport() {
+    if (getApplicationInstance().getRights() == null) return true;
     //TODO : if writer manage validation and manage topic specific right
     boolean canImport = getApplicationInstance().getRights().getManager() ||
             getApplicationInstance().getRights().getPublisher();
