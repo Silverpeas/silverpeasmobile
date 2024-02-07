@@ -37,8 +37,11 @@ import org.silverpeas.components.gallery.delegate.MediaDataCreateDelegate;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.model.Photo;
+import org.silverpeas.components.gallery.notification.user.GalleryUserAlertNotification;
 import org.silverpeas.components.gallery.service.GalleryService;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.core.admin.user.model.User;
+import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
 import org.silverpeas.mobile.server.helpers.MediaHelper;
@@ -201,6 +204,11 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
     }
 
     Media newMedia = getGalleryService().createMedia(getUserInSession(request), componentId, GalleryComponentSettings.getWatermark(componentId), delegate);
+
+    // notification management
+    User sender = getUserInSession(request);
+    GalleryUserAlertNotification n = new GalleryUserAlertNotification(new NodePK(albumId, componentId), newMedia, sender);
+    n.build().send();
 
     return newMedia.getId();
   }
