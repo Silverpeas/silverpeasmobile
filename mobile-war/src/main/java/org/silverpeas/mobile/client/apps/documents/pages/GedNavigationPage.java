@@ -44,6 +44,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -67,8 +68,15 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   private ShareButton share = new ShareButton();
 
   private boolean canImport = false;
+  private boolean personnal = false;
 
   private static GedNavigationPageUiBinder uiBinder = GWT.create(GedNavigationPageUiBinder.class);
+
+  private ApplicationMessages globalMsg = GWT.create(ApplicationMessages.class);
+
+  public void setPersonnal(boolean personnal) {
+    this.personnal = personnal;
+  }
 
   interface GedNavigationPageUiBinder extends UiBinder<Widget, GedNavigationPage> {
   }
@@ -109,7 +117,11 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
       List<BaseDTO> dataItems = event.getTopicsAndPublications();
       for (Object dataItem : dataItems) {
         if (dataItem instanceof TopicDTO && ((TopicDTO) dataItem).isRoot()) {
-          setPageTitle(((TopicDTO) dataItem).getName());
+          if (personnal) {
+            setPageTitle(globalMsg.myDocuments());
+          } else {
+            setPageTitle(((TopicDTO) dataItem).getName());
+          }
           root = (TopicDTO) dataItem;
         } else {
           GedItem item = new GedItem();
