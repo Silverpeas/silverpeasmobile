@@ -67,6 +67,13 @@ public class PageFooter extends Composite {
     ressources.css().ensureInjected();
 
     tchat.setVisible(Boolean.parseBoolean(ResourcesManager.getParam("chat.enable")));
+
+    browse.setHTML(ressources.homeShortcut().getText());
+    favoris.setHTML(ressources.favoritesShortcut().getText());
+    tasks.setHTML(ressources.tasksShortcut().getText());
+    tchat.setHTML(ressources.chatShortcut().getText());
+    contact.setHTML(ressources.contactsShortcut().getText());
+
     addCustomButtons();
   }
 
