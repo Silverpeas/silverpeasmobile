@@ -24,10 +24,13 @@
 
 package org.silverpeas.mobile.server.services;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.IFrameElement;
 import org.apache.commons.lang3.EnumUtils;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
@@ -361,9 +364,12 @@ public class ServiceNavigation extends AbstractRestWebService {
                 getSettings().getBoolean("spacehomepage.displayUrlType")) {
           String url = space.getFirstPageExtraParam();
           if (url.startsWith("/") && !url.startsWith("/silverpeas") && !url.startsWith("$")) url = "/silverpeas" + url;
-          String html =
-                  "<iframe frameborder='0' style='width:100vw;height:100vh' src='" + url +
-                          "'></iframe>";
+          String html = getIframe(url);
+          data.setHtmlFreeZone(html);
+        } else if (space.getFirstPageType() == HomePages.APP.getValue() && space.getFirstPageExtraParam().startsWith("webPage")) {
+          String appId = space.getFirstPageExtraParam();
+          String url = "/silverpeas/services/spmobile/PublicationContent" + "?id=" + appId + "&componentId=" + appId;
+          String html = getIframe(url);
           data.setHtmlFreeZone(html);
         }
       }
@@ -383,6 +389,14 @@ public class ServiceNavigation extends AbstractRestWebService {
     }
 
     return data;
+  }
+
+  private String getIframe(String url) {
+    String style = "border-style: none; width: 100%; overflow: hidden;";
+    String script = "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));";
+    String html = "<iframe style='" + style + "' src='" + url + "' onload=\"" + script + "\">";
+    html += "</iframe>";
+    return html;
   }
 
   private List<ComponentInstLight> getAllowedComponents(boolean visibleOnly, String name,
