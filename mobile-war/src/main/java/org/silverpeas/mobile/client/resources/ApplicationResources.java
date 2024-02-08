@@ -43,6 +43,10 @@ public interface ApplicationResources extends ClientBundle {
   @Source("icons/offline.png")
   ImageResource offline();
 
+  @Source("icons/star.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource favorite();
+
   @Source("icons/call.svg")
   @DataResource.MimeType("image/svg+xml")
   TextResource call();

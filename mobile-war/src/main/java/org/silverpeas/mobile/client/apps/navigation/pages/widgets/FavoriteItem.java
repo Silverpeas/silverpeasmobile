@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.navigation.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -34,6 +35,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
 
@@ -44,6 +46,11 @@ public class FavoriteItem extends Composite {
   @UiField Anchor link;
   protected ApplicationMessages msg = null;
 
+  private ApplicationResources resources = GWT.create(ApplicationResources.class);
+
+  @UiField
+  SpanElement icon;
+
 
   interface FavoriteItemUiBinder extends UiBinder<Widget, FavoriteItem> {
   }
@@ -51,6 +58,7 @@ public class FavoriteItem extends Composite {
   public FavoriteItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
+    icon.setInnerHTML(resources.favorite().getText());
   }
 
   public void setData(MyLinkDTO data) {
