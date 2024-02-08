@@ -51,10 +51,22 @@
       <components:UnorderedList ui:field="listApplications" />
 
       <ul id="actions-menu">
-        <li id="menu-home"><g:Anchor ui:field="home" styleName="ui-link" text="{msg.home}"/></li>
-        <li id="menu-parameter"><g:Anchor ui:field="config" styleName="ui-link" text="{msg.config}"/></li>
-        <li id="menu-help"><g:Anchor ui:field="help" styleName="ui-link" text="{msg.help}"/></li>
-        <li id="menu-logout"><g:Anchor ui:field="disconnect" styleName="ui-link" text="{msg.disconnect}"/></li>
+        <li id="menu-home">
+          <span ui:field="iconHome"></span>
+          <g:Anchor ui:field="home" styleName="ui-link" text="{msg.home}"/>
+        </li>
+        <li id="menu-parameter">
+          <span ui:field="iconSettings"></span>
+          <g:Anchor ui:field="config" styleName="ui-link" text="{msg.config}"/>
+        </li>
+        <li id="menu-help">
+          <span ui:field="iconHelp"></span>
+          <g:Anchor ui:field="help" styleName="ui-link" text="{msg.help}"/>
+        </li>
+        <li id="menu-logout">
+          <span ui:field="iconLogout"></span>
+          <g:Anchor ui:field="disconnect" styleName="ui-link" text="{msg.disconnect}"/>
+        </li>
       </ul>
     </div>
   </g:HTMLPanel>

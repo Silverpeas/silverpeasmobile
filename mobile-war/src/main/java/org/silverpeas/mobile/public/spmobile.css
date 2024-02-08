@@ -449,33 +449,30 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #navigation-footer a {
-  bottom: 0;
-  top: auto;
+  margin: auto;
+  text-align: center;
   flex: 1;
-  text-indent: -300em;
   transform: scale(1.5);
+  fill: #7eb73b;
 }
 
 #navigation-footer .btn-list-navigation {
-  background: transparent url('icons/home_shortcut.svg') center no-repeat;
+
 }
 
 #navigation-footer .btn-find-contact {
-  background: transparent url('icons/contacts_shortcut.svg') center no-repeat;
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 #navigation-footer .btn-update-tchat {
-  background: transparent url('icons/chat_shortcut.svg') center no-repeat;
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 #navigation-footer .btn-list-task {
-  background: transparent url('icons/tasks_shortcut.svg') center no-repeat;
+
 }
 
 #navigation-footer .btn-list-favoris {
-  background: transparent url('icons/favorites_shortcut.svg') center no-repeat;
   transform: scale(1.4);
 }
 
@@ -735,16 +732,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: none;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-config a {
-  background: transparent url('icons/settings.svg') no-repeat;
+#actions-menu li {
+  fill: #7eb73b;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-tasks a {
-  background: transparent url('icons/tasks.svg') no-repeat;
-}
-
-#silverpeas-navmenu-panel #actions-menu li#menu-help a {
-  background: transparent url('icons/help.svg') no-repeat;
+#actions-menu li span {
+  position: absolute;
+  left: 0.5em;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-notificationsbox a {
@@ -756,20 +750,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #silverpeas-navmenu-panel #actions-menu li#menu-parameter a {
-  background: transparent url('icons/settings.svg') no-repeat;
+
 }
 
 #silverpeas-navmenu-panel #actions-menu li#menu-home a {
-  background: transparent url('icons/home.svg') no-repeat;
 
 }
 
 #silverpeas-navmenu-panel #actions-menu li#menu-logout a {
-  background: transparent url('icons/logout.svg') no-repeat;
-}
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-tchat a {
-  background: transparent url('icons/chat.svg') no-repeat;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-usercalendar a {
