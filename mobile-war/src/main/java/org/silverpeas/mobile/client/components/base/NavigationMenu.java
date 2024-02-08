@@ -80,7 +80,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
   @UiField HTMLPanel container, user;
   @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, calendar, notifications, shares;
-  @UiField SpanElement status;
+  @UiField SpanElement status, iconHelp, iconSettings, iconHome, iconLogout;
   @UiField TextBox search;
   @UiField AvatarUpload avatar;
 
@@ -116,6 +116,11 @@ public class NavigationMenu extends Composite implements PageEventHandler {
         help.setTarget("_blank");
       }
     }
+    iconSettings.setInnerHTML(resources.settings().getText());
+    iconHelp.setInnerHTML(resources.help().getText());
+    iconLogout.setInnerHTML(resources.logout().getText());
+    iconHome.setInnerHTML(resources.home().getText());
+
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
 

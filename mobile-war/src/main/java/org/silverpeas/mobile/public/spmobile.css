@@ -732,12 +732,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background: none;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-config a {
-  background: transparent url('icons/settings.svg') no-repeat;
+#actions-menu li {
+  fill: #7eb73b;
 }
 
-#silverpeas-navmenu-panel #actions-menu li#menu-help a {
-  background: transparent url('icons/help.svg') no-repeat;
+#actions-menu li span {
+  position: absolute;
+  left: 0.5em;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-notificationsbox a {
@@ -749,16 +750,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #silverpeas-navmenu-panel #actions-menu li#menu-parameter a {
-  background: transparent url('icons/settings.svg') no-repeat;
+
 }
 
 #silverpeas-navmenu-panel #actions-menu li#menu-home a {
-  background: transparent url('icons/home.svg') no-repeat;
 
 }
 
 #silverpeas-navmenu-panel #actions-menu li#menu-logout a {
-  background: transparent url('icons/logout.svg') no-repeat;
+
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li#menu-usercalendar a {

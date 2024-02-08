@@ -147,6 +147,21 @@ public interface ApplicationResources extends ClientBundle {
   @Source("icons/shortcuts/chat_shortcut.svg")
   @DataResource.MimeType("image/svg+xml")
   TextResource chatShortcut();
+  @Source("icons/menu/help.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource help();
+
+  @Source("icons/menu/settings.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource settings();
+
+  @Source("icons/menu/home.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource home();
+
+  @Source("icons/menu/logout.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource logout();
 
 }
 
