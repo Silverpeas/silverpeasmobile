@@ -547,11 +547,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-size: 0.8em;
 }
 
+.favoris-bloc span {
+  top:0.25em;
+  fill : #a9a9a9;
+}
+
 .favoris-bloc a {
   padding-left: 2.5em;
-  font-size: 0.95em;
-  background: transparent url('icons/star.svg') no-repeat;
-  background-size: auto;
 }
 
 .racourcis-bloc a {
@@ -2109,10 +2111,12 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .ui-listview.favoris a {
-  background: transparent url('icons/star.svg') no-repeat;
-  background-size: auto;
-  background-position-y: center;
-  padding-left: 2em;
+  padding-left: 2.5em;
+}
+
+.ui-listview.favoris span {
+  top: 0.25em;
+  fill : #a9a9a9;
 }
 
 /*** Popup ***/
