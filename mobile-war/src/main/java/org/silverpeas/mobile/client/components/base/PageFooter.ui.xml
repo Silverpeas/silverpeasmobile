@@ -28,10 +28,10 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.resources.ApplicationMessages'/>
 
   <g:HTMLPanel ui:field="footer">
-    <g:Anchor stylePrimaryName="btn-list-navigation" ui:field="browse"><ui:safehtml from="{msg.browser}"/></g:Anchor>
-    <g:Anchor stylePrimaryName="btn-list-favoris" ui:field="favoris"><ui:safehtml from="{msg.appFavortis}"/></g:Anchor>
-    <g:Anchor stylePrimaryName="btn-find-contact" ui:field="contact"><ui:safehtml from="{msg.appContact}"/></g:Anchor>
-    <g:Anchor stylePrimaryName="btn-list-task" ui:field="tasks">{msg.tasks}/></g:Anchor>
-    <g:Anchor stylePrimaryName="btn-update-tchat" ui:field="tchat" href="chat.jsp" target="_blank"><ui:safehtml from="{msg.tchat}"/></g:Anchor>
+    <g:Anchor stylePrimaryName="btn-list-navigation" ui:field="browse"></g:Anchor>
+    <g:Anchor stylePrimaryName="btn-list-favoris" ui:field="favoris"></g:Anchor>
+    <g:Anchor stylePrimaryName="btn-find-contact" ui:field="contact"></g:Anchor>
+    <g:Anchor stylePrimaryName="btn-list-task" ui:field="tasks"></g:Anchor>
+    <g:Anchor stylePrimaryName="btn-update-tchat" ui:field="tchat" href="chat.jsp" target="_blank"></g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder> 

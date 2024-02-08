@@ -128,5 +128,25 @@ public interface ApplicationResources extends ClientBundle {
   @DataResource.MimeType("image/svg+xml")
   TextResource publication();
 
+  @Source("icons/shortcuts/home_shortcut.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource homeShortcut();
+
+  @Source("icons/shortcuts/favorites_shortcut.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource favoritesShortcut();
+
+  @Source("icons/shortcuts/contacts_shortcut.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource contactsShortcut();
+
+  @Source("icons/shortcuts/tasks_shortcut.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource tasksShortcut();
+
+  @Source("icons/shortcuts/chat_shortcut.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource chatShortcut();
+
 }
 
