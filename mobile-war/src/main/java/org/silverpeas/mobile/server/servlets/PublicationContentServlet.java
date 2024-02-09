@@ -115,18 +115,15 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
 
     response.getOutputStream().print("<html>");
     response.getOutputStream().print("<head>");
-    response.getOutputStream()
-        .print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
-    response.getOutputStream().print("<style>");
-
-    InputStream template =
-        getServletContext().getResourceAsStream("/spmobile/spmobile.css");
-    response.getOutputStream().print(IOUtils.toString(template, StandardCharsets.UTF_8));
-    response.getOutputStream().print("</style>");
+    response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
 
     String urlCSS = mobileSettings.getString("styleSheet", "");
     if (!urlCSS.isEmpty()) {
       response.getOutputStream().print("<link rel=\"stylesheet\" href=\"" + urlCSS + "\">");
+    }
+    String urlCSSWysiwyg = mobileSettings.getString("wysiwyg.styleSheet", "");
+    if (!urlCSSWysiwyg.isEmpty()) {
+      response.getOutputStream().print("<link rel=\"stylesheet\" href=\"" + urlCSSWysiwyg + "\">");
     }
 
     response.getOutputStream().print("</head>");
