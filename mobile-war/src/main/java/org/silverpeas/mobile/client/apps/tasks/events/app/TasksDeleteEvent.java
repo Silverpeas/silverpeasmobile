@@ -22,33 +22,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.components.base;
+package org.silverpeas.mobile.client.apps.tasks.events.app;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Composite;
+import org.silverpeas.mobile.shared.dto.TaskDTO;
 
-/**
- * @author: svu
- */
-public class ActionItem extends Composite {
+import java.util.List;
 
-  private String id;
-  private Command callback;
+public class TasksDeleteEvent extends AbstractTasksAppEvent {
 
+  private List<TaskDTO> tasks;
 
-  public String getId() {
-    return id;
+  public TasksDeleteEvent(List<TaskDTO> tasks){
+    super();
+    this.tasks = tasks;
   }
 
-  public void setId(final String id) {
-    this.id = id;
+  @Override
+  protected void dispatch(TasksAppEventHandler handler) {
+    handler.deleteTask(this);
   }
 
-  public void setCallback(Command callback) {
-    this.callback = callback;
-  }
-
-  protected Command getCallback() {
-    return this.callback;
+  public List<TaskDTO> getTasks() {
+    return tasks;
   }
 }

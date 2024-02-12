@@ -30,4 +30,6 @@ public interface TasksAppEventHandler extends EventHandler{
   void loadTasks(TasksLoadEvent event);
   void updateTask(TaskUpdateEvent event);
   void createTask(TaskCreateEvent event);
+
+  void deleteTask(TasksDeleteEvent event);
 }

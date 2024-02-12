@@ -32,4 +32,6 @@ public interface TasksMessages extends Messages {
   String actionEdit();
   String nameField();
   String edit();
+
+  String deleteConfirmation();
 }

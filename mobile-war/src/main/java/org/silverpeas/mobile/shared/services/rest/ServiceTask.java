@@ -28,12 +28,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -54,6 +49,12 @@ public interface ServiceTask extends RestService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("")
   public void updateTask(TaskDTO task, MethodCallback<Void> callback);
+
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("")
+  public void deleteTasks(List<TaskDTO> tasks, MethodCallback<Void> callback);
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)

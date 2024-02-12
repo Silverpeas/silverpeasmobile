@@ -38,12 +38,7 @@ import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
@@ -93,6 +88,16 @@ public class ServiceTask extends AbstractRestWebService {
     todo.setName(task.getName());
     todo.setPercentCompleted(task.getPercentCompleted());
     getCalendar().updateToDo(todo);
+  }
+
+  @DELETE
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("")
+  public void deleteTasks(List<TaskDTO> tasks) {
+    for (TaskDTO task : tasks) {
+      getCalendar().removeToDo(task.getId());
+    }
   }
 
   @POST

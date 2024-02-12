@@ -25,16 +25,13 @@
 package org.silverpeas.mobile.client.apps.tasks;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.apps.tasks.events.app.AbstractTasksAppEvent;
-import org.silverpeas.mobile.client.apps.tasks.events.app.TaskCreateEvent;
-import org.silverpeas.mobile.client.apps.tasks.events.app.TaskUpdateEvent;
-import org.silverpeas.mobile.client.apps.tasks.events.app.TasksAppEventHandler;
-import org.silverpeas.mobile.client.apps.tasks.events.app.TasksLoadEvent;
+import org.silverpeas.mobile.client.apps.tasks.events.app.*;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TaskCreatedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TaskUpdatedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
@@ -126,6 +123,24 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
       }
     };
     action.attempt();
+  }
+
+  @Override
+  public void deleteTask(TasksDeleteEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceTasks().deleteTasks(event.getTasks(), this);
+      }
+      @Override
+      public void onSuccess(Method method, Void unused) {
+        super.onSuccess(method, unused);
+        loadTasks(new TasksLoadEvent());
+      }
+    };
+    action.attempt();
+
   }
 
   @Override
