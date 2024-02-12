@@ -71,6 +71,7 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
+import org.silverpeas.mobile.shared.helpers.ApplicationsHelper;
 
 import java.util.List;
 
@@ -127,12 +128,14 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   public void setPersonalApps(List<ApplicationInstanceDTO> applicationInstanceDTOS) {
     listApplications.clear();
     for (ApplicationInstanceDTO app : applicationInstanceDTOS) {
-      if (app.getType().equals(Apps.kmelia.name())) {
-        app.setLabel(msg.myDocuments());
+      if (ApplicationsHelper.isSupportedApp(app)) {
+        if (app.getType().equals(Apps.kmelia.name())) {
+          app.setLabel(msg.myDocuments());
+        }
+        NavigationItem item = new NavigationItem();
+        item.setData(app);
+        listApplications.add(item);
       }
-      NavigationItem item = new NavigationItem();
-      item.setData(app);
-      listApplications.add(item);
     }
     personalAppsInitialized = true;
   }
