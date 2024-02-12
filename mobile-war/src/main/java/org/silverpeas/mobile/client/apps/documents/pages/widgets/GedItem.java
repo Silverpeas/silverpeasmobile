@@ -72,6 +72,7 @@ public class GedItem extends Composite {
         icon.setHTML(resources.folder().getText());
       }
       link.setText(dataTopic.getName() + " (" + dataTopic.getPubCount() + ")");
+      link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
     } else if (data instanceof PublicationDTO) {
       dataPublication = (PublicationDTO) data;
       link.setHTML(dataPublication.getName());
@@ -82,8 +83,9 @@ public class GedItem extends Composite {
         style += ");background-position:5px 5px;background-size:20px 20px;";
         link.getElement().setAttribute("style", style);
       }
+      link.setStyleName("ui-btn ui-icon-carat-r");
     }
-    link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
+
   }
 
   @UiHandler("link")

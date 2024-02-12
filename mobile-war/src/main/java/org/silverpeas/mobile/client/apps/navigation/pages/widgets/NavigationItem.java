@@ -67,6 +67,7 @@ public class NavigationItem extends Composite {
       if (((SpaceDTO)data).isPersonal()) {
         link.setText(msg.personalSpace());
       }
+      link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
     } else {
       String type = ((ApplicationInstanceDTO) data).getType();
       if (type.equalsIgnoreCase(Apps.kmelia.name())) {
@@ -112,8 +113,8 @@ public class NavigationItem extends Composite {
         setStyleName("app-resourcesManager");
         icon.setHTML(resources.bookonline().getText());
       }
+      link.setStyleName("ui-btn ui-icon-carat-r");
     }
-    link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
   }
 
   @UiHandler("link")
