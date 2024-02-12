@@ -12,17 +12,26 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 public class SelectableItem extends Composite {
 
     private PageContent parent;
+    private HTMLPanel container;
     private boolean selectionMode = false;
 
     public void setParent(PageContent page) {
         this.parent = page;
     }
 
+    public void setContainer(HTMLPanel container) {
+        this.container = container;
+    }
+
     public void setSelectionMode(boolean mode) {
         this.selectionMode = mode;
     }
 
-    protected void startTouch(TouchStartEvent event, HTMLPanel container, boolean selectable) {
+    public boolean isSelected() {
+        return container.getElement().hasClassName("selected");
+    }
+
+    protected void startTouch(TouchStartEvent event, boolean selectable) {
         if (!parent.isSelectionMode() && selectable) {
             Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
                 @Override
@@ -35,7 +44,7 @@ public class SelectableItem extends Composite {
         }
     }
 
-    protected void endTouch(TouchEndEvent event, HTMLPanel container, boolean selectable, Command onClickAction) {
+    protected void endTouch(TouchEndEvent event, boolean selectable, Command onClickAction) {
         if (!selectable) {
             onClickAction.execute();
             return;
