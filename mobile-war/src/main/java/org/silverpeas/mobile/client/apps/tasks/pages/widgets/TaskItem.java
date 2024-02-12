@@ -60,6 +60,7 @@ public class TaskItem extends SelectableItem {
   public TaskItem() {
     msg = GWT.create(TasksMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+    setContainer(container);
   }
 
   public void setData(TaskDTO data) {
@@ -88,16 +89,12 @@ public class TaskItem extends SelectableItem {
 
   @UiHandler("link")
   protected void startTouch(TouchStartEvent event) {
-    startTouch(event, container, task.getExternalId().isEmpty());
-  }
-
-  public boolean isSelected() {
-    return container.getElement().hasClassName("selected");
+    startTouch(event, task.getExternalId().isEmpty());
   }
 
   @UiHandler("link")
   protected void endTouch(TouchEndEvent event) {
-    endTouch(event, container, task.getExternalId().isEmpty(), new Command() {
+    endTouch(event, task.getExternalId().isEmpty(), new Command() {
       @Override
       public void execute() {
         if (task.getExternalId().isEmpty()) {
