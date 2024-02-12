@@ -803,7 +803,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 2.5em;
 }
 
-#actionsList:has(.add-task) {
+#actionsList:has(.add-task),  #actionsList:has(.delete-task){
   right: 1em;
 }
 
@@ -813,8 +813,14 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   filter: invert(1);
   background: url('icons/add.svg') no-repeat;
 }
+.delete-task {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/delete.svg') no-repeat;
+}
 
-.add-task a {
+.add-task a, .delete-task a {
   height: 24px;
   width: 24px;
   display: block;
@@ -1457,7 +1463,7 @@ li > #operations {
   width: 2em;
 }
 
-#notification .list-notifications > li.selected, .list-resources > li.selected {
+#notification .list-notifications > li.selected, .list-resources > li.selected, #tasks > li.selected {
   border-left: 8px solid #7eb73a;
   color: #000
 }

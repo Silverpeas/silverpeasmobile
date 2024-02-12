@@ -33,7 +33,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -96,6 +95,16 @@ public abstract class PageContent extends Composite implements View, NativePrevi
   public void addActionShortcut(ActionItem action) {
     actionsShortcuts.add(action);
     SpMobil.getMainPage().getHeader().addActionShortcut(action);
+  }
+
+  public void removeActionShortcut(ActionItem action) {
+    actionsShortcuts.remove(action);
+    SpMobil.getMainPage().getHeader().removeActionShortcut(action);
+  }
+
+  public void clearActions() {
+    actionsShortcuts.clear();
+    SpMobil.getMainPage().getHeader().clearActions();
   }
 
   public void addActionMenu(ActionItem action) {

@@ -25,10 +25,11 @@
 package org.silverpeas.mobile.client.apps.tasks.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -37,6 +38,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
+import org.silverpeas.mobile.client.apps.tasks.pages.TasksPage;
 import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
@@ -53,6 +55,9 @@ public class TaskItem extends Composite {
 
   private TaskDTO task;
 
+  private TasksPage parent;
+
+  private boolean selectionMode = false;
   interface ContactItemUiBinder extends UiBinder<Widget, TaskItem> {
   }
 
@@ -82,20 +87,69 @@ public class TaskItem extends Composite {
     updateRange(data.getPercentCompleted());
   }
 
+  public void setParent(TasksPage page) {
+    this.parent = page;
+  }
   public TaskDTO getData() {
     return task;
   }
 
   @UiHandler("link")
-  protected void edit(ClickEvent event) {
-    if (task.getExternalId().isEmpty()) {
-      TaskPage page = new TaskPage();
-      page.setPageTitle(msg.edit());
-      page.setData(task);
-      page.show();
-    } else {
-      //TODO : redirect on content
+  protected void startTouch(TouchStartEvent event) {
+    if (!parent.isSelectionMode()) {
+      Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+        @Override
+        public boolean execute() {
+          selectionMode = true;
+          container.getElement().addClassName("selected");
+          return false;
+        }
+      }, 400);
     }
+  }
+
+  public boolean isSelected() {
+    return container.getElement().hasClassName("selected");
+  }
+
+  @UiHandler("link")
+  protected void endTouch(TouchEndEvent event) {
+    if (parent.isSelectionMode()) {
+      if (container.getElement().hasClassName("selected")) {
+        container.getElement().removeClassName("selected");
+        parent.changeSelectionNumber(-1);
+      } else {
+        container.getElement().addClassName("selected");
+        parent.changeSelectionNumber(1);
+      }
+    } else {
+      if (selectionMode) {
+        container.getElement().addClassName("selected");
+        parent.changeSelectionNumber(1);
+        parent.setSelectionMode(true);
+      } else {
+        if (task.getExternalId().isEmpty()) {
+          TaskPage page = new TaskPage();
+          page.setPageTitle(msg.edit());
+          page.setData(task);
+          page.show();
+          Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+            @Override
+            public boolean execute() {
+              selectionMode = false;
+              container.getElement().removeClassName("selected");
+              return false;
+            }
+          }, 400);
+        } else {
+          //TODO : redirect on content
+        }
+      }
+    }
+  }
+
+  public void setSelectionMode(boolean mode) {
+    this.selectionMode = mode;
   }
 
   private void updateRange(final int value) {
@@ -103,6 +157,4 @@ public class TaskItem extends Composite {
     String css = "background-image: -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(" + val + ", rgb(114, 171, 14)), color-stop(" + val + ", rgb(197, 197, 197)));";
     range.setAttribute("style", css);
   }
-
-
 }

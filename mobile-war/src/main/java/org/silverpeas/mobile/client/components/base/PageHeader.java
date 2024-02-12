@@ -71,6 +71,10 @@ public class PageHeader extends Composite {
     actionsShortcuts.addAction(action);
   }
 
+  public void removeActionShortcut(ActionItem action) {
+    actionsShortcuts.removeAction(action.getId(), true);
+  }
+
   public void addActionMenu(ActionItem action) {
     actionsMenu.addAction(action);
   }

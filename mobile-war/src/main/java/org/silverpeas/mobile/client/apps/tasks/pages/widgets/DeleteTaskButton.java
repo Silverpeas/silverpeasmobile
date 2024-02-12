@@ -31,33 +31,29 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
 import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 
 /**
  * @author: svu
  */
-public class AddTaskButton extends ActionItem {
+public class DeleteTaskButton extends ActionItem {
 
-  interface AddTaskItemUiBinder extends UiBinder<Widget, AddTaskButton> {
+  interface DeleteTaskItemUiBinder extends UiBinder<Widget, DeleteTaskButton> {
   }
 
   @UiField Anchor link;
   @UiField(provided = true) protected TasksMessages msg = null;
 
-  private static AddTaskItemUiBinder uiBinder = GWT.create(AddTaskItemUiBinder.class);
-
-  public AddTaskButton() {
+  private static DeleteTaskItemUiBinder uiBinder = GWT.create(DeleteTaskItemUiBinder.class);
+  public DeleteTaskButton() {
+    setId("delete-task");
     msg = GWT.create(TasksMessages.class);
-    setId("add-task");
     initWidget(uiBinder.createAndBindUi(this));
   }
 
   @UiHandler("link")
-  void createTask(ClickEvent event) {
-    TaskPage page = new TaskPage();
-    page.setPageTitle(msg.create());
-    page.show();
+  void deleteTasks(ClickEvent event) {
+    getCallback().execute();
   }
 }
