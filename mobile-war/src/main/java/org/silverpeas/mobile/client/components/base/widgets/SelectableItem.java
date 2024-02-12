@@ -22,8 +22,8 @@ public class SelectableItem extends Composite {
         this.selectionMode = mode;
     }
 
-    protected void startTouch(TouchStartEvent event, HTMLPanel container) {
-        if (!parent.isSelectionMode()) {
+    protected void startTouch(TouchStartEvent event, HTMLPanel container, boolean selectable) {
+        if (!parent.isSelectionMode() && selectable) {
             Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
                 @Override
                 public boolean execute() {
@@ -35,7 +35,11 @@ public class SelectableItem extends Composite {
         }
     }
 
-    protected void endTouch(TouchEndEvent event, HTMLPanel container, Command onClickAction) {
+    protected void endTouch(TouchEndEvent event, HTMLPanel container, boolean selectable, Command onClickAction) {
+        if (!selectable) {
+            onClickAction.execute();
+            return;
+        }
         if (parent.isSelectionMode()) {
             if (container.getElement().hasClassName("selected")) {
                 container.getElement().removeClassName("selected");
