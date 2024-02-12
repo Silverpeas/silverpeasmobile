@@ -88,7 +88,7 @@ public class TaskItem extends SelectableItem {
 
   @UiHandler("link")
   protected void startTouch(TouchStartEvent event) {
-    startTouch(event, container);
+    startTouch(event, container, task.getExternalId().isEmpty());
   }
 
   public boolean isSelected() {
@@ -97,7 +97,7 @@ public class TaskItem extends SelectableItem {
 
   @UiHandler("link")
   protected void endTouch(TouchEndEvent event) {
-    endTouch(event, container, new Command() {
+    endTouch(event, container, task.getExternalId().isEmpty(), new Command() {
       @Override
       public void execute() {
         if (task.getExternalId().isEmpty()) {
