@@ -56,11 +56,15 @@ public abstract class PageContent extends Composite implements View, NativePrevi
 
   private App app;
   protected boolean clicked = false;
+
+  private boolean selectionMode = false;
   protected String pageTitle;
   private HandlerRegistration registration;
   private SwipeRecognizer swipeRecognizer;
   private List<ActionItem> actionsMenu = new ArrayList<>();
   private List<ActionItem> actionsShortcuts = new ArrayList<>();
+
+  private int changeSelectionNumber = 0;
 
   public PageContent() {
     super();
@@ -202,5 +206,19 @@ public abstract class PageContent extends Composite implements View, NativePrevi
   @Override
   public void loadedMoreDataEvent(final MoreDataLoadedEvent moreDataLoadedEvent) {
     // to be override if necessary
+  }
+
+  public boolean isSelectionMode() {
+    return selectionMode;
+  }
+  public void setSelectionMode(boolean selectionMode) {
+    this.selectionMode = selectionMode;
+  }
+
+  public void changeSelectionNumber(int i) {
+    changeSelectionNumber = changeSelectionNumber + i;
+    if (changeSelectionNumber == 0) {
+      setSelectionMode(false);
+    }
   }
 }

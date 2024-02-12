@@ -64,9 +64,6 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
   @UiField
   UnorderedList list;
 
-  private boolean selectionMode = false;
-  private int changeSelectionNumber = 0;
-
   private TasksMessages msg = GWT.create(TasksMessages .class);
 
   public TasksPage() {
@@ -126,10 +123,6 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
     EventBus.getInstance().removeHandler(AbstractTasksPagesEvent.TYPE, this);
   }
 
-  public boolean isSelectionMode() {
-    return selectionMode;
-  }
-
   private void deleteSelectedTasks() {
     PopinConfirmation popin = new PopinConfirmation(msg.deleteConfirmation());
     popin.setYesCallback(new Command() {
@@ -148,9 +141,10 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
     popin.show();
   }
 
+  @Override
   public void setSelectionMode(boolean selectionMode) {
+    super.setSelectionMode(selectionMode);
 
-    this.selectionMode = selectionMode;
     if (selectionMode) {
       clearActions();
       buttonDelete.setCallback(new Command() {@Override public void execute() {deleteSelectedTasks();}});
@@ -162,12 +156,6 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
     for (int i = 0; i < list.getCount(); i++) {
       TaskItem item = (TaskItem) list.getWidget(i);
       item.setSelectionMode(selectionMode);
-    }
-  }
-  public void changeSelectionNumber(int i) {
-    changeSelectionNumber = changeSelectionNumber + i;
-    if (changeSelectionNumber == 0) {
-      setSelectionMode(false);
     }
   }
 }
