@@ -40,6 +40,7 @@ public class NotificationSendedDTO extends NotificationBoxDTO implements Seriali
 
   public NotificationSendedDTO() {
     super();
+    setSended(true);
   }
 
   public String getDate() {

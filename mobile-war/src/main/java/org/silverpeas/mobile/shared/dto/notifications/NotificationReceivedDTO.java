@@ -42,6 +42,7 @@ public class NotificationReceivedDTO extends NotificationBoxDTO implements Seria
 
   public NotificationReceivedDTO() {
     super();
+    setSended(false);
   }
 
   public String getDate() {

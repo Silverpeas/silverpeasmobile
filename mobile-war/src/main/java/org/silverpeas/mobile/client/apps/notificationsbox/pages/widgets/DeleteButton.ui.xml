@@ -27,7 +27,7 @@
 
     <ui:with field='msg' type='org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages'/>
 
-    <g:HTMLPanel tag="li" ui:field="container" styleName="">
-        <g:Anchor styleName="" ui:field="delete" text="{msg.delete}"/>
+    <g:HTMLPanel tag="li" ui:field="container" styleName="delete-notification">
+        <g:Anchor ui:field="link"/>
     </g:HTMLPanel>
 </ui:UiBinder>

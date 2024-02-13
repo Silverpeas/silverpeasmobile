@@ -55,7 +55,7 @@ public class MarkAsReadButton extends ActionItem {
   @UiField
   HTMLPanel container;
   @UiField
-  Anchor read;
+  Anchor link;
 
   @UiField(provided = true)
   protected NotificationsMessages msg = null;
@@ -67,16 +67,9 @@ public class MarkAsReadButton extends ActionItem {
     setId("markAsRead");
   }
 
-  @UiHandler("read")
+  @UiHandler("link")
   void read(ClickEvent event) {
-    List<NotificationBoxDTO> selection = parentPage.getSelectedNotification();
-
-    MarkAsReadNotificationsEvent notReadEvent = new MarkAsReadNotificationsEvent();
-    notReadEvent.setSelection(selection);
-    EventBus.getInstance().fireEvent(notReadEvent);
-
-    // hide menu
-    ActionsMenu.close(getElement());
+    getCallback().execute();
   }
 
   public void setParentPage(final NotificationsBoxPage parentPage) {

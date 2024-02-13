@@ -25,82 +25,86 @@
 package org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.components.base.widgets.SelectableItem;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
-public class NotificationItem extends Composite implements ClickHandler {
+public class NotificationItem extends SelectableItem {
 
-  private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
+  private static NotificationItemUiBinder uiBinder = GWT.create(NotificationItemUiBinder.class);
 
   @UiField HTMLPanel container;
 
   @UiField
-  InlineHTML date, title, source, author;
+  SpanElement date, title, source, author;
 
   @UiField
-  CheckBox select;
+  Anchor link;
 
   @UiField(provided = true) protected NotificationsMessages msg = null;
 
   private NotificationBoxDTO data;
 
-  @Override
-  public void onClick(final ClickEvent clickEvent) {
-    if (data instanceof NotificationSendedDTO) {
-      Window.Location.assign(((NotificationSendedDTO)data).getLink());
-    } else {
-      Window.Location.assign(((NotificationReceivedDTO)data).getLink());
-      NotificationReadenEvent event = new NotificationReadenEvent((NotificationReceivedDTO) data);
-      EventBus.getInstance().fireEvent(event);
-    }
-  }
-
-  interface ContactItemUiBinder extends UiBinder<Widget, NotificationItem> {
+  interface NotificationItemUiBinder extends UiBinder<Widget, NotificationItem> {
   }
 
   public NotificationItem() {
     msg = GWT.create(NotificationsMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
-    date.addClickHandler(this);
-    author.addClickHandler(this);
-    source.addClickHandler(this);
-    title.addClickHandler(this);
+    setContainer(container);
   }
 
-  public boolean isSelected() {
-    return select.getValue();
+  @UiHandler("link")
+  protected void startTouch(TouchStartEvent event) {
+    startTouch(event, true);
+  }
+
+  @UiHandler("link")
+  protected void endTouch(TouchEndEvent event) {
+    endTouch(event, true, new Command() {
+      @Override
+      public void execute() {
+        if (data instanceof NotificationSendedDTO) {
+          Window.Location.assign(((NotificationSendedDTO)data).getLink());
+        } else {
+          Window.Location.assign(((NotificationReceivedDTO)data).getLink());
+          NotificationReadenEvent event = new NotificationReadenEvent((NotificationReceivedDTO) data);
+          EventBus.getInstance().fireEvent(event);
+        }
+      }
+    });
   }
 
   public void setData(NotificationSendedDTO data) {
     this.data = data;
-    date.setText(data.getDate());
-    source.setText(data.getSource());
-    title.setText(data.getTitle());
+    date.setInnerText(data.getDate());
+    source.setInnerHTML(data.getSource());
+    title.setInnerText(data.getTitle());
   }
 
   public void setData(NotificationReceivedDTO data) {
     this.data = data;
-    date.setText(data.getDate());
-    author.setText(data.getAuthor());
-    source.setText(data.getSource());
-    title.setText(data.getTitle());
+    date.setInnerText(data.getDate());
+    author.setInnerText(data.getAuthor());
+    source.setInnerText(data.getSource());
+    title.setInnerText(data.getTitle());
     if (data.getReaden() == 0) {
-      getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
+      getElement().addClassName("not-read");
     }
   }
 

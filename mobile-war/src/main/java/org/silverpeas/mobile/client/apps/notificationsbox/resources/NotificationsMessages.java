@@ -31,4 +31,6 @@ public interface NotificationsMessages extends Messages {
   String delete();
   String markAsRead();
 
+  String deleteConfirmation();
+
 }
