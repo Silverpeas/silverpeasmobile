@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -72,6 +73,11 @@ public class NotificationItem extends SelectableItem {
   @UiHandler("link")
   protected void startTouch(TouchStartEvent event) {
     startTouch(event, true);
+  }
+
+  @UiHandler("link")
+  protected void moveTouch(TouchMoveEvent event) {
+    super.moveTouch(event);
   }
 
   @UiHandler("link")
