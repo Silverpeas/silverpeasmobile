@@ -105,7 +105,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     initWidget(uiBinder.createAndBindUi(this));
     container.getElement().setId("silverpeas-navmenu-panel");
     listApplications.getElement().setId("personals-apps");
-    container.getElement().getStyle().setHeight(Window.getClientHeight(), Unit.PX);
     user.getElement().setId("user");
     String url = ResourcesManager.getParam("help.url");
     if (url != null && !url.isEmpty()) {

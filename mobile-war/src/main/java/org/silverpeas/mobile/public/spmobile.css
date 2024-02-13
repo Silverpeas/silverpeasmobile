@@ -653,6 +653,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-color: #f4f4f4;
   position: fixed;
   font-size: 0.8em;
+  height: 100vh;
 }
 
 #silverpeas-navmenu-panel .ui-panel-inner {
