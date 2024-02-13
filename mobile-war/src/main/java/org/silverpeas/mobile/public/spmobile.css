@@ -2762,7 +2762,6 @@ a.popin-btn {
 
 .notificationBox .ui-listview.notifications a {
     background-color: transparent;
-    user-select: none;
 }
 
 .notificationBox .ui-listview.notifications  .notification-date,
