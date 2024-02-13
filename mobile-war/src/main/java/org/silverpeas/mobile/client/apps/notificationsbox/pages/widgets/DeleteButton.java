@@ -55,7 +55,7 @@ public class DeleteButton extends ActionItem {
   @UiField
   HTMLPanel container;
   @UiField
-  Anchor delete;
+  Anchor link;
 
   @UiField(provided = true)
   protected NotificationsMessages msg = null;
@@ -64,19 +64,12 @@ public class DeleteButton extends ActionItem {
   public DeleteButton() {
     msg = GWT.create(NotificationsMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
-    setId("delete");
+    setId("delete-notification");
   }
 
-  @UiHandler("delete")
+  @UiHandler("link")
   void delete(ClickEvent event) {
-    List<NotificationBoxDTO> selection = parentPage.getSelectedNotification();
-
-    DeleteNotificationsEvent deleteEvent = new DeleteNotificationsEvent();
-    deleteEvent.setSelection(selection);
-    if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
-
-    // hide menu
-    ActionsMenu.close(getElement());
+    getCallback().execute();
   }
 
   public void setParentPage(final NotificationsBoxPage parentPage) {

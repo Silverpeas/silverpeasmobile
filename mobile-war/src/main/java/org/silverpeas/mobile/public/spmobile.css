@@ -804,6 +804,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 2.5em;
 }
 
+#actionList-bloc > li {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+#actionList-bloc > li:last-child {
+  padding-left: 0em;
+}
+
 #actionsList:has(.add-task),  #actionsList:has(.delete-task){
   right: 1em;
 }
@@ -1464,7 +1473,8 @@ li > #operations {
   width: 2em;
 }
 
-#notification .list-notifications > li.selected, .list-resources > li.selected, #tasks > li.selected {
+#notification .list-notifications > li.selected, .list-resources > li.selected, #tasks > li.selected,
+.notifications > li.selected {
   border-left: 8px solid #7eb73a;
   color: #000
 }
@@ -2744,35 +2754,42 @@ a.popin-btn {
 }
 
 /********* notification **************/
-.notificationBox .ui-listview.notifications  .notification-date {
-	color:#777;
-	display:inline-block;
-	font-size:90%;
-}
 .notificationBox .ui-listview.notifications  input {
 	position:absolute;
 	top:0.5em;
 	left:0.25em;
 }
 
+.notificationBox .ui-listview.notifications a {
+    background-color: transparent;
+    user-select: none;
+}
 
-.notificationBox .ui-listview.notifications  .notification-author{
+.notificationBox .ui-listview.notifications  .notification-date,
+.notificationBox .ui-listview.notifications  .notification-author {
 	font-size:90%;
 	display:inline-block;
+    color : #777;
 }
 .notificationBox .ui-listview.notifications  .notification-source {
 	font-size:90%;
+    color: #70a72e;
 }
 
-.notificationBox .ui-listview.notifications  .notification-title{
+.notificationBox .ui-listview.notifications .notification-title{
 	margin-bottom:0.75em;
-	font-weight:600;
+    color: #000;
 }
+
+.notificationBox .notification.not-read a .notification-title {
+  font-weight: bold;
+}
+
 .ui-listview.notifications  li span {
 	display:block;
 }
 .ui-listview.notifications  li{
-	padding: 0.75em 0.75em 0.75em 3em;
+	padding: 0.75em 0.75em 0.75em 2em;
 	position: relative;
 	border-bottom:1px solid  #CCC;
 }
@@ -2787,6 +2804,30 @@ a.popin-btn {
 
 .ui-listview.notifications  li:nth-child(even){
 	background-color: #FFF;
+}
+
+#actionsList:has(.delete-notification) {
+  right: 1em;
+}
+
+.delete-notification {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/delete.svg') no-repeat;
+}
+
+.markAsRead-notification {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/mark_read.svg') no-repeat;
+}
+
+.delete-notification a, .markAsRead-notification a {
+  height: 24px;
+  width: 24px;
+  display: block;
 }
 
 /******** FAQ ********/

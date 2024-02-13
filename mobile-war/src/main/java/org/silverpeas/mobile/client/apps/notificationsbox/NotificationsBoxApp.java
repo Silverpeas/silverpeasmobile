@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.notificationsbox;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -133,7 +134,7 @@ public class NotificationsBoxApp extends App
       public void onSuccess(final Method method, final Void unused) {
         super.onSuccess(method, unused);
         if (event.getSelection().get(0) instanceof NotificationSendedDTO) {
-          loadNotificationsSended(new NotificationsSendedLoadEvent());
+          loadNotificationsSended(new NotificationsSendedLoadEvent(), 0);
         } else {
           loadNotifications(new NotificationsLoadEvent(), 0);
         }

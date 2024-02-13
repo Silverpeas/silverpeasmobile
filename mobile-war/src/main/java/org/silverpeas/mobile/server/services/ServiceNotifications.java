@@ -117,7 +117,7 @@ public class ServiceNotifications extends AbstractRestWebService {
               SentNotificationInterface.get().getAllNotifByUser(getUser().getId());
           for (SentNotificationDetail notif : notifications) {
             NotificationSendedDTO dto = new NotificationSendedDTO();
-            dto.setSource(notif.getSource());
+            dto.setSource(notif.getBody());
             dto.setDate(sdf.format(notif.getNotifDate()));
             dto.setLink(notif.getLink());
             dto.setTitle(notif.getTitle());
@@ -362,10 +362,10 @@ public class ServiceNotifications extends AbstractRestWebService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("")
   public void delete(List<NotificationBoxDTO> selection) {
-    if (selection.get(0) instanceof NotificationSendedDTO) {
+    if (selection.get(0).isSended()) {
       for (NotificationBoxDTO dto : selection) {
         try {
-          SentNotificationInterface.get().deleteNotif(String.valueOf(dto.getIdNotif()), Integer.parseInt(getUser().getId()));
+          SentNotificationInterface.get().deleteNotif(getUser().getId(), (int) dto.getIdNotif());
         } catch (NotificationException e) {
           SilverLogger.getLogger(this).error(e);
         }

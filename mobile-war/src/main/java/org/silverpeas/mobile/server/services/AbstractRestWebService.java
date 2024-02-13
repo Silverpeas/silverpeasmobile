@@ -116,6 +116,7 @@ public abstract class AbstractRestWebService extends RESTWebService {
       HttpServletRequest request, Populator populator) {
     int callSize = 25;
 
+    if (callNumber==0) request.getSession().removeAttribute(CACHE_NAME);
     List<?> list = (List<?>) request.getSession().getAttribute(CACHE_NAME);
     if (list == null) {
       list = populator.execute();

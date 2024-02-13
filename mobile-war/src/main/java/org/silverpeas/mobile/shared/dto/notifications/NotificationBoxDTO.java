@@ -34,6 +34,7 @@ import java.io.Serializable;
 public class NotificationBoxDTO implements Serializable {
 
   private long idNotif;
+  private boolean sended;
 
   public long getIdNotif() {
     return idNotif;
@@ -41,5 +42,13 @@ public class NotificationBoxDTO implements Serializable {
 
   public void setIdNotif(final long idNotif) {
     this.idNotif = idNotif;
+  }
+
+  public boolean isSended() {
+    return sended;
+  }
+
+  protected void setSended(boolean sended) {
+    this.sended = sended;
   }
 }

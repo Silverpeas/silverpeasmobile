@@ -27,11 +27,12 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages'/>
 
   <g:HTMLPanel tag="li" ui:field="container" styleName="notification">
-    <g:CheckBox ui:field="select"  styleName="notification-checkbox"></g:CheckBox>
-    <g:InlineHTML ui:field="title" styleName="notification-title"></g:InlineHTML>
-    <g:InlineHTML ui:field="date" styleName="notification-date"></g:InlineHTML>
-    <g:InlineHTML ui:field="author" styleName="notification-author"></g:InlineHTML>
-    <g:InlineHTML ui:field="source" styleName="notification-source"></g:InlineHTML>
+    <g:Anchor ui:field="link" styleName="">
+    <span ui:field="title" class="notification-title"></span>
+    <span ui:field="date" class="notification-date"></span>
+    <span ui:field="author" class="notification-author"></span>
+    <span ui:field="source" class="notification-source"></span>
+    </g:Anchor>
   </g:HTMLPanel>
 
 </ui:UiBinder> 
