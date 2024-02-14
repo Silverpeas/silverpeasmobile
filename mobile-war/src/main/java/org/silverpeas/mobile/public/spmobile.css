@@ -2769,15 +2769,18 @@ a.popin-btn {
 	font-size:90%;
 	display:inline-block;
     color : #777;
+    user-select: none;
 }
 .notificationBox .ui-listview.notifications  .notification-source {
 	font-size:90%;
     color: #70a72e;
+    user-select: none;
 }
 
 .notificationBox .ui-listview.notifications .notification-title{
 	margin-bottom:0.75em;
     color: #000;
+    user-select: none;
 }
 
 .notificationBox .notification.not-read a .notification-title {

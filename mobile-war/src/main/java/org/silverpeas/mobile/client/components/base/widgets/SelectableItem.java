@@ -13,10 +13,11 @@ public class SelectableItem extends Composite {
 
     private PageContent parent;
     private HTMLPanel container;
-    private boolean selectionMode = false;
     private boolean onMove = false;
+    private boolean unSelected = false;
 
-    private Timer timer = null;
+    private Timer timerSelection = null;
+    private Timer timerScroll = null;
 
     public void setParent(PageContent page) {
         this.parent = page;
@@ -26,59 +27,63 @@ public class SelectableItem extends Composite {
         this.container = container;
     }
 
-    public void setSelectionMode(boolean mode) {
-        this.selectionMode = mode;
-    }
-
     public boolean isSelected() {
         return container.getElement().hasClassName("selected");
     }
 
     protected void startTouch(TouchStartEvent event, boolean selectable) {
         if (!parent.isSelectionMode() && selectable) {
-            timer = new Timer() {
+            timerSelection = new Timer() {
                 @Override
                 public void run() {
-                    selectionMode = true;
+                    parent.setSelectionMode(true);
                     container.getElement().addClassName("selected");
+                    parent.changeSelectionNumber(1);
                 }
             };
-            timer.schedule(400);
+            timerSelection.schedule(400);
+        } else if (parent.isSelectionMode() && selectable) {
+            timerScroll = new Timer() {
+                @Override
+                public void run() {
+                    if (!onMove) {
+                        if (container.getElement().hasClassName("selected")) {
+                            container.getElement().removeClassName("selected");
+                            parent.changeSelectionNumber(-1);
+                            unSelected = true;
+                        } else {
+                            container.getElement().addClassName("selected");
+                            parent.changeSelectionNumber(1);
+                        }
+                    } else {
+                        onMove = false;
+                    }
+                }
+            };
+            timerScroll.schedule(100);
         }
     }
 
     protected void moveTouch(TouchMoveEvent event) {
-        if (timer != null) timer.cancel();
+        if (timerSelection != null) timerSelection.cancel();
+        if (timerScroll != null) timerScroll.cancel();
         onMove = true;
     }
 
     protected void endTouch(TouchEndEvent event, boolean selectable, Command onClickAction) {
+        if (timerSelection != null) timerSelection.cancel();
         if (!onMove) {
-            if (!selectable) {
-                onClickAction.execute();
-                return;
-            }
-            if (parent.isSelectionMode()) {
-                if (container.getElement().hasClassName("selected")) {
-                    container.getElement().removeClassName("selected");
-                    parent.changeSelectionNumber(-1);
-                } else {
-                    container.getElement().addClassName("selected");
-                    parent.changeSelectionNumber(1);
+            if (selectable) {
+                if (!parent.isSelectionMode() && !unSelected) {
+                    onClickAction.execute();
                 }
             } else {
-                if (selectionMode) {
-                    container.getElement().addClassName("selected");
-                    parent.changeSelectionNumber(1);
-                    parent.setSelectionMode(true);
-                } else {
-                    onClickAction.execute();
-                    if (timer != null) timer.cancel();
-                }
+                onClickAction.execute();
             }
         } else {
             onMove = false;
         }
+        unSelected = false;
     }
 
 }

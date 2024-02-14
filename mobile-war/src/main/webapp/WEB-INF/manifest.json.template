@@ -9,7 +9,7 @@
   "start_url": "/silverpeas/spmobile/spmobil.jsp",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
-  "theme_color": "#00FF00",
+  "theme_color": "#7eb73b",
   "icons": [
     {
       "src" : "icon.png",

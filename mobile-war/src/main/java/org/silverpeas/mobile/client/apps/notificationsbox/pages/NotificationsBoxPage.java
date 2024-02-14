@@ -30,7 +30,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.DeleteNotificationsEvent;
@@ -161,10 +160,6 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
 
     } else {
       clearActions();
-    }
-    for (int i = 0; i < notifications.getCount(); i++) {
-      NotificationItem item = (NotificationItem) notifications.getWidget(i);
-      item.setSelectionMode(selectionMode);
     }
   }
 
