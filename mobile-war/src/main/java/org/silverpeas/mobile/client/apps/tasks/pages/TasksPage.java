@@ -153,9 +153,5 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
       clearActions();
       addActionShortcut(buttonCreate);
     }
-    for (int i = 0; i < list.getCount(); i++) {
-      TaskItem item = (TaskItem) list.getWidget(i);
-      item.setSelectionMode(selectionMode);
-    }
   }
 }

@@ -213,6 +213,7 @@ public abstract class PageContent extends Composite implements View, NativePrevi
   }
   public void setSelectionMode(boolean selectionMode) {
     this.selectionMode = selectionMode;
+    resetSelectionNumber();
   }
 
   public void changeSelectionNumber(int i) {
@@ -220,5 +221,9 @@ public abstract class PageContent extends Composite implements View, NativePrevi
     if (changeSelectionNumber == 0) {
       setSelectionMode(false);
     }
+  }
+
+  private void resetSelectionNumber() {
+    changeSelectionNumber = 0;
   }
 }
