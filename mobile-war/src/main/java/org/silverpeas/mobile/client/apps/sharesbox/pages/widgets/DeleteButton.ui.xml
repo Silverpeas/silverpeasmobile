@@ -27,7 +27,8 @@
 
     <ui:with field='msg' type='org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages'/>
 
-    <g:HTMLPanel tag="li" ui:field="container" styleName="">
-        <g:Anchor styleName="" ui:field="delete" text="{msg.delete}"/>
+    <g:HTMLPanel tag="li" ui:field="container" styleName="delete-share">
+        <g:Anchor ui:field="link"/>
     </g:HTMLPanel>
+
 </ui:UiBinder>

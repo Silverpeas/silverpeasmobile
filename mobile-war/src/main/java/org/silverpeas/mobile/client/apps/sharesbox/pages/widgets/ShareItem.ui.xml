@@ -26,11 +26,12 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages'/>
 
-  <g:HTMLPanel tag="li" ui:field="container">
-    <g:CheckBox ui:field="select"  styleName="share-checkbox"></g:CheckBox>
-    <g:InlineHTML ui:field="date" styleName="share-date"></g:InlineHTML>
-    <g:Anchor ui:field="link" styleName="share-link" target="_self"></g:Anchor>
-    <g:InlineHTML ui:field="name" styleName="share-name"></g:InlineHTML>
+  <g:HTMLPanel tag="li" ui:field="container" styleName="share">
+    <g:Anchor ui:field="link" styleName="">
+      <a ui:field="shareLink" class="share-link" target="_self"></a>
+      <span ui:field="date" class="share-date"></span>
+      <span ui:field="name" class="share-name"></span>
+    </g:Anchor>
   </g:HTMLPanel>
 
 </ui:UiBinder> 

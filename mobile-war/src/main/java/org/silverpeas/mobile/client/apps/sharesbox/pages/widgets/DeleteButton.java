@@ -31,15 +31,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.silverpeas.mobile.client.apps.sharesbox.events.app.DeleteSharesEvent;
-import org.silverpeas.mobile.client.apps.sharesbox.pages.SharesBoxPage;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
-import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
-
-import java.util.List;
 
 /**
  * @author: svu
@@ -50,12 +43,10 @@ public class DeleteButton extends ActionItem {
 
   private static DeleteButtonUiBinder uiBinder = GWT.create(DeleteButtonUiBinder.class);
 
-  private SharesBoxPage parentPage;
-
   @UiField
   HTMLPanel container;
   @UiField
-  Anchor delete;
+  Anchor link;
 
   @UiField(provided = true)
   protected ShareMessages msg = null;
@@ -64,21 +55,11 @@ public class DeleteButton extends ActionItem {
   public DeleteButton() {
     msg = GWT.create(ShareMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
-    setId("delete");
+    setId("delete-share");
   }
 
-  @UiHandler("delete")
+  @UiHandler("link")
   void delete(ClickEvent event) {
-    List<TicketDTO> selection = parentPage.getSelectedShares();
-    DeleteSharesEvent deleteEvent = new DeleteSharesEvent();
-    deleteEvent.setSelection(selection);
-    if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
-
-    // hide menu
-    ActionsMenu.close(getElement());
-  }
-
-  public void setParentPage(final SharesBoxPage parentPage) {
-    this.parentPage = parentPage;
+    getCallback().execute();
   }
 }

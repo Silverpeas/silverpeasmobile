@@ -32,4 +32,5 @@ public interface ShareMessages extends Messages {
     String delete();
 
 
+    String deleteConfirmation();
 }
