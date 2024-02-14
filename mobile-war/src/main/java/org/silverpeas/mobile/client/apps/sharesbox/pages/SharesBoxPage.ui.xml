@@ -30,8 +30,8 @@
 
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages' />
 
-  <g:HTMLPanel ui:field="container" styleName="content ui-body-a notificationBox">
+  <g:HTMLPanel ui:field="container" styleName="content ui-body-a sharesbox">
 
-    <components:UnorderedList ui:field="shares" stylePrimaryName="ui-listview ui-listview-inset ui-corner-all ui-shadow"></components:UnorderedList>
+    <components:UnorderedList ui:field="shares" stylePrimaryName="ui-listview ui-listview-inset ui-corner-all ui-shadow shares"></components:UnorderedList>
   </g:HTMLPanel>
 </ui:UiBinder> 

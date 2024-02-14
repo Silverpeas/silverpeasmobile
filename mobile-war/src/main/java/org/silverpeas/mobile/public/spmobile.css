@@ -480,7 +480,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #fff;
   font-size: 1.1em;
   font-weight: normal;
-  left: 60px;
+  left: 50px;
   line-height: 44px;
   margin: 0;
   overflow: hidden;
@@ -488,6 +488,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   position: absolute;
   top: 1px;
   height: 44px;
+  width: calc(100vw - 50px - 2.5em);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .ui-btn-right.back {
@@ -813,7 +817,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 0em;
 }
 
-#actionsList:has(.add-task),  #actionsList:has(.delete-task){
+#actionsList:has(.add-task),  #actionsList:has(.delete-task), #actionsList:has(.delete-share) {
   right: 1em;
 }
 
@@ -1422,6 +1426,7 @@ li > #operations {
   margin-bottom: 2em;
 }
 
+
 /* notification */
 
 #notification .list-contacts li {
@@ -1474,7 +1479,7 @@ li > #operations {
 }
 
 #notification .list-notifications > li.selected, .list-resources > li.selected, #tasks > li.selected,
-.notifications > li.selected {
+.notifications > li.selected, .shares > li.selected {
   border-left: 8px solid #7eb73a;
   color: #000
 }
@@ -2753,6 +2758,63 @@ a.popin-btn {
   padding:1em;
 }
 
+/********* sharebox **************/
+
+.sharesbox .ui-listview.shares a {
+  background-color: transparent;
+}
+
+.sharesbox .ui-listview.shares  .share-date {
+  font-size:90%;
+  display:inline-block;
+  color : #777;
+  user-select: none;
+}
+
+.sharesbox .ui-listview.shares  .share-name {
+  font-size:90%;
+  display:block;
+  color: #70a72e;
+  user-select: none;
+}
+
+.sharesbox .ui-listview.shares .share-link {
+  background: url('icons/link.svg') no-repeat;
+  height: 24px;
+  width: 24px;
+  display: block;
+  float: left;
+  padding-right: 1em;
+}
+
+/*.sharesBox .ui-listview.shares .notification-title{
+  margin-bottom:0.75em;
+  color: #000;
+  user-select: none;
+}*/
+
+.ui-listview.shares li span {
+  display:block;
+}
+.ui-listview.shares li {
+  width: 100%;
+  padding: 0.75em 0.75em 0.75em 2em;
+  position: relative;
+  border-bottom:1px solid  #CCC;
+}
+
+.ui-listview.shares li:first-child {
+  border-top:1px solid  #CCC;
+}
+
+.ui-listview.shares  li:nth-child(odd){
+  background-color: #F0F0F0;
+}
+
+.ui-listview.shares  li:nth-child(even){
+  background-color: #FFF;
+}
+
 /********* notification **************/
 .notificationBox .ui-listview.notifications  input {
 	position:absolute;
@@ -2796,7 +2858,7 @@ a.popin-btn {
 	border-bottom:1px solid  #CCC;
 }
 
-.ui-listview.notifications li:first-child{
+.ui-listview.notifications li:first-child {
 	border-top:1px solid  #CCC;
 }
 
@@ -2812,7 +2874,7 @@ a.popin-btn {
   right: 1em;
 }
 
-.delete-notification {
+.delete-notification, .delete-share a {
   height: 24px;
   width: 24px;
   filter: invert(1);
@@ -2826,7 +2888,7 @@ a.popin-btn {
   background: url('icons/mark_read.svg') no-repeat;
 }
 
-.delete-notification a, .markAsRead-notification a {
+.delete-notification a, .markAsRead-notification a, .delete-share a {
   height: 24px;
   width: 24px;
   display: block;
