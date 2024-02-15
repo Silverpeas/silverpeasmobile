@@ -31,13 +31,13 @@
 
   <g:HTMLPanel>
     <div id="header">
-      <h1 id="page-cookies-title"><ui:safehtml from="{msg.informationTitle}"/></h1>
+      <h1 id="page-infos-title"><ui:safehtml from="{msg.informationTitle}"/></h1>
     </div>
 
-    <div id="page-cookies" class="ui-content ui-body-a">
-      <div class="cookiesTextContainer">
-        <g:HTML ui:field="text" styleName="cookiesText"></g:HTML>
-        <div class="cookiesTextActions">
+    <div id="page-infos" class="ui-content ui-body-a">
+      <div class="infosTextContainer">
+        <g:HTML ui:field="text" styleName="infosText"></g:HTML>
+        <div class="infosTextActions">
           <g:Anchor ui:field="accept" styleName="btn-validate ui-link smaller multiple"><ui:safehtml from="{msg.accept}"/></g:Anchor>
         </div>
       </div>
