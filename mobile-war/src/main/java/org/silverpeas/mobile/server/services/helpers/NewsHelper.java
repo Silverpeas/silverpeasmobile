@@ -84,7 +84,7 @@ public class NewsHelper {
       for (String appId : appIds) {
         news.addAll(service.getVisibleNews(appId));
       }
-      news = sortAndTruncate(maxNews, news);
+      news = sortAndTruncate(maxNews, news, false);
       return news;
     } else {
       // News on main page
@@ -96,11 +96,14 @@ public class NewsHelper {
       } catch (MissingResourceException e) {}
       if (newsSource != null && newsSource.isEmpty() == false) {
           if (newsSource.trim().startsWith("quickinfo")) {
-            news = getNewsByComponentId(newsSource, false, userId, maxNews);
-            news = sortAndTruncate(maxNews, news);
+            String [] sources = newsSource.split(" ");
+            for (String source : sources) {
+              news.addAll(getNewsByComponentId(source.trim(), false, userId, maxNews));
+            }
+            news = sortAndTruncate(maxNews, news, true);
           } else if (newsSource.trim().equals("*")) {
             news = getAllNews(userId, maxNews);
-            news = sortAndTruncate(maxNews, news);
+            news = sortAndTruncate(maxNews, news, true);
           } else {
             news = getDelegatedNews(userId, maxNews);
           }
@@ -165,7 +168,7 @@ public class NewsHelper {
     for (String appId : apps) {
       news.addAll(getNewsByComponentId(appId, false, userId, maxNews));
     }
-    news = sortAndTruncate(maxNews, news);
+    news = sortAndTruncate(maxNews, news, false);
 
     return news;
   }
@@ -181,14 +184,14 @@ public class NewsHelper {
         news = service.getVisibleNews(appId);
       }
     }
-    news = sortAndTruncate(maxNews, news);
+    news = sortAndTruncate(maxNews, news, false);
 
     return news;
   }
 
-  private static List<News> sortAndTruncate(int maxNews, List<News> news) {
+  private static List<News> sortAndTruncate(int maxNews, List<News> news, boolean reverse) {
     Collections.sort(news, (o1, o2) -> o1.getUpdateDate().compareTo(o2.getUpdateDate()));
-    //Collections.reverse(news);
+    if (reverse) Collections.reverse(news);
     if (news != null && news.size() > maxNews) {
       news = news.subList(0, maxNews);
     }
