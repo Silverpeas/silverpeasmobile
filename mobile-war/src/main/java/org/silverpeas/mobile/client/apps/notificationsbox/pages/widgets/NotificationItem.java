@@ -100,7 +100,7 @@ public class NotificationItem extends SelectableItem {
     this.data = data;
     date.setInnerText(data.getDate());
     source.setInnerHTML(data.getSource());
-    title.setInnerText(data.getTitle());
+    title.setInnerHTML(data.getTitle());
   }
 
   public void setData(NotificationReceivedDTO data) {
@@ -108,7 +108,7 @@ public class NotificationItem extends SelectableItem {
     date.setInnerText(data.getDate());
     author.setInnerText(data.getAuthor());
     source.setInnerText(data.getSource());
-    title.setInnerText(data.getTitle());
+    title.setInnerHTML(data.getTitle());
     if (data.getReaden() == 0) {
       getElement().addClassName("not-read");
     }
