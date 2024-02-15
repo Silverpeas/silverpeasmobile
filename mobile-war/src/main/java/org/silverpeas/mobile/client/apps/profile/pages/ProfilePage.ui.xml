@@ -30,22 +30,6 @@
 
   <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
 
-    <h2><ui:safehtml from="{msg.titlePwd}"/></h2>
-    <div id="champs-password">
-      <span class="ui-btn-text"><ui:text from="{msg.newPwd}"/></span>
-      <g:PasswordTextBox ui:field="pwd1" styleName="ui-input-text ui-body-inherit"/>
-      <br/>
-      <span class="ui-btn-text"><ui:text from="{msg.repeatNewPwd}"/></span>
-      <g:PasswordTextBox ui:field="pwd2" styleName="ui-input-text ui-body-inherit"/>
-    </div>
-    <div class=" ui-controlgroup ui-controlgroup-horizontal">
-      <div class="ui-controlgroup-controls ">
-        <g:Anchor ui:field="changePwd" styleName="btn-validate ui-link">
-          <span class="ui-btn-text"><ui:text from="{msg.changePwd}"/></span>
-        </g:Anchor>
-      </div>
-    </div>
-
     <h2><ui:safehtml from="{msg.titleStatus}"/></h2>
     <div id="champs-statut">
       <div class="ouverture-bulle"></div>
@@ -58,6 +42,25 @@
         </g:Anchor>
       </div>
     </div>
+
+    <div ui:field="changePwdArea">
+      <h2><ui:safehtml from="{msg.titlePwd}"/></h2>
+      <div id="champs-password">
+        <span class="ui-btn-text"><ui:text from="{msg.newPwd}"/></span>
+        <g:PasswordTextBox ui:field="pwd1" styleName="ui-input-text ui-body-inherit"/>
+        <br/>
+        <span class="ui-btn-text"><ui:text from="{msg.repeatNewPwd}"/></span>
+        <g:PasswordTextBox ui:field="pwd2" styleName="ui-input-text ui-body-inherit"/>
+      </div>
+      <div class=" ui-controlgroup ui-controlgroup-horizontal">
+        <div class="ui-controlgroup-controls ">
+          <g:Anchor ui:field="changePwd" styleName="btn-validate ui-link">
+            <span class="ui-btn-text"><ui:text from="{msg.changePwd}"/></span>
+          </g:Anchor>
+        </div>
+      </div>
+    </div>
+
   </g:HTMLPanel>
 
 </ui:UiBinder>

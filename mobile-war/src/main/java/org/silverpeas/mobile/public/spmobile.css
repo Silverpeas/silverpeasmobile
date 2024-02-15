@@ -3029,3 +3029,11 @@ a.popin-btn {
   right: 1em;
 }
 
+/** Profil Page **/
+
+#champs-password input {
+  display: block;
+  background-color: white;
+  height: 2em;
+  width: calc(100vw - 2em);
+}
