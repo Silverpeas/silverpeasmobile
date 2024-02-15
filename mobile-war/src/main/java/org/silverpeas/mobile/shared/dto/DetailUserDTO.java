@@ -46,6 +46,7 @@ public class DetailUserDTO implements Serializable{
   private String sessionKey;
   private boolean connected;
   private boolean notificationBox;
+  private boolean ldap;
   private List<PropertyDTO> properties = new ArrayList<>();
 
   public void addProperty(String key, String value) {
@@ -175,5 +176,13 @@ public class DetailUserDTO implements Serializable{
 
   public boolean isNotificationBox() {
     return notificationBox;
+  }
+
+  public void setLdap(boolean ldap) {
+    this.ldap = ldap;
+  }
+
+  public boolean isLdap() {
+    return ldap;
   }
 }

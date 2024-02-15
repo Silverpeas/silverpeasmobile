@@ -72,6 +72,8 @@ public class UserHelper {
     dto.setLanguage(user.getUserPreferences().getLanguage());
     dto.setToken(user.getToken());
     dto.setZone(user.getUserPreferences().getZoneId().getId());
+    dto.setLdap(!user.getDomain().getDriverClassName()
+            .equals("org.silverpeas.core.admin.domain.driver.SilverpeasDomainDriver"));
 
     boolean notificationBox = false;
     List<Properties> channels = null;

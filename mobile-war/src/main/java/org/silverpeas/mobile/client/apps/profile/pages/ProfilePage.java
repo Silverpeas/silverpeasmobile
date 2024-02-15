@@ -25,15 +25,15 @@
 package org.silverpeas.mobile.client.apps.profile.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
+import org.apache.ecs.html.Div;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.profile.ProfileApp;
 import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;
 import org.silverpeas.mobile.client.apps.profile.resources.ProfileMessages;
@@ -53,6 +53,8 @@ public class ProfilePage extends PageContent {
   @UiField protected Anchor publish, changePwd;
   @UiField protected PasswordTextBox pwd1, pwd2;
 
+  @UiField protected DivElement changePwdArea;
+
   interface StatusPageUiBinder extends UiBinder<Widget, ProfilePage> {
   }
 
@@ -63,8 +65,11 @@ public class ProfilePage extends PageContent {
     container.getElement().setId("update-statut");
     status.getElement().setAttribute("x-webkit-speech", "x-webkit-speech");
     status.getElement().setAttribute("speech", "speech");
-    pwd1.getElement().setAttribute("autocomplete", "off");
-    pwd2.getElement().setAttribute("autocomplete", "off");
+    pwd1.getElement().setAttribute("autocomplete", "new-password");
+    pwd2.getElement().setAttribute("autocomplete", "new-password");
+    if (!SpMobil.getUser().isLdap()) {
+      changePwdArea.getStyle().setDisplay(Style.Display.NONE);
+    }
   }
 
   @UiHandler("publish")
