@@ -3005,7 +3005,7 @@ a.popin-btn {
 }
 
 /**** Cookies information page ****/
-.cookiesTextContainer {
+.infosTextContainer {
   background-color: white;
   height: 25vh;
   padding: 2em;
@@ -3015,16 +3015,16 @@ a.popin-btn {
   border-radius: 0.25em;
 }
 
-.cookiesText {
+.infosText {
   height: 20vh;
   text-align: justify;
   line-height: 1.2em;
 }
-.cookiesTextActions {
+.infosTextActions {
   text-align: right;
 }
 
-#header #page-cookies-title {
+#header #page-infos-title {
   left: 1em;
   right: 1em;
 }
