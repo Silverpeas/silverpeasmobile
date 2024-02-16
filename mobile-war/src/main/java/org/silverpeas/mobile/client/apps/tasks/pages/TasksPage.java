@@ -37,7 +37,6 @@ import org.silverpeas.mobile.client.apps.tasks.events.pages.TaskUpdatedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TasksPagesEventHandler;
 import org.silverpeas.mobile.client.apps.tasks.pages.widgets.AddTaskButton;
-import org.silverpeas.mobile.client.apps.tasks.pages.widgets.DeleteTaskButton;
 import org.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -45,6 +44,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
   private static TasksPageUiBinder uiBinder = GWT.create(TasksPageUiBinder.class);
   private AddTaskButton buttonCreate = new AddTaskButton();
 
-  private DeleteTaskButton buttonDelete = new DeleteTaskButton();
+  private DeleteButton buttonDelete = new DeleteButton();
   @UiField HTMLPanel container;
   @UiField
   UnorderedList list;
@@ -71,6 +71,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
     list.getElement().setId("tasks");
     EventBus.getInstance().fireEvent(new TasksLoadEvent());
     EventBus.getInstance().addHandler(AbstractTasksPagesEvent.TYPE, this);
+    buttonDelete.setId("delete-task");
   }
 
   @Override

@@ -817,7 +817,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 0em;
 }
 
-#actionsList:has(.add-task),  #actionsList:has(.delete-task), #actionsList:has(.delete-share) {
+#actionsList:has(.add-task) {
   right: 1em;
 }
 
@@ -827,14 +827,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   filter: invert(1);
   background: url('icons/add.svg') no-repeat;
 }
-.delete-task {
-  height: 24px;
-  width: 24px;
-  filter: invert(1);
-  background: url('icons/delete.svg') no-repeat;
-}
 
-.add-task a, .delete-task a {
+.add-task a {
   height: 24px;
   width: 24px;
   display: block;
@@ -2874,11 +2868,11 @@ a.popin-btn {
 	background-color: #FFF;
 }
 
-#actionsList:has(.delete-notification) {
+#actionsList:has(.delete-action) {
   right: 1em;
 }
 
-.delete-notification, .delete-share a, .delete-favoris {
+.delete-action {
   height: 24px;
   width: 24px;
   filter: invert(1);
@@ -2892,7 +2886,7 @@ a.popin-btn {
   background: url('icons/mark_read.svg') no-repeat;
 }
 
-.delete-notification a, .markAsRead-notification a, .delete-share a {
+.delete-action a, .markAsRead-notification a {
   height: 24px;
   width: 24px;
   display: block;
