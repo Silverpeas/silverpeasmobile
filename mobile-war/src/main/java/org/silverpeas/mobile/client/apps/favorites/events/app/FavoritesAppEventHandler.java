@@ -30,4 +30,5 @@ public interface FavoritesAppEventHandler extends EventHandler{
 	void loadFavorites(FavoritesLoadEvent event);
 	void addFavorite(AddFavoriteEvent event);
 	void gotoApp(GotoAppEvent event);
+    void deleteFavorites(FavoritesDeleteEvent favoritesDeleteEvent);
 }

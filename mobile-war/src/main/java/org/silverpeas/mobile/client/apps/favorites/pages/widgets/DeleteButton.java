@@ -22,35 +22,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services.rest;
+package org.silverpeas.mobile.client.apps.favorites.pages.widgets;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.mobile.shared.dto.MyLinkDTO;
-import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBoxPage;
+import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
+import org.silverpeas.mobile.client.components.base.ActionItem;
 
 /**
- * @author svu
+ * @author: svu
  */
-@Path("/mylinks")
-public interface ServiceMyLinks extends RestService {
+public class DeleteButton extends ActionItem {
 
+  interface DeleteButtonUiBinder extends UiBinder<HTMLPanel, DeleteButton> {}
 
-  @POST
-  @Path("/")
-  public void addLink(MyLinkDTO newLink, MethodCallback<MyLinkDTO> callback);
+  private static DeleteButtonUiBinder uiBinder = GWT.create(DeleteButtonUiBinder.class);
 
-  @GET
-  @Path("/")
-  public void getMyLinks(MethodCallback<List<MyLinkDTO>> callback);
+  @UiField
+  HTMLPanel container;
+  @UiField
+  Anchor link;
 
-  @DELETE
-  @Path("{linkId}")
-  public void deleteLink(final @PathParam("linkId") String linkId, MethodCallback<Void> callback);
+  public DeleteButton() {
+    initWidget(uiBinder.createAndBindUi(this));
+    setId("delete-favoris");
+  }
 
-
+  @UiHandler("link")
+  void delete(ClickEvent event) {
+    getCallback().execute();
+  }
 }

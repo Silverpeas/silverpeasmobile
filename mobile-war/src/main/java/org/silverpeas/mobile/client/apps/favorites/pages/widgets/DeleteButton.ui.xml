@@ -22,15 +22,10 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-	<g:HTMLPanel tag="li" ui:field="container" styleName="favorite">
-		<g:Anchor ui:field="link" styleName="ui-btn">
-			<span ui:field="icon" class="icon-app"></span>
-			<span ui:field="title" class="favorite-title"></span>
-			<span ui:field="desc" class="favorite-desc"></span>
-		</g:Anchor>
-	</g:HTMLPanel>
-
-</ui:UiBinder> 
+    <g:HTMLPanel tag="li" ui:field="container" styleName="delete-favoris">
+        <g:Anchor ui:field="link"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

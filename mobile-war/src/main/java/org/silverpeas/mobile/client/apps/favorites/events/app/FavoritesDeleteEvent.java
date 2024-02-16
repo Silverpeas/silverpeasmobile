@@ -22,35 +22,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services.rest;
+package org.silverpeas.mobile.client.apps.favorites.events.app;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
-import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-/**
- * @author svu
- */
-@Path("/mylinks")
-public interface ServiceMyLinks extends RestService {
+public class FavoritesDeleteEvent extends AbstractFavoritesAppEvent {
 
+  private List<MyLinkDTO> selection;
+  public FavoritesDeleteEvent(){
+    super();
+  }
+  @Override
+  protected void dispatch(FavoritesAppEventHandler handler) {
+    handler.deleteFavorites(this);
+  }
 
-  @POST
-  @Path("/")
-  public void addLink(MyLinkDTO newLink, MethodCallback<MyLinkDTO> callback);
+  public void setSelection(List<MyLinkDTO> selection) {
+    this.selection = selection;
+  }
 
-  @GET
-  @Path("/")
-  public void getMyLinks(MethodCallback<List<MyLinkDTO>> callback);
-
-  @DELETE
-  @Path("{linkId}")
-  public void deleteLink(final @PathParam("linkId") String linkId, MethodCallback<Void> callback);
-
-
+  public List<MyLinkDTO> getSelection() {
+    return selection;
+  }
 }

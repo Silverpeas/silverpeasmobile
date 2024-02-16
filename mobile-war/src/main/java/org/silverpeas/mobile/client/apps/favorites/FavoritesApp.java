@@ -26,11 +26,7 @@ package org.silverpeas.mobile.client.apps.favorites;
 
 import com.google.gwt.core.client.GWT;
 import org.fusesource.restygwt.client.Method;
-import org.silverpeas.mobile.client.apps.favorites.events.app.AbstractFavoritesAppEvent;
-import org.silverpeas.mobile.client.apps.favorites.events.app.AddFavoriteEvent;
-import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesAppEventHandler;
-import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesLoadEvent;
-import org.silverpeas.mobile.client.apps.favorites.events.app.GotoAppEvent;
+import org.silverpeas.mobile.client.apps.favorites.events.app.*;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
 import org.silverpeas.mobile.client.apps.favorites.pages.FavoritesPage;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
@@ -141,7 +137,31 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
       action.attempt();
   }
 
-  @Override
+    @Override
+    public void deleteFavorites(FavoritesDeleteEvent favoritesDeleteEvent) {
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+            private int i = 1;
+            @Override
+            public void attempt() {
+                super.attempt();
+                for (MyLinkDTO dto : favoritesDeleteEvent.getSelection()) {
+                    ServicesLocator.getServiceMyLinks().deleteLink(String.valueOf(dto.getLinkId()), this);
+                }
+            }
+
+            @Override
+            public void onSuccess(Method method, Void unused) {
+                i++;
+                if (i > favoritesDeleteEvent.getSelection().size()) {
+                    super.onSuccess(method, unused);
+                    loadFavorites(new FavoritesLoadEvent());
+                }
+            }
+        };
+        action.attempt();
+    }
+
+    @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) { /* only one instance */ }
 
   @Override

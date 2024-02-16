@@ -30,4 +30,6 @@ public interface FavoritesMessages extends Messages {
   String addToFavoritesContent();
   String favoriteAdded();
 
+  String deleteConfirmation();
+
 }

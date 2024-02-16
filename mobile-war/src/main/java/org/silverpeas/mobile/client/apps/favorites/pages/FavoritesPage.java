@@ -27,19 +27,24 @@ package org.silverpeas.mobile.client.apps.favorites.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesDeleteEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesLoadEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.AbstractFavoritesPagesEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesPagesEventHandler;
+import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
+import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.DeleteButton;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.FavoriteDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FavoritesPage extends PageContent implements FavoritesPagesEventHandler {
@@ -49,6 +54,10 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
   @UiField(provided = true) protected ApplicationMessages msg = null;
   @UiField
   UnorderedList favorites;
+
+  private DeleteButton buttonDelete = new DeleteButton();
+
+  private FavoritesMessages msgApp = GWT.create(FavoritesMessages .class);
 
   interface FavoritesPageUiBinder extends UiBinder<Widget, FavoritesPage> {
   }
@@ -69,12 +78,51 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
 
   @Override
   public void onFavoritesLoaded(final FavoritesLoadedEvent event) {
-
+    favorites.clear();
     List<MyLinkDTO> favoritesList = event.getFavorites();
     for (MyLinkDTO favoriteDTO : favoritesList) {
       FavoriteItem item = new FavoriteItem();
+      item.setParent(this);
       item.setData(favoriteDTO);
       favorites.add(item);
     }
+  }
+
+  @Override
+  public void setSelectionMode(boolean selectionMode) {
+    super.setSelectionMode(selectionMode);
+    if (selectionMode) {
+      clearActions();
+      buttonDelete.setCallback(new Command() {@Override public void execute() {deleteSelectedFavoris();}});
+      addActionShortcut(buttonDelete);
+    } else {
+      clearActions();
+    }
+  }
+
+  private void deleteSelectedFavoris() {
+    PopinConfirmation popin = new PopinConfirmation(msgApp.deleteConfirmation());
+    popin.setYesCallback(new Command() {
+      @Override
+      public void execute() {
+        List<MyLinkDTO> selection = getSelectedFavorites();
+        FavoritesDeleteEvent deleteEvent = new FavoritesDeleteEvent();
+        deleteEvent.setSelection(selection);
+        if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
+        clearActions();
+      }
+    });
+    popin.show();
+  }
+
+  private List<MyLinkDTO> getSelectedFavorites() {
+    List<MyLinkDTO> selection = new ArrayList<>();
+    for (int i = 0; i < favorites.getCount(); i++) {
+      FavoriteItem item = (FavoriteItem) favorites.getWidget(i);
+      if (item.isSelected()) {
+        selection.add(item.getData());
+      }
+    }
+    return selection;
   }
 }
