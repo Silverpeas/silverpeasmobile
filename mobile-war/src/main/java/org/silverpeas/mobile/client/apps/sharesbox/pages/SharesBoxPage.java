@@ -33,13 +33,13 @@ import org.silverpeas.mobile.client.apps.sharesbox.events.app.DeleteSharesEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.AbstractSharesBoxPagesEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.SharesBoxPagesEventHandler;
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.SharesDeletedEvent;
-import org.silverpeas.mobile.client.apps.sharesbox.pages.widgets.DeleteButton;
 import org.silverpeas.mobile.client.apps.sharesbox.pages.widgets.ShareItem;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 import java.util.ArrayList;
@@ -99,6 +99,7 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractSharesBoxPagesEvent.TYPE, this);
+    buttonDelete.setId("delete-share");
   }
 
   @Override

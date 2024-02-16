@@ -40,7 +40,6 @@ import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.AbstractN
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsBoxPagesEventHandler;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsSendedLoadedEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.DeleteButton;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.MarkAsReadButton;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.NotificationItem;
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
@@ -48,6 +47,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
@@ -80,8 +80,8 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractNotificationsBoxPagesEvent.TYPE, this);
     EventBus.getInstance().fireEvent(new NotificationsLoadEvent());
-    buttonDelete.setParentPage(this);
     buttonNotRead.setParentPage(this);
+    buttonDelete.setId("delete-notifications");
   }
 
   @Override

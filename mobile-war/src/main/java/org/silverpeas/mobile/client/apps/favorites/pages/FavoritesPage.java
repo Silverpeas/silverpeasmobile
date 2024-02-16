@@ -36,11 +36,11 @@ import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedE
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesPagesEventHandler;
 import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
-import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.DeleteButton;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
@@ -94,6 +94,7 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
     if (selectionMode) {
       clearActions();
       buttonDelete.setCallback(new Command() {@Override public void execute() {deleteSelectedFavoris();}});
+      buttonDelete.setId("delete-favoris");
       addActionShortcut(buttonDelete);
     } else {
       clearActions();

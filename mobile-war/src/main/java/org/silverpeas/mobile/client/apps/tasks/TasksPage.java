@@ -22,7 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.tasks.pages;
+package org.silverpeas.mobile.client.apps.tasks;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -44,6 +44,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
   private static TasksPageUiBinder uiBinder = GWT.create(TasksPageUiBinder.class);
   private AddTaskButton buttonCreate = new AddTaskButton();
 
-  private DeleteTaskButton buttonDelete = new DeleteTaskButton();
+  private DeleteButton buttonDelete = new DeleteButton();
   @UiField HTMLPanel container;
   @UiField
   UnorderedList list;
@@ -70,6 +71,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
     list.getElement().setId("tasks");
     EventBus.getInstance().fireEvent(new TasksLoadEvent());
     EventBus.getInstance().addHandler(AbstractTasksPagesEvent.TYPE, this);
+    buttonDelete.setId("delete-task");
   }
 
   @Override

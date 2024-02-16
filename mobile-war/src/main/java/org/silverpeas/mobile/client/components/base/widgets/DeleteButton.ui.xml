@@ -25,7 +25,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
-    <g:HTMLPanel tag="li" ui:field="container" styleName="delete-favoris">
+    <g:HTMLPanel tag="li" ui:field="container" styleName="delete-action">
         <g:Anchor ui:field="link"/>
     </g:HTMLPanel>
 </ui:UiBinder>

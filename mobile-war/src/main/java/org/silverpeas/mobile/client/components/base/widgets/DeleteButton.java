@@ -22,7 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.sharesbox.pages.widgets;
+package org.silverpeas.mobile.client.components.base.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,7 +31,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 
 /**
@@ -48,14 +47,8 @@ public class DeleteButton extends ActionItem {
   @UiField
   Anchor link;
 
-  @UiField(provided = true)
-  protected ShareMessages msg = null;
-
-
   public DeleteButton() {
-    msg = GWT.create(ShareMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
-    setId("delete-share");
   }
 
   @UiHandler("link")
