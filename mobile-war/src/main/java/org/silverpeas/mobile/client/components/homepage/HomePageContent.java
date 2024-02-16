@@ -145,9 +145,12 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     List<MyLinkDTO> favoritesList = data.getFavorites();
     favorisSection.setVisible(!favoritesList.isEmpty() && config.isFavoritesDisplay());
     for (MyLinkDTO favoriteDTO : favoritesList) {
-      FavoriteItem item = new FavoriteItem();
-      item.setData(favoriteDTO);
-      favoris.add(item);
+      if (favoriteDTO.getVisible()) {
+        FavoriteItem item = new FavoriteItem();
+        item.setMinimalView(true);
+        item.setData(favoriteDTO);
+        favoris.add(item);
+      }
     }
 
     shortcutstools.clear();

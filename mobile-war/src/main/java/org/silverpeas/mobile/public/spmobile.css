@@ -1479,7 +1479,7 @@ li > #operations {
 }
 
 #notification .list-notifications > li.selected, .list-resources > li.selected, #tasks > li.selected,
-.notifications > li.selected, .shares > li.selected {
+.notifications > li.selected, .shares > li.selected, .favoris > li.selected {
   border-left: 8px solid #7eb73a;
   color: #000
 }
@@ -2160,6 +2160,8 @@ form .forms .fields > li:nth-child(even) {
 	width: calc( 90% - 104px );
 	margin:0 5%;
 	text-align: center;
+    z-index: 999;
+    position: absolute;
 }
 
 .popin-btns {
@@ -2787,12 +2789,6 @@ a.popin-btn {
   padding-right: 1em;
 }
 
-/*.sharesBox .ui-listview.shares .notification-title{
-  margin-bottom:0.75em;
-  color: #000;
-  user-select: none;
-}*/
-
 .ui-listview.shares li span {
   display:block;
 }
@@ -2814,6 +2810,14 @@ a.popin-btn {
 .ui-listview.shares  li:nth-child(even){
   background-color: #FFF;
 }
+
+/********* favorites **************/
+.favorite-desc {
+  display: block;
+  padding-top: 1em;
+}
+
+
 
 /********* notification **************/
 .notificationBox .ui-listview.notifications  input {
@@ -2874,7 +2878,7 @@ a.popin-btn {
   right: 1em;
 }
 
-.delete-notification, .delete-share a {
+.delete-notification, .delete-share a, .delete-favoris {
   height: 24px;
   width: 24px;
   filter: invert(1);
