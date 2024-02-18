@@ -30,7 +30,7 @@ import org.silverpeas.core.notification.sse.CDIServerEventListener;
 import org.silverpeas.core.notification.user.UserNotificationServerEvent;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
-import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
 
 import java.util.Map;

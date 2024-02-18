@@ -39,8 +39,8 @@ import org.silverpeas.core.questioncontainer.container.service.QuestionContainer
 import org.silverpeas.core.security.token.TokenGenerator;
 import org.silverpeas.core.security.token.TokenGeneratorProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 

@@ -44,8 +44,8 @@ import org.silverpeas.core.admin.service.OrganizationControllerProvider;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.node.model.NodePK;
-import org.silverpeas.core.util.StringUtil;
-import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.core.webapi.media.streaming.StreamingProviderDataEntity;
 import org.silverpeas.mobile.server.common.CommandCreateList;
@@ -87,7 +87,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.silverpeas.core.util.StringUtil.EMPTY;
+import static org.silverpeas.kernel.util.StringUtil.EMPTY;
 
 /**
  * Service de gestion des galleries d'images.

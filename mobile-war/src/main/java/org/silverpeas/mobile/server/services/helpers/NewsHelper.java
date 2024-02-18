@@ -40,10 +40,14 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.io.file.ImageResizingProcessor;
 import org.silverpeas.core.io.file.SilverpeasFileProcessor;
-import org.silverpeas.core.util.*;
+import org.silverpeas.core.util.CollectionUtil;
+import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.io.File;
@@ -53,15 +57,15 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * @author: svu
+ * @author svu
  */
 public class NewsHelper {
 
   private static NewsHelper instance;
-  private static ImageResizingProcessor processor = ServiceProvider.getService(ImageResizingProcessor.class);
-  private OrganizationController organizationController = OrganizationController.get();
-  private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
-  private SettingBundle publicationSettings = ResourceLocator.getSettingBundle("org.silverpeas.publication.publicationSettings");
+  private static final ImageResizingProcessor processor = ServiceProvider.getService(ImageResizingProcessor.class);
+  private final OrganizationController organizationController = OrganizationController.get();
+  private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+  private final SettingBundle publicationSettings = ResourceLocator.getSettingBundle("org.silverpeas.publication.publicationSettings");
 
   public static NewsHelper getInstance() {
     if (instance == null) {

@@ -38,7 +38,7 @@ import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
 import java.io.File;

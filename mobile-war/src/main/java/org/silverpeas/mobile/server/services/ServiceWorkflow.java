@@ -41,7 +41,7 @@ import org.silverpeas.core.contribution.content.form.RecordTemplate;
 import org.silverpeas.core.contribution.content.form.field.MultipleUserField;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.core.workflow.api.Workflow;
 import org.silverpeas.core.workflow.api.instance.ProcessInstance;

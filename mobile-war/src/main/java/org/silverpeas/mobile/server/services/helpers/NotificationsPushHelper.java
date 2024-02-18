@@ -31,14 +31,14 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import org.silverpeas.core.SilverpeasRuntimeException;
+import org.silverpeas.kernel.SilverpeasRuntimeException;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
-import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
-import org.silverpeas.core.util.SettingBundle;
-import org.silverpeas.core.util.StringUtil;
-import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.kernel.bundle.SettingBundle;
+import org.silverpeas.kernel.util.StringUtil;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.dao.token.TokenDAO;
 
 import javax.inject.Inject;
@@ -51,7 +51,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static org.silverpeas.core.util.StringUtil.EMPTY;
+import static org.silverpeas.kernel.util.StringUtil.EMPTY;
 
 /**
  * @author svu
@@ -69,7 +69,7 @@ public class NotificationsPushHelper {
   private boolean configPresent;
 
   public static NotificationsPushHelper getInstance() {
-    return ServiceProvider.getSingleton(NotificationsPushHelper.class);
+    return ServiceProvider.getService(NotificationsPushHelper.class);
   }
 
   protected TokenDAO getTokenDAO() {

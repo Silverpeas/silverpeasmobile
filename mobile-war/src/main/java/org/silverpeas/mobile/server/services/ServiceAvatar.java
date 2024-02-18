@@ -28,7 +28,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.file.FileUploadUtil;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
