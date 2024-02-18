@@ -29,7 +29,7 @@ import org.apache.commons.io.IOUtils;
 import org.silverpeas.core.io.file.SilverpeasFile;
 import org.silverpeas.core.io.file.SilverpeasFileProvider;
 import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
 
 import javax.activation.MimetypesFileTypeMap;

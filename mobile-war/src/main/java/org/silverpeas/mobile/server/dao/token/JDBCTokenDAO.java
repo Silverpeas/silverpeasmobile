@@ -24,7 +24,7 @@
 
 package org.silverpeas.mobile.server.dao.token;
 
-import org.silverpeas.core.SilverpeasRuntimeException;
+import org.silverpeas.kernel.SilverpeasRuntimeException;
 
 import javax.inject.Inject;
 import javax.inject.Named;

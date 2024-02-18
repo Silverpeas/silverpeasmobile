@@ -26,25 +26,25 @@ package org.silverpeas.mobile.server.services.helpers;
 
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.user.model.Group;
-import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.notification.NotificationException;
 import org.silverpeas.core.notification.user.client.NotificationManager;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
-import org.silverpeas.core.util.StringUtil;
-import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
- * @author: svu
+ * @author svu
  */
 public class UserHelper {
 
@@ -82,7 +82,7 @@ public class UserHelper {
     } catch (NotificationException e) {
       SilverLogger.getLogger(this).error(e);
     }
-    for (Properties channel : channels) {
+    for (Properties channel : Objects.requireNonNull(channels)) {
       String isDefault = channel.getProperty("isDefault");
       String canal = channel.getProperty("channel");
       if (canal.equalsIgnoreCase("SILVERMAIL") && isDefault.equalsIgnoreCase("true")) {

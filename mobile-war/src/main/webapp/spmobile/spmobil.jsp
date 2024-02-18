@@ -5,12 +5,12 @@
 <%@ page import="org.silverpeas.core.security.session.SessionManagement" %>
 <%@ page import="org.silverpeas.core.security.session.SessionManagementProvider" %>
 <%@ page import="org.silverpeas.core.security.token.synchronizer.SynchronizerToken" %>
-<%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
-<%@ page import="org.silverpeas.core.util.ResourceLocator" %>
+<%@ page import="org.silverpeas.kernel.bundle.LocalizationBundle" %>
+<%@ page import="org.silverpeas.kernel.bundle.ResourceLocator" %>
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
 <%@ page import="org.silverpeas.mobile.server.helpers.ResourceBundleHelper" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="org.silverpeas.core.util.SettingBundle" %>
+<%@ page import="org.silverpeas.kernel.bundle.SettingBundle" %>
 <%@ page import="org.silverpeas.bridge.MobilFilter" %>
 
 <%--

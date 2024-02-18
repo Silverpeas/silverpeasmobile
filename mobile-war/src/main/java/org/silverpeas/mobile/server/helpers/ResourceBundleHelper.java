@@ -24,7 +24,7 @@
 
 package org.silverpeas.mobile.server.helpers;
 
-import org.silverpeas.core.util.LocalizationBundle;
+import org.silverpeas.kernel.bundle.LocalizationBundle;
 
 import java.util.Enumeration;
 import java.util.HashMap;

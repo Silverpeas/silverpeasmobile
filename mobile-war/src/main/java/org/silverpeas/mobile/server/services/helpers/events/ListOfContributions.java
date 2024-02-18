@@ -25,7 +25,7 @@
 package org.silverpeas.mobile.server.services.helpers.events;
 
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.web.look.Shortcut;
 

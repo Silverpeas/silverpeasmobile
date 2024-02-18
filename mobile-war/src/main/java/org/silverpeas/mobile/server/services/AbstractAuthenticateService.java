@@ -25,14 +25,14 @@
 package org.silverpeas.mobile.server.services;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import org.silverpeas.core.SilverpeasException;
+import org.silverpeas.kernel.SilverpeasException;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationResponse;
 import org.silverpeas.core.security.authentication.AuthenticationService;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.shared.StreamingList;

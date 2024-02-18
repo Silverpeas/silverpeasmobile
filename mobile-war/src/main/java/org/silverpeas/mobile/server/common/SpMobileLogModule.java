@@ -24,8 +24,8 @@
 
 package org.silverpeas.mobile.server.common;
 
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
 
 public class SpMobileLogModule {
 

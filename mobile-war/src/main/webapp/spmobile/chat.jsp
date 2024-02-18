@@ -41,7 +41,7 @@
 <c:set var="userLanguage" value="${currentUser.userPreferences.language}"/>
 <jsp:useBean id="userLanguage" type="java.lang.String"/>
 <c:set var="chatBundle" value="<%=ChatLocalizationProvider.getLocalizationBundle(userLanguage)%>"/>
-<jsp:useBean id="chatBundle" type="org.silverpeas.core.util.LocalizationBundle"/>
+<jsp:useBean id="chatBundle" type="org.silverpeas.kernel.bundle.LocalizationBundle"/>
 
 <c:set var="chatUrl" value="${chatSettings.BOSHServiceUrl}"/>
 <c:set var="chatWsUrl" value="${chatSettings.websocketServiceUrl}"/>

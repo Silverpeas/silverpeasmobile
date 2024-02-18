@@ -25,8 +25,8 @@
 package org.silverpeas.mobile.server.servlets;
 
 import org.silverpeas.core.admin.user.model.UserDetail;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 

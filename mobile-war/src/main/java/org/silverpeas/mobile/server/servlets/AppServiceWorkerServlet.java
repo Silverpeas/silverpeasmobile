@@ -25,7 +25,7 @@
 package org.silverpeas.mobile.server.servlets;
 
 import org.apache.commons.io.IOUtils;
-import org.silverpeas.core.util.logging.SilverLogger;
+import org.silverpeas.kernel.logging.SilverLogger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
