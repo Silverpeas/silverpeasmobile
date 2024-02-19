@@ -90,11 +90,10 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
           @Override
           public void onSuccess(final Method method, final List<MyLinkDTO> links) {
             super.onSuccess(method, links);
-            //TODO : autre favoris et ordre
             List groupedList = new ArrayList<>();
             List noCatList = new ArrayList<>();
             MyLinkCategoryDTO itemNoCat = new MyLinkCategoryDTO();
-            itemNoCat.setName("Autres favoris");
+            itemNoCat.setName(msg.favoritesWithoutCategory());
             groupedList.add(itemNoCat);
             for(MyLinkDTO link : links) {
                 if (link.getCategoryId() == null) {

@@ -511,7 +511,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .ui-page-content {
   padding: 0;
-  min-height: 100vh;
+  min-height: calc(100vh - 92px);
 }
 
 #menu-principal {
@@ -1342,6 +1342,18 @@ audio::-webkit-media-controls-enclosure {
   margin-bottom:0px;
 }
 
+.item-open {
+  transition: all .25s ease-in-out;
+  color: transparent;
+  max-height: 600px;
+}
+
+.item-closed {
+  transition: all .25s ease-in-out;
+  max-height: 0px;
+}
+
+
 li > #operations {
   padding:0em;
 }
@@ -2126,6 +2138,10 @@ form .forms .fields > li:nth-child(even) {
   padding-left: 1em;
 }
 
+.ui-listview.favoris {
+  overflow: hidden;
+}
+
 .ui-listview.favoris a {
   padding-left: 2.5em;
 }
@@ -2136,7 +2152,7 @@ form .forms .fields > li:nth-child(even) {
 }
 
 .ui-listview.favoris .category {
-
+  z-index: 3;
 }
 
 .ui-listview.favoris .category .category-title {

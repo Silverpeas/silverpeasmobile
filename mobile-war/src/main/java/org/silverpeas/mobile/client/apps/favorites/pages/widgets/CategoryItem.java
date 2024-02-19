@@ -26,19 +26,29 @@ package org.silverpeas.mobile.client.apps.favorites.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
 import org.silverpeas.mobile.client.components.base.widgets.SelectableItem;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.MyLinkCategoryDTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CategoryItem extends SelectableItem {
 
   private MyLinkCategoryDTO data;
+  private boolean expanded = true;
+
+  private List<FavoriteItem> favorites = new ArrayList<>();
   private static CategoryItemUiBinder uiBinder = GWT.create(CategoryItemUiBinder.class);
 
   @UiField
@@ -69,8 +79,34 @@ public class CategoryItem extends SelectableItem {
       desc.setInnerHTML(data.getDescription());
     }
   }
+
+  public void addFavorite(FavoriteItem item) {
+    favorites.add(item);
+  }
+
+
   public MyLinkCategoryDTO getData() {
     return data;
   }
 
+    @UiHandler("link")
+    protected void onClick(ClickEvent event) {
+      expanded = !expanded;
+      if (expanded) {
+        icon.setInnerHTML(resources.more().getText());
+      } else {
+        icon.setInnerHTML(resources.less().getText());
+      }
+      for (FavoriteItem item : favorites) {
+        //item.setVisible(expanded);
+        if (expanded) {
+          item.getElement().addClassName("item-open");
+          item.getElement().removeClassName("item-closed");
+
+        } else {
+          item.getElement().addClassName("item-closed");
+          item.getElement().removeClassName("item-open");
+        }
+      }
+    }
 }
