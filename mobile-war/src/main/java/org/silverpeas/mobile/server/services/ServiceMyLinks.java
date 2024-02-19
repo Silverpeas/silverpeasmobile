@@ -22,25 +22,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.favorites.events.pages;
+package org.silverpeas.mobile.server.services;
 
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.dto.MyLinkCategoryDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
+import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-public class FavoritesLoadedEvent extends AbstractFavoritesPagesEvent {
+/**
+ * @author svu
+ */
+@Path("/mylinks")
+public interface ServiceMyLinks extends RestService {
 
-  List favorites;
 
-  public FavoritesLoadedEvent(List favorites) {
-    super();
-    this.favorites = favorites;
-  }
+  @POST
+  @Path("/")
+  public void addLink(MyLinkDTO newLink, MethodCallback<MyLinkDTO> callback);
 
-  @Override
-  protected void dispatch(FavoritesPagesEventHandler handler) {
-    handler.onFavoritesLoaded(this);
-  }
+  @GET
+  @Path("/")
+  public void getMyLinks(MethodCallback<List<MyLinkDTO>> callback);
 
-  public List getFavorites() {
-    return favorites;
-  }
+  @DELETE
+  @Path("{linkId}")
+  public void deleteLink(final @PathParam("linkId") String linkId, MethodCallback<Void> callback);
+
+  @GET
+  @Path("categories")
+  @Produces(MediaType.APPLICATION_JSON)
+  public void getMyCategories(MethodCallback<List<MyLinkCategoryDTO>> callback);
+
 }

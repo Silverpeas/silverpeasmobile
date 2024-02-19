@@ -47,6 +47,14 @@ public interface ApplicationResources extends ClientBundle {
   @DataResource.MimeType("image/svg+xml")
   TextResource favorite();
 
+  @Source("icons/expand_more.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource more();
+
+  @Source("icons/expand_less.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource less();
+
   @Source("icons/call.svg")
   @DataResource.MimeType("image/svg+xml")
   TextResource call();

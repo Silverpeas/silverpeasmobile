@@ -2135,6 +2135,29 @@ form .forms .fields > li:nth-child(even) {
   fill : #a9a9a9;
 }
 
+.ui-listview.favoris .category {
+
+}
+
+.ui-listview.favoris .category .category-title {
+  font-weight: bold;
+}
+
+.ui-listview.favoris .category .category-desc {
+  display: block;
+}
+
+.ui-listview.favoris .category .category-icon {
+  position: absolute;
+  right: 0.5em;
+  fill: black;
+}
+
+.ui-listview.favoris .category a {
+  background-color: #7eb73b;
+  padding-left: 1em;
+}
+
 /*** Popup ***/
 .gwt-PopupPanel {
   left: 0;

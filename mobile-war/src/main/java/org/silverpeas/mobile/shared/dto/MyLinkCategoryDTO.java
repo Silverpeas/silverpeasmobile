@@ -22,25 +22,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.favorites.events.pages;
+package org.silverpeas.mobile.shared.dto;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class FavoritesLoadedEvent extends AbstractFavoritesPagesEvent {
+/**
+ * @author svu
+ */
+public class MyLinkCategoryDTO implements Serializable {
 
-  List favorites;
+  private String catId;
 
-  public FavoritesLoadedEvent(List favorites) {
-    super();
-    this.favorites = favorites;
+  private String position;
+  private String name;
+  private String description;
+
+  private String userId;
+
+  public String getCatId() {
+    return catId;
   }
 
-  @Override
-  protected void dispatch(FavoritesPagesEventHandler handler) {
-    handler.onFavoritesLoaded(this);
+  public void setCatId(String catId) {
+    this.catId = catId;
   }
 
-  public List getFavorites() {
-    return favorites;
+  public String getPosition() {
+    return position;
+  }
+
+  public void setPosition(String position) {
+    this.position = position;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
   }
 }
