@@ -200,4 +200,7 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Partager")
   String share();
+
+  @DefaultMessage("Autres favoris")
+  String favoritesWithoutCategory();
 }

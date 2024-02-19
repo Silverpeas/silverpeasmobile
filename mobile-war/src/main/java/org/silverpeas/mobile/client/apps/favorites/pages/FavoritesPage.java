@@ -83,16 +83,20 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
   public void onFavoritesLoaded(final FavoritesLoadedEvent event) {
     favorites.clear();
     List favoritesList = event.getFavorites();
+    CategoryItem currentCategory = null;
     for (Object it : favoritesList) {
       if (it instanceof MyLinkDTO) {
         FavoriteItem item = new FavoriteItem();
         item.setParent(this);
         item.setData((MyLinkDTO) it);
+        currentCategory.addFavorite(item);
+        item.getElement().addClassName("item-open");
         favorites.add(item);
       } else if (it instanceof MyLinkCategoryDTO) {
         CategoryItem item = new CategoryItem();
         item.setData((MyLinkCategoryDTO) it);
         favorites.add(item);
+        currentCategory = item;
       }
     }
   }
