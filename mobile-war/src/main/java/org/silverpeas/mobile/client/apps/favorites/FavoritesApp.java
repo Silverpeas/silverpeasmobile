@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.favorites;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.favorites.events.app.*;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
@@ -40,10 +41,11 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.MyLinkCategoryDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
-import java.util.List;
+import java.util.*;
 
 public class FavoritesApp extends App implements FavoritesAppEventHandler, NavigationEventHandler {
 
@@ -67,23 +69,75 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
     @Override
     public void loadFavorites(final FavoritesLoadEvent event) {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<MyLinkDTO>>() {
-        @Override
-        public void onSuccess(final Method method, final List<MyLinkDTO> result) {
-          super.onSuccess(method, result);
-          EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(result));
-        }
 
-        @Override
-        public void attempt() {
-          super.attempt();
-          ServicesLocator.getServiceMyLinks().getMyLinks(this);
-        }
-      };
-      action.attempt();
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<MyLinkCategoryDTO>>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getServiceMyLinks().getMyCategories(this);
+            }
+
+            @Override
+            public void onSuccess(Method method, List<MyLinkCategoryDTO> categories) {
+                super.onSuccess(method, categories);
+                loadMyLinks(categories);
+            }
+        };
+        action.attempt();
+    }
+    private void loadMyLinks(List<MyLinkCategoryDTO> categories) {
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<MyLinkDTO>>() {
+          @Override
+          public void onSuccess(final Method method, final List<MyLinkDTO> links) {
+            super.onSuccess(method, links);
+            //TODO : autre favoris et ordre
+            List groupedList = new ArrayList<>();
+            List noCatList = new ArrayList<>();
+            MyLinkCategoryDTO itemNoCat = new MyLinkCategoryDTO();
+            itemNoCat.setName("Autres favoris");
+            groupedList.add(itemNoCat);
+            for(MyLinkDTO link : links) {
+                if (link.getCategoryId() == null) {
+                    noCatList.add(link);
+                }
+            }
+              Collections.sort(noCatList, new Comparator<MyLinkDTO>() {
+                  @Override
+                  public int compare(MyLinkDTO o1, MyLinkDTO o2) {
+                      return o1.getPosition() - o2.getPosition();
+                  }
+              });
+            groupedList.addAll(noCatList);
+
+            for (MyLinkCategoryDTO category : categories) {
+                groupedList.add(category);
+                for(MyLinkDTO link : links) {
+                    List catList = new ArrayList<>();
+                    if (link.getCategoryId() != null && link.getCategoryId().equals(category.getCatId())) {
+                        catList.add(link);
+                    }
+                    Collections.sort(catList, new Comparator<MyLinkDTO>() {
+                        @Override
+                        public int compare(MyLinkDTO o1, MyLinkDTO o2) {
+                            return o1.getPosition() - o2.getPosition();
+                        }
+                    });
+                    groupedList.addAll(catList);
+                }
+            }
+            EventBus.getInstance().fireEvent(new FavoritesLoadedEvent(groupedList));
+          }
+
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceMyLinks().getMyLinks(this);
+          }
+        };
+        action.attempt();
     }
 
-  @Override
+    @Override
   public void addFavorite(final AddFavoriteEvent event) {
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<MyLinkDTO>() {
       @Override

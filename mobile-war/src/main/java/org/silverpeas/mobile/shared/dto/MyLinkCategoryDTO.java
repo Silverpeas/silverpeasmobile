@@ -22,40 +22,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services.rest;
+package org.silverpeas.mobile.shared.dto;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.mobile.shared.dto.MyLinkCategoryDTO;
-import org.silverpeas.mobile.shared.dto.MyLinkDTO;
-import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * @author svu
  */
-@Path("/mylinks")
-public interface ServiceMyLinks extends RestService {
+public class MyLinkCategoryDTO implements Serializable {
 
+  private String catId;
 
-  @POST
-  @Path("/")
-  public void addLink(MyLinkDTO newLink, MethodCallback<MyLinkDTO> callback);
+  private String position;
+  private String name;
+  private String description;
 
-  @GET
-  @Path("/")
-  public void getMyLinks(MethodCallback<List<MyLinkDTO>> callback);
+  private String userId;
 
-  @DELETE
-  @Path("{linkId}")
-  public void deleteLink(final @PathParam("linkId") String linkId, MethodCallback<Void> callback);
+  public String getCatId() {
+    return catId;
+  }
 
-  @GET
-  @Path("categories")
-  @Produces(MediaType.APPLICATION_JSON)
-  public void getMyCategories(MethodCallback<List<MyLinkCategoryDTO>> callback);
+  public void setCatId(String catId) {
+    this.catId = catId;
+  }
 
+  public String getPosition() {
+    return position;
+  }
+
+  public void setPosition(String position) {
+    this.position = position;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 }

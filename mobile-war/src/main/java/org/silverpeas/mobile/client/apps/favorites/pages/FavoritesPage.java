@@ -28,12 +28,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesDeleteEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesLoadEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.AbstractFavoritesPagesEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesPagesEventHandler;
+import org.silverpeas.mobile.client.apps.favorites.pages.widgets.CategoryItem;
 import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -42,6 +44,7 @@ import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.shared.dto.MyLinkCategoryDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
 import java.util.ArrayList;
@@ -79,12 +82,18 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
   @Override
   public void onFavoritesLoaded(final FavoritesLoadedEvent event) {
     favorites.clear();
-    List<MyLinkDTO> favoritesList = event.getFavorites();
-    for (MyLinkDTO favoriteDTO : favoritesList) {
-      FavoriteItem item = new FavoriteItem();
-      item.setParent(this);
-      item.setData(favoriteDTO);
-      favorites.add(item);
+    List favoritesList = event.getFavorites();
+    for (Object it : favoritesList) {
+      if (it instanceof MyLinkDTO) {
+        FavoriteItem item = new FavoriteItem();
+        item.setParent(this);
+        item.setData((MyLinkDTO) it);
+        favorites.add(item);
+      } else if (it instanceof MyLinkCategoryDTO) {
+        CategoryItem item = new CategoryItem();
+        item.setData((MyLinkCategoryDTO) it);
+        favorites.add(item);
+      }
     }
   }
 

@@ -43,6 +43,8 @@ public class MyLinkDTO implements Serializable {
   private String instanceId = "";
   private String objectId = "";
 
+  private String categoryId = "";
+
   public String getUri() {
     return uri;
   }
@@ -129,5 +131,13 @@ public class MyLinkDTO implements Serializable {
 
   public void setObjectId(final String objectId) {
     this.objectId = objectId;
+  }
+
+  public String getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(String categoryId) {
+    this.categoryId = categoryId;
   }
 }
