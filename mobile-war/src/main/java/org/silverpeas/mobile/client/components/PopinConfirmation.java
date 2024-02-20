@@ -24,9 +24,11 @@
 
 package org.silverpeas.mobile.client.components;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -65,9 +67,21 @@ public class PopinConfirmation extends PopupPanel implements ClickHandler{
 
     buttons.add(no);
     content.add(buttons);
-
     setWidget(content);
-    center();
+    recenter();
+    getElement().setAttribute("style", getElement().getAttribute("style") + " height: -webkit-fill-available;");
+  }
+
+  @Override
+  public void show() {
+    super.show();
+    int popupHeight = getElement().getFirstChildElement().getOffsetHeight();
+    int popupPaddingTop = Integer.parseInt(getElement().getStyle().getPaddingTop().replace("px",""));
+    getElement().getStyle().setPaddingTop(popupPaddingTop - (popupHeight/2) , Style.Unit.PX);
+  }
+
+  public void recenter() {
+    getElement().getStyle().setPaddingTop(getElement().getAbsoluteTop() + (Window.getClientHeight() /2), Style.Unit.PX);
   }
 
   public void setYesCallback(Command callback) {
