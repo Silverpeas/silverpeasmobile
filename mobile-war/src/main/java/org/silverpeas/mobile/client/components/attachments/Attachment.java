@@ -201,20 +201,27 @@ public class Attachment extends Composite {
     }
   }
 
+  private boolean isVisibleOperations() {
+    return operations.getStylePrimaryName().equals("ops-open");
+  }
+
   private void viewDocument() {
     AttachmentsManager.viewDocument(data.getId(), data.getLang());
   }
 
   @UiHandler("share")
   protected void share(ClickEvent event) {
-    SharingPage page = new SharingPage();
-    page.setData("Attachment", data.getSpId(), data.getInstanceId());
-    page.show();
+    if (isVisibleOperations()) {
+      SharingPage page = new SharingPage();
+      page.setData("Attachment", data.getSpId(), data.getInstanceId());
+      page.show();
+    }
   }
 
   @UiHandler("download")
   protected void download(ClickEvent event) {
-    if (MobilUtils.isIOS()) {
+    if (isVisibleOperations()) {
+      if (MobilUtils.isIOS()) {
         if (data.isDownloadable()) {
           String u = link.getHref();
           if (NetworkHelper.isOnline()) {
@@ -235,16 +242,19 @@ public class Attachment extends Composite {
           viewDocument();
         }
       }
+    }
   }
 
   @UiHandler("view")
   protected void view(ClickEvent event) {
-    viewDocument();
+    if (isVisibleOperations()) viewDocument();
   }
 
   @UiHandler("notify")
   protected void notify(ClickEvent event) {
-    NotificationsApp app = new NotificationsApp(data.getInstanceId(), data.getId(), NotificationDTO.TYPE_DOCUMENT, data.getFileName(), data.getFileName());
-    app.start();
+    if (isVisibleOperations()) {
+      NotificationsApp app = new NotificationsApp(data.getInstanceId(), data.getId(), NotificationDTO.TYPE_DOCUMENT, data.getFileName(), data.getFileName());
+      app.start();
+    }
   }
 }
