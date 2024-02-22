@@ -33,4 +33,6 @@ public interface DocumentsAppEventHandler extends EventHandler {
   void share(DocumentsSharingEvent event);
 
   void nextPublication(DocumentsNextPublicationEvent event);
+
+    void publish(DocumentsPublishEvent documentsPublishEvent);
 }

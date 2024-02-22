@@ -22,46 +22,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.documents.resources;
+package org.silverpeas.mobile.client.apps.documents.events.pages.navigation;
 
-import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.safehtml.shared.SafeHtml;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
-public interface DocumentsMessages extends Messages {
-  String title();
+import java.util.List;
 
-  // Publication page
-  String lastUpdate(String updateDate, String updater);
-  String publicationTitle();
-  String sizeK(String size);
-  String sizeM(String size);
+public class GedItemPublishedEvent extends AbstractGedNavigationPagesEvent {
 
-  String content();
 
-  String creation(String creationDate, String creator);
+	private PublicationDTO publication;
 
-  String views(int number);
-  String view();
-  String noview();
+	public GedItemPublishedEvent(PublicationDTO publication) {
+		super();
+		this.publication = publication;
+	}
 
-  String share();
+	@Override
+	protected void dispatch(GedNavigationPagesEventHandler handler) {
+		handler.onPublicationPublished(this);
+	}
 
-  String validityPermanent();
-  String validityTemporary();
-
-  String validityMandatory();
-
-  SafeHtml validityLabel();
-  SafeHtml endValidityLabel();
-  SafeHtml maxAccessLabel();
-  SafeHtml usersLabel();
-  SafeHtml emailsLabel();
-  SafeHtml commentsLabel();
-
-  String importFile();
-  String maxUploadError();
-
-  String fileNotSupportedError();
-
-  String draftOut();
+	public PublicationDTO getPublication() {
+		return publication;
+	}
 }

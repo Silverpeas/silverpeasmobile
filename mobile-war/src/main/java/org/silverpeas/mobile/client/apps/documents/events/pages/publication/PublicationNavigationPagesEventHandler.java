@@ -27,6 +27,9 @@ package org.silverpeas.mobile.client.apps.documents.events.pages.publication;
 import com.google.gwt.event.shared.EventHandler;
 
 public interface PublicationNavigationPagesEventHandler extends EventHandler {
-	void onLoadedPublication(PublicationLoadedEvent event);
-  void onLoadedPublicationAttachments(PublicationAttachmentsLoadedEvent event);
+    void onLoadedPublication(PublicationLoadedEvent event);
+
+    void onLoadedPublicationAttachments(PublicationAttachmentsLoadedEvent event);
+
+    void publishedPublication(PublicationPublishedEvent publicationPublishedEvent);
 }

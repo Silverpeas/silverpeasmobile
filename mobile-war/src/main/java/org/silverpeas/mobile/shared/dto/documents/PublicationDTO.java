@@ -43,6 +43,10 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   private int commentsNumber = 0;
   private String instanceId;
   private boolean content;
+
+  private boolean draft;
+
+  private boolean publishable;
   private List<PublicationDTO> linkedPublications;
   private String vignette;
   private int viewsNumber;
@@ -144,5 +148,21 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
   }
   public List<String> getNotAllowedDownloads() {
     return notAllowedDownloads;
+  }
+
+  public boolean isDraft() {
+    return draft;
+  }
+
+  public void setDraft(boolean draft) {
+    this.draft = draft;
+  }
+
+  public boolean isPublishable() {
+    return publishable;
+  }
+
+  public void setPublishable(boolean publishable) {
+    this.publishable = publishable;
   }
 }

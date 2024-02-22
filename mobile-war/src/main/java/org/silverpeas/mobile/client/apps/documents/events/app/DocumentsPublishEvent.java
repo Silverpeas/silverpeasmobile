@@ -22,46 +22,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.documents.resources;
+package org.silverpeas.mobile.client.apps.documents.events.app;
 
-import com.google.gwt.i18n.client.Messages;
-import com.google.gwt.safehtml.shared.SafeHtml;
 
-public interface DocumentsMessages extends Messages {
-  String title();
+import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-  // Publication page
-  String lastUpdate(String updateDate, String updater);
-  String publicationTitle();
-  String sizeK(String size);
-  String sizeM(String size);
+public class DocumentsPublishEvent extends AbstractDocumentsAppEvent {
 
-  String content();
+  private PublicationDTO publication;
 
-  String creation(String creationDate, String creator);
+  public DocumentsPublishEvent(PublicationDTO publication) {
+    super();
+    this.publication = publication;
+  }
 
-  String views(int number);
-  String view();
-  String noview();
+  @Override
+  protected void dispatch(DocumentsAppEventHandler handler) {
+    handler.publish(this);
+  }
 
-  String share();
-
-  String validityPermanent();
-  String validityTemporary();
-
-  String validityMandatory();
-
-  SafeHtml validityLabel();
-  SafeHtml endValidityLabel();
-  SafeHtml maxAccessLabel();
-  SafeHtml usersLabel();
-  SafeHtml emailsLabel();
-  SafeHtml commentsLabel();
-
-  String importFile();
-  String maxUploadError();
-
-  String fileNotSupportedError();
-
-  String draftOut();
+  public PublicationDTO getPublication() {
+    return publication;
+  }
 }

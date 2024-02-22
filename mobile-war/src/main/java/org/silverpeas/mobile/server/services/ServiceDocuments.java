@@ -348,6 +348,8 @@ public class ServiceDocuments extends AbstractRestWebService {
         PublicationDTO dto = new PublicationDTO();
         dto.setId(publicationDetail.getId());
         dto.setVignette(getVignetteUrl(publicationDetail));
+        dto.setDraft(publicationDetail.isDraft());
+        dto.setPublishable(isPublishable(publicationDetail));
 
         if (publicationDetail.isDraft()) {
           if (publicationDetail.getUpdaterId().equals(getUser().getId())) {
@@ -423,6 +425,10 @@ public class ServiceDocuments extends AbstractRestWebService {
         .debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + id);
 
     try {
+      final String userLanguage = getUser().getUserPreferences().getLanguage();
+      LocalizationBundle resource =
+              ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle",
+                      userLanguage);
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
       PublicationDetail pub = getPubBm().getDetail(new PublicationPK(id));
@@ -431,8 +437,12 @@ public class ServiceDocuments extends AbstractRestWebService {
       dto.setId(pub.getId());
       dto.setName(pub.getName());
       dto.setCreator(pub.getCreator().getDisplayedName());
+      dto.setPublishable(isPublishable(pub));
       dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName());
       dto.setVersion(pub.getVersion());
+      dto.setDraft(pub.isDraft());
+      if (pub.isDraft())  dto.setName(pub.getName() + " (" + resource.getString("publication.draft") + ")");
+
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
@@ -676,6 +686,23 @@ public class ServiceDocuments extends AbstractRestWebService {
       throw e;
     }
 
+    return dto;
+  }
+
+  private boolean isPublishable(PublicationDetail pub) {
+    return pub.canBeModifiedBy(getUser());
+  }
+
+  @POST
+  @Path("publish/{pubId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public PublicationDTO publish(@PathParam("appId") String appId, @PathParam("pubId") String pubId) throws Exception {
+    CompletePublication pub = PublicationService.get().getCompletePublication(new PublicationPK(pubId));
+    NodePK nodePK = KmeliaService.get().getPublicationFatherPK(new PublicationPK(pubId, pub.getPublicationDetail().getInstanceId()));
+    String profile = getUserTopicProfile(nodePK.getId(), appId);
+    KmeliaService.get().draftOutPublication(new PublicationPK(pubId), new NodePK(nodePK.getId(), appId), profile);
+    PublicationDTO dto = new PublicationDTO();
+    dto.setName(pub.getPublicationDetail().getName(getUser().getUserPreferences().getLanguage()));
     return dto;
   }
 
