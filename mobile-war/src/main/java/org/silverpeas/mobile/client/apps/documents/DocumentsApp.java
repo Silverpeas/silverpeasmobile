@@ -33,9 +33,11 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.documents.events.app.*;
+import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemPublishedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
+import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationPublishedEvent;
 import org.silverpeas.mobile.client.apps.documents.pages.GedNavigationPage;
 import org.silverpeas.mobile.client.apps.documents.pages.PublicationPage;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
@@ -278,7 +280,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             new PublicationLoadedEvent(result, getApplicationInstance().getCommentable(),
                 getApplicationInstance().getAbleToStoreContent(),
                 getApplicationInstance().getNotifiable(), getApplicationInstance().getPublicationSharing(),
-                    event.getContent().getType(), getCanImport()));
+                    event.getContent().getType(), getCanImport(), result.isPublishable()));
       }
     };
     action.attempt();
@@ -343,5 +345,27 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
         EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
       }
     });
+  }
+
+  @Override
+  public void publish(DocumentsPublishEvent event) {
+
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<PublicationDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceDocuments().publish(event.getPublication().getInstanceId(),
+                event.getPublication().getId(), this);
+      }
+
+      @Override
+      public void onSuccess(Method method, PublicationDTO publication) {
+        super.onSuccess(method, publication);
+        EventBus.getInstance().fireEvent(new PublicationPublishedEvent(publication));
+        //TODO : update folder
+        EventBus.getInstance().fireEvent(new GedItemPublishedEvent(event.getPublication()));
+      }
+    };
+    action.attempt();
   }
 }

@@ -37,12 +37,10 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
-import org.silverpeas.core.contribution.attachment.AttachmentService;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.attachment.util.SimpleDocumentList;
-import org.silverpeas.core.contribution.publication.dao.PublicationCriteria;
 import org.silverpeas.core.contribution.publication.model.*;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.io.media.image.thumbnail.ThumbnailSettings;
@@ -50,13 +48,8 @@ import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
 import org.silverpeas.core.sharing.services.SharingServiceProvider;
-import org.silverpeas.core.sharing.services.SharingTicketService;
 import org.silverpeas.core.silverstatistics.access.service.StatisticService;
-import org.silverpeas.core.util.LocalizationBundle;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.ServiceProvider;
-import org.silverpeas.core.util.SettingBundle;
-import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.*;
 import org.silverpeas.core.util.file.FileServerUtils;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
@@ -76,7 +69,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -348,6 +340,8 @@ public class ServiceDocuments extends AbstractRestWebService {
         PublicationDTO dto = new PublicationDTO();
         dto.setId(publicationDetail.getId());
         dto.setVignette(getVignetteUrl(publicationDetail));
+        dto.setDraft(publicationDetail.isDraft());
+        dto.setPublishable(isPublishable(publicationDetail));
 
         if (publicationDetail.isDraft()) {
           if (publicationDetail.getUpdaterId().equals(getUser().getId())) {
@@ -423,6 +417,10 @@ public class ServiceDocuments extends AbstractRestWebService {
         .debug("ServiceDocumentsImpl.getPublication", "getPublication for id " + id);
 
     try {
+      final String userLanguage = getUser().getUserPreferences().getLanguage();
+      LocalizationBundle resource =
+              ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle",
+                      userLanguage);
       SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
       PublicationDetail pub = getPubBm().getDetail(new PublicationPK(id));
@@ -431,8 +429,12 @@ public class ServiceDocuments extends AbstractRestWebService {
       dto.setId(pub.getId());
       dto.setName(pub.getName());
       dto.setCreator(pub.getCreator().getDisplayedName());
+      dto.setPublishable(isPublishable(pub));
       dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName());
       dto.setVersion(pub.getVersion());
+      dto.setDraft(pub.isDraft());
+      if (pub.isDraft())  dto.setName(pub.getName() + " (" + resource.getString("publication.draft") + ")");
+
       dto.setDescription(pub.getDescription());
       dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
@@ -647,7 +649,6 @@ public class ServiceDocuments extends AbstractRestWebService {
       }
       new KmeliaPublicationSort(sort).withContentLanguage(getUser().getUserPreferences().getLanguage()).sort(publications);
 
-
       KmeliaPublication next = null;
       for (int i = 0; i < publications.size(); i++) {
         if (publications.get(i).getId().equals(id)) {
@@ -666,8 +667,7 @@ public class ServiceDocuments extends AbstractRestWebService {
           }
         }
       }
-
-
+      
       dto.setId(next.getId());
       dto.setName(next.getName());
       dto.setDescription(next.getDescription());
@@ -678,6 +678,23 @@ public class ServiceDocuments extends AbstractRestWebService {
       throw e;
     }
 
+    return dto;
+  }
+
+  private boolean isPublishable(PublicationDetail pub) {
+    return pub.canBeModifiedBy(getUser());
+  }
+
+  @POST
+  @Path("publish/{pubId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public PublicationDTO publish(@PathParam("appId") String appId, @PathParam("pubId") String pubId) throws Exception {
+    CompletePublication pub = PublicationService.get().getCompletePublication(new PublicationPK(pubId));
+    NodePK nodePK = KmeliaService.get().getPublicationFatherPK(new PublicationPK(pubId, pub.getPublicationDetail().getInstanceId()));
+    String profile = getUserTopicProfile(nodePK.getId(), appId);
+    KmeliaService.get().draftOutPublication(new PublicationPK(pubId), new NodePK(nodePK.getId(), appId), profile);
+    PublicationDTO dto = new PublicationDTO();
+    dto.setName(pub.getPublicationDetail().getName(getUser().getUserPreferences().getLanguage()));
     return dto;
   }
 

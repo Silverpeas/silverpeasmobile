@@ -62,4 +62,6 @@ public interface DocumentsMessages extends Messages {
   String maxUploadError();
 
   String fileNotSupportedError();
+
+  String draftOut();
 }

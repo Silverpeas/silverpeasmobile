@@ -59,6 +59,10 @@ public class GedItem extends Composite {
     msg = GWT.create(ApplicationMessages.class);
   }
 
+  public Object getData() {
+    return data;
+  }
+
   public void setData(Object data) {
     this.data = data;
     if (data instanceof TopicDTO) {
@@ -86,6 +90,14 @@ public class GedItem extends Composite {
       link.setStyleName("ui-btn ui-icon-carat-r");
     }
 
+  }
+
+  public void setPublicationName(String name) {
+    if (dataPublication != null) {
+      dataPublication.setName(name);
+      ((PublicationDTO) data).setName(name);
+      link.setHTML(name);
+    }
   }
 
   @UiHandler("link")

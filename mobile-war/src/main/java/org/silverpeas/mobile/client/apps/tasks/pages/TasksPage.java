@@ -44,6 +44,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
   private static TasksPageUiBinder uiBinder = GWT.create(TasksPageUiBinder.class);
   private AddTaskButton buttonCreate = new AddTaskButton();
 
-  private DeleteTaskButton buttonDelete = new DeleteTaskButton();
+  private DeleteButton buttonDelete = new DeleteButton();
   @UiField HTMLPanel container;
   @UiField
   UnorderedList list;

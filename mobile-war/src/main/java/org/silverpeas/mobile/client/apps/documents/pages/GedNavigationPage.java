@@ -30,10 +30,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.AbstractGedNavigationPagesEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemClickEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedItemsLoadedEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.GedNavigationPagesEventHandler;
+import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.*;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.AddFileButton;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.GedItem;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.ShareButton;
@@ -173,6 +170,19 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
         content.setId(((PublicationDTO) event.getGedItem()).getId());
         content.setType(ContentsTypes.Publication.toString());
         EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
+      }
+    }
+  }
+
+  @Override
+  public void onPublicationPublished(GedItemPublishedEvent event) {
+    for (int i = 0; i < list.getCount(); i++) {
+      GedItem item = (GedItem) list.getWidget(i);
+      Object data = item.getData();
+      if (data instanceof PublicationDTO) {
+        if (event.getPublication().getId().equals(((PublicationDTO) data).getId())) {
+          item.setPublicationName(event.getPublication().getName());
+        }
       }
     }
   }

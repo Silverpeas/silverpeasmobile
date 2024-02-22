@@ -89,4 +89,9 @@ public interface ServiceDocuments extends RestService {
                                  @PathParam("id") String id,
                                  @PathParam("direction") String direction, MethodCallback<PublicationDTO> callback);
 
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{appId}/publish/{pubId}")
+  public void publish(@PathParam("appId") String appId, @PathParam("pubId") String pubId, MethodCallback<PublicationDTO> callback);
+
 }

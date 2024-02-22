@@ -2,7 +2,6 @@ package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.core.SilverpeasException;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
-import org.silverpeas.core.security.authentication.AuthenticationResponse;
 import org.silverpeas.core.security.authentication.AuthenticationService;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 import org.silverpeas.core.security.session.SessionInfo;
@@ -42,15 +41,13 @@ public abstract class AbstractRestWebService extends RESTWebService {
       throws SilverpeasException {
     AuthenticationService authService = AuthenticationServiceProvider.getService();
     AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(login);
-    AuthenticationResponse response =
+    String response =
         authService.authenticate(credential.withAsPassword(password).withAsDomainId(domainId));
     String key;
     if (response == null) {
       key = null;
-    } else if (response.getStatus().succeeded()) {
-      key = response.getToken();
     } else {
-      key = response.getStatus().getCode();
+      key = response;
     }
     MainSessionController mainSessionController =
         new MainSessionController(key, getHttpRequest().getSession());

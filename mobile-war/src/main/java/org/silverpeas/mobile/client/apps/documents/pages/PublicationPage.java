@@ -33,6 +33,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -41,11 +42,10 @@ import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadAttachmentsEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsNextPublicationEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.publication.AbstractPublicationPagesEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationAttachmentsLoadedEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationLoadedEvent;
-import org.silverpeas.mobile.client.apps.documents.events.pages.publication.PublicationNavigationPagesEventHandler;
+import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsPublishEvent;
+import org.silverpeas.mobile.client.apps.documents.events.pages.publication.*;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.AddFileButton;
+import org.silverpeas.mobile.client.apps.documents.pages.widgets.DraftOutButton;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.LinkedPublicationItem;
 import org.silverpeas.mobile.client.apps.documents.pages.widgets.ShareButton;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
@@ -101,7 +101,7 @@ public class PublicationPage extends PageContent
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   private AddFileButton buttonImport = new AddFileButton();
-
+  private DraftOutButton buttonDraftOut = new DraftOutButton();
   private ShareButton share = new ShareButton();
   private ContentDTO contentDTO = null;
   private boolean canImport = false;
@@ -135,6 +135,7 @@ public class PublicationPage extends PageContent
     linkedPublications.getElement().setId("linkedPublications");
     content.setId("content");
     buttonImport.setId("import");
+    buttonDraftOut.setId("publish");
     content.getStyle().setDisplay(Style.Display.NONE);
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
@@ -197,6 +198,16 @@ public class PublicationPage extends PageContent
       buttonImport.init(event.getPublication().getInstanceId(), event.getPublication().getId(), true);
       addActionShortcut(buttonImport);
     }
+
+    if (publication.isDraft() && event.isCanPublish()) {
+      buttonDraftOut.setCallback(new Command() {
+        @Override
+        public void execute() {
+          EventBus.getInstance().fireEvent(new DocumentsPublishEvent(publication));
+        }
+      });
+      addActionMenu(buttonDraftOut);
+    }
   }
 
   @Override
@@ -220,8 +231,14 @@ public class PublicationPage extends PageContent
     }
   }
 
+  @Override
+  public void publishedPublication(PublicationPublishedEvent event) {
+    title.setInnerHTML(event.getPublication().getName());
+    publication.setName(event.getPublication().getName());
+  }
+
   /**
-   * Refesh view informations.
+   * Refresh view informations.
    */
   private void display(boolean commentable, boolean ableToStoreContent, String type) {
     if (isVisible()) {
