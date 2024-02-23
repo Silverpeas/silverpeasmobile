@@ -39,10 +39,14 @@ body.ui-panel-wrapper {
   background-color: #ececec;
 }
 
-body, input, select, textarea, button, .ui-btn {
+body {
   font-size: 10pt;
   line-height: 1em;
   font-family: Open Sans, sans-serif
+}
+
+input, select, textarea, button, .ui-btn {
+  font-size: 1em;
 }
 
 legend, .ui-input-text input, .ui-input-search input {
