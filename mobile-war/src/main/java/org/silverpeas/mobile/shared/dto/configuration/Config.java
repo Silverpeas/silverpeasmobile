@@ -38,6 +38,8 @@ public class Config {
   private boolean freeZoneDisplay;
   private boolean freeZoneThinDisplay;
 
+  private int fontSize;
+
   public Config() {
   }
 
@@ -51,6 +53,7 @@ public class Config {
     c.setShortCutsToolsDisplay(true);
     c.setFreeZoneDisplay(true);
     c.setFreeZoneThinDisplay(true);
+    c.setFontSize(10);
     return c;
   }
 
@@ -118,6 +121,14 @@ public class Config {
     this.shortCutsToolsDisplay = shortCutsToolsDisplay;
   }
 
+  public int getFontSize() {
+    return fontSize;
+  }
+
+  public void setFontSize(int fontSize) {
+    this.fontSize = fontSize;
+  }
+
   public AutoBean<IConfig> getAutoBean () {
     AutoBean<IConfig> b = LocalStorageHelper.factory.iconfig();
     b.as().setFreeZoneDisplay(isFreeZoneDisplay());
@@ -128,6 +139,7 @@ public class Config {
     b.as().setLastPublicationsDisplay(isLastPublicationsDisplay());
     b.as().setShortCutsDisplay(isShortCutsDisplay());
     b.as().setShortCutsToolsDisplay(isShortCutsToolsDisplay());
+    b.as().setFontSize(getFontSize());
     return b;
   }
 
@@ -141,6 +153,7 @@ public class Config {
     conf.setLastPublicationsDisplay(b.as().isLastPublicationsDisplay());
     conf.setShortCutsDisplay(b.as().isShortCutsDisplay());
     conf.setShortCutsToolsDisplay(b.as().isShortCutsToolsDisplay());
+    conf.setFontSize(b.as().getFontSize());
     return conf;
   }
 }

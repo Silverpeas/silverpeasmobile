@@ -39,13 +39,22 @@
 
       <div id="menu-search">
         <g:TextBox ui:field="search" styleName="searchBox"/>
-        <g:Anchor ui:field="searchButton" styleName="searchButton" text="{msg.search}"/>
+        <a ui:field="searchButton" class="searchButton"></a>
       </div>
 
       <ul id="navmenu-panel">
-        <li id="menu-usercalendar"><g:Anchor ui:field="calendar" styleName="ui-link" text="{msg.usercalendar}"/></li>
-        <li id="menu-notificationsbox"><g:Anchor ui:field="notifications" styleName="ui-link" text="{msg.notifications}"/></li>
-        <li id="menu-sharesbox"><g:Anchor ui:field="shares" styleName="ui-link" text="{msg.shares}"/></li>
+        <li id="menu-usercalendar">
+          <span ui:field="iconUserCalendar"></span>
+          <g:Anchor ui:field="calendar" styleName="ui-link" text="{msg.usercalendar}"/>
+        </li>
+        <li id="menu-notificationsbox">
+          <span ui:field="iconInbox"></span>
+          <g:Anchor ui:field="notifications" styleName="ui-link" text="{msg.notifications}"/>
+        </li>
+        <li id="menu-sharesbox">
+          <span ui:field="iconShareBox"></span>
+          <g:Anchor ui:field="shares" styleName="ui-link" text="{msg.shares}"/>
+        </li>
       </ul>
 
       <components:UnorderedList ui:field="listApplications" />

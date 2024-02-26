@@ -42,4 +42,8 @@ public interface IConfig {
 
   public void setShortCutsToolsDisplay(final boolean shortCutsToolsDisplay);
 
+  public int getFontSize();
+
+  public void setFontSize(int fontSize);
+
 }

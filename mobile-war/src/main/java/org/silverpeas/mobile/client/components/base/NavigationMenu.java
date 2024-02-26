@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client.components.base;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -80,10 +81,13 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
   @UiField HTMLPanel container, user;
-  @UiField Anchor home, disconnect, updateStatus, searchButton, help, config, calendar, notifications, shares;
-  @UiField SpanElement status, iconHelp, iconSettings, iconHome, iconLogout;
+  @UiField Anchor home, disconnect, updateStatus, help, config, calendar, notifications, shares;
+  @UiField SpanElement status, iconHelp, iconSettings, iconHome, iconLogout, iconUserCalendar, iconInbox, iconShareBox;
   @UiField TextBox search;
   @UiField AvatarUpload avatar;
+
+  @UiField
+  AnchorElement searchButton;
 
   @UiField(provided = true) protected ApplicationMessages msg = null;
 
@@ -120,6 +124,11 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     iconHelp.setInnerHTML(resources.help().getText());
     iconLogout.setInnerHTML(resources.logout().getText());
     iconHome.setInnerHTML(resources.home().getText());
+    iconUserCalendar.setInnerHTML(resources.usercalendar().getText());
+    iconInbox.setInnerHTML(resources.inbox().getText());
+    iconShareBox.setInnerHTML(resources.sharebox().getText());
+    searchButton.setInnerHTML(resources.search().getText());
+    //searchButton.
 
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
@@ -132,6 +141,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
           app.setLabel(msg.myDocuments());
         }
         NavigationItem item = new NavigationItem();
+        item.getElement().getFirstChildElement().removeClassName("icon-app");//TODO
         item.setData(app);
         listApplications.add(item);
       }
@@ -197,10 +207,10 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     }
   }
 
-  @UiHandler("searchButton")
+  /*@UiHandler("searchButton")
   protected void searchIos(ClickEvent event) {
     SpMobil.search(search.getText());
-  }
+  }*/
 
   @UiHandler("home")
   protected void goHome(ClickEvent event) {
