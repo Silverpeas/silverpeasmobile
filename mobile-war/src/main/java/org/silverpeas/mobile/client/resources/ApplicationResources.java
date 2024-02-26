@@ -175,5 +175,20 @@ public interface ApplicationResources extends ClientBundle {
   @DataResource.MimeType("image/svg+xml")
   TextResource logout();
 
+  @Source("icons/menu/usercalendar.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource usercalendar();
+
+  @Source("icons/menu/sharebox.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource sharebox();
+
+  @Source("icons/menu/inbox.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource inbox();
+
+  @Source("icons/menu/search.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource search();
 }
 

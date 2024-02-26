@@ -152,6 +152,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     // init connexion supervision
     NetworkHelper.getInstance();
 
+    setFontSize(getConfiguration().getFontSize());
+
     instance = this;
     shortcutAppId = Window.Location.getParameter("shortcutAppId");
     shortcutContentType = Window.Location.getParameter("shortcutContentType");
@@ -584,4 +586,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   public static native void exportNativeFunctions()/*-{
     $wnd.navigateTo = $entry(@org.silverpeas.mobile.client.common.navigation.LinksManager::navigateToPermalink(*));
   }-*/;
+
+  public static void setFontSize(int value) {
+    Document.get().getBody().setAttribute("style", "font-size:"+value+"pt;");
+  }
 }

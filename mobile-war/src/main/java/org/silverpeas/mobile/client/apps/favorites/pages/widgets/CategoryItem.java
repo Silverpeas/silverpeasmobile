@@ -93,12 +93,11 @@ public class CategoryItem extends SelectableItem {
     protected void onClick(ClickEvent event) {
       expanded = !expanded;
       if (expanded) {
-        icon.setInnerHTML(resources.more().getText());
-      } else {
         icon.setInnerHTML(resources.less().getText());
+      } else {
+        icon.setInnerHTML(resources.more().getText());
       }
       for (FavoriteItem item : favorites) {
-        //item.setVisible(expanded);
         if (expanded) {
           item.getElement().addClassName("item-open");
           item.getElement().removeClassName("item-closed");

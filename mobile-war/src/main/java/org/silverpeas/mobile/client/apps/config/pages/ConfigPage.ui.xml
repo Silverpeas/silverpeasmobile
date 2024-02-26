@@ -61,6 +61,8 @@
         </a>
       </li>
     </ul>
+    <h3 class="title-bloc-part ui-title">Taille du texte</h3>
+    <input type="range" ui:field="fontSize" class="font-percent-size"></input>
   </g:HTMLPanel>
   </g:HTMLPanel>
 

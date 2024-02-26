@@ -609,6 +609,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .carroussel-news li {
   height: 90px;
   position: relative;
+  overflow: hidden;
 }
 
 .carroussel-news img {
@@ -637,7 +638,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .carroussel-news p {
   font-size: 0.75em;
-  line-height: 1em;
+  line-height: inherit;
   color: #666666;
   padding: 0;
   margin: 0;
@@ -645,7 +646,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .carroussel-news .nbIndication {
   position: absolute;
-  bottom: -0.7em;
+  bottom: 0em;
   right: 0.5em;
   font-size: 0.85em;
 }
@@ -675,10 +676,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #silverpeas-navmenu-panel #user img {
   float: left;
-  width: 30px;
+  width: 2.5em;
   vertical-align: middle;
   margin-right: 0.25em;
-  border-radius: 30px;
+  border-radius: 100%;
   margin-right: 0.5em;
   border: 1px solid #9d9c9c;
 }
@@ -696,85 +697,105 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   height: 18px;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel, #silverpeas-navmenu-panel #actions-menu {
+#silverpeas-navmenu-panel #navmenu-panel {
   border-top: 1px solid #d3d3d3;
+  margin: 0;
+  padding: 0;
+}
+
+#silverpeas-navmenu-panel #navmenu-panel li {
   list-style-type: none;
-  padding: 0;
-  margin: 0;
+  display: flex;
+  align-items: center;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li, #silverpeas-navmenu-panel #actions-menu li {
-  padding: 0;
-  margin: 0;
-}
-
-#silverpeas-navmenu-panel #navmenu-panel li a, #silverpeas-navmenu-panel #actions-menu li a {
-  text-decoration: none;
-  color: #333333;
-  display: block;
-  padding: 0.25em 0 0.5em 32px;
-  font-size: 1.25em;
-  line-height: 1.6em;
+#silverpeas-navmenu-panel #navmenu-panel li span {
+  position: relative;
+  display: inline;
   margin-left: 0.5em;
+  font-size: 1.25em;
+}
+
+#silverpeas-navmenu-panel #navmenu-panel li span svg {
+  height: 2em;
+  width: 2em;
+}
+
+#silverpeas-navmenu-panel #navmenu-panel li a {
+  position: relative;
+  display: inline;
+  border: none;
+  font-size: 1.25em;
+  padding-left: 0.5em;
+  color: #333333;
+}
+
+#actions-menu > :first-child, #navmenu-panel > :first-child, #personals-apps > :first-child {
+  padding-top: 1em;
+}
+
+#personals-apps {
+  border-top: 1px solid #d3d3d3;
+  margin: 0;
+  padding: 0;
+}
+
+#personals-apps li {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+}
+
+#personals-apps li span {
+  position: relative;
+  display: inline;
+  margin-left: 0.5em;
+  font-size: 1.25em;
+}
+#personals-apps li span svg {
+  height: 2em;
+  width: 2em;
+}
+
+#personals-apps li a {
+  position: relative;
+  display: inline;
+  border: none;
+  font-size: 1.25em;
+  padding-left: 0.5em;
 }
 
 #actions-menu {
+  border-top: 1px solid #d3d3d3 !important;
   position: absolute;
   bottom: 48px;
   width: 100%;
   border: 0;
-}
-
-#personals-apps {
-  padding: inherit;
-  border-top: 1px solid #d3d3d3;
-}
-
-#personals-apps .icon-app {
-  top: auto;
-}
-#personals-apps a {
-  border: none;
   padding-left: 0.5em;
-  padding-top: 0.5em;
-}
-
-#personals-apps a:after {
-  background: none;
 }
 
 #actions-menu li {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
   fill: #7eb73b;
 }
 
-#actions-menu li span {
-  position: absolute;
-  left: 0.5em;
+#actions-menu li span svg {
+  height: 2em;
+  width: 2em;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-notificationsbox a {
-  background: transparent url('icons/inbox.svg') no-repeat;
+#actions-menu li a {
+  text-decoration: none;
+  color: #333333;
+  display: block;
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+  font-size: 1.25em;
+  margin-left: 0.5em;
 }
 
-#silverpeas-navmenu-panel #navmenu-panel li#menu-sharesbox a {
-  background: transparent url('icons/share.svg') no-repeat;
-}
-
-#silverpeas-navmenu-panel #actions-menu li#menu-parameter a {
-
-}
-
-#silverpeas-navmenu-panel #actions-menu li#menu-home a {
-
-}
-
-#silverpeas-navmenu-panel #actions-menu li#menu-logout a {
-
-}
-
-#silverpeas-navmenu-panel #navmenu-panel li#menu-usercalendar a {
-  background: transparent url('icons/calendar.svg') no-repeat;
-}
 
 #menu-principal li a strong {
   color: #333333;
@@ -1811,18 +1832,17 @@ textarea.ui-input-text {
 .searchBox {
   border: 1px solid #d3d3d3;
   border-radius: 3px;
-  width:calc( 100% - 2em - 20px );
+  width:calc( 100% - 4em );
   background-color: #FFF;
   color: #666;
   padding: 5px;
   outline-style: none;
+  height: 1.5em;
 }
 
-.searchButton {
-  width: 24px;
-  height: 24px;
-  background: url('icons/search.svg') no-repeat;
-  text-indent: -300em;
+.searchButton svg {
+  width: 2em;
+  height: 2em;
   display: inline-block;
   position: absolute;
 }
@@ -1831,14 +1851,6 @@ textarea.ui-input-text {
   background: #efefef;
   padding: 1em;
   border-top: 1px solid #d3d3d3;
-}
-
-#menu-config {
-  /*display:none;*/
-}
-
-#menu-tasks {
-  /*display:none;*/
 }
 
 .bloc-actu-vignette, .bloc-actu-content {
@@ -1858,11 +1870,11 @@ textarea.ui-input-text {
   padding: 0;
 }
 
-.ui-content .carroussel-news li {
+.carroussel-news li {
   height: auto !important;
   clear: both;
   border-bottom: 1px solid #eee;
-  margin-bottom: 1em
+  margin-bottom: 1em;
 }
 
 .ui-content .carroussel-news .caption {
@@ -2056,7 +2068,7 @@ form .forms .fields > li:nth-child(even) {
 
 #actions {
   position: absolute;
-  right: 0.5em;
+  right: 8px;
   top: 11px;
   filter: invert(1);
   z-index: 9999;
@@ -2068,19 +2080,19 @@ form .forms .fields > li:nth-child(even) {
   width: 16px;
   height: 24px;
   text-indent: -3000px;
-  right: 0.5em;
+  right: 8px;
   background: transparent url("qvf.svg") 0 0 no-repeat;
   outline: none;
   z-index: 999;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 #action-bloc {
   border: 0;
   position: absolute;
   top: 37px;
-  right: 0.1em;
+  right: 2px;
   padding: 0;
   margin: 0;
   width: 10em;
@@ -2105,7 +2117,7 @@ form .forms .fields > li:nth-child(even) {
 #actionsList {
   position: absolute;
   top: 11px;
-  right: 4em;
+  right: 50px;
   z-index: 9999;
 }
 
@@ -2136,6 +2148,12 @@ form .forms .fields > li:nth-child(even) {
 
 .config li a {
   padding-left: 1em;
+}
+
+.font-percent-size {
+  margin-left: 1em;
+  margin-bottom: 3em;
+  width: calc(100% - 2em);
 }
 
 .ui-listview.favoris {

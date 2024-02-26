@@ -25,11 +25,14 @@
 package org.silverpeas.mobile.client.apps.config.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.config.events.app.LoadConfigEvent;
 import org.silverpeas.mobile.client.apps.config.events.app.UpdateConfigEvent;
 import org.silverpeas.mobile.client.apps.config.events.pages.AbstractConfigPagesEvent;
@@ -54,11 +57,32 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
   CheckBox lastPublicationsDisplay, lastEventsDisplay;
   @UiField
   CheckBox favoritesDisplay, shortCutsDisplay, shortCutsToolsDisplay;
+
+  @UiField
+  InputElement fontSize;
+
   private Config config;
   public ConfigPage() {
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractConfigPagesEvent.TYPE, this);
     EventBus.getInstance().fireEvent(new LoadConfigEvent());
+    fontSize.setAttribute("min", "9");
+    fontSize.setAttribute("max", "17");
+    fontSize.setAttribute("step", "1");
+    fontSize.setAttribute("value", String.valueOf(SpMobil.getConfiguration().getFontSize()));
+    addListenerInput(fontSize, this);
+  }
+
+  public native void addListenerInput(Element range, ConfigPage page) /*-{
+    range.addEventListener('input', function () {
+      page.@org.silverpeas.mobile.client.apps.config.pages.ConfigPage::updateFontSize(I)(range.value);
+    }, false);
+  }-*/;
+
+  private void updateFontSize(final int value) {
+    fontSize.setAttribute("value", String.valueOf(value));
+    SpMobil.setFontSize(value);
+    save();
   }
 
   @Override
@@ -73,7 +97,6 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractConfigPagesEvent.TYPE, this);
-
   }
 
   @Override
@@ -94,6 +117,7 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     config.setLastEventsDisplay(lastEventsDisplay.getValue());
     config.setShortCutsDisplay(shortCutsDisplay.getValue());
     config.setShortCutsToolsDisplay(shortCutsToolsDisplay.getValue());
+    config.setFontSize(Integer.parseInt(fontSize.getAttribute("value")));
     EventBus.getInstance().fireEvent(new UpdateConfigEvent(config));
   }
 
