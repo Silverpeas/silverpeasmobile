@@ -88,8 +88,8 @@ public interface ServiceNavigation extends RestService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("homepage/{spaceId}/")
-  public void getHomePageData(@PathParam("spaceId") String spaceId, MethodCallback<HomePageDTO> callback);
+  @Path("homepage/{spaceId}/{zoom}/")
+  public void getHomePageData(@PathParam("spaceId") String spaceId, @PathParam("zoom") String zoom, MethodCallback<HomePageDTO> callback);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
