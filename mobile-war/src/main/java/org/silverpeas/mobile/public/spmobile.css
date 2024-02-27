@@ -441,7 +441,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #navigation-footer a {
-  margin: auto;
+  margin: 12px;
   text-align: center;
   flex: 1;
   transform: scale(1.5);

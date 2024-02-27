@@ -39,27 +39,27 @@
       <div id="spaces">
         <components:UnorderedList ui:field="spaces" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </div>
-      <g:HTMLPanel stylePrimaryName="favoris-bloc bloc" ui:field="favorisSection">
+      <g:HTMLPanel stylePrimaryName="favoris-bloc bloc" ui:field="favorisSection" visible="false">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.favorites}"/></h3>
         <components:UnorderedList ui:field="favoris" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
-    <g:HTMLPanel stylePrimaryName="tools-bloc bloc" ui:field="shortCutsToolsSection">
+    <g:HTMLPanel stylePrimaryName="tools-bloc bloc" ui:field="shortCutsToolsSection" visible="false">
       <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.shortcutstools}"/></h3>
       <components:UnorderedList ui:field="shortcutstools" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
     </g:HTMLPanel>
 
-      <g:HTMLPanel stylePrimaryName="racourcis-bloc bloc" ui:field="shortCutsSection">
+      <g:HTMLPanel stylePrimaryName="racourcis-bloc bloc" ui:field="shortCutsSection" visible="false">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.shortcuts}"/></h3>
         <components:UnorderedList ui:field="shortcuts" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
-      <g:HTMLPanel stylePrimaryName="last-publication-bloc bloc" ui:field="lastPublicationsSection">
+      <g:HTMLPanel stylePrimaryName="last-publication-bloc bloc" ui:field="lastPublicationsSection" visible="false">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.lastPublications}"/></h3>
         <components:UnorderedList ui:field="lastPublications" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
-      <g:HTMLPanel stylePrimaryName="last-event-bloc bloc" ui:field="lastEventsSection">
+      <g:HTMLPanel stylePrimaryName="last-event-bloc bloc" ui:field="lastEventsSection" visible="false">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.lastEvents}"/></h3>
         <components:UnorderedList ui:field="lastEvents" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>

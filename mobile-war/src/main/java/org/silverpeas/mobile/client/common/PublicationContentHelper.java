@@ -79,9 +79,14 @@ public class PublicationContentHelper {
     final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId;
     String zoom = SpMobil.getContentZoomLevel();
     IFrameElement iframeC = Document.get().createIFrameElement();
+    iframeC.setAttribute("scrolling", "no");
     iframeC.setSrc(url);
-    iframeC.setAttribute("onload", "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';" +
-            "o.contentWindow.document.body.style='zoom:"+zoom+";'}(this));");
+
+    String script = "o.contentWindow.document.body.style='zoom:" + zoom + "'; ";
+    script += "var h = o.contentWindow.document.body.scrollHeight;";
+    script += "o.style.height=h+'px'; ";
+
+    iframeC.setAttribute("onload", "javascript:(function(o){" + script + "}(this));");
     String s = "border-style: none; width: 100%; overflow: hidden;";
     iframeC.setAttribute("style", s);
     basement.appendChild(iframeC);

@@ -391,9 +391,12 @@ public class ServiceNavigation extends AbstractRestWebService {
 
   private String getIframe(String url, String zoom) {
     String style = "border-style: none; width: 100%; overflow: hidden;";
-    String script = "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';" +
-            "o.contentWindow.document.body.style='zoom:"+zoom+"';}(this));";
-    String html = "<iframe style='" + style + "' src='" + url + "' onload=\"" + script + "\">";
+
+    String script = "o.contentWindow.document.body.style='zoom:" + zoom + "'; ";
+    script += "var h = o.contentWindow.document.body.scrollHeight;";
+    script += "o.style.height=h+'px'; ";
+
+    String html = "<iframe style='" + style + "' src='" + url + "' onload=\"" + script + "\" scrolling='no'>";
     html += "</iframe>";
     return html;
   }
