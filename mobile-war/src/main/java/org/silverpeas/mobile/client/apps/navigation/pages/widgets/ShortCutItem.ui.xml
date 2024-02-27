@@ -26,7 +26,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <g:HTMLPanel tag="li">
-    <g:Image ui:field="icon" styleName="icon"></g:Image>
+    <g:Image ui:field="icon" styleName="icon-item"></g:Image>
     <g:Anchor ui:field="link"></g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder> 
