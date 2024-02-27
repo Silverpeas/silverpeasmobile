@@ -24,13 +24,10 @@
 
 package org.silverpeas.mobile.server.services;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.IFrameElement;
 import org.apache.commons.lang3.EnumUtils;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
-import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
@@ -189,8 +186,8 @@ public class ServiceNavigation extends AbstractRestWebService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("homepage/{spaceId}/")
-  public HomePageDTO getHomePageData(@PathParam("spaceId") String spaceId) {
+  @Path("homepage/{spaceId}/{zoom}/")
+  public HomePageDTO getHomePageData(@PathParam("spaceId") String spaceId, @PathParam("zoom") String zoom) {
     if (spaceId.equals("null")) spaceId = null;
 
     initSilverpeasSession(request);
@@ -356,6 +353,7 @@ public class ServiceNavigation extends AbstractRestWebService {
         String pageWebAppId = settings.getString("home.freezone.appId", "");
         if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
           String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
+          html = "<div style='zoom:"+zoom+"'>" + html + "</div>";
           data.setHtmlFreeZone(html);
         }
       } else if (spaceId != null) {
@@ -364,12 +362,12 @@ public class ServiceNavigation extends AbstractRestWebService {
                 getSettings().getBoolean("spacehomepage.displayUrlType")) {
           String url = space.getFirstPageExtraParam();
           if (url.startsWith("/") && !url.startsWith("/silverpeas") && !url.startsWith("$")) url = "/silverpeas" + url;
-          String html = getIframe(url);
+          String html = getIframe(url, zoom);
           data.setHtmlFreeZone(html);
         } else if (space.getFirstPageType() == HomePages.APP.getValue() && space.getFirstPageExtraParam().startsWith("webPage")) {
           String appId = space.getFirstPageExtraParam();
           String url = "/silverpeas/services/spmobile/PublicationContent" + "?id=" + appId + "&componentId=" + appId;
-          String html = getIframe(url);
+          String html = getIframe(url, zoom);
           data.setHtmlFreeZone(html);
         }
       }
@@ -391,9 +389,10 @@ public class ServiceNavigation extends AbstractRestWebService {
     return data;
   }
 
-  private String getIframe(String url) {
+  private String getIframe(String url, String zoom) {
     String style = "border-style: none; width: 100%; overflow: hidden;";
-    String script = "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));";
+    String script = "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';" +
+            "o.contentWindow.document.body.style='zoom:"+zoom+"';}(this));";
     String html = "<iframe style='" + style + "' src='" + url + "' onload=\"" + script + "\">";
     html += "</iframe>";
     return html;

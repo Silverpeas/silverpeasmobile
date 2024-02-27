@@ -86,7 +86,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
 
         @Override
         public void attempt() {
-          ServicesLocator.getServiceNavigation().getHomePageData(event.getRootSpaceId(), this);
+          ServicesLocator.getServiceNavigation().getHomePageData(event.getRootSpaceId(), SpMobil.getContentZoomLevel(), this);
         }
 
         @Override

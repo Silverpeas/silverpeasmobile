@@ -38,6 +38,7 @@ import org.silverpeas.mobile.client.apps.config.events.app.UpdateConfigEvent;
 import org.silverpeas.mobile.client.apps.config.events.pages.AbstractConfigPagesEvent;
 import org.silverpeas.mobile.client.apps.config.events.pages.ConfigLoadedEvent;
 import org.silverpeas.mobile.client.apps.config.events.pages.ConfigPagesEventHandler;
+import org.silverpeas.mobile.client.apps.config.resources.ConfigMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
@@ -61,8 +62,12 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
   @UiField
   InputElement fontSize;
 
+  @UiField(provided = true)
+  protected ConfigMessages msg;
+
   private Config config;
   public ConfigPage() {
+    msg = GWT.create(ConfigMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractConfigPagesEvent.TYPE, this);
     EventBus.getInstance().fireEvent(new LoadConfigEvent());

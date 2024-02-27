@@ -77,9 +77,11 @@ public class PublicationContentHelper {
 
   public static void showContent(String pubId, String appId, Element basement) {
     final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId;
+    String zoom = SpMobil.getContentZoomLevel();
     IFrameElement iframeC = Document.get().createIFrameElement();
     iframeC.setSrc(url);
-    iframeC.setAttribute("onload", "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';}(this));");
+    iframeC.setAttribute("onload", "javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+'px';" +
+            "o.contentWindow.document.body.style='zoom:"+zoom+";'}(this));");
     String s = "border-style: none; width: 100%; overflow: hidden;";
     iframeC.setAttribute("style", s);
     basement.appendChild(iframeC);

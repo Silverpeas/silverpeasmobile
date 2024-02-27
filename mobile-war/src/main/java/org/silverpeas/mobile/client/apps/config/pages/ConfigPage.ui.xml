@@ -25,43 +25,46 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
+
+  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.config.resources.ConfigMessages'/>
+
   <g:HTMLPanel ui:field="container" styleName="ui-content ui-body-a">
 
   <g:HTMLPanel stylePrimaryName="last-publication-bloc bloc">
-    <h3 class="title-bloc-part ui-title">Page d'accueil</h3>
+    <h3 class="title-bloc-part ui-title"><ui:text from="{msg.homePage}"/></h3>
     <ul class="ui-listview ui-listview-inset ui-corner-all ui-shadow config">
       <li class="actuality">
         <a class="ui-btn">
-        <g:CheckBox ui:field="newsDisplay" text="Afficher les dernières actualités"></g:CheckBox>
+        <g:CheckBox ui:field="newsDisplay" text="{msg.lastNews}"></g:CheckBox>
         </a>
       </li>
       <li class="publication">
         <a class="ui-btn">
-          <g:CheckBox ui:field="lastPublicationsDisplay" text="Afficher les dernières publications"></g:CheckBox>
+          <g:CheckBox ui:field="lastPublicationsDisplay" text="{msg.lastPublications}"></g:CheckBox>
         </a>
       </li>
       <li class="event">
         <a class="ui-btn">
-          <g:CheckBox ui:field="lastEventsDisplay" text="Afficher les prochains événements"></g:CheckBox>
+          <g:CheckBox ui:field="lastEventsDisplay" text="{msg.events}"></g:CheckBox>
         </a>
       </li>
       <li class="favoris">
         <a class="ui-btn">
-          <g:CheckBox ui:field="favoritesDisplay" text="Afficher les favoris"></g:CheckBox>
+          <g:CheckBox ui:field="favoritesDisplay" text="{msg.favorites}"></g:CheckBox>
         </a>
       </li>
       <li class="shortcut">
         <a class="ui-btn">
-          <g:CheckBox ui:field="shortCutsDisplay" text="Afficher les raccourcis"></g:CheckBox>
+          <g:CheckBox ui:field="shortCutsDisplay" text="{msg.shortcurts}"></g:CheckBox>
         </a>
       </li>
       <li class="shortcutools">
         <a class="ui-btn">
-          <g:CheckBox ui:field="shortCutsToolsDisplay" text="Afficher les outils"></g:CheckBox>
+          <g:CheckBox ui:field="shortCutsToolsDisplay" text="{msg.tools}"></g:CheckBox>
         </a>
       </li>
     </ul>
-    <h3 class="title-bloc-part ui-title">Taille du texte</h3>
+    <h3 class="title-bloc-part ui-title"><ui:text from="{msg.fontSize}"/></h3>
     <input type="range" ui:field="fontSize" class="font-percent-size"></input>
   </g:HTMLPanel>
   </g:HTMLPanel>

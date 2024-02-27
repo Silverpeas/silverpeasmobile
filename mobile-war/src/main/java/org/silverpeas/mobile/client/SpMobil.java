@@ -33,6 +33,7 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
@@ -302,7 +303,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
         @Override
         public void attempt() {
-          ServicesLocator.getServiceNavigation().getHomePageData(null, this);
+          ServicesLocator.getServiceNavigation().getHomePageData(null, SpMobil.getContentZoomLevel(), this);
         }
 
         @Override
@@ -576,6 +577,11 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     }
 
     return config;
+  }
+
+  public static String getContentZoomLevel() {
+    double z = getConfiguration().getFontSize() / 10d;
+    return String.valueOf(z);
   }
 
   @Override
