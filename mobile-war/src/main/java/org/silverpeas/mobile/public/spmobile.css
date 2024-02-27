@@ -262,7 +262,7 @@ legend, .ui-input-text input, .ui-input-search input {
   background-color: #FFF;
   background-image: url('icons/search.svg');
   background-repeat: no-repeat;
-  width: 92%;
+  width: calc( 100vw - 4em);
   padding-left: 2em;
 }
 
@@ -382,18 +382,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .last-event-bloc h3.title-bloc-part{
 	position:relative;
 }
-.last-event-bloc h3.title-bloc-part::after{
-	content:'';
-	display:block;
-	width:16px;
-	height:16px;
-	background-image: url('icons/calendar_today.svg');
-    background-repeat: no-repeat;
-  background-size: contain;
-	position:absolute;
-	top:0;
-	right:1.25em;
-}
 
 .last-event-bloc .ui-listview .date {
 	float:right;
@@ -503,7 +491,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border: none;
   height: 36px;
   width: 36px;
-  margin: 3px 0 0 0;
+  margin: 0 0 0 0;
   padding: 0 0 0 0;
   left:0;
 }
@@ -556,7 +544,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .favoris-bloc span {
-  top:0.25em;
   fill : #a9a9a9;
 }
 
@@ -588,8 +575,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .last-publication-bloc .ui-listview li .ui-btn {
-  text-overflow: initial;
-  overflow: auto;
+  text-overflow: ellipsis;
+  overflow: hidden;
   white-space: inherit;
 }
 
@@ -655,6 +642,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #1c94d4
 }
 
+#shortCuts ul li {
+  display: flex;
+  align-items: center;
+}
+
+#shortCuts ul li a {
+  width: 100%;
+}
+
 /***** MENU****/
 #silverpeas-navmenu-panel {
   padding: 0;
@@ -717,8 +713,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li span svg {
-  height: 2em;
-  width: 2em;
+  height: 1.5em;
+  width: 1.5em;
 }
 
 #silverpeas-navmenu-panel #navmenu-panel li a {
@@ -732,6 +728,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #actions-menu > :first-child, #navmenu-panel > :first-child, #personals-apps > :first-child {
   padding-top: 1em;
+}
+
+#actions-menu > :last-child, #navmenu-panel > :last-child, #personals-apps > :last-child {
+  padding-bottom: 1em;
 }
 
 #personals-apps {
@@ -753,8 +753,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   font-size: 1.25em;
 }
 #personals-apps li span svg {
-  height: 2em;
-  width: 2em;
+  height: 1.5em;
+  width: 1.5em;
 }
 
 #personals-apps li a {
@@ -762,7 +762,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   display: inline;
   border: none;
   font-size: 1.25em;
-  padding-left: 0.5em;
+  padding : 0 0 0 0.5em;
 }
 
 #actions-menu {
@@ -782,8 +782,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #actions-menu li span svg {
-  height: 2em;
-  width: 2em;
+  height: 1.5em;
+  width: 1.5em;
 }
 
 #actions-menu li a {
@@ -821,9 +821,19 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 /***** NAVIGATION ****/
 
+#spaces ul li, #favoris ul li, #edm li {
+  display: flex;
+  align-items: center;
+}
+
+#spaces ul li a, #favoris ul li a, #edm li a {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .icon-app, .icon-item {
   position: absolute;
-  top: 0.5em;
   left: 0.5em;
   z-index: 2;
 }
@@ -1684,7 +1694,7 @@ input.filter-contacts {
 
 .ui-btn-left, .ui-btn-right {
   position: absolute;
-  top: .24em;
+  top: 5px;
 }
 
 .ui-btn {
@@ -2431,8 +2441,8 @@ a.popin-btn {
 .liste-news li h2 a,
 .forms-list h2,
 .liste-annonces li h2 a {
-  font-size: 1.05em;
-  line-height: 1.2em;
+  font-size: 1em;
+  line-height: 1.1em;
   color: #555;
   text-decoration: none;
   font-weight:500;
@@ -2866,6 +2876,9 @@ a.popin-btn {
 .favorite-desc {
   display: block;
   padding-top: 1em;
+  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 

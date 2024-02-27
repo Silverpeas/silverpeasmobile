@@ -128,8 +128,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     iconInbox.setInnerHTML(resources.inbox().getText());
     iconShareBox.setInnerHTML(resources.sharebox().getText());
     searchButton.setInnerHTML(resources.search().getText());
-    //searchButton.
-
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
   }
 
@@ -141,7 +139,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
           app.setLabel(msg.myDocuments());
         }
         NavigationItem item = new NavigationItem();
-        item.getElement().getFirstChildElement().removeClassName("icon-app");//TODO
+        item.getElement().getFirstChildElement().removeClassName("icon-app");
         item.setData(app);
         listApplications.add(item);
       }
