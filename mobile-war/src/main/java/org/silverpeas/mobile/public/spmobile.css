@@ -2881,6 +2881,11 @@ a.popin-btn {
   text-overflow: ellipsis;
 }
 
+#favoris ul li a {
+  display: flex;
+  align-items: center;
+}
+
 
 
 /********* notification **************/
