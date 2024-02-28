@@ -396,7 +396,7 @@ public class ServiceNavigation extends AbstractRestWebService {
     script += "var h = o.contentWindow.document.body.scrollHeight;";
     script += "o.style.height=h+'px'; ";
 
-    String html = "<iframe style='" + style + "' src='" + url + "' onload=\"" + script + "\" scrolling='no'>";
+    String html = "<iframe style='" + style + "' src='" + url + "' onload=\"" + "javascript:(function(o){" + script + "}(this));" + "\" scrolling='no'>";
     html += "</iframe>";
     return html;
   }
