@@ -22,7 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.tasks.pages.widgets;
+package org.silverpeas.mobile.client.components.base.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,34 +30,29 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
-import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 
 /**
  * @author: svu
  */
-public class AddTaskButton extends ActionItem {
+public class AddButton extends ActionItem {
 
-  interface AddTaskItemUiBinder extends UiBinder<Widget, AddTaskButton> {
-  }
+  interface AddButtonUiBinder extends UiBinder<HTMLPanel, AddButton> {}
 
-  @UiField Anchor link;
-  @UiField(provided = true) protected TasksMessages msg = null;
+  private static AddButtonUiBinder uiBinder = GWT.create(AddButtonUiBinder.class);
 
-  private static AddTaskItemUiBinder uiBinder = GWT.create(AddTaskItemUiBinder.class);
+  @UiField
+  HTMLPanel container;
+  @UiField
+  Anchor link;
 
-  public AddTaskButton() {
-    msg = GWT.create(TasksMessages.class);
-    setId("add-task");
+  public AddButton() {
     initWidget(uiBinder.createAndBindUi(this));
   }
 
   @UiHandler("link")
-  void createTask(ClickEvent event) {
-    TaskPage page = new TaskPage();
-    page.setPageTitle(msg.create());
-    page.show();
+  void delete(ClickEvent event) {
+    getCallback().execute();
   }
 }

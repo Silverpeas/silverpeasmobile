@@ -36,7 +36,6 @@ import org.silverpeas.mobile.client.apps.tasks.events.pages.TaskCreatedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TaskUpdatedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TasksLoadedEvent;
 import org.silverpeas.mobile.client.apps.tasks.events.pages.TasksPagesEventHandler;
-import org.silverpeas.mobile.client.apps.tasks.pages.widgets.AddTaskButton;
 import org.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
 import org.silverpeas.mobile.client.common.EventBus;

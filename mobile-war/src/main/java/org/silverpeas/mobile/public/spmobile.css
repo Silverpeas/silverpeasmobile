@@ -262,8 +262,6 @@ legend, .ui-input-text input, .ui-input-search input {
   background-color: #FFF;
   background-image: url('icons/search.svg');
   background-repeat: no-repeat;
-  width: calc( 100vw - 4em);
-  padding-left: 2em;
 }
 
 .ui-page-theme-a textarea.ui-body-inherit {
@@ -2943,7 +2941,7 @@ a.popin-btn {
 	background-color: #FFF;
 }
 
-#actionsList:has(.delete-action) {
+#actionsList:has(.delete-action), #actionsList:has(.add-action) {
   right: 1em;
 }
 
@@ -2954,6 +2952,13 @@ a.popin-btn {
   background: url('icons/delete.svg') no-repeat;
 }
 
+.add-action {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/add.svg') no-repeat;
+}
+
 .markAsRead-notification {
   height: 24px;
   width: 24px;
@@ -2961,7 +2966,7 @@ a.popin-btn {
   background: url('icons/mark_read.svg') no-repeat;
 }
 
-.delete-action a, .markAsRead-notification a {
+.add-action a, .delete-action a, .markAsRead-notification a {
   height: 24px;
   width: 24px;
   display: block;
