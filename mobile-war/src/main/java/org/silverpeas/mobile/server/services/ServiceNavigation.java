@@ -489,8 +489,7 @@ public class ServiceNavigation extends AbstractRestWebService {
       SpaceInst space = Administration.get().getPersonalSpace(userId);
       List<ApplicationInstanceDTO> apps = new ArrayList<>();
       for (ComponentInst app : space.getAllComponentsInst()) {
-        ApplicationInstanceDTO dto = populate(app);
-        dto.setPersonnal(true);
+        ApplicationInstanceDTO dto = populate(app, true);
         apps.add(dto);
       }
       return apps;
@@ -558,7 +557,8 @@ public class ServiceNavigation extends AbstractRestWebService {
           ComponentInstLight app = Administration.get().getComponentInstLight(appId);
           if (isSupportedApp(app) && app.getDomainFatherId().equals(rootSpaceId)) {
             if (!app.isHidden()) {
-              partialResults.add(populate(app));
+              SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
+              partialResults.add(populate(app, space.isPersonalSpace()));
             }
           }
         }
@@ -606,7 +606,8 @@ public class ServiceNavigation extends AbstractRestWebService {
     ApplicationInstanceDTO dto = null;
     try {
       ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
-      dto = populate(app);
+      SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
+      dto = populate(app,space.isPersonalSpace());
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
@@ -663,22 +664,24 @@ public class ServiceNavigation extends AbstractRestWebService {
 
     return dto;
   }
-  private ApplicationInstanceDTO populate(ComponentInst app) {
+  private ApplicationInstanceDTO populate(ComponentInst app, boolean personal) {
     ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
     dto.setId(app.getId());
     dto.setLabel(app.getLabel());
     dto.setType(app.getName());
     dto.setOrderNum(app.getOrderNum());
+    dto.setPersonnal(personal);
     return dto;
   }
 
-  private ApplicationInstanceDTO populate(ComponentInstLight app) {
+  private ApplicationInstanceDTO populate(ComponentInstLight app,boolean personal) {
     ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
     dto.setId(app.getId());
     dto.setLabel(app.getLabel());
     dto.setType(app.getName());
     dto.setOrderNum(app.getOrderNum());
     dto.setWorkflow(isWorkflowApp(app));
+    dto.setPersonnal(personal);
 
     RightDTO rights = new RightDTO();
     String[] roles = getUserRoles(app.getId(), getUser().getId());

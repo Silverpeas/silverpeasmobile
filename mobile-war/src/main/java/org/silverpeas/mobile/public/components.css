@@ -13,7 +13,7 @@
 }
 
 .checkbox-wrapper label {
-    --size: 50px;
+    --size: 4em;
 
     cursor: pointer;
     width: var(--size);

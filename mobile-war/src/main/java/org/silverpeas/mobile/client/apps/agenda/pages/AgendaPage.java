@@ -81,7 +81,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   @UiField
   SpanElement message;
 
-  private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private AddToFavoritesButton buttonFavorite = new AddToFavoritesButton();
 
   interface AgendaPageUiBinder extends UiBinder<Widget, AgendaPage> {
   }
@@ -211,8 +211,10 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     } else {
       message.setInnerText(msg.noEvent());
     }
-    addActionMenu(favorite);
-    favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
+    if (!event.getInstance().getPersonnal()) {
+      addActionMenu(buttonFavorite);
+      buttonFavorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
+    }
   }
 
   private CalendarDTO getCalendar(final String calendarId) {

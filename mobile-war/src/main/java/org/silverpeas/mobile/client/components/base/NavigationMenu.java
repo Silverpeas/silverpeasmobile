@@ -271,6 +271,7 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   @UiHandler("calendar")
   protected void calendar(ClickEvent event) {
     ApplicationInstanceDTO app = new ApplicationInstanceDTO();
+    app.setPersonnal(true);
     app.setId("userCalendar" + SpMobil.getUser().getId() + "_PCI");
     app.setType(Apps.userCalendar.name());
     EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(app));

@@ -49,6 +49,7 @@ public class ActionsMenu  extends Composite {
 
     private static ActionsMenuUiBinder uiBinder = GWT.create(ActionsMenuUiBinder.class);
 
+    private ActionsList actionsShortcuts;
     @UiField HTMLPanel container;
     @UiField
     UnorderedList listActions;
@@ -59,8 +60,12 @@ public class ActionsMenu  extends Composite {
         listActions.setId("action-bloc");
         actions.getElement().setId("action-button");
         container.getElement().setId("actions");
-        container.getElement().getStyle().setDisplay(Style.Display.NONE);
         listActions.getElement().addClassName("closed-qvf-menu");
+    }
+
+    public void setActionsShortcuts(ActionsList actionsShortcuts) {
+        this.actionsShortcuts = actionsShortcuts;
+        hide();
     }
 
     @UiHandler("actions")
@@ -96,12 +101,12 @@ public class ActionsMenu  extends Composite {
           if (act.getId().equals(action.getId())) return;
         }
         listActions.add(action);
-        container.getElement().getStyle().setDisplay(Style.Display.BLOCK);
+        show();
     }
 
     public void clear() {
         listActions.clear();
-        container.getElement().getStyle().setDisplay(Style.Display.NONE);
+        hide();
     }
 
     public void removeAction(String id, boolean silently) {
@@ -114,7 +119,17 @@ public class ActionsMenu  extends Composite {
         }
       }
       if (isEmpty()) {
-        container.getElement().getStyle().setDisplay(Style.Display.NONE);
+          hide();
       }
+    }
+
+    private void show() {
+        container.getElement().removeClassName("empty");
+        this.actionsShortcuts.getElement().removeClassName("menu-empty");
+    }
+
+    private void hide() {
+        container.getElement().addClassName("empty");
+        this.actionsShortcuts.getElement().addClassName("menu-empty");
     }
 }
