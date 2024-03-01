@@ -61,7 +61,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   private TopicDTO root;
   private String rootTopicId, instanceId;
   private boolean dataLoaded = false;
-  private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private AddToFavoritesButton buttonFavorite = new AddToFavoritesButton();
 
   private AddFileButton buttonImport = new AddFileButton();
   private ShareButton share = new ShareButton();
@@ -121,6 +121,7 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
             setPageTitle(globalMsg.myDocuments());
           } else {
             setPageTitle(((TopicDTO) dataItem).getName());
+            addActionMenu(buttonFavorite);
           }
           root = (TopicDTO) dataItem;
         } else {
@@ -131,13 +132,11 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
       }
       dataLoaded = true;
 
-      addActionMenu(favorite);
-
       if (root.getId() == null) {
-        favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
+        buttonFavorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
         buttonImport.init(instanceId, "0", false);
       } else {
-        favorite.init(instanceId, root.getId(), ContentsTypes.Folder.name(), root.getName());
+        buttonFavorite.init(instanceId, root.getId(), ContentsTypes.Folder.name(), root.getName());
         buttonImport.init(instanceId, rootTopicId, false);
       }
 

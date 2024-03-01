@@ -51,7 +51,7 @@ public class ActionsList extends Composite {
         initWidget(uiBinder.createAndBindUi(this));
         listActions.setId("actionList-bloc");
         container.getElement().setId("actionsList");
-        container.getElement().getStyle().setDisplay(Style.Display.NONE);
+        container.getElement().addClassName("empty");
     }
     public boolean isEmpty() {
         return (listActions.getWidgetCount() == 0);
@@ -63,12 +63,12 @@ public class ActionsList extends Composite {
           if (act.getId().equals(action.getId())) return;
         }
         listActions.add(action);
-        container.getElement().getStyle().setDisplay(Style.Display.BLOCK);
+        container.getElement().removeClassName("empty");
     }
 
     public void clear() {
         listActions.clear();
-        container.getElement().getStyle().setDisplay(Style.Display.NONE);
+        container.getElement().addClassName("empty");
     }
 
     public void removeAction(String id, boolean silently) {
@@ -80,7 +80,7 @@ public class ActionsList extends Composite {
         }
       }
       if (isEmpty()) {
-        container.getElement().getStyle().setDisplay(Style.Display.NONE);
+          container.getElement().addClassName("empty");
       }
     }
 }

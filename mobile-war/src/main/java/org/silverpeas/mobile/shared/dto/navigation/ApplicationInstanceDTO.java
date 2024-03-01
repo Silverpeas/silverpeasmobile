@@ -107,7 +107,7 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   public int getPublicationSharing() { return publicationSharing; }
   public int getFileSharing() { return fileSharing; }
 
-  public boolean isPersonnal() {
+  public boolean getPersonnal() {
     return personnal;
   }
 

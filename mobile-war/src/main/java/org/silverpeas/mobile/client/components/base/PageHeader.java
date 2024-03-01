@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
@@ -65,6 +66,7 @@ public class PageHeader extends Composite {
     menu.getElement().setId("menu");
     ressources.css().ensureInjected();
     title.setInnerText(ResourcesManager.getLabel("mainpage.title"));
+    actionsMenu.setActionsShortcuts(actionsShortcuts);
   }
 
   public void addActionShortcut(ActionItem action) {

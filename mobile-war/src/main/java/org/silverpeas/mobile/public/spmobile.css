@@ -850,10 +850,6 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   padding-left: 0em;
 }
 
-#actionsList:has(.add-task) {
-  right: 1em;
-}
-
 .add-task {
   height: 24px;
   width: 24px;
@@ -2138,6 +2134,28 @@ form .forms .fields > li:nth-child(even) {
   list-style: none;
 }
 
+#actionsList.menu-empty {
+  right: 8px;
+}
+
+.empty {
+  display: none;
+}
+
+.delete-action {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/delete.svg') no-repeat;
+}
+
+.add-action {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/add.svg') no-repeat;
+}
+
 .config .actuality a {
 
 }
@@ -2941,24 +2959,6 @@ a.popin-btn {
 	background-color: #FFF;
 }
 
-#actionsList:has(.delete-action), #actionsList:has(.add-action) {
-  right: 1em;
-}
-
-.delete-action {
-  height: 24px;
-  width: 24px;
-  filter: invert(1);
-  background: url('icons/delete.svg') no-repeat;
-}
-
-.add-action {
-  height: 24px;
-  width: 24px;
-  filter: invert(1);
-  background: url('icons/add.svg') no-repeat;
-}
-
 .markAsRead-notification {
   height: 24px;
   width: 24px;
@@ -3085,7 +3085,7 @@ a.popin-btn {
 /**** Cookies information page ****/
 .infosTextContainer {
   background-color: white;
-  height: 25vh;
+  min-height: 25vh;
   padding: 2em;
   margin-left: 1em;
   margin-right: 1em;
@@ -3094,7 +3094,7 @@ a.popin-btn {
 }
 
 .infosText {
-  height: 20vh;
+  min-height: 20vh;
   text-align: justify;
   line-height: 1.2em;
 }

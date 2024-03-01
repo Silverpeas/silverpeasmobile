@@ -196,7 +196,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       page.setPageTitle(event.getInstance().getLabel());
       page.setInstanceId(event.getInstance().getId());
       page.setTopicId(null);
-      page.setPersonnal(event.getInstance().isPersonnal());
+      page.setPersonnal(event.getInstance().getPersonnal());
       page.show();
     }
   }
