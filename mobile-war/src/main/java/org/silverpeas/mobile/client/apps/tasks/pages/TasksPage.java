@@ -116,10 +116,8 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
       if (list.getWidget(i) instanceof TaskItem) {
         TaskItem t = (TaskItem) list.getWidget(i);
         if (t.getData().getId() == taskUpdatedEvent.getTask().getId()) {
-          list.remove(t);
-          TaskItem item = new TaskItem();
+          TaskItem item = (TaskItem) list.getWidget(i);
           item.setData(taskUpdatedEvent.getTask());
-          list.add(item);
           break;
         }
       }

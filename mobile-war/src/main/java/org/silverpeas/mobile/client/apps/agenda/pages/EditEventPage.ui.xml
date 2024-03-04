@@ -1,0 +1,84 @@
+<!--
+  ~ Copyright (C) 2000 - 2022 Silverpeas
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ As a special exception to the terms and conditions of version 3.0 of
+  ~ the GPL, you may redistribute this Program in connection with Free/Libre
+  ~ Open Source Software ("FLOSS") applications as described in Silverpeas's
+  ~ FLOSS exception.  You should have received a copy of the text describing
+  ~ the FLOSS exception, and it is also available here:
+  ~ "https://www.silverpeas.org/legal/floss_exception.html"
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base"
+             xmlns:components="urn:import:org.silverpeas.mobile.client.components">
+
+  <ui:with field='msg' type='org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages' />
+
+  <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
+
+    <span class="calendars">
+      <label>Calendrier :</label>
+      <g:ListBox ui:field="calendars"></g:ListBox>
+    </span>
+
+    <g:TextBox ui:field="title" styleName="title"/>
+    <g:CheckBox ui:field="allDay" text="Toute la journée" styleName="allDay" value="true"/>
+
+    <span class="startDate">
+      <label>Début: </label>
+      <g:TextBox ui:field="startDate"/>
+    </span>
+    <span class="endDate">
+      <label>Fin: </label>
+      <g:TextBox ui:field="endDate"/>
+    </span>
+    <g:TextArea ui:field="description" styleName="description"/>
+
+    <span class="priority">
+      <label>Important :</label>
+      <g:RadioButton ui:field="important" name="priority">Oui</g:RadioButton>
+      <g:RadioButton ui:field="notimportant" name="priority">Non</g:RadioButton>
+    </span>
+    <span class="visibility">
+      <label>Visibilité :</label>
+      <g:RadioButton ui:field="publique" name="visibility">Publique</g:RadioButton>
+      <g:RadioButton ui:field="prive" name="visibility">Privé</g:RadioButton>
+    </span>
+
+    <span class="frequency">
+      <label>Récurrence :</label>
+      <g:ListBox ui:field="frequency"></g:ListBox>
+    </span>
+
+    <span class="participants">
+      <label>Participants :</label>
+      <g:Anchor ui:field="selectionButton">
+        <span ui:field="selection" class="selection"></span>
+      </g:Anchor>
+    </span>
+
+    <div class=" ui-controlgroup ui-controlgroup-horizontal">
+      <div class="ui-controlgroup-controls ">
+        <g:Anchor ui:field="submit" styleName="btn-validate ui-link">
+          <span class="ui-btn-text"><ui:text from="{msg.create}"/></span>
+        </g:Anchor>
+      </div>
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder>

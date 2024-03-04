@@ -96,4 +96,7 @@ public interface AgendaMessages extends Messages {
   String noEvent();
 
   String the();
+  String create();
+
+  String newtitleEvent();
 }
