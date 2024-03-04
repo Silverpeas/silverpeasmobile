@@ -37,6 +37,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.components.UnorderedList;
 
 /**
@@ -77,18 +78,24 @@ public class ActionsMenu  extends Composite {
             listActions.getElement().removeClassName("open-qvf-menu");
             listActions.getElement().addClassName("closed-qvf-menu");
         }
+        enableAllItem(true);
     }
 
     public static void close(Element action) {
-        if (action.getParentElement() != null) {
-            action.getParentElement().removeClassName("open-qvf-menu");
-            action.getParentElement().addClassName("closed-qvf-menu");
-        }
+        SpMobil.getMainPage().getHeader().actionsMenu.close();
     }
 
     public void close() {
         listActions.getElement().removeClassName("open-qvf-menu");
         listActions.getElement().addClassName("closed-qvf-menu");
+        enableAllItem(false);
+    }
+
+    private void enableAllItem(boolean enable) {
+        for (int i = 0; i < listActions.getCount(); i++) {
+            ActionItem item = (ActionItem) listActions.getWidget(i);
+            item.setVisible(enable);
+        }
     }
 
     public boolean isEmpty() {

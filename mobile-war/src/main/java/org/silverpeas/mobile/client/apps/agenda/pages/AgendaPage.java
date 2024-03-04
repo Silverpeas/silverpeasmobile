@@ -32,6 +32,8 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -49,6 +51,7 @@ import org.silverpeas.mobile.client.common.DateUtil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.AddButton;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
@@ -82,6 +85,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   SpanElement message;
 
   private AddToFavoritesButton buttonFavorite = new AddToFavoritesButton();
+  private AddButton buttonCreate = new AddButton();
 
   interface AgendaPageUiBinder extends UiBinder<Widget, AgendaPage> {
   }
@@ -94,6 +98,14 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     week.getElement().setId("btn-week");
     mouth.getElement().setId("btn-month");
     EventBus.getInstance().addHandler(AbstractAgendaPagesEvent.TYPE, this);
+    buttonCreate.setCallback(new Command() {
+      @Override
+      public void execute() {
+        EditEventPage edit = new EditEventPage();
+        edit.setData(getApp().getApplicationInstance(), calendars);
+        edit.show();
+      }
+    });
   }
 
   public void setCalendars(final List<CalendarDTO> cals) {
@@ -214,6 +226,11 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
     if (!event.getInstance().getPersonnal()) {
       addActionMenu(buttonFavorite);
       buttonFavorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
+      if (event.getInstance().getRights().getWriter() || event.getInstance().getRights().getPublisher() || event.getInstance().getRights().getManager()) {
+        addActionShortcut(buttonCreate);
+      }
+    } else {
+      addActionShortcut(buttonCreate);
     }
   }
 

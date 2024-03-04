@@ -31,6 +31,7 @@
 html {
   font-size: 100%;
   height: 100%;
+  scrollbar-width: none;
 }
 
 body.ui-panel-wrapper {
@@ -543,6 +544,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .favoris-bloc span {
   fill : #a9a9a9;
+  white-space: normal;
 }
 
 .favoris-bloc a {
@@ -2619,6 +2621,96 @@ a.popin-btn {
   padding-top: 2em;
   display: inline-block;
   padding-left: 1em;
+}
+
+#eventForm {
+  padding-top: 2em;
+}
+
+#eventForm .title, #eventForm .allDay {
+  width: calc(100vw - 4em);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  line-height: 2em;
+}
+
+#eventForm .title::placeholder {
+  color: #ec8001;
+}
+
+#eventForm .description {
+  width: calc(100vw - 4em);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  border: none;
+}
+
+#eventForm .priority, #eventForm .visibility {
+  margin-left: 2em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  display: inline-block;
+}
+
+#eventForm .startDate > label, #eventForm .endDate > label {
+  width: 3em;
+  display: inline-block;
+}
+
+#eventForm .title, #eventForm .startDate > input, #eventForm .endDate > input {
+  line-height: 2em;
+  border: none;
+  border-radius: 2px;
+}
+
+#eventForm .startDate, #eventForm .endDate {
+  display: block;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  float: none;
+}
+
+#eventForm .calendars {
+  display: block;
+  margin-left: 2em;
+}
+
+#eventForm .frequency {
+  display: block;
+  margin-left: 2em;
+  margin-bottom: 1em;
+}
+
+#eventForm .calendars > select, #eventForm .frequency > select {
+  box-sizing: border-box;
+  padding: 0.5em;
+  background-color: white;
+  border-radius: 0.25em;
+  border: none;
+}
+
+#eventForm .participants {
+
+}
+
+#eventForm .participants > label {
+  margin-left: 2em;
+}
+
+#eventForm .participants > a {
+  background-color: white;
+  height: 4em;
+  display: inline-block;
+  width: calc(100vw - 4em);
+  margin-left: 2em;
+  margin-top: 1em;
+  vertical-align: middle;
+}
+
+#eventForm .participants > a .selecection {
+  vertical-align: super;
 }
 
 .termsOfServiceText {
