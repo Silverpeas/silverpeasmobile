@@ -28,13 +28,11 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventCreationDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -71,5 +69,11 @@ public interface ServiceAlmanach extends RestService {
       @PathParam("attendeeId") String attendeeId,
       @QueryParam("zoneid") String zoneid, CalendarEventAttendeeDTO dto,
       MethodCallback<CalendarEventDTO> callback);
+
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{componentInstanceId}/{calendarId}/events")
+  public void createEvent(@PathParam("componentInstanceId") String componentInstanceId,
+                          @PathParam("calendarId") String calendarId, CalendarEventCreationDTO event, MethodCallback<CalendarEventDTO> callback);
 
 }

@@ -24,19 +24,25 @@
 
 package org.silverpeas.mobile.client.apps.agenda.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventCreationDTO;
+import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
+import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-public interface AgendaAppEventHandler extends EventHandler{
-  void loadCalendarEvents(CalendarLoadEvent event);
+public class EventCreateEvent extends AbstractAgendaAppEvent {
+  private CalendarEventCreationDTO event;
 
-  void loadReminders(RemindersLoadEvent event);
-  void updateReminder(ReminderUpdateEvent event);
-  void createReminder(ReminderCreateEvent event);
-  void deleteReminder(ReminderDeleteEvent event);
+  public EventCreateEvent(CalendarEventCreationDTO event) {
+    super();
+    this.event = event;
+  }
 
-  void loadAttachments(AttachmentsLoadEvent event);
+  @Override
+  protected void dispatch(AgendaAppEventHandler handler) {
+    handler.createEvent(this);
+  }
 
-  void participation(ParticipationEvent participationEvent);
 
-  void createEvent(EventCreateEvent event);
+  public CalendarEventCreationDTO getEvent() {
+    return event;
+  }
 }

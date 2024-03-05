@@ -2701,7 +2701,7 @@ a.popin-btn {
 
 #eventForm .participants > a {
   background-color: white;
-  height: 4em;
+  min-height: 4em;
   display: inline-block;
   width: calc(100vw - 4em);
   margin-left: 2em;
@@ -2709,9 +2709,19 @@ a.popin-btn {
   vertical-align: middle;
 }
 
-#eventForm .participants > a .selecection {
-  vertical-align: super;
+#eventForm .participants > a .selection {
+  color: #333333;
 }
+
+.formMandatoryField {
+  color: #ec8001;
+}
+
+.formIncomplete {
+  filter: grayscale(1);
+}
+
+
 
 .termsOfServiceText {
   text-align: center;

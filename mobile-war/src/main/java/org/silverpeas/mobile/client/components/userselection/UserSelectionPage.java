@@ -35,6 +35,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.components.UnorderedList;
@@ -68,14 +69,21 @@ public class UserSelectionPage extends PageContent
 
   private static UserSelectionPageUiBinder uiBinder = GWT.create(UserSelectionPageUiBinder.class);
   private String contentId;
-  private List<String> preSelectedIds = new ArrayList<String>();
+  private List<String> preSelectedUsersIds = new ArrayList<String>();
+  private List<String> preSelectedGroupsIds = new ArrayList<String>();
 
   public void setMaxSelection(final int maxSelection) {
     this.maxSelection = maxSelection;
   }
 
-  public void setPreSelectedIds(final List<String> preSelectedIds) {
-    this.preSelectedIds = preSelectedIds;
+  public void setPreSelectedUsersIds(final List<String> preSelectedUsersIds) {
+    this.preSelectedUsersIds = preSelectedUsersIds;
+    if (preSelectedUsersIds != null && !preSelectedUsersIds.isEmpty()) continu.setVisible(true);
+  }
+
+  public void setPreSelectedGroupsIds(final List<String> preSelectedGroupsIds) {
+    this.preSelectedGroupsIds = preSelectedGroupsIds;
+    if (preSelectedGroupsIds != null && !preSelectedGroupsIds.isEmpty()) continu.setVisible(true);
   }
 
   interface UserSelectionPageUiBinder extends UiBinder<HTMLPanel, UserSelectionPage> {
@@ -111,10 +119,17 @@ public class UserSelectionPage extends PageContent
     for (BaseDTO data : allowedUsersAndGroupsLoadedEvent.getListAllowedUsersAndGroups()) {
       UserGroupItem item = new UserGroupItem();
       item.setData(data);
-      if (preSelectedIds.contains(data.getId())) {
-        item.select();
+      if (data instanceof UserDTO) {
+        if (preSelectedUsersIds.contains(data.getId())) {
+          item.select();
+        }
+        list.add(item);
+      } else if (data instanceof GroupDTO) {
+        if (preSelectedGroupsIds.contains(data.getId())) {
+          item.select();
+        }
+        list.add(item);
       }
-      list.add(item);
     }
   }
 
