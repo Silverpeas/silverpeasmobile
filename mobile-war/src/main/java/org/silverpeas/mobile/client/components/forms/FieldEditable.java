@@ -292,7 +292,12 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
                     // get users or groups selected before
                     TextArea tx = ((TextArea) clickEvent.getSource());
                     List<String> ids = Arrays.asList(tx.getElement().getAttribute("data").split(","));
-                    page.setPreSelectedIds(ids);
+                    if (type.equalsIgnoreCase("user")) {
+                        page.setPreSelectedUsersIds(ids);
+                    } else if (type.equalsIgnoreCase("group")) {
+                        page.setPreSelectedGroupsIds(ids);
+                    }
+
                     sendEventToGetPossibleUsers();
                     page.show();
                 }

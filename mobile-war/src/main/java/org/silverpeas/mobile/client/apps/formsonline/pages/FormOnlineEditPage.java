@@ -272,7 +272,11 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
     // get users or groups selected before
     TextAreaElement tx = getUserField(fieldName);
     List<String> ids = Arrays.asList(tx.getAttribute("data").split(","));
-    page.setPreSelectedIds(ids);
+    if (type.equalsIgnoreCase("user")) {
+      page.setPreSelectedUsersIds(ids);
+    } else if (type.equalsIgnoreCase("group")) {
+      page.setPreSelectedGroupsIds(ids);
+    }
     sendEventToGetPossibleUsers(fieldName);
     page.show();
   }

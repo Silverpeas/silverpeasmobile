@@ -42,11 +42,11 @@
 
     <span class="startDate">
       <label>Début: </label>
-      <g:TextBox ui:field="startDate"/>
+      <g:TextBox ui:field="startDate" stylePrimaryName="formMandatoryField"/>
     </span>
     <span class="endDate">
       <label>Fin: </label>
-      <g:TextBox ui:field="endDate"/>
+      <g:TextBox ui:field="endDate" stylePrimaryName="formMandatoryField"/>
     </span>
     <g:TextArea ui:field="description" styleName="description"/>
 
@@ -69,7 +69,8 @@
     <span class="participants">
       <label>Participants :</label>
       <g:Anchor ui:field="selectionButton">
-        <span ui:field="selection" class="selection"></span>
+        <div ui:field="icon"></div>
+        <div ui:field="participantsSelected" class="selection"></div>
       </g:Anchor>
     </span>
 

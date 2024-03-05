@@ -25,7 +25,8 @@
 package org.silverpeas.mobile.client.apps.agenda.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -33,17 +34,25 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import org.silverpeas.mobile.client.apps.agenda.events.app.EventCreateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.*;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.userselection.UserSelectionPage;
+import org.silverpeas.mobile.client.components.userselection.events.components.AbstractUserSelectionComponentEvent;
 import org.silverpeas.mobile.client.components.userselection.events.components.UserSelectionComponentEventHandler;
 import org.silverpeas.mobile.client.components.userselection.events.components.UsersAndGroupsSelectedEvent;
+import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.GroupDTO;
+import org.silverpeas.mobile.shared.dto.UserDTO;
+import org.silverpeas.mobile.shared.dto.almanach.*;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -77,11 +86,14 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
   Anchor submit, selectionButton;
 
   @UiField
-  SpanElement selection;
+  DivElement participantsSelected, icon;
 
-  @Override
-  public void onUsersAndGroupSelected(UsersAndGroupsSelectedEvent event) {
-    //TODO
+  private List<BaseDTO> allowedUsersAndGroups;
+
+  private List<BaseDTO> selectedUsersAndGroups;
+
+  public void setAllowedUsersAndGroups(List<BaseDTO> allowedUsersAndGroups) {
+    this.allowedUsersAndGroups = allowedUsersAndGroups;
   }
 
   interface EditEventPageUiBinder extends UiBinder<Widget, EditEventPage> {
@@ -97,9 +109,11 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
     description.getElement().setAttribute("rows", "6");
     startDate.getElement().setAttribute("type", "date");
     endDate.getElement().setAttribute("type", "date");
-    important.setValue(true);
+    notimportant.setValue(true);
     publique.setValue(true);
+    submit.getElement().addClassName("formIncomplete");
     EventBus.getInstance().addHandler(AbstractEventPagesEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractUserSelectionComponentEvent.TYPE, this);
     allDay.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
       @Override
       public void onValueChange(ValueChangeEvent<Boolean> valueChangeEvent) {
@@ -113,13 +127,13 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
       }
     });
 
-    frequency.addItem("Aucune", "string:NONE");
-    frequency.addItem("Tous les jours", "string:DAY");
-    frequency.addItem("Toutes les semaines", "string:WEEK");
-    frequency.addItem("Tous les mois", "string:MONTH");
-    frequency.addItem("Tous les ans", "string:YEAR");
+    frequency.addItem("Aucune", "NONE");
+    frequency.addItem("Tous les jours", "DAY");
+    frequency.addItem("Toutes les semaines", "WEEK");
+    frequency.addItem("Tous les mois", "MONTH");
+    frequency.addItem("Tous les ans", "YEAR");
 
-    selectionButton.getElement().setInnerHTML(resources.peoples().getText() + selectionButton.getElement().getInnerHTML());
+    icon.setInnerHTML(resources.peoples().getText());
   }
 
   public void setData(ApplicationInstanceDTO instance, List<CalendarDTO> calendarsDTO) {
@@ -128,18 +142,134 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
     }
   }
 
+  @UiHandler("title")
+  protected void changeTitle(ChangeEvent event) {
+    validateForm();
+  }
+
+  @UiHandler("startDate")
+  protected void changeStartDate(ChangeEvent event) {
+    endDate.getElement().setAttribute("min", startDate.getValue());
+    if (startDate.getText().isEmpty()) {
+      startDate.getElement().addClassName("formMandatoryField");
+    } else {
+      startDate.getElement().removeClassName("formMandatoryField");
+    }
+    validateForm();
+  }
+
+  @UiHandler("endDate")
+  protected void changeEndDate(ChangeEvent event) {
+    startDate.getElement().setAttribute("max", endDate.getValue());
+    if (endDate.getText().isEmpty()) {
+      endDate.getElement().addClassName("formMandatoryField");
+    } else {
+      endDate.getElement().removeClassName("formMandatoryField");
+    }
+    validateForm();
+  }
+
+  private boolean validateForm() {
+    boolean valid = !startDate.getText().isEmpty() && !endDate.getText().isEmpty() && !title.getText().isEmpty();
+    if (valid) {
+      submit.getElement().removeClassName("formIncomplete");
+    } else {
+      submit.getElement().addClassName("formIncomplete");
+    }
+    return valid;
+  }
+
   @UiHandler("submit")
   protected void save(ClickEvent event) {
-    back();
+    if (!submit.getElement().hasClassName("formIncomplete")) {
+      CalendarEventCreationDTO dto = new CalendarEventCreationDTO();
+      dto.setEventType("CalendarEvent");
+      dto.setOccurrenceType("CalendarEventOccurrence");
+      dto.setEventId("volatile-" + new Date().getTime());
+
+      CalendarDTO calendarDTO = new CalendarDTO();
+      calendarDTO.setId(calendars.getSelectedValue());
+      dto.setCalendar(calendarDTO);
+      dto.setTitle(title.getText());
+      dto.setOnAllDay(allDay.getValue());
+      if (allDay.getValue()) {
+        dto.setStartDate(startDate.getText());
+        dto.setEndDate(endDate.getText());
+      } else {
+        dto.setStartDate(startDate.getText()+":00+01:00");
+        dto.setEndDate(endDate.getText()+":00+01:00");
+      }
+      dto.setDescription(description.getText());
+      if (important.getValue()) dto.setPriority(PriorityDTO.HIGH.name());
+      if (notimportant.getValue()) dto.setPriority(PriorityDTO.NORMAL.name());
+      if (publique.getValue()) dto.setVisibility(VisibilityLevelDTO.PUBLIC.name());
+      if (prive.getValue()) dto.setVisibility(VisibilityLevelDTO.PRIVATE.name());
+      if (!frequency.getSelectedValue().equals("NONE")) {
+        CalendarEventRecurrenceDTO rec = new CalendarEventRecurrenceDTO();
+        CalendarEventRecurrenceDTO.FrequencyDTO freq = new CalendarEventRecurrenceDTO.FrequencyDTO();
+        freq.setTimeUnit(TimeUnitDTO.valueOf(frequency.getSelectedValue()));
+        freq.setInterval(1);
+        rec.setFrequency(freq);
+        dto.setRecurrence(rec);
+      }
+      dto.setAttendees(getAttendees());
+      EventCreateEvent ev = new EventCreateEvent(dto);
+      EventBus.getInstance().fireEvent(ev);
+      back(); //TODO : update parent page
+    }
+  }
+
+  private List<CalendarEventAttendeeDTO> getAttendees() {
+    List<CalendarEventAttendeeDTO> attendees = new ArrayList<>();
+    if (selectedUsersAndGroups != null) {
+      for (BaseDTO sel : selectedUsersAndGroups) {
+        CalendarEventAttendeeDTO a = new CalendarEventAttendeeDTO();
+        a.setId(sel.getId());
+        if (sel instanceof UserDTO) {
+          a.setFullName(((UserDTO) sel).getFirstName() + ((UserDTO) sel).getLastName());
+        }
+        a.setParticipationStatus(ParticipationStatusDTO.AWAITING);
+        a.setPresenceStatus(PresenceStatusDTO.INFORMATIVE);
+        attendees.add(a);
+      }
+    }
+    return attendees;
   }
 
   @UiHandler("selectionButton")
   protected  void onUserSelection(ClickEvent event) {
     UserSelectionPage page = new UserSelectionPage();
+    if (selectedUsersAndGroups != null) {
 
-    //page.setPreSelectedIds(ids);
-    //sendEventToGetPossibleUsers(fieldName);
+
+      List<String> ids = new ArrayList<>();
+      for (BaseDTO sel : selectedUsersAndGroups) {
+        if (sel instanceof UserDTO) ids.add(sel.getId());
+      }
+      page.setPreSelectedUsersIds(ids);
+    }
     page.show();
+    AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(allowedUsersAndGroups, true);
+    EventBus.getInstance().fireEvent(ev);
+  }
+
+  @Override
+  public void onUsersAndGroupSelected(UsersAndGroupsSelectedEvent event) {
+
+    this.selectedUsersAndGroups = event.getUsersAndGroupsSelected();
+    String selectionNames = "";
+    for (BaseDTO sel : selectedUsersAndGroups) {
+
+      if (sel instanceof UserDTO) {
+        selectionNames += ((UserDTO) sel).getFirstName() + " " + ((UserDTO) sel).getLastName() + " , ";
+      } else if (sel instanceof GroupDTO) {
+        selectionNames += ((GroupDTO) sel).getName() + " , ";
+      }
+    }
+    selectionNames = selectionNames.substring(0, selectionNames.length() - 2);
+
+    participantsSelected.setInnerText(selectionNames);
+
   }
 
   @Override
@@ -162,6 +292,7 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
 
   @Override
   public void stop() {
+    EventBus.getInstance().removeHandler(AbstractUserSelectionComponentEvent.TYPE, this);
     EventBus.getInstance().removeHandler(AbstractEventPagesEvent.TYPE, this);
     super.stop();
   }

@@ -31,15 +31,7 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
-import org.silverpeas.mobile.client.apps.agenda.events.app.AbstractAgendaAppEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.app.AgendaAppEventHandler;
-import org.silverpeas.mobile.client.apps.agenda.events.app.AttachmentsLoadEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.app.ParticipationEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderCreateEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderDeleteEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.app.ReminderUpdateEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.app.RemindersLoadEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.app.*;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractAgendaPagesEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AgendaPagesEventHandler;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
@@ -60,7 +52,9 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
+import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventAttendeeDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
@@ -140,6 +134,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
       AgendaPage page = new AgendaPage();
       page.setPageTitle(event.getInstance().getLabel());
+      loadUsersAndGroups(page);
 
       MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CalendarDTO>>() {
         @Override
@@ -438,6 +433,24 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     action.attempt();
   }
 
+  @Override
+  public void createEvent(EventCreateEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CalendarEventDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceAlmanach().createEvent(getApplicationInstance().getId(), event.getEvent().getCalendar().getId(), event.getEvent(), this);
+      }
+
+      @Override
+      public void onSuccess(Method method, CalendarEventDTO event) {
+        super.onSuccess(method, event);
+        //TODO
+      }
+    };
+    action.attempt();
+  }
+
   private CalendarEventAttendeeDTO getUserAttendee(final List<CalendarEventAttendeeDTO> attendees) {
     CalendarEventAttendeeDTO attendee = null;
     for (CalendarEventAttendeeDTO attendeeDTO : attendees) {
@@ -448,5 +461,33 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
     }
     return attendee;
   }
+
+  public void loadUsersAndGroups(AgendaPage page) {
+
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        String appId = getApplicationInstance().getId();
+        if (getApplicationInstance().getPersonnal()) appId = null;
+        ServicesLocator.getServiceNotifications()
+                .getAllowedUsersAndGroups(appId, null, this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<BaseDTO> baseDTOS) {
+        super.onSuccess(method, baseDTOS);
+        List<BaseDTO> users = new ArrayList<>();
+        for (BaseDTO dto : baseDTOS) {
+          if (dto instanceof UserDTO) {
+            users.add(dto);
+          }
+        }
+        page.setAllowedUsersAndGroups(users);
+      }
+    };
+    action.attempt();
+  }
+
 }
 

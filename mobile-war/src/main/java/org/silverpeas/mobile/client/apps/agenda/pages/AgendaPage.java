@@ -52,6 +52,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.AddButton;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
@@ -87,7 +88,17 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
   private AddToFavoritesButton buttonFavorite = new AddToFavoritesButton();
   private AddButton buttonCreate = new AddButton();
 
-  interface AgendaPageUiBinder extends UiBinder<Widget, AgendaPage> {
+  private List<BaseDTO> allowedUsersAndGroups;
+
+    public void setAllowedUsersAndGroups(List<BaseDTO> baseDTOS) {
+      this.allowedUsersAndGroups = baseDTOS;
+    }
+
+    public List<BaseDTO> getAllowedUsersAndGroups() {
+      return this.allowedUsersAndGroups;
+    }
+
+    interface AgendaPageUiBinder extends UiBinder<Widget, AgendaPage> {
   }
 
   public AgendaPage() {
@@ -103,6 +114,7 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
       public void execute() {
         EditEventPage edit = new EditEventPage();
         edit.setData(getApp().getApplicationInstance(), calendars);
+        edit.setAllowedUsersAndGroups(getAllowedUsersAndGroups());
         edit.show();
       }
     });
