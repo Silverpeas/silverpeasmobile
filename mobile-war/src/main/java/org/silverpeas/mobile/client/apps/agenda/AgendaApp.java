@@ -26,20 +26,12 @@ package org.silverpeas.mobile.client.apps.agenda;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.*;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractAgendaPagesEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.AgendaPagesEventHandler;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.AttachmentsLoadedEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.CalendarLoadedEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.ParticipationUpdatedEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderAddedEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.ReminderDeletedEvent;
-import org.silverpeas.mobile.client.apps.agenda.events.pages.RemindersLoadedEvent;
+import org.silverpeas.mobile.client.apps.agenda.events.pages.*;
 import org.silverpeas.mobile.client.apps.agenda.pages.AgendaPage;
 import org.silverpeas.mobile.client.apps.agenda.pages.EventPage;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
@@ -445,7 +437,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       @Override
       public void onSuccess(Method method, CalendarEventDTO event) {
         super.onSuccess(method, event);
-        //TODO
+        EventBus.getInstance().fireEvent(new EventSavedEvent());
       }
     };
     action.attempt();

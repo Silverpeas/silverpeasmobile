@@ -33,7 +33,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -115,9 +114,11 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
         EditEventPage edit = new EditEventPage();
         edit.setData(getApp().getApplicationInstance(), calendars);
         edit.setAllowedUsersAndGroups(getAllowedUsersAndGroups());
+        edit.setCurrentTimeRange(currentTimeRange);
         edit.show();
       }
     });
+    buttonCreate.setId("create-event");
   }
 
   public void setCalendars(final List<CalendarDTO> cals) {
@@ -172,10 +173,13 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
           int endYear = DateUtil.getYear(endDate);
           for (GroupItem groupItem : groups) {
             if ((groupItem.getNumber() >= startWeek && groupItem.getNumber() <= endWeek) || (groupItem.getNumber() >= startWeek && endYear > startYear)) {
-              EventItem item = new EventItem();
-              item.showCalendarName(isMultiCalendar());
-              item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
-              groupItem.addEvent(item);
+              CalendarDTO cal = getCalendar(dto.getCalendarId());
+              if (cal != null) {
+                EventItem item = new EventItem();
+                item.showCalendarName(isMultiCalendar());
+                item.setData(event.getInstance(), dto, cal);
+                groupItem.addEvent(item);
+              }
             }
           }
         }
@@ -216,10 +220,13 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
           for (GroupItem groupItem : groups) {
             if ((groupItem.getNumber() >= startMonth && groupItem.getNumber() <= endMonth) && groupItem.getYear() == startYear && groupItem.getYear() == endYear  || (groupItem.getNumber() >= startMonth && endYear > startYear)) {
-              EventItem item = new EventItem();
-              item.showCalendarName(isMultiCalendar());
-              item.setData(event.getInstance(), dto, getCalendar(dto.getCalendarId()));
-              groupItem.addEvent(item);
+              CalendarDTO cal = getCalendar(dto.getCalendarId());
+              if (cal != null) {
+                EventItem item = new EventItem();
+                item.showCalendarName(isMultiCalendar());
+                item.setData(event.getInstance(), dto, cal);
+                groupItem.addEvent(item);
+              }
             }
           }
         }

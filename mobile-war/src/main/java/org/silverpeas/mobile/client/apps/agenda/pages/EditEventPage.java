@@ -34,6 +34,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
+import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.app.EventCreateEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.*;
 import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
@@ -58,7 +60,7 @@ import java.util.List;
 /**
  * @author svu
  */
-public class EditEventPage extends PageContent implements EventPagesEventHandler, UserSelectionComponentEventHandler {
+public class EditEventPage extends PageContent implements EditEventPagesEventHandler, UserSelectionComponentEventHandler {
   private static EditEventPageUiBinder uiBinder = GWT.create(EditEventPageUiBinder.class);
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
 
@@ -92,8 +94,14 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
 
   private List<BaseDTO> selectedUsersAndGroups;
 
+  private TimeRange currentTimeRange;
+
   public void setAllowedUsersAndGroups(List<BaseDTO> allowedUsersAndGroups) {
     this.allowedUsersAndGroups = allowedUsersAndGroups;
+  }
+
+  public void setCurrentTimeRange(TimeRange currentTimeRange) {
+    this.currentTimeRange = currentTimeRange;
   }
 
   interface EditEventPageUiBinder extends UiBinder<Widget, EditEventPage> {
@@ -112,7 +120,7 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
     notimportant.setValue(true);
     publique.setValue(true);
     submit.getElement().addClassName("formIncomplete");
-    EventBus.getInstance().addHandler(AbstractEventPagesEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractEditEventPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(AbstractUserSelectionComponentEvent.TYPE, this);
     allDay.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
       @Override
@@ -186,7 +194,6 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
       dto.setEventType("CalendarEvent");
       dto.setOccurrenceType("CalendarEventOccurrence");
       dto.setEventId("volatile-" + new Date().getTime());
-
       CalendarDTO calendarDTO = new CalendarDTO();
       calendarDTO.setId(calendars.getSelectedValue());
       dto.setCalendar(calendarDTO);
@@ -215,7 +222,6 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
       dto.setAttendees(getAttendees());
       EventCreateEvent ev = new EventCreateEvent(dto);
       EventBus.getInstance().fireEvent(ev);
-      back(); //TODO : update parent page
     }
   }
 
@@ -240,8 +246,6 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
   protected  void onUserSelection(ClickEvent event) {
     UserSelectionPage page = new UserSelectionPage();
     if (selectedUsersAndGroups != null) {
-
-
       List<String> ids = new ArrayList<>();
       for (BaseDTO sel : selectedUsersAndGroups) {
         if (sel instanceof UserDTO) ids.add(sel.getId());
@@ -255,11 +259,9 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
 
   @Override
   public void onUsersAndGroupSelected(UsersAndGroupsSelectedEvent event) {
-
     this.selectedUsersAndGroups = event.getUsersAndGroupsSelected();
     String selectionNames = "";
     for (BaseDTO sel : selectedUsersAndGroups) {
-
       if (sel instanceof UserDTO) {
         selectionNames += ((UserDTO) sel).getFirstName() + " " + ((UserDTO) sel).getLastName() + " , ";
       } else if (sel instanceof GroupDTO) {
@@ -267,33 +269,19 @@ public class EditEventPage extends PageContent implements EventPagesEventHandler
       }
     }
     selectionNames = selectionNames.substring(0, selectionNames.length() - 2);
-
     participantsSelected.setInnerText(selectionNames);
-
   }
 
   @Override
-  public void onRemindersLoaded(final RemindersLoadedEvent event) { }
-
-  @Override
-  public void onRemindersDeleted(final ReminderDeletedEvent event) {}
-
-  @Override
-  public void onAttachmentLoaded(final AttachmentsLoadedEvent event) {}
-
-  @Override
-  public void onRemindersAdding(final RemindersAddingEvent remindersAddingEvent) {}
-
-  @Override
-  public void onReminderAdded(final ReminderAddedEvent event) {}
-
-  @Override
-  public void onParticipationUpdated(final ParticipationUpdatedEvent event) {}
+  public void onEventSaved(EventSavedEvent event) {
+    back();
+    EventBus.getInstance().fireEvent(new CalendarLoadEvent(null, currentTimeRange));
+  }
 
   @Override
   public void stop() {
     EventBus.getInstance().removeHandler(AbstractUserSelectionComponentEvent.TYPE, this);
-    EventBus.getInstance().removeHandler(AbstractEventPagesEvent.TYPE, this);
+    EventBus.getInstance().removeHandler(AbstractEditEventPagesEvent.TYPE, this);
     super.stop();
   }
 
