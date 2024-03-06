@@ -111,14 +111,14 @@ public class PublicationPage extends PageContent
   @Override
   public void onSwipeEnd(SwipeEndEvent event) {
     if (!isVisible()) return;
-    String direction = "left";
+    String direction = "";
     if (event.getDirection() == SwipeEvent.DIRECTION.RIGHT_TO_LEFT) {
       // next
       direction = "right";
-    } else if (event.getDirection() == SwipeEvent.DIRECTION.LEFT_TO_RIGHT) {
+    } /*else if (event.getDirection() == SwipeEvent.DIRECTION.LEFT_TO_RIGHT) {
       // previous
       direction = "left";
-    }
+    }*/
     if (!direction.isEmpty()) {
       EventBus.getInstance().fireEvent(new DocumentsNextPublicationEvent(publication, direction));
     }
@@ -169,6 +169,7 @@ public class PublicationPage extends PageContent
 
   @Override
   public void onLoadedPublication(PublicationLoadedEvent event) {
+    if (!isVisible()) return;
     Notification.activityStop();
     attachments.clear();
     setCanImport(event.isCanImport());
@@ -212,6 +213,7 @@ public class PublicationPage extends PageContent
 
   @Override
   public void onLoadedPublicationAttachments(final PublicationAttachmentsLoadedEvent event) {
+    if (!isVisible()) return;
     for (SimpleDocumentDTO attachment : event.getAttachments()) {
       if (!publication.getNotAllowedDownloads().isEmpty()) {
         attachment.setDownloadable(true);
