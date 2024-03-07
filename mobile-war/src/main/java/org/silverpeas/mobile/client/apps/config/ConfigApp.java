@@ -82,4 +82,51 @@ public class ConfigApp extends App implements ConfigAppEventHandler {
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
 
   }
+
+    public static class ConfigApp extends App implements ConfigAppEventHandler {
+
+      private static ConfigApp instance = null;
+
+      public ConfigApp() {
+        super();
+        EventBus.getInstance().addHandler(AbstractConfigAppEvent.TYPE, this);
+      }
+
+      public void start() {
+        setMainPage(new ConfigPage());
+        super.start();
+      }
+
+
+      @Override
+      public void stop() {
+        EventBus.getInstance().removeHandler(AbstractConfigAppEvent.TYPE, this);
+        super.stop();
+      }
+
+
+      public static ConfigApp getInstance() {
+        if (instance == null) {
+          instance = new ConfigApp();
+        }
+        return instance;
+      }
+
+      @Override
+      public void updateConfig(UpdateConfigEvent event) {
+        Config conf = event.getConfig();
+        LocalStorageHelper.getInstance().store("config", conf.getAutoBean());
+      }
+
+      @Override
+      public void loadConfig(LoadConfigEvent event) {
+        Config conf = SpMobil.getConfiguration();
+        EventBus.getInstance().fireEvent(new ConfigLoadedEvent(conf));
+      }
+
+      @Override
+      public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+
+      }
+    }
 }

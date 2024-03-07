@@ -75,11 +75,11 @@ public class AuthentificationManager {
   }
 
   public void addHeader(String key, String value) {
-    LocalStorageHelper.store(key, value);
+    LocalStorageHelper.getInstance().store(key, value);
   }
 
   public String getHeader(String key) {
-    return LocalStorageHelper.load(key);
+    return LocalStorageHelper.getInstance().load(key);
   }
 
   public void storeUser(final DetailUserDTO user, final UserProfileDTO profil, String login,
@@ -96,20 +96,20 @@ public class AuthentificationManager {
 
     String maintainSession = ResourcesManager.getParam("maintain.session");
     if (maintainSession.equalsIgnoreCase("true")) {
-      LocalStorageHelper.store(USER_CONNECTED_KEY, u.getAutoBean());
-      LocalStorageHelper.store(USER_PROFIL, profil.getAutoBean());
+      LocalStorageHelper.getInstance().store(USER_CONNECTED_KEY, u.getAutoBean());
+      LocalStorageHelper.getInstance().store(USER_PROFIL, profil.getAutoBean());
     }
   }
 
   public void updateAvatarInCache(final String avatarData) {
     SpMobil.getUser().setAvatar(avatarData);
     SpMobil.getUserProfile().setAvatar(avatarData);
-    FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.load(USER_CONNECTED_KEY, IFullUser.class));
+    FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.getInstance().load(USER_CONNECTED_KEY, IFullUser.class));
     user.setAvatar(avatarData);
     String maintainSession = ResourcesManager.getParam("maintain.session");
     if (maintainSession.equalsIgnoreCase("true")) {
-      LocalStorageHelper.store(USER_CONNECTED_KEY, user.getAutoBean());
-      LocalStorageHelper.store(USER_PROFIL, SpMobil.getUserProfile().getAutoBean());
+      LocalStorageHelper.getInstance().store(USER_CONNECTED_KEY, user.getAutoBean());
+      LocalStorageHelper.getInstance().store(USER_PROFIL, SpMobil.getUserProfile().getAutoBean());
     }
   }
 
@@ -117,14 +117,14 @@ public class AuthentificationManager {
    * Clean data in local storage.
    */
   public void clearLocalStorage() {
-    LocalStorageHelper.clear();
+    LocalStorageHelper.getInstance().clear();
   }
 
   public FullUserDTO loadUser() {
-    FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.load(USER_CONNECTED_KEY, IFullUser.class));
+    FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.getInstance().load(USER_CONNECTED_KEY, IFullUser.class));
     SpMobil.setUser(user);
     UserProfileDTO profil =
-        UserProfileDTO.getBean(LocalStorageHelper.load(USER_PROFIL, IUserProfile.class));
+        UserProfileDTO.getBean(LocalStorageHelper.getInstance().load(USER_PROFIL, IUserProfile.class));
     SpMobil.setUserProfile(profil);
     return user;
   }
@@ -309,7 +309,7 @@ public class AuthentificationManager {
         }
         @Override
         public void onError(final Request request, final Throwable throwable) {
-
+          LocalStorageHelper.getInstance().storeBuildDate();
         }
       });
     } catch (RequestException e) {
@@ -317,7 +317,7 @@ public class AuthentificationManager {
     }
   }
 
-  private void clearCache() {
+  public void clearCache() {
     // clear app cache
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
