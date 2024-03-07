@@ -33,7 +33,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
@@ -99,7 +98,6 @@ import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
 import org.silverpeas.mobile.shared.dto.configuration.IConfig;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
-import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
@@ -150,6 +148,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
    */
   public void onModuleLoad() {
     exportNativeFunctions();
+    checkVersion();
+
     // init connexion supervision
     NetworkHelper.getInstance();
 
@@ -234,7 +234,18 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     apps.add(new ResourcesManagerApp());
   }
 
+  private static void checkVersion() {
+    String  buildDate = ResourcesManager.getParam("build.date");
+    String lastBuild = LocalStorageHelper.getInstance().load("build.date");
+    if (lastBuild != null && !buildDate.equals(lastBuild)) {
+      // clear cache
+      AuthentificationManager.getInstance().clearCache();
+    }
+    if (lastBuild == null || lastBuild.isEmpty()) LocalStorageHelper.getInstance().storeBuildDate();
+  }
+
   public void displayFirstPage() {
+    checkVersion();
     boolean displayCookiesInformation = Boolean.parseBoolean(ResourcesManager.getParam("displayCookiesInformation"));
     String cookie = Cookies.getCookie("accept_cookies");
     if (displayCookiesInformation && (cookie == null || cookie.isEmpty())) {
@@ -278,7 +289,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   }
 
   public static void displayMainPage() {
-
+    SpMobil.getMainPage().showFooter();
     if (!Window.Location.getHref().contains("?locale=") &&
         !user.getLanguage().equalsIgnoreCase("fr")) {
       Window.Location.replace(Window.Location.getHref() + "?locale=" + user.getLanguage());
@@ -383,7 +394,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           super.onSuccess(method, detailUserDTO);
           setUser(detailUserDTO);
           setUserProfile(UserProfileDTO.getBean(
-              LocalStorageHelper.load(AuthentificationManager.USER_PROFIL, IUserProfile.class)));
+              LocalStorageHelper.getInstance().load(AuthentificationManager.USER_PROFIL, IUserProfile.class)));
           if (getUserProfile() == null) {
             UserProfileDTO p = new UserProfileDTO();
             p.setFullName(detailUserDTO.getFirstName() + " " + detailUserDTO.getLastName());
@@ -433,6 +444,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   }
 
   private void tryToRelogin(final Command attempt) {
+    checkVersion();
     FullUserDTO user = AuthentificationManager.getInstance().loadUser();
     if (user != null) {
       String password = AuthentificationManager.getInstance().decryptPassword(user.getPassword());
@@ -492,6 +504,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   }
 
   public static void displayLoginPage(AuthenticationException error) {
+    checkVersion();
     ConnexionPage connexionPage = new ConnexionPage();
     connexionPage.setAuthenticateError(error);
     RootPanel.get().clear();
@@ -568,7 +581,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   }
 
   public static Config getConfiguration() {
-    AutoBean<IConfig> conf = LocalStorageHelper.load("config", IConfig.class);
+    AutoBean<IConfig> conf = LocalStorageHelper.getInstance().load("config", IConfig.class);
     Config config = null;
     if (conf == null) {
       config = Config.getDefaultConfig();

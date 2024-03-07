@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.storage.client.Storage;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 
 
 /**
@@ -36,9 +37,16 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 public class LocalStorageHelper {
 
   public static AutoBeanFactory factory = GWT.create(AutoBeanFactory.class);
+  public static LocalStorageHelper instance;
 
+  public static LocalStorageHelper getInstance() {
+    if (instance == null) {
+      instance = new LocalStorageHelper();
+    }
+    return instance;
+  }
 
-  public static <T> void store(String key, AutoBean<T> autobean) {
+  public <T> void store(String key, AutoBean<T> autobean) {
     Storage storage = Storage.getLocalStorageIfSupported();
 
     if (storage != null) {
@@ -51,7 +59,7 @@ public class LocalStorageHelper {
     }
   }
 
-  public static void store(String key, String data) {
+  public void store(String key, String data) {
     Storage storage = Storage.getLocalStorageIfSupported();
     if (storage != null) {
       try {
@@ -60,7 +68,7 @@ public class LocalStorageHelper {
 
     }
   }
-  public static String load(String key) {
+  public String load(String key) {
     Storage storage = Storage.getLocalStorageIfSupported();
     if (storage != null) {
       String dataItem = storage.getItem(key);
@@ -68,7 +76,7 @@ public class LocalStorageHelper {
     }
     return  null;
   }
-  public static <T> AutoBean<T> load(String key, Class<T> beanClass) {
+  public <T> AutoBean<T> load(String key, Class<T> beanClass) {
     Storage storage = Storage.getLocalStorageIfSupported();
     if (storage != null) {
       String dataItem = storage.getItem(key);
@@ -85,15 +93,20 @@ public class LocalStorageHelper {
     return  null;
   }
 
-  public static void clear() {
+  public void clear() {
     Storage storage = Storage.getLocalStorageIfSupported();
     if (storage != null) storage.clear();
   }
 
-  public static void remove(String key) {
+  public void remove(String key) {
     Storage storage = Storage.getLocalStorageIfSupported();
     if (storage != null) {
       storage.removeItem(key);
     }
+  }
+
+  public void storeBuildDate() {
+    String  buildDate = ResourcesManager.getParam("build.date");
+    store("build.date", buildDate);
   }
 }
