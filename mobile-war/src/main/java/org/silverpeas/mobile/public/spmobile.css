@@ -1796,6 +1796,15 @@ textarea.ui-input-text {
 }
 
 #page-login #copyright {
+  bottom: 3em;
+  font-size: 0.8em;
+  left: 0;
+  position: fixed;
+  right: 0;
+  text-align: center;
+}
+
+#page-login #version {
   bottom: 1em;
   font-size: 0.8em;
   left: 0;
