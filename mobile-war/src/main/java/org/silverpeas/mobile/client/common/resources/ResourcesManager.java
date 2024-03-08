@@ -66,6 +66,8 @@ public class ResourcesManager {
   public static String getSSOPath() {
     return Document.get().getElementById("ssoPath").getAttribute("value");
   }
+
+  public static String getVersion() { return ResourcesManager.getParam("version"); }
   public static native JavaScriptObject getLabels() /*-{
     return $wnd.labels;
   }-*/;

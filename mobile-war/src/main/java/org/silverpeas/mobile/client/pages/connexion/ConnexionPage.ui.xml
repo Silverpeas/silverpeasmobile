@@ -61,6 +61,7 @@
         <div id="copyright">
           <ui:safehtml from="{msg.copyright}"/>
         </div>
+        <div ui:field="version"></div>
         </g:HTMLPanel>
       </g:FormPanel>
     </div>

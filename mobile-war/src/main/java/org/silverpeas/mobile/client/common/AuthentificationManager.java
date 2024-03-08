@@ -322,18 +322,16 @@ public class AuthentificationManager {
     MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
-        super.attempt();
         ServicesLocator.getServiceNavigation().clearAppCache(this);
       }
 
       @Override
       public void onFailure(final Method method, final Throwable t) {
-        super.onFailure(method, t);
+
       }
 
       @Override
       public void onSuccess(final Method method, final Void unused) {
-        super.onSuccess(method, unused);
       }
     };
     action.attempt();

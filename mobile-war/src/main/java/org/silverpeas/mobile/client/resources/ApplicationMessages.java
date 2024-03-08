@@ -52,7 +52,7 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Corriger")
   String correctBtnLabel();
 
-  @DefaultMessage("© 2001-2023 <a target='_blank' href='http://www.silverpeas.com'>Silverpeas</a>	- Tous droits réservés")
+  @DefaultMessage("© 2001-2024 <a target='_blank' href='http://www.silverpeas.com'>Silverpeas</a>	- Tous droits réservés")
   SafeHtml copyright();
 
   @DefaultMessage("Parcourir la plateforme")
@@ -203,4 +203,7 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Autres favoris")
   String favoritesWithoutCategory();
+
+  @DefaultMessage("Version")
+  String version();
 }
