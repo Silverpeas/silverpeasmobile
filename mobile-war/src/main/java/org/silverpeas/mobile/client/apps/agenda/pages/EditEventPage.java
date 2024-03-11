@@ -112,8 +112,8 @@ public class EditEventPage extends PageContent implements EditEventPagesEventHan
     setPageTitle(msg.newtitleEvent());
     initWidget(uiBinder.createAndBindUi(this));
     container.getElement().setId("eventForm");
-    title.getElement().setAttribute("placeholder", "Titre");
-    description.getElement().setAttribute("placeholder", "Description");
+    title.getElement().setAttribute("placeholder", msg.titleField());
+    description.getElement().setAttribute("placeholder", msg.descriptionField());
     description.getElement().setAttribute("rows", "6");
     startDate.getElement().setAttribute("type", "date");
     endDate.getElement().setAttribute("type", "date");
@@ -135,11 +135,11 @@ public class EditEventPage extends PageContent implements EditEventPagesEventHan
       }
     });
 
-    frequency.addItem("Aucune", "NONE");
-    frequency.addItem("Tous les jours", "DAY");
-    frequency.addItem("Toutes les semaines", "WEEK");
-    frequency.addItem("Tous les mois", "MONTH");
-    frequency.addItem("Tous les ans", "YEAR");
+    frequency.addItem(msg.frequencyNone(), "NONE");
+    frequency.addItem(msg.frequencyDay(), "DAY");
+    frequency.addItem(msg.frequencyWeek(), "WEEK");
+    frequency.addItem(msg.frequencyMouth(), "MONTH");
+    frequency.addItem(msg.frequencyYear(), "YEAR");
 
     icon.setInnerHTML(resources.peoples().getText());
   }
