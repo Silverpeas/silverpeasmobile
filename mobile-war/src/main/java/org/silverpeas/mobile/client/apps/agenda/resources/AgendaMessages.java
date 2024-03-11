@@ -99,4 +99,27 @@ public interface AgendaMessages extends Messages {
   String create();
 
   String newtitleEvent();
+
+  String calendarField();
+  String allDay();
+
+  String startDate();
+  String endDate();
+
+  String titleField();
+  String descriptionField();
+  String importantField();
+  String visibilityField();
+  String yes();
+  String no();
+  String publicValue();
+  String privateValue();
+  String frequencyField();
+  String attendeesField();
+
+  String frequencyNone();
+  String frequencyDay();
+  String frequencyWeek();
+  String frequencyMouth();
+  String frequencyYear();
 }

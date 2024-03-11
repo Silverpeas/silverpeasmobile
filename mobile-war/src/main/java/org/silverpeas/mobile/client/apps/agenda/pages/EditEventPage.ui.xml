@@ -33,41 +33,41 @@
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
 
     <span class="calendars">
-      <label>Calendrier :</label>
+      <label><ui:text from="{msg.calendarField}" /></label>
       <g:ListBox ui:field="calendars"></g:ListBox>
     </span>
 
     <g:TextBox ui:field="title" styleName="title"/>
-    <g:CheckBox ui:field="allDay" text="Toute la journée" styleName="allDay" value="true"/>
+    <g:CheckBox ui:field="allDay" text="{msg.allDay}" styleName="allDay" value="true"/>
 
     <span class="startDate">
-      <label>Début: </label>
+      <label><ui:text from="{msg.startDate}" /></label>
       <g:TextBox ui:field="startDate" stylePrimaryName="formMandatoryField"/>
     </span>
     <span class="endDate">
-      <label>Fin: </label>
+      <label><ui:text from="{msg.endDate}" /></label>
       <g:TextBox ui:field="endDate" stylePrimaryName="formMandatoryField"/>
     </span>
     <g:TextArea ui:field="description" styleName="description"/>
 
     <span class="priority">
-      <label>Important :</label>
-      <g:RadioButton ui:field="important" name="priority">Oui</g:RadioButton>
-      <g:RadioButton ui:field="notimportant" name="priority">Non</g:RadioButton>
+      <label><ui:text from="{msg.importantField}" /></label>
+      <g:RadioButton ui:field="important" name="priority"><ui:text from="{msg.yes}" /></g:RadioButton>
+      <g:RadioButton ui:field="notimportant" name="priority"><ui:text from="{msg.no}" /></g:RadioButton>
     </span>
     <span class="visibility">
-      <label>Visibilité :</label>
-      <g:RadioButton ui:field="publique" name="visibility">Publique</g:RadioButton>
-      <g:RadioButton ui:field="prive" name="visibility">Privé</g:RadioButton>
+      <label><ui:text from="{msg.visibilityField}" /></label>
+      <g:RadioButton ui:field="publique" name="visibility"><ui:text from="{msg.publicValue}" /></g:RadioButton>
+      <g:RadioButton ui:field="prive" name="visibility"><ui:text from="{msg.privateValue}" /></g:RadioButton>
     </span>
 
     <span class="frequency">
-      <label>Récurrence :</label>
+      <label><ui:text from="{msg.frequencyField}" /></label>
       <g:ListBox ui:field="frequency"></g:ListBox>
     </span>
 
     <span class="participants">
-      <label>Participants :</label>
+      <label><ui:text from="{msg.attendeesField}" /></label>
       <g:Anchor ui:field="selectionButton">
         <div ui:field="icon"></div>
         <div ui:field="participantsSelected" class="selection"></div>
