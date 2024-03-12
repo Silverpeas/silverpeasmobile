@@ -25,13 +25,18 @@
 package org.silverpeas.mobile.client.apps.config.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RadioButton;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.config.events.app.LoadConfigEvent;
 import org.silverpeas.mobile.client.apps.config.events.app.UpdateConfigEvent;
@@ -41,7 +46,10 @@ import org.silverpeas.mobile.client.apps.config.events.pages.ConfigPagesEventHan
 import org.silverpeas.mobile.client.apps.config.resources.ConfigMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.userselection.widgets.events.ChangeEvent;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
+
+import javax.print.Doc;
 
 /**
  * @author: svu
@@ -58,6 +66,9 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
   CheckBox lastPublicationsDisplay, lastEventsDisplay;
   @UiField
   CheckBox favoritesDisplay, shortCutsDisplay, shortCutsToolsDisplay;
+
+  @UiField
+  RadioButton standard, grayscale, sepia, inverse;
 
   @UiField
   InputElement fontSize;
@@ -104,6 +115,33 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     EventBus.getInstance().removeHandler(AbstractConfigPagesEvent.TYPE, this);
   }
 
+  @UiHandler("standard")
+  protected void standard(ClickEvent event) {
+    Config c = new Config();
+    c.setStandard(true);
+    SpMobil.setFilter(c);
+  }
+  @UiHandler("grayscale")
+  protected void grayscale(ClickEvent event) {
+    Config c = new Config();
+    c.setGrayscale(true);
+    SpMobil.setFilter(c);
+  }
+
+  @UiHandler("sepia")
+  protected void sepia(ClickEvent event) {
+    Config c = new Config();
+    c.setSepia(true);
+    SpMobil.setFilter(c);
+  }
+
+  @UiHandler("inverse")
+  protected void inverse(ClickEvent event) {
+    Config c = new Config();
+    c.setInverse(true);
+    SpMobil.setFilter(c);
+  }
+
   @Override
   public void onConfigLoaded(ConfigLoadedEvent event) {
     config = event.getConfig();
@@ -113,6 +151,10 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     lastEventsDisplay.setValue(config.isLastEventsDisplay());
     shortCutsDisplay.setValue(config.isShortCutsDisplay());
     shortCutsToolsDisplay.setValue(config.isShortCutsToolsDisplay());
+    standard.setValue(config.isStandard());
+    grayscale.setValue(config.isGrayscale());
+    sepia.setValue(config.isSepia());
+    inverse.setValue(config.isInverse());
   }
 
   private void save() {
@@ -123,6 +165,10 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     config.setShortCutsDisplay(shortCutsDisplay.getValue());
     config.setShortCutsToolsDisplay(shortCutsToolsDisplay.getValue());
     config.setFontSize(Integer.parseInt(fontSize.getAttribute("value")));
+    config.setStandard(standard.getValue());
+    config.setGrayscale(grayscale.getValue());
+    config.setSepia(sepia.getValue());
+    config.setInverse(inverse.getValue());
     EventBus.getInstance().fireEvent(new UpdateConfigEvent(config));
   }
 

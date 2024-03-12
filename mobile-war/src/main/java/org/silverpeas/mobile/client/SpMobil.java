@@ -154,6 +154,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     NetworkHelper.getInstance();
 
     setFontSize(getConfiguration().getFontSize());
+    setFilter(getConfiguration());
 
     instance = this;
     shortcutAppId = Window.Location.getParameter("shortcutAppId");
@@ -609,4 +610,17 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   public static void setFontSize(int value) {
     Document.get().getBody().setAttribute("style", "font-size:"+value+"pt;");
   }
+
+  public static void setFilter(Config configuration) {
+    if (configuration.isStandard()) {
+      Document.get().getElementsByTagName("html").getItem(0).setAttribute("style","");
+    } else if (configuration.isGrayscale()) {
+      Document.get().getElementsByTagName("html").getItem(0).setAttribute("style","filter:grayscale(1);");
+    } else if (configuration.isSepia()) {
+      Document.get().getElementsByTagName("html").getItem(0).setAttribute("style","filter:sepia(1);");
+    } else if (configuration.isInverse()) {
+      Document.get().getElementsByTagName("html").getItem(0).setAttribute("style","filter:invert(1);");
+    }
+  }
+
 }

@@ -46,4 +46,19 @@ public interface IConfig {
 
   public void setFontSize(int fontSize);
 
+  boolean isStandard();
+
+  void setStandard(final boolean standard);
+
+  void setGrayscale(final boolean grayscale);
+
+  boolean isGrayscale();
+
+  void setSepia(final boolean sepia);
+
+  boolean isSepia();
+
+  void setInverse(final boolean inverse);
+
+  boolean isInverse();
 }

@@ -66,6 +66,15 @@
     </ul>
     <h3 class="title-bloc-part ui-title"><ui:text from="{msg.fontSize}"/></h3>
     <input type="range" ui:field="fontSize" class="font-percent-size"></input>
+
+    <h3 class="title-bloc-part ui-title"><ui:text from="{msg.filters}"/></h3>
+    <span class="filters">
+      <g:RadioButton ui:field="standard" name="filters" stylePrimaryName="filter"><ui:text from="{msg.standard}"/></g:RadioButton>
+      <g:RadioButton ui:field="grayscale" name="filters" stylePrimaryName="filter"><ui:text from="{msg.grayscale}" /></g:RadioButton>
+      <g:RadioButton ui:field="sepia" name="filters" stylePrimaryName="filter"><ui:text from="{msg.sepia}" /></g:RadioButton>
+      <g:RadioButton ui:field="inverse" name="filters" stylePrimaryName="filter"><ui:text from="{msg.inverse}" /></g:RadioButton>
+    </span>
+
   </g:HTMLPanel>
   </g:HTMLPanel>
 
