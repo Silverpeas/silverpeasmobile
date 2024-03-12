@@ -38,6 +38,11 @@ public class Config {
   private boolean freeZoneDisplay;
   private boolean freeZoneThinDisplay;
 
+  private boolean standard;
+  private boolean grayscale;
+  private boolean sepia;
+  private boolean inverse;
+
   private int fontSize;
 
   public Config() {
@@ -54,6 +59,10 @@ public class Config {
     c.setFreeZoneDisplay(true);
     c.setFreeZoneThinDisplay(true);
     c.setFontSize(10);
+    c.setStandard(true);
+    c.setGrayscale(false);
+    c.setSepia(false);
+    c.setInverse(false);
     return c;
   }
 
@@ -129,6 +138,58 @@ public class Config {
     this.fontSize = fontSize;
   }
 
+  public boolean isStandard() {
+    return standard;
+  }
+
+  public void setStandard(boolean standard) {
+    this.standard = standard;
+    if (standard) {
+      setSepia(false);
+      setInverse(false);
+      setGrayscale(false);
+    }
+  }
+
+  public boolean isGrayscale() {
+    return grayscale;
+  }
+
+  public void setGrayscale(boolean grayscale) {
+    this.grayscale = grayscale;
+    if (grayscale) {
+      setStandard(false);
+      setSepia(false);
+      setInverse(false);
+    }
+  }
+
+  public boolean isSepia() {
+    return sepia;
+  }
+
+  public void setSepia(boolean sepia) {
+    this.sepia = sepia;
+    if (sepia) {
+      setStandard(false);
+      setInverse(false);
+      setGrayscale(false);
+    }
+  }
+
+  public boolean isInverse() {
+    return inverse;
+  }
+
+  public void setInverse(boolean inverse) {
+    this.inverse = inverse;
+    if (inverse) {
+      setStandard(false);
+      setSepia(false);
+      setGrayscale(false);
+    }
+  }
+
   public AutoBean<IConfig> getAutoBean () {
     AutoBean<IConfig> b = LocalStorageHelper.factory.iconfig();
     b.as().setFreeZoneDisplay(isFreeZoneDisplay());
@@ -140,6 +201,10 @@ public class Config {
     b.as().setShortCutsDisplay(isShortCutsDisplay());
     b.as().setShortCutsToolsDisplay(isShortCutsToolsDisplay());
     b.as().setFontSize(getFontSize());
+    b.as().setStandard(isStandard());
+    b.as().setGrayscale(isGrayscale());
+    b.as().setSepia(isSepia());
+    b.as().setInverse(isInverse());
     return b;
   }
 
@@ -154,6 +219,10 @@ public class Config {
     conf.setShortCutsDisplay(b.as().isShortCutsDisplay());
     conf.setShortCutsToolsDisplay(b.as().isShortCutsToolsDisplay());
     conf.setFontSize(b.as().getFontSize());
+    conf.setStandard(b.as().isStandard());
+    conf.setGrayscale(b.as().isGrayscale());
+    conf.setSepia(b.as().isSepia());
+    conf.setInverse(b.as().isInverse());
     return conf;
   }
 }

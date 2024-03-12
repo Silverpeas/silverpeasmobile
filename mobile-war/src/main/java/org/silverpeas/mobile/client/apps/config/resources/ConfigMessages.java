@@ -38,4 +38,10 @@ public interface ConfigMessages extends Messages {
   String lastPublications();
   String lastNews();
 
+  String filters();
+  String grayscale();
+  String sepia();
+  String inverse();
+  String standard();
+
 }

@@ -2193,6 +2193,11 @@ form .forms .fields > li:nth-child(even) {
   width: calc(100% - 2em);
 }
 
+.filters > span {
+  display: block;
+  margin-left: 1em;
+}
+
 .ui-listview.favoris {
   overflow: hidden;
 }
