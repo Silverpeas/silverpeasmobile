@@ -28,6 +28,8 @@ import com.google.gwt.i18n.client.Messages;
 import com.google.gwt.safehtml.shared.SafeHtml;
 
 public interface ConfigMessages extends Messages {
+
+  String title();
   String homePage();
   String fontSize();
   String tools();

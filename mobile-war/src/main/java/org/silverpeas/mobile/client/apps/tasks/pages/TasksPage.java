@@ -68,6 +68,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
 
   public TasksPage() {
     initWidget(uiBinder.createAndBindUi(this));
+    setPageTitle(msg.title());
     list.getElement().setId("tasks");
     EventBus.getInstance().fireEvent(new TasksLoadEvent());
     EventBus.getInstance().addHandler(AbstractTasksPagesEvent.TYPE, this);

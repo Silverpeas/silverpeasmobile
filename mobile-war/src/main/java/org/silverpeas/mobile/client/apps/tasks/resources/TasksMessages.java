@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.tasks.resources;
 import com.google.gwt.i18n.client.Messages;
 
 public interface TasksMessages extends Messages {
+  String title();
   String create();
   String actionCreate();
   String actionEdit();
