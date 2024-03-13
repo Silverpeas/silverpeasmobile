@@ -82,6 +82,7 @@ public class ConfigPage extends PageContent implements ConfigPagesEventHandler {
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractConfigPagesEvent.TYPE, this);
     EventBus.getInstance().fireEvent(new LoadConfigEvent());
+    setPageTitle(msg.title());
     fontSize.setAttribute("min", "9");
     fontSize.setAttribute("max", "17");
     fontSize.setAttribute("step", "1");
