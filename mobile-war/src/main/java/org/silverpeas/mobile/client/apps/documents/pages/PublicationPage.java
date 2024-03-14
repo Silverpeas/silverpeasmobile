@@ -25,15 +25,14 @@
 package org.silverpeas.mobile.client.apps.documents.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.ParagraphElement;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -52,6 +51,7 @@ import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Html5Utils;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.PublicationContentHelper;
 import org.silverpeas.mobile.client.common.app.View;
@@ -63,6 +63,7 @@ import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.SpeakButton;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -99,6 +100,8 @@ public class PublicationPage extends PageContent
 
   private NotifyButton notification = new NotifyButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
+
+  private SpeakButton speak = new SpeakButton();
 
   private AddFileButton buttonImport = new AddFileButton();
   private DraftOutButton buttonDraftOut = new DraftOutButton();
@@ -187,6 +190,19 @@ public class PublicationPage extends PageContent
       addActionMenu(share);
     }
 
+    if (publication.getContent()) {
+      speak.setCallback(new Command() {
+        @Override
+        public void execute() {
+          IFrameElement c = IFrameElement.as(Document.get().getElementById("htmlContent"));
+          String mainText = c.getContentDocument().getBody().getInnerText().trim();
+
+          String[] text = {publication.getName(), publication.getDescription(), mainText};
+          Html5Utils.readText(text);
+        }
+      });
+      addActionShortcut(speak);
+    }
     if (Boolean.parseBoolean(ResourcesManager.getParam("content.display.embedded")) && publication.getContent()) {
       PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
       contentLink.setVisible(false);
