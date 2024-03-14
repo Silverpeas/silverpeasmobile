@@ -79,6 +79,7 @@ public class PublicationContentHelper {
     final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId;
     String zoom = SpMobil.getContentZoomLevel();
     IFrameElement iframeC = Document.get().createIFrameElement();
+    iframeC.setId("htmlContent");
     iframeC.setAttribute("scrolling", "no");
     iframeC.setSrc(url);
 

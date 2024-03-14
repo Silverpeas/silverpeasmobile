@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.client.common;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
@@ -130,16 +131,29 @@ public class Html5Utils {
     return window.speechSynthesis.getVoices();
   }-*/;
 
-  public static native void speak(String text) /*-{
+  public static void readText(String[] text) {
+    Html5Utils.cancelSpeaking();
+    for (int i = 0; i < text.length; i++) {
+      String [] sentences = text[i].split("\\.");
+      if (sentences.length==0) speak(text[i]);
+      for (int j = 0; j < sentences.length; j++) {
+        speak(sentences[j]);
+      }
+    }
+  }
+
+  private static native void speak(String text) /*-{
     var msg = new SpeechSynthesisUtterance();
     msg.text = text;
+    msg.addEventListener("end", function (){});
     speechSynthesis.speak(msg);
+
   }-*/;
 
   public static native void cancelSpeaking() /*-{
     speechSynthesis.cancel();
   }-*/;
-  public static native void speak(String text, double volume, double rate, double pitch, String language) /*-{
+  private static native void speak(String text, double volume, double rate, double pitch, String language) /*-{
         var msg = new SpeechSynthesisUtterance();
         msg.volume = volume; // From 0 to 1
         msg.rate = rate; // From 0.1 to 10
@@ -149,7 +163,7 @@ public class Html5Utils {
         speechSynthesis.speak(msg);
     }-*/;
 
-  public static native void speak(String text, double volume, double rate, double pitch, String language, String desiredVoice) /*-{
+  private static native void speak(String text, double volume, double rate, double pitch, String language, String desiredVoice) /*-{
     var msg = new SpeechSynthesisUtterance();
     for (var i = 0; i < speechSynthesis.getVoices().length; i++) {
         if (speechSynthesis.getVoices()[i].name === desiredVoice) {

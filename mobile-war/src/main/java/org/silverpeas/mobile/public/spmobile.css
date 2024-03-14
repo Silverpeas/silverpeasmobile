@@ -2167,6 +2167,29 @@ form .forms .fields > li:nth-child(even) {
   background: url('icons/add.svg') no-repeat;
 }
 
+.speak-action {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/speaker_phone.svg') no-repeat;
+}
+
+.speak-action.running {
+  background: url('icons/stop.svg') no-repeat;
+  animation: stopSpeak 2s infinite;
+}
+
+@-webkit-keyframes stopSpeak {
+  50%   {
+    transform: scale(1.5);
+    opacity: 50
+  }
+  100%   {
+    transform: scale(1.5);
+    opacity: 50
+  }
+}
+
 .config .actuality a {
 
 }
@@ -3082,7 +3105,7 @@ a.popin-btn {
   background: url('icons/mark_read.svg') no-repeat;
 }
 
-.add-action a, .delete-action a, .markAsRead-notification a {
+.add-action a, .delete-action a, .markAsRead-notification a, .speak-action a {
   height: 24px;
   width: 24px;
   display: block;
