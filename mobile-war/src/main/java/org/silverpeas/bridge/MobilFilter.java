@@ -108,6 +108,7 @@ public class MobilFilter implements Filter {
           !url.contains(URLUtil.getApplicationURL() + "/util/") && (!tablet) &&
           !url.contains("attached_file") && !url.contains("Ticket") &&
           !url.contains("LinkFile/Key")  &&
+          !url.contains("Logout")  &&
           !url.contains("FileServer/thumbnail") && redirect) {
         String params = "";
         if (url.contains("Publication")) {
