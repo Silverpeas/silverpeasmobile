@@ -43,7 +43,8 @@ body.ui-panel-wrapper {
 body {
   font-size: 10pt;
   line-height: 1em;
-  font-family: Open Sans, sans-serif
+  font-family: Open Sans, sans-serif;
+  overscroll-behavior-y: contain;
 }
 
 input, select, textarea, button, .ui-btn {
