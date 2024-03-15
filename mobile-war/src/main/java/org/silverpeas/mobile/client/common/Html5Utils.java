@@ -24,10 +24,9 @@
 
 package org.silverpeas.mobile.client.common;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Anchor;
 import org.silverpeas.mobile.client.common.event.speech.SpeechErrorEvent;
 import org.silverpeas.mobile.client.common.event.speech.SpeechResultEvent;
@@ -131,21 +130,34 @@ public class Html5Utils {
     return window.speechSynthesis.getVoices();
   }-*/;
 
-  public static void readText(String[] text) {
+  public static void readText(String[] text, Command endCallback) {
     Html5Utils.cancelSpeaking();
     for (int i = 0; i < text.length; i++) {
+      boolean last = (i == text.length -1);
       String [] sentences = text[i].split("\\.");
-      if (sentences.length==0) speak(text[i]);
+      if (sentences.length==0) {
+        if (last) {
+          speak(text[i], endCallback);
+        } else {
+          speak(text[i], null);
+        }
+      }
       for (int j = 0; j < sentences.length; j++) {
-        speak(sentences[j]);
+        if (last && j == sentences.length -1) {
+          speak(sentences[j], endCallback);
+        } else {
+          speak(sentences[j], null);
+        }
       }
     }
   }
 
-  private static native void speak(String text) /*-{
+  private static native void speak(String text, Command endCallback) /*-{
     var msg = new SpeechSynthesisUtterance();
     msg.text = text;
-    msg.addEventListener("end", function (){});
+    msg.addEventListener("end", function (event) {
+        if (endCallback != null) endCallback.@com.google.gwt.user.client.Command::execute(*)();
+    });
     speechSynthesis.speak(msg);
 
   }-*/;

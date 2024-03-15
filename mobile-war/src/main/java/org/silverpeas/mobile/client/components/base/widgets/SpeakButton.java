@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import org.silverpeas.mobile.client.common.Html5Utils;
@@ -39,9 +40,13 @@ import org.silverpeas.mobile.client.components.base.ActionItem;
  */
 public class SpeakButton extends ActionItem {
 
+
+
   interface SpeakButtonUiBinder extends UiBinder<HTMLPanel, SpeakButton> {}
 
   private static SpeakButtonUiBinder uiBinder = GWT.create(SpeakButtonUiBinder.class);
+
+  private Command onEndSpeaking;
 
   @UiField
   HTMLPanel container;
@@ -51,10 +56,21 @@ public class SpeakButton extends ActionItem {
   public SpeakButton() {
     initWidget(uiBinder.createAndBindUi(this));
     setId("speak");
+
+    onEndSpeaking = new Command() {
+      @Override
+      public void execute() {
+        onClick(null);
+      }
+    };
+  }
+
+  public Command getEndCallback() {
+    return onEndSpeaking;
   }
 
   @UiHandler("link")
-  void speak(ClickEvent event) {
+  void onClick(ClickEvent event) {
     if (container.getElement().hasClassName("running")) {
       container.getElement().removeClassName("running");
       Html5Utils.cancelSpeaking();
