@@ -31,8 +31,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -190,19 +188,7 @@ public class PublicationPage extends PageContent
       addActionMenu(share);
     }
 
-    if (publication.getContent()) {
-      speak.setCallback(new Command() {
-        @Override
-        public void execute() {
-          IFrameElement c = IFrameElement.as(Document.get().getElementById("htmlContent"));
-          String mainText = c.getContentDocument().getBody().getInnerText().trim();
-
-          String[] text = {publication.getName(), publication.getDescription(), mainText};
-          Html5Utils.readText(text);
-        }
-      });
-      addActionShortcut(speak);
-    }
+    addSpeakingCapacity();
     if (Boolean.parseBoolean(ResourcesManager.getParam("content.display.embedded")) && publication.getContent()) {
       PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
       contentLink.setVisible(false);
@@ -224,6 +210,25 @@ public class PublicationPage extends PageContent
         }
       });
       addActionMenu(buttonDraftOut);
+    }
+  }
+
+  private void addSpeakingCapacity() {
+    if (Boolean.parseBoolean(ResourcesManager.getParam("speaking"))) {
+      speak.setCallback(new Command() {
+        @Override
+        public void execute() {
+          Element el = Document.get().getElementById("htmlContent");
+          String mainText = "";
+          if (el != null) {
+            IFrameElement c = IFrameElement.as(el);
+            mainText = c.getContentDocument().getBody().getInnerText().trim();
+          }
+          String[] text = {publication.getName(), publication.getDescription(), mainText};
+          Html5Utils.readText(text, speak.getEndCallback());
+        }
+      });
+      addActionShortcut(speak);
     }
   }
 
