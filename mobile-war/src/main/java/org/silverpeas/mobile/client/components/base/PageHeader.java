@@ -70,10 +70,17 @@ public class PageHeader extends Composite {
 
   public void addActionShortcut(ActionItem action) {
     actionsShortcuts.addAction(action);
+    adjustTitle();
+  }
+
+  private void adjustTitle() {
+    float offset = actionsShortcuts.listActions.getCount() * 2.5f;
+    title.setAttribute("style", "width : calc(100vw - 50px - 2.5em - "+offset+"em);");
   }
 
   public void removeActionShortcut(ActionItem action) {
     actionsShortcuts.removeAction(action.getId(), true);
+    adjustTitle();
   }
 
   public void addActionMenu(ActionItem action) {

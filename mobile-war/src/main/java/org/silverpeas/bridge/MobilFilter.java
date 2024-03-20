@@ -39,8 +39,8 @@ import org.silverpeas.core.questioncontainer.container.service.QuestionContainer
 import org.silverpeas.core.security.token.TokenGenerator;
 import org.silverpeas.core.security.token.TokenGeneratorProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 
@@ -102,7 +102,6 @@ public class MobilFilter implements Filter {
       final boolean tablet = session.getAttribute("tablet", Boolean.class, false);
 
       boolean redirect = isRedirect(url);
-
       if (isMobile && !url.contains("sso") && !url.contains("services") &&
               !url.contains("spmobile") && !url.contains(URLUtil.getApplicationURL() + "/chat/") &&
               !url.contains(URLUtil.getApplicationURL() + "/media/") &&
@@ -110,7 +109,8 @@ public class MobilFilter implements Filter {
               !url.contains(URLUtil.getApplicationURL() + "/util/") && (!tablet) &&
               !url.contains("attached_file") && !url.contains("Ticket") &&
               !url.contains("LinkFile/Key")  &&
-              !url.contains("Logout")  &&
+              !url.contains("Logout") &&
+              !url.contains("FileServer/vignette") &&
               !url.contains("FileServer/thumbnail") && redirect) {
         String params = "";
         if (url.contains("Publication")) {
