@@ -140,8 +140,6 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       NavigationAppInstanceChangedEvent event = new NavigationAppInstanceChangedEvent(data);
       appInstanceChanged(event);
     } else if (content.getType().equals(ContentsTypes.Attachment.toString())) {
-      final DocumentsApp app = this;
-
       MethodCallbackOnlineOnly action =
           new MethodCallbackOnlineOnly<AttachmentDTO>() {
             @Override
@@ -175,6 +173,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
               }
             }
           };
+      action.attempt();
     }
   }
 

@@ -83,9 +83,10 @@ public class GedItem extends Composite {
       setStyleName("publication");
       icon.setHTML(resources.publication().getText());
       if (dataPublication.getVignette() != null) {
-        String style = "background-image:url("+dataPublication.getVignette();
-        style += ");background-position:5px 5px;background-size:20px 20px;";
+        String style = "background:url("+dataPublication.getVignette();
+        style += ") no-repeat;background-position:0.5em;background-size:24px 24px;";
         link.getElement().setAttribute("style", style);
+        icon.setVisible(false);
       }
       link.setStyleName("ui-btn ui-icon-carat-r");
     }
