@@ -102,7 +102,6 @@ public class MobilFilter implements Filter {
       final boolean tablet = session.getAttribute("tablet", Boolean.class, false);
 
       boolean redirect = isRedirect(url);
-
       if (isMobile && !url.contains("sso") && !url.contains("services") &&
               !url.contains("spmobile") && !url.contains(URLUtil.getApplicationURL() + "/chat/") &&
               !url.contains(URLUtil.getApplicationURL() + "/media/") &&
@@ -111,6 +110,7 @@ public class MobilFilter implements Filter {
               !url.contains("attached_file") && !url.contains("Ticket") &&
               !url.contains("LinkFile/Key")  &&
               !url.contains("Logout") &&
+              !url.contains("FileServer/vignette") &&
               !url.contains("FileServer/thumbnail") && redirect) {
         String params = "";
         if (url.contains("Publication")) {
