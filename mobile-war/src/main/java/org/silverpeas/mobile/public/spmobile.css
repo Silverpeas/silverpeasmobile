@@ -2172,7 +2172,7 @@ form .forms .fields > li:nth-child(even) {
   height: 24px;
   width: 24px;
   filter: invert(1);
-  background: url('icons/speaker_phone.svg') no-repeat;
+  background: url('icons/volume_up.svg') no-repeat;
 }
 
 .speak-action.running {
