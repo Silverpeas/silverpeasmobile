@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.components.base;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -285,6 +286,12 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     user.addAndReplaceElement(html, "userName");
     status.setInnerHTML(currentUser.getStatus());
 
-    notifications.setVisible(currentUser.isNotificationBox());
+    if (currentUser.isNotificationBox()) {
+      notifications.setVisible(true);
+      iconInbox.getStyle().setDisplay(Style.Display.BLOCK);
+    } else {
+      notifications.setVisible(false);
+      iconInbox.getStyle().setDisplay(Style.Display.NONE);
+    }
   }
 }
