@@ -367,76 +367,68 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
    * Load ids in SQL Web Storage.
    */
   public void loadIds(Command attempt) {
-    if (token != null) {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
-        @Override
-        public void attempt() {
-          super.attempt();
-          FullUserDTO u = AuthentificationManager.getInstance().loadUser();
-          if (u != null) {
-            nbRetryLogin = 0;
-            ServicesLocator.getServiceNavigation().getUser(u.getLogin(), u.getDomainId(), this);
-          } else {
-            String login = Cookies.getCookie("svpLogin");
-            String domainId = Cookies.getCookie("defaultDomain");
-            if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty()) {
-              ServicesLocator.getServiceNavigation().getUser(login, domainId, this);
-            } else {
-              if (nbRetryLogin < 5) {
-                tryToRelogin(attempt);
-                nbRetryLogin++;
-              }
-            }
-          }
-        }
-
-        @Override
-        public void onSuccess(final Method method, final DetailUserDTO detailUserDTO) {
-          super.onSuccess(method, detailUserDTO);
-          setUser(detailUserDTO);
-          setUserProfile(UserProfileDTO.getBean(
-              LocalStorageHelper.getInstance().load(AuthentificationManager.USER_PROFIL, IUserProfile.class)));
-          if (getUserProfile() == null) {
-            UserProfileDTO p = new UserProfileDTO();
-            p.setFullName(detailUserDTO.getFirstName() + " " + detailUserDTO.getLastName());
-            p.setAvatar(detailUserDTO.getAvatar());
-            p.setFirstName(detailUserDTO.getFirstName());
-            p.setLastName(detailUserDTO.getLastName());
-            p.setLanguage(detailUserDTO.getLanguage());
-            p.setId(detailUserDTO.getId());
-            p.seteMail(detailUserDTO.geteMail());
-            setUserProfile(p);
-          }
-          ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
-            @Override
-            public void onFailure(final Method method, final Throwable throwable) {
-              Notification.activityStop();
-              EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-            }
-
-            @Override
-            public void onSuccess(final Method method, final Boolean showTerms) {
-              if (showTerms) {
-                SpMobil.displayTermsOfServicePage();
-              } else {
-                SpMobil.displayMainPage();
-              }
-            }
-          });
-        }
-
-        @Override
-        public void onFailure(final Method method, final Throwable t) {
-          super.onFailure(method, t);
-          tryToRelogin(attempt);
-        }
-      };
-      action.setRelogin(false);
-      action.attempt();
+    FullUserDTO u = AuthentificationManager.getInstance().loadUser();
+    if (u != null) {
+      tryToRelogin(null);
     } else {
-      //Login
-      tabletGesture(false);
-      displayLoginPage(null);
+      String login = Cookies.getCookie("svpLogin");
+      String domainId = Cookies.getCookie("defaultDomain");
+      if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty()) {
+        //SSO
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
+          @Override
+          public void attempt() {
+            super.attempt();
+            ServicesLocator.getServiceNavigation().getUser(login, domainId, this);
+          }
+
+          @Override
+          public void onFailure(Method method, Throwable t) {
+            tabletGesture(false);
+            displayLoginPage(null);
+          }
+
+          @Override
+          public void onSuccess(Method method, DetailUserDTO detailUserDTO) {
+            super.onSuccess(method, detailUserDTO);
+            setUser(detailUserDTO);
+            setUserProfile(UserProfileDTO.getBean(
+                    LocalStorageHelper.getInstance().load(AuthentificationManager.USER_PROFIL, IUserProfile.class)));
+            if (getUserProfile() == null) {
+              UserProfileDTO p = new UserProfileDTO();
+              p.setFullName(detailUserDTO.getFirstName() + " " + detailUserDTO.getLastName());
+              p.setAvatar(detailUserDTO.getAvatar());
+              p.setFirstName(detailUserDTO.getFirstName());
+              p.setLastName(detailUserDTO.getLastName());
+              p.setLanguage(detailUserDTO.getLanguage());
+              p.setId(detailUserDTO.getId());
+              p.seteMail(detailUserDTO.geteMail());
+              setUserProfile(p);
+            }
+            ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
+              @Override
+              public void onFailure(final Method method, final Throwable throwable) {
+                Notification.activityStop();
+                EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+              }
+
+              @Override
+              public void onSuccess(final Method method, final Boolean showTerms) {
+                if (showTerms) {
+                  SpMobil.displayTermsOfServicePage();
+                } else {
+                  SpMobil.displayMainPage();
+                }
+              }
+            });
+          }
+        };
+        action.attempt();
+      } else {
+        //Login
+        tabletGesture(false);
+        displayLoginPage(null);
+      }
     }
   }
 

@@ -190,7 +190,7 @@ public class ServiceNavigation extends AbstractRestWebService {
   public HomePageDTO getHomePageData(@PathParam("spaceId") String spaceId, @PathParam("zoom") String zoom) {
     if (spaceId.equals("null")) spaceId = null;
 
-    initSilverpeasSession(request);
+    //initSilverpeasSession(request);
     request.getSession().setAttribute("Silverpeas_Portlet_SpaceId", spaceId);
 
     String look = "";
