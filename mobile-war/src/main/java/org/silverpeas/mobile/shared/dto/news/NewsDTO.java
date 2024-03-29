@@ -38,6 +38,10 @@ public class NewsDTO extends BaseDTO implements Serializable {
   private String updateDate;
   private String vignette;
   private String instanceId;
+
+  private String content;
+
+  private boolean important;
   private boolean draft;
   private boolean visible;
 
@@ -122,5 +126,21 @@ public class NewsDTO extends BaseDTO implements Serializable {
 
   public void setIdNews(final String idNews) {
     this.idNews = idNews;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  public boolean getImportant() {
+    return important;
+  }
+
+  public void setImportant(boolean important) {
+    this.important = important;
   }
 }

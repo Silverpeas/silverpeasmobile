@@ -30,4 +30,15 @@ public interface NewsMessages extends Messages {
   String more();
   String title();
 
+  String important();
+
+  String titleField();
+
+  String descriptionField();
+
+  String newTitle();
+
+  String create();
+
+  String notSaved();
 }

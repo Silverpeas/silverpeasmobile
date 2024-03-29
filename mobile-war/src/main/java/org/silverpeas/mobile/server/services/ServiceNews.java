@@ -24,7 +24,10 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.fusesource.restygwt.client.MethodCallback;
 import org.silverpeas.components.quickinfo.model.News;
+import org.silverpeas.components.quickinfo.model.QuickInfoService;
+import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
@@ -32,10 +35,7 @@ import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
@@ -57,6 +57,23 @@ public class ServiceNews extends AbstractRestWebService {
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
   private OrganizationController organizationController = OrganizationController.get();
 
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("create")
+  public void createNews(NewsDTO news) {
+
+    QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
+    News n = News.builder().build();
+    n.setTitle(news.getTitle());
+    n.setImportant(news.getImportant());
+    n.setDescription(news.getDescription());
+    n.setContentToStore(news.getContent());
+    n.setComponentInstanceId(componentId);
+    n.setCreatorId(getUser().getId());
+    service.create(n);
+
+    //TODO : test
+  }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)

@@ -28,9 +28,8 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -42,5 +41,10 @@ public interface ServiceNews extends RestService {
   @GET
   @Path("{appId}/all")
   public void getNews(@PathParam("appId") String appId, MethodCallback<List<NewsDTO>> callback);
+
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{appId}/create")
+  public void createNews(@PathParam("appId") String appId, NewsDTO news, MethodCallback<Void> callback);
 
 }

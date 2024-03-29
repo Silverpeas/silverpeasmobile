@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.news;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -32,8 +33,10 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.news.events.app.AbstractNewsAppEvent;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsAppEventHandler;
+import org.silverpeas.mobile.client.apps.news.events.app.NewsCreateEvent;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsLoadEvent;
 import org.silverpeas.mobile.client.apps.news.events.pages.NewsLoadedEvent;
+import org.silverpeas.mobile.client.apps.news.events.pages.NewsSavedEvent;
 import org.silverpeas.mobile.client.apps.news.pages.NewsPage;
 import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -50,8 +53,6 @@ import java.util.List;
 public class NewsApp extends App implements NewsAppEventHandler, NavigationEventHandler {
 
   private NewsMessages msg;
-  private ApplicationInstanceDTO instance;
-
   public NewsApp(){
     super();
     msg = GWT.create(NewsMessages.class);
@@ -74,13 +75,37 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       @Override
       public void attempt() {
         super.attempt();
-        ServicesLocator.getServiceNews().getNews(instance.getId(), this);
+        ServicesLocator.getServiceNews().getNews(getApplicationInstance().getId(), this);
       }
 
       @Override
       public void onSuccess(final Method method, final List<NewsDTO> news) {
         super.onSuccess(method, news);
-        EventBus.getInstance().fireEvent(new NewsLoadedEvent(news));
+        EventBus.getInstance().fireEvent(new NewsLoadedEvent(getApplicationInstance(), news));
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void createNews(NewsCreateEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceNews().createNews(getApplicationInstance().getId(), event.getNews(), this);
+      }
+
+      @Override
+      public void onFailure(Method method, Throwable t) {
+        super.onFailure(method, t);
+        EventBus.getInstance().fireEvent(new NewsSavedEvent(true));
+      }
+
+      @Override
+      public void onSuccess(Method method, Void o) {
+        super.onSuccess(method, o);
+        EventBus.getInstance().fireEvent(new NewsSavedEvent(false));
       }
     };
     action.attempt();
@@ -93,7 +118,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.quickinfo.name())) {
-      this.instance = event.getInstance();
+      setApplicationInstance(event.getInstance());
       NewsPage page = new NewsPage();
       page.setPageTitle(event.getInstance().getLabel());
       page.show();

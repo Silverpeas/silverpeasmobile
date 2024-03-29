@@ -24,17 +24,21 @@
 
 package org.silverpeas.mobile.client.apps.news.events.pages;
 
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
+import javax.ws.rs.core.Application;
 import java.util.List;
 
 public class NewsLoadedEvent extends AbstractNewsPagesEvent {
 
   private List<NewsDTO> news;
+  private ApplicationInstanceDTO instance;
 
-  public NewsLoadedEvent(List<NewsDTO> news){
+  public NewsLoadedEvent(ApplicationInstanceDTO instance, List<NewsDTO> news){
     super();
     this.news = news;
+    this.instance = instance;
   }
 
   @Override
@@ -44,5 +48,9 @@ public class NewsLoadedEvent extends AbstractNewsPagesEvent {
 
   public List<NewsDTO> getNews() {
     return news;
+  }
+
+  public ApplicationInstanceDTO getApplicationInstance() {
+    return instance;
   }
 }

@@ -1906,10 +1906,43 @@ textarea.ui-input-text {
   border-top: 1px solid #ddd;
 }
 
-.liste-news li, .liste-annonces li {
+.liste-annonces li {
   padding: 0.2em 0.5em;
   margin: 0;
 }
+
+.liste-news li {
+  padding: 1em 1em;
+  margin: 0;
+}
+
+#newsForm .title {
+  width: calc(100vw - 4em);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  border: none;
+  line-height: 2em;
+}
+
+#newsForm .title::placeholder {
+  color: #ec8001;
+}
+
+#newsForm .description {
+  width: calc(100vw - 4em);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  border: none;
+}
+
+#newsForm .important {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+}
+
 
 .liste-news li img, .liste-annonces img {
   float: left;
@@ -1922,8 +1955,14 @@ textarea.ui-input-text {
   margin: 0;
 }
 
-.liste-news li p, .liste-annonces li p {
+.liste-annonces li p {
   font-size: 0.82em;
+  color: #666;
+}
+
+.liste-news li p {
+  text-align: justify;
+  font-size: 1em;
   color: #666;
 }
 
@@ -3254,4 +3293,15 @@ a.popin-btn {
   background-color: white;
   height: 2em;
   width: calc(100vw - 2em);
+}
+
+/** Ckeditor **/
+.ck.ck-reset.ck-editor {
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-top: 1em;
+}
+
+.ck-editor__editable_inline {
+  min-height: 250px;
 }

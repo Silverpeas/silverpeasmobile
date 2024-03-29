@@ -149,6 +149,7 @@
       window.navigateTo(url);
     }
   </script>
+  <script type="text/javascript" src="<%=appUrl%>/spmobile/ckeditor/ckeditor.js"></script>
 
   <%
     String css = resource.getString("styleSheet");

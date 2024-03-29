@@ -28,4 +28,5 @@ import com.google.gwt.event.shared.EventHandler;
 
 public interface NewsAppEventHandler extends EventHandler{
   void loadNews(NewsLoadEvent event);
+  void createNews(NewsCreateEvent event);
 }
