@@ -115,6 +115,8 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
   }
 
   @Override
-  public void onNewsSaved(NewsSavedEvent newsSavedEvent) {}
+  public void onNewsSaved(NewsSavedEvent newsSavedEvent) {
+    EventBus.getInstance().fireEvent(new NewsLoadEvent());
+  }
 
 }

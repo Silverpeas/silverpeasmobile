@@ -45,6 +45,6 @@ public interface ServiceNews extends RestService {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("{appId}/create")
-  public void createNews(@PathParam("appId") String appId, NewsDTO news, MethodCallback<Void> callback);
+  public void createNews(@PathParam("appId") String appId, NewsDTO news, MethodCallback<NewsDTO> callback);
 
 }

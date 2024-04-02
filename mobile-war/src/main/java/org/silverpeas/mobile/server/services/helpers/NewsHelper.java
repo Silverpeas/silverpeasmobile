@@ -207,7 +207,7 @@ public class NewsHelper {
     news.setId(n.getPublication().getId());
     news.setTitle(n.getPublication().getTitle());
     news.setDescription(n.getPublication().getDescription());
-    news.setUpdateDate(sdf.format(n.getPublication().getLastUpdateDate()));
+    news.setUpdateDate(sdf.format(n.getLastUpdateDate()));
     news.setDraft(n.getPublication().isDraft());
     news.setVisible(n.getPublication().isVisible());
     news.setIdNews(n.getId());
@@ -240,7 +240,7 @@ public class NewsHelper {
     news.setVisible(pub.isVisible());
     try {
       news.setVignette(getBase64ImageData(pub.getInstanceId(), pub));
-    } catch(Exception e) {e.printStackTrace();}
+    } catch(Exception e) {SilverLogger.getLogger(this).error(e);}
     news.setInstanceId(pub.getInstanceId());
     return news;
   }

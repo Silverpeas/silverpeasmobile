@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.news;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
+import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -89,7 +90,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
 
   @Override
   public void createNews(NewsCreateEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<NewsDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -99,13 +100,13 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       @Override
       public void onFailure(Method method, Throwable t) {
         super.onFailure(method, t);
-        EventBus.getInstance().fireEvent(new NewsSavedEvent(true));
+        EventBus.getInstance().fireEvent(new NewsSavedEvent(true, null));
       }
 
       @Override
-      public void onSuccess(Method method, Void o) {
-        super.onSuccess(method, o);
-        EventBus.getInstance().fireEvent(new NewsSavedEvent(false));
+      public void onSuccess(Method method, NewsDTO dto) {
+        super.onSuccess(method, dto);
+        EventBus.getInstance().fireEvent(new NewsSavedEvent(false, dto));
       }
     };
     action.attempt();

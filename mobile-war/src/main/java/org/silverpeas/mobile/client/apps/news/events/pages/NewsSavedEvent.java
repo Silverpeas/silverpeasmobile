@@ -24,12 +24,16 @@
 
 package org.silverpeas.mobile.client.apps.news.events.pages;
 
+import org.silverpeas.mobile.shared.dto.news.NewsDTO;
+
 public class NewsSavedEvent extends AbstractNewsPagesEvent {
 
   private boolean inError = false;
-  public NewsSavedEvent(boolean inError) {
+  private NewsDTO dto;
+  public NewsSavedEvent(boolean inError, NewsDTO dto) {
     super();
     this.inError = inError;
+    this.dto = dto;
   }
 
   @Override
@@ -39,5 +43,9 @@ public class NewsSavedEvent extends AbstractNewsPagesEvent {
 
   public boolean isInError() {
     return inError;
+  }
+
+  public NewsDTO getNews() {
+    return dto;
   }
 }

@@ -24,7 +24,7 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.fusesource.restygwt.client.MethodCallback;
+import org.silverpeas.core.date.Period;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
@@ -33,12 +33,16 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
+import static java.time.OffsetDateTime.ofInstant;
+import static org.silverpeas.core.cache.service.VolatileIdentifierProvider.newVolatileIntegerIdentifierOn;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @WebService
@@ -60,19 +64,42 @@ public class ServiceNews extends AbstractRestWebService {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("create")
-  public void createNews(NewsDTO news) {
+  public NewsDTO createNews(NewsDTO news) {
 
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
-    News n = News.builder().build();
-    n.setTitle(news.getTitle());
+
+    News n = News.builder()
+            .setTitleAndDescription(news.getTitle(), news.getDescription())
+            .build();
+    n.setDraft();
+    n.setComponentInstanceId(componentId);
+    // Dummy identifiers
+    n.setId("volatileId@" + getComponentId() + "@" + System.nanoTime());
+    n.setPublicationId(newVolatileIntegerIdentifierOn(getComponentId()));
+    n.getPublication().getPK().setId(n.getPublicationId());
+
     n.setImportant(news.getImportant());
     n.setDescription(news.getDescription());
-    n.setContentToStore(news.getContent());
-    n.setComponentInstanceId(componentId);
     n.setCreatorId(getUser().getId());
-    service.create(n);
+    n.setUpdaterId(getUser().getId());
+    n.setVisibilityPeriod(getPeriod(new Date(), null));
+    News n2 = service.create(n);
+    n2.setContentToStore(news.getContent());
+
+    n2.markAsModified();
+    //n2.setPublished();
+    service.update(n2, null, null, false);
+
+    return NewsHelper.getInstance().populate(n2);
 
     //TODO : test
+  }
+
+  private Period getPeriod(Date begin, Date end) {
+    return Period.betweenNullable(
+            begin != null ? ofInstant(begin.toInstant(), ZoneId.systemDefault()) : null,
+            end != null ? ofInstant(end.toInstant(), ZoneId.systemDefault()) : null
+    );
   }
 
   @GET
