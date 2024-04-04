@@ -1943,6 +1943,43 @@ textarea.ui-input-text {
   margin-left: 2em;
 }
 
+#newsForm .thumbnail {
+  width: calc(100vw - 4em);
+  height: 100px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  background: url('icons/add_photo_alternate.svg') center no-repeat;
+  background-color: white;
+  background-size: 10%;
+}
+
+#newsForm .thumbnail.mandatory {
+  background-color: #ec8001 !important;
+}
+
+#newsForm .thumbnail input {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+#newsForm .thumbnail label {
+  width: 100%;
+  height: 100%;
+  display: block;
+  text-align: center;
+  padding-top: 15px;
+}
+
+#newsForm #preview {
+  width: calc(100vw - 4em);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+}
 
 .liste-news li img, .liste-annonces img {
   float: left;

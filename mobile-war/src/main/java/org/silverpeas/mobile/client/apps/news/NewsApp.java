@@ -121,6 +121,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
     if (event.getInstance().getType().equals(Apps.quickinfo.name())) {
       setApplicationInstance(event.getInstance());
       NewsPage page = new NewsPage();
+      page.setApp(this);
       page.setPageTitle(event.getInstance().getLabel());
       page.show();
 

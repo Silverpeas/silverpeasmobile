@@ -361,7 +361,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       public void onSuccess(Method method, PublicationDTO publication) {
         super.onSuccess(method, publication);
         EventBus.getInstance().fireEvent(new PublicationPublishedEvent(publication));
-        //TODO : update folder
+        // update folder
         EventBus.getInstance().fireEvent(new GedItemPublishedEvent(event.getPublication()));
       }
     };

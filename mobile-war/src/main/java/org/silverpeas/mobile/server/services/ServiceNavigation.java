@@ -755,6 +755,10 @@ public class ServiceNavigation extends AbstractRestWebService {
         dto.setPublicationSharing(0);
         dto.setFileSharing(0);
       }
+    } else if (app.getName().equals("quickinfo")) {
+      String value = "";
+      value = getMainSessionController().getComponentParameterValue(app.getId(), "thumbnailMandatory");
+      dto.getParamters().put("thumbnailMandatory", value);
     }
 
     return dto;

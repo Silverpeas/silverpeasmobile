@@ -26,6 +26,9 @@ package org.silverpeas.mobile.client.apps.news.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,13 +37,11 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsCreateEvent;
-import org.silverpeas.mobile.client.apps.news.events.pages.AbstractNewsPagesEvent;
-import org.silverpeas.mobile.client.apps.news.events.pages.NewsLoadedEvent;
-import org.silverpeas.mobile.client.apps.news.events.pages.NewsPagesEventHandler;
-import org.silverpeas.mobile.client.apps.news.events.pages.NewsSavedEvent;
+import org.silverpeas.mobile.client.apps.news.events.pages.*;
 import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.Ckeditor;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.PopinInformation;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -60,9 +61,14 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
 
   @UiField CheckBox important;
 
-  @UiField DivElement newsContent;
+  @UiField DivElement newsContent, thumbnailContainer;
+
+  @UiField
+  FileUpload thumbnail;
 
   @UiField Anchor submit;
+
+  ImageElement preview;
 
   interface NewsEditPageUiBinder extends UiBinder<Widget, NewsEditPage> {
   }
@@ -80,6 +86,16 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
     Ckeditor.createEditor(newsContent);
   }
 
+  @Override
+  public void setApp(App app) {
+    super.setApp(app);
+    //TODO : mandatory case
+    String mandatory = app.getApplicationInstance().getParamters().get("thumbnailMandatory");
+    if (Boolean.parseBoolean(mandatory)) {
+      thumbnailContainer.addClassName("mandatory");
+    }
+  }
+
   @UiHandler("submit")
   protected void save(ClickEvent event) {
     NewsDTO dto = new NewsDTO();
@@ -87,6 +103,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
     dto.setDescription(description.getText());
     dto.setImportant(important.getValue());
     dto.setContent(Ckeditor.getCurrentData());
+    dto.setVignette(preview.getSrc());
     NewsCreateEvent createEvent = new NewsCreateEvent(dto);
     EventBus.getInstance().fireEvent(createEvent);
   }
@@ -115,6 +132,27 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
     }
     return valid;
   }
+
+  @UiHandler("thumbnail")
+  void upload(ChangeEvent event) {
+    thumbnailContainer.setInnerHTML("");
+    thumbnailContainer.removeClassName("thumbnail");
+    preview = Document.get().createImageElement();
+    preview.setId("preview");
+    thumbnailContainer.appendChild(preview);
+    previewFile(thumbnail.getElement(), preview);
+  }
+
+  public static native void previewFile(Element thumbnail, ImageElement v) /*-{
+    var file = thumbnail.files[0];
+    var reader = new FileReader();
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+    reader.addEventListener("load", function () {
+      v.src = reader.result;
+    });
+  }-*/;
 
   @Override
   public void stop() {

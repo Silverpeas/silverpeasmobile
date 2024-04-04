@@ -258,6 +258,7 @@ public class PublicationPage extends PageContent
   public void publishedPublication(PublicationPublishedEvent event) {
     title.setInnerHTML(event.getPublication().getName());
     publication.setName(event.getPublication().getName());
+    setPageTitle(event.getPublication().getName());
   }
 
   /**

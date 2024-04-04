@@ -34,6 +34,8 @@ import org.silverpeas.mobile.server.common.SpMobileLogModule;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 /**
  * @author: svu
@@ -81,6 +83,17 @@ public class DataURLHelper {
           .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
     }
     return data;
+  }
+
+  public static File createPictureFromUrlData(String data, String id) throws Exception {
+    String extension = data.substring(0, data.indexOf(";"));
+    extension = "." + extension.substring(data.indexOf("/")+1);
+    File f = File.createTempFile(id, extension);
+    byte dearr[] = Base64.decodeBase64(data.substring(data.indexOf (",")));
+    FileOutputStream fos = fos = new FileOutputStream(f);
+    fos.write(dearr);
+    fos.close();
+    return f;
   }
 
   public static String convertPictureToUrlData(String path, String fileName, String size) {

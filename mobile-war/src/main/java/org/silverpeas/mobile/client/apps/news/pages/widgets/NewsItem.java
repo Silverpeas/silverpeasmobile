@@ -65,6 +65,16 @@ public class NewsItem extends Composite implements ClickHandler {
     this.index = index;
     this.max = max;
     this.data = data;
+
+    updateTitle(data);
+    picto.addClickHandler(this);
+    content.setHTML(
+         "<p>" + data.getDescription() + "</p><br class='clear'/>");
+    content.addClickHandler(this);
+  }
+
+  public void updateTitle(NewsDTO data) {
+    this.data = data;
     String status = "";
     if (data.getManagable()) {
       if (data.getDraft()) {
@@ -74,10 +84,10 @@ public class NewsItem extends Composite implements ClickHandler {
       }
     }
     picto.setHTML("<h2><a href='#'>" + data.getTitle() + status + "</a></h2><img src='" + data.getVignette() + "'/>");
-    picto.addClickHandler(this);
-    content.setHTML(
-         "<p>" + data.getDescription() + "</p><br class='clear'/>");
-    content.addClickHandler(this);
+  }
+
+  public NewsDTO getData() {
+    return data;
   }
 
   @Override

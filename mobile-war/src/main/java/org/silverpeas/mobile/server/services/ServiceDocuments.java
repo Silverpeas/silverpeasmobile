@@ -28,6 +28,7 @@ import org.silverpeas.components.kmelia.KmeliaPublicationHelper;
 import org.silverpeas.components.kmelia.model.KmeliaPublication;
 import org.silverpeas.components.kmelia.model.KmeliaPublicationSort;
 import org.silverpeas.components.kmelia.service.KmeliaService;
+import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.admin.ProfiledObjectId;
@@ -697,12 +698,18 @@ public class ServiceDocuments extends AbstractRestWebService {
   @Path("publish/{pubId}")
   @Produces(MediaType.APPLICATION_JSON)
   public PublicationDTO publish(@PathParam("appId") String appId, @PathParam("pubId") String pubId) throws Exception {
-    CompletePublication pub = PublicationService.get().getCompletePublication(new PublicationPK(pubId));
-    NodePK nodePK = KmeliaService.get().getPublicationFatherPK(new PublicationPK(pubId, pub.getPublicationDetail().getInstanceId()));
-    String profile = getUserTopicProfile(nodePK.getId(), appId);
-    KmeliaService.get().draftOutPublication(new PublicationPK(pubId), new NodePK(nodePK.getId(), appId), profile);
     PublicationDTO dto = new PublicationDTO();
-    dto.setName(pub.getPublicationDetail().getName(getUser().getUserPreferences().getLanguage()));
+    if (appId.startsWith("quickinfo")) {
+      News n = QuickInfoService.get().getNewsByForeignId(pubId);
+      QuickInfoService.get().publish(n.getId(), getUser().getId());
+      dto.setName(QuickInfoService.get().getNews(n.getId()).getName());
+    } else {
+      CompletePublication pub = PublicationService.get().getCompletePublication(new PublicationPK(pubId));
+      NodePK nodePK = KmeliaService.get().getPublicationFatherPK(new PublicationPK(pubId, pub.getPublicationDetail().getInstanceId()));
+      String profile = getUserTopicProfile(nodePK.getId(), appId);
+      KmeliaService.get().draftOutPublication(new PublicationPK(pubId), new NodePK(nodePK.getId(), appId), profile);
+      dto.setName(pub.getPublicationDetail().getName(getUser().getUserPreferences().getLanguage()));
+    }
     return dto;
   }
 

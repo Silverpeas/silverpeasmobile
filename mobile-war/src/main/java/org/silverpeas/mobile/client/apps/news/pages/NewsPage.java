@@ -25,20 +25,24 @@
 package org.silverpeas.mobile.client.apps.news.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.SpMobil;
+import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.*;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsLoadEvent;
-import org.silverpeas.mobile.client.apps.news.events.pages.AbstractNewsPagesEvent;
-import org.silverpeas.mobile.client.apps.news.events.pages.NewsLoadedEvent;
-import org.silverpeas.mobile.client.apps.news.events.pages.NewsPagesEventHandler;
-import org.silverpeas.mobile.client.apps.news.events.pages.NewsSavedEvent;
+import org.silverpeas.mobile.client.apps.news.events.pages.*;
 import org.silverpeas.mobile.client.apps.news.pages.widgets.NewsItem;
 import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
+import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.AddButton;
@@ -49,7 +53,7 @@ import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.util.List;
 
-public class NewsPage extends PageContent implements NewsPagesEventHandler {
+public class NewsPage extends PageContent implements NewsPagesEventHandler, GedNavigationPagesEventHandler {
 
   private static NewsPageUiBinder uiBinder = GWT.create(NewsPageUiBinder.class);
 
@@ -70,14 +74,15 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractNewsPagesEvent.TYPE, this);
+    EventBus.getInstance().addHandler(AbstractGedNavigationPagesEvent.TYPE, this);
     EventBus.getInstance().fireEvent(new NewsLoadEvent());
 
     buttonCreate.setId("add-news");
     buttonCreate.setCallback(new Command() {
       @Override
       public void execute() {
-        //TODO
         NewsEditPage page = new NewsEditPage();
+        page.setApp(getApp());
         page.show();
       }
     });
@@ -87,6 +92,7 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractNewsPagesEvent.TYPE, this);
+    EventBus.getInstance().removeHandler(AbstractGedNavigationPagesEvent.TYPE, this);
   }
 
   @Override
@@ -95,7 +101,7 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
 
     RightDTO r = event.getApplicationInstance().getRights();
     if (r.getManager() || r.getPublisher()) {
-      //addActionShortcut(buttonCreate);
+      addActionShortcut(buttonCreate);
     }
 
     List<NewsDTO> newsDTOList = event.getNews();
@@ -116,6 +122,17 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler {
 
   @Override
   public void onNewsSaved(NewsSavedEvent newsSavedEvent) {
+    EventBus.getInstance().fireEvent(new NewsLoadEvent());
+  }
+
+  @Override
+  public void onLoadedTopics(GedItemsLoadedEvent event) {}
+
+  @Override
+  public void onGedItemClicked(GedItemClickEvent event) {}
+
+  @Override
+  public void onPublicationPublished(GedItemPublishedEvent event) {
     EventBus.getInstance().fireEvent(new NewsLoadEvent());
   }
 

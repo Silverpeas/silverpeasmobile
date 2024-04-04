@@ -24,13 +24,19 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.util.Streams;
+import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.date.Period;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.annotation.WebService;
+import org.silverpeas.core.io.media.image.thumbnail.control.ThumbnailController;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 import static java.time.OffsetDateTime.ofInstant;
@@ -40,8 +46,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,33 +75,43 @@ public class ServiceNews extends AbstractRestWebService {
   @Path("create")
   public NewsDTO createNews(NewsDTO news) {
 
-    QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
+    try {
+      QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
 
-    News n = News.builder()
-            .setTitleAndDescription(news.getTitle(), news.getDescription())
-            .build();
-    n.setDraft();
-    n.setComponentInstanceId(componentId);
-    // Dummy identifiers
-    n.setId("volatileId@" + getComponentId() + "@" + System.nanoTime());
-    n.setPublicationId(newVolatileIntegerIdentifierOn(getComponentId()));
-    n.getPublication().getPK().setId(n.getPublicationId());
+      News n = News.builder()
+              .setTitleAndDescription(news.getTitle(), news.getDescription())
+              .build();
+      n.setDraft();
+      n.setComponentInstanceId(componentId);
+      // Dummy identifiers
+      n.setId("volatileId@" + getComponentId() + "@" + System.nanoTime());
+      n.setPublicationId(newVolatileIntegerIdentifierOn(getComponentId()));
+      n.getPublication().getPK().setId(n.getPublicationId());
 
-    n.setImportant(news.getImportant());
-    n.setDescription(news.getDescription());
-    n.setCreatorId(getUser().getId());
-    n.setUpdaterId(getUser().getId());
-    n.setVisibilityPeriod(getPeriod(new Date(), null));
-    News n2 = service.create(n);
-    n2.setContentToStore(news.getContent());
+      n.setImportant(news.getImportant());
+      n.setDescription(news.getDescription());
+      n.setCreatorId(getUser().getId());
+      n.setUpdaterId(getUser().getId());
+      n.setVisibilityPeriod(getPeriod(new Date(), null));
+      News n2 = service.create(n);
+      n2.setContentToStore(news.getContent());
 
-    n2.markAsModified();
-    //n2.setPublished();
-    service.update(n2, null, null, false);
+      // vignette
+      File f = DataURLHelper.createPictureFromUrlData(news.getVignette(), n2.getComponentInstanceId()+"-"+n2.getId());
+      DiskFileItemFactory factory = new DiskFileItemFactory();
+      FileItem fi = factory.createItem("WAIMGVAR0", "image/" + f.getName().substring(f.getName().lastIndexOf(".")), false, f.getAbsolutePath());
+      Streams.copy(new FileInputStream(f), fi.getOutputStream(), true);
+      List<FileItem> items = new ArrayList<>();
+      items.add(fi);
+      ThumbnailController.processThumbnail(new ResourceReference(n2.getPublicationId(), componentId), items);
 
-    return NewsHelper.getInstance().populate(n2);
-
-    //TODO : test
+      n2.markAsModified();
+      //n2.setPublished();
+      service.update(n2, null, null, false);
+      return NewsHelper.getInstance().populate(n2);
+    } catch (Exception e) {
+      throw new WebApplicationException(e);
+    }
   }
 
   private Period getPeriod(Date begin, Date end) {

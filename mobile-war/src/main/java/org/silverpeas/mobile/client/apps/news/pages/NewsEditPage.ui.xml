@@ -34,6 +34,9 @@
       <g:TextBox ui:field="title" styleName="title"/>
       <g:TextArea ui:field="description" styleName="description"/>
       <g:CheckBox ui:field="important" text="{msg.important}" styleName="important" value="true"/>
+      <div class="thumbnail" ui:field="thumbnailContainer">
+          <g:FileUpload ui:field="thumbnail" name="thumbnail"/>
+      </div>
       <div ui:field="newsContent"></div>
 
       <div class=" ui-controlgroup ui-controlgroup-horizontal">
