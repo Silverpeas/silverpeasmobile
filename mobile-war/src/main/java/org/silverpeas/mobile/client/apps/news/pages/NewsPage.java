@@ -25,14 +25,10 @@
 package org.silverpeas.mobile.client.apps.news.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.*;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsLoadEvent;
@@ -40,9 +36,7 @@ import org.silverpeas.mobile.client.apps.news.events.pages.*;
 import org.silverpeas.mobile.client.apps.news.pages.widgets.NewsItem;
 import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
-import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.AddButton;
@@ -124,6 +118,9 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler, GedN
   public void onNewsSaved(NewsSavedEvent newsSavedEvent) {
     EventBus.getInstance().fireEvent(new NewsLoadEvent());
   }
+
+  @Override
+  public void onOneNewsLoaded(OneNewsLoadedEvent oneNewsLoadedEvent) {}
 
   @Override
   public void onLoadedTopics(GedItemsLoadedEvent event) {}

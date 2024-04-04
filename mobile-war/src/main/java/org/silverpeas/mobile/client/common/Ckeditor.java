@@ -16,15 +16,15 @@ public class Ckeditor {
         return editorInstance.getData();
     }-*/;
 
-    public static native String setCurrentData(String data) /*-{
+    public static native void setCurrentData(String data) /*-{
         var domEditableElement = $wnd.document.querySelector( '.ck-editor__editable' );
         var editorInstance = domEditableElement.ckeditorInstance;
-        return editorInstance.setData(data);
+        editorInstance.setData(data);
     }-*/;
 
-    public static native String destroyEditor() /*-{
+    public static native void destroyEditor() /*-{
         var domEditableElement = $wnd.document.querySelector( '.ck-editor__editable' );
         var editorInstance = domEditableElement.ckeditorInstance;
-        return editorInstance.destroy();
+        editorInstance.destroy();
     }-*/;
 }

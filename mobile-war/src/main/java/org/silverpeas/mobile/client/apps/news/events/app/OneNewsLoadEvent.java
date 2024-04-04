@@ -24,11 +24,23 @@
 
 package org.silverpeas.mobile.client.apps.news.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
-public interface NewsAppEventHandler extends EventHandler{
-  void loadNews(NewsLoadEvent event);
-  void createNews(NewsCreateEvent event);
-  void loadOneNews(OneNewsLoadEvent event);
-  void updateNews(NewsUpdateEvent event);
+public class OneNewsLoadEvent extends AbstractNewsAppEvent {
+
+  private PublicationDTO publication;
+
+  public OneNewsLoadEvent(PublicationDTO dto){
+    super();
+    this.publication = dto;
+  }
+
+  @Override
+  protected void dispatch(NewsAppEventHandler handler) {
+    handler.loadOneNews(this);
+  }
+
+  public PublicationDTO getPublication() {
+    return publication;
+  }
 }

@@ -64,4 +64,6 @@ public interface DocumentsMessages extends Messages {
   String fileNotSupportedError();
 
   String draftOut();
+
+  String edit();
 }

@@ -22,13 +22,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.news.events.app;
+package org.silverpeas.mobile.client.apps.news.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
-public interface NewsAppEventHandler extends EventHandler{
-  void loadNews(NewsLoadEvent event);
-  void createNews(NewsCreateEvent event);
-  void loadOneNews(OneNewsLoadEvent event);
-  void updateNews(NewsUpdateEvent event);
+public class OneNewsLoadedEvent extends AbstractNewsPagesEvent {
+  private NewsDTO dto;
+  public OneNewsLoadedEvent(NewsDTO dto) {
+    super();
+    this.dto = dto;
+  }
+
+  @Override
+  protected void dispatch(NewsPagesEventHandler handler) {
+    handler.onOneNewsLoaded(this);
+  }
+
+  public NewsDTO getNews() {
+    return dto;
+  }
 }

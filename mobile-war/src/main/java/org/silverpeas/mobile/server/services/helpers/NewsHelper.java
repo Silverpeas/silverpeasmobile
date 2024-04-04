@@ -208,6 +208,7 @@ public class NewsHelper {
     news.setTitle(n.getPublication().getTitle());
     news.setDescription(n.getPublication().getDescription());
     news.setUpdateDate(sdf.format(n.getLastUpdateDate()));
+    news.setContent(n.getContent());
     news.setDraft(n.getPublication().isDraft());
     news.setVisible(n.getPublication().isVisible());
     news.setIdNews(n.getId());

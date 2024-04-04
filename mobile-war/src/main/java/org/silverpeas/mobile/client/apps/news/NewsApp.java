@@ -27,17 +27,14 @@ package org.silverpeas.mobile.client.apps.news;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
-import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.apps.news.events.app.AbstractNewsAppEvent;
-import org.silverpeas.mobile.client.apps.news.events.app.NewsAppEventHandler;
-import org.silverpeas.mobile.client.apps.news.events.app.NewsCreateEvent;
-import org.silverpeas.mobile.client.apps.news.events.app.NewsLoadEvent;
+import org.silverpeas.mobile.client.apps.news.events.app.*;
 import org.silverpeas.mobile.client.apps.news.events.pages.NewsLoadedEvent;
 import org.silverpeas.mobile.client.apps.news.events.pages.NewsSavedEvent;
+import org.silverpeas.mobile.client.apps.news.events.pages.OneNewsLoadedEvent;
 import org.silverpeas.mobile.client.apps.news.pages.NewsPage;
 import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
@@ -110,6 +107,44 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       }
     };
     action.attempt();
+  }
+
+  @Override
+  public void loadOneNews(OneNewsLoadEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<NewsDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceNews().getNewsByPubId(event.getPublication().getInstanceId(), event.getPublication().getId(), this);
+      }
+
+      @Override
+      public void onSuccess(Method method, NewsDTO newsDTO) {
+        super.onSuccess(method, newsDTO);
+        EventBus.getInstance().fireEvent(new OneNewsLoadedEvent(newsDTO));
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void updateNews(NewsUpdateEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceNews().updateNews(event.getNews().getInstanceId(), event.getNews(), this);
+      }
+
+      @Override
+      public void onSuccess(Method method, Void unused) {
+        super.onSuccess(method, unused);
+        //TODO
+        Window.alert("saved");
+      }
+    };
+    action.attempt();
+
   }
 
   public void updateDisplay() {

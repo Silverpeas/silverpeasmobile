@@ -25,26 +25,24 @@
 package org.silverpeas.mobile.client.apps.news.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsCreateEvent;
+import org.silverpeas.mobile.client.apps.news.events.app.NewsUpdateEvent;
+import org.silverpeas.mobile.client.apps.news.events.app.OneNewsLoadEvent;
 import org.silverpeas.mobile.client.apps.news.events.pages.*;
 import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.Ckeditor;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.PopinInformation;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
@@ -68,7 +66,13 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
 
   @UiField Anchor submit;
 
+  @UiField
+  SpanElement submitTitle;
+
   ImageElement preview;
+  private boolean thumbnailIsSet = false;
+
+  private NewsDTO data = null;
 
   interface NewsEditPageUiBinder extends UiBinder<Widget, NewsEditPage> {
   }
@@ -89,23 +93,37 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
   @Override
   public void setApp(App app) {
     super.setApp(app);
-    //TODO : mandatory case
-    String mandatory = app.getApplicationInstance().getParamters().get("thumbnailMandatory");
-    if (Boolean.parseBoolean(mandatory)) {
+    if (isThumbnailMandatory()) {
       thumbnailContainer.addClassName("mandatory");
     }
   }
 
+  private boolean isThumbnailMandatory() {
+    String mandatory = getApp().getApplicationInstance().getParameters().get("thumbnailMandatory");
+    return mandatory.equalsIgnoreCase("yes");
+  }
+
+  public void setPublication(PublicationDTO publication) {
+    EventBus.getInstance().fireEvent(new OneNewsLoadEvent(publication));
+  }
+
   @UiHandler("submit")
   protected void save(ClickEvent event) {
-    NewsDTO dto = new NewsDTO();
-    dto.setTitle(title.getText());
-    dto.setDescription(description.getText());
-    dto.setImportant(important.getValue());
-    dto.setContent(Ckeditor.getCurrentData());
-    dto.setVignette(preview.getSrc());
-    NewsCreateEvent createEvent = new NewsCreateEvent(dto);
-    EventBus.getInstance().fireEvent(createEvent);
+    if (!submit.getElement().hasClassName("formIncomplete")) {
+      if (data == null) {
+        NewsDTO dto = new NewsDTO();
+        dto.setTitle(title.getText());
+        dto.setDescription(description.getText());
+        dto.setImportant(important.getValue());
+        dto.setContent(Ckeditor.getCurrentData());
+        dto.setVignette(preview.getSrc());
+        NewsCreateEvent createEvent = new NewsCreateEvent(dto);
+        EventBus.getInstance().fireEvent(createEvent);
+      } else {
+        NewsUpdateEvent updateEvent = new NewsUpdateEvent(data);
+        EventBus.getInstance().fireEvent(updateEvent);
+      }
+    }
   }
   @Override
   public void onNewsSaved(NewsSavedEvent event) {
@@ -118,6 +136,28 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
     }
   }
 
+  @Override
+  public void onOneNewsLoaded(OneNewsLoadedEvent event) {
+    this.data = event.getNews();
+    title.setText(data.getTitle());
+    description.setText(data.getDescription());
+    important.setValue(data.getImportant());
+
+    thumbnailContainer.setInnerHTML("");
+    thumbnailContainer.removeClassName("thumbnail");
+    thumbnailContainer.removeClassName("mandatory");
+    preview = Document.get().createImageElement();
+    preview.setSrc(data.getVignette());
+    preview.setId("preview");
+    thumbnailIsSet=true;
+    thumbnailContainer.appendChild(preview);
+    Ckeditor.setCurrentData(data.getContent());
+
+    submitTitle.setInnerText(msg.edit());
+
+    validateForm();
+  }
+
   @UiHandler("title")
   protected void changeTitle(ChangeEvent event) {
     validateForm();
@@ -125,6 +165,9 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
 
   private boolean validateForm() {
     boolean valid = !title.getText().isEmpty();
+    if (isThumbnailMandatory()) {
+      valid = valid && thumbnailIsSet;
+    }
     if (valid) {
       submit.getElement().removeClassName("formIncomplete");
     } else {
@@ -141,6 +184,8 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
     preview.setId("preview");
     thumbnailContainer.appendChild(preview);
     previewFile(thumbnail.getElement(), preview);
+    thumbnailIsSet = true;
+    validateForm();
   }
 
   public static native void previewFile(Element thumbnail, ImageElement v) /*-{

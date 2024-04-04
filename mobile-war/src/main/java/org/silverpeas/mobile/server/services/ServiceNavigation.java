@@ -68,10 +68,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -599,6 +596,7 @@ public class ServiceNavigation extends AbstractRestWebService {
     ApplicationInstanceDTO dto = getApplicationInstanceDTO(instanceId);
     if (dto == null) throw new NotFoundException();
     dto.setExtraId(localId);
+    populateParameters(dto.getType(), dto.getId() , dto);
     return dto;
   }
 
@@ -671,7 +669,20 @@ public class ServiceNavigation extends AbstractRestWebService {
     dto.setType(app.getName());
     dto.setOrderNum(app.getOrderNum());
     dto.setPersonnal(personal);
+
+    populateParameters(app.getName(), app.getId(), dto);
+
     return dto;
+  }
+
+  private void populateParameters(String name, String id, ApplicationInstanceDTO dto) {
+    Map<String, String> params = new HashMap<String, String>();
+    if (name.equals("quickinfo")) {
+      String value = "";
+      value = getMainSessionController().getComponentParameterValue(id, "thumbnailMandatory");
+      params.put("thumbnailMandatory", value);
+    }
+    dto.setParameters(params);
   }
 
   private ApplicationInstanceDTO populate(ComponentInstLight app,boolean personal) {
@@ -755,11 +766,7 @@ public class ServiceNavigation extends AbstractRestWebService {
         dto.setPublicationSharing(0);
         dto.setFileSharing(0);
       }
-    } else if (app.getName().equals("quickinfo")) {
-      String value = "";
-      value = getMainSessionController().getComponentParameterValue(app.getId(), "thumbnailMandatory");
-      dto.getParamters().put("thumbnailMandatory", value);
-    }
+    } else populateParameters(app.getName(), app.getId(), dto);
 
     return dto;
   }

@@ -70,6 +70,20 @@ public class ServiceNews extends AbstractRestWebService {
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
   private OrganizationController organizationController = OrganizationController.get();
 
+  @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("update")
+  public void updateNews(NewsDTO news) {
+
+    News n = QuickInfoService.get().getNews(news.getIdNews());
+    n.setTitle(news.getTitle());
+    n.setImportant(news.getImportant());
+    n.setDescription(news.getDescription());
+    n.setContentToStore(news.getContent());
+    n.setUpdaterId(getUser().getId());
+    QuickInfoService.get().update(n, null, null, true);
+  }
+
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("create")
@@ -104,9 +118,7 @@ public class ServiceNews extends AbstractRestWebService {
       List<FileItem> items = new ArrayList<>();
       items.add(fi);
       ThumbnailController.processThumbnail(new ResourceReference(n2.getPublicationId(), componentId), items);
-
       n2.markAsModified();
-      //n2.setPublished();
       service.update(n2, null, null, false);
       return NewsHelper.getInstance().populate(n2);
     } catch (Exception e) {
@@ -133,6 +145,16 @@ public class ServiceNews extends AbstractRestWebService {
     List<NewsDTO> newsDTO = NewsHelper.getInstance().populate(news, managerAccess);
     return newsDTO;
   }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("byPubId/{pubId}")
+  public NewsDTO getNewsByPubId(@PathParam("appId") String appId, @PathParam("pubId") String pubId) {
+    News n = QuickInfoService.get().getNewsByForeignId(pubId);
+    NewsDTO n2 = NewsHelper.getInstance().populate(n);
+    return n2;
+  }
+
 
   private boolean isManagerOrPublisher(final String[] profiles) {
     for (String profile : profiles) {

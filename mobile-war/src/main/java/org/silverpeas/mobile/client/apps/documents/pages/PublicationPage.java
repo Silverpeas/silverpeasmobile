@@ -31,6 +31,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -41,12 +42,10 @@ import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPubli
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsNextPublicationEvent;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsPublishEvent;
 import org.silverpeas.mobile.client.apps.documents.events.pages.publication.*;
-import org.silverpeas.mobile.client.apps.documents.pages.widgets.AddFileButton;
-import org.silverpeas.mobile.client.apps.documents.pages.widgets.DraftOutButton;
-import org.silverpeas.mobile.client.apps.documents.pages.widgets.LinkedPublicationItem;
-import org.silverpeas.mobile.client.apps.documents.pages.widgets.ShareButton;
+import org.silverpeas.mobile.client.apps.documents.pages.widgets.*;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import org.silverpeas.mobile.client.apps.news.pages.NewsEditPage;
 import org.silverpeas.mobile.client.apps.notifications.pages.widgets.NotifyButton;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Html5Utils;
@@ -99,6 +98,8 @@ public class PublicationPage extends PageContent
   private NotifyButton notification = new NotifyButton();
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
 
+  private EditButton edit = new EditButton();
+
   private SpeakButton speak = new SpeakButton();
 
   private AddFileButton buttonImport = new AddFileButton();
@@ -137,6 +138,7 @@ public class PublicationPage extends PageContent
     content.setId("content");
     buttonImport.setId("import");
     buttonDraftOut.setId("publish");
+    edit.setId("edit");
     content.getStyle().setDisplay(Style.Display.NONE);
     EventBus.getInstance().addHandler(AbstractPublicationPagesEvent.TYPE, this);
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
@@ -200,6 +202,19 @@ public class PublicationPage extends PageContent
     if (canImport) {
       buttonImport.init(event.getPublication().getInstanceId(), event.getPublication().getId(), true);
       addActionShortcut(buttonImport);
+
+      if (event.getType().equals(ContentsTypes.News.name())) {
+        edit.setCallback(new Command() {
+          @Override
+          public void execute() {
+            NewsEditPage page = new NewsEditPage();
+            page.setApp(getApp());
+            page.setPublication(event.getPublication());
+            page.show();
+          }
+        });
+        addActionMenu(edit);
+      }
     }
 
     if (publication.isDraft() && event.isCanPublish()) {

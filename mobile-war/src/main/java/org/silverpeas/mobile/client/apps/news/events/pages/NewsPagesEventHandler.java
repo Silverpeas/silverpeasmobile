@@ -30,4 +30,6 @@ public interface NewsPagesEventHandler extends EventHandler{
 	void onNewsLoad(NewsLoadedEvent event);
 
     void onNewsSaved(NewsSavedEvent newsSavedEvent);
+
+    void onOneNewsLoaded(OneNewsLoadedEvent oneNewsLoadedEvent);
 }

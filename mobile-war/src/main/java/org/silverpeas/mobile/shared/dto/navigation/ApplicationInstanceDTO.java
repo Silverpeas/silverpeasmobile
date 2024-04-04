@@ -27,7 +27,6 @@ package org.silverpeas.mobile.shared.dto.navigation;
 import org.silverpeas.mobile.shared.dto.RightDTO;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -44,7 +43,7 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   private int publicationSharing;
   private int fileSharing;
 
-  private HashMap<String, String> parameters = new HashMap<>();
+  private Map<String, String> parameters;
 
   private boolean personnal;
 
@@ -119,7 +118,11 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
     this.personnal = personnal;
   }
 
-  public Map<String, String> getParamters() {
+  public void setParameters(Map<String, String> parameters) {
+    this.parameters = parameters;
+  }
+
+  public Map<String, String> getParameters() {
     return parameters;
   }
 }
