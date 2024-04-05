@@ -91,6 +91,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     description.getElement().setAttribute("rows", "6");
     submit.getElement().addClassName("formIncomplete");
     Ckeditor.createEditor(newsContent);
+    thumbnail.getElement().setAttribute("accept", "image/*");
   }
 
   @Override
