@@ -75,13 +75,18 @@ public class ServiceNews extends AbstractRestWebService {
   @Path("update")
   public void updateNews(NewsDTO news) {
 
-    News n = QuickInfoService.get().getNews(news.getIdNews());
-    n.setTitle(news.getTitle());
-    n.setImportant(news.getImportant());
-    n.setDescription(news.getDescription());
-    n.setContentToStore(news.getContent());
-    n.setUpdaterId(getUser().getId());
-    QuickInfoService.get().update(n, null, null, true);
+    try {
+      News n = QuickInfoService.get().getNews(news.getIdNews());
+      n.setTitle(news.getTitle());
+      n.setImportant(news.getImportant());
+      n.setDescription(news.getDescription());
+      n.setContentToStore(news.getContent());
+      n.setUpdaterId(getUser().getId());
+      setVignette(news, n);
+      QuickInfoService.get().update(n, null, null, false);
+    } catch (Exception e) {
+      throw new WebApplicationException(e);
+    }
   }
 
   @POST
@@ -111,19 +116,23 @@ public class ServiceNews extends AbstractRestWebService {
       n2.setContentToStore(news.getContent());
 
       // vignette
-      File f = DataURLHelper.createPictureFromUrlData(news.getVignette(), n2.getComponentInstanceId()+"-"+n2.getId());
-      DiskFileItemFactory factory = new DiskFileItemFactory();
-      FileItem fi = factory.createItem("WAIMGVAR0", "image/" + f.getName().substring(f.getName().lastIndexOf(".")), false, f.getAbsolutePath());
-      Streams.copy(new FileInputStream(f), fi.getOutputStream(), true);
-      List<FileItem> items = new ArrayList<>();
-      items.add(fi);
-      ThumbnailController.processThumbnail(new ResourceReference(n2.getPublicationId(), componentId), items);
+      setVignette(news, n2);
       n2.markAsModified();
       service.update(n2, null, null, false);
       return NewsHelper.getInstance().populate(n2);
     } catch (Exception e) {
       throw new WebApplicationException(e);
     }
+  }
+
+  private void setVignette(NewsDTO news, News n2) throws Exception {
+    File f = DataURLHelper.createPictureFromUrlData(news.getVignette(), n2.getComponentInstanceId()+"-"+ n2.getId());
+    DiskFileItemFactory factory = new DiskFileItemFactory();
+    FileItem fi = factory.createItem("WAIMGVAR0", "image/" + f.getName().substring(f.getName().lastIndexOf(".")), false, f.getAbsolutePath());
+    Streams.copy(new FileInputStream(f), fi.getOutputStream(), true);
+    List<FileItem> items = new ArrayList<>();
+    items.add(fi);
+    ThumbnailController.processThumbnail(new ResourceReference(n2.getPublicationId(), componentId), items);
   }
 
   private Period getPeriod(Date begin, Date end) {

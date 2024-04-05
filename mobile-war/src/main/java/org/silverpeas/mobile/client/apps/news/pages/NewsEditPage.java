@@ -111,20 +111,27 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
   protected void save(ClickEvent event) {
     if (!submit.getElement().hasClassName("formIncomplete")) {
       if (data == null) {
-        NewsDTO dto = new NewsDTO();
-        dto.setTitle(title.getText());
-        dto.setDescription(description.getText());
-        dto.setImportant(important.getValue());
-        dto.setContent(Ckeditor.getCurrentData());
-        dto.setVignette(preview.getSrc());
+        NewsDTO dto = populate(data);
         NewsCreateEvent createEvent = new NewsCreateEvent(dto);
         EventBus.getInstance().fireEvent(createEvent);
       } else {
+        data = populate(data);
         NewsUpdateEvent updateEvent = new NewsUpdateEvent(data);
         EventBus.getInstance().fireEvent(updateEvent);
       }
     }
   }
+
+  private NewsDTO populate(NewsDTO dto) {
+    if (dto == null) dto = new NewsDTO();
+    dto.setTitle(title.getText());
+    dto.setDescription(description.getText());
+    dto.setImportant(important.getValue());
+    dto.setContent(Ckeditor.getCurrentData());
+    dto.setVignette(preview.getSrc());
+    return dto;
+  }
+
   @Override
   public void onNewsSaved(NewsSavedEvent event) {
     if (event.isInError()) {
@@ -140,6 +147,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
   public void onOneNewsLoaded(OneNewsLoadedEvent event) {
     this.data = event.getNews();
     title.setText(data.getTitle());
+    setPageTitle(data.getTitle());
     description.setText(data.getDescription());
     important.setValue(data.getImportant());
 
@@ -180,6 +188,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
   void upload(ChangeEvent event) {
     thumbnailContainer.setInnerHTML("");
     thumbnailContainer.removeClassName("thumbnail");
+    thumbnailContainer.removeClassName("mandatory");
     preview = Document.get().createImageElement();
     preview.setId("preview");
     thumbnailContainer.appendChild(preview);

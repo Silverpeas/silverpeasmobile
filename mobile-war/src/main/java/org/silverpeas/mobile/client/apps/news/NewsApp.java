@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.news;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -139,8 +138,13 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       @Override
       public void onSuccess(Method method, Void unused) {
         super.onSuccess(method, unused);
-        //TODO
-        Window.alert("saved");
+        EventBus.getInstance().fireEvent(new NewsSavedEvent(false, null));
+      }
+
+      @Override
+      public void onFailure(Method method, Throwable t) {
+        super.onFailure(method, t);
+        EventBus.getInstance().fireEvent(new NewsSavedEvent(true, null));
       }
     };
     action.attempt();

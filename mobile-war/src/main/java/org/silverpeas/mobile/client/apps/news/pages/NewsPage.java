@@ -91,13 +91,19 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler, GedN
 
   @Override
   public void onNewsLoad(final NewsLoadedEvent event) {
-    news.clear();
 
-    RightDTO r = event.getApplicationInstance().getRights();
-    if (r.getManager() || r.getPublisher()) {
-      addActionShortcut(buttonCreate);
+    if (news.isEmpty()) {
+      RightDTO r = event.getApplicationInstance().getRights();
+      if (r.getManager() || r.getPublisher()) {
+        addActionShortcut(buttonCreate);
+      }
+      addActionMenu(favorite);
+      favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), getPageTitle());
+      addActionMenu(share);
+      share.init(getPageTitle(), getPageTitle(), LinksManager.createApplicationPermalink(instanceId));
     }
 
+    news.clear();
     List<NewsDTO> newsDTOList = event.getNews();
     int i = 1;
     int max = newsDTOList.size();
@@ -108,10 +114,6 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler, GedN
       instanceId = newsDTO.getInstanceId();
       i++;
     }
-    addActionMenu(favorite);
-    favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), getPageTitle());
-    addActionMenu(share);
-    share.init(getPageTitle(), getPageTitle(), LinksManager.createApplicationPermalink(instanceId));
   }
 
   @Override
