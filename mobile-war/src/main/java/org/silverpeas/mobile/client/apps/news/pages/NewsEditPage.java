@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -45,7 +46,7 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
-public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
+public class NewsEditPage extends PageContent implements NewsPagesEventHandler, ClickHandler {
 
   private static NewsEditPageUiBinder uiBinder = GWT.create(NewsEditPageUiBinder.class);
 
@@ -59,7 +60,9 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
 
   @UiField CheckBox important;
 
-  @UiField DivElement newsContent, thumbnailContainer;
+  @UiField DivElement newsContent;
+
+  @UiField FlowPanel thumbnailContainer;
 
   @UiField
   FileUpload thumbnail;
@@ -69,7 +72,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
   @UiField
   SpanElement submitTitle;
 
-  ImageElement preview;
+  Image preview;
   private boolean thumbnailIsSet = false;
 
   private NewsDTO data = null;
@@ -94,7 +97,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
   public void setApp(App app) {
     super.setApp(app);
     if (isThumbnailMandatory()) {
-      thumbnailContainer.addClassName("mandatory");
+      thumbnailContainer.getElement().addClassName("mandatory");
     }
   }
 
@@ -128,7 +131,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
     dto.setDescription(description.getText());
     dto.setImportant(important.getValue());
     dto.setContent(Ckeditor.getCurrentData());
-    dto.setVignette(preview.getSrc());
+    dto.setVignette(preview.getUrl());
     return dto;
   }
 
@@ -151,14 +154,15 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
     description.setText(data.getDescription());
     important.setValue(data.getImportant());
 
-    thumbnailContainer.setInnerHTML("");
-    thumbnailContainer.removeClassName("thumbnail");
-    thumbnailContainer.removeClassName("mandatory");
-    preview = Document.get().createImageElement();
-    preview.setSrc(data.getVignette());
-    preview.setId("preview");
+    thumbnail.setVisible(false);
+    thumbnailContainer.getElement().removeClassName("thumbnail");
+    thumbnailContainer.getElement().removeClassName("mandatory");
+    preview = new Image();
+    preview.setUrl(data.getVignette());
+    preview.getElement().setId("preview");
     thumbnailIsSet=true;
-    thumbnailContainer.appendChild(preview);
+    thumbnailContainer.add(preview);
+    preview.addClickHandler(this);
     Ckeditor.setCurrentData(data.getContent());
 
     submitTitle.setInnerText(msg.edit());
@@ -186,18 +190,25 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler {
 
   @UiHandler("thumbnail")
   void upload(ChangeEvent event) {
-    thumbnailContainer.setInnerHTML("");
-    thumbnailContainer.removeClassName("thumbnail");
-    thumbnailContainer.removeClassName("mandatory");
-    preview = Document.get().createImageElement();
-    preview.setId("preview");
-    thumbnailContainer.appendChild(preview);
-    previewFile(thumbnail.getElement(), preview);
+    thumbnailContainer.getElement().removeClassName("thumbnail");
+    thumbnailContainer.getElement().removeClassName("mandatory");
+    if (preview == null) preview = new Image();
+    preview.getElement().setId("preview");
+    preview.addClickHandler(this);
+    thumbnailContainer.add(preview);
+    previewFile(thumbnail.getElement(), preview.getElement());
     thumbnailIsSet = true;
+    thumbnail.setVisible(false);
     validateForm();
   }
 
-  public static native void previewFile(Element thumbnail, ImageElement v) /*-{
+  @Override
+  public void onClick(ClickEvent clickEvent) {
+    // manage cover change
+    thumbnail.click();
+  }
+
+  public static native void previewFile(Element thumbnail, Element v) /*-{
     var file = thumbnail.files[0];
     var reader = new FileReader();
     if (file) {
