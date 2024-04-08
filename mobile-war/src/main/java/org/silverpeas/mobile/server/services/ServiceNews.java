@@ -119,7 +119,7 @@ public class ServiceNews extends AbstractRestWebService {
       setVignette(news, n2);
       n2.markAsModified();
       service.update(n2, null, null, false);
-      return NewsHelper.getInstance().populate(n2);
+      return NewsHelper.getInstance().populate(n2, true);
     } catch (Exception e) {
       throw new WebApplicationException(e);
     }
@@ -160,7 +160,7 @@ public class ServiceNews extends AbstractRestWebService {
   @Path("byPubId/{pubId}")
   public NewsDTO getNewsByPubId(@PathParam("appId") String appId, @PathParam("pubId") String pubId) {
     News n = QuickInfoService.get().getNewsByForeignId(pubId);
-    NewsDTO n2 = NewsHelper.getInstance().populate(n);
+    NewsDTO n2 = NewsHelper.getInstance().populate(n, false);
     return n2;
   }
 

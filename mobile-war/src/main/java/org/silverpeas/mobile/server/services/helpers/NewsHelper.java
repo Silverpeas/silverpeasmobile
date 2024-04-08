@@ -202,7 +202,7 @@ public class NewsHelper {
     return news;
   }
 
-  public NewsDTO populate(News n) {
+  public NewsDTO populate(News n, boolean resizeImage) {
     NewsDTO news = new NewsDTO();
     news.setId(n.getPublication().getId());
     news.setTitle(n.getPublication().getTitle());
@@ -213,7 +213,7 @@ public class NewsHelper {
     news.setVisible(n.getPublication().isVisible());
     news.setIdNews(n.getId());
     try {
-      news.setVignette(getBase64ImageData(n.getPublication().getInstanceId(), n.getPublication()));
+      news.setVignette(getBase64ImageData(n.getPublication().getInstanceId(), n.getPublication(), resizeImage));
     } catch(Exception e) {e.printStackTrace();}
     news.setInstanceId(n.getPublication().getInstanceId());
     return news;
@@ -223,7 +223,7 @@ public class NewsHelper {
     List<NewsDTO> dtos = new ArrayList<NewsDTO>();
     if (news != null) {
       for (News n : news) {
-        NewsDTO dto = populate(n);
+        NewsDTO dto = populate(n, true);
         dto.setManagable(managerAccess);
         dtos.add(dto);
       }
@@ -231,7 +231,7 @@ public class NewsHelper {
     return dtos;
   }
 
-  public NewsDTO populate(PublicationDetail pub) {
+  public NewsDTO populate(PublicationDetail pub, boolean resizeImage) {
     NewsDTO news = new NewsDTO();
     news.setId(pub.getId());
     news.setTitle(pub.getTitle());
@@ -240,17 +240,17 @@ public class NewsHelper {
     news.setDraft(pub.isDraft());
     news.setVisible(pub.isVisible());
     try {
-      news.setVignette(getBase64ImageData(pub.getInstanceId(), pub));
+      news.setVignette(getBase64ImageData(pub.getInstanceId(), pub, resizeImage));
     } catch(Exception e) {SilverLogger.getLogger(this).error(e);}
     news.setInstanceId(pub.getInstanceId());
     return news;
   }
 
-  public List<NewsDTO> populatePub(List<PublicationDetail> pubs, boolean managerAccess) {
+  public List<NewsDTO> populatePub(List<PublicationDetail> pubs, boolean managerAccess, boolean resizeImage) {
     List<NewsDTO> dtos = new ArrayList<NewsDTO>();
     if (pubs != null) {
       for (PublicationDetail pub : pubs) {
-        NewsDTO dto = populate(pub);
+        NewsDTO dto = populate(pub, resizeImage);
         dto.setManagable(managerAccess);
         dtos.add(dto);
       }
@@ -259,11 +259,11 @@ public class NewsHelper {
   }
 
 
-  private String getBase64ImageData(String instanceId, PublicationDetail pub) throws Exception {
+  private String getBase64ImageData(String instanceId, PublicationDetail pub, boolean resize) throws Exception {
     if (pub.getImage().contains("GalleryInWysiwyg")) {
       return convertSpImageUrlToDataUrl(pub.getImage());
     } else {
-      File f = getActuThumb(instanceId, pub);
+      File f = getActuThumb(instanceId, pub, resize);
       FileInputStream is = new FileInputStream(f);
       byte[] binaryData = new byte[(int) f.length()];
       is.read(binaryData);
@@ -274,11 +274,15 @@ public class NewsHelper {
     }
   }
 
-  private File getActuThumb(String componentId,	PublicationDetail pub) throws IOException {
+  private File getActuThumb(String componentId,	PublicationDetail pub, boolean resize) throws IOException {
     String path = FileRepositoryManager.getAbsolutePath(componentId) + publicationSettings.getString("imagesSubDirectory", "fr") + File.separatorChar;
     path += pub.getImage();
     File originalFile = new File(path);
-    return resizeImage(originalFile);
+    if (resize) {
+      return resizeImage(originalFile);
+    } else {
+      return originalFile;
+    }
   }
 
   private File resizeImage(final File originalFile) {
