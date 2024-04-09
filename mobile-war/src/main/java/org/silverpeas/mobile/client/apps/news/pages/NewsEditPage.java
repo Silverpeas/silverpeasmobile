@@ -161,7 +161,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     if (cropped) {
       dto.setVignette(CropUtil.getCanvasData());
     } else {
-      dto.setVignette(preview.getUrl());
+      if (preview != null) dto.setVignette(preview.getUrl());
     }
     return dto;
   }

@@ -126,13 +126,15 @@ public class ServiceNews extends AbstractRestWebService {
   }
 
   private void setVignette(NewsDTO news, News n2) throws Exception {
-    File f = DataURLHelper.createPictureFromUrlData(news.getVignette(), n2.getComponentInstanceId()+"-"+ n2.getId());
-    DiskFileItemFactory factory = new DiskFileItemFactory();
-    FileItem fi = factory.createItem("WAIMGVAR0", "image/" + f.getName().substring(f.getName().lastIndexOf(".")), false, f.getAbsolutePath());
-    Streams.copy(new FileInputStream(f), fi.getOutputStream(), true);
-    List<FileItem> items = new ArrayList<>();
-    items.add(fi);
-    ThumbnailController.processThumbnail(new ResourceReference(n2.getPublicationId(), componentId), items);
+    if (news.getVignette() != null && !news.getVignette().isEmpty()) {
+      File f = DataURLHelper.createPictureFromUrlData(news.getVignette(), n2.getComponentInstanceId() + "-" + n2.getId());
+      DiskFileItemFactory factory = new DiskFileItemFactory();
+      FileItem fi = factory.createItem("WAIMGVAR0", "image/" + f.getName().substring(f.getName().lastIndexOf(".")), false, f.getAbsolutePath());
+      Streams.copy(new FileInputStream(f), fi.getOutputStream(), true);
+      List<FileItem> items = new ArrayList<>();
+      items.add(fi);
+      ThumbnailController.processThumbnail(new ResourceReference(n2.getPublicationId(), componentId), items);
+    }
   }
 
   private Period getPeriod(Date begin, Date end) {
