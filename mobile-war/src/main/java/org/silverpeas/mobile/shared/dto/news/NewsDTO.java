@@ -38,6 +38,8 @@ public class NewsDTO extends BaseDTO implements Serializable {
   private String updateDate;
   private String vignette;
   private String instanceId;
+  private String startDate;
+  private String endDate;
 
   private String content;
 
@@ -142,5 +144,29 @@ public class NewsDTO extends BaseDTO implements Serializable {
 
   public void setImportant(boolean important) {
     this.important = important;
+  }
+
+  public void setStartDate(String startDate) {
+    if (startDate != null) {
+      this.startDate = startDate.replaceAll("T", " ");
+    } else {
+      this.startDate = startDate;
+    }
+  }
+
+  public String getStartDate() {
+    return startDate;
+  }
+
+  public void setEndDate(String endDate) {
+    if (endDate != null) {
+      this.endDate = endDate.replaceAll("T", " ");
+    } else {
+      this.endDate = endDate;
+    }
+  }
+
+  public String getEndDate() {
+    return endDate;
   }
 }

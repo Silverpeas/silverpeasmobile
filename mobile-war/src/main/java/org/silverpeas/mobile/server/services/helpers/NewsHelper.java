@@ -54,6 +54,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalField;
 import java.util.*;
 
 /**
@@ -212,10 +215,13 @@ public class NewsHelper {
     news.setContent(n.getContent());
     news.setDraft(n.getPublication().isDraft());
     news.setVisible(n.getPublication().isVisible());
+
+    news.setStartDate(n.getVisibility().getPeriod().getStartDate().toString().replaceAll("Z", ""));
+    news.setEndDate(n.getVisibility().getPeriod().getEndDate().toString().replaceAll("Z", ""));
     news.setIdNews(n.getId());
     try {
       news.setVignette(getBase64ImageData(n.getPublication().getInstanceId(), n.getPublication(), resizeImage));
-    } catch(Exception e) {e.printStackTrace();}
+    } catch(Exception e) {SilverLogger.getLogger(this).error(e);}
     news.setInstanceId(n.getPublication().getInstanceId());
     return news;
   }

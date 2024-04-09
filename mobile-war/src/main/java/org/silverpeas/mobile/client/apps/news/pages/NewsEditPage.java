@@ -32,6 +32,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsCreateEvent;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsUpdateEvent;
@@ -55,7 +56,9 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
 
   @UiField
   HTMLPanel container;
-  @UiField TextBox title;
+
+  @UiField
+  TextBox title, startDate, endDate;
 
   @UiField TextArea description;
 
@@ -94,6 +97,8 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     submit.getElement().addClassName("formIncomplete");
     Ckeditor.createEditor(newsContent);
     thumbnail.getElement().setAttribute("accept", "image/*");
+    startDate.getElement().setAttribute("type", "datetime-local");
+    endDate.getElement().setAttribute("type", "datetime-local");
   }
 
   @Override
@@ -158,6 +163,8 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     dto.setDescription(description.getText());
     dto.setImportant(important.getValue());
     dto.setContent(Ckeditor.getCurrentData());
+    dto.setStartDate(startDate.getText());
+    dto.setEndDate(endDate.getText());
     if (cropped) {
       dto.setVignette(CropUtil.getCanvasData());
     } else {
@@ -173,6 +180,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
       popin.show();
     } else {
       Ckeditor.destroyEditor();
+      CropUtil.destroyCropTool();
       back();
     }
   }
@@ -197,6 +205,8 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     thumbnailContainer.add(preview);
     preview.addClickHandler(this);
     Ckeditor.setCurrentData(data.getContent());
+    startDate.getElement().setAttribute("value", data.getStartDate());
+    endDate.getElement().setAttribute("value", data.getEndDate());
 
     submitTitle.setInnerText(msg.edit());
 

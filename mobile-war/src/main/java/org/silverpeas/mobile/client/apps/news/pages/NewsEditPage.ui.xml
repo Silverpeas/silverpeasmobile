@@ -34,12 +34,21 @@
       <g:TextBox ui:field="title" styleName="title"/>
       <g:TextArea ui:field="description" styleName="description"/>
       <g:CheckBox ui:field="important" text="{msg.important}" styleName="important" value="true"/>
-      <g:Anchor ui:field="crop" stylePrimaryName="crop" title="${msg.crop}" visible="false"></g:Anchor>
+      <g:Anchor ui:field="crop" stylePrimaryName="crop" title="{msg.crop}" visible="false"></g:Anchor>
       <g:FlowPanel ui:field="thumbnailContainer" stylePrimaryName="thumbnail">
           <g:FileUpload ui:field="thumbnail" name="thumbnail"/>
       </g:FlowPanel>
 
       <div ui:field="newsContent"></div>
+
+      <div class="startDate">
+          <label><ui:text from="{msg.startDate}" /></label>
+          <g:TextBox ui:field="startDate"/>
+      </div>
+      <div class="endDate">
+          <label><ui:text from="{msg.endDate}" /></label>
+          <g:TextBox ui:field="endDate"/>
+      </div>
 
       <div class=" ui-controlgroup ui-controlgroup-horizontal">
           <div class="ui-controlgroup-controls ">

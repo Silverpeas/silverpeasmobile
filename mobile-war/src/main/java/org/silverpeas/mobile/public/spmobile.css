@@ -1999,6 +1999,24 @@ textarea.ui-input-text {
   display: block;
 }
 
+#newsForm .startDate, #newsForm .endDate {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  float: initial;
+}
+
+#newsForm .startDate label, #newsForm .endDate label {
+  display: inline-block;
+  width: 9em;
+}
+
+#newsForm .startDate input, #newsForm .endDate input {
+  line-height: 2em;
+  border: none;
+  border-radius: 2px;
+}
+
 .liste-news li img, .liste-annonces img {
   float: left;
   margin: 1em;

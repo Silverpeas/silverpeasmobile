@@ -48,6 +48,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -83,6 +84,7 @@ public class ServiceNews extends AbstractRestWebService {
       n.setContentToStore(news.getContent());
       n.setUpdaterId(getUser().getId());
       setVignette(news, n);
+      setPeriod(news, n);
       QuickInfoService.get().update(n, null, null, false);
     } catch (Exception e) {
       throw new WebApplicationException(e);
@@ -111,9 +113,10 @@ public class ServiceNews extends AbstractRestWebService {
       n.setDescription(news.getDescription());
       n.setCreatorId(getUser().getId());
       n.setUpdaterId(getUser().getId());
-      n.setVisibilityPeriod(getPeriod(new Date(), null));
       News n2 = service.create(n);
       n2.setContentToStore(news.getContent());
+
+      setPeriod(news, n2);
 
       // vignette
       setVignette(news, n2);
@@ -123,6 +126,15 @@ public class ServiceNews extends AbstractRestWebService {
     } catch (Exception e) {
       throw new WebApplicationException(e);
     }
+  }
+
+  private void setPeriod(NewsDTO news, News n2) throws ParseException {
+    Date start = new Date();
+    Date end = null;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    if (!news.getStartDate().isEmpty()) start = sdf.parse(news.getStartDate());
+    if (!news.getEndDate().isEmpty()) end = sdf.parse(news.getEndDate());
+    n2.setVisibilityPeriod(getPeriod(start, end));
   }
 
   private void setVignette(NewsDTO news, News n2) throws Exception {
