@@ -40,7 +40,7 @@
 
 
   <properties>
-    <gwtVersion>2.10.0</gwtVersion>
+    <gwtVersion>2.11.0</gwtVersion>
     <gwtMojoPluginVersion>2.10.0</gwtMojoPluginVersion>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
