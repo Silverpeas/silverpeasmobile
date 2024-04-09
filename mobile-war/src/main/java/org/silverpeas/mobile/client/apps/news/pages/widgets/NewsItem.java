@@ -83,7 +83,9 @@ public class NewsItem extends Composite implements ClickHandler {
         status = " ("+msg.notVisible()+")";
       }
     }
-    picto.setHTML("<h2><a href='#'>" + data.getTitle() + status + "</a></h2><img src='" + data.getVignette() + "'/>");
+    String vignette = data.getVignette();
+    if (vignette == null) vignette = "";
+    picto.setHTML("<h2><a href='javaScript:;'>" + data.getTitle() + status + "</a></h2><img src='" + vignette + "'/>");
   }
 
   public NewsDTO getData() {
