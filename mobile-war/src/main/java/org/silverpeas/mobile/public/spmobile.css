@@ -1943,6 +1943,19 @@ textarea.ui-input-text {
   margin-left: 2em;
 }
 
+#newsForm .crop {
+  margin-right: 2em;
+  float: right;
+  mask-image: url("icons/crop.svg");
+  background-color: black;
+  width: 24px;
+  height: 24px;
+}
+
+#newsForm .crop.cropping {
+  background-color: #3388cc;
+}
+
 #newsForm .thumbnail {
   width: calc(100vw - 4em);
   height: 100px;
@@ -1974,11 +1987,16 @@ textarea.ui-input-text {
   padding-top: 15px;
 }
 
-#newsForm #preview {
+#newsForm .previewContainer {
   width: calc(100vw - 4em);
   margin-top: 1em;
   margin-bottom: 1em;
   margin-left: 2em;
+}
+
+#newsForm #preview {
+  max-width: 100%;
+  display: block;
 }
 
 .liste-news li img, .liste-annonces img {
@@ -3341,4 +3359,8 @@ a.popin-btn {
 
 .ck-editor__editable_inline {
   min-height: 250px;
+}
+
+.ck-powered-by-balloon {
+  display: none !important;
 }

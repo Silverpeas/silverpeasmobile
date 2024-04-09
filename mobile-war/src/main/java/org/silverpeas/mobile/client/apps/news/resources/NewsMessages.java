@@ -43,4 +43,5 @@ public interface NewsMessages extends Messages {
   String notSaved();
 
   String edit();
+  String crop();
 }

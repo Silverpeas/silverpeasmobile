@@ -150,6 +150,9 @@
     }
   </script>
   <script type="text/javascript" src="<%=appUrl%>/spmobile/ckeditor/ckeditor.js"></script>
+  <link  href="<%=appUrl%>/spmobile/cropjs/cropper.min.css" rel="stylesheet">
+  <script type="text/javascript" src="<%=appUrl%>/spmobile/cropjs/cropper.min.js"></script>
+  <script type="text/javascript" src="<%=appUrl%>/spmobile/cropjs/spmobilecropper.js"></script>
 
   <%
     String css = resource.getString("styleSheet");

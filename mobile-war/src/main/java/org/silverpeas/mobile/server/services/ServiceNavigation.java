@@ -681,6 +681,10 @@ public class ServiceNavigation extends AbstractRestWebService {
       String value = "";
       value = getMainSessionController().getComponentParameterValue(id, "thumbnailMandatory");
       params.put("thumbnailMandatory", value);
+      value = getMainSessionController().getComponentParameterValue(id, "thumbnailWidthSize");
+      params.put("thumbnailWidthSize", value);
+      value = getMainSessionController().getComponentParameterValue(id, "thumbnailHeightSize");
+      params.put("thumbnailHeightSize", value);
     }
     dto.setParameters(params);
   }

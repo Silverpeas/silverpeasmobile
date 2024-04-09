@@ -39,6 +39,7 @@ import org.silverpeas.mobile.client.apps.news.events.app.OneNewsLoadEvent;
 import org.silverpeas.mobile.client.apps.news.events.pages.*;
 import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.Ckeditor;
+import org.silverpeas.mobile.client.common.CropUtil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.PopinInformation;
@@ -67,13 +68,14 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
   @UiField
   FileUpload thumbnail;
 
-  @UiField Anchor submit;
+  @UiField Anchor submit, crop;
 
   @UiField
   SpanElement submitTitle;
 
   Image preview;
   private boolean thumbnailIsSet = false;
+  private boolean cropped = false;
 
   private NewsDTO data = null;
 
@@ -107,8 +109,32 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     return mandatory.equalsIgnoreCase("yes");
   }
 
+  private float getRatio() {
+    String w = getApp().getApplicationInstance().getParameters().get("thumbnailWidthSize");
+    String h = getApp().getApplicationInstance().getParameters().get("thumbnailHeightSize");
+
+    if (!w.isEmpty() && !w.isEmpty()) {
+      return Integer.parseInt(w) / Integer.parseInt(h);
+    } else {
+      return 0;
+    }
+  }
+
   public void setPublication(PublicationDTO publication) {
     EventBus.getInstance().fireEvent(new OneNewsLoadEvent(publication));
+  }
+
+  @UiHandler("crop")
+  protected void crop(ClickEvent event) {
+    if (cropped) {
+      cropped = false;
+      crop.getElement().removeClassName("cropping");
+      CropUtil.destroyCropTool();
+    } else {
+      crop.getElement().addClassName("cropping");
+      cropped = true;
+      CropUtil.initCropTool(preview.getElement(), getRatio());
+    }
   }
 
   @UiHandler("submit")
@@ -132,7 +158,11 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     dto.setDescription(description.getText());
     dto.setImportant(important.getValue());
     dto.setContent(Ckeditor.getCurrentData());
-    dto.setVignette(preview.getUrl());
+    if (cropped) {
+      dto.setVignette(CropUtil.getCanvasData());
+    } else {
+      dto.setVignette(preview.getUrl());
+    }
     return dto;
   }
 
@@ -158,10 +188,12 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     thumbnail.setVisible(false);
     thumbnailContainer.getElement().removeClassName("thumbnail");
     thumbnailContainer.getElement().removeClassName("mandatory");
+    thumbnailContainer.getElement().addClassName("previewContainer");
     preview = new Image();
     preview.setUrl(data.getVignette());
     preview.getElement().setId("preview");
     thumbnailIsSet=true;
+    crop.setVisible(true);
     thumbnailContainer.add(preview);
     preview.addClickHandler(this);
     Ckeditor.setCurrentData(data.getContent());
@@ -193,6 +225,8 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
   void upload(ChangeEvent event) {
     thumbnailContainer.getElement().removeClassName("thumbnail");
     thumbnailContainer.getElement().removeClassName("mandatory");
+    thumbnailContainer.getElement().addClassName("previewContainer");
+
     if (preview == null) preview = new Image();
     preview.getElement().setId("preview");
     preview.addClickHandler(this);
@@ -200,6 +234,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
     previewFile(thumbnail.getElement(), preview.getElement());
     thumbnailIsSet = true;
     thumbnail.setVisible(false);
+    crop.setVisible(true);
     validateForm();
   }
 
