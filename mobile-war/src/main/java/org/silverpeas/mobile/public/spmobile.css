@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -34,17 +34,26 @@ html {
   scrollbar-width: none;
 }
 
-body.ui-panel-wrapper {
-  padding: 44px 0;
-  margin: 0;
-  background-color: #ececec;
-}
-
 body {
   font-size: 10pt;
   line-height: 1em;
   font-family: Open Sans, sans-serif;
   overscroll-behavior-y: contain;
+
+  --main-bg-color: #ececec;
+  --main-color : #7eb73b;
+  --main-border-color: #70a72e;
+  --main-font-color: #333333;
+  --white: #FFFFFF;
+  --black: #000000;
+  --main-flashy-color: #ec8001;
+  --secondary-color:#56a3d9;
+}
+
+body.ui-panel-wrapper {
+  padding: 44px 0;
+  margin: 0;
+  background-color: var(--main-bg-color);
 }
 
 input, select, textarea, button, .ui-btn {
@@ -213,7 +222,7 @@ legend, .ui-input-text input, .ui-input-search input {
 
 .ui-radio .ui-btn.ui-radio-on:after {
   background-image: none;
-  background-color: #fff;
+  background-color: var(--white);
   width: 8px;
   height: 8px;
   border-width: 5px;
@@ -221,7 +230,7 @@ legend, .ui-input-text input, .ui-input-search input {
 }
 
 .ui-alt-icon.ui-btn.ui-radio-on:after, .ui-alt-icon .ui-btn.ui-radio-on:after {
-  background-color: #000;
+  background-color: var(--black);
 }
 
 /* Loader */
@@ -236,8 +245,8 @@ legend, .ui-input-text input, .ui-input-search input {
 /* Bar: Toolbars, dividers, slider track */
 .ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit, html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit {
   background-color: #313131 /*{a-bar-background-color}*/;
-  border-color: #000000 /*{a-bar-border}*/;
-  color: #fffff /*{a-bar-color}*/;
+  border-color: var(--black) /*{a-bar-border}*/;
+  color: #fff /*{a-bar-color}*/;
   font-weight: bold;
 }
 
@@ -248,26 +257,26 @@ legend, .ui-input-text input, .ui-input-search input {
 
 /* Page and overlay */
 .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
-  background-color: #ececec /*{a-page-background-color}*/;
+  background-color: var(--main-bg-color) /*{a-page-background-color}*/;
   border-color: #bbbbbb /*{a-page-border}*/;
-  color: #333 /*{a-page-color}*/;
+  color: var(--main-font-color) /*{a-page-color}*/;
 }
 
 /* Body: Read-only lists, text inputs, collapsible content */
 .ui-body-a, .ui-page-theme-a .ui-body-inherit, html .ui-bar-a .ui-body-inherit, html .ui-body-a .ui-body-inherit, html body .ui-group-theme-a .ui-body-inherit, html .ui-panel-page-container-a {
-  background-color: #ececec /*{a-body-background-color}*/;
+  background-color: var(--main-bg-color) /*{a-body-background-color}*/;
   border-color: #dddddd /*{a-body-border}*/;
-  color: #333333 /*{a-body-color}*/;
+  color: var(--main-font-color) /*{a-body-color}*/;
  }
 
 .ui-page-theme-a .ui-body-inherit.filter-contacts {
-  background-color: #FFF;
+  background-color: var(--white);
   background-image: url('icons/search.svg');
   background-repeat: no-repeat;
 }
 
 .ui-page-theme-a textarea.ui-body-inherit {
-  background-color: #fff /*{a-body-background-color}*/;
+  background-color: var(--white) /*{a-body-background-color}*/;
 }
 
 /* Links */
@@ -286,7 +295,7 @@ legend, .ui-input-text input, .ui-input-search input {
 .ui-page-theme-a .ui-btn:visited, html .ui-bar-a .ui-btn:visited, html .ui-body-a .ui-btn:visited, html body .ui-group-theme-a .ui-btn:visited, html head + body .ui-btn.ui-btn-a:visited {
   background-color: #f6f6f6 /*{a-bup-background-color}*/;
   border-color: #dddddd /*{a-bup-border}*/;
-  color: #333333 /*{a-bup-color}*/;
+  color: var(--main-font-color) /*{a-bup-color}*/;
  }
 
 /* Button up */
@@ -294,21 +303,21 @@ html .ui-header .ui-btn {
   background-color: #2c2c2c;
   background: linear-gradient(#4c4c4c, #2c2c2c) repeat scroll 0 0 #2c2c2c;
   border-color: #090909 /*{a-bup-border}*/;
-  color: #FFF /*{a-bup-color}*/;
-  text-shadow: 0 1px 0 #000;
+  color: var(--white) /*{a-bup-color}*/;
+  text-shadow: 0 1px 0 var(--black);
 }
 
 html .ui-header .ui-btn:hover {
   background-color: #4c4c4c;
   background: linear-gradient(#2c2c2c, #4c4c4c) repeat scroll 0 0 #4c4c4c;
   border-color: #090909 /*{a-bup-border}*/;
-  color: #FFF /*{a-bup-color}*/;
-  text-shadow: 0 1px 0 #000;
+  color: var(--white) /*{a-bup-color}*/;
+  text-shadow: 0 1px 0 var(--black);
 }
 
 html .ui-controlgroup-controls .ui-btn-up-c {
   background-color: #EEEEEE
-  background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #EEEEEE;
+  background: linear-gradient(var(--white), #F1F1F1) repeat scroll 0 0 #EEEEEE;
 }
 
 .ui-controlgroup, fieldset.ui-controlgroup {
@@ -320,7 +329,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-image: none;
   background-color: #e8e8e8 /*{a-bdown-background-color}*/;
   border-color: #dddddd /*{a-bdown-border}*/;
-  color: #333333 /*{a-bdown-color}*/;
+  color: var(--main-font-color) /*{a-bdown-color}*/;
  }
 
 /* Active button */
@@ -331,23 +340,23 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .ui-page-theme-a .ui-flipswitch-active, html .ui-bar-a .ui-flipswitch-active, html .ui-body-a .ui-flipswitch-active, html body .ui-group-theme-a .ui-flipswitch-active, html body .ui-flipswitch.ui-bar-a.ui-flipswitch-active,
   /* Active slider track */
 .ui-page-theme-a .ui-slider-track .ui-btn-active, html .ui-bar-a .ui-slider-track .ui-btn-active, html .ui-body-a .ui-slider-track .ui-btn-active, html body .ui-group-theme-a .ui-slider-track .ui-btn-active, html body div.ui-slider-track.ui-body-a .ui-btn-active {
-  background-color: #7eb73b /*{a-active-background-color}*/;
-  border-color: #70a72e /*{a-active-border}*/;
-  color: #ffffff /*{a-active-color}*/;
+  background-color: var(--main-color) /*{a-active-background-color}*/;
+  border-color: var(--main-border-color) /*{a-active-border}*/;
+  color: var(--white) /*{a-active-color}*/;
 }
 
 /* Active radio button icon */
 .ui-page-theme-a .ui-radio-on:after, html .ui-bar-a .ui-radio-on:after, html .ui-body-a .ui-radio-on:after, html body .ui-group-theme-a .ui-radio-on:after, .ui-btn.ui-radio-on.ui-btn-a:after {
-  border-color: #7eb73b /*{a-active-background-color}*/;
+  border-color: var(--main-color) /*{a-active-background-color}*/;
 }
 
 /* Focus */
 .ui-page-theme-a .ui-btn:focus, html .ui-bar-a .ui-btn:focus, html .ui-body-a .ui-btn:focus, html body .ui-group-theme-a .ui-btn:focus, html head + body .ui-btn.ui-btn-a:focus,
   /* Focus buttons and text inputs with div wrap */
 .ui-page-theme-a .ui-focus, html .ui-bar-a .ui-focus, html .ui-body-a .ui-focus, html body .ui-group-theme-a .ui-focus, html head + body .ui-btn-a.ui-focus, html head + body .ui-body-a.ui-focus {
-  -webkit-box-shadow: 0 0 12px #7eb73b /*{a-active-background-color}*/;
-  -moz-box-shadow: 0 0 12px #7eb73b /*{a-active-background-color}*/;
-  box-shadow: 0 0 12px #7eb73b /*{a-active-background-color}*/;
+  -webkit-box-shadow: 0 0 12px var(--main-color) /*{a-active-background-color}*/;
+  -moz-box-shadow: 0 0 12px var(--main-color) /*{a-active-background-color}*/;
+  box-shadow: 0 0 12px var(--main-color) /*{a-active-background-color}*/;
 }
 
 /* Structure */
@@ -396,7 +405,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .ui-listview > li:nth-child(odd) a, .list-contacts > li:nth-child(odd), .list-notifications > li:nth-child(odd), .list-resources > li:nth-child(odd) {
-  background-color: #fff;
+  background-color: var(--white);
 }
 
 .ui-listview > li:nth-child(even) a, .list-contacts > li:nth-child(even), .list-notifications > li:nth-child(even), .list-resources > li:nth-child(even) {
@@ -425,7 +434,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #header,
 #navigation-footer {
-  background-color: black;
+  background-color: var(--black);
   height: 46px;
   border-bottom: 2px solid #151515;
   position: fixed;
@@ -445,7 +454,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   text-align: center;
   flex: 1;
   transform: scale(1.5);
-  fill: #7eb73b;
+  fill: var(--main-color);
 }
 
 #navigation-footer .btn-list-navigation {
@@ -469,7 +478,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 #header h1 {
-  color: #fff;
+  color: var(--white);
   font-size: 1.1em;
   font-weight: normal;
   left: 50px;
@@ -498,7 +507,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 /* HOME */
 .ui-panel-wrapper {
-  background-color: #ececec;
+  background-color: var(--main-bg-color);
 }
 
 .ui-page-content {
@@ -655,7 +664,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 /***** MENU****/
 #silverpeas-navmenu-panel {
   padding: 0;
-  color: #333333;
+  color: var(--main-font-color);
   background-color: #f4f4f4;
   position: fixed;
   font-size: 0.8em;
@@ -724,7 +733,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border: none;
   font-size: 1.25em;
   padding-left: 0.5em;
-  color: #333333;
+  color: var(--main-font-color);
 }
 
 #actions-menu > :first-child, #navmenu-panel > :first-child, #personals-apps > :first-child {
@@ -779,7 +788,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   list-style-type: none;
   display: flex;
   align-items: center;
-  fill: #7eb73b;
+  fill: var(--main-color);
 }
 
 #actions-menu li span svg {
@@ -789,7 +798,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #actions-menu li a {
   text-decoration: none;
-  color: #333333;
+  color: var(--main-font-color);
   display: block;
   padding-bottom: 0.5em;
   padding-top: 0.5em;
@@ -799,7 +808,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 
 #menu-principal li a strong {
-  color: #333333;
+  color: var(--main-font-color);
 }
 
 #btn-find-document a {
@@ -971,8 +980,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 .media-thumb .ui-thumb {
   overflow: hidden;
   display: block;
-  border: 3px solid #FFF;
-  background-color: white !important;
+  border: 3px solid var(--white);
+  background-color: var(--white) !important;
   box-shadow: 0 2px 10px 0 rgba(0,0,0,0.3);
 }
 
@@ -990,7 +999,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   line-height: 1em;
   background-color: #f6f6f6;
   width: 100%;
-  color: black;
+  color: var(--black);
 }
 
 audio::-webkit-media-controls-enclosure {
@@ -1022,7 +1031,7 @@ audio::-webkit-media-controls-enclosure {
 
 /**** Publication - media ***********/
 #publication, #contacts, #update-statut, #a-media, #notification, #edit-notification, #event, #send-message {
-  background-color: #ECECEC;
+  background-color: var(--main-bg-color);
   padding: 1em 0;
 }
 
@@ -1079,8 +1088,8 @@ audio::-webkit-media-controls-enclosure {
 }
 
 .cadrePhoto {
-  background-color: #333;
-  background: linear-gradient(#343434, #000000) repeat scroll 0 0 #343434;
+  background-color: var(--main-font-color);
+  background: linear-gradient(#343434, var(--black)) repeat scroll 0 0 #343434;
   text-align: center;
   padding: 2em;
 }
@@ -1105,7 +1114,7 @@ audio::-webkit-media-controls-enclosure {
 .list-resources li,
 .list-reservations li,
 .list-detail-event {
-  background-color: #FFF;
+  background-color: var(--white);
   border-bottom: 1px solid #e0e0e0;
   padding: 0;
   margin: 0;
@@ -1141,7 +1150,7 @@ audio::-webkit-media-controls-enclosure {
 }
 
 #comments, .elts-pub {
-  background-color: #FFF;
+  background-color: var(--white);
 
   padding: 0;
   margin: 0;
@@ -1178,7 +1187,7 @@ audio::-webkit-media-controls-enclosure {
 	width:20px;
 	height:20px;
 	display:block;
-  background: #fff url(packImagesNavigation.png) 0 -1959px no-repeat;
+  background: var(--white) url(packImagesNavigation.png) 0 -1959px no-repeat;
   position:absolute;
   top:0.75em;
   left:1em;
@@ -1306,7 +1315,7 @@ audio::-webkit-media-controls-enclosure {
 
 #attachments li a {
   text-decoration: none;
-  color: #000;
+  color: var(--black);
   display: flex;
 }
 
@@ -1390,7 +1399,7 @@ li > #operations {
 #download {
   background : transparent url(icons/download.svg) no-repeat;
   background-position: 50% 50%;
-  background-color:#ececec;
+  background-color:var(--main-bg-color);
   width: 30px;
   height: 30px;
   border-radius: 0.25em;
@@ -1401,7 +1410,7 @@ li > #operations {
 #view {
   background: transparent url(icons/view.svg) no-repeat;
   background-position: 50% 50%;
-  background-color:#ececec;
+  background-color:var(--main-bg-color);
   width: 30px;
   height: 30px;
   border-radius: 0.25em;
@@ -1412,7 +1421,7 @@ li > #operations {
 #share {
   background: transparent url(icons/share.svg) no-repeat;
   background-position: 50% 50%;
-  background-color:#ececec;
+  background-color:var(--main-bg-color);
   width: 30px;
   height: 30px;
   border-radius: 0.25em;
@@ -1423,7 +1432,7 @@ li > #operations {
 #notify {
   background: transparent url(icons/send.svg) no-repeat;
   background-position: 50% 50%;
-  background-color:#ececec;
+  background-color:var(--main-bg-color);
   width: 30px;
   height: 30px;
   border-radius: 0.25em;
@@ -1486,7 +1495,7 @@ li > #operations {
 #edit-notification .ui-input-text.destinataires {
   line-height: 1.4em;
   position: relative;
-  color: #000;
+  color: var(--black);
   font-size: 0.8em;
   min-height: 3.4em;
 }
@@ -1500,7 +1509,7 @@ li > #operations {
   top: 0.5em;
   left: 1.6em;
   font-size: 1.4em;
-  color: #333;
+  color: var(--main-font-color);
 }
 
 #edit-notification .ui-input-text.destinataires .btn-modif {
@@ -1516,7 +1525,7 @@ li > #operations {
 #notification .list-notifications > li.selected, .list-resources > li.selected, #tasks > li.selected,
 .notifications > li.selected, .shares > li.selected, .favoris > li.selected {
   border-left: 8px solid #7eb73a;
-  color: #000
+  color: var(--black)
 }
 
 #notification .list-notifications {
@@ -1543,7 +1552,7 @@ li > #operations {
   padding-right: 1%;
   padding-left: 1%;
   line-height: 2.5em;
-  background-color: #FFF;
+  background-color: var(--white);
   font-size: 0.8em;
 }
 
@@ -1602,7 +1611,7 @@ input.filter-contacts {
 }
 
 .ui-page-theme-a .tel-link {
-  color: #ec8001;
+  color: var(--main-flashy-color);
   text-decoration: none;
   white-space: nowrap;
   margin-right: 1em;
@@ -1613,11 +1622,11 @@ input.filter-contacts {
 }
 
 .tel-link svg {
-  fill:#ec8001;
+  fill:var(--main-flashy-color);
 }
 
 .sms-link svg {
-  fill:#ec8001;
+  fill:var(--main-flashy-color);
 }
 
 /***** STATUT & ADD COMMENT***/
@@ -1646,7 +1655,7 @@ input.filter-contacts {
   height: 0;
   border-left: 1px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid #FFF;
+  border-bottom: 10px solid var(--white);
 }
 
 #champs-statut textarea,
@@ -1665,7 +1674,7 @@ input.filter-contacts {
   background: linear-gradient(#7eb73a, #6fa800) repeat scroll 0 0 #6fa800;
   border: 1px solid #6fa800;
   padding: 1em;
-  color: #fff !important;
+  color: var(--white) !important;
   text-decoration: none;
   display: block;
   font-weight: bold;
@@ -1682,7 +1691,7 @@ input.filter-contacts {
 .ui-page-theme-a .btn-validate:hover {
   background-color: #7eb73a;
   background: linear-gradient(#6fa800, #7eb73a) repeat scroll 0 0 #7eb73a;
-  color: #FFF;
+  color: var(--white);
 }
 
 .ui-btn-right {
@@ -1709,7 +1718,7 @@ input.filter-contacts {
   -webkit-appearance: none;
   box-sizing: border-box;
   outline: 0;
-  background: #FFF;
+  background: var(--white);
 }
 
 textarea.ui-input-text {
@@ -1764,7 +1773,7 @@ textarea.ui-input-text {
 
 #page-login #Login, #page-login #Password {
   box-sizing: border-box;
-  background: #FFF url(bg-input-login.png) 0 0 no-repeat;
+  background: var(--white) url(bg-input-login.png) 0 0 no-repeat;
   padding-left: 2em;
   border: 1px solid #dddddd;
   width: 70vw;
@@ -1775,14 +1784,14 @@ textarea.ui-input-text {
 }
 
 #page-login #Password {
-  background: #FFF url(bg-input-password.png) 0 0 no-repeat;
+  background: var(--white) url(bg-input-password.png) 0 0 no-repeat;
 }
 
 #page-login #DomainId, .filter-list {
   width: 70vw;
   box-sizing: border-box;
   padding: 0.5em;
-  background-color: white;
+  background-color: var(--white);
   border-radius: 0.25em;
   border: none;
   box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
@@ -1824,7 +1833,7 @@ textarea.ui-input-text {
 /************ PAGE D'ERREUR **************/
 
 #error {
-  background: #333 url(fond-casse.jpg) 0 0 no-repeat;
+  background: var(--main-font-color) url(fond-casse.jpg) 0 0 no-repeat;
 }
 
 #mascotte {
@@ -1837,7 +1846,7 @@ textarea.ui-input-text {
   min-height: 220px;
   padding-right: 130px;
   padding-left: 1em;
-  color: #FFF
+  color: var(--white)
 }
 
 #error .ui-btn-right {
@@ -1849,7 +1858,7 @@ textarea.ui-input-text {
   border: 1px solid #d3d3d3;
   border-radius: 3px;
   width:calc( 100% - 4em );
-  background-color: #FFF;
+  background-color: var(--white);
   color: #666;
   padding: 5px;
   outline-style: none;
@@ -1926,7 +1935,7 @@ textarea.ui-input-text {
 }
 
 #newsForm .title::placeholder {
-  color: #ec8001;
+  color: var(--main-flashy-color);
 }
 
 #newsForm .description {
@@ -1947,7 +1956,7 @@ textarea.ui-input-text {
   margin-right: 2em;
   float: right;
   mask-image: url("icons/crop.svg");
-  background-color: black;
+  background-color: var(--black);
   width: 24px;
   height: 24px;
 }
@@ -1963,12 +1972,12 @@ textarea.ui-input-text {
   margin-bottom: 1em;
   margin-left: 2em;
   background: url('icons/add_photo_alternate.svg') center no-repeat;
-  background-color: white;
+  background-color: var(--white);
   background-size: 10%;
 }
 
 #newsForm .thumbnail.mandatory {
-  background-color: #ec8001 !important;
+  background-color: var(--main-flashy-color) !important;
 }
 
 #newsForm .thumbnail input {
@@ -2040,7 +2049,7 @@ textarea.ui-input-text {
 }
 
 #content {
-  background-color: #FFF;
+  background-color: var(--white);
   border-top: 1px solid #e0e0e0;
   padding: 0;
   margin: 0;
@@ -2059,7 +2068,7 @@ textarea.ui-input-text {
 }
 
 .forms .form-title {
-  color: #333333;
+  color: var(--main-font-color);
   font-size: 1.3em;
   font-weight: bold;
   margin: 0 0 5px;
@@ -2224,7 +2233,7 @@ form .forms .fields > li:nth-child(even) {
   padding: 0;
   margin: 0;
   width: 10em;
-  background-color: #FFF;
+  background-color: var(--white);
   z-index: 100;
   list-style-type: none;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
@@ -2235,7 +2244,7 @@ form .forms .fields > li:nth-child(even) {
 }
 
 #action-bloc a {
-  color: #333;
+  color: var(--main-font-color);
   line-height: 200%;
   font-size: 0.9em;
   display: block;
@@ -2362,11 +2371,11 @@ form .forms .fields > li:nth-child(even) {
 .ui-listview.favoris .category .category-icon {
   position: absolute;
   right: 0.5em;
-  fill: black;
+  fill: var(--black);
 }
 
 .ui-listview.favoris .category a {
-  background-color: #7eb73b;
+  background-color: var(--main-color);
   padding-left: 1em;
 }
 
@@ -2385,7 +2394,7 @@ form .forms .fields > li:nth-child(even) {
 	border:2px solid #f9e98e;
 	padding: 50px;
 	border-radius:8px;
-	color: #333;
+	color: var(--main-font-color);
 	width: calc( 90% - 104px );
 	margin:0 5%;
 	text-align: center;
@@ -2400,7 +2409,7 @@ form .forms .fields > li:nth-child(even) {
 a.popin-btn {
   background:#ec9c01;
   text-decoration: none;
-  color: #FFFFFF;
+  color: var(--white);
   border-radius:5px;
   padding:0.5em 1em;
   margin: 1em;
@@ -2408,7 +2417,7 @@ a.popin-btn {
 
 #real-element {
   padding: 0 0.5em;
-  background-color: #ececec;
+  background-color: var(--main-bg-color);
 }
 
 #real-element img {
@@ -2467,7 +2476,7 @@ a.popin-btn {
 .formOnline-form  .gwt-Label ,
 .forms-list   .gwt-Label{
 	padding-bottom:0.5em;
-	color:#333;
+	color:var(--main-font-color);
 	font-size:1.1em;
 }
 
@@ -2699,7 +2708,7 @@ a.popin-btn {
 }
 
 .ui-list-graduate > li:nth-child(odd) {
-  background-color: #ececec;
+  background-color: var(--main-bg-color);
 }
 
 .ui-list-graduate li.open {
@@ -2725,7 +2734,7 @@ a.popin-btn {
 }
 
 #list-events .ui-listview li {
-  background-color: #FFF;
+  background-color: var(--white);
   display: table-row;
 }
 
@@ -2748,7 +2757,7 @@ a.popin-btn {
 
 #list-events .ui-listview .date-event strong {
   font-weight: 500;
-  color: #000;
+  color: var(--black);
   white-space: nowrap;
 }
 
@@ -2786,7 +2795,7 @@ a.popin-btn {
 }
 
 #eventForm .title::placeholder {
-  color: #ec8001;
+  color: var(--main-flashy-color);
 }
 
 #eventForm .description {
@@ -2836,7 +2845,7 @@ a.popin-btn {
 #eventForm .calendars > select, #eventForm .frequency > select {
   box-sizing: border-box;
   padding: 0.5em;
-  background-color: white;
+  background-color: var(--white);
   border-radius: 0.25em;
   border: none;
 }
@@ -2850,7 +2859,7 @@ a.popin-btn {
 }
 
 #eventForm .participants > a {
-  background-color: white;
+  background-color: var(--white);
   min-height: 4em;
   display: inline-block;
   width: calc(100vw - 4em);
@@ -2860,11 +2869,11 @@ a.popin-btn {
 }
 
 #eventForm .participants > a .selection {
-  color: #333333;
+  color: var(--main-font-color);
 }
 
 .formMandatoryField {
-  color: #ec8001;
+  color: var(--main-flashy-color);
 }
 
 .formIncomplete {
@@ -2898,14 +2907,14 @@ a.popin-btn {
 }
 
 .classified_price {
-  color: #56a3d9;
+  color: var(--secondary-color);
   font-weight:bold;
   font-size: 1.15em;
 }
 
 .liste-annonces li h2{
   font-size:1em;
-  color:#333333;
+  color:var(--main-font-color);
   font-weight:500;
   padding:0;
   margin:0.25em 0;
@@ -2918,7 +2927,7 @@ a.popin-btn {
 .liste-annonces div.thumbnail {
   width:125px;
   height:125px;
-  background-color:#ececec;
+  background-color:var(--main-bg-color);
   float:left;
   text-align:center;
   margin:0 0.50em;
@@ -2967,8 +2976,8 @@ a.popin-btn {
 }
 
 #classified .classified_price {
-  color:#FFF;
-  background-color:#56a3d9;
+  color:var(--white);
+  background-color:var(--secondary-color);
   border-radius:6px;
   padding:0.4em 0.5em ;
   font-weight: 500;
@@ -3005,7 +3014,7 @@ a.popin-btn {
   right:0;
   left:0;
   text-align:center;
-  color:#fff;
+  color:var(--white);
   text-shadow: 1px 1px 1px rgba(150, 150, 150, 1);
 }
 
@@ -3031,7 +3040,7 @@ a.popin-btn {
 
 .liste-questions.forms-list .label{
   display:block;
-  color:#000;
+  color:var(--black);
   text-decoration:underline;
 }
 
@@ -3069,12 +3078,12 @@ a.popin-btn {
   padding-left: 0;
 }
 .survey .liste-enquete li:first-child {
-  background-color:#333 !important;
-  color:#fff;
+  background-color:var(--main-font-color) !important;
+  color:var(--white);
 }
 .survey .liste-enquete li {
   display:table-row;
-  background-color: #FFF;
+  background-color: var(--white);
 }
 .survey .liste-enquete li:nth-child(2n+1){
   background-color: #f9f9f9;
@@ -3105,7 +3114,7 @@ a.popin-btn {
 .sharesbox .ui-listview.shares  .share-name {
   font-size:90%;
   display:block;
-  color: #70a72e;
+  color: var(--main-border-color);
   user-select: none;
 }
 
@@ -3137,7 +3146,7 @@ a.popin-btn {
 }
 
 .ui-listview.shares  li:nth-child(even){
-  background-color: #FFF;
+  background-color: var(--white);
 }
 
 /********* favorites **************/
@@ -3176,13 +3185,13 @@ a.popin-btn {
 }
 .notificationBox .ui-listview.notifications  .notification-source {
 	font-size:90%;
-    color: #70a72e;
+    color: var(--main-border-color);
     user-select: none;
 }
 
 .notificationBox .ui-listview.notifications .notification-title{
 	margin-bottom:0.75em;
-    color: #000;
+    color: var(--black);
     user-select: none;
 }
 
@@ -3208,7 +3217,7 @@ a.popin-btn {
 }
 
 .ui-listview.notifications  li:nth-child(even){
-	background-color: #FFF;
+	background-color: var(--white);
 }
 
 .markAsRead-notification {
@@ -3229,7 +3238,7 @@ a.popin-btn {
   width: 90vw;
   box-sizing: border-box;
   padding-left: 5vw;
-  background-color: white;
+  background-color: var(--white);
   border-radius: 0.25em;
   border: none;
   box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
@@ -3242,7 +3251,7 @@ a.popin-btn {
 
 #resourcesManager .list-resources li.category {
 	font-weight: 600;
-	color: white;
+	color: var(--white);
 	background-color: #6fa800;
 }
 #resourcesManager .list-resources li .gwt-HTML{
@@ -3281,7 +3290,7 @@ a.popin-btn {
 #resourcesManager .reservationRessources li.validated,
 #reservationDetail .reservationRessources li.validated {
   background-color: #87bd41;
-  color: #FFF;
+  color: var(--white);
   margin-bottom: 3px;
   border-radius: 5px;
   padding: 3px 5px;
@@ -3290,7 +3299,7 @@ a.popin-btn {
 #resourcesManager .reservationRessources li.waitingForValidation,
 #reservationDetail .reservationRessources li.waitingForValidation {
   background-color: #a7a7a7;
-  color: #FFF;
+  color: var(--white);
   margin-bottom: 3px;
   border-radius: 5px;
   padding: 3px 5px;
@@ -3336,7 +3345,7 @@ a.popin-btn {
 
 /**** Cookies information page ****/
 .infosTextContainer {
-  background-color: white;
+  background-color: var(--white);
   min-height: 25vh;
   padding: 2em;
   margin-left: 1em;
@@ -3363,7 +3372,7 @@ a.popin-btn {
 
 #champs-password input {
   display: block;
-  background-color: white;
+  background-color: var(--white);
   height: 2em;
   width: calc(100vw - 2em);
 }
