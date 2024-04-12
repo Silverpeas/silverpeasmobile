@@ -6,7 +6,7 @@ import com.google.gwt.dom.client.Element;
 public class Ckeditor {
     public static native void createEditor(Element element) /*-{
         $wnd.ClassicEditor.create(element, {
-            toolbar: { items : [ 'undo', 'redo', 'heading', 'bold', 'italic','-', 'outdent', 'indent', 'numberedList', 'bulletedList', 'link', 'insertTable' ], shouldNotGroupWhenFull: true}}
+            toolbar: { items : [ 'undo', 'redo', 'heading', 'bold', 'italic', 'outdent', 'indent', 'numberedList', 'bulletedList', 'link', 'blockQuote', 'insertTable' ], shouldNotGroupWhenFull: true}}
         );
     }-*/;
 
