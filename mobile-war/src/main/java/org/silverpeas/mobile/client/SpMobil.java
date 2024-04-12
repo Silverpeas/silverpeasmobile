@@ -137,9 +137,9 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     return userProfile;
   }
 
-  public static void setUser(final DetailUserDTO user) {
+  public static void setUser(final DetailUserDTO user, boolean displayPersonnalApps) {
     SpMobil.user = user;
-    displayPersonnalApps();
+    if(displayPersonnalApps) displayPersonnalApps();
   }
 
 
@@ -391,7 +391,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           @Override
           public void onSuccess(Method method, DetailUserDTO detailUserDTO) {
             super.onSuccess(method, detailUserDTO);
-            setUser(detailUserDTO);
+            setUser(detailUserDTO, true);
             setUserProfile(UserProfileDTO.getBean(
                     LocalStorageHelper.getInstance().load(AuthentificationManager.USER_PROFIL, IUserProfile.class)));
             if (getUserProfile() == null) {

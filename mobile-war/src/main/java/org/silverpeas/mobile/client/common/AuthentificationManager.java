@@ -90,7 +90,7 @@ public class AuthentificationManager {
     } catch (InvalidCipherTextException e) {
       EventBus.getInstance().fireEvent(new ErrorEvent(e));
     }
-    SpMobil.setUser(user);
+    SpMobil.setUser(user, false);
 
     FullUserDTO u = new FullUserDTO(login, encryptedPassword, domainId, user);
 
@@ -122,7 +122,7 @@ public class AuthentificationManager {
 
   public FullUserDTO loadUser() {
     FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.getInstance().load(USER_CONNECTED_KEY, IFullUser.class));
-    SpMobil.setUser(user);
+    SpMobil.setUser(user, false);
     UserProfileDTO profil =
         UserProfileDTO.getBean(LocalStorageHelper.getInstance().load(USER_PROFIL, IUserProfile.class));
     SpMobil.setUserProfile(profil);
@@ -229,7 +229,7 @@ public class AuthentificationManager {
                 @Override
                 public void onSuccess(final Method method, final DetailUserDTO user) {
                   super.onSuccess(method, user);
-                  SpMobil.setUser(user);
+                  SpMobil.setUser(user, true);
 
                   ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
                     @Override
