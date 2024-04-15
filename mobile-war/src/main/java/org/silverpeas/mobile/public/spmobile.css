@@ -935,8 +935,13 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 }
 
-.folder-galery a {
+ul>.folder-galery {
+  display: flex;
+  align-items: center !important;
+}
 
+.folder-galery a {
+  width: 100%;
 }
 
 .publication a {
