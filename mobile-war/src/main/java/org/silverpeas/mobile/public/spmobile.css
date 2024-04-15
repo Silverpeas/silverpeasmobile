@@ -2941,12 +2941,14 @@ a.popin-btn {
   margin:0.50em 0 ;
 }
 
-.filter-classifield {
-  text-align: right;
+.filter-classifield .filter-list {
+  width: calc(100% - 6em);
 }
 
 .filter-classifield span {
-  padding-right: 1em;
+  width: 5em;
+  display: inline-block;
+  padding-bottom: 1em;
 }
 
 .liste-annonces div.thumbnail img{
