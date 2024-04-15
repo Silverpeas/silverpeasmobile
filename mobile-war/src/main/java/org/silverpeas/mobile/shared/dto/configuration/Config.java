@@ -58,7 +58,7 @@ public class Config {
     c.setShortCutsToolsDisplay(true);
     c.setFreeZoneDisplay(true);
     c.setFreeZoneThinDisplay(true);
-    c.setFontSize(10);
+    c.setFontSize(12);
     c.setStandard(true);
     c.setGrayscale(false);
     c.setSepia(false);
