@@ -62,7 +62,7 @@ public class ActionButton extends ActionItem {
         this.actionCode = actionCode;
         this.actionLabel = actionLabel;
         this.state = state;
-        action.setText(actionLabel);
+        action.setTitle(actionLabel);
     }
 
     @UiHandler("action")

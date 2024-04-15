@@ -27,7 +27,7 @@
 
     <ui:with field='msg' type='org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages'/>
 
-    <g:HTMLPanel tag="li" ui:field="container" styleName="">
+    <g:HTMLPanel tag="li" ui:field="container" styleName="add-workflow-demand">
         <g:Anchor styleName="" ui:field="action"/>
     </g:HTMLPanel>
 </ui:UiBinder>

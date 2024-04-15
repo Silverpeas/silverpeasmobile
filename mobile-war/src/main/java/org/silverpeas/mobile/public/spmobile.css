@@ -958,14 +958,14 @@ ul>.folder-galery {
   background-position-x: 0.5em;
 }
 
-.add-media, .add-file {
+.add-media, .add-file, .add-workflow-demand {
   height: 24px;
   width: 24px;
   filter: invert(1);
   background: url('icons/add.svg') no-repeat;
 }
 
-.add-media a, .add-file a {
+.add-media a, .add-file a, .add-workflow-demand a {
   height: 24px;
   width: 24px;
   display: block;
