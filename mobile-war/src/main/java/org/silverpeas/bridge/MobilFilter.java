@@ -111,7 +111,8 @@ public class MobilFilter implements Filter {
               !url.contains("LinkFile/Key")  &&
               !url.contains("Logout") &&
               !url.contains("FileServer/vignette") &&
-              !url.contains("FileServer/thumbnail") && redirect) {
+              !url.contains("FileServer/thumbnail") &&
+              !url.contains("GalleryInWysiwyg/dummy") && redirect) {
         String params = "";
         if (url.contains("Publication")) {
           String id = url.substring(url.lastIndexOf("/") + 1);
