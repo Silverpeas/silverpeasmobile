@@ -965,7 +965,15 @@ ul>.folder-galery {
   background: url('icons/add.svg') no-repeat;
 }
 
-.add-media a, .add-file a, .add-workflow-demand a {
+.book-resources {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/bookmark_add.svg') no-repeat;
+
+}
+
+.add-media a, .add-file a, .add-workflow-demand a, .book-resources a {
   height: 24px;
   width: 24px;
   display: block;
@@ -1133,7 +1141,7 @@ audio::-webkit-media-controls-enclosure {
 .list-reservations li > *,
 .list-detail-event  > * {
   padding:1em;
-  padding-left: 0.5em;
+  padding-left: 1em;
 }
 
 #linkedPublications li {
@@ -1147,7 +1155,7 @@ audio::-webkit-media-controls-enclosure {
 .ui-listview.list-comments > li p {
   line-height: 100%;
   white-space: normal;
-  font-size: 0.90em;
+  font-size: 1em;
 }
 
 .list-comments .date {
@@ -3266,7 +3274,7 @@ a.popin-btn {
 } 
 
 #resourcesManager .list-reservations {
-  margin-top: 3em;
+  margin-top: 2em;
 }
 
 #resourcesManager .reservationDate {
@@ -3275,13 +3283,16 @@ a.popin-btn {
 	padding-bottom: 0.5em;
 }
 
+#resourcesManager .reservationDate svg {
+  vertical-align: middle;
+}
+
 #resourcesManager .reservationEvent {
 	padding-bottom:1em;
 }
 
 #resourcesManager ul .reservation {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  border-radius: 4px;
 }
 
 #resourcesManager ul .reservationRessources {
@@ -3299,8 +3310,8 @@ a.popin-btn {
   background-color: #87bd41;
   color: var(--white);
   margin-bottom: 3px;
-  border-radius: 5px;
-  padding: 3px 5px;
+  border-radius: 50px;
+  padding: 5px 10px;
 }
 
 #resourcesManager .reservationRessources li.waitingForValidation,
@@ -3308,13 +3319,12 @@ a.popin-btn {
   background-color: #a7a7a7;
   color: var(--white);
   margin-bottom: 3px;
-  border-radius: 5px;
-  padding: 3px 5px;
+  border-radius: 50px;
+  padding: 5px 10px;
 }
 
 #reservationDetail .field {
-  padding: 5px;
-  margin: 5px;
+  padding: 0.5em;
 }
 
 #reservationDetail {
@@ -3323,8 +3333,10 @@ a.popin-btn {
 }
 
 #reservationDetail .section {
-  background-color: #8080802b;
-  border-radius: 5px;
+  background-color: var(--white);
+  border-radius: 4px;
+  padding: 1em;
+  margin-bottom: 1em;
 }
 
 #reservationDetail ul.reservationRessources {

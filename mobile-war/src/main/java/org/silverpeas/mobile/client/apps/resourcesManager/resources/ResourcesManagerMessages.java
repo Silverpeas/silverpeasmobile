@@ -56,4 +56,6 @@ public interface ResourcesManagerMessages extends Messages {
   String deleteReservationConfirmation();
 
   String errorNoResource();
+
+  String newReservation();
 }

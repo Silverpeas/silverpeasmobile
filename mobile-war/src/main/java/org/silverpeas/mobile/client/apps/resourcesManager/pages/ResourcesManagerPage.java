@@ -92,7 +92,7 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
 
     addActionMenu(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
-    addActionMenu(addReservation);
+    addActionShortcut(addReservation);
   }
 
   private void displayList() {

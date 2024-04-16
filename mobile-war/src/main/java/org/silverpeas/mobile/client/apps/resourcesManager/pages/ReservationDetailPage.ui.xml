@@ -35,7 +35,7 @@
         <g:Label ui:field="labelTitle" stylePrimaryName="field"><ui:text from="{msg.event}"/></g:Label>
         <g:Label ui:field="labelStartDate" stylePrimaryName="field"><ui:text from="{msg.startDate}"/></g:Label>
         <g:Label ui:field="labelEndDate" stylePrimaryName="field"><ui:text from="{msg.endDate}"/></g:Label>
-        <g:Label stylePrimaryName="field"><ui:text from="{msg.reason}"/></g:Label>
+        <g:Label stylePrimaryName="field"><ui:text from="{msg.reason}"/> :</g:Label>
         <g:Label ui:field="reason" stylePrimaryName="field"></g:Label>
       </div>
       <div class="section">

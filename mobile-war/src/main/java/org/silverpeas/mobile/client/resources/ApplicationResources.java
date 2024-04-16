@@ -67,6 +67,10 @@ public interface ApplicationResources extends ClientBundle {
   @DataResource.MimeType("image/svg+xml")
   TextResource peoples();
 
+  @Source("icons/arrow_forward.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource arrowForward();
+
 
   /** Applications icons **/
 

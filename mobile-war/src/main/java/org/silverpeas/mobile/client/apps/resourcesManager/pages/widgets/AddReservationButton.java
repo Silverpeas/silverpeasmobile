@@ -41,7 +41,7 @@ public class AddReservationButton extends ActionItem {
   void displayReservationPage(ClickEvent event){
 
     ReservationPage page = new ReservationPage();
-    page.setPageTitle("Ajout reservation");
+    page.setPageTitle(msg.newReservation());
     page.show();
 
     // hide menu

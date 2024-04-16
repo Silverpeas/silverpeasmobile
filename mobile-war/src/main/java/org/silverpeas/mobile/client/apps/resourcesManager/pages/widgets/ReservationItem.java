@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.ReservationDetailPage;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
+import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationStatus;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
@@ -44,6 +45,7 @@ public class ReservationItem extends Composite implements ClickHandler {
 
   private ReservationDTO data;
   private static FavoriteItemUiBinder uiBinder = GWT.create(FavoriteItemUiBinder.class);
+  private ApplicationResources resources = GWT.create(ApplicationResources.class);
 
   @UiField
   HTML content;
@@ -68,7 +70,7 @@ public class ReservationItem extends Composite implements ClickHandler {
     this.data = data;
     String html = "";
     container.setStylePrimaryName("reservation");
-    html += "<div class='reservationDate'>" + data.getStartDate() + "&nbsp;&rarr;&nbsp;" + data.getEndDate() + "</div>";
+    html += "<div class='reservationDate'>" + data.getStartDate() + "&nbsp"+ resources.arrowForward().getText() +"&nbsp;" + data.getEndDate() + "</div>";
     html += "<div class='reservationEvent'>" + data.getEvenement() + "</div>";
     html += "<div><ul class='reservationRessources'>";
     for (ResourceDTO res : data.getResources()) {

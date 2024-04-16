@@ -27,7 +27,7 @@
 
     <ui:with field='msg' type='org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages'/>
 
-    <g:HTMLPanel tag="li" ui:field="container" styleName="">
-        <g:Anchor styleName="" ui:field="addReservation" text="{msg.addReservation}"/>
+    <g:HTMLPanel tag="li" ui:field="container" styleName="book-resources">
+        <g:Anchor styleName="" ui:field="addReservation" title="{msg.addReservation}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
