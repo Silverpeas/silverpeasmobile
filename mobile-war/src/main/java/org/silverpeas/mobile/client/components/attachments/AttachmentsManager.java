@@ -39,9 +39,10 @@ import org.silverpeas.mobile.client.components.IframePage;
  */
 public class AttachmentsManager {
 
-  public static void viewDocument(String id, String lang) {
+  public static void viewDocument(String id, String lang, String title) {
     IframePage page = new IframePage("/silverpeas/services/media/viewer/embed/pdf?documentId=" + id + "" +
             "&documentType=attachment&language=" + lang + "&embedPlayer=true");
+    page.setPageTitle(title);
     page.show();
   }
 

@@ -220,7 +220,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
           }
         });
     } else if (event.getContent().getType().equals(ContentsTypes.Attachment.name())) {
-      AttachmentsManager.viewDocument(event.getContent().getId(), event.getContent().getRole());
+      AttachmentsManager.viewDocument(event.getContent().getId(), event.getContent().getRole(), "");
     }
   }
 

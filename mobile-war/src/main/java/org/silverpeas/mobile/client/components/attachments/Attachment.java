@@ -206,7 +206,7 @@ public class Attachment extends Composite {
   }
 
   private void viewDocument() {
-    AttachmentsManager.viewDocument(data.getId(), data.getLang());
+    AttachmentsManager.viewDocument(data.getId(), data.getLang(), data.getTitle());
   }
 
   @UiHandler("share")

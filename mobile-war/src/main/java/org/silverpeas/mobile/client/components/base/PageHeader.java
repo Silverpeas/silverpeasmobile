@@ -75,7 +75,9 @@ public class PageHeader extends Composite {
 
   private void adjustTitle() {
     float offset = actionsShortcuts.listActions.getCount() * 2.5f;
-    title.setAttribute("style", "width : calc(100vw - 50px - 2.5em - "+offset+"em);");
+    float offset2 = 2.5f;
+    if (actionsMenu.isEmpty()) offset2 = 0f;
+    title.setAttribute("style", "width : calc(100vw - 50px - "+offset2+"em - "+offset+"em);");
   }
 
   public void removeActionShortcut(ActionItem action) {
@@ -141,6 +143,7 @@ public class PageHeader extends Composite {
 
   public void setPageTitle(String title) {
     this.title.setInnerHTML(title);
+    adjustTitle();
   }
 
   public int getHeight() {

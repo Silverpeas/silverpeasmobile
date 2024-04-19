@@ -1374,6 +1374,9 @@ audio::-webkit-media-controls-enclosure {
 #attachments li a span {
   display: block;
   padding-right:1em;
+  max-width: calc(100vw - 5em);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ops-open, .ops-open #share, .ops-open #download, .ops-open #view, .ops-open #notify {
