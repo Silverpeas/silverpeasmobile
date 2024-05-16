@@ -32,9 +32,11 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
 import org.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
 import org.silverpeas.mobile.client.apps.comments.events.pages.AbstractCommentsPagesEvent;
@@ -43,13 +45,17 @@ import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEve
 import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsPagesEventHandler;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.Comment;
 import org.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
+import org.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
+import org.silverpeas.mobile.shared.dto.TaskDTO;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,6 +73,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   @UiField Anchor addComment;
   @UiField TextArea newComment;
 
+  private DeleteButton buttonDelete = new DeleteButton();
   protected CommentsMessages msg = null;
   private String contentId, contentType, instanceId;
   private List<CommentDTO> comments;
@@ -78,6 +85,14 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractCommentsPagesEvent.TYPE, this);
     container.getElement().setId("publication");
+    buttonDelete.setId("delete-comment");
+    buttonDelete.setCallback(new Command() {
+      @Override
+      public void execute() {
+        getSelectedComment().getComment();
+        //TODO : call rest service
+      }
+    });
   }
 
   public void setContentInfos(final String contentId, final String instanceId, final String contentType) {
@@ -104,6 +119,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     commentsList.clear();
     for (CommentDTO comment : comments) {
       Comment c = new Comment();
+      c.setParent(this);
       c.setComment(comment);
       commentsList.add(c);
     }
@@ -137,5 +153,27 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     if (!addComment.getElement().hasClassName("inactif")) {
       EventBus.getInstance().fireEvent(new AddCommentEvent(contentId, instanceId, contentType, newComment.getText()));
     }
+  }
+
+  @Override
+  public void setSelectionMode(boolean selectionMode) {
+    super.setSelectionMode(selectionMode);
+    if (selectionMode) {
+      clearActions();
+      addActionShortcut(buttonDelete);
+      //TODO : add edit button
+    } else {
+      clearActions();
+    }
+  }
+
+  private Comment getSelectedComment() {
+    for (int i = 0; i < commentsList.getCount(); i++) {
+      Comment item = (Comment) commentsList.getWidget(i);
+      if (item.isSelected()) {
+        return item;
+      }
+    }
+    return null;
   }
 }

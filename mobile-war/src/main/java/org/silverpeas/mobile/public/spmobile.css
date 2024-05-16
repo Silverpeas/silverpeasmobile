@@ -1539,7 +1539,7 @@ li > #operations {
 }
 
 #notification .list-notifications > li.selected, .list-resources > li.selected, #tasks > li.selected,
-.notifications > li.selected, .shares > li.selected, .favoris > li.selected {
+.notifications > li.selected, .shares > li.selected, .favoris > li.selected, .list-comments > li.selected {
   border-left: 8px solid #7eb73a;
   color: var(--black)
 }

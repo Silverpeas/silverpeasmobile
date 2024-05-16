@@ -25,25 +25,37 @@
 package org.silverpeas.mobile.client.apps.comments.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import org.silverpeas.mobile.client.SpMobil;
+import org.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
+import org.silverpeas.mobile.client.components.base.widgets.SelectableItem;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 /**
  * @author: svu
  */
-public class Comment extends Composite {
+public class Comment extends SelectableItem {
   interface CommentUiBinder extends UiBinder<HTMLPanel, Comment> {
   }
 
+  @UiField HTMLPanel container;
+  @UiField Anchor link;
   @UiField SpanElement date, userName;
   @UiField ParagraphElement content;
-  @UiField Image avatar;
+  @UiField
+  ImageElement avatar;
 
   private CommentDTO comment;
 
@@ -52,11 +64,17 @@ public class Comment extends Composite {
   public Comment() {
     uiBinder.createAndBindUi(this);
     initWidget(uiBinder.createAndBindUi(this));
+    setMultiSelection(false);
+    setContainer(container);
   }
 
   public void setComment(final CommentDTO comment) {
     this.comment = comment;
     render();
+  }
+
+  public CommentDTO getComment() {
+    return comment;
   }
 
   private void render() {
@@ -68,6 +86,17 @@ public class Comment extends Composite {
       date.setInnerHTML(" - " + comment.getModificationDate());
     }
     userName.setInnerHTML(comment.getAuthor().getFullName());
-    avatar.setUrl(comment.getAuthor().getAvatar());
+    avatar.setSrc(comment.getAuthor().getAvatar());
+  }
+
+  @UiHandler("link")
+  protected void startTouch(TouchStartEvent event) {
+    //TODO : allow selection for manager
+    startTouch(event, comment.getAuthor().getId().equals(SpMobil.getUser().getId()));
+  }
+
+  @UiHandler("link")
+  protected void endTouch(TouchEndEvent event) {
+    endTouch(event, true, null);
   }
 }

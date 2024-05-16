@@ -16,8 +16,14 @@ public class SelectableItem extends Composite {
     private boolean onMove = false;
     private boolean unSelected = false;
 
+    private boolean multiSelection = true;
+
     private Timer timerSelection = null;
     private Timer timerScroll = null;
+
+    public void setMultiSelection(boolean multiSelection) {
+        this.multiSelection = multiSelection;
+    }
 
     public void setParent(PageContent page) {
         this.parent = page;
@@ -52,8 +58,10 @@ public class SelectableItem extends Composite {
                             parent.changeSelectionNumber(-1);
                             unSelected = true;
                         } else {
-                            container.getElement().addClassName("selected");
-                            parent.changeSelectionNumber(1);
+                            if (multiSelection) {
+                                container.getElement().addClassName("selected");
+                                parent.changeSelectionNumber(1);
+                            }
                         }
                     } else {
                         onMove = false;

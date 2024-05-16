@@ -24,14 +24,16 @@
 
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-  <g:HTMLPanel tag="li">
+  <g:HTMLPanel tag="li" ui:field="container">
+    <g:Anchor styleName="ui-btn ui-icon-carat-r" ui:field="link">
     <div>
       <span class="user-name">
-        <g:Image ui:field="avatar"></g:Image>
+        <img ui:field="avatar"></img>
         <span ui:field="userName"></span>
       </span>
       <span class="date" ui:field="date"/>
     </div>
     <p ui:field="content"></p>
+    </g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder> 
