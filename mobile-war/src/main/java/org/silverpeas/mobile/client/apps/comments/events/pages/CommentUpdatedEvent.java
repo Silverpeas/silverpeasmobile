@@ -24,11 +24,23 @@
 
 package org.silverpeas.mobile.client.apps.comments.events.pages;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
-public interface CommentsPagesEventHandler extends EventHandler {
-	void onLoadedComments(CommentsLoadedEvent event);
-    void onAddedComment(CommentAddedEvent event);
-    void onDeletedComment(CommentDeletedEvent event);
-    void onUpdatedComment(CommentUpdatedEvent event);
+public class CommentUpdatedEvent extends AbstractCommentsPagesEvent {
+
+	private CommentDTO comment;
+
+	public CommentUpdatedEvent(CommentDTO comment) {
+		super();
+		this.comment = comment;
+	}
+
+	@Override
+	protected void dispatch(CommentsPagesEventHandler handler) {
+		handler.onUpdatedComment(this);
+	}
+
+	public CommentDTO getComment() {
+		return comment;
+	}	
 }

@@ -22,13 +22,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.comments.events.pages;
+package org.silverpeas.mobile.client.apps.comments.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
-public interface CommentsPagesEventHandler extends EventHandler {
-	void onLoadedComments(CommentsLoadedEvent event);
-    void onAddedComment(CommentAddedEvent event);
-    void onDeletedComment(CommentDeletedEvent event);
-    void onUpdatedComment(CommentUpdatedEvent event);
+public class UpdateCommentEvent extends AbstractCommentsAppEvent {
+
+	private CommentDTO comment;
+
+	public UpdateCommentEvent(CommentDTO comment){
+		super();
+		this.comment = comment;
+	}
+	
+	@Override
+	protected void dispatch(CommentsAppEventHandler handler) {
+		handler.updateComment(this);
+	}
+
+    public CommentDTO getComment() {
+        return comment;
+    }
 }

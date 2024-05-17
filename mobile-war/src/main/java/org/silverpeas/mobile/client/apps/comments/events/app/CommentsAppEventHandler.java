@@ -30,4 +30,5 @@ public interface CommentsAppEventHandler extends EventHandler{
     void loadComments(CommentsLoadEvent event);
     void addComment(AddCommentEvent event);
     void deleteComment(DeleteCommentEvent event);
+    void updateComment(UpdateCommentEvent event);
 }

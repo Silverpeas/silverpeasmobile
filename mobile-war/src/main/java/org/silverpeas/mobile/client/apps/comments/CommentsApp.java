@@ -29,6 +29,7 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.comments.events.app.*;
 import org.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent;
 import org.silverpeas.mobile.client.apps.comments.events.pages.CommentDeletedEvent;
+import org.silverpeas.mobile.client.apps.comments.events.pages.CommentUpdatedEvent;
 import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.comments.pages.CommentsPage;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -130,8 +131,26 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
             }
         };
         action.attempt();
+    }
 
+    @Override
+    public void updateComment(UpdateCommentEvent event) {
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
 
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getRestServiceComment().updateComment(event.getComment().getComponentId(),
+                        event.getComment().getResourceType(), event.getComment().getResourceId(), event.getComment().getId(), event.getComment(), this);
+            }
+
+            @Override
+            public void onSuccess(Method method, CommentDTO comment) {
+                super.onSuccess(method, comment);
+                EventBus.getInstance().fireEvent(new CommentUpdatedEvent(event.getComment()));
+            }
+        };
+        action.attempt();
     }
 
     @Override

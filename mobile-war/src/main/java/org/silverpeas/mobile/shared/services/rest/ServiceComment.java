@@ -29,6 +29,7 @@ import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -57,4 +58,15 @@ public interface ServiceComment extends RestService {
                             @PathParam("contentId") String contentId,
                             @PathParam("commentId") String commentId,
                             MethodCallback<Void> callback);
+
+  @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("{componentId}/{contentType}/{contentId}/{commentId}")
+  public void updateComment(@PathParam("componentId") String componentId,
+                            @PathParam("contentType") String contentType,
+                            @PathParam("contentId") String contentId,
+                            @PathParam("commentId") String commentId,
+                            CommentDTO comment,
+                            MethodCallback<CommentDTO> callback);
 }

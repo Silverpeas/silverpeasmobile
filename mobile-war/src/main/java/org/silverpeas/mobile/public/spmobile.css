@@ -3252,7 +3252,7 @@ a.popin-btn {
   background: url('icons/mark_read.svg') no-repeat;
 }
 
-.add-action a, .delete-action a, .markAsRead-notification a, .speak-action a {
+.add-action a, .delete-action a, .markAsRead-notification a, .speak-action a, .edit-action a {
   height: 24px;
   width: 24px;
   display: block;

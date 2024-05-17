@@ -37,14 +37,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
-import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
 import org.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
 import org.silverpeas.mobile.client.apps.comments.events.app.DeleteCommentEvent;
 import org.silverpeas.mobile.client.apps.comments.events.pages.*;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.Comment;
 import org.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
-import org.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
@@ -53,10 +51,8 @@ import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.client.components.base.widgets.EditButton;
-import org.silverpeas.mobile.shared.dto.TaskDTO;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,6 +101,11 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
       @Override
       public void execute() {
         //TODO
+        CommentEditPage page = new CommentEditPage();
+        page.setPageTitle("Modifier le commentaire");
+        page.setTitle(title.getInnerText());
+        page.setComment(getSelectedComment().getComment());
+        page.show();
       }
     });
   }
@@ -150,6 +151,17 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   @Override
   public void onDeletedComment(CommentDeletedEvent event) {
     comments.remove(event.getComment());
+    renderList();
+    clearActions();
+  }
+
+  @Override
+  public void onUpdatedComment(CommentUpdatedEvent event) {
+    for (CommentDTO c : comments) {
+      if (c.getId().equals(event.getComment().getId())) {
+        c.setText(event.getComment().getText());
+      }
+    }
     renderList();
     clearActions();
   }

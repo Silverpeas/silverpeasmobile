@@ -104,6 +104,10 @@ public class CommentsButton extends Composite implements CommentsPagesEventHandl
   public void onDeletedComment(CommentDeletedEvent event) {
   }
 
+  @Override
+  public void onUpdatedComment(CommentUpdatedEvent event) {
+  }
+
   public void stop() {
     EventBus.getInstance().removeHandler(AbstractCommentsPagesEvent.TYPE, this);
   }
