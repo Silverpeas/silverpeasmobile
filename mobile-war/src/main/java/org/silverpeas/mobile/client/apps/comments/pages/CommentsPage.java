@@ -151,6 +151,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   public void onDeletedComment(CommentDeletedEvent event) {
     comments.remove(event.getComment());
     renderList();
+    clearActions();
   }
 
   @Override
