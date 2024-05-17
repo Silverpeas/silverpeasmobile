@@ -22,19 +22,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.comments.resources;
+package org.silverpeas.mobile.client.components.base.widgets;
 
-import com.google.gwt.i18n.client.Messages;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import org.silverpeas.mobile.client.components.base.ActionItem;
 
-public interface CommentsMessages extends Messages {
+/**
+ * @author: svu
+ */
+public class EditButton extends ActionItem {
 
-  String comments(String number);
-  String commentsTitle();
-  String comment();
-  String noComment();
+  interface EditButtonUiBinder extends UiBinder<HTMLPanel, EditButton> {}
 
-  String commentsPageTitle(String publicationTitle);
-  String addComment();
-  String deleteComment();
+  private static EditButtonUiBinder uiBinder = GWT.create(EditButtonUiBinder.class);
 
+  @UiField
+  HTMLPanel container;
+  @UiField
+  Anchor link;
+
+  public EditButton() {
+    initWidget(uiBinder.createAndBindUi(this));
+  }
+
+  @UiHandler("link")
+  void edit(ClickEvent event) {
+    getCallback().execute();
+  }
 }

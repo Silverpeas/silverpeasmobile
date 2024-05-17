@@ -2298,6 +2298,13 @@ form .forms .fields > li:nth-child(even) {
   background: url('icons/delete.svg') no-repeat;
 }
 
+.edit-action {
+  height: 24px;
+  width: 24px;
+  filter: invert(1);
+  background: url('icons/edit_note.svg') no-repeat;
+}
+
 .add-action {
   height: 24px;
   width: 24px;

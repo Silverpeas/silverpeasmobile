@@ -33,10 +33,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import org.silverpeas.mobile.client.apps.comments.CommentsApp;
-import org.silverpeas.mobile.client.apps.comments.events.pages.AbstractCommentsPagesEvent;
-import org.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent;
-import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
-import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsPagesEventHandler;
+import org.silverpeas.mobile.client.apps.comments.events.pages.*;
 import org.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 
@@ -101,6 +98,10 @@ public class CommentsButton extends Composite implements CommentsPagesEventHandl
   public void onAddedComment(final CommentAddedEvent event) {
     this.commentNumber++;
     render();
+  }
+
+  @Override
+  public void onDeletedComment(CommentDeletedEvent event) {
   }
 
   public void stop() {

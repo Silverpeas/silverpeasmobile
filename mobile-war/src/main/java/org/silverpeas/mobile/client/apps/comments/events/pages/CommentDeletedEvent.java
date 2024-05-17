@@ -22,19 +22,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.comments.resources;
+package org.silverpeas.mobile.client.apps.comments.events.pages;
 
-import com.google.gwt.i18n.client.Messages;
+import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
-public interface CommentsMessages extends Messages {
+public class CommentDeletedEvent extends AbstractCommentsPagesEvent {
 
-  String comments(String number);
-  String commentsTitle();
-  String comment();
-  String noComment();
+	private CommentDTO comment;
 
-  String commentsPageTitle(String publicationTitle);
-  String addComment();
-  String deleteComment();
+	public CommentDeletedEvent(CommentDTO comment) {
+		super();
+		this.comment = comment;
+	}
 
+	@Override
+	protected void dispatch(CommentsPagesEventHandler handler) {
+		handler.onDeletedComment(this);
+	}
+
+	public CommentDTO getComment() {
+		return comment;
+	}	
 }

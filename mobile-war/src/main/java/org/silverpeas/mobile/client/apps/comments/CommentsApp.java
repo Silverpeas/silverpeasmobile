@@ -26,11 +26,9 @@ package org.silverpeas.mobile.client.apps.comments;
 
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
-import org.silverpeas.mobile.client.apps.comments.events.app.AbstractCommentsAppEvent;
-import org.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
-import org.silverpeas.mobile.client.apps.comments.events.app.CommentsAppEventHandler;
-import org.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
+import org.silverpeas.mobile.client.apps.comments.events.app.*;
 import org.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent;
+import org.silverpeas.mobile.client.apps.comments.events.pages.CommentDeletedEvent;
 import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.comments.pages.CommentsPage;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -59,7 +57,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
         mainPage.setContentInfos(contentId, instanceId, contentType);
     }
 
-    public void start(){
+    public void start() {
         setMainPage(mainPage);
         super.start();
     }
@@ -72,50 +70,72 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
     @Override
     public void loadComments(final CommentsLoadEvent event) {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CommentDTO>>() {
-          @Override
-          public void attempt() {
-            super.attempt();
-            ServicesLocator.getRestServiceComment().getAllComments(instanceId,
-                event.getContentType(), event.getContentId(), this);
-          }
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CommentDTO>>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getRestServiceComment().getAllComments(instanceId,
+                        event.getContentType(), event.getContentId(), this);
+            }
 
-          @Override
-          public void onSuccess(final Method method, final List<CommentDTO> result) {
-            super.onSuccess(method, result);
-            EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));
-          }
+            @Override
+            public void onSuccess(final Method method, final List<CommentDTO> result) {
+                super.onSuccess(method, result);
+                EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));
+            }
         };
         action.attempt();
     }
 
     @Override
     public void addComment(final AddCommentEvent event) {
-      CommentDTO dto = new CommentDTO();
-      dto.setText(event.getMessage());
-      dto.setAuthor(SpMobil.getUserProfile());
-      dto.setComponentId(event.getInstanceId());
-      dto.setResourceId(event.getContentId());
-      dto.setResourceType(event.getContentType());
+        CommentDTO dto = new CommentDTO();
+        dto.setText(event.getMessage());
+        dto.setAuthor(SpMobil.getUserProfile());
+        dto.setComponentId(event.getInstanceId());
+        dto.setResourceId(event.getContentId());
+        dto.setResourceType(event.getContentType());
 
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
-        @Override
-        public void attempt() {
-          super.attempt();
-          ServicesLocator.getRestServiceComment().saveNewComment(event.getInstanceId(), event.getContentType(), event.getContentId(), dto, this);
-        }
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getRestServiceComment().saveNewComment(event.getInstanceId(), event.getContentType(), event.getContentId(), dto, this);
+            }
 
-        @Override
-        public void onSuccess(final Method method, final CommentDTO result) {
-          super.onSuccess(method, result);
-          EventBus.getInstance().fireEvent(new CommentAddedEvent(result));
-        }
-      };
-      action.attempt();
+            @Override
+            public void onSuccess(final Method method, final CommentDTO result) {
+                super.onSuccess(method, result);
+                EventBus.getInstance().fireEvent(new CommentAddedEvent(result));
+            }
+        };
+        action.attempt();
     }
 
-  @Override
-  public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+    @Override
+    public void deleteComment(DeleteCommentEvent event) {
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
 
-  }
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getRestServiceComment().deleteComment(event.getComment().getComponentId(),
+                        event.getComment().getResourceType(), event.getComment().getResourceId(), event.getComment().getId(), this);
+            }
+
+            @Override
+            public void onSuccess(Method method, Void unused) {
+                super.onSuccess(method, unused);
+                EventBus.getInstance().fireEvent(new CommentDeletedEvent(event.getComment()));
+            }
+        };
+        action.attempt();
+
+
+    }
+
+    @Override
+    public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
+
+    }
 }

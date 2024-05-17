@@ -28,10 +28,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import java.util.List;
 
 /**
@@ -53,4 +50,11 @@ public interface ServiceComment extends RestService {
       @PathParam("contentType") String contentType, @PathParam("contentId") String contentId,
       MethodCallback<List<CommentDTO>> callback);
 
+  @DELETE
+  @Path("{componentId}/{contentType}/{contentId}/{commentId}")
+  public void deleteComment(@PathParam("componentId") String componentId,
+                            @PathParam("contentType") String contentType,
+                            @PathParam("contentId") String contentId,
+                            @PathParam("commentId") String commentId,
+                            MethodCallback<Void> callback);
 }

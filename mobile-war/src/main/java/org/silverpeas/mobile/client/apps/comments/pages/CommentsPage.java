@@ -33,25 +33,26 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.comments.events.app.AddCommentEvent;
 import org.silverpeas.mobile.client.apps.comments.events.app.CommentsLoadEvent;
-import org.silverpeas.mobile.client.apps.comments.events.pages.AbstractCommentsPagesEvent;
-import org.silverpeas.mobile.client.apps.comments.events.pages.CommentAddedEvent;
-import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsLoadedEvent;
-import org.silverpeas.mobile.client.apps.comments.events.pages.CommentsPagesEventHandler;
+import org.silverpeas.mobile.client.apps.comments.events.app.DeleteCommentEvent;
+import org.silverpeas.mobile.client.apps.comments.events.pages.*;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.Comment;
 import org.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
 import org.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
+import org.silverpeas.mobile.client.components.PopinConfirmation;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
+import org.silverpeas.mobile.client.components.base.widgets.EditButton;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
@@ -74,6 +75,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   @UiField TextArea newComment;
 
   private DeleteButton buttonDelete = new DeleteButton();
+  private EditButton buttonEdit = new EditButton();
   protected CommentsMessages msg = null;
   private String contentId, contentType, instanceId;
   private List<CommentDTO> comments;
@@ -89,8 +91,20 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     buttonDelete.setCallback(new Command() {
       @Override
       public void execute() {
-        getSelectedComment().getComment();
-        //TODO : call rest service
+        PopinConfirmation popin = new PopinConfirmation(msg.deleteComment());
+        popin.setYesCallback(new Command() {
+          @Override
+          public void execute() {
+            EventBus.getInstance().fireEvent(new DeleteCommentEvent(getSelectedComment().getComment()));
+          }
+        });
+        popin.show();
+      }
+    });
+    buttonEdit.setCallback(new Command() {
+      @Override
+      public void execute() {
+        //TODO
       }
     });
   }
@@ -134,6 +148,12 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   }
 
   @Override
+  public void onDeletedComment(CommentDeletedEvent event) {
+    comments.remove(event.getComment());
+    renderList();
+  }
+
+  @Override
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractCommentsPagesEvent.TYPE, this);
@@ -161,7 +181,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     if (selectionMode) {
       clearActions();
       addActionShortcut(buttonDelete);
-      //TODO : add edit button
+      addActionShortcut(buttonEdit);
     } else {
       clearActions();
     }
