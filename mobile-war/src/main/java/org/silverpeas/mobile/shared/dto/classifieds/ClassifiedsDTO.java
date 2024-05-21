@@ -64,7 +64,7 @@ public class ClassifiedsDTO extends BaseDTO {
     this.categories = categories;
   }
 
-  public boolean hasComments() {
+  public boolean getHasComments() {
     return hasComments;
   }
 

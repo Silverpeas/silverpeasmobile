@@ -124,8 +124,8 @@ public class VideoStreamingPage extends PageContent
       lastUpdate.setInnerHTML(msg.lastUpdate(video.getUpdateDate(), video.getUpdater()));
 
       if (event.isCommentable()) {
-        comments.init(video.getId(), video.getInstance(), CommentDTO.TYPE_STREAMING, getPageTitle(),
-            video.getTitle(), video.getCommentsNumber());
+        comments.init(video.getId(), CommentDTO.TYPE_STREAMING, getPageTitle(),
+            video.getTitle(), video.getCommentsNumber(), getApp().getApplicationInstance());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }

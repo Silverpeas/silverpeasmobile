@@ -31,7 +31,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -306,8 +305,8 @@ public class PublicationPage extends PageContent
         if (contentDTO != null && contentDTO.getContributionId() != null) {
           id = contentDTO.getContributionId();
         }
-        comments.init(id, publication.getInstanceId(), type, getPageTitle(), publication.getName(),
-            publication.getCommentsNumber());
+        comments.init(id, type, getPageTitle(), publication.getName(),
+            publication.getCommentsNumber(), getApp().getApplicationInstance());
         comments.getElement().getStyle().clearDisplay();
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);

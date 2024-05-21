@@ -106,7 +106,7 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
         item.setType(data.getTypes().get(classified.getType()));
         item.setApplication(getApp());
         item.setData(classified);
-        item.hasComments(data.hasComments());
+        item.hasComments(data.getHasComments());
         classifieds.add(item);
       }
     }

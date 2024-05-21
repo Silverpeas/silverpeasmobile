@@ -148,8 +148,8 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
 
     if (hasComments) {
       String contentType = "Classified";
-      comments.init(data.getId(), getApp().getApplicationInstance().getId(), contentType,
-          getPageTitle(), data.getTitle(), data.getCommentsNumber());
+      comments.init(data.getId(), contentType,
+          getPageTitle(), data.getTitle(), data.getCommentsNumber(), getApp().getApplicationInstance());
       comments.getElement().getStyle().clearDisplay();
     }
 

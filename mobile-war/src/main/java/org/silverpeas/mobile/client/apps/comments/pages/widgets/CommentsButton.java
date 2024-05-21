@@ -36,6 +36,7 @@ import org.silverpeas.mobile.client.apps.comments.CommentsApp;
 import org.silverpeas.mobile.client.apps.comments.events.pages.*;
 import org.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 /**
  * @author: svu
@@ -50,7 +51,8 @@ public class CommentsButton extends Composite implements CommentsPagesEventHandl
 
   protected CommentsMessages msg = null;
 
-  private String contentId, contentType, contentName, instanceId, pageTitle;
+  private String contentId, contentType, contentName, pageTitle;
+  private ApplicationInstanceDTO applicationInstance;
   private int commentNumber;
 
   private static CommentsButtonUiBinder uiBinder = GWT.create(CommentsButtonUiBinder.class);
@@ -63,11 +65,11 @@ public class CommentsButton extends Composite implements CommentsPagesEventHandl
     render();
   }
 
-  public void init(String contentId, String instanceId, String contentType, String pageTitle, String contentName, int commentsNumber) {
+  public void init(String contentId, String contentType, String pageTitle, String contentName, int commentsNumber, ApplicationInstanceDTO applicationInstance) {
     this.contentId = contentId;
     this.contentType = contentType;
     this.contentName = contentName;
-    this.instanceId = instanceId;
+    this.applicationInstance = applicationInstance;
     this.pageTitle = pageTitle;
     this.commentNumber = commentsNumber;
     render();
@@ -76,7 +78,8 @@ public class CommentsButton extends Composite implements CommentsPagesEventHandl
 
   @UiHandler("comments")
   void displayComments(ClickEvent event){
-    CommentsApp commentsApp = new CommentsApp(contentId, instanceId, contentType, pageTitle, contentName);
+    CommentsApp commentsApp = new CommentsApp(contentId, contentType, pageTitle, contentName, applicationInstance);
+    commentsApp.setApplicationInstance(applicationInstance);
     commentsApp.start();
   }
 

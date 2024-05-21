@@ -37,6 +37,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -164,8 +165,8 @@ public class PhotoPage extends PageContent implements View, MediaPagesEventHandl
       lastUpdate.setInnerHTML(msg.lastUpdate(photo.getUpdateDate(), photo.getUpdater()));
 
       if (event.isCommentable()) {
-        comments.init(photo.getId(), photo.getInstance(), CommentDTO.TYPE_PHOTO, getPageTitle(),
-            photo.getTitle(), photo.getCommentsNumber());
+        comments.init(photo.getId(), CommentDTO.TYPE_PHOTO, getPageTitle(),
+            photo.getTitle(), photo.getCommentsNumber(), getApp().getApplicationInstance());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }

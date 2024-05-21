@@ -130,7 +130,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
           super.onSuccess(method, data);
           ClassifiedDTO c = data.getClassifieds().get(0);
           ClassifiedPage page = new ClassifiedPage();
-          page.setComments(data.hasComments());
+          page.setComments(data.getHasComments());
           page.setCategory(c.getCategory());
           page.setType(c.getType());
           page.setApp(ClassifiedsApp.this);

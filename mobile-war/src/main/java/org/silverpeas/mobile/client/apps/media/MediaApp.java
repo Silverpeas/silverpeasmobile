@@ -148,6 +148,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     if (item instanceof PhotoDTO) {
       PhotoPage page = new PhotoPage();
       page.setPageTitle(msg.title());
+      page.setApp(this);
       page.show();
       EventBus.getInstance().fireEvent(
           new MediaPreviewLoadEvent(item.getInstance(), ContentsTypes.Photo.toString(),
@@ -155,6 +156,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     } else if (item instanceof SoundDTO) {
       SoundPage page = new SoundPage();
       page.setPageTitle(msg.title());
+      page.setApp(this);
       page.show();
       Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
         @Override
@@ -167,6 +169,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     } else if (item instanceof VideoDTO) {
       VideoPage page = new VideoPage();
       page.setPageTitle(msg.title());
+      page.setApp(this);
       page.show();
       Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
         @Override
@@ -179,6 +182,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     } else if (item instanceof VideoStreamingDTO) {
       VideoStreamingPage page = new VideoStreamingPage();
       page.setPageTitle(msg.title());
+      page.setApp(this);
       page.show();
       Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
         @Override
@@ -206,6 +210,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     if (event.getInstance().getType().equals(Apps.gallery.name())) {
       this.commentable = event.getInstance().getCommentable();
       this.notifiable = event.getInstance().getNotifiable();
+      setApplicationInstance(event.getInstance());
       MediaNavigationPage page = new MediaNavigationPage();
       page.setApp(this);
       page.setPageTitle(event.getInstance().getLabel());

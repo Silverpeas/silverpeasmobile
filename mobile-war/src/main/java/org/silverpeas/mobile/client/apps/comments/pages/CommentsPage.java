@@ -52,6 +52,7 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
 import org.silverpeas.mobile.client.components.base.widgets.EditButton;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.List;
 
@@ -73,7 +74,8 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   private DeleteButton buttonDelete = new DeleteButton();
   private EditButton buttonEdit = new EditButton();
   protected CommentsMessages msg = null;
-  private String contentId, contentType, instanceId;
+  private String contentId, contentType;
+  private ApplicationInstanceDTO applicationInstance;
   private List<CommentDTO> comments;
 
   private static CommentsPageUiBinder uiBinder = GWT.create(CommentsPageUiBinder.class);
@@ -100,7 +102,6 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     buttonEdit.setCallback(new Command() {
       @Override
       public void execute() {
-        //TODO
         CommentEditPage page = new CommentEditPage();
         page.setPageTitle("Modifier le commentaire");
         page.setTitle(title.getInnerText());
@@ -110,10 +111,10 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     });
   }
 
-  public void setContentInfos(final String contentId, final String instanceId, final String contentType) {
+  public void setContentInfos(final String contentId, final ApplicationInstanceDTO applicationInstance, final String contentType) {
     this.contentId = contentId;
     this.contentType = contentType;
-    this.instanceId = instanceId;
+    this.applicationInstance = applicationInstance;
     // send event to controler for retrieve comments infos
     Notification.activityStart();
     EventBus.getInstance().fireEvent(new CommentsLoadEvent(contentId, contentType));
@@ -136,6 +137,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
       Comment c = new Comment();
       c.setParent(this);
       c.setComment(comment);
+      c.setRight(getApp().getApplicationInstance().getRights());
       commentsList.add(c);
     }
   }
@@ -184,7 +186,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   @UiHandler("addComment")
   void addComment(ClickEvent event) {
     if (!addComment.getElement().hasClassName("inactif")) {
-      EventBus.getInstance().fireEvent(new AddCommentEvent(contentId, instanceId, contentType, newComment.getText()));
+      EventBus.getInstance().fireEvent(new AddCommentEvent(contentId, applicationInstance.getId(), contentType, newComment.getText()));
     }
   }
 

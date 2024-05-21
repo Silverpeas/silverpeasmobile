@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.Image;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.tasks.pages.TaskPage;
 import org.silverpeas.mobile.client.components.base.widgets.SelectableItem;
+import org.silverpeas.mobile.shared.dto.RightDTO;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 /**
@@ -61,11 +62,17 @@ public class Comment extends SelectableItem {
 
   private static CommentUiBinder uiBinder = GWT.create(CommentUiBinder.class);
 
+  private RightDTO right;
+
   public Comment() {
     uiBinder.createAndBindUi(this);
     initWidget(uiBinder.createAndBindUi(this));
     setMultiSelection(false);
     setContainer(container);
+  }
+
+  public void setRight(RightDTO right) {
+    this.right = right;
   }
 
   public void setComment(final CommentDTO comment) {
@@ -91,8 +98,11 @@ public class Comment extends SelectableItem {
 
   @UiHandler("link")
   protected void startTouch(TouchStartEvent event) {
-    //TODO : allow selection for manager
-    startTouch(event, comment.getAuthor().getId().equals(SpMobil.getUser().getId()));
+    if (right.getManager()) {
+      startTouch(event, true);
+    } else {
+      startTouch(event, comment.getAuthor().getId().equals(SpMobil.getUser().getId()));
+    }
   }
 
   @UiHandler("link")

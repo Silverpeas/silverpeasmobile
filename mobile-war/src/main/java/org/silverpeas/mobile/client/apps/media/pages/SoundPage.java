@@ -149,8 +149,8 @@ public class SoundPage extends PageContent implements View, MediaPagesEventHandl
       lastUpdate.setInnerHTML(msg.lastUpdate(sound.getUpdateDate(), sound.getUpdater()));
 
       if (event.isCommentable()) {
-        comments.init(sound.getId(), sound.getInstance(), CommentDTO.TYPE_SOUND, getPageTitle(),
-            sound.getTitle(), sound.getCommentsNumber());
+        comments.init(sound.getId(), CommentDTO.TYPE_SOUND, getPageTitle(),
+            sound.getTitle(), sound.getCommentsNumber(), getApp().getApplicationInstance());
       } else {
         comments.getElement().getStyle().setDisplay(Style.Display.NONE);
       }

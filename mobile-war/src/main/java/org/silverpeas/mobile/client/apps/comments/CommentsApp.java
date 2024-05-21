@@ -38,6 +38,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
+import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
 import java.util.List;
 
@@ -47,15 +48,15 @@ import java.util.List;
 public class CommentsApp extends App implements CommentsAppEventHandler {
 
     private CommentsPage mainPage = new CommentsPage();
-    private String instanceId;
+    private ApplicationInstanceDTO applicationInstance;
 
-    public CommentsApp(String contentId, String instanceId, String contentType, String pageTitle, String title) {
+    public CommentsApp(String contentId, String contentType, String pageTitle, String title, ApplicationInstanceDTO applicationInstance) {
         super();
-        this.instanceId = instanceId;
+        this.applicationInstance = applicationInstance;
         EventBus.getInstance().addHandler(AbstractCommentsAppEvent.TYPE, this);
         mainPage.setTitle(title);
         mainPage.setPageTitle(pageTitle);
-        mainPage.setContentInfos(contentId, instanceId, contentType);
+        mainPage.setContentInfos(contentId, applicationInstance, contentType);
     }
 
     public void start() {
@@ -75,7 +76,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
             @Override
             public void attempt() {
                 super.attempt();
-                ServicesLocator.getRestServiceComment().getAllComments(instanceId,
+                ServicesLocator.getRestServiceComment().getAllComments(applicationInstance.getId(),
                         event.getContentType(), event.getContentId(), this);
             }
 
@@ -134,6 +135,11 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
     }
 
     @Override
+    public void setApplicationInstance(ApplicationInstanceDTO instance) {
+        super.setApplicationInstance(instance);
+    }
+
+    @Override
     public void updateComment(UpdateCommentEvent event) {
         MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
 
@@ -155,6 +161,5 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
     @Override
     public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
-
     }
 }

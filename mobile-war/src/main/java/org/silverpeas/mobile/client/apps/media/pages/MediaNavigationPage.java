@@ -27,10 +27,7 @@ package org.silverpeas.mobile.client.apps.media.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
 import org.silverpeas.mobile.client.apps.media.events.app.MediasLoadMediaItemsEvent;
@@ -58,7 +55,6 @@ import org.silverpeas.mobile.shared.dto.RightDTO;
 import org.silverpeas.mobile.shared.dto.media.AlbumDTO;
 import org.silverpeas.mobile.shared.dto.media.MediaDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MediaNavigationPage extends PageContent implements View, MediaNavigationPagesEventHandler {
