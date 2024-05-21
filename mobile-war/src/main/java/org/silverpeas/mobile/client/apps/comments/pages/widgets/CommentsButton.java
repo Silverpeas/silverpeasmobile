@@ -105,6 +105,8 @@ public class CommentsButton extends Composite implements CommentsPagesEventHandl
 
   @Override
   public void onDeletedComment(CommentDeletedEvent event) {
+    this.commentNumber--;
+    render();
   }
 
   @Override
