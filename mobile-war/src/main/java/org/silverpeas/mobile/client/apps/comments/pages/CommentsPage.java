@@ -133,6 +133,7 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
 
   private void renderList() {
     commentsList.clear();
+    setSelectionMode(false);
     for (CommentDTO comment : comments) {
       Comment c = new Comment();
       c.setParent(this);
