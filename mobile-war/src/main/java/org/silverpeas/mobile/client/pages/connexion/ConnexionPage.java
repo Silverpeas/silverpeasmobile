@@ -32,11 +32,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
+import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -133,9 +135,18 @@ public class ConnexionPage extends PageContent {
 
     String login = loginField.getText();
     String password = passwordField.getText();
-    login(login, password, domains.getValue(domains.getSelectedIndex()));
 
-
+    if (Boolean.parseBoolean(ResourcesManager.getParam("authentification.twoFactors"))) {
+      checkCredentials(login, password);
+      if (!login.isEmpty() && !password.isEmpty()) {
+        TwoFactorPage page = new TwoFactorPage();
+        page.setIds(login, password, domains.getSelectedValue());
+        RootPanel.get().clear();
+        RootPanel.get().add(page);
+      }
+    } else {
+      login(login, password, domains.getSelectedValue());
+    }
   }
 
   @UiHandler("tooglePasswordView")
@@ -159,8 +170,7 @@ public class ConnexionPage extends PageContent {
     if (!login.isEmpty() && !password.isEmpty()) {
       Notification.activityStart();
       AuthentificationManager.getInstance()
-          .authenticateOnSilverpeas(loginField.getText(), passwordField.getText(),
-              domains.getSelectedValue(), null);
+          .authenticateOnSilverpeas(login, password, domainId, null);
     }
   }
 

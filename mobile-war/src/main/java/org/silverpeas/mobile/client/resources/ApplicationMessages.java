@@ -39,8 +39,17 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Mot de passe")
   SafeHtml passwordLabel();
 
+  @DefaultMessage("Code sécurité")
+  SafeHtml codeLabel();
+
+  @DefaultMessage("Renvoyer un code")
+  SafeHtml reSendSecurityCode();
+
   @DefaultMessage("Silverpeas &gt; Ecran de connexion")
   SafeHtml loginTitle();
+
+  @DefaultMessage("Silverpeas &gt; Code de sécurité")
+  SafeHtml twoFactorTitle();
 
   @DefaultMessage("Information")
   SafeHtml informationTitle();
@@ -206,4 +215,5 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Version")
   String version();
+
 }
