@@ -27,13 +27,17 @@ package org.silverpeas.mobile.client.pages.connexion;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
+import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
+import org.silverpeas.mobile.client.common.ServicesLocator;
+import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -63,6 +67,7 @@ public class TwoFactorPage extends PageContent {
     this.login = login;
     this.password = password;
     this.domainId = domainId;
+    requestCode(null);
   }
 
   interface TwoFactorPageUiBinder extends UiBinder<Widget, TwoFactorPage> {}
@@ -90,13 +95,24 @@ public class TwoFactorPage extends PageContent {
             .setInnerHTML(ResourcesManager.getLabel("login.title"));
       }
     });
-
-    sendCode(null);
+  }
+  @UiHandler("codeField")
+  void codeChange(ChangeEvent event) {
+    codeField.getElement().getStyle().clearBackgroundColor();
   }
 
   @UiHandler("sendCode")
-  void sendCode(ClickEvent event) {
-    //TODO : call service
+  void requestCode(ClickEvent event) {
+    codeField.setText("");
+    codeField.getElement().getStyle().clearBackgroundColor();
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceConnection().generateSecurityCode(login, domainId, this);
+      }
+    };
+    action.attempt();
   }
 
   /**
@@ -104,8 +120,24 @@ public class TwoFactorPage extends PageContent {
    */
   @UiHandler("go")
   void connexion(ClickEvent e) {
-    //TODO : verify code
-    AuthentificationManager.getInstance()
-            .authenticateOnSilverpeas(login, password, domainId, null);
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceConnection().checkSecurityCode(login, domainId, codeField.getText(), this);
+      }
+
+      @Override
+      public void onSuccess(Method method, Boolean valid) {
+        super.onSuccess(method, valid);
+        if (valid) {
+          AuthentificationManager.getInstance()
+                  .authenticateOnSilverpeas(login, password, domainId, null);
+        } else {
+          codeField.getElement().getStyle().setBackgroundColor("#ec9c01");
+        }
+      }
+    };
+    action.attempt();
   }
 }

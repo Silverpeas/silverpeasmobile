@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.server.services;
 
+import org.silverpeas.core.mail.MailAddress;
+import org.silverpeas.core.mail.MailSending;
 import org.silverpeas.kernel.SilverpeasException;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.AdminException;
@@ -38,6 +40,7 @@ import org.silverpeas.core.security.authentication.AuthenticationServiceProvider
 import org.silverpeas.core.security.authentication.exception.AuthenticationException;
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
+import org.silverpeas.mobile.server.dao.SecurityCode;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -57,8 +60,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service de gestion des connexions.
@@ -67,6 +70,9 @@ import java.util.List;
 @WebService
 @Path(ServiceConnection.PATH)
 public class ServiceConnection extends AbstractRestWebService {
+
+  private static ConcurrentHashMap<String, SecurityCode> securityCodeRequests = new ConcurrentHashMap<>();
+  private static long CODE_MAX_DURATION = 30;
 
   @Inject
   ChatUserAuthenticationListener chatUserAuthenticationListener;
@@ -159,6 +165,69 @@ public class ServiceConnection extends AbstractRestWebService {
     chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, user, "");
 
     return userDTO;
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("securityCode/check/{login}/{domainId}/{code}")
+  public Boolean checkSecurityCode(@PathParam("login") String login, @PathParam("domainId") String domainId,
+                                   @PathParam("code") String code) {
+      Boolean valid = Boolean.FALSE;
+    try {
+      String userId = Administration.get().getUserIdByLoginAndDomain(login, domainId);
+      UserDetail user = Administration.get().getUserDetail(userId);
+      SecurityCode sc = securityCodeRequests.get(user.getEmailAddress());
+      if (sc == null) return Boolean.FALSE;
+      Date now = new Date();
+      long diff = (now.getTime() - sc.getCreationDate().getTime()) / (1000 * 60);
+      if (diff < CODE_MAX_DURATION) {
+      return sc.getCode().equals(code);
+      }
+    } catch (Throwable e) {
+      throw new WebApplicationException(e);
+    }
+    return valid;
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("securityCode/{login}/{domainId}")
+  public void generateSecurityCode(@PathParam("login") String login, @PathParam("domainId") String domainId) {
+
+      try {
+          String userId = Administration.get().getUserIdByLoginAndDomain(login, domainId);
+          UserDetail user = Administration.get().getUserDetail(userId);
+        if (securityCodeRequests.containsKey(user.getEmailAddress())) {
+          SecurityCode sc = securityCodeRequests.get(user.getEmailAddress());
+          Date now = new Date();
+          long diff = (now.getTime() - sc.getCreationDate().getTime()) / 1000;
+          if (diff >= CODE_MAX_DURATION) {
+            securityCodeRequests.remove(user.getEmailAddress());
+            String code = generateSecurityCode(user);
+            sendSecurityCode(user, code);
+          }
+        } else {
+          String code = generateSecurityCode(user);
+          sendSecurityCode(user, code);
+        }
+      } catch (Throwable e) {
+          throw new WebApplicationException(e);
+      }
+  }
+
+  private void sendSecurityCode(UserDetail user, String code) {
+    MailSending mail = MailSending.from(MailAddress.eMail(user.getEmailAddress()));
+    mail = mail.to(MailAddress.eMail(user.getEmailAddress()));
+    mail = mail.withContent("Code de sécurité");
+    mail = mail.withTextContent("Votre code est : " + code);
+    mail.send();
+  }
+
+  private String generateSecurityCode(UserDetail user) {
+    Random random = new Random();
+    String code = String.format("%04d", random.nextInt(10000));
+    securityCodeRequests.put(user.getEmailAddress(), new SecurityCode(code, new Date()));
+    return code;
   }
 
   @GET

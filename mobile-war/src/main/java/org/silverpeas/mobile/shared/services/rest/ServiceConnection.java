@@ -44,6 +44,18 @@ public interface ServiceConnection extends RestService {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @Path("securityCode/{login}/{domainId}")
+  void generateSecurityCode(@PathParam("login") String login, @PathParam("domainId") String domainId,
+    MethodCallback<Void> callback);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("securityCode/check/{login}/{domainId}/{code}")
+  void checkSecurityCode(@PathParam("login") String login, @PathParam("domainId") String domainId,
+                                   @PathParam("code") String code, MethodCallback<Boolean> callback);
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("domains/")
   void getDomains(MethodCallback<List<DomainDTO>> callback);
 
