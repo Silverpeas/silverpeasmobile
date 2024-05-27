@@ -267,7 +267,7 @@ legend, .ui-input-text input, .ui-input-search input {
   background-color: var(--main-bg-color) /*{a-body-background-color}*/;
   border-color: #dddddd /*{a-body-border}*/;
   color: var(--main-font-color) /*{a-body-color}*/;
- }
+}
 
 .ui-page-theme-a .ui-body-inherit.filter-contacts {
   background-color: var(--white);
@@ -296,7 +296,7 @@ legend, .ui-input-text input, .ui-input-search input {
   background-color: #f6f6f6 /*{a-bup-background-color}*/;
   border-color: #dddddd /*{a-bup-border}*/;
   color: var(--main-font-color) /*{a-bup-color}*/;
- }
+}
 
 /* Button up */
 html .ui-header .ui-btn {
@@ -330,7 +330,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   background-color: #e8e8e8 /*{a-bdown-background-color}*/;
   border-color: #dddddd /*{a-bdown-border}*/;
   color: var(--main-font-color) /*{a-bdown-color}*/;
- }
+}
 
 /* Active button */
 .ui-page-theme-a .ui-btn.ui-btn-active, html .ui-bar-a .ui-btn.ui-btn-active, html .ui-body-a .ui-btn.ui-btn-active, html body .ui-group-theme-a .ui-btn.ui-btn-active, html head + body .ui-btn.ui-btn-a.ui-btn-active,
@@ -389,16 +389,16 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .last-event-bloc h3.title-bloc-part{
-	position:relative;
+  position:relative;
 }
 
 .last-event-bloc .ui-listview .date {
-	float:right;
-	font-size:0.95em;
+  float:right;
+  font-size:0.95em;
 }
 
 .last-event-bloc .ui-listview a{
-	font-size:0.95em;
+  font-size:0.95em;
 }
 .ui-listview li {
   font-size: 0.95em;
@@ -591,7 +591,8 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 }
 
 .carroussel-news {
-  padding: 1em 0.75em 1em 0.5em;
+  padding-left:0;
+  padding-top:1.25em;
   margin: 0;
   list-style-type: none;
   min-height: 1em;
@@ -607,6 +608,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   height: 90px;
   position: relative;
   overflow: hidden;
+  background-color: #FFF;
 }
 
 .carroussel-news img {
@@ -615,10 +617,15 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   margin-right: 1em;
 }
 
+.carroussel-news .caption-list {
+  height: 5em;
+  overflow: hidden;
+}
+
 .carroussel-news .caption {
   height: 5em;
   overflow: hidden;
-  padding-right: 2em;
+  padding-bottom: 2em;
 }
 
 .carroussel-news h2 {
@@ -1196,10 +1203,10 @@ audio::-webkit-media-controls-enclosure {
 }
 
 #event .reccurence::before {
-	content:'';
-	width:20px;
-	height:20px;
-	display:block;
+  content:'';
+  width:20px;
+  height:20px;
+  display:block;
   background: var(--white) url(packImagesNavigation.png) 0 -1959px no-repeat;
   position:absolute;
   top:0.75em;
@@ -1358,8 +1365,8 @@ audio::-webkit-media-controls-enclosure {
 }
 
 #attachments li a.expand-more {
-	background: transparent url(icons/expand_more.svg) right 0.5em no-repeat;
-	margin-right: 0.5em;
+  background: transparent url(icons/expand_more.svg) right 0.5em no-repeat;
+  margin-right: 0.5em;
 }
 
 #attachments li a.expand-less {
@@ -2413,16 +2420,16 @@ form .forms .fields > li:nth-child(even) {
   padding-top: 50%;
 }
 .popupContent {
-	background-color: #fbf7aa;
-	border:2px solid #f9e98e;
-	padding: 50px;
-	border-radius:8px;
-	color: var(--main-font-color);
-	width: calc( 90% - 104px );
-	margin:0 5%;
-	text-align: center;
-    z-index: 999;
-    position: absolute;
+  background-color: #fbf7aa;
+  border:2px solid #f9e98e;
+  padding: 50px;
+  border-radius:8px;
+  color: var(--main-font-color);
+  width: calc( 90% - 104px );
+  margin:0 5%;
+  text-align: center;
+  z-index: 999;
+  position: absolute;
 }
 
 .popin-btns {
@@ -2465,7 +2472,7 @@ a.popin-btn {
 
 .workflow-list > tbody > tr:nth-child(odd) {
   background-color: #f9f9f9;
-								
+
 }
 
 .workflow-list > tbody > tr:nth-child(even) {
@@ -2476,11 +2483,11 @@ a.popin-btn {
   border-bottom: 1px solid #ddd;
 }
 
-.workflow-roles {  
-	position: absolute;
-	margin-bottom: 1em;
-	top: 1em;
-	left: .5em;
+.workflow-roles {
+  position: absolute;
+  margin-bottom: 1em;
+  top: 1em;
+  left: .5em;
 }
 
 .workflow-anchor {
@@ -2495,12 +2502,12 @@ a.popin-btn {
 .workflow-form li, .formOnline-form li {
   padding:1em;
 }
-.workflow-form .gwt-Label, 
+.workflow-form .gwt-Label,
 .formOnline-form  .gwt-Label ,
 .forms-list   .gwt-Label{
-	padding-bottom:0.5em;
-	color:var(--main-font-color);
-	font-size:1.1em;
+  padding-bottom:0.5em;
+  color:var(--main-font-color);
+  font-size:1.1em;
 }
 
 .workflow-form li:nth-child(odd),
@@ -3056,7 +3063,7 @@ a.popin-btn {
 /********* SURVEY ************/
 
 .survey.content {
-	padding-top: 2em;
+  padding-top: 2em;
 }
 .liste-questions.forms-list {
   color:inherit;
@@ -3192,32 +3199,32 @@ a.popin-btn {
 
 /********* notification **************/
 .notificationBox .ui-listview.notifications  input {
-	position:absolute;
-	top:0.5em;
-	left:0.25em;
+  position:absolute;
+  top:0.5em;
+  left:0.25em;
 }
 
 .notificationBox .ui-listview.notifications a {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .notificationBox .ui-listview.notifications  .notification-date,
 .notificationBox .ui-listview.notifications  .notification-author {
-	font-size:90%;
-	display:inline-block;
-    color : #777;
-    user-select: none;
+  font-size:90%;
+  display:inline-block;
+  color : #777;
+  user-select: none;
 }
 .notificationBox .ui-listview.notifications  .notification-source {
-	font-size:90%;
-    color: var(--main-border-color);
-    user-select: none;
+  font-size:90%;
+  color: var(--main-border-color);
+  user-select: none;
 }
 
 .notificationBox .ui-listview.notifications .notification-title{
-	margin-bottom:0.75em;
-    color: var(--black);
-    user-select: none;
+  margin-bottom:0.75em;
+  color: var(--black);
+  user-select: none;
 }
 
 .notificationBox .notification.not-read a .notification-title {
@@ -3225,24 +3232,24 @@ a.popin-btn {
 }
 
 .ui-listview.notifications  li span {
-	display:block;
+  display:block;
 }
 .ui-listview.notifications  li{
-	padding: 0.75em 0.75em 0.75em 2em;
-	position: relative;
-	border-bottom:1px solid  #CCC;
+  padding: 0.75em 0.75em 0.75em 2em;
+  position: relative;
+  border-bottom:1px solid  #CCC;
 }
 
 .ui-listview.notifications li:first-child {
-	border-top:1px solid  #CCC;
+  border-top:1px solid  #CCC;
 }
 
 .ui-listview.notifications  li:nth-child(odd){
-	background-color: #F0F0F0;
+  background-color: #F0F0F0;
 }
 
 .ui-listview.notifications  li:nth-child(even){
-	background-color: var(--white);
+  background-color: var(--white);
 }
 
 .markAsRead-notification {
@@ -3275,22 +3282,22 @@ a.popin-btn {
 /******** Resources Manager ********/
 
 #resourcesManager .list-resources li.category {
-	font-weight: 600;
-	color: var(--white);
-	background-color: #6fa800;
+  font-weight: 600;
+  color: var(--white);
+  background-color: #6fa800;
 }
 #resourcesManager .list-resources li .gwt-HTML{
-	display:block;
-} 
+  display:block;
+}
 
 #resourcesManager .list-reservations {
   margin-top: 2em;
 }
 
 #resourcesManager .reservationDate {
-	font-weight: 600;
-	font-size: 1.1em;
-	padding-bottom: 0.5em;
+  font-weight: 600;
+  font-size: 1.1em;
+  padding-bottom: 0.5em;
 }
 
 #resourcesManager .reservationDate svg {
@@ -3298,7 +3305,7 @@ a.popin-btn {
 }
 
 #resourcesManager .reservationEvent {
-	padding-bottom:1em;
+  padding-bottom:1em;
 }
 
 #resourcesManager ul .reservation {
@@ -3356,10 +3363,10 @@ a.popin-btn {
 }
 
 #reservationDetail ul.reservationRessources::after {
-	content:' ';
-	display:block;
-	clear:left;
-	height:1em;
+  content:' ';
+  display:block;
+  clear:left;
+  height:1em;
 }
 
 /* sharing */

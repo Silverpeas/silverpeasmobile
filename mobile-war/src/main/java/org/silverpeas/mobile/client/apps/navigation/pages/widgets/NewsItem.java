@@ -87,6 +87,11 @@ public class NewsItem extends Composite implements ClickHandler {
 
   public void setDisplayPager(boolean displayPager) {
     this.displayPager = displayPager;
+    if (displayPager) {
+      content.setStylePrimaryName("caption");
+    } else {
+      content.setStylePrimaryName("caption-list");
+    }
   }
 
 }
