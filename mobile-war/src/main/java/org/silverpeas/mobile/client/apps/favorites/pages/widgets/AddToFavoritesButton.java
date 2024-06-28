@@ -35,6 +35,7 @@ import org.silverpeas.mobile.client.apps.favorites.events.app.AddFavoriteEvent;
 import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 
@@ -78,8 +79,7 @@ public class AddToFavoritesButton extends ActionItem {
 
         // hide menu
         ActionsMenu.close(getElement());
-        Popin popin = new Popin(msg.favoriteAdded());
-        popin.show();
+        Snackbar.show(msg.favoriteAdded(), Snackbar.DELAY);
     }
 
 }
