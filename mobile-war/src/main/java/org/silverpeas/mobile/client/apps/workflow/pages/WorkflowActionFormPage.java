@@ -44,7 +44,7 @@ import org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
-import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -150,7 +150,7 @@ public class WorkflowActionFormPage extends PageContent implements WorkflowPages
         message += msg.mandatory();
       }
 
-      new Popin(message).show();
+      Snackbar.show(message, Snackbar.DELAY, Snackbar.INFO);
     } else {
       Notification.activityStart();
       WorkflowProcessFormEvent ev = new WorkflowProcessFormEvent();

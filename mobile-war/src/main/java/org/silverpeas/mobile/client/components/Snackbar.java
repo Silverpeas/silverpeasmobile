@@ -13,12 +13,17 @@ import com.google.gwt.user.client.ui.Anchor;
 public class Snackbar {
 
     public final static int DELAY = 3000;
+    public final static int INFO = 0;
+    public final static int WARNING = 1;
+    public final static int ERROR = 2;
 
-    public static void show(String message, int delay) {
+    public static void show(String message, int delay, int type) {
         BodyElement body = Document.get().getBody();
         DivElement div = Document.get().createDivElement();
         div.setAttribute("id","snackbar");
         div.setClassName("show");
+        if (type == WARNING) { div.addClassName("warning");}
+        if (type == ERROR) { div.addClassName("error");}
         div.setInnerText(message);
         body.appendChild(div);
         close(delay, div);
@@ -39,11 +44,13 @@ public class Snackbar {
         timer.schedule(delay);
     }
 
-    public static void show(String message) {
+    public static void showWithCloseButton(String message, int type) {
         BodyElement body = Document.get().getBody();
         DivElement div = Document.get().createDivElement();
         div.setAttribute("id","snackbar");
         div.setClassName("show-static");
+        if (type == WARNING) { div.addClassName("warning");}
+        if (type == ERROR) { div.addClassName("error");}
         div.setInnerHTML("<span>"+message+"</span>");
         AnchorElement close = Document.get().createAnchorElement();
         close.setClassName("close");

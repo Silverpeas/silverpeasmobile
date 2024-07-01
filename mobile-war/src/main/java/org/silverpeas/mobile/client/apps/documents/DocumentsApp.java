@@ -53,7 +53,7 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.IframePage;
-import org.silverpeas.mobile.client.components.PopinInformation;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.attachments.AttachmentsManager;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -318,8 +318,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       @Override
       public void onSuccess(Method method, TicketDTO dto) {
         super.onSuccess(method, dto);
-        PopinInformation popin = new PopinInformation(dto.getUrl());
-        popin.show();
+        Snackbar.showWithCloseButton(dto.getUrl(), Snackbar.INFO);
       }
     };
     action.attempt();

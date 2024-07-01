@@ -45,7 +45,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.TextCallbackOnlineOnly;
-import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reservations.Errors;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
@@ -148,9 +148,9 @@ public class ResourcesManagerApp extends App
               };
           action.attempt();
         } else if (error.equals(Errors.dateOrder.toString())) {
-          new Popin(msg.errorDateOrder()).show();
+          Snackbar.showWithCloseButton(msg.errorDateOrder(), Snackbar.ERROR);
         } else if (error.equals(Errors.earlierDate.toString())) {
-          new Popin(msg.errorEarlierDate()).show();
+          Snackbar.showWithCloseButton(msg.errorEarlierDate(), Snackbar.ERROR);
         }
       }
     };
@@ -170,7 +170,7 @@ public class ResourcesManagerApp extends App
       @Override
       public void onSuccess(final Method method, final ReservationDTO reservation) {
         super.onSuccess(method, reservation);
-        new Popin(msg.saved()).show();
+        Snackbar.show(msg.saved(), Snackbar.DELAY, Snackbar.INFO);
         getMainPage().back();
         getMainPage().back();
         SavedReservationEvent event = new SavedReservationEvent();

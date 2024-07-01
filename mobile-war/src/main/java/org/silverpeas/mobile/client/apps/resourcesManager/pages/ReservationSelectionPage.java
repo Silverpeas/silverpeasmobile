@@ -39,7 +39,7 @@ import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedRese
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.ResourceItem;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
@@ -130,8 +130,7 @@ public class ReservationSelectionPage extends PageContent implements ResourcesMa
     }
 
     if (selection.isEmpty()) {
-      new Popin(msg.errorNoResource()).show();
-
+      Snackbar.showWithCloseButton(msg.errorNoResource(), Snackbar.ERROR);
     } else {
       reservation.setResources(selection);
       SaveReservationEvent saveEvent = new SaveReservationEvent();

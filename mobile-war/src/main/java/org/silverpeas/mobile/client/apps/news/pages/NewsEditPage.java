@@ -32,7 +32,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsCreateEvent;
 import org.silverpeas.mobile.client.apps.news.events.app.NewsUpdateEvent;
@@ -43,7 +42,7 @@ import org.silverpeas.mobile.client.common.Ckeditor;
 import org.silverpeas.mobile.client.common.CropUtil;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.components.PopinInformation;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
@@ -176,8 +175,7 @@ public class NewsEditPage extends PageContent implements NewsPagesEventHandler, 
   @Override
   public void onNewsSaved(NewsSavedEvent event) {
     if (event.isInError()) {
-      PopinInformation popin = new PopinInformation(msg.notSaved());
-      popin.show();
+      Snackbar.showWithCloseButton(msg.notSaved(), Snackbar.ERROR);
     } else {
       Ckeditor.destroyEditor();
       CropUtil.destroyCropTool();

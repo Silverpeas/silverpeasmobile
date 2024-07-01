@@ -40,7 +40,7 @@ import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.Resources
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 
@@ -112,8 +112,7 @@ public class ReservationPage extends PageContent implements ResourcesManagerPage
       } else {
         message += msg.mandatory();
       }
-
-      new Popin(message).show();
+      Snackbar.showWithCloseButton(message, Snackbar.WARNING);
     } else {
       ReservationDTO dto = new ReservationDTO();
       dto.setEvenement(title.getText());

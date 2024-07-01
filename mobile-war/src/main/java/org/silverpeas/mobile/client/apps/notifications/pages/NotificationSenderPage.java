@@ -26,8 +26,6 @@ package org.silverpeas.mobile.client.apps.notifications.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -40,7 +38,7 @@ import org.silverpeas.mobile.client.apps.notifications.events.pages.Notification
 import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.View;
-import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -121,7 +119,7 @@ public class NotificationSenderPage extends PageContent implements View, Notific
     public void onNotificationSended(NotificationSendedEvent event) {
         back();
         back();
-        new Popin(msg.sended()).show();
+        Snackbar.show(msg.sended(), Snackbar.DELAY, Snackbar.INFO);
     }
 
     @Override

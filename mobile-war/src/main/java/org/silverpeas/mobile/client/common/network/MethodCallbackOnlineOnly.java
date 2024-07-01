@@ -34,7 +34,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
-import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 /**
@@ -72,7 +72,7 @@ public abstract class MethodCallbackOnlineOnly<T> implements MethodCallback<T> {
         }
       }
     } else if (method.getResponse().getStatusCode() == 404) {
-      new Popin(msg.notfoundError()).show();
+      Snackbar.showWithCloseButton(msg.notfoundError(), Snackbar.INFO);
     } else {
       if (NetworkHelper.needToGoOffine(t)) {
         // Lost connexion during requesting
