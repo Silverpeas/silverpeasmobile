@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -27,10 +27,9 @@ package org.silverpeas.mobile.server.services;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.exception.AuthenticationException;
-import org.silverpeas.core.security.authentication.exception.AuthenticationUserMustAcceptTermsOfService;
 import org.silverpeas.core.security.authentication.verifier.AuthenticationUserVerifierFactory;
 import org.silverpeas.core.template.SilverpeasTemplate;
-import org.silverpeas.core.template.SilverpeasTemplateFactory;
+import org.silverpeas.core.template.SilverpeasTemplates;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.kernel.logging.SilverLogger;
@@ -88,14 +87,15 @@ public class ServiceTermsOfService extends AbstractRestWebService {
   @Path("content")
   public String getContent() {
     SettingBundle resource = ResourceLocator.getSettingBundle("org.silverpeas.authentication.settings.authenticationSettings");
-    Boolean specificTemplate = false;
+    boolean specificTemplate;
     try {
       specificTemplate = resource.getBoolean("termsOfServiceAcceptanceSpecificTemplateContent.domain" + getUser().getDomainId());
     } catch(Exception e) {
       SilverLogger.getLogger(this).debug("termsOfServiceAcceptanceSpecificTemplateContent.domain" + getUser().getDomainId() + " not found");
+      specificTemplate = false;
     }
-    String content = "";
-    SilverpeasTemplate template = SilverpeasTemplateFactory.createSilverpeasTemplateOnCore("termsOfService");
+    String content;
+    SilverpeasTemplate template = SilverpeasTemplates.createSilverpeasTemplateOnCore("termsOfService");
     if (specificTemplate) {
       content = template.applyFileTemplate(
           "termsOfService_domain" + getUser().getDomainId() + "_" + getUser().getUserPreferences().getLanguage());
@@ -119,6 +119,7 @@ public class ServiceTermsOfService extends AbstractRestWebService {
 
   @Override
   public void validateUserAuthorization(final UserPrivilegeValidation validation) {
+    // no validation has to be done
   }
 
 }
