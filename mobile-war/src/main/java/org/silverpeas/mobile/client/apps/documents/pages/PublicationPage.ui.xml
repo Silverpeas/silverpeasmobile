@@ -35,6 +35,11 @@
 
       <h2 ui:field="title" class="publiName"></h2>
       <p ui:field="desc" class="publiDesc"></p>
+
+      <g:HTMLPanel ui:field="filesButton">
+        <g:Anchor styleName="ui-btn ui-btn-icon-right" href="#attachments" ui:field="files"/>
+      </g:HTMLPanel>
+
       <widgets:CommentsButton ui:field="comments" visible="false"/>
       <div ui:field="content" style="display:none;">
         <g:Anchor ui:field="contentLink" styleName="ui-btn ui-btn-icon-right" text="{msg.content}"/>

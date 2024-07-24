@@ -87,9 +87,12 @@ public class PublicationPage extends PageContent
   @UiField
   CommentsButton comments;
   @UiField
-  Anchor contentLink;
+  Anchor contentLink, files;
   @UiField
   DivElement content;
+
+  @UiField
+  HTMLPanel filesButton;
 
   @UiField(provided = true)
   protected DocumentsMessages msg;
@@ -135,6 +138,7 @@ public class PublicationPage extends PageContent
     attachments.getElement().setId("attachments");
     linkedPublications.getElement().setId("linkedPublications");
     content.setId("content");
+    filesButton.getElement().setId("files");
     buttonImport.setId("import");
     buttonDraftOut.setId("publish");
     edit.setId("edit");
@@ -190,11 +194,13 @@ public class PublicationPage extends PageContent
     }
 
     addSpeakingCapacity();
+    files.setVisible(publication.getContent());
     if (Boolean.parseBoolean(ResourcesManager.getParam("content.display.embedded")) && publication.getContent()) {
       PublicationContentHelper.showContent(publication.getId(), publication.getInstanceId(), content);
       contentLink.setVisible(false);
     } else {
       contentLink.setVisible(publication.getContent());
+      files.setVisible(false);
     }
     swipeRecognizer = new SwipeRecognizer(supercontainer);
 
@@ -265,6 +271,15 @@ public class PublicationPage extends PageContent
       a.setAttachment(attachment);
       a.setSharing(event.getShare());
       attachments.add(a);
+    }
+    if (event.getAttachments().isEmpty()) {
+      files.setVisible(false);
+    } else {
+      if (event.getAttachments().size() > 1) {
+        files.setText(msg.files(event.getAttachments().size()));
+      } else {
+        files.setText(msg.file());
+      }
     }
   }
 

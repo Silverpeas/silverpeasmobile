@@ -1169,7 +1169,7 @@ audio::-webkit-media-controls-enclosure {
   color: #848484;
 }
 
-#comments, .elts-pub {
+#comments, #files, .elts-pub {
   background-color: var(--white);
 
   padding: 0;
@@ -1184,6 +1184,17 @@ audio::-webkit-media-controls-enclosure {
   padding-left: 3em;
   background-position-y: center;
   background-position-x: 0.5em;
+}
+
+#files a {
+  border: 0 none;
+  margin: 0;
+  text-align: left;
+  background: url('icons/attachment.svg') no-repeat;
+  padding-left: 3em;
+  background-position-y: center;
+  background-position-x: 0.5em;
+  margin-bottom: 2px;
 }
 
 #info-event, .elts-pub {

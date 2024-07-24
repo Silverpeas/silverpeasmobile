@@ -37,6 +37,8 @@ public interface DocumentsMessages extends Messages {
   String sizeM(String size);
 
   String content();
+  String file();
+  String files(int number);
 
   String creation(String creationDate, String creator);
 
