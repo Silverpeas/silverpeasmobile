@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -69,7 +69,7 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
   TextArea comment;
 
   @UiField
-  Anchor accept, reject;
+  Anchor accept, reject, cancel;
 
   @UiField
   Label labelComment;
@@ -86,6 +86,7 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
     initWidget(uiBinder.createAndBindUi(this));
     accept.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
     reject.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+    cancel.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
     EventBus.getInstance().addHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
   }
 
@@ -136,10 +137,22 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
     EventBus.getInstance().fireEvent(new FormsOnlineValidationRequestEvent(data, validation));
   }
 
+  @UiHandler("cancel")
+  protected void cancel(ClickEvent event) {
+    Notification.activityStart();
+    ValidationRequestDTO validation = new ValidationRequestDTO();
+    validation.setDecision("cancel");
+    validation.setComment(comment.getText());
+    EventBus.getInstance().fireEvent(new FormsOnlineValidationRequestEvent(data, validation));
+  }
+
   public void setData(FormRequestDTO data) {
     this.data = data;
     reject.setVisible(data.isReadOnly());
     accept.setVisible(data.isReadOnly());
+    cancel.setVisible(!data.isReadOnly());
+    if (data.getState() == FormRequestDTO.STATE_CANCELED) cancel.setVisible(false);
+
     labelComment.setVisible(data.isReadOnly());
     comment.setVisible(data.isReadOnly());
 

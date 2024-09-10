@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -40,6 +40,7 @@ public class FormRequestDTO implements Serializable {
   public static final int STATE_VALIDATED = 3;
   public static final int STATE_REFUSED = 4;
   public static final int STATE_ARCHIVED = 5;
+  public static final int STATE_CANCELED = 6;
 
   private String id;
   private String comments;
@@ -52,6 +53,7 @@ public class FormRequestDTO implements Serializable {
   private String stateLabel;
   private String formId;
   private List<FormFieldDTO> data;
+  private int validator;
 
   private FormLayerDTO htmlLayer;
 
@@ -152,7 +154,7 @@ public class FormRequestDTO implements Serializable {
   }
 
   public boolean isReadOnly() {
-    return state == STATE_READ || state == STATE_UNREAD;
+    return (state == STATE_READ || state == STATE_UNREAD) && validator == 1;
   }
 
   public void setFormName(String formName) {
@@ -162,4 +164,12 @@ public class FormRequestDTO implements Serializable {
   public String getFormName() {
     return formName;
   }
+
+    public int getValidator() {
+        return validator;
+    }
+
+    public void setValidator(int validator) {
+        this.validator = validator;
+    }
 }

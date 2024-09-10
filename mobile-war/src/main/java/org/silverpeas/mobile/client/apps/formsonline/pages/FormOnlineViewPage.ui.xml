@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2000 - 2022 Silverpeas
+  ~ Copyright (C) 2000 - 2024 Silverpeas
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -42,6 +42,9 @@
         </g:Anchor>
         <g:Anchor ui:field="reject" styleName="btn-validate ui-link smaller multiple">
           <span class="ui-btn-text"><ui:text from="{msg.reject}"/></span>
+        </g:Anchor>
+        <g:Anchor ui:field="cancel" styleName="btn-validate ui-link smaller multiple">
+          <span class="ui-btn-text"><ui:text from="{msg.cancel}"/></span>
         </g:Anchor>
       </div>
     </div>
