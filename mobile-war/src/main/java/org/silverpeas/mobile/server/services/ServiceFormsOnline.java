@@ -138,9 +138,13 @@ public class ServiceFormsOnline extends AbstractRestWebService {
   @Path("processRequest/{requestId}")
   public void processRequest(@PathParam("requestId") String requestId, ValidationRequestDTO validation) {
     try {
-      FormsOnlineService.get()
-          .saveNextRequestValidationStep(new RequestPK(requestId, getComponentId()),
-              getUser().getId(), validation.getDecision(), validation.getComment(), false);
+      if (validation.getDecision().equalsIgnoreCase("cancel")) {
+        FormsOnlineService.get().cancelRequest(new RequestPK(requestId, getComponentId()));
+      } else {
+        FormsOnlineService.get()
+                .saveNextRequestValidationStep(new RequestPK(requestId, getComponentId()),
+                        getUser().getId(), validation.getDecision(), validation.getComment(), false);
+      }
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
@@ -222,6 +226,7 @@ public class ServiceFormsOnline extends AbstractRestWebService {
       RequestsByStatus r = FormsOnlineService.get().getValidatorRequests(getRequestsFilter(), getUser().getId(), null);
       for (FormInstance f : r.getToValidate()) {
         if (f.getFormId() == Integer.parseInt(formId)) {
+          f = FormsOnlineService.get().loadRequest(new RequestPK(f.getId(), getComponentId()), getUser().getId());
           FormRequestDTO dto = populate(f);
           requestDTOS.add(dto);
         }
@@ -237,6 +242,8 @@ public class ServiceFormsOnline extends AbstractRestWebService {
       throws FormException, AdminException {
     FormRequestDTO dto = new FormRequestDTO();
     dto.setId(f.getId());
+    dto.setValidator(1);
+    if (f.canBeCanceledBy(getUser())) dto.setValidator(0);
     dto.setComments(f.getComments());
     dto.setTitle(f.getTitle());
     dto.setDescription(f.getDescription());
@@ -260,6 +267,9 @@ public class ServiceFormsOnline extends AbstractRestWebService {
         break;
       case FormInstance.STATE_UNREAD:
         dto.setStateLabel(formsOnlineBundle.getString("formsOnline.stateUnread"));
+        break;
+      case FormInstance.STATE_CANCELED:
+        dto.setStateLabel(formsOnlineBundle.getString("formsOnline.stateCanceled"));
         break;
     }
     if (f.getFormWithData() instanceof XmlForm) {

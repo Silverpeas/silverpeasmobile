@@ -43,6 +43,9 @@
         <g:Anchor ui:field="reject" styleName="btn-validate ui-link smaller multiple">
           <span class="ui-btn-text"><ui:text from="{msg.reject}"/></span>
         </g:Anchor>
+        <g:Anchor ui:field="cancel" styleName="btn-validate ui-link smaller multiple">
+          <span class="ui-btn-text"><ui:text from="{msg.cancel}"/></span>
+        </g:Anchor>
       </div>
     </div>
   </g:HTMLPanel>
