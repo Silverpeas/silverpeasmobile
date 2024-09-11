@@ -45,6 +45,7 @@ public class ClassifiedDTO extends BaseDTO {
   private String updateDate;
   private int commentsNumber;
   private List<FormFieldDTO> fields;
+  private boolean showPrice;
 
   public String getTitle() {
     return title;
@@ -141,4 +142,8 @@ public class ClassifiedDTO extends BaseDTO {
   public void setFields(final List<FormFieldDTO> fields) {
     this.fields = fields;
   }
+
+  public boolean getShowPrice() { return showPrice; }
+
+  public void setShowPrice(final boolean showPrice) { this.showPrice = showPrice; }
 }

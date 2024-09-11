@@ -169,6 +169,11 @@ public class ServiceClassifieds extends AbstractRestWebService {
     dto.setDescription(classifiedDetail.getDescription());
     dto.setPrice(String.valueOf(classifiedDetail.getPrice()));
 
+    dto.setShowPrice(false);
+    String showPrice =
+            getMainSessionController().getComponentParameterValue(componentId, "usePrice");
+    if (showPrice.equalsIgnoreCase("yes")) dto.setShowPrice(true);
+
     SimpleDocumentPK pk = new SimpleDocumentPK(classifiedDetail.getId(), classifiedDetail.getComponentInstanceId());
     List<String> pictures = new ArrayList<>();
     SimpleDocumentList<SimpleDocument> pics = AttachmentServiceProvider

@@ -115,6 +115,8 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
   public void setData(ClassifiedDTO data) {
     this.data = data;
 
+    price.setVisible(data.getShowPrice());
+
     if(data.getCreatorId().equals(SpMobil.getUser().getId())) {
       contact.setVisible(false);
     }
