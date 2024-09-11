@@ -93,7 +93,6 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
 
   public ClassifiedPage() {
     msg = GWT.create(ClassifiedsMessages.class);
-    setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     contact.setHTML("<span class='ui-btn-text'>" + msg.contact() + "</span>");
     EventBus.getInstance().addHandler(AbstractClassifiedsPagesEvent.TYPE, this);
@@ -114,6 +113,7 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
 
   public void setData(ClassifiedDTO data) {
     this.data = data;
+    setPageTitle(data.getTitle());
 
     price.setVisible(data.getShowPrice());
 
@@ -140,9 +140,11 @@ public class ClassifiedPage extends PageContent implements ClassifiedsPagesEvent
     }
 
     for (FormFieldDTO field : data.getFields()) {
-      FieldItem item = new FieldItem();
-      item.setData(field);
-      fields.add(item);
+      if ((field.getValue() != null && !field.getValue().isEmpty()) || (field.getValueId() != null && !field.getValueId().isEmpty())) {
+        FieldItem item = new FieldItem();
+        item.setData(field);
+        fields.add(item);
+      }
     }
 
     notification.init(getApp().getApplicationInstance().getId(), data.getId(), NotificationDTO.TYPE_EVENT, data.getTitle(), getPageTitle());
