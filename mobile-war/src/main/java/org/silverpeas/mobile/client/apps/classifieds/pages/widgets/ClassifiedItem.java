@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -29,7 +29,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -77,7 +76,9 @@ public class ClassifiedItem extends Composite implements ClickHandler {
     String html = "<div class='thumbnail'><img src='" + pic + "' width='200px'/></div>";
     html += "<h2>" + data.getTitle() + "</h2>";
     html += "<div class='classified_type'><span>" + category + "</span><span>" + type + "</span></div>";
-    if (!data.getPrice().equalsIgnoreCase("0")) html += "<div class='classified_price'>" + data.getPrice() + " €" + "</div>";
+    if(data.getShowPrice() && (!data.getPrice().equalsIgnoreCase("0"))) {
+        html += "<div class='classified_price'>" + data.getPrice() + " €" + "</div>";
+    }
     html += "<div class='classified_creationInfo'>" + date + "</div>";
     content.setHTML(html);
     content.addClickHandler(this);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -168,6 +168,11 @@ public class ServiceClassifieds extends AbstractRestWebService {
     dto.setTitle(classifiedDetail.getTitle());
     dto.setDescription(classifiedDetail.getDescription());
     dto.setPrice(String.valueOf(classifiedDetail.getPrice()));
+
+    dto.setShowPrice(false);
+    String showPrice =
+            getMainSessionController().getComponentParameterValue(componentId, "usePrice");
+    if (showPrice.equalsIgnoreCase("yes")) dto.setShowPrice(true);
 
     SimpleDocumentPK pk = new SimpleDocumentPK(classifiedDetail.getId(), classifiedDetail.getComponentInstanceId());
     List<String> pictures = new ArrayList<>();
