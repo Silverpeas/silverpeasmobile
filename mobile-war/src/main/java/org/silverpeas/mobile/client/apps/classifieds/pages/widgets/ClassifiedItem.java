@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.classifieds.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -74,7 +75,12 @@ public class ClassifiedItem extends Composite implements ClickHandler {
       date = data.getUpdateDate();
     }
 
-    String html = "<div class='thumbnail'><img src='" + pic + "' width='200px'/></div>";
+    String html = "";
+    if (!pic.isEmpty()) {
+      html = "<div class='thumbnail'><img src='" + pic + "' width='200px'/></div>";
+    } else {
+      getElement().getStyle().setMarginLeft(1, Style.Unit.EM);
+    }
     html += "<h2>" + data.getTitle() + "</h2>";
     html += "<div class='classified_type'><span>" + category + "</span><span>" + type + "</span></div>";
     if(data.getShowPrice() && (!data.getPrice().equalsIgnoreCase("0"))) {
