@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -132,9 +132,10 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
         FormOnlineEditPage page = new FormOnlineEditPage();
         page.setPageTitle(event.getForm().getTitle());
         page.show();
+        String xmlFormName = event.getForm().getXmlFormName();
 
         ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(),
-                event.getForm().getXmlFormName(), "update", new MethodCallback<FormLayerDTO>() {
+                xmlFormName, "update", new MethodCallback<FormLayerDTO>() {
                     @Override
                     public void onFailure(Method method, Throwable throwable) {
                         EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
@@ -157,6 +158,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
                                 FormLoadedEvent event = new FormLoadedEvent();
                                 event.setFormFields(formFieldsDTO);
                                 event.setLayer(layer);
+                                event.setXmlFormName(xmlFormName);
                                 EventBus.getInstance().fireEvent(event);
                             }
                         };

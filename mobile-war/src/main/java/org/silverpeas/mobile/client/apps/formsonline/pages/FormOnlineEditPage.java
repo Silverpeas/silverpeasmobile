@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -31,8 +31,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadUserFieldEvent;
@@ -49,7 +47,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
-import org.silverpeas.mobile.client.components.Popin;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.forms.FieldEditable;
@@ -139,6 +137,7 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
         fields.add(field);
       }
     }
+    ScriptInjector.fromUrl("/weblib/xmlForms/" + formLoadedEvent.getXmlFormName().replace(".xml",".js")).inject();
   }
 
   @Override
@@ -291,7 +290,7 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
   public void onFormSaved(final FormSavedEvent formSavedEvent) {
     stopAllFields();
     Notification.activityStop();
-    new Popin(msg.saved(), Popin.LONG_DURATION).show();
+    Snackbar.show(msg.saved(), Snackbar.DELAY, Snackbar.INFO);
     back();
   }
 
@@ -341,8 +340,7 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
       } else {
         message += msg.mandatory();
       }
-
-      new Popin(message).show();
+      Snackbar.showWithCloseButton(message, Snackbar.WARNING);
     } else {
       Notification.activityStart();
       FormSaveEvent ev = new FormSaveEvent();

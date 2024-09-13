@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -47,6 +47,7 @@ public class FormLoadedEvent extends AbstractFormsOnlinePagesEvent {
 
   private List<FormFieldDTO> fields;
   private FormLayerDTO layer;
+  private String xmlFormName;
 
   public FormLayerDTO getLayer() {
     return layer;
@@ -60,4 +61,10 @@ public class FormLoadedEvent extends AbstractFormsOnlinePagesEvent {
     handler.onFormLoaded(this);
   }
 
+  public void setXmlFormName(String xmlFormName) {
+    this.xmlFormName = xmlFormName;
+  }
+  public String getXmlFormName() { return
+    xmlFormName;
+  }
 }
