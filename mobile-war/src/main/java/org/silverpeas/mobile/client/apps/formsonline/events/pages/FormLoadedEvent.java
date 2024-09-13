@@ -47,6 +47,7 @@ public class FormLoadedEvent extends AbstractFormsOnlinePagesEvent {
 
   private List<FormFieldDTO> fields;
   private FormLayerDTO layer;
+  private String xmlFormName;
 
   public FormLayerDTO getLayer() {
     return layer;
@@ -60,4 +61,10 @@ public class FormLoadedEvent extends AbstractFormsOnlinePagesEvent {
     handler.onFormLoaded(this);
   }
 
+  public void setXmlFormName(String xmlFormName) {
+    this.xmlFormName = xmlFormName;
+  }
+  public String getXmlFormName() { return
+    xmlFormName;
+  }
 }

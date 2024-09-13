@@ -137,6 +137,7 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
         fields.add(field);
       }
     }
+    ScriptInjector.fromUrl("/weblib/xmlForms/" + formLoadedEvent.getXmlFormName().replace(".xml",".js")).inject();
   }
 
   @Override
