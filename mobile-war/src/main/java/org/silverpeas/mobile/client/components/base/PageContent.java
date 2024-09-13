@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.components.base;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
@@ -94,6 +95,10 @@ public abstract class PageContent extends Composite implements View, NativePrevi
 
   public void show() {
     PageHistory.getInstance().goTo(this);
+    String js = ResourcesManager.getParam("js."+this.getClass().getSimpleName());
+    if (js != null && !js.isEmpty()) {
+      ScriptInjector.fromUrl(js).inject();
+    }
   }
 
   public void addActionShortcut(ActionItem action) {
