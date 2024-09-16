@@ -34,6 +34,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.events.apps.AbstractAppEvent;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
@@ -109,6 +110,7 @@ public abstract class App implements AppEventHandler, NavigationEventHandler {
 
   protected void setApplicationInstance (ApplicationInstanceDTO instance) {
     this.instance = instance;
+    LocalStorageHelper.getInstance().store("currentAppInstance", instance.getId());
   }
 
   @Override
