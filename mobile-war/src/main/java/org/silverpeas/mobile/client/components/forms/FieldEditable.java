@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -89,6 +89,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         } else if (changeEvent.getSource() instanceof ListBox) {
             value = ((ListBox) changeEvent.getSource()).getSelectedValue();
             data.setValueId(value);
+            data.setValue(value);
         }
     }
 
@@ -110,6 +111,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
             }
         }
         data.setValueId(value);
+        data.setValue(value);
     }
 
     @Override
