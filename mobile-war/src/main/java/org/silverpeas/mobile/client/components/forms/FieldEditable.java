@@ -89,6 +89,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
         } else if (changeEvent.getSource() instanceof ListBox) {
             value = ((ListBox) changeEvent.getSource()).getSelectedValue();
             data.setValueId(value);
+            data.setValue(value);
         }
     }
 
@@ -110,6 +111,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
             }
         }
         data.setValueId(value);
+        data.setValue(value);
     }
 
     @Override
