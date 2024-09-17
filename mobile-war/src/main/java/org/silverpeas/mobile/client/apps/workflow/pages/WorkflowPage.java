@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -141,6 +141,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       ActionButton act = new ActionButton();
       act.setId(ACTION_CREATE);
       act.init(instanceId, "create", msg.create(), null);
+      act.addClass("add-workflow-demand");
       addActionShortcut(act);
       //addActionMenu(act);
     } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2022 Silverpeas
+ * Copyright (C) 2000 - 2024 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -72,7 +72,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -409,66 +408,66 @@ public class ServiceWorkflow extends AbstractRestWebService {
       } else {
         ProcessInstance instance =
             Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
-
         form = instance.getProcessModel().getActionForm(action);
         data = instance.getFolder();
         dto.setId(instance.getInstanceId());
       }
-
-      for (Input input : form.getInputs()) {
-        WorkflowFieldDTO fdto = new WorkflowFieldDTO();
-        fdto.setId(getComponentId());
-        fdto.setDisplayerName(input.getDisplayerName());
-        fdto.setMandatory(input.isMandatory());
-        fdto.setReadOnly(input.isReadonly());
-        fdto.setName(input.getItem().getName());
-        fdto.setActionName(action);
-        fdto.setLabel(
-            input.getItem().getLabel(role, getUser().getUserPreferences().getLanguage()));
-        fdto.setValue(input.getValue());
-        if (!action.equals("create")) {
-          Field f = data.getField(input.getItem().getName());
-          if (f.getValue() != null && !f.getValue().isEmpty()) {
-            if (input.getItem().getType().equalsIgnoreCase("date")) {
-              fdto.setValue(f.getValue().replaceAll("/", "-"));
-              //TODO : user, multipleUser, group data
-            } else if (input.getItem().getType().equalsIgnoreCase("user")) {
-              UserDetail u = (UserDetail) f.getObjectValue();
-              fdto.setValueId(u.getId());
-              fdto.setValue(f.getValue());
-            } else if (input.getItem().getType().equalsIgnoreCase("multipleUser")) {
-              String[] usersId = ((MultipleUserField) f).getUserIds();
-              if (usersId.length > 0) {
-                String ids = Arrays.toString(usersId);
-                ids = ids.substring(1, ids.length() - 1);
-                fdto.setValueId(ids);
-                String value = "";
-                for (String id : usersId) {
-                  value += Administration.get().getUserDetail(id).getDisplayedName() + ",";
+      if (form != null) {
+        for (Input input : form.getInputs()) {
+          WorkflowFieldDTO fdto = new WorkflowFieldDTO();
+          fdto.setId(getComponentId());
+          fdto.setDisplayerName(input.getDisplayerName());
+          fdto.setMandatory(input.isMandatory());
+          fdto.setReadOnly(input.isReadonly());
+          fdto.setName(input.getItem().getName());
+          fdto.setActionName(action);
+          fdto.setLabel(
+                  input.getItem().getLabel(role, getUser().getUserPreferences().getLanguage()));
+          fdto.setValue(input.getValue());
+          if (!action.equals("create")) {
+            Field f = data.getField(input.getItem().getName());
+            if (f.getValue() != null && !f.getValue().isEmpty()) {
+              if (input.getItem().getType().equalsIgnoreCase("date")) {
+                fdto.setValue(f.getValue().replaceAll("/", "-"));
+                //TODO : user, multipleUser, group data
+              } else if (input.getItem().getType().equalsIgnoreCase("user")) {
+                UserDetail u = (UserDetail) f.getObjectValue();
+                fdto.setValueId(u.getId());
+                fdto.setValue(f.getValue());
+              } else if (input.getItem().getType().equalsIgnoreCase("multipleUser")) {
+                String[] usersId = ((MultipleUserField) f).getUserIds();
+                if (usersId.length > 0) {
+                  String ids = Arrays.toString(usersId);
+                  ids = ids.substring(1, ids.length() - 1);
+                  fdto.setValueId(ids);
+                  String value = "";
+                  for (String id : usersId) {
+                    value += Administration.get().getUserDetail(id).getDisplayedName() + ",";
+                  }
+                  value = value.substring(0, value.length() - 1);
+                  fdto.setValue(value);
                 }
-                value = value.substring(0, value.length() - 1);
-                fdto.setValue(value);
+              } else if (input.getItem().getType().equalsIgnoreCase("group")) {
+                GroupDetail g = (GroupDetail) f.getObjectValue();
+                fdto.setValueId(g.getId());
+                fdto.setValue(f.getValue());
+              } else if (input.getItem().getType().equalsIgnoreCase("file")) {
+                SimpleDocument doc = AttachmentServiceProvider.getAttachmentService()
+                        .searchDocumentById(new SimpleDocumentPK(f.getValue()),
+                                getUser().getUserPreferences().getLanguage());
+                fdto.setValue(doc.getTitle());
+                fdto.setValueId(doc.getId());
+              } else {
+                fdto.setValue(f.getValue());
               }
-            } else if (input.getItem().getType().equalsIgnoreCase("group")) {
-              GroupDetail g = (GroupDetail) f.getObjectValue();
-              fdto.setValueId(g.getId());
-              fdto.setValue(f.getValue());
-            } else if (input.getItem().getType().equalsIgnoreCase("file")) {
-              SimpleDocument doc = AttachmentServiceProvider.getAttachmentService()
-                  .searchDocumentById(new SimpleDocumentPK(f.getValue()),
-                      getUser().getUserPreferences().getLanguage());
-              fdto.setValue(doc.getTitle());
-              fdto.setValueId(doc.getId());
-            } else {
-              fdto.setValue(f.getValue());
             }
           }
+          fdto.setType(input.getItem().getType());
+          fdto.setValues(input.getItem().getKeyValuePairs());
+          dto.addField(fdto);
         }
-        fdto.setType(input.getItem().getType());
-        fdto.setValues(input.getItem().getKeyValuePairs());
-        dto.addField(fdto);
+        dto.setTitle(form.getTitle(role, getUser().getUserPreferences().getLanguage()));
       }
-      dto.setTitle(form.getTitle(role, getUser().getUserPreferences().getLanguage()));
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
       throw e;

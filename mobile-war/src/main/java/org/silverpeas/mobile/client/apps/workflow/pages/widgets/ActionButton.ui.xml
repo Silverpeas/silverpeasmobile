@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2000 - 2022 Silverpeas
+  ~ Copyright (C) 2000 - 2024 Silverpeas
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as
@@ -26,8 +26,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='msg' type='org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages'/>
-
-    <g:HTMLPanel tag="li" ui:field="container" styleName="add-workflow-demand">
+    <g:HTMLPanel tag="li" ui:field="container">
         <g:Anchor styleName="" ui:field="action"/>
     </g:HTMLPanel>
 </ui:UiBinder>
