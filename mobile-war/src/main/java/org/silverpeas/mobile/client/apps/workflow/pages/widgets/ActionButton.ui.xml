@@ -26,8 +26,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field='msg' type='org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages'/>
-
-    <g:HTMLPanel tag="li" ui:field="container" styleName="add-workflow-demand">
+    <g:HTMLPanel tag="li" ui:field="container">
         <g:Anchor styleName="" ui:field="action"/>
     </g:HTMLPanel>
 </ui:UiBinder>

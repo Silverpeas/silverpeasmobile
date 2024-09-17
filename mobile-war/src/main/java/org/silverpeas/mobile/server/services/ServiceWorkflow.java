@@ -39,8 +39,11 @@ import org.silverpeas.core.contribution.content.form.FieldTemplate;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.form.RecordTemplate;
 import org.silverpeas.core.contribution.content.form.field.MultipleUserField;
+import org.silverpeas.core.contribution.content.form.record.GenericDataRecord;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.workflow.api.event.TaskDoneEvent;
+import org.silverpeas.core.workflow.api.model.Action;
 import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.core.workflow.api.Workflow;
@@ -409,66 +412,66 @@ public class ServiceWorkflow extends AbstractRestWebService {
       } else {
         ProcessInstance instance =
             Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
-
         form = instance.getProcessModel().getActionForm(action);
         data = instance.getFolder();
         dto.setId(instance.getInstanceId());
       }
-
-      for (Input input : form.getInputs()) {
-        WorkflowFieldDTO fdto = new WorkflowFieldDTO();
-        fdto.setId(getComponentId());
-        fdto.setDisplayerName(input.getDisplayerName());
-        fdto.setMandatory(input.isMandatory());
-        fdto.setReadOnly(input.isReadonly());
-        fdto.setName(input.getItem().getName());
-        fdto.setActionName(action);
-        fdto.setLabel(
-            input.getItem().getLabel(role, getUser().getUserPreferences().getLanguage()));
-        fdto.setValue(input.getValue());
-        if (!action.equals("create")) {
-          Field f = data.getField(input.getItem().getName());
-          if (f.getValue() != null && !f.getValue().isEmpty()) {
-            if (input.getItem().getType().equalsIgnoreCase("date")) {
-              fdto.setValue(f.getValue().replaceAll("/", "-"));
-              //TODO : user, multipleUser, group data
-            } else if (input.getItem().getType().equalsIgnoreCase("user")) {
-              UserDetail u = (UserDetail) f.getObjectValue();
-              fdto.setValueId(u.getId());
-              fdto.setValue(f.getValue());
-            } else if (input.getItem().getType().equalsIgnoreCase("multipleUser")) {
-              String[] usersId = ((MultipleUserField) f).getUserIds();
-              if (usersId.length > 0) {
-                String ids = Arrays.toString(usersId);
-                ids = ids.substring(1, ids.length() - 1);
-                fdto.setValueId(ids);
-                String value = "";
-                for (String id : usersId) {
-                  value += Administration.get().getUserDetail(id).getDisplayedName() + ",";
+      if (form != null) {
+        for (Input input : form.getInputs()) {
+          WorkflowFieldDTO fdto = new WorkflowFieldDTO();
+          fdto.setId(getComponentId());
+          fdto.setDisplayerName(input.getDisplayerName());
+          fdto.setMandatory(input.isMandatory());
+          fdto.setReadOnly(input.isReadonly());
+          fdto.setName(input.getItem().getName());
+          fdto.setActionName(action);
+          fdto.setLabel(
+                  input.getItem().getLabel(role, getUser().getUserPreferences().getLanguage()));
+          fdto.setValue(input.getValue());
+          if (!action.equals("create")) {
+            Field f = data.getField(input.getItem().getName());
+            if (f.getValue() != null && !f.getValue().isEmpty()) {
+              if (input.getItem().getType().equalsIgnoreCase("date")) {
+                fdto.setValue(f.getValue().replaceAll("/", "-"));
+                //TODO : user, multipleUser, group data
+              } else if (input.getItem().getType().equalsIgnoreCase("user")) {
+                UserDetail u = (UserDetail) f.getObjectValue();
+                fdto.setValueId(u.getId());
+                fdto.setValue(f.getValue());
+              } else if (input.getItem().getType().equalsIgnoreCase("multipleUser")) {
+                String[] usersId = ((MultipleUserField) f).getUserIds();
+                if (usersId.length > 0) {
+                  String ids = Arrays.toString(usersId);
+                  ids = ids.substring(1, ids.length() - 1);
+                  fdto.setValueId(ids);
+                  String value = "";
+                  for (String id : usersId) {
+                    value += Administration.get().getUserDetail(id).getDisplayedName() + ",";
+                  }
+                  value = value.substring(0, value.length() - 1);
+                  fdto.setValue(value);
                 }
-                value = value.substring(0, value.length() - 1);
-                fdto.setValue(value);
+              } else if (input.getItem().getType().equalsIgnoreCase("group")) {
+                GroupDetail g = (GroupDetail) f.getObjectValue();
+                fdto.setValueId(g.getId());
+                fdto.setValue(f.getValue());
+              } else if (input.getItem().getType().equalsIgnoreCase("file")) {
+                SimpleDocument doc = AttachmentServiceProvider.getAttachmentService()
+                        .searchDocumentById(new SimpleDocumentPK(f.getValue()),
+                                getUser().getUserPreferences().getLanguage());
+                fdto.setValue(doc.getTitle());
+                fdto.setValueId(doc.getId());
+              } else {
+                fdto.setValue(f.getValue());
               }
-            } else if (input.getItem().getType().equalsIgnoreCase("group")) {
-              GroupDetail g = (GroupDetail) f.getObjectValue();
-              fdto.setValueId(g.getId());
-              fdto.setValue(f.getValue());
-            } else if (input.getItem().getType().equalsIgnoreCase("file")) {
-              SimpleDocument doc = AttachmentServiceProvider.getAttachmentService()
-                  .searchDocumentById(new SimpleDocumentPK(f.getValue()),
-                      getUser().getUserPreferences().getLanguage());
-              fdto.setValue(doc.getTitle());
-              fdto.setValueId(doc.getId());
-            } else {
-              fdto.setValue(f.getValue());
             }
           }
+          fdto.setType(input.getItem().getType());
+          fdto.setValues(input.getItem().getKeyValuePairs());
+          dto.addField(fdto);
         }
-        fdto.setType(input.getItem().getType());
-        fdto.setValues(input.getItem().getKeyValuePairs());
-        dto.addField(fdto);
+        dto.setTitle(form.getTitle(role, getUser().getUserPreferences().getLanguage()));
       }
-      dto.setTitle(form.getTitle(role, getUser().getUserPreferences().getLanguage()));
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
       throw e;

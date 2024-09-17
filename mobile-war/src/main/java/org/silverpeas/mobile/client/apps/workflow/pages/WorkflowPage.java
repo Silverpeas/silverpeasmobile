@@ -141,6 +141,7 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
       ActionButton act = new ActionButton();
       act.setId(ACTION_CREATE);
       act.init(instanceId, "create", msg.create(), null);
+      act.addClass("add-workflow-demand");
       addActionShortcut(act);
       //addActionMenu(act);
     } else {

@@ -63,6 +63,7 @@ public class ActionButton extends ActionItem {
         this.actionLabel = actionLabel;
         this.state = state;
         action.setTitle(actionLabel);
+        action.setText(actionLabel);
     }
 
     @UiHandler("action")
@@ -76,4 +77,8 @@ public class ActionButton extends ActionItem {
         ActionsMenu.close(getElement());
     }
 
+    public void addClass(String className) {
+        container.getElement().addClassName(className);
+        action.setText("");
+    }
 }

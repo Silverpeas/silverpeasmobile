@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.workflow;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
