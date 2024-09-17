@@ -48,7 +48,6 @@ import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.Popin;
-import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.forms.FieldEditable;
