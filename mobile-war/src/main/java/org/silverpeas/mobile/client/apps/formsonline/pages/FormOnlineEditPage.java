@@ -47,6 +47,7 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.FormsHelper;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
+import org.silverpeas.mobile.client.components.Popin;
 import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -290,7 +291,7 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
   public void onFormSaved(final FormSavedEvent formSavedEvent) {
     stopAllFields();
     Notification.activityStop();
-    Snackbar.show(msg.saved(), Snackbar.DELAY, Snackbar.INFO);
+    new Popin(msg.saved(), Popin.LONG_DURATION).show();
     back();
   }
 
@@ -340,7 +341,7 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
       } else {
         message += msg.mandatory();
       }
-      Snackbar.showWithCloseButton(message, Snackbar.WARNING);
+      new Popin(message).show();
     } else {
       Notification.activityStart();
       FormSaveEvent ev = new FormSaveEvent();
