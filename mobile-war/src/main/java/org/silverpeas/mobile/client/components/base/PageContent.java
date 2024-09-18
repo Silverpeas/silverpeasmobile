@@ -97,7 +97,7 @@ public abstract class PageContent extends Composite implements View, NativePrevi
     PageHistory.getInstance().goTo(this);
     String js = ResourcesManager.getParam("js."+this.getClass().getSimpleName());
     if (js != null && !js.isEmpty()) {
-      ScriptInjector.fromUrl(js).inject();
+      ScriptInjector.fromUrl(js).setWindow(ScriptInjector.TOP_WINDOW).inject();
     }
   }
 
