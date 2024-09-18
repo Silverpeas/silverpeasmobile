@@ -32,6 +32,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import org.apache.ecs.html.S;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadUserFieldEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormSaveEvent;
@@ -122,9 +123,9 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
         if (script.contains("src=")) {
           script = script.substring(script.indexOf("src=")+5);
           script = script.substring(0, script.indexOf(">")-1);
-          ScriptInjector.fromUrl(script).inject();
+          ScriptInjector.fromUrl(script).setWindow(ScriptInjector.TOP_WINDOW).inject();
         } else {
-          ScriptInjector.fromString(script).inject();
+          ScriptInjector.fromString(script).setWindow(ScriptInjector.TOP_WINDOW).inject();
         }
       }
     } else {
@@ -137,7 +138,7 @@ public class FormOnlineEditPage extends PageContent implements UserSelectionComp
         fields.add(field);
       }
     }
-    ScriptInjector.fromUrl("/weblib/xmlForms/" + formLoadedEvent.getXmlFormName().replace(".xml",".js")).inject();
+    ScriptInjector.fromUrl("/weblib/xmlForms/" + formLoadedEvent.getXmlFormName().replace(".xml",".js")).setWindow(ScriptInjector.TOP_WINDOW).inject();
   }
 
   @Override
