@@ -181,6 +181,6 @@ public class FormOnlineViewPage extends PageContent implements FormsOnlinePagesE
         fields.add(item);
       }
     }
-    ScriptInjector.fromUrl("/weblib/xmlForms/" + data.getFormName().replace(".xml",".js")).inject();
+    ScriptInjector.fromUrl("/weblib/xmlForms/" + data.getFormName().replace(".xml",".js")).setWindow(ScriptInjector.TOP_WINDOW).inject();
   }
 }
