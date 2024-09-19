@@ -2579,6 +2579,10 @@ a.popin-btn {
 
 }
 
+.forms-list h2.title::first-letter {
+  text-transform: capitalize;
+}
+
 .forms-list li .number {
   float: right;
 }
