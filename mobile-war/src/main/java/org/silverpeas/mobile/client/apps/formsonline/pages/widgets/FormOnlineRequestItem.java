@@ -61,7 +61,7 @@ public class FormOnlineRequestItem extends Composite implements ClickHandler {
     this.data = data;
     this.readOnly = readOnly;
     if (data.getTitle().isEmpty()) data.setTitle("&nbsp;");
-    String html = "<h2 class='title'><a href='#'>" + data.getTitle() + "</a></h2>";
+    String html = "<h2 class='title'><a href='#'>" + data.getFormName().replace(".xml","") + "&nbsp;n°" + data.getId() + "</a></h2>";
     if (!data.getDescription().isEmpty()) html += "<span class='description'>" + data.getDescription() + "</span>";
     html += "<span class='state'>" + data.getStateLabel() + "</span>" + "<span class='author'>" + data.getCreationDate() + "&nbsp;" + data.getCreator() + "</span>";
     content.setHTML(html);
