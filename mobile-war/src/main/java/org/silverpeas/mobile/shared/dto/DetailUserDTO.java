@@ -26,7 +26,9 @@ package org.silverpeas.mobile.shared.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DetailUserDTO implements Serializable{
 
@@ -48,6 +50,11 @@ public class DetailUserDTO implements Serializable{
   private boolean notificationBox;
   private boolean ldap;
   private List<PropertyDTO> properties = new ArrayList<>();
+  private Map<String, String> propertiesLabel = new HashMap<>();
+
+  public void addPropertyLabel(String prop, String label) {
+    this.propertiesLabel.put(prop, label);
+  }
 
   public void addProperty(String key, String value) {
     PropertyDTO dto = new PropertyDTO();
@@ -58,8 +65,12 @@ public class DetailUserDTO implements Serializable{
   public void setProperties(List<PropertyDTO> properties) {
     this.properties = properties;
   }
+  public void setPropertiesLabel(Map<String, String> propertiesLabel) {this.propertiesLabel = propertiesLabel;}
   public List<PropertyDTO> getProperties() {
     return properties;
+  }
+  public Map<String, String> getPropertiesLabel() {
+    return propertiesLabel;
   }
 
   public String getId() {

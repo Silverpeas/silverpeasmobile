@@ -25,12 +25,11 @@
 package org.silverpeas.mobile.client.apps.contacts;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
-import org.silverpeas.mobile.client.apps.contacts.events.app.AbstractContactsAppEvent;
-import org.silverpeas.mobile.client.apps.contacts.events.app.ContactsAppEventHandler;
-import org.silverpeas.mobile.client.apps.contacts.events.app.ContactsFilteredLoadEvent;
-import org.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
+import org.silverpeas.mobile.client.apps.contacts.events.app.*;
 import org.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
+import org.silverpeas.mobile.client.apps.contacts.pages.ContactPage;
 import org.silverpeas.mobile.client.apps.contacts.pages.ContactsPage;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -83,6 +82,27 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
         super.onSuccess(method, result);
         // Notify view
         EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
+      }
+    };
+    action.attempt();
+  }
+
+  @Override
+  public void loadContact(ContactLoadEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceContact().getContact(event.getUserId(), this);
+      }
+
+      @Override
+      public void onSuccess(Method method, DetailUserDTO detailUserDTO) {
+        super.onSuccess(method, detailUserDTO);
+        ContactPage page = new ContactPage();
+        page.setPageTitle(detailUserDTO.getFirstName() + " " + detailUserDTO.getLastName());
+        page.setData(detailUserDTO);
+        page.show();
       }
     };
     action.attempt();

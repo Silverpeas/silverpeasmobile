@@ -1133,7 +1133,7 @@ audio::-webkit-media-controls-enclosure {
 .list-notifications li,
 .list-resources li,
 .list-reservations li,
-.list-detail-event {
+.list-detail-event, f {
   background-color: var(--white);
   border-bottom: 1px solid #e0e0e0;
   padding: 0;
@@ -1499,6 +1499,24 @@ li > #operations {
   text-align: left;
   font-size: 0.8em;
 }
+
+.fields-contact {
+  margin-top: 1em;
+  user-select: none;
+  list-style-type:none;
+}
+
+.fields-contact .avatar {
+  margin-bottom: 1em;
+}
+
+.fields-contact li {
+  margin-bottom: 0.5em;
+}
+
+/*.standardFields div, .extendedFields div {
+  margin-bottom: 0.5em;
+}*/
 
 .actions {
   margin-bottom: 2em;

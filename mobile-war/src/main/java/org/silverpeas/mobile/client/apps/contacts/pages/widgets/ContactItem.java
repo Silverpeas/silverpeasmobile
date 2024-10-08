@@ -28,6 +28,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
@@ -37,14 +39,15 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.contacts.events.app.ContactLoadEvent;
 import org.silverpeas.mobile.client.apps.contacts.resources.ContactsResources;
-import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.PropertyDTO;
 
-public class ContactItem extends Composite {
+public class ContactItem extends Composite implements ClickHandler {
 
   private static ContactItemUiBinder uiBinder = GWT.create(ContactItemUiBinder.class);
   @UiField Anchor mail;
@@ -52,6 +55,12 @@ public class ContactItem extends Composite {
 
   private ApplicationResources resources = GWT.create(ApplicationResources.class);
   private ContactsResources resourcesContact = GWT.create(ContactsResources.class);
+
+  @Override
+  public void onClick(ClickEvent event) {
+    Widget w = (Widget) event.getSource();
+    EventBus.getInstance().fireEvent(new ContactLoadEvent(w.getElement().getAttribute("user-id")));
+  }
 
   interface ContactItemUiBinder extends UiBinder<Widget, ContactItem> {
   }
@@ -65,9 +74,14 @@ public class ContactItem extends Composite {
       Image avatar = new Image(resources.avatar());
       avatar.getElement().removeAttribute("height");
       avatar.getElement().removeAttribute("width");
+      avatar.getElement().setAttribute("user-id", userData.getId());
+      avatar.addClickHandler(this);
       user.add(avatar);
     } else {
-      user.add(new Image(userData.getAvatar()));
+      Image avatar = new Image(userData.getAvatar());
+      avatar.getElement().setAttribute("user-id", userData.getId());
+      avatar.addClickHandler(this);
+      user.add(avatar);
     }
 
     Boolean firstnameAtFirst = Boolean.parseBoolean(ResourcesManager.getParam("directory.display.firstname.at.first"));
@@ -80,7 +94,10 @@ public class ContactItem extends Composite {
     html += " <span class='status'>" + userData.getStatus() + "</span>";
 
     if (userData.getConnected()) html += "<span class='connected'></span>";
-    user.add(new HTML(html));
+    HTML h = new HTML(html);
+    h.getElement().setAttribute("user-id", userData.getId());
+    h.addClickHandler(this);
+    user.add(h);
     mail.setText(userData.geteMail());
     if (userData.geteMail() == null || userData.geteMail().isEmpty()) {
       mail.setHTML("&nbsp");

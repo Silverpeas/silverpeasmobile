@@ -40,6 +40,11 @@ import java.util.List;
 @Path("/mobile/contact")
 public interface ServiceContact extends RestService {
 
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("contact/{userId}/")
+  void getContact(@PathParam("userId") String userId,
+                   MethodCallback<DetailUserDTO> callback);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
