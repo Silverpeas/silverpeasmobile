@@ -87,9 +87,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   @UiField TextBox search;
   @UiField AvatarUpload avatar;
 
-  @UiField
-  AnchorElement searchButton;
-
   @UiField(provided = true) protected ApplicationMessages msg = null;
 
   @UiField UnorderedList listApplications;
@@ -128,8 +125,8 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     iconUserCalendar.setInnerHTML(resources.usercalendar().getText());
     iconInbox.setInnerHTML(resources.inbox().getText());
     iconShareBox.setInnerHTML(resources.sharebox().getText());
-    searchButton.setInnerHTML(resources.search().getText());
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
+    search.getElement().setAttribute("placeholder", msg.search());
   }
 
   public void setPersonalApps(List<ApplicationInstanceDTO> applicationInstanceDTOS) {
@@ -205,11 +202,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
       SpMobil.search(search.getText());
     }
   }
-
-  /*@UiHandler("searchButton")
-  protected void searchIos(ClickEvent event) {
-    SpMobil.search(search.getText());
-  }*/
 
   @UiHandler("home")
   protected void goHome(ClickEvent event) {

@@ -78,7 +78,7 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Discussions")
   SafeHtml tchat();
 
-  @DefaultMessage("Go")
+  @DefaultMessage("Rechercher")
   String search();
 
   @DefaultMessage("Retour")

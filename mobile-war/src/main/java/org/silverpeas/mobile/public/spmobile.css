@@ -1909,25 +1909,21 @@ textarea.ui-input-text {
 .searchBox {
   border: 1px solid #d3d3d3;
   border-radius: 3px;
-  width:calc( 100% - 4em );
-  background-color: var(--white);
+  width:calc( 100% - 1em );
   color: #666;
   padding: 5px;
   outline-style: none;
   height: 1.5em;
-}
-
-.searchButton svg {
-  width: 2em;
-  height: 2em;
-  display: inline-block;
-  position: absolute;
+  background-color: var(--white);
 }
 
 #menu-search {
   background: #efefef;
   padding: 1em;
+  padding-left: 2em;
+  margin-left: 0.5em;
   border-top: 1px solid #d3d3d3;
+  background: 0px 1.5em url('icons/search.svg') no-repeat;
 }
 
 .bloc-actu-vignette, .bloc-actu-content {

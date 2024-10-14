@@ -39,7 +39,6 @@
 
       <div id="menu-search">
         <g:TextBox ui:field="search" styleName="searchBox"/>
-        <a ui:field="searchButton" class="searchButton"></a>
       </div>
 
       <ul id="navmenu-panel">
