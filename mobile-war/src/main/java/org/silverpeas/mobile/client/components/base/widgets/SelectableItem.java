@@ -21,6 +21,8 @@ public class SelectableItem extends Composite {
     private Timer timerSelection = null;
     private Timer timerScroll = null;
 
+    public boolean isInSelectionMode() { return parent.isSelectionMode(); }
+
     public void setMultiSelection(boolean multiSelection) {
         this.multiSelection = multiSelection;
     }

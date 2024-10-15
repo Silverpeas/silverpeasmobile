@@ -35,16 +35,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.widgets.SelectableItem;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 import java.util.Date;
@@ -88,12 +83,25 @@ public class ShareItem extends SelectableItem {
 
   @UiHandler("link")
   protected void endTouch(TouchEndEvent event) {
+    if (isInSelectionMode()) {
+      toogleDownload();
+    } else {
+      enableDownload();
+    }
     endTouch(event, true, new Command() {
       @Override
       public void execute() {
         //TODO : display share informations
       }
     });
+  }
+
+  public void toogleDownload() {
+    shareLink.toggleClassName("ui-disabled");
+  }
+
+  public void enableDownload() {
+    shareLink.removeClassName("ui-disabled");
   }
 
   public void setData(TicketDTO data) {

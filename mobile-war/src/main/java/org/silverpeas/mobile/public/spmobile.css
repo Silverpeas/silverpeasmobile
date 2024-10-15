@@ -2445,13 +2445,12 @@ form .forms .fields > li:nth-child(even) {
   padding-top: 50%;
 }
 .popupContent {
-  background-color: #fbf7aa;
-  border:2px solid #f9e98e;
+  background-color: #333;
   padding: 50px;
-  border-radius:8px;
-  color: var(--main-font-color);
-  width: calc( 90% - 104px );
-  margin:0 5%;
+  border-radius:4px;
+  color: var(--white);
+  width: calc( 99% - 104px );
+  margin:0 1%;
   text-align: center;
   z-index: 999;
   position: absolute;
@@ -2462,10 +2461,10 @@ form .forms .fields > li:nth-child(even) {
 }
 
 a.popin-btn {
-  background:#ec9c01;
+  background:var(--main-color);
   text-decoration: none;
   color: var(--white);
-  border-radius:5px;
+  border-radius:4px;
   padding:0.5em 1em;
   margin: 1em;
 }

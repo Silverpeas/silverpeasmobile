@@ -109,7 +109,6 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
       clearActions();
       buttonDelete.setCallback(new Command() {@Override public void execute() {deleteSelectedShares();}});
       addActionShortcut(buttonDelete);
-
     } else {
       clearActions();
     }
@@ -123,7 +122,10 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
         List<TicketDTO> selection = getSelectedShares();
         DeleteSharesEvent deleteEvent = new DeleteSharesEvent();
         deleteEvent.setSelection(selection);
-        if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
+        if (!selection.isEmpty()) {
+          removeActionShortcut(buttonDelete);
+          EventBus.getInstance().fireEvent(deleteEvent);
+        }
       }
     });
     popin.show();
