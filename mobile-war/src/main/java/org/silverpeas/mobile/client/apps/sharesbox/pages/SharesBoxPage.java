@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.sharesbox.events.app.DeleteSharesEvent;
 import org.silverpeas.mobile.client.apps.sharesbox.events.pages.AbstractSharesBoxPagesEvent;
@@ -37,6 +38,7 @@ import org.silverpeas.mobile.client.apps.sharesbox.pages.widgets.ShareItem;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.PopinConfirmation;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
@@ -115,8 +117,7 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
   }
 
   private void deleteSelectedShares() {
-    PopinConfirmation popin = new PopinConfirmation(msg.deleteConfirmation()); //TODO
-    popin.setYesCallback(new Command() {
+    Snackbar.showConfirmation(msg.deleteConfirmation(), new Command() {
       @Override
       public void execute() {
         List<TicketDTO> selection = getSelectedShares();
@@ -127,8 +128,7 @@ public class SharesBoxPage extends PageContent implements SharesBoxPagesEventHan
           EventBus.getInstance().fireEvent(deleteEvent);
         }
       }
-    });
-    popin.show();
+    }, null);
   }
 
   @Override

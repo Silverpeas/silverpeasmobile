@@ -214,7 +214,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 #snackbar {
     visibility: hidden;
-    min-width: 250px;
+    min-width: 90%;
     background-color: #333;
     color: #fff;
     text-align: center;
@@ -255,6 +255,32 @@ input[type="range"]::-webkit-slider-thumb {
     user-select: none;
     margin-left: 1em;
 }
+
+#snackbar.show-static .snackbar-message {
+    text-align: left;
+}
+
+#snackbar.show-static .snackbar-actions {
+    position: absolute;
+    right: 16px;
+}
+
+#snackbar.show-static .yes {
+    background-color: var(--main-color);
+    padding: 0.5em;
+    margin-left: 0.5em;
+    border-radius: 4px;
+    color: var(--white);
+}
+
+#snackbar.show-static .no {
+    background-color: var(--main-color);
+    padding: 0.5em;
+    margin-left: 0.5em;
+    border-radius: 4px;
+    color: var(--white);
+}
+
 
 @-webkit-keyframes fadein-snackbar {
     from {bottom: 0; opacity: 0;}

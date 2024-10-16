@@ -216,4 +216,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Version")
   String version();
 
+  @DefaultMessage("Oui")
+  String yes();
+
+  @DefaultMessage("Non")
+  String no();
 }
