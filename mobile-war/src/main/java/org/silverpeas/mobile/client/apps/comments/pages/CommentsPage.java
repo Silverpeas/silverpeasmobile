@@ -89,6 +89,9 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
     buttonDelete.setCallback(new Command() {
       @Override
       public void execute() {
+
+
+
         PopinConfirmation popin = new PopinConfirmation(msg.deleteComment());
         popin.setYesCallback(new Command() {
           @Override

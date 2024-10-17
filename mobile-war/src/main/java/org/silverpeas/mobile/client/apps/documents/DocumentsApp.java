@@ -91,6 +91,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   public void startWithContent(final ContentDTO content) {
     if (content.getType().equals(ContentsTypes.Folder.toString())) {
       GedNavigationPage page = new GedNavigationPage();
+      page.setApp(this);
       page.setInstanceId(content.getInstanceId());
       page.setTopicId(content.getId());
       page.show();
@@ -128,6 +129,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     if (content.getType().equals(ContentsTypes.Publication.toString()) ||
         content.getType().equals(ContentsTypes.News.toString())) {
       PublicationPage page = new PublicationPage();
+      page.setApp(this);
       page.setPageTitle(msg.publicationTitle());
       page.setContent(content);
       setMainPage(page);
@@ -192,6 +194,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
     if (event.getInstance().getType().equals(Apps.kmelia.name())) {
       setApplicationInstance(event.getInstance());
       GedNavigationPage page = new GedNavigationPage();
+      page.setApp(this);
       page.setPageTitle(event.getInstance().getLabel());
       page.setInstanceId(event.getInstance().getId());
       page.setTopicId(null);
@@ -335,6 +338,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       @Override
       public void onSuccess(Method method, PublicationDTO publicationDTO) {
         PublicationPage page = new PublicationPage();
+        page.setApp(DocumentsApp.this);
         page.setPageTitle(msg.publicationTitle());
         page.show();
         ContentDTO content = new ContentDTO();

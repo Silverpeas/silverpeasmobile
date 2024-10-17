@@ -159,12 +159,14 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
     if (isVisible()) {
       if (event.getGedItem() instanceof TopicDTO) {
         GedNavigationPage page = new GedNavigationPage();
+        page.setApp(getApp());
         page.setInstanceId(instanceId);
         page.setTopicId(((TopicDTO)event.getGedItem()).getId());
         page.setCanImport(canImport);
         page.show();
       } else if (event.getGedItem() instanceof PublicationDTO) {
         PublicationPage page = new PublicationPage();
+        page.setApp(getApp());
         page.setPageTitle(msg.publicationTitle());
         page.show();
 
