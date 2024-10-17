@@ -33,7 +33,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -46,7 +45,7 @@ import org.silverpeas.mobile.client.apps.comments.resources.CommentsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.app.View;
-import org.silverpeas.mobile.client.components.PopinConfirmation;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
@@ -90,16 +89,12 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
       @Override
       public void execute() {
 
-
-
-        PopinConfirmation popin = new PopinConfirmation(msg.deleteComment());
-        popin.setYesCallback(new Command() {
+        Snackbar.showConfirmation(msg.deleteComment(), new Command() {
           @Override
           public void execute() {
             EventBus.getInstance().fireEvent(new DeleteCommentEvent(getSelectedComment().getComment()));
           }
-        });
-        popin.show();
+        }, null);
       }
     });
     buttonEdit.setCallback(new Command() {

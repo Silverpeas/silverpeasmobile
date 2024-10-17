@@ -44,7 +44,7 @@ import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.MarkAsRe
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.widgets.NotificationItem;
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.PopinConfirmation;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
@@ -172,17 +172,15 @@ public class NotificationsBoxPage extends PageContent implements NotificationsBo
   }
 
   private void deleteSelectedNotifications() {
-    PopinConfirmation popin = new PopinConfirmation(msgApp.deleteConfirmation());
-    popin.setYesCallback(new Command() {
+    Snackbar.showConfirmation(msgApp.deleteConfirmation(), new Command() {
       @Override
       public void execute() {
         List<NotificationBoxDTO> selection = getSelectedNotification();
         DeleteNotificationsEvent deleteEvent = new DeleteNotificationsEvent();
         deleteEvent.setSelection(selection);
         if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
-        clearActions();
+        setSelectionMode(false);
       }
-    });
-    popin.show();
+    }, null);
   }
 }

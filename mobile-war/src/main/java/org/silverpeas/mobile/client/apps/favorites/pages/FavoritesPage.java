@@ -28,7 +28,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesDeleteEvent;
 import org.silverpeas.mobile.client.apps.favorites.events.app.FavoritesLoadEvent;
@@ -39,7 +38,7 @@ import org.silverpeas.mobile.client.apps.favorites.pages.widgets.CategoryItem;
 import org.silverpeas.mobile.client.apps.favorites.resources.FavoritesMessages;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.PopinConfirmation;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.DeleteButton;
@@ -115,26 +114,26 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
   }
 
   private void deleteSelectedFavoris() {
-    PopinConfirmation popin = new PopinConfirmation(msgApp.deleteConfirmation());
-    popin.setYesCallback(new Command() {
+    Snackbar.showConfirmation(msgApp.deleteConfirmation(), new Command() {
       @Override
       public void execute() {
         List<MyLinkDTO> selection = getSelectedFavorites();
         FavoritesDeleteEvent deleteEvent = new FavoritesDeleteEvent();
         deleteEvent.setSelection(selection);
         if (!selection.isEmpty()) EventBus.getInstance().fireEvent(deleteEvent);
-        clearActions();
+        setSelectionMode(false);
       }
-    });
-    popin.show();
+    }, null);
   }
 
   private List<MyLinkDTO> getSelectedFavorites() {
     List<MyLinkDTO> selection = new ArrayList<>();
     for (int i = 0; i < favorites.getCount(); i++) {
-      FavoriteItem item = (FavoriteItem) favorites.getWidget(i);
-      if (item.isSelected()) {
-        selection.add(item.getData());
+      if (favorites.getWidget(i) instanceof FavoriteItem) {
+        FavoriteItem item = (FavoriteItem) favorites.getWidget(i);
+        if (item.isSelected()) {
+          selection.add(item.getData());
+        }
       }
     }
     return selection;

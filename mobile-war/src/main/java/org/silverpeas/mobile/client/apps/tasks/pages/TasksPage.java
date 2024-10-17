@@ -40,7 +40,7 @@ import org.silverpeas.mobile.client.apps.tasks.pages.widgets.TaskItem;
 import org.silverpeas.mobile.client.apps.tasks.resources.TasksMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
-import org.silverpeas.mobile.client.components.PopinConfirmation;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.AddButton;
@@ -133,8 +133,7 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
   }
 
   private void deleteSelectedTasks() {
-    PopinConfirmation popin = new PopinConfirmation(msg.deleteConfirmation());
-    popin.setYesCallback(new Command() {
+    Snackbar.showConfirmation(msg.deleteConfirmation(), new Command() {
       @Override
       public void execute() {
         ArrayList<TaskDTO> selection = new ArrayList<>();
@@ -144,10 +143,10 @@ public class TasksPage extends PageContent implements TasksPagesEventHandler {
             selection.add(item.getData());
           }
         }
+        setSelectionMode(false);
         EventBus.getInstance().fireEvent(new TasksDeleteEvent(selection));
       }
-    });
-    popin.show();
+    }, null);
   }
 
   @Override

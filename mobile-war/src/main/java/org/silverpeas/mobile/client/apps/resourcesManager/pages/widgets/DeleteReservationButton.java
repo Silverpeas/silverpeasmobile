@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.app.DeleteReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.components.PopinConfirmation;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
@@ -47,17 +47,16 @@ public class DeleteReservationButton extends ActionItem {
   }
 
   @UiHandler("deleteReservation")
-  void displayReservationPage(ClickEvent event){
-    PopinConfirmation conf = new PopinConfirmation(msg.deleteReservationConfirmation());
-    conf.setYesCallback(new Command() {
+  void displayReservationPage(ClickEvent event) {
+
+    Snackbar.showConfirmation(msg.deleteReservationConfirmation(), new Command() {
       @Override
       public void execute() {
         DeleteReservationEvent ev = new DeleteReservationEvent();
         ev.setData(data);
         EventBus.getInstance().fireEvent(ev);
       }
-    });
-    conf.show();
+    }, null);
 
     // hide menu
     ActionsMenu.close(getElement());
