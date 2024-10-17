@@ -441,6 +441,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   width: 100%;
   top: 0;
   z-index: 1000;
+  user-select: none;
 }
 
 #navigation-footer {
@@ -676,6 +677,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   position: fixed;
   font-size: 0.8em;
   height: 100vh;
+  user-select: none;
 }
 
 #silverpeas-navmenu-panel .ui-panel-inner {
@@ -755,6 +757,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   border-top: 1px solid #d3d3d3;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 
 #personals-apps li {
@@ -789,6 +792,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   width: 100%;
   border: 0;
   padding-left: 0.5em;
+  user-select: none;
 }
 
 #actions-menu li {
