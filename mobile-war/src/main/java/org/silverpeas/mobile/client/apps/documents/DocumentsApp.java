@@ -46,6 +46,7 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.Html5Utils;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
@@ -322,6 +323,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       public void onSuccess(Method method, TicketDTO dto) {
         super.onSuccess(method, dto);
         Snackbar.showWithCloseButton(dto.getUrl(), Snackbar.INFO);
+        Html5Utils.copyInClipboard(dto.getUrl());
       }
     };
     action.attempt();

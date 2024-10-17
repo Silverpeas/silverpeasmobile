@@ -224,4 +224,8 @@ public class Html5Utils {
     $wnd.navigator.share(shareData);
   }-*/;
 
+  public static native void copyInClipboard(String text) /*-{
+    $wnd.navigator.clipboard.writeText(text);
+  }-*/;
+
 }
