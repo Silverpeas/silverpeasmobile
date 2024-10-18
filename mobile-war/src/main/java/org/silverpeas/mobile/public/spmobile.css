@@ -70,6 +70,11 @@ legend, .ui-input-text input, .ui-input-search input {
   font-size: 1.2em;
 }
 
+.freeze {
+  pointer-events: none;
+  user-select: none;
+}
+
 /* Separators
 -----------------------------------------------------------------------------------------------------------*/
 /* Field contain separator (< 28em) */

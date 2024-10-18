@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
+import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
 public class Snackbar {
@@ -43,6 +44,7 @@ public class Snackbar {
             }
         };
         timer.schedule(delay);
+        SpMobil.getMainPage().unfreeze();
     }
 
     public static void showWithCloseButton(String message, int type) {
@@ -73,6 +75,7 @@ public class Snackbar {
     }
 
     public static void showConfirmation(String message, String yesLabel, String noLabel, Command yesCommand, Command noCommand) {
+        SpMobil.getMainPage().freeze();
         BodyElement body = Document.get().getBody();
         DivElement div = Document.get().createDivElement();
         div.setAttribute("id","snackbar");
