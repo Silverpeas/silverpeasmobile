@@ -28,9 +28,19 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface ShareMessages extends Messages {
     String title();
-
+    String shareOf();
     String delete();
 
 
     String deleteConfirmation();
+
+    String creationDate();
+
+    String name();
+
+    String nbAccess();
+
+    String link();
+
+    String active();
 }

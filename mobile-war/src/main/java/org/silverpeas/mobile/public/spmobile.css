@@ -3218,6 +3218,27 @@ a.popin-btn {
   background-color: var(--white);
 }
 
+.field-share {
+  padding-top: 1em;
+  padding-left: 1em;
+}
+
+.header-share, .field-link-share {
+  background-color: var(--white);
+  margin: 1em;
+  padding-bottom: 1em;
+}
+
+.field-infos-share {
+  margin: 1em;
+}
+
+.field-link-share a {
+  overflow: hidden;
+  text-overflow: clip;
+  display: block;
+}
+
 /********* favorites **************/
 .favorite-desc {
   display: block;

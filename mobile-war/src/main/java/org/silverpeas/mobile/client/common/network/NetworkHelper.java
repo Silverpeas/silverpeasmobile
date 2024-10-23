@@ -83,6 +83,10 @@ public class NetworkHelper {
         return (connection == null);
     }-*/;
 
+    public static native String getHostname() /*-{
+        return "https://" + location.hostname;
+  }-*/;
+
   public static native boolean isOnline() /*-{
     var connection = window.navigator.onLine;
     return connection;

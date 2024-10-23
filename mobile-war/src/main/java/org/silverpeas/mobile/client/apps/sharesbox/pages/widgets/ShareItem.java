@@ -38,6 +38,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.sharesbox.pages.SharePage;
 import org.silverpeas.mobile.client.apps.sharesbox.resources.ShareMessages;
 import org.silverpeas.mobile.client.components.base.widgets.SelectableItem;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
@@ -91,7 +92,9 @@ public class ShareItem extends SelectableItem {
     endTouch(event, true, new Command() {
       @Override
       public void execute() {
-        //TODO : display share informations
+        SharePage page = new SharePage();
+        page.setData(data);
+        page.show();
       }
     });
   }
