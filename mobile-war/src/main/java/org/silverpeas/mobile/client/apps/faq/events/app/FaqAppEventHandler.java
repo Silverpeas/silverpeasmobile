@@ -31,4 +31,6 @@ public interface FaqAppEventHandler extends EventHandler{
   void loadCategories(FaqCategoriesLoadEvent faqCategoriesLoadEvent);
 
   void loadAttachments(FaqAttachmentsLoadEvent faqAttachmentsLoadEvent);
+
+  void onCreateQuestion(QuestionCreateEvent questionCreateEvent);
 }

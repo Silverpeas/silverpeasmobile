@@ -327,6 +327,7 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 .ui-controlgroup, fieldset.ui-controlgroup {
   text-align: center;
+  width: 100%;
 }
 
 /* Button down */
@@ -3336,6 +3337,47 @@ a.popin-btn {
   line-height: 3em;
   height: 2em;
 }
+
+#questionForm .category {
+  width: calc(100vw - 4em);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+
+
+
+  box-sizing: border-box;
+
+  background-color: var(--white);
+  border-radius: 0.25em;
+  border: none;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+
+  line-height: 3em;
+  height: 2em;
+}
+
+#questionForm .question {
+  width: calc(100vw - 4em);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  border: none;
+  line-height: 2em;
+}
+
+#questionForm .question::placeholder {
+  color: var(--main-flashy-color);
+}
+
+#questionForm .description {
+  width: calc(100vw - 4em);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  border: none;
+}
+
 
 /******** Resources Manager ********/
 

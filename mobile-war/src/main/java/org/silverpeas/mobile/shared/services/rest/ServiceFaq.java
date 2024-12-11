@@ -28,10 +28,10 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
+import org.silverpeas.mobile.shared.dto.faq.QuestionDetailDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
@@ -49,4 +49,9 @@ public interface ServiceFaq extends RestService {
   @Path("{appId}/category/all")
   public void getAllCategories(@PathParam("appId") String appId,
       MethodCallback<List<CategoryDTO>> callback);
+
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Path("{appId}/question")
+  public void createQuestion(@PathParam("appId") String appId, QuestionDetailDTO question, MethodCallback<QuestionDetailDTO> callback);
 }

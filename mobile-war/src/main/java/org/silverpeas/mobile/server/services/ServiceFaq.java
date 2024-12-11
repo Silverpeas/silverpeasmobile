@@ -37,14 +37,11 @@ import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
+import org.silverpeas.mobile.shared.dto.faq.QuestionDetailDTO;
 import org.silverpeas.mobile.shared.dto.faq.ReplyDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -63,6 +60,29 @@ public class ServiceFaq extends AbstractRestWebService {
 
   @PathParam("appId")
   private String componentId;
+
+  @POST
+  @Path("question")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public QuestionDetailDTO createQuestion(final QuestionDetailDTO question) {
+    Question q = new Question();
+    q.setTitle(question.getQuestion());
+    q.setContent(question.getDescription());
+    q.setCreatorId(getUser().getId());
+    q.setCreationDate();
+    q.setInstanceId(componentId);
+    if (!question.getCategoryId().isEmpty()) q.setCategoryId(question.getCategoryId());
+
+    try {
+      long id = QuestionManagerProvider.getQuestionManager().createQuestion(q);
+      question.setId(id);
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+      throw new WebApplicationException(e);
+    }
+    return question;
+  }
 
   @GET
   @Path("question/all")

@@ -22,15 +22,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.faq.events.pages;
+package org.silverpeas.mobile.shared.dto.faq;
 
-import com.google.gwt.event.shared.EventHandler;
-import org.silverpeas.mobile.client.apps.faq.events.app.QuestionCreateEvent;
 
-public interface FaqPagesEventHandler extends EventHandler{
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-  void onCategoriesLoaded(FaqCategoriesLoadedEvent faqCategoriesLoadedEvent);
+/**
+ * @author svu
+ */
+public class QuestionDetailDTO implements Serializable {
+  private long id;
+  private String question;
+  private String categoryId;
+  private String description;
 
-  void onAttachmentsLoaded(FaqAttachmentsLoadedEvent faqAttachmentsLoadedEvent);
+  public String getQuestion() {
+    return question;
+  }
 
+  public void setQuestion(String question) {
+    this.question = question;
+  }
+
+  public String getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(String categoryId) {
+    this.categoryId = categoryId;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  public long getId() {
+    return id;
+  }
 }

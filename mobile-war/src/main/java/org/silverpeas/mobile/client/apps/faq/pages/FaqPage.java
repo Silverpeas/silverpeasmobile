@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -41,10 +42,12 @@ import org.silverpeas.mobile.client.apps.faq.events.pages.FaqPagesEventHandler;
 import org.silverpeas.mobile.client.apps.faq.pages.widgets.FaqItem;
 import org.silverpeas.mobile.client.apps.faq.resources.FaqMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
+import org.silverpeas.mobile.client.apps.news.pages.NewsEditPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.base.widgets.AddButton;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
@@ -70,7 +73,7 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
   private List<CategoryDTO> cats;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
-
+  private AddButton ask = new AddButton();
 
   interface FaqPageUiBinder extends UiBinder<Widget, FaqPage> {
   }
@@ -80,7 +83,15 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
     setPageTitle(msg.title());
     initWidget(uiBinder.createAndBindUi(this));
     EventBus.getInstance().addHandler(AbstractFaqPagesEvent.TYPE, this);
-
+    ask.setId("ask");
+    ask.setCallback(new Command() {
+      @Override
+      public void execute() {
+        QuestionPage page = new QuestionPage();
+        page.setApp(getApp());
+        page.show();
+      }
+    });
   }
 
   @Override
@@ -94,6 +105,9 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
     super.setApp(app);
     addActionMenu(favorite);
     favorite.init(getApp().getApplicationInstance().getId(), getApp().getApplicationInstance().getId(), ContentsTypes.Component.name(), getPageTitle());
+    if (app.getApplicationInstance().getRights().getPublisher() || app.getApplicationInstance().getRights().getManager()) {
+      addActionShortcut(ask);
+    }
   }
 
   public void setData(List<QuestionDTO> data) {

@@ -22,15 +22,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.client.apps.faq.events.pages;
+package org.silverpeas.mobile.client.apps.faq.events.app;
 
-import com.google.gwt.event.shared.EventHandler;
-import org.silverpeas.mobile.client.apps.faq.events.app.QuestionCreateEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.AbstractFaqPagesEvent;
+import org.silverpeas.mobile.client.apps.faq.events.pages.FaqPagesEventHandler;
+import org.silverpeas.mobile.shared.dto.faq.QuestionDetailDTO;
 
-public interface FaqPagesEventHandler extends EventHandler{
+public class QuestionCreateEvent extends AbstractFaqAppEvent {
 
-  void onCategoriesLoaded(FaqCategoriesLoadedEvent faqCategoriesLoadedEvent);
+  private QuestionDetailDTO question;
 
-  void onAttachmentsLoaded(FaqAttachmentsLoadedEvent faqAttachmentsLoadedEvent);
+  public QuestionCreateEvent(){
+    super();
+  }
 
+  public QuestionCreateEvent(final QuestionDetailDTO question) {
+    this.question = question;
+  }
+
+  @Override
+  protected void dispatch(FaqAppEventHandler handler) {
+    handler.onCreateQuestion(this);
+  }
+
+  public QuestionDetailDTO getQuestion() {
+    return question;
+  }
 }

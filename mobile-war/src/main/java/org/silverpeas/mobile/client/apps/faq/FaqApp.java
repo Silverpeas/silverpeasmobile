@@ -27,10 +27,7 @@ package org.silverpeas.mobile.client.apps.faq;
 import com.google.gwt.core.client.GWT;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
-import org.silverpeas.mobile.client.apps.faq.events.app.AbstractFaqAppEvent;
-import org.silverpeas.mobile.client.apps.faq.events.app.FaqAppEventHandler;
-import org.silverpeas.mobile.client.apps.faq.events.app.FaqAttachmentsLoadEvent;
-import org.silverpeas.mobile.client.apps.faq.events.app.FaqCategoriesLoadEvent;
+import org.silverpeas.mobile.client.apps.faq.events.app.*;
 import org.silverpeas.mobile.client.apps.faq.events.pages.FaqAttachmentsLoadedEvent;
 import org.silverpeas.mobile.client.apps.faq.events.pages.FaqCategoriesLoadedEvent;
 import org.silverpeas.mobile.client.apps.faq.pages.FaqPage;
@@ -43,10 +40,12 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.shared.dto.documents.DocumentType;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
+import org.silverpeas.mobile.shared.dto.faq.QuestionDetailDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 import java.util.List;
@@ -92,6 +91,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
           page.setApp(FaqApp.this);
           page.setData(questions);
           page.show();
+          setMainPage(page);
         }
       };
       action.attempt();
@@ -142,6 +142,44 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
       }
     };
 
+    action.attempt();
+  }
+
+  @Override
+  public void onCreateQuestion(QuestionCreateEvent event) {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<QuestionDetailDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceFaq().createQuestion(getApplicationInstance().getId(), event.getQuestion(), this);
+      }
+
+      @Override
+      public void onSuccess(Method method, QuestionDetailDTO questionDetailDTO) {
+        super.onSuccess(method, questionDetailDTO);
+        Snackbar.show(msg.createConfirmation(), Snackbar.DELAY, Snackbar.INFO);
+        reloadFaq();
+      }
+    };
+    action.attempt();
+  }
+
+
+  private void reloadFaq() {
+    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<QuestionDTO>>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceFaq().getAllQuestions(getApplicationInstance().getId(), this);
+      }
+
+      @Override
+      public void onSuccess(final Method method, final List<QuestionDTO> questions) {
+        super.onSuccess(method, questions);
+        FaqPage page = (FaqPage) getMainPage();
+        page.setData(questions);
+      }
+    };
     action.attempt();
   }
 }

@@ -28,4 +28,9 @@ import com.google.gwt.i18n.client.Messages;
 
 public interface FaqMessages extends Messages {
   String title();
+  String create();
+  String questionField();
+  String descriptionField();
+  String categoryField();
+  String createConfirmation();
 }
