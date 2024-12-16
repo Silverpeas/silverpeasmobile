@@ -55,6 +55,7 @@ import org.silverpeas.mobile.client.apps.navigation.NavigationApp;
 import org.silverpeas.mobile.client.apps.navigation.events.pages.HomePageLoadedEvent;
 import org.silverpeas.mobile.client.apps.news.NewsApp;
 import org.silverpeas.mobile.client.apps.notificationsbox.NotificationsBoxApp;
+import org.silverpeas.mobile.client.apps.orgchartgroup.OrgChartGroupApp;
 import org.silverpeas.mobile.client.apps.resourcesManager.ResourcesManagerApp;
 import org.silverpeas.mobile.client.apps.sharesbox.SharesBoxApp;
 import org.silverpeas.mobile.client.apps.survey.SurveyApp;
@@ -233,6 +234,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     apps.add(new SharesBoxApp());
     apps.add(new FaqApp());
     apps.add(new ResourcesManagerApp());
+    apps.add(new OrgChartGroupApp());
   }
 
   private static void checkVersion() {

@@ -22,8 +22,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.dto.navigation;
+package org.silverpeas.mobile.shared.services.rest;
 
-public enum Apps {
-	gallery, kmelia, quickinfo, webPages, blog, hyperlink, almanach, userCalendar, formsOnline, classifieds, survey, questionReply, pollingStation, resourcesManager, orgchartGroup;
+import org.fusesource.restygwt.client.MethodCallback;
+import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
+
+import javax.ws.rs.*;
+
+@Path("/mobile/orgchartgroup")
+public interface ServiceOrgChartGroup extends RestService {
+
+  @GET
+  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Path("{appId}/")
+  void getOrgChart(@PathParam("appId") String appId, MethodCallback<GroupOrgChartDTO> callback);
+
 }

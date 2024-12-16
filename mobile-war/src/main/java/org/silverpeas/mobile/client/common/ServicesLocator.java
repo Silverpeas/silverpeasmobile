@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.common;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import org.fusesource.restygwt.client.Defaults;
 import org.silverpeas.mobile.client.common.network.RestAuthenticationDispatcher;
 import org.silverpeas.mobile.client.common.network.RestDispatcher;
@@ -71,6 +70,7 @@ public class ServicesLocator {
   private static ServiceTermsOfService serviceTermsOfService = GWT.create(ServiceTermsOfService.class);
 
   private static ServiceResourcesManager serviceResourcesManager = GWT.create(ServiceResourcesManager.class);
+  private static ServiceOrgChartGroup serviceOrgChartGroup = GWT.create(ServiceOrgChartGroup.class);
 
   private static void initRestContext() {
       Defaults.getServiceRoot().equals("/silverpeas/services");
@@ -223,6 +223,11 @@ public class ServicesLocator {
   public static ServiceContact getServiceContact() {
     initRestContext();
     return serviceContact;
+  }
+
+  public static ServiceOrgChartGroup getServiceOrgChartGroup() {
+    initRestContext();
+    return serviceOrgChartGroup;
   }
 
 }

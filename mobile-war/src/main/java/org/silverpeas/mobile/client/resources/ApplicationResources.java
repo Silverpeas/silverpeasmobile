@@ -28,6 +28,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.TextResource;
+import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 
 /**
  * @author: svu
@@ -194,5 +195,9 @@ public interface ApplicationResources extends ClientBundle {
   @Source("icons/menu/search.svg")
   @DataResource.MimeType("image/svg+xml")
   TextResource search();
+
+  @Source("icons/apps/orgchartgroup.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource orgchartGroup();
 }
 

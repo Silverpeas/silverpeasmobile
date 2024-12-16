@@ -112,6 +112,9 @@ public class NavigationItem extends Composite {
       } else if (type.equalsIgnoreCase(Apps.resourcesManager.name())) {
         setStyleName("app-resourcesManager");
         icon.setHTML(resources.bookonline().getText());
+      } else if(type.equalsIgnoreCase(Apps.orgchartGroup.name())) {
+        setStyleName("app-orgaChartGroup");
+        icon.setHTML(resources.orgchartGroup().getText());
       }
       link.setStyleName("ui-btn ui-icon-carat-r");
     }

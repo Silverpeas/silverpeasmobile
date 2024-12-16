@@ -38,6 +38,7 @@ import org.silverpeas.mobile.shared.dto.media.SoundDTO;
 import org.silverpeas.mobile.shared.dto.media.VideoDTO;
 import org.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
+import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
 import java.io.Serializable;
 
@@ -45,6 +46,7 @@ import java.io.Serializable;
  * @author: svu
  */
 @JsonSubTypes({@JsonSubTypes.Type(value = UserDTO.class, name = "UserDTO"),
+    @JsonSubTypes.Type(value = GroupOrgChartDTO.class, name = "GroupOrgChartDTO"),
     @JsonSubTypes.Type(value = GroupDTO.class, name = "GroupeDTO"),
     @JsonSubTypes.Type(value = PostDTO.class, name = "PostDTO"),
     @JsonSubTypes.Type(value = StatusDTO.class, name = "StatusDTO"),
