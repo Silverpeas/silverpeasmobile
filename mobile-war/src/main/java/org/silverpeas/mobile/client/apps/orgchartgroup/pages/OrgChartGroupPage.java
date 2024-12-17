@@ -27,7 +27,9 @@ package org.silverpeas.mobile.client.apps.orgchartgroup.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
+import org.silverpeas.mobile.client.apps.orgchartgroup.pages.widgets.OrgaChartGroupItem;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -45,6 +47,13 @@ public class OrgChartGroupPage extends PageContent {
 
   public void setData(GroupOrgChartDTO groupOrgChartDTO) {
     this.data = groupOrgChartDTO;
+    setTitle(data.getName());
+    data.getSubGroups().forEach(group -> {
+      OrgaChartGroupItem item = new OrgaChartGroupItem();
+      item.setName(group.getName());
+      units.add(item);
+    });
+
   }
 
   interface OrgChartGroupPageUiBinder extends UiBinder<Widget, OrgChartGroupPage> {

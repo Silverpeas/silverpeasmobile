@@ -3532,3 +3532,21 @@ a.popin-btn {
 .ck-powered-by-balloon {
   display: none !important;
 }
+
+/** OrgChartGroup */
+
+li.orgachartgroup {
+  background-color: var(--white);
+  padding: 1em 1em 1em 1em;
+  margin-bottom: 1em;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
+li.orgachartgroup:nth-child(odd) {
+  background-color: var(--white);
+}
+
+li.orgachartgroup:nth-child(even), li.orgachartgroup:nth-child(even)>a {
+  background-color: var(--main-bg-color);
+}
