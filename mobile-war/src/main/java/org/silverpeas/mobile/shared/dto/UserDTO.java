@@ -27,6 +27,8 @@ package org.silverpeas.mobile.shared.dto;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonTypeName("UserDTO")
 public class UserDTO extends BaseDTO implements Serializable{
@@ -37,6 +39,12 @@ public class UserDTO extends BaseDTO implements Serializable{
   private String eMail;
   private String firstName;
   private String avatar;
+  private String password;
+  private List<PropertyDTO> properties = new ArrayList<PropertyDTO>();
+
+  public List<PropertyDTO> getProperties() { return properties; }
+
+  public void setProperties(List<PropertyDTO> properties) { this.properties = properties; }
 
   public String getLastName() {
     return lastName;
@@ -70,6 +78,7 @@ public class UserDTO extends BaseDTO implements Serializable{
     this.avatar = avatar;
   }
 
+  public void addProperty(PropertyDTO property) { properties.add(property); }
 
   @Override
   public boolean equals(Object obj) {

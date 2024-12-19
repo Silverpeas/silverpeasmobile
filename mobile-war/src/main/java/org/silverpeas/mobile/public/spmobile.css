@@ -3535,18 +3535,50 @@ a.popin-btn {
 
 /** OrgChartGroup */
 
-li.orgachartgroup {
+li.orgachartgroup, li.orgachartuser {
   background-color: var(--white);
   padding: 1em 1em 1em 1em;
   margin-bottom: 1em;
   text-align: center;
   border: 1px solid #e0e0e0;
+  margin-left: 2em;
+  margin-right: 2em;
+  user-select:none;
 }
 
-li.orgachartgroup:nth-child(odd) {
+li.orgachartgroup:nth-child(odd), li.orgachartgroup:nth-child(odd)>a {
   background-color: var(--white);
+  color: var(--black);
 }
 
 li.orgachartgroup:nth-child(even), li.orgachartgroup:nth-child(even)>a {
-  background-color: var(--main-bg-color);
+  background-color: var(--white);
+  color: var(--black);
 }
+
+li.orgachartuser:nth-child(odd), li.orgachartuser:nth-child(odd)>a {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+li.orgachartuser:nth-child(even), li.orgachartuser:nth-child(even)>a {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.orgachartgroup-name {
+  display: block;
+  margin-bottom: 1em;
+  font-size: 1.2em;
+}
+
+.orgachartgroup-boss > div.label-boss {
+  margin-bottom: 1em;
+}
+
+.orgachartuser-avatar, .orgachartgroup-boss > div.boss > img {
+  margin-right: 1em;
+  width: 3em;
+  vertical-align:middle;
+}
+

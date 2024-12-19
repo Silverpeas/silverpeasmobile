@@ -39,6 +39,7 @@ public class GroupOrgChartDTO extends BaseDTO implements Serializable {
   private String name;
   private List<UserDTO> users = new ArrayList<>();
   private List<GroupOrgChartDTO> subGroups = new ArrayList<>();
+  private List<UserDTO> boss = new ArrayList<>();
 
   public void setName(String name) {
     this.name = name;
@@ -48,9 +49,9 @@ public class GroupOrgChartDTO extends BaseDTO implements Serializable {
     return name;
   }
 
-  public void addUser(final UserDTO user) {
-    users.add(user);
-  }
+  public void addUser(final UserDTO user) { users.add(user); }
+
+  public void addBoss(final UserDTO user) { boss.add(user); }
 
   public List<UserDTO> getUsers() {
     return users;
@@ -71,4 +72,8 @@ public class GroupOrgChartDTO extends BaseDTO implements Serializable {
   public void setSubGroups(List<GroupOrgChartDTO> subGroups) {
     this.subGroups = subGroups;
   }
+
+  public List<UserDTO> getBoss() { return boss; }
+
+  public void setBoss(List<UserDTO> boss) { this.boss = boss; }
 }

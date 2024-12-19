@@ -33,6 +33,7 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
+import org.silverpeas.mobile.shared.dto.PropertyDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
@@ -65,24 +66,51 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
   public GroupOrgChartDTO getOrgChart() throws Exception {
     ComponentInst app = Administration.get().getComponentInst(componentId);
     String groupId = app.getParameterValue("ldapRoot");
+    String titleField = app.getParameterValue("ldapAttTitle");
+    String unitsChartCentralLabel = app.getParameterValue("unitsChartCentralLabel");
     GroupDetail root =  Administration.get().getGroup(groupId);
-    GroupOrgChartDTO dto = populateOrga(root);
+    GroupOrgChartDTO dto = populateOrga(root, titleField, unitsChartCentralLabel);
     return dto;
   }
 
-  private GroupOrgChartDTO populateOrga(Group group) {
+  private GroupOrgChartDTO populateOrga(Group group, String titleField, String unitsChartCentralLabel) throws Exception {
     GroupOrgChartDTO dto = new GroupOrgChartDTO();
     dto.setId(group.getId());
     dto.setName(group.getName());
     dto.setName(group.getName());
     dto.setId(group.getId());
-    for (User u : group.getAllUsers()) {
+    String [] ids = Administration.get().getGroup(group.getId()).getUserIds();
+    for (String id : ids) {
+      User u = Administration.get().getUserDetail(id);
       dto.addUser(populate(u));
+      String boss = isBoss(u, titleField, unitsChartCentralLabel);
+      if (boss != null) {
+        UserDTO b = populate(u);
+        PropertyDTO prop = new PropertyDTO();
+        prop.setKey("bossTitle");
+        prop.setValue(boss);
+        b.addProperty(prop);
+        dto.addBoss(b);
+      }
     }
     for (Group g : group.getSubGroups()) {
-      dto.addSubGroup(populateOrga(g));
+      dto.addSubGroup(populateOrga(g, titleField, unitsChartCentralLabel));
     }
     return dto;
+  }
+
+  private String isBoss(User u, String titleField, String unitsChartCentralLabel) throws Exception {
+    String title = Administration.get().getUserFull(u.getId()).getValue(titleField);
+    String [] rules = unitsChartCentralLabel.split(";");
+    for (String rule : rules) {
+      String [] r = rule.split("=");
+      r[0] = r[0].trim();
+      r[1] = r[1].trim();
+      if (title.contains(r[1])) {
+        return r[0];
+      }
+    }
+    return null;
   }
 
   private UserDTO populate(User user) {

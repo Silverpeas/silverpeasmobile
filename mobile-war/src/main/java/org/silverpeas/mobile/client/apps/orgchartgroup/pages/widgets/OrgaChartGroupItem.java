@@ -41,30 +41,33 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
+import org.silverpeas.mobile.client.apps.orgchartgroup.OrgChartGroupApp;
+import org.silverpeas.mobile.client.apps.orgchartgroup.pages.OrgChartGroupPage;
 import org.silverpeas.mobile.client.apps.orgchartgroup.resources.OrgChartGroupMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.widgets.SelectableItem;
+import org.silverpeas.mobile.shared.dto.PropertyDTO;
+import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
+import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
 public class OrgaChartGroupItem extends Composite {
 
   private static OrgChartGroupItemUiBinder uiBinder = GWT.create(OrgChartGroupItemUiBinder.class);
 
+  private GroupOrgChartDTO data;
+
   @UiField HTMLPanel container;
 
   @UiField
-  SpanElement name;
+  SpanElement name, bossPlace;
 
   @UiField
   Anchor link;
 
   @UiField(provided = true) protected OrgChartGroupMessages msg = null;
-
-  public void setName(String n) {
-    name.setInnerText(n);
-  }
 
 
   interface OrgChartGroupItemUiBinder extends UiBinder<Widget, OrgaChartGroupItem> {
@@ -72,11 +75,30 @@ public class OrgaChartGroupItem extends Composite {
 
   @UiHandler("link")
   protected void navigate(ClickEvent event) {
-    //TODO
+    OrgChartGroupPage page = new OrgChartGroupPage();
+    page.setPageTitle(name.getInnerText());
+    page.setData(data);
+    page.show();
   }
 
   public OrgaChartGroupItem() {
     msg = GWT.create(OrgChartGroupMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+  }
+
+  public void setData(GroupOrgChartDTO data) {
+    this.data = data;
+    name.setInnerText(data.getName());
+    String htmlBoss = "";
+    for (UserDTO boss : data.getBoss()) {
+      String label = "";
+      for (PropertyDTO prop : boss.getProperties()) {
+        if (prop.getKey().equalsIgnoreCase("bossTitle")) {
+          label = prop.getValue();
+        }
+      }
+      htmlBoss += "<div class='label-boss'>" + label + "</div><div class='boss'><img src='/silverpeas" + boss.getAvatar() + "'></img><span>" + boss.getFirstName() + " " + boss.getLastName() + "</span></div>";
+    }
+    bossPlace.setInnerHTML(htmlBoss);
   }
 }

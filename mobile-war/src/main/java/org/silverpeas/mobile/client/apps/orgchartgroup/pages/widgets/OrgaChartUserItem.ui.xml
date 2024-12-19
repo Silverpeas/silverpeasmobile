@@ -26,10 +26,10 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.orgchartgroup.resources.OrgChartGroupMessages'/>
 
-  <g:HTMLPanel tag="li" ui:field="container" styleName="orgachartgroup">
+  <g:HTMLPanel tag="li" ui:field="container" styleName="orgachartuser">
     <g:Anchor ui:field="link" styleName="">
-      <span ui:field="name" class="orgachartgroup-name"></span>
-      <span ui:field="bossPlace" class="orgachartgroup-boss"></span>
+      <img src="" ui:field="avatar" class="orgachartuser-avatar"></img>
+      <span ui:field="name" class="orgachartuser-name"></span>
     </g:Anchor>
   </g:HTMLPanel>
 

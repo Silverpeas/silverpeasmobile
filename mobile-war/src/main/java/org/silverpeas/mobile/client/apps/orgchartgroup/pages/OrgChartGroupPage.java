@@ -30,6 +30,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.orgchartgroup.pages.widgets.OrgaChartGroupItem;
+import org.silverpeas.mobile.client.apps.orgchartgroup.pages.widgets.OrgaChartUserItem;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -50,9 +51,17 @@ public class OrgChartGroupPage extends PageContent {
     setTitle(data.getName());
     data.getSubGroups().forEach(group -> {
       OrgaChartGroupItem item = new OrgaChartGroupItem();
-      item.setName(group.getName());
+      item.setData(group);
       units.add(item);
     });
+
+    if (data.getSubGroups().isEmpty()) {
+      data.getUsers().forEach(user -> {
+        OrgaChartUserItem item = new OrgaChartUserItem();
+        item.setData(user);
+        units.add(item);
+      });
+    }
 
   }
 
