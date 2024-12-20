@@ -1,12 +1,15 @@
 package org.silverpeas.mobile.client.apps.orgchartgroup;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.app.AbstractOrgChartGroupAppEvent;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.app.ContactLoadEvent;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.app.OrgChartGroupAppEventHandler;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.ui.ContactLoadedEvent;
 import org.silverpeas.mobile.client.apps.orgchartgroup.pages.OrgChartGroupPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
@@ -14,10 +17,11 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
+import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
-public class OrgChartGroupApp extends App implements NavigationEventHandler {
+public class OrgChartGroupApp extends App implements NavigationEventHandler, OrgChartGroupAppEventHandler {
 
     private ApplicationMessages msg;
 
@@ -25,6 +29,7 @@ public class OrgChartGroupApp extends App implements NavigationEventHandler {
         super();
         msg = GWT.create(ApplicationMessages.class);
         EventBus.getInstance().addHandler(AbstractNavigationEvent.TYPE, this);
+        EventBus.getInstance().addHandler(AbstractOrgChartGroupAppEvent.TYPE, this);
     }
 
     public void start() {
@@ -69,11 +74,24 @@ public class OrgChartGroupApp extends App implements NavigationEventHandler {
                 }
             };
             action.attempt();
-
-
-
-
-
         }
+    }
+
+    @Override
+    public void loadContact(ContactLoadEvent event) {
+        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
+            @Override
+            public void attempt() {
+                super.attempt();
+                ServicesLocator.getServiceContact().getContact(event.getUserId(), this);
+            }
+
+            @Override
+            public void onSuccess(Method method, DetailUserDTO detailUserDTO) {
+                super.onSuccess(method, detailUserDTO);
+                EventBus.getInstance().fireEvent(new ContactLoadedEvent(detailUserDTO));
+            }
+        };
+        action.attempt();
     }
 }

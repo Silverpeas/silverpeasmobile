@@ -92,12 +92,18 @@ public class OrgaChartGroupItem extends Composite {
     String htmlBoss = "";
     for (UserDTO boss : data.getBoss()) {
       String label = "";
+      String infos = "<div class='orgachartuser-infos'>";
       for (PropertyDTO prop : boss.getProperties()) {
         if (prop.getKey().equalsIgnoreCase("bossTitle")) {
           label = prop.getValue();
+        } else {
+          if (prop.getValue() != null && !prop.getValue().isEmpty()) {
+            infos += "<div>" + prop.getKey() + " : " + prop.getValue() + "</div>";
+          }
         }
       }
-      htmlBoss += "<div class='label-boss'>" + label + "</div><div class='boss'><img src='/silverpeas" + boss.getAvatar() + "'></img><span>" + boss.getFirstName() + " " + boss.getLastName() + "</span></div>";
+      infos += "</div>";
+      htmlBoss += "<div class='label-boss'>" + label + "</div><div class='boss'><img src='/silverpeas" + boss.getAvatar() + "'></img><span>" + boss.getFirstName() + " " + boss.getLastName() + "</span>"+infos+"</div>";
     }
     bossPlace.setInnerHTML(htmlBoss);
   }

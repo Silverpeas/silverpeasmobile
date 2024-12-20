@@ -3566,6 +3566,10 @@ li.orgachartuser:nth-child(even), li.orgachartuser:nth-child(even)>a {
   color: var(--black);
 }
 
+.orgachartuser-infos {
+  margin-top: 1em;
+}
+
 .orgachartgroup-name {
   display: block;
   margin-bottom: 1em;

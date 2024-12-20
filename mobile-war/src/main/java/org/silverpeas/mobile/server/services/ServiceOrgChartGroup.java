@@ -68,12 +68,15 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
     String groupId = app.getParameterValue("ldapRoot");
     String titleField = app.getParameterValue("ldapAttTitle");
     String unitsChartCentralLabel = app.getParameterValue("unitsChartCentralLabel");
+    String personnsChartOthersInfosKeys = app.getParameterValue("personnsChartOthersInfosKeys");
+    String unitsChartOthersInfosKeys = app.getParameterValue("unitsChartOthersInfosKeys");
+
     GroupDetail root =  Administration.get().getGroup(groupId);
-    GroupOrgChartDTO dto = populateOrga(root, titleField, unitsChartCentralLabel);
+    GroupOrgChartDTO dto = populateOrga(root, titleField, unitsChartCentralLabel, personnsChartOthersInfosKeys, unitsChartOthersInfosKeys);
     return dto;
   }
 
-  private GroupOrgChartDTO populateOrga(Group group, String titleField, String unitsChartCentralLabel) throws Exception {
+  private GroupOrgChartDTO populateOrga(Group group, String titleField, String unitsChartCentralLabel, String personnsChartOthersInfosKeys, String unitsChartOthersInfosKeys) throws Exception {
     GroupOrgChartDTO dto = new GroupOrgChartDTO();
     dto.setId(group.getId());
     dto.setName(group.getName());
@@ -82,10 +85,10 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
     String [] ids = Administration.get().getGroup(group.getId()).getUserIds();
     for (String id : ids) {
       User u = Administration.get().getUserDetail(id);
-      dto.addUser(populate(u));
+      dto.addUser(populate(u, personnsChartOthersInfosKeys));
       String boss = isBoss(u, titleField, unitsChartCentralLabel);
       if (boss != null) {
-        UserDTO b = populate(u);
+        UserDTO b = populate(u, unitsChartOthersInfosKeys);
         PropertyDTO prop = new PropertyDTO();
         prop.setKey("bossTitle");
         prop.setValue(boss);
@@ -94,7 +97,7 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
       }
     }
     for (Group g : group.getSubGroups()) {
-      dto.addSubGroup(populateOrga(g, titleField, unitsChartCentralLabel));
+      dto.addSubGroup(populateOrga(g, titleField, unitsChartCentralLabel, personnsChartOthersInfosKeys, unitsChartOthersInfosKeys));
     }
     return dto;
   }
@@ -113,13 +116,22 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
     return null;
   }
 
-  private UserDTO populate(User user) {
+  private UserDTO populate(User user, String propertiesToDisplay) throws Exception {
     UserDTO dto = new UserDTO();
     dto.setId(user.getId());
     dto.setFirstName(user.getFirstName());
     dto.setLastName(user.getLastName());
     dto.seteMail(user.getEmailAddress());
     dto.setAvatar(user.getAvatar());
+
+    String [] properties = propertiesToDisplay.split(";");
+    for (String property : properties) {
+      String [] p = property.split("=");
+      PropertyDTO prop = new PropertyDTO();
+      prop.setKey(p[0].trim());
+      prop.setValue(Administration.get().getUserFull(user.getId()).getValue(p[1].trim()));
+      dto.addProperty(prop);
+    }
     return dto;
   }
 

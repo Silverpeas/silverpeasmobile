@@ -27,7 +27,6 @@ package org.silverpeas.mobile.client.apps.orgchartgroup.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.orgchartgroup.pages.widgets.OrgaChartGroupItem;
 import org.silverpeas.mobile.client.apps.orgchartgroup.pages.widgets.OrgaChartUserItem;
@@ -77,6 +76,11 @@ public class OrgChartGroupPage extends PageContent {
   @Override
   public void stop() {
     super.stop();
-
+    for (int i = 0; i < units.getCount() ; i++) {
+      Widget w = units.getWidget(i);
+      if (w instanceof OrgaChartUserItem) {
+        ((OrgaChartUserItem) w).stop();
+      }
+    }
   }
 }

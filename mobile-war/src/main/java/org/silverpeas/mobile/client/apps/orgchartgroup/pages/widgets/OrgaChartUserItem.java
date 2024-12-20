@@ -25,19 +25,31 @@
 package org.silverpeas.mobile.client.apps.orgchartgroup.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import org.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
+import org.silverpeas.mobile.client.apps.contacts.pages.ContactPage;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.app.AbstractOrgChartGroupAppEvent;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.app.ContactLoadEvent;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.ui.AbstractOrgChartGroupeUIEvent;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.ui.ContactLoadedEvent;
+import org.silverpeas.mobile.client.apps.orgchartgroup.events.ui.OrgChartGroupUIEventHandler;
 import org.silverpeas.mobile.client.apps.orgchartgroup.pages.OrgChartGroupPage;
 import org.silverpeas.mobile.client.apps.orgchartgroup.resources.OrgChartGroupMessages;
+import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.shared.dto.DetailUserDTO;
+import org.silverpeas.mobile.shared.dto.PropertyDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
-public class OrgaChartUserItem extends Composite {
+public class OrgaChartUserItem extends Composite implements OrgChartGroupUIEventHandler {
 
   private static OrgChartUserItemUiBinder uiBinder = GWT.create(OrgChartUserItemUiBinder.class);
 
@@ -49,6 +61,9 @@ public class OrgaChartUserItem extends Composite {
   SpanElement name;
 
   @UiField
+  DivElement infos;
+
+  @UiField
   ImageElement avatar;
 
   @UiField
@@ -56,23 +71,43 @@ public class OrgaChartUserItem extends Composite {
 
   @UiField(provided = true) protected OrgChartGroupMessages msg = null;
 
-
   interface OrgChartUserItemUiBinder extends UiBinder<Widget, OrgaChartUserItem> {
   }
 
   @UiHandler("link")
   protected void navigate(ClickEvent event) {
-    //TODO : display profil
+    EventBus.getInstance().fireEvent(new ContactLoadEvent(data.getId()));
   }
 
   public OrgaChartUserItem() {
     msg = GWT.create(OrgChartGroupMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+    EventBus.getInstance().addHandler(AbstractOrgChartGroupeUIEvent.TYPE, this);
+  }
+
+  @Override
+  public void onContactLoaded(ContactLoadedEvent event) {
+    if (event.getUser().getId().equals(data.getId())) {
+      ContactPage page = new ContactPage();
+      page.setData(event.getUser());
+      page.show();
+    }
   }
 
   public void setData(UserDTO data) {
     this.data = data;
     name.setInnerText(data.getFirstName() + " " + data.getLastName());
     avatar.setSrc("/silverpeas" + data.getAvatar());
+    String html = "";
+    for (PropertyDTO p : data.getProperties()) {
+      if (p.getValue() != null && !p.getValue().isEmpty()) {
+        html += "<div>" + p.getKey() + " : " + p.getValue() + "</div>";
+      }
+    }
+    infos.setInnerHTML(html);
+  }
+
+  public void stop() {
+    EventBus.getInstance().removeHandler(AbstractOrgChartGroupeUIEvent.TYPE, this);
   }
 }

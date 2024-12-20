@@ -30,6 +30,7 @@
     <g:Anchor ui:field="link" styleName="">
       <img src="" ui:field="avatar" class="orgachartuser-avatar"></img>
       <span ui:field="name" class="orgachartuser-name"></span>
+      <div ui:field="infos" class="orgachartuser-infos"></div>
     </g:Anchor>
   </g:HTMLPanel>
 
