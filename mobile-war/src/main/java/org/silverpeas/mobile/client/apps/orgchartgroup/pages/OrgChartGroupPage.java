@@ -54,14 +54,12 @@ public class OrgChartGroupPage extends PageContent {
       units.add(item);
     });
 
-    if (data.getSubGroups().isEmpty()) {
-      data.getUsers().forEach(user -> {
-        OrgaChartUserItem item = new OrgaChartUserItem();
-        item.setData(user);
-        units.add(item);
-      });
-    }
 
+    data.getUsers().forEach(user -> {
+      OrgaChartUserItem item = new OrgaChartUserItem();
+      item.setData(user);
+      units.add(item);
+    });
   }
 
   interface OrgChartGroupPageUiBinder extends UiBinder<Widget, OrgChartGroupPage> {

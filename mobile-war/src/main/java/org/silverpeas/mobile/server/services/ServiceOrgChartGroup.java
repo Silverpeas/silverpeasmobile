@@ -40,7 +40,8 @@ import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service de gestion des Organigrammes groups.
@@ -71,12 +72,14 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
     String personnsChartOthersInfosKeys = app.getParameterValue("personnsChartOthersInfosKeys");
     String unitsChartOthersInfosKeys = app.getParameterValue("unitsChartOthersInfosKeys");
 
+    String personnsChartCategoriesLabel = app.getParameterValue("personnsChartCategoriesLabel");
+
     GroupDetail root =  Administration.get().getGroup(groupId);
-    GroupOrgChartDTO dto = populateOrga(root, titleField, unitsChartCentralLabel, personnsChartOthersInfosKeys, unitsChartOthersInfosKeys);
+    GroupOrgChartDTO dto = populateOrga(root, titleField, unitsChartCentralLabel, personnsChartOthersInfosKeys, unitsChartOthersInfosKeys, personnsChartCategoriesLabel);
     return dto;
   }
 
-  private GroupOrgChartDTO populateOrga(Group group, String titleField, String unitsChartCentralLabel, String personnsChartOthersInfosKeys, String unitsChartOthersInfosKeys) throws Exception {
+  private GroupOrgChartDTO populateOrga(Group group, String titleField, String unitsChartCentralLabel, String personnsChartOthersInfosKeys, String unitsChartOthersInfosKeys, String personnsChartCategoriesLabel) throws Exception {
     GroupOrgChartDTO dto = new GroupOrgChartDTO();
     dto.setId(group.getId());
     dto.setName(group.getName());
@@ -96,10 +99,49 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
         dto.addBoss(b);
       }
     }
+
+    List<PropertyDTO> categories = rulesExetrator(personnsChartCategoriesLabel);
+    for (PropertyDTO category : categories) {
+      GroupOrgChartDTO cat = new GroupOrgChartDTO();
+      cat.setName(category.getKey());
+
+      for (UserDTO user : dto.getUsers()) {
+        String title = Administration.get().getUserFull(user.getId()).getValue(titleField);
+        if (title.contains(category.getValue())) {
+          cat.addUser(user);
+        }
+      }
+      if (cat.getUsers().size() > 0) {
+        dto.addSubGroup(cat);
+        for (UserDTO uc : cat.getUsers()) {
+          for (int i = 0; i < dto.getUsers().size(); i++) {
+            UserDTO user = dto.getUsers().get(i);
+            if (user.getId().equals(uc.getId())) {
+              dto.getUsers().remove(i);
+              break;
+            }
+          }
+        }
+      }
+    }
+
     for (Group g : group.getSubGroups()) {
-      dto.addSubGroup(populateOrga(g, titleField, unitsChartCentralLabel, personnsChartOthersInfosKeys, unitsChartOthersInfosKeys));
+      dto.addSubGroup(populateOrga(g, titleField, unitsChartCentralLabel, personnsChartOthersInfosKeys, unitsChartOthersInfosKeys, personnsChartCategoriesLabel));
     }
     return dto;
+  }
+
+  private List<PropertyDTO> rulesExetrator(String rules) {
+    List<PropertyDTO> rulesList = new ArrayList<>();
+    String [] rulesInfos = rules.split(";");
+    for (String rule : rulesInfos) {
+      String [] r = rule.split("=");
+      PropertyDTO p = new PropertyDTO();
+      p.setKey(r[0]);
+      p.setValue(r[1]);
+      rulesList.add(p);
+    }
+    return rulesList;
   }
 
   private String isBoss(User u, String titleField, String unitsChartCentralLabel) throws Exception {
