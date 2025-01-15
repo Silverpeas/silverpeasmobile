@@ -30,6 +30,7 @@ import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.annotation.WebService;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
@@ -42,6 +43,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service de gestion des Organigrammes groups.
@@ -165,13 +167,19 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
     dto.setLastName(user.getLastName());
     dto.seteMail(user.getEmailAddress());
     dto.setAvatar(user.getAvatar());
-
     String [] properties = propertiesToDisplay.split(";");
     for (String property : properties) {
       String [] p = property.split("=");
       PropertyDTO prop = new PropertyDTO();
       prop.setKey(p[0].trim());
-      prop.setValue(Administration.get().getUserFull(user.getId()).getValue(p[1].trim()));
+      String f = p[1].trim();
+      String v = Administration.get().getUserFull(user.getId()).getValue(f);
+      if (v.isEmpty()) {
+        Map<String, String> extrasProps = PublicationTemplateManager.getInstance().getDirectoryFormValues(user.getId(), user.getDomainId(), user.getUserPreferences().getLanguage());
+        v = extrasProps.get(f);
+        extrasProps.size();
+      }
+      prop.setValue(v);
       dto.addProperty(prop);
     }
     return dto;
