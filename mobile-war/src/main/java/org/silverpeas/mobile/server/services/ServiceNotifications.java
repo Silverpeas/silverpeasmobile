@@ -31,11 +31,9 @@ import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.admin.space.SpaceInst;
 import org.silverpeas.core.admin.user.model.*;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
-import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
@@ -49,41 +47,24 @@ import org.silverpeas.core.notification.user.client.model.SentNotificationInterf
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SilvermailCriteria;
-import org.silverpeas.kernel.bundle.LocalizationBundle;
-import org.silverpeas.kernel.bundle.ResourceLocator;
-import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
-import org.silverpeas.mobile.server.helpers.DataURLHelper;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationToSendDTO;
+import org.silverpeas.mobile.shared.dto.notifications.*;
 
-
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service de gestion des Notifications.
@@ -95,7 +76,8 @@ import java.util.List;
 @Path(ServiceNotifications.PATH)
 public class ServiceNotifications extends AbstractRestWebService {
 
-  private OrganizationController organizationController = OrganizationController.get();
+  @Inject
+  private OrganizationController organizationController;
   static final String PATH = "mobile/notification";
 
   @Context
@@ -105,9 +87,11 @@ public class ServiceNotifications extends AbstractRestWebService {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("sended/{callNumber}")
   public StreamingList<NotificationSendedDTO> getUserSendedNotifications(
-      @PathParam("callNumber") int callNumber) throws Exception {
+      @PathParam("callNumber") int callNumber) {
 
-    StreamingList<NotificationSendedDTO> s = (StreamingList<NotificationSendedDTO>) makeStreamingList(callNumber, "Cache_userNotificationsSended", request, new Populator() {
+    //noinspection unchecked
+    return (StreamingList<NotificationSendedDTO>) makeStreamingList(callNumber,
+        "Cache_userNotificationsSended", request, new Populator() {
       @Override
       public List<?> execute() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -131,8 +115,6 @@ public class ServiceNotifications extends AbstractRestWebService {
       }
     });
 
-    return s;
-
   }
 
 
@@ -142,31 +124,28 @@ public class ServiceNotifications extends AbstractRestWebService {
   public StreamingList<NotificationReceivedDTO> getUserNotifications(
       @PathParam("callNumber") int callNumber) {
 
-    StreamingList<NotificationReceivedDTO> s = (StreamingList<NotificationReceivedDTO>) makeStreamingList(callNumber, "Cache_userNotificationsReceived", request, new Populator() {
-      @Override
-      public List<?> execute() {
-        List<NotificationReceivedDTO> list = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Collection<SILVERMAILMessage> messages =
-            SILVERMAILPersistence.getMessageOfFolder(getUser().getId(), "INBOX", null,
-                SilvermailCriteria.QUERY_ORDER_BY.RECEPTION_DATE_ASC);
-        for (SILVERMAILMessage message : messages) {
-          NotificationReceivedDTO dto = new NotificationReceivedDTO();
-          dto.setSource(message.getSource());
-          dto.setAuthor(message.getSenderName());
-          dto.setDate(sdf.format(message.getDate()));
-          dto.setLink(message.getUrl());
-          dto.setReaden(message.getReaden());
-          dto.setTitle(message.getSubject());
-          dto.setIdNotif(message.getId());
-          list.add(dto);
-        }
-        Collections.reverse(list);
-        return list;
+    //noinspection unchecked
+    return (StreamingList<NotificationReceivedDTO>) makeStreamingList(callNumber,
+        "Cache_userNotificationsReceived", request, () -> {
+      List<NotificationReceivedDTO> list = new ArrayList<>();
+      SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+      Collection<SILVERMAILMessage> messages =
+          SILVERMAILPersistence.getMessageOfFolder(getUser().getId(), "INBOX", null,
+              SilvermailCriteria.QUERY_ORDER_BY.RECEPTION_DATE_ASC);
+      for (SILVERMAILMessage message : messages) {
+        NotificationReceivedDTO dto = new NotificationReceivedDTO();
+        dto.setSource(message.getSource());
+        dto.setAuthor(message.getSenderName());
+        dto.setDate(sdf.format(message.getDate()));
+        dto.setLink(message.getUrl());
+        dto.setReaden(message.getReaden());
+        dto.setTitle(message.getSubject());
+        dto.setIdNotif(message.getId());
+        list.add(dto);
       }
+      Collections.reverse(list);
+      return list;
     });
-
-    return s;
   }
 
   @GET
@@ -184,16 +163,16 @@ public class ServiceNotifications extends AbstractRestWebService {
           users.add(populate(user));
         }
         for (GroupDetail group : Administration.get().getAllGroups()) {
-          GroupDTO g =UserHelper.getInstance().populateGroupDTO(group);
+          GroupDTO g = UserHelper.getInstance().populateGroupDTO(group);
           groups.add(g);
         }
       } else {
         ComponentInst componentInst = Administration.get().getComponentInst(componentId);
-        List<ProfileInst> profiles = new ArrayList<ProfileInst>();
+        List<ProfileInst> profiles = new ArrayList<>();
 
         if (componentId.toLowerCase().startsWith("kmelia") && isRightsOnTopicsEnabled(componentId)) {
           TopicDetail topic = getKmeliaService().getBestTopicDetailOfPublicationForUser(
-                  new PublicationPK(contentId, componentId), true, getUser().getId());
+              new PublicationPK(contentId, componentId), true, getUser().getId());
           if (topic != null) {
             NodePK pk = topic.getNodePK();
             NodeDetail node = getNodeService().getDetail(pk);
@@ -202,7 +181,7 @@ public class ServiceNotifications extends AbstractRestWebService {
                 profiles.addAll(getTopicProfiles(pk.getId(), componentId));
               } else if (node.haveInheritedRights()) {
                 profiles.addAll(
-                        getTopicProfiles(String.valueOf(node.getRightsDependsOn()), componentId));
+                    getTopicProfiles(String.valueOf(node.getRightsDependsOn()), componentId));
               }
 
             } else {
@@ -282,20 +261,12 @@ public class ServiceNotifications extends AbstractRestWebService {
   }
 
   private UserDTO populate(UserDetail userDetail) {
-    UserDTO u = new UserDTO();
-    u.setId(userDetail.getId());
-    u.setFirstName(userDetail.getFirstName());
-    u.setLastName(userDetail.getLastName());
-    u.seteMail(userDetail.getEmailAddress());
-    String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
-            getSettings().getString("avatar.size", "24x"));
-    u.setAvatar(avatar);
-    return u;
+    return UserHelper.getInstance().populateUserDTO(userDetail);
   }
 
   private List<ProfileInst> getTopicProfiles(String topicId, String componentId)
       throws AdminException {
-    List<ProfileInst> alShowProfile = new ArrayList<ProfileInst>();
+    List<ProfileInst> alShowProfile = new ArrayList<>();
     String[] asAvailProfileNames = Administration.get().getAllProfilesNames("kmelia");
     for (String asAvailProfileName : asAvailProfileNames) {
       ProfileInst profile = getTopicProfile(asAvailProfileName, topicId, componentId);
@@ -325,7 +296,7 @@ public class ServiceNotifications extends AbstractRestWebService {
     return profile;
   }
 
-  private boolean isRightsOnTopicsEnabled(String instanceId) throws Exception {
+  private boolean isRightsOnTopicsEnabled(String instanceId) {
     String value =
         getMainSessionController().getComponentParameterValue(instanceId, "rightsOnTopics");
     return StringUtil.getBooleanValue(value);
@@ -379,74 +350,67 @@ public class ServiceNotifications extends AbstractRestWebService {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("send/")
-  public void send(NotificationToSendDTO notificationToSendDTO) throws Exception {
-    try {
-      LocalizationBundle resource =
-          ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.multilang.mobileBundle",
-              getUser().getUserPreferences().getLanguage());
-      NotificationSender notificationSender =
-          new NotificationSender(notificationToSendDTO.getNotification().getInstanceId());
-      NotificationMetaData metaData = new NotificationMetaData();
+  public void send(NotificationToSendDTO notificationToSendDTO) throws AdminException,
+      NotificationException {
+    NotificationSender notificationSender =
+        new NotificationSender(notificationToSendDTO.getNotification().getInstanceId());
+    NotificationMetaData metaData = new NotificationMetaData();
 
-      for (BaseDTO receiver : notificationToSendDTO.getReceivers()) {
-        if (receiver instanceof UserDTO) {
-          metaData.addUserRecipient(new UserRecipient((receiver).getId()));
-        } else if (receiver instanceof GroupDTO) {
-          metaData.addGroupRecipient(new GroupRecipient((receiver).getId()));
-        }
+    for (BaseDTO receiver : notificationToSendDTO.getReceivers()) {
+      if (receiver instanceof UserDTO) {
+        metaData.addUserRecipient(new UserRecipient((receiver).getId()));
+      } else if (receiver instanceof GroupDTO) {
+        metaData.addGroupRecipient(new GroupRecipient((receiver).getId()));
       }
+    }
 
-      metaData.setSendImmediately(true);
-      UserDetail u = Administration.get().getUserDetail(getUser().getId());
-      String silverpeasServerUrl = u.getDomain().getSilverpeasServerURL();
-      if (!silverpeasServerUrl.contains("/silverpeas")) {
-        silverpeasServerUrl = silverpeasServerUrl + "/silverpeas";
-      }
+    metaData.setSendImmediately(true);
+    UserDetail u = Administration.get().getUserDetail(getUser().getId());
+    String silverpeasServerUrl = u.getDomain().getSilverpeasServerURL();
+    if (!silverpeasServerUrl.contains("/silverpeas")) {
+      silverpeasServerUrl = silverpeasServerUrl + "/silverpeas";
+    }
 
-      if (notificationToSendDTO.getNotification().getContentType()
-          .equals(NotificationDTO.TYPE_PUBLICATION)) {
+    switch (notificationToSendDTO.getNotification().getContentType()) {
+      case NotificationDTO.TYPE_PUBLICATION: {
         String url = silverpeasServerUrl + "/Publication/" +
-                notificationToSendDTO.getNotification().getContentId();
+            notificationToSendDTO.getNotification().getContentId();
         metaData.setLink(url);
-      } else if (notificationToSendDTO.getNotification().getContentType().equals(NotificationDTO.TYPE_DOCUMENT)) {
+        break;
+      }
+      case NotificationDTO.TYPE_DOCUMENT: {
         String url = silverpeasServerUrl + "/services/media/viewer/embed/pdf?documentId=" +
-                notificationToSendDTO.getNotification().getContentId() + "&documentType=attachment&embedPlayer=true";
+            notificationToSendDTO.getNotification().getContentId() + "&documentType=attachment" +
+            "&embedPlayer=true";
         metaData.setLink(url);
-      } else if (notificationToSendDTO.getNotification().getContentType()
-          .equals(NotificationDTO.TYPE_PHOTO) ||
-          notificationToSendDTO.getNotification().getContentType()
-              .equals(NotificationDTO.TYPE_SOUND) ||
-          notificationToSendDTO.getNotification().getContentType()
-              .equals(NotificationDTO.TYPE_VIDEO) ||
-          notificationToSendDTO.getNotification().getContentType()
-              .equals(NotificationDTO.TYPE_STREAMING)) {
+        break;
+      }
+      case NotificationDTO.TYPE_PHOTO:
+      case NotificationDTO.TYPE_SOUND:
+      case NotificationDTO.TYPE_VIDEO:
+      case NotificationDTO.TYPE_STREAMING: {
         String url = silverpeasServerUrl + "/autoRedirect.jsp?goto=%2FRgallery%2F" +
             notificationToSendDTO.getNotification().getInstanceId() + "%2FsearchResult%3FType%3D" +
             notificationToSendDTO.getNotification().getContentType() + "%26Id%3D" +
             notificationToSendDTO.getNotification().getContentId();
         metaData.setLink(url);
-      } else if (notificationToSendDTO.getNotification().getContentType()
-          .equals(NotificationDTO.TYPE_EVENT)) {
+        break;
+      }
+      case NotificationDTO.TYPE_EVENT: {
         String url = silverpeasServerUrl + "/Contribution/" +
             notificationToSendDTO.getNotification().getContentId();
         metaData.setLink(url);
+        break;
       }
-      metaData.setAnswerAllowed(false);
-      metaData.setContent(notificationToSendDTO.getNotification().getMessage());
-      metaData.setSender(getUser().getEmailAddress());
-
-      ComponentInst app = Administration.get()
-          .getComponentInst(notificationToSendDTO.getNotification().getInstanceId());
-      SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
-      metaData.setTitle(notificationToSendDTO.getSubject());
-      notificationSender.notifyUser(metaData);
-    } catch (Exception e) {
-      throw e;
+      default:
+        break;
     }
-  }
+    metaData.setAnswerAllowed(false);
+    metaData.setContent(notificationToSendDTO.getNotification().getMessage());
+    metaData.setSender(getUser().getEmailAddress());
 
-  private PublicationService getPublicationService() {
-    return PublicationService.get();
+    metaData.setTitle(notificationToSendDTO.getSubject());
+    notificationSender.notifyUser(metaData);
   }
 
   private KmeliaService getKmeliaService() {
@@ -469,5 +433,6 @@ public class ServiceNotifications extends AbstractRestWebService {
 
   @Override
   public void validateUserAuthorization(final UserPrivilegeValidation validation) {
+    // no authorization
   }
 }

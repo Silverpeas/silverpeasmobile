@@ -37,42 +37,31 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.contact.model.CompleteContact;
 import org.silverpeas.core.contact.model.ContactDetail;
 import org.silverpeas.core.contact.model.ContactPK;
-import org.silverpeas.core.contribution.content.form.PagesContext;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.index.search.SearchEngineProvider;
 import org.silverpeas.core.index.search.model.MatchingIndexEntry;
 import org.silverpeas.core.index.search.model.ParseException;
 import org.silverpeas.core.index.search.model.QueryDescription;
 import org.silverpeas.core.socialnetwork.relationship.RelationShipService;
-import org.silverpeas.kernel.bundle.ResourceLocator;
-import org.silverpeas.kernel.bundle.SettingBundle;
-import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.core.web.rs.RESTWebService;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
+import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import org.silverpeas.mobile.shared.dto.contact.ContactScope;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 @WebService
 @Authorized
@@ -84,11 +73,13 @@ public class ServiceContact extends AbstractRestWebService {
 
     static final String PATH = "mobile/contact";
 
-    private OrganizationController organizationController = OrganizationController.get();
-    private RelationShipService relationShipService = RelationShipService.get();
+    @Inject
+    private OrganizationController organizationController;
+    @Inject
+    private RelationShipService relationShipService;
 
     private List<String> getUserProperties() {
-        List<String> userProperties = new ArrayList<String>();
+        List<String> userProperties = new ArrayList<>();
         String properties = getSettings().getString("directory.user.properties", "");
         StringTokenizer stkU = new StringTokenizer(properties, ",");
         while (stkU.hasMoreTokens()) {
@@ -98,7 +89,7 @@ public class ServiceContact extends AbstractRestWebService {
     }
 
     private List<String> getContactProperties() {
-        List<String> contactProperties = new ArrayList<String>();
+        List<String> contactProperties = new ArrayList<>();
         String formProperties = getSettings().getString("directory.contact.properties", "");
         StringTokenizer stkC = new StringTokenizer(formProperties, ",");
         while (stkC.hasMoreTokens()) {
@@ -108,7 +99,7 @@ public class ServiceContact extends AbstractRestWebService {
     }
 
     private List<String> getdomainsIds() {
-        List<String> domainsIds = new ArrayList<String>();
+        List<String> domainsIds = new ArrayList<>();
         String domains = getSettings().getString("directory.domains", "");
 
         StringTokenizer stk = new StringTokenizer(domains, ",");
@@ -122,10 +113,9 @@ public class ServiceContact extends AbstractRestWebService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/contact/{userId}/")
-    public DetailUserDTO getContact(@PathParam("userId") String userId) throws Exception {
+    public DetailUserDTO getContact(@PathParam("userId") String userId) throws AdminException {
         UserDetail u = Administration.get().getUserDetail(userId);
-        DetailUserDTO d = populate(u, false);
-        return d;
+      return populate(u, false);
     }
 
     /**
@@ -138,39 +128,47 @@ public class ServiceContact extends AbstractRestWebService {
     @Path("paging/{type}/")
     public List<DetailUserDTO> getContacts(@PathParam("type") String type,
                                            @QueryParam("filter") String filter, @QueryParam("pageSize") int pageSize,
-                                           @QueryParam("startIndex") int startIndex) throws Exception {
-        ArrayList<DetailUserDTO> listUsers = new ArrayList<DetailUserDTO>();
+                                           @QueryParam("startIndex") int startIndex) {
+        ArrayList<DetailUserDTO> listUsers = new ArrayList<>();
         try {
-            if (type.equals(ContactFilters.ALL)) {
-                List tabUserDetail = getUsersByQuery(filter, "UserFull");
-                for (int i = 0; i < tabUserDetail.size(); i++) {
-                    if (i >= startIndex && i < startIndex + pageSize) {
-                        DetailUserDTO dto = populate(tabUserDetail.get(i), true);
-                        if (dto != null) listUsers.add(dto);
-                    }
+          switch (type) {
+            case ContactFilters.ALL: {
+              List tabUserDetail = getUsersByQuery(filter, "UserFull");
+              for (int i = 0; i < tabUserDetail.size(); i++) {
+                if (i >= startIndex && i < startIndex + pageSize) {
+                  DetailUserDTO dto = populate(tabUserDetail.get(i), true);
+                  if (dto != null) listUsers.add(dto);
                 }
-            } else if (type.equals(ContactFilters.ALL_EXT)) {
-                List tabUserDetail = getUsersByQuery(filter, "Contact");
-                for (int i = 0; i < tabUserDetail.size(); i++) {
-                    if (i >= startIndex && i < startIndex + pageSize) {
-                        listUsers.add(populate(tabUserDetail.get(i), true));
-                    }
-                }
-            } else if (type.equals(ContactFilters.MY)) {
-                List<String> contactsIds =
-                        relationShipService.getMyContactsIds(Integer.parseInt(getUser().getId()));
-
-                for (int j = 0; j < contactsIds.size(); j++) {
-                    if (j >= startIndex && j < startIndex + pageSize) {
-                        String id = contactsIds.get(j);
-                        UserDetail userDetail = organizationController.getUserDetail(id);
-                        DetailUserDTO userDTO = populate(userDetail, true);
-                        listUsers.add(userDTO);
-                    }
-                }
+              }
+              break;
             }
+            case ContactFilters.ALL_EXT: {
+              List tabUserDetail = getUsersByQuery(filter, "Contact");
+              for (int i = 0; i < tabUserDetail.size(); i++) {
+                if (i >= startIndex && i < startIndex + pageSize) {
+                  listUsers.add(populate(tabUserDetail.get(i), true));
+                }
+              }
+              break;
+            }
+            case ContactFilters.MY:
+              List<String> contactsIds =
+                  relationShipService.getMyContactsIds(Integer.parseInt(getUser().getId()));
+
+              for (int j = 0; j < contactsIds.size(); j++) {
+                if (j >= startIndex && j < startIndex + pageSize) {
+                  String id = contactsIds.get(j);
+                  UserDetail userDetail = organizationController.getUserDetail(id);
+                  DetailUserDTO userDTO = populate(userDetail, true);
+                  listUsers.add(userDTO);
+                }
+              }
+              break;
+              default:
+                  break;
+          }
             defaultSortContacts(listUsers);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             SilverLogger.getLogger(this).error("ServiceContact.getContacts", "root.EX_NO_MESSAGE", e);
             throw e;
         }
@@ -182,8 +180,8 @@ public class ServiceContact extends AbstractRestWebService {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{type}/")
     public List<DetailUserDTO> getContactsFiltered(@PathParam("type") String type, @QueryParam("filter") String filter)
-            throws Exception {
-        ArrayList<DetailUserDTO> listUsers = new ArrayList<DetailUserDTO>();
+          throws AdminException {
+        ArrayList<DetailUserDTO> listUsers = new ArrayList<>();
         try {
             if (type.equals(ContactScope.group.name())) {
                 String[] groupsIds = filter.split(",");
@@ -192,7 +190,7 @@ public class ServiceContact extends AbstractRestWebService {
                 for (GroupDetail group : groups) {
                     users.addAll(group.getAllUsers());
                 }
-                users = new ArrayList<User>(new HashSet<>(users));
+                users = new ArrayList<>(new HashSet<>(users));
                 for (User user : users) {
                     DetailUserDTO userDTO = populate(user, true);
                     listUsers.add(userDTO);
@@ -208,6 +206,7 @@ public class ServiceContact extends AbstractRestWebService {
                     }
                 }
 
+                Objects.requireNonNull(users);
                 for (User user : users) {
                     DetailUserDTO userDTO = populate(user, true);
                     listUsers.add(userDTO);
@@ -219,7 +218,7 @@ public class ServiceContact extends AbstractRestWebService {
                     listUsers.add(userDTO);
                 }
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             SilverLogger.getLogger(this)
                     .error("ServiceContact.getContactsFiltered", "root.EX_NO_MESSAGE", e);
             throw e;
@@ -228,13 +227,8 @@ public class ServiceContact extends AbstractRestWebService {
         return listUsers;
     }
 
-    private void defaultSortContacts(final List listUsers) {
-        Collections.sort(listUsers, new Comparator<DetailUserDTO>() {
-            @Override
-            public int compare(final DetailUserDTO u1, final DetailUserDTO u2) {
-                return u1.getLastName().compareTo(u2.getLastName());
-            }
-        });
+    private void defaultSortContacts(final List<DetailUserDTO> listUsers) {
+        listUsers.sort(Comparator.comparing(DetailUserDTO::getLastName));
     }
 
     @GET
@@ -248,21 +242,10 @@ public class ServiceContact extends AbstractRestWebService {
         try {
             contactsIds = relationShipService.getMyContactsIds(Integer.parseInt(getUser().getId()));
         } catch (Exception e) {
+            // don't treat this case
         }
         result.setHasPersonnalContacts(!contactsIds.isEmpty());
         return result;
-    }
-
-    private List getFilteredUserList(final String filter, String type) {
-        UserDetail[] tabUserDetail = organizationController.getAllUsers();
-        List filteredUserList = null;
-        if (filter.isEmpty()) {
-            filteredUserList = new ArrayList<UserDetail>(Arrays.asList(tabUserDetail));
-            return filteredUserList;
-        }
-        filteredUserList = getUsersByQuery(filter, type);
-
-        return filteredUserList;
     }
 
     private List getUsersByQuery(String query, String type) {
@@ -311,7 +294,7 @@ public class ServiceContact extends AbstractRestWebService {
     private List<String> getContactComponentIds() {
         String[] appIds =
                 organizationController.getComponentIdsForUser(getUser().getId(), "yellowpages");
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (String appId : appIds) {
             String param =
                     organizationController.getComponentParameterValue(appId, "displayedInDirectory");
@@ -322,14 +305,8 @@ public class ServiceContact extends AbstractRestWebService {
         return result;
     }
 
-    /**
-     * Populate user or contact DTO.
-     *
-     * @param
-     * @return
-     */
     private DetailUserDTO populate(Object user, boolean filtered) {
-        if (user != null && user instanceof UserDetail) {
+        if (user instanceof UserDetail) {
             UserDetail userDetail = (UserDetail) user;
             SilverLogger.getLogger(this).debug(SpMobileLogModule.getName(), "ServiceContact.populate",
                     "User id=" + userDetail.getId());
@@ -337,13 +314,7 @@ public class ServiceContact extends AbstractRestWebService {
             DetailUserDTO dto = null;
             if (userFull != null) {
                 dto = new DetailUserDTO();
-                dto.setId(userFull.getId());
-                dto.setFirstName(userFull.getFirstName());
-                dto.setLastName(userFull.getLastName());
-                dto.seteMail(userFull.getEmailAddress());
-                dto.setStatus(userFull.getStatus());
-                dto.setAvatar(userFull.getAvatar());
-                dto.setLanguage(userFull.getUserPreferences().getLanguage());
+                UserHelper.initUserDTO(userFull, dto);
                 dto.setConnected(userFull.isConnected());
                 String avatar;
 
@@ -354,9 +325,8 @@ public class ServiceContact extends AbstractRestWebService {
                     dto.addPropertyLabel(prop, label);
                 }
                 Map<String, String> labels = PublicationTemplateManager.getInstance().getDirectoryFormLabels(userFull.getId(), userFull.getDomainId(), dto.getLanguage());
-                for (String prop : labels.keySet()) {
-                    String value = labels.get(prop);
-                    dto.addPropertyLabel(prop, value);
+                for (Map.Entry<String, String> prop : labels.entrySet()) {
+                    dto.addPropertyLabel(prop.getKey(), prop.getValue());
                 }
 
                 if (filtered) {
@@ -368,14 +338,14 @@ public class ServiceContact extends AbstractRestWebService {
                 } else {
                     avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), "96x");
                     Map<String, String> fields = userFull.getAllDefinedValues(userFull.getUserPreferences().getLanguage());
-                    for (String prop : fields.keySet()) {
-                        dto.addProperty(prop, fields.get(prop));
+                    for (Map.Entry<String, String> prop : fields.entrySet()) {
+                        dto.addProperty(prop.getKey(), prop.getValue());
                     }
                 }
                 dto.setAvatar(avatar);
             }
             return dto;
-        } else if (user != null && user instanceof ContactDetail) {
+        } else if (user instanceof ContactDetail) {
             ContactDetail contactDetail = (ContactDetail) user;
             SilverLogger.getLogger(this).debug(SpMobileLogModule.getName(), "ServiceContact.populate",
                     "Contact id=" + contactDetail.getPK().getId() + "app id=" +
@@ -402,8 +372,8 @@ public class ServiceContact extends AbstractRestWebService {
                         dto.addProperty(prop, fields.get(prop));
                     }
                 } else {
-                    for (String prop : fields.keySet()) {
-                        dto.addProperty(prop, fields.get(prop));
+                    for (Map.Entry<String, String> prop : fields.entrySet()) {
+                        dto.addProperty(prop.getKey(), prop.getValue());
                     }
                 }
             }

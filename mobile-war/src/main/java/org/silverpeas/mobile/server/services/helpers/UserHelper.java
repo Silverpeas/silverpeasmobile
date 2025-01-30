@@ -30,6 +30,7 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.notification.NotificationException;
 import org.silverpeas.core.notification.user.client.NotificationManager;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
+import org.silverpeas.kernel.SilverpeasRuntimeException;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.kernel.logging.SilverLogger;
@@ -63,13 +64,7 @@ public class UserHelper {
 
   public DetailUserDTO populate(UserDetail user) {
     DetailUserDTO dto = new DetailUserDTO();
-    dto.setId(user.getId());
-    dto.setFirstName(user.getFirstName());
-    dto.setLastName(user.getLastName());
-    dto.seteMail(user.getEmailAddress());
-    dto.setStatus(user.getStatus());
-    dto.setAvatar(user.getAvatar());
-    dto.setLanguage(user.getUserPreferences().getLanguage());
+    initUserDTO(user, dto);
     dto.setToken(user.getToken());
     dto.setZone(user.getUserPreferences().getZoneId().getId());
     dto.setLdap(!user.getDomain().getDriverClassName()
@@ -95,6 +90,16 @@ public class UserHelper {
     return dto;
   }
 
+  public static void initUserDTO(UserDetail user, DetailUserDTO dto) {
+    dto.setId(user.getId());
+    dto.setFirstName(user.getFirstName());
+    dto.setLastName(user.getLastName());
+    dto.seteMail(user.getEmailAddress());
+    dto.setStatus(user.getStatus());
+    dto.setAvatar(user.getAvatar());
+    dto.setLanguage(user.getUserPreferences().getLanguage());
+  }
+
   public UserDTO populateUserDTO(UserDetail user) {
     UserDTO dto = new UserDTO();
     dto.setId(user.getId());
@@ -111,16 +116,16 @@ public class UserHelper {
     GroupDTO dto = new GroupDTO();
     dto.setId(group.getId());
     dto.setName(group.getName());
-    dto.setNbMembers(group.getNbUsers());
+    dto.setNbMembers(group.getDirectUsersCount());
     return dto;
   }
 
   public String getUserLook(String userId) {
-    UserDetail user = null;
+    UserDetail user;
     try {
       user = Administration.get().getUserDetail(userId);
     } catch(Exception e) {
-      SilverLogger.getLogger(this).error(e);
+      throw new SilverpeasRuntimeException("Unable to found user '" + userId + "'", e);
     }
     return getUserLook(user);
   }
