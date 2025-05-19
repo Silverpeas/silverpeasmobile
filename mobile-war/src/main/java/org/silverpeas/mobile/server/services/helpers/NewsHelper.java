@@ -105,7 +105,7 @@ public class NewsHelper {
           if (newsSource.trim().startsWith("quickinfo")) {
             String [] sources = newsSource.split(" ");
             for (String source : sources) {
-              news.addAll(getNewsByComponentId(source.trim(), false, userId, maxNews));
+              news.addAll(getNewsByComponentId(source.trim(), false, userId, maxNews, true));
             }
             news = sortAndTruncate(maxNews, news, true);
           } else if (newsSource.trim().equals("*")) {
@@ -173,14 +173,14 @@ public class NewsHelper {
     List<String> apps = CollectionUtil
         .asList(organizationController.getComponentIdsForUser(userId, "quickinfo"));
     for (String appId : apps) {
-      news.addAll(getNewsByComponentId(appId, false, userId, maxNews));
+      news.addAll(getNewsByComponentId(appId, false, userId, maxNews, true));
     }
     news = sortAndTruncate(maxNews, news, false);
 
     return news;
   }
 
-  private List<News> getNewsByComponentId(String appId, boolean managerAccess, String userId, int maxNews) throws AdminException {
+  private List<News> getNewsByComponentId(String appId, boolean managerAccess, String userId, int maxNews, boolean reverse) throws AdminException {
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
     List<News> news = new ArrayList<>();
 
@@ -191,7 +191,7 @@ public class NewsHelper {
         news = service.getVisibleNews(appId);
       }
     }
-    news = sortAndTruncate(maxNews, news, false);
+    news = sortAndTruncate(maxNews, news, reverse);
 
     return news;
   }
