@@ -209,3 +209,99 @@ input[type="range"]::-webkit-slider-thumb {
     width: 0px;
     height: 0px;
 }
+
+/***** Snackbar ***************/
+
+#snackbar {
+    visibility: hidden;
+    min-width: 90%;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 999;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 50px;
+    font-size: 17px;
+    border-radius: 4px;
+}
+
+#snackbar > span {
+    width: 100%;
+}
+
+#snackbar.warning {
+    background-color: orange;
+}
+
+#snackbar.error {
+    background-color: red;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein-snackbar 0.5s, fadeout-snackbar 0.5s 2.5s;
+    animation: fadein-snackbar 0.5s, fadeout-snackbar 0.5s 2.5s;
+}
+
+#snackbar.show-static {
+    visibility: visible;
+    display: flex;
+    align-items: center;
+}
+
+#snackbar.show-static .close {
+    float: right;
+    fill : #FFF;
+    user-select: none;
+    margin-left: 1em;
+}
+
+#snackbar.show-static .snackbar-message {
+    text-align: left;
+}
+
+#snackbar.show-static .snackbar-actions {
+    position: absolute;
+    right: 16px;
+}
+
+#snackbar.show-static .yes {
+    background-color: var(--main-color);
+    padding: 0.5em;
+    margin-left: 0.5em;
+    border-radius: 4px;
+    color: var(--white);
+}
+
+#snackbar.show-static .no {
+    background-color: var(--main-color);
+    padding: 0.5em;
+    margin-left: 0.5em;
+    border-radius: 4px;
+    color: var(--white);
+}
+
+
+@-webkit-keyframes fadein-snackbar {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 50px; opacity: 1;}
+}
+
+@keyframes fadein-snackbar {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 50px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout-snackbar {
+    from {bottom: 50px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout-snackbar {
+    from {bottom: 50px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}

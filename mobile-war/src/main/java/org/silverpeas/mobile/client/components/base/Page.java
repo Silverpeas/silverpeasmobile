@@ -163,4 +163,12 @@ public class Page extends Composite implements Window.ScrollHandler {
     return menu.isPersonalAppsInitialized();
   }
 
+  public void freeze() {
+    container.getElement().addClassName("freeze");
+  }
+
+  public void unfreeze() {
+    container.getElement().removeClassName("freeze");
+  }
+
 }
