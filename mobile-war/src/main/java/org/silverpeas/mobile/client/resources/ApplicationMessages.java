@@ -221,4 +221,7 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Non")
   String no();
+
+  @DefaultMessage("Installer l''application")
+  String installation();
 }

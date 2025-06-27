@@ -26,6 +26,7 @@ package org.silverpeas.mobile.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
@@ -35,6 +36,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -62,12 +64,7 @@ import org.silverpeas.mobile.client.apps.survey.SurveyApp;
 import org.silverpeas.mobile.client.apps.tasks.TasksApp;
 import org.silverpeas.mobile.client.apps.webpage.WebPageApp;
 import org.silverpeas.mobile.client.apps.workflow.WorkflowApp;
-import org.silverpeas.mobile.client.common.AuthentificationManager;
-import org.silverpeas.mobile.client.common.ErrorManager;
-import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
-import org.silverpeas.mobile.client.common.ServicesLocator;
-import org.silverpeas.mobile.client.common.ShortCutRouter;
+import org.silverpeas.mobile.client.common.*;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.event.ExceptionEvent;
@@ -82,6 +79,7 @@ import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.base.Page;
 import org.silverpeas.mobile.client.components.base.events.window.OrientationChangeEvent;
 import org.silverpeas.mobile.client.pages.connexion.ConnexionPage;
@@ -148,8 +146,12 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
    * Init. spmobile.
    */
   public void onModuleLoad() {
+    msg = GWT.create(ApplicationMessages.class);
+
     exportNativeFunctions();
     checkVersion();
+    checkInstallation();
+
 
     // init connexion supervision
     NetworkHelper.getInstance();
@@ -185,7 +187,6 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
       token = AuthentificationManager.getInstance().getHeader("X-STKN");
     }
 
-    msg = GWT.create(ApplicationMessages.class);
     EventBus.getInstance().addHandler(ExceptionEvent.TYPE, new ErrorManager());
     EventBus.getInstance().addHandler(AbstractAuthenticationErrorEvent.TYPE, this);
 
@@ -235,6 +236,25 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     apps.add(new FaqApp());
     apps.add(new ResourcesManagerApp());
     apps.add(new OrgChartGroupApp());
+  }
+
+  private static void checkInstallation() {
+    PWAHelper.detectAppInstallation();
+    Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+      @Override
+      public boolean execute() {
+        if (!PWAHelper.isInstalledApp()) {
+
+          Snackbar.showConfirmation(msg.installation(), new Command() {
+            @Override
+            public void execute() {
+              PWAHelper.installApp();
+            }
+          }, null);
+        }
+        return false;
+      }
+    }, 1000);
   }
 
   private static void checkVersion() {
