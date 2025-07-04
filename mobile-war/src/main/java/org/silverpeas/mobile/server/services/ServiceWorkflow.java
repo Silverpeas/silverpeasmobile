@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.server.services;
 
 import org.silverpeas.core.admin.service.Administration;
-import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.GroupDetail;
 import org.silverpeas.core.admin.user.model.ProfileInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
@@ -33,18 +32,10 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
-import org.silverpeas.core.contribution.content.form.DataRecord;
-import org.silverpeas.core.contribution.content.form.Field;
-import org.silverpeas.core.contribution.content.form.FieldTemplate;
-import org.silverpeas.core.contribution.content.form.Form;
-import org.silverpeas.core.contribution.content.form.RecordTemplate;
+import org.silverpeas.core.contribution.content.form.*;
 import org.silverpeas.core.contribution.content.form.field.MultipleUserField;
-import org.silverpeas.core.contribution.content.form.record.GenericDataRecord;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.core.workflow.api.event.TaskDoneEvent;
-import org.silverpeas.core.workflow.api.model.Action;
-import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.core.workflow.api.Workflow;
 import org.silverpeas.core.workflow.api.instance.ProcessInstance;
@@ -53,15 +44,11 @@ import org.silverpeas.core.workflow.api.model.ProcessModel;
 import org.silverpeas.core.workflow.api.model.Role;
 import org.silverpeas.core.workflow.api.task.Task;
 import org.silverpeas.core.workflow.api.user.User;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.workflow.FieldPresentationDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowFormActionDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstancePresentationFormDTO;
+import org.silverpeas.mobile.shared.dto.workflow.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -73,14 +60,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Service de gestion des workflows.
@@ -92,9 +72,6 @@ import java.util.TreeMap;
 @Path(ServiceWorkflow.PATH + "/{appId}")
 public class ServiceWorkflow extends AbstractRestWebService {
 
-  private static final long serialVersionUID = 1L;
-  private OrganizationController organizationController = OrganizationController.get();
-
   static final String PATH = "mobile/workflow";
 
   @Context
@@ -104,7 +81,7 @@ public class ServiceWorkflow extends AbstractRestWebService {
   private String componentId;
 
   private List<GroupDetail> getGroups(List<String> ids) throws Exception {
-    ArrayList<GroupDetail> groups = new ArrayList<GroupDetail>();
+    ArrayList<GroupDetail> groups = new ArrayList<>();
     for (String id : ids) {
       groups.add(Administration.get().getGroup(id));
     }
@@ -113,7 +90,7 @@ public class ServiceWorkflow extends AbstractRestWebService {
 
   private Map<String, String> getWorkflowUserRoles() throws Exception {
     String[] roles = getOrganisationController().getUserProfiles(getUser().getId(), getComponentId());
-    TreeMap<String, String> userRoles = new TreeMap<String, String>();
+    TreeMap<String, String> userRoles = new TreeMap<>();
     Role[] allRoles = Workflow.getProcessModelManager().getProcessModel(getComponentId()).getRoles();
 
     for (String role : roles) {
@@ -142,12 +119,12 @@ public class ServiceWorkflow extends AbstractRestWebService {
   @Path("userField/{instanceId}/{actionName}/{fieldName}/{role}")
   public List<BaseDTO> getUserField(@PathParam("instanceId") String instanceId, @PathParam("actionName") String actionName,
       @PathParam("fieldName") String fieldName, @PathParam("role") String role) throws Exception {
-    HashSet<BaseDTO> result = new HashSet<BaseDTO>();
+    HashSet<BaseDTO> result = new HashSet<>();
     try {
       boolean group = false;
       ProcessModel model = Workflow.getProcessModelManager().getProcessModel(instanceId);
 
-      org.silverpeas.core.workflow.api.model.Form form = null;
+      org.silverpeas.core.workflow.api.model.Form form;
       if (actionName.equals("create")) {
         form = model.getCreateAction(role).getForm();
       } else {
@@ -161,8 +138,8 @@ public class ServiceWorkflow extends AbstractRestWebService {
           break;
         }
       }
-      ArrayList<String> users = new ArrayList<String>();
-      ArrayList<GroupDetail> groups = new ArrayList<GroupDetail>();
+      ArrayList<String> users = new ArrayList<>();
+      ArrayList<GroupDetail> groups = new ArrayList<>();
       String roles = parameters.get("roles");
       List<ProfileInst> profiles =
           Administration.get().getComponentInst(getComponentId()).getProfiles();
@@ -213,7 +190,7 @@ public class ServiceWorkflow extends AbstractRestWebService {
       throw e;
     }
 
-    return new ArrayList<BaseDTO>(result);
+    return new ArrayList<>(result);
   }
 
   @GET
@@ -246,12 +223,12 @@ public class ServiceWorkflow extends AbstractRestWebService {
       callSize = list.size() - calledSize;
     }
 
-    ArrayList<WorkflowInstanceDTO> instances = new ArrayList<WorkflowInstanceDTO>();
+    ArrayList<WorkflowInstanceDTO> instances = new ArrayList<>();
     for (ProcessInstance processInstance : list.subList(calledSize, calledSize + callSize)) {
       instances.add(populate(processInstance, userRole));
     }
 
-    StreamingList<WorkflowInstanceDTO> streamingList = new StreamingList<WorkflowInstanceDTO>(instances, moreElements);
+    StreamingList<WorkflowInstanceDTO> streamingList = new StreamingList<>(instances, moreElements);
     if (!streamingList.getMoreElement()) getHttpRequest().getSession().removeAttribute("Cache_processInstances_"+userRole);
 
     return streamingList;
@@ -264,17 +241,10 @@ public class ServiceWorkflow extends AbstractRestWebService {
   public WorkflowDataDTO getDataInstances(@PathParam("role") String userRole) throws Exception {
     WorkflowDataDTO data = new WorkflowDataDTO();
     try {
-      if (userRole.equals("null")) userRole = null;
-      Role[] roles = Workflow.getProcessModelManager().getProcessModel(getComponentId()).getRoles();
-      if (userRole == null || userRole.isEmpty()) {
-        userRole = roles[0].getName();
-      }
-
+      var processModel = Workflow.getProcessModelManager().getProcessModel(getComponentId());
       data.setRoles(getWorkflowUserRoles());
-      data.setRolesAllowedToCreate(new ArrayList(Arrays.asList(
-          Workflow.getProcessModelManager().getProcessModel(getComponentId()).getCreationRoles())));
+      data.setRolesAllowedToCreate(new ArrayList<>(Arrays.asList(processModel.getCreationRoles())));
       data.setHeaderLabels(getHeaderLabels(data.getRoles()));
-
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
       throw e;
@@ -288,8 +258,8 @@ public class ServiceWorkflow extends AbstractRestWebService {
   public WorkflowInstancePresentationFormDTO getPresentationForm(@PathParam("instanceId") String instanceId, @PathParam("role") String role)
       throws Exception {
     WorkflowInstancePresentationFormDTO dto = new WorkflowInstancePresentationFormDTO();
-    List<FieldPresentationDTO> fields = new ArrayList<FieldPresentationDTO>();
-    Map<String, String> mapActions = new TreeMap<String, String>();
+    List<FieldPresentationDTO> fields = new ArrayList<>();
+    Map<String, String> mapActions = new TreeMap<>();
     try {
       ProcessInstance instance =
           Workflow.getProcessInstanceManager().getProcessInstance(instanceId);
@@ -342,15 +312,14 @@ public class ServiceWorkflow extends AbstractRestWebService {
         } else if (type.equalsIgnoreCase("date")) {
           value =
               DateUtil.getInputDate(value, getUser().getUserPreferences().getLanguage());
-        } else if (type.equalsIgnoreCase("file")) {
-          if (value != null) {
+        } else if (type.equalsIgnoreCase("file") && value != null) {
             SimpleDocument doc = AttachmentServiceProvider.getAttachmentService()
                 .searchDocumentById(new SimpleDocumentPK(value),
                     getUser().getUserPreferences().getLanguage());
             value = doc.getTitle();
             id = doc.getId();
           }
-        }
+
         if (value != null) {
           fields.add(new FieldPresentationDTO(label, value, id, type, displayerName));
         }
@@ -403,7 +372,7 @@ public class ServiceWorkflow extends AbstractRestWebService {
       throws Exception {
     WorkflowFormActionDTO dto = new WorkflowFormActionDTO();
     try {
-      org.silverpeas.core.workflow.api.model.Form form = null;
+      org.silverpeas.core.workflow.api.model.Form form;
       DataRecord data = null;
       if (action.equals("create")) {
         ProcessModel model = Workflow.getProcessModelManager().getProcessModel(getComponentId());
@@ -432,7 +401,7 @@ public class ServiceWorkflow extends AbstractRestWebService {
             Field f = data.getField(input.getItem().getName());
             if (f.getValue() != null && !f.getValue().isEmpty()) {
               if (input.getItem().getType().equalsIgnoreCase("date")) {
-                fdto.setValue(f.getValue().replaceAll("/", "-"));
+                fdto.setValue(f.getValue().replace("/", "-"));
                 //TODO : user, multipleUser, group data
               } else if (input.getItem().getType().equalsIgnoreCase("user")) {
                 UserDetail u = (UserDetail) f.getObjectValue();
@@ -480,7 +449,7 @@ public class ServiceWorkflow extends AbstractRestWebService {
   }
 
   private List<String> getHeaderLabels(String modelId, String role) throws Exception {
-    ArrayList<String> labels = new ArrayList<String>();
+    ArrayList<String> labels = new ArrayList<>();
     RecordTemplate template = Workflow.getProcessModelManager().getProcessModel(modelId)
         .getRowTemplate(role, getUser().getUserPreferences().getLanguage());
     FieldTemplate[] headers = template.getFieldTemplates();
@@ -497,7 +466,7 @@ public class ServiceWorkflow extends AbstractRestWebService {
     String title =
         processInstance.getTitle(role, getUser().getUserPreferences().getLanguage());
     dto.setTitle(title);
-    dto.setState(processInstance.getActiveStates().toString());
+    dto.setState(Arrays.toString(processInstance.getActiveStates()));
 
     RecordTemplate template =
         Workflow.getProcessModelManager().getProcessModel(processInstance.getModelId())

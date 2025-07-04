@@ -47,17 +47,20 @@ import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 
 public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEventHandler {
 
-  private static ClassifiedsPageUiBinder uiBinder = GWT.create(ClassifiedsPageUiBinder.class);
+  private static final ClassifiedsPageUiBinder uiBinder = GWT.create(ClassifiedsPageUiBinder.class);
 
-  @UiField(provided = true) protected ClassifiedsMessages msg = null;
+  @UiField(provided = true)
+  protected ClassifiedsMessages msg;
   @UiField
   UnorderedList classifieds;
   @UiField
-  ListBox categories, types;
+  ListBox categories;
+  @UiField
+  ListBox types;
 
 
   private ClassifiedsDTO data;
-  private AddToFavoritesButton favorite = new AddToFavoritesButton();
+  private final AddToFavoritesButton favorite = new AddToFavoritesButton();
 
   interface ClassifiedsPageUiBinder extends UiBinder<Widget, ClassifiedsPage> {
   }

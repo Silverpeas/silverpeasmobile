@@ -26,7 +26,7 @@ package org.silverpeas.mobile.shared.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gwt.dom.client.Element;
-import org.silverpeas.mobile.shared.dto.workflow.WorkflowFieldDTO;
+import org.silverpeas.core.contribution.content.form.FieldValuesTemplate;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -58,9 +58,19 @@ public class FormFieldDTO implements Serializable {
   public void setId(final String id) {
     this.id = id;
   }
+
   @Override
   public boolean equals(Object obj) {
-    return ((WorkflowFieldDTO) obj).getId().equals(getId());
+    if (obj instanceof FormFieldDTO) {
+      FormFieldDTO f = (FormFieldDTO) obj;
+      return id.equals(f.getId());
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 
   public boolean isReadOnly() {

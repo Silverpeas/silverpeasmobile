@@ -38,6 +38,7 @@ import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.attachment.util.SimpleDocumentList;
 import org.silverpeas.core.contribution.content.form.DataRecord;
+import org.silverpeas.core.contribution.content.form.FieldValuesTemplate;
 import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
@@ -45,9 +46,9 @@ import org.silverpeas.core.contribution.template.publication.PublicationTemplate
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateException;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.notification.user.builder.helper.UserNotificationHelper;
-import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.FormsHelper;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
@@ -55,21 +56,11 @@ import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebService
 @Authorized
@@ -84,7 +75,7 @@ public class ServiceClassifieds extends AbstractRestWebService {
 
   static final String PATH = "mobile/classifieds";
 
-  private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+  private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 
 
   @GET
@@ -214,9 +205,10 @@ public class ServiceClassifieds extends AbstractRestWebService {
       PublicationTemplate pubTemplate = getPublicationTemplate(instanceId);
       if (pubTemplate != null) {
         GenericFieldTemplate field = (GenericFieldTemplate) pubTemplate.getRecordTemplate().getFieldTemplate(listName);
-        return field.getKeyValuePairs(getUser().getUserPreferences().getLanguage());
+        field.getFieldValuesTemplate(getUser().getUserPreferences().getLanguage())
+            .apply(v -> fields.put(v.getKey(), v.getLabel()));
       }
-    } else { }
+    }
     return fields;
   }
 

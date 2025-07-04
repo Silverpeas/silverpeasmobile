@@ -30,15 +30,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.silverpeas.components.formsonline.FormsOnlineComponentSettings;
-import org.silverpeas.components.formsonline.model.FormDetail;
-import org.silverpeas.components.formsonline.model.FormInstance;
-import org.silverpeas.components.formsonline.model.FormPK;
-import org.silverpeas.components.formsonline.model.FormsOnlineService;
-import org.silverpeas.components.formsonline.model.RequestPK;
-import org.silverpeas.components.formsonline.model.RequestsByStatus;
-import org.silverpeas.components.formsonline.model.RequestsFilter;
-import org.silverpeas.kernel.SilverpeasException;
-import org.silverpeas.core.admin.service.AdminException;
+import org.silverpeas.components.formsonline.model.*;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.GroupDetail;
@@ -48,24 +40,19 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
-import org.silverpeas.core.contribution.content.form.DataRecord;
-import org.silverpeas.core.contribution.content.form.Field;
-import org.silverpeas.core.contribution.content.form.FieldTemplate;
-import org.silverpeas.core.contribution.content.form.Form;
-import org.silverpeas.core.contribution.content.form.FormException;
-import org.silverpeas.core.contribution.content.form.RecordSet;
+import org.silverpeas.core.contribution.content.form.*;
 import org.silverpeas.core.contribution.content.form.form.HtmlForm;
 import org.silverpeas.core.contribution.content.form.form.XmlForm;
-import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateImpl;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.SilverpeasException;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
-import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
@@ -76,25 +63,14 @@ import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 
@@ -108,9 +84,9 @@ public class ServiceFormsOnline extends AbstractRestWebService {
 
   static final String PATH = "mobile/formsOnline";
 
-  private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+  private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-  private SettingBundle formsOnlineBundle =
+  private final SettingBundle formsOnlineBundle =
       ResourceLocator.getSettingBundle("org.silverpeas.formsonline.multilang.formsOnlineBundle");
 
   @PathParam("appId")
@@ -124,8 +100,8 @@ public class ServiceFormsOnline extends AbstractRestWebService {
     FormRequestDTO dto = null;
     try {
       RequestPK pk = new RequestPK(requestId, getComponentId());
-      FormInstance request = FormsOnlineService.get().loadRequest(pk, getUser().getId());
-      dto = populate(request);
+      FormInstance req = FormsOnlineService.get().loadRequest(pk, getUser().getId());
+      dto = populate(req);
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
@@ -239,7 +215,7 @@ public class ServiceFormsOnline extends AbstractRestWebService {
   }
 
   private FormRequestDTO populate(final FormInstance f)
-      throws FormException, AdminException {
+      throws FormException {
     FormRequestDTO dto = new FormRequestDTO();
     dto.setId(f.getId());
     dto.setValidator(1);
@@ -270,6 +246,8 @@ public class ServiceFormsOnline extends AbstractRestWebService {
         break;
       case FormInstance.STATE_CANCELED:
         dto.setStateLabel(formsOnlineBundle.getString("formsOnline.stateCanceled"));
+        break;
+      default:
         break;
     }
     if (f.getFormWithData() instanceof XmlForm) {
@@ -348,13 +326,12 @@ public class ServiceFormsOnline extends AbstractRestWebService {
     }
     fieldDTO.setType(field.getTypeName());
     fieldDTO.setName(field.getName());
-    if (field.getTypeName().equalsIgnoreCase("file")) {
-      if (fieldDTO.getValue() != null) {
+    if (field.getTypeName().equalsIgnoreCase("file") && fieldDTO.getValue() != null) {
         fieldDTO.setValueId(fieldDTO.getValue());
         SimpleDocument doc = AttachmentServiceProvider.getAttachmentService().searchDocumentById(new SimpleDocumentPK(fieldDTO.getValueId(), componentId), null);
         fieldDTO.setValue(doc.getFilename());
       }
-    }
+
 
     return fieldDTO;
   }
@@ -416,7 +393,6 @@ public class ServiceFormsOnline extends AbstractRestWebService {
       PublicationTemplate template = getPublicationTemplate(formName, true);
       String spHome = System.getenv("SILVERPEAS_HOME");
       if (layerType.equalsIgnoreCase("view")) {
-        boolean layer = template.isViewLayerExist();
         String file = ((PublicationTemplateImpl) template).getViewFileName();
         file = spHome + "/data/templateRepository/" + file;
         html = Files.readString(java.nio.file.Path.of(file));
@@ -445,8 +421,7 @@ public class ServiceFormsOnline extends AbstractRestWebService {
 
       ArrayList<String> scripts = new ArrayList<>();
       Elements els = Jsoup.parse(html).select("script");
-      for (int i = 0; i < els.size(); i++) {
-        Element el = els.get(i);
+      for (Element el : els) {
         String script = el.outerHtml();
         if (!script.contains("src=")) {
           script = el.html();
@@ -552,7 +527,10 @@ public class ServiceFormsOnline extends AbstractRestWebService {
         f.setType(field.getTypeName());
         f.setMandatory(field.isMandatory());
         f.setReadOnly(field.isReadOnly());
-        f.setValues(((GenericFieldTemplate) field).getKeyValuePairs(getUserPreferences().getLanguage()));
+        var values = new HashMap<String, String>();
+        field.getFieldValuesTemplate(getUserPreferences().getLanguage())
+                .apply(v -> values.put(v.getKey(), v.getLabel()));
+        f.setValues(values);
         fields.add(f);
       }
     } catch (Exception e) {
@@ -602,7 +580,7 @@ public class ServiceFormsOnline extends AbstractRestWebService {
             }
 
             // remove duplicate users
-            users = new ArrayList<String>(new HashSet<>(users));
+            users = new ArrayList<>(new HashSet<>(users));
 
             for (String usrId : users) {
               UserDetail usr = Administration.get().getUserDetail(usrId);

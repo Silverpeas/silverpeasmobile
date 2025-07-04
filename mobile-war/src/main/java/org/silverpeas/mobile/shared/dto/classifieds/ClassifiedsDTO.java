@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.shared.dto.classifieds;
 
+import org.silverpeas.core.contribution.content.form.FieldValuesTemplate;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.util.ArrayList;

@@ -35,7 +35,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormOnlineLoadUserFieldEvent;
@@ -60,14 +59,16 @@ import java.util.Map;
 public class FieldEditable extends Composite implements ChangeHandler, ValueChangeHandler,
         UserSelectionComponentEventHandler, View {
 
-    private static FieldUiBinder uiBinder = GWT.create(FieldUiBinder.class);
+    private static final FieldUiBinder uiBinder = GWT.create(FieldUiBinder.class);
 
     @UiField
     Label label;
     @UiField
     Anchor file, deleteFile;
     @UiField
-    HTMLPanel container, inputContainer;
+    HTMLPanel container;
+    @UiField
+    HTMLPanel inputContainer;
 
     private Widget w;
     protected ApplicationMessages msg = null;
@@ -75,7 +76,7 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
 
     @Override
     public void onChange(final ChangeEvent changeEvent) {
-        String value = "";
+        String value;
         if (changeEvent.getSource() instanceof TextBox) {
             if (((TextBox) changeEvent.getSource()).getElement().getAttribute("type").equalsIgnoreCase("file")) {
                 data.setObjectValue(((TextBox) changeEvent.getSource()).getElement());
@@ -102,11 +103,11 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
             FlowPanel p = (FlowPanel) ((CheckBox) valueChangeEvent.getSource()).getParent();
             for (int i = 0; i < p.getWidgetCount(); i++) {
                 CheckBox c = (CheckBox) p.getWidget(i);
-                if (c.getValue()) {
+                if (Boolean.TRUE.equals(c.getValue())) {
                     value += c.getFormValue() + "##";
                 }
             }
-            if (value.indexOf("#") != -1) {
+            if (value.contains("#")) {
                 value = value.substring(0, value.length() - 2);
             }
         }
@@ -203,15 +204,8 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
             w = panel;
         } else if (type.equalsIgnoreCase("listbox")) {
             ListBox l = new ListBox();
-            int i = 0;
-            int index = 0;
             for (Map.Entry<String, String> v : data.getValues().entrySet()) {
                 l.addItem(v.getValue(), v.getKey());
-
-                if (data.getValue() != null && v.getValue().equals(data.getValue())) {
-                    i = index;
-                }
-                index++;
             }
             l.setEnabled(!data.isReadOnly());
             l.addChangeHandler(this);
@@ -271,9 +265,8 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
             if (type.equalsIgnoreCase("multipleUser")) {
                 if (data.getValue() != null && data.getValueId() != null && !data.getValue().isEmpty() && !data.getValueId().isEmpty()) {
                     String[] values = data.getValue().split(",");
-                    String[] ids = data.getValueId().split(",");
-                    for (int i = 0; i < values.length; i++) {
-                        t.setText(t.getText() + "\n" + values[i]);
+                    for (String value : values) {
+                        t.setText(t.getText() + "\n" + value);
                     }
                     t.getElement().setAttribute("data", data.getValueId());
                 }
@@ -284,25 +277,22 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
             }
             t.setWidth("10em");
             t.setEnabled(!data.isReadOnly());
-            t.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(final ClickEvent clickEvent) {
-                    UserSelectionPage page = new UserSelectionPage();
-                    if (type.equalsIgnoreCase("user") || type.equalsIgnoreCase("group")) page.setMaxSelection(1);
-                    page.setContentId(data.getName());
+            t.addClickHandler(clickEvent -> {
+                UserSelectionPage page = new UserSelectionPage();
+                if (type.equalsIgnoreCase("user") || type.equalsIgnoreCase("group")) page.setMaxSelection(1);
+                page.setContentId(data.getName());
 
-                    // get users or groups selected before
-                    TextArea tx = ((TextArea) clickEvent.getSource());
-                    List<String> ids = Arrays.asList(tx.getElement().getAttribute("data").split(","));
-                    if (type.equalsIgnoreCase("user")) {
-                        page.setPreSelectedUsersIds(ids);
-                    } else if (type.equalsIgnoreCase("group")) {
-                        page.setPreSelectedGroupsIds(ids);
-                    }
-
-                    sendEventToGetPossibleUsers();
-                    page.show();
+                // get users or groups selected before
+                TextArea tx = ((TextArea) clickEvent.getSource());
+                List<String> ids = Arrays.asList(tx.getElement().getAttribute("data").split(","));
+                if (type.equalsIgnoreCase("user")) {
+                    page.setPreSelectedUsersIds(ids);
+                } else if (type.equalsIgnoreCase("group")) {
+                    page.setPreSelectedGroupsIds(ids);
                 }
+
+                sendEventToGetPossibleUsers();
+                page.show();
             });
 
             w = t;
@@ -313,8 +303,6 @@ public class FieldEditable extends Composite implements ChangeHandler, ValueChan
             t.setReadOnly(data.isReadOnly());
             t.addChangeHandler(this);
             w = t;
-        } else {
-            // not supported field
         }
 
         if (w != null) {
