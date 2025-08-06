@@ -264,9 +264,13 @@ input[type="range"]::-webkit-slider-thumb {
     text-align: left;
 }
 
-#snackbar.show-static .snackbar-actions {
+#snackbar.show-static .snackbar-actions-center {
     position: absolute;
     right: 16px;
+}
+
+#snackbar.show-static .snackbar-actions {
+    text-align: right;
 }
 
 #snackbar.show-static .yes {

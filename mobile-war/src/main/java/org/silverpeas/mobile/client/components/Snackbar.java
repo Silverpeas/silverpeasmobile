@@ -68,13 +68,19 @@ public class Snackbar {
         });
     }
 
+    public static void showConfirmation(String message, Command yesCommand, Command noCommand, boolean buttonsCenter) {
+        String yesLabel = msg.yes();
+        String noLabel = msg.no();
+        showConfirmation(message, yesLabel, noLabel, yesCommand, noCommand, buttonsCenter);
+    }
+
     public static void showConfirmation(String message, Command yesCommand, Command noCommand) {
         String yesLabel = msg.yes();
         String noLabel = msg.no();
-        showConfirmation(message, yesLabel, noLabel, yesCommand, noCommand);
+        showConfirmation(message, yesLabel, noLabel, yesCommand, noCommand, true);
     }
 
-    public static void showConfirmation(String message, String yesLabel, String noLabel, Command yesCommand, Command noCommand) {
+    public static void showConfirmation(String message, String yesLabel, String noLabel, Command yesCommand, Command noCommand, boolean buttonsCenter) {
         SpMobil.getMainPage().freeze();
         BodyElement body = Document.get().getBody();
         DivElement div = Document.get().createDivElement();
@@ -87,7 +93,11 @@ public class Snackbar {
         div.appendChild(messageContainer);
 
         SpanElement actions = Document.get().createSpanElement();
-        actions.setClassName("snackbar-actions");
+        if (buttonsCenter) {
+            actions.setClassName("snackbar-actions-center");
+        } else {
+            actions.setClassName("snackbar-actions");
+        }
         AnchorElement yes = Document.get().createAnchorElement();
         yes.setInnerText(yesLabel);
         yes.setClassName("yes");

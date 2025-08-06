@@ -250,7 +250,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
             public void execute() {
               PWAHelper.installApp();
             }
-          }, null);
+          }, null, false);
         }
         return false;
       }
