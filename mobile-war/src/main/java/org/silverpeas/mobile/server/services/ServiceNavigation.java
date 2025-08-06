@@ -442,9 +442,9 @@ public class ServiceNavigation extends AbstractRestWebService {
   }
 
   private boolean isSupportedApp(ComponentInstLight app) {
+    String[] appsExcluded = getSettings().getList("apps.exclude.intances", ",");
     if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
       String[] supportedApps = getSettings().getList("apps.supported", ",");
-      String[] appsExcluded = getSettings().getList("apps.exclude.intances", ",");
       if (Arrays.asList(appsExcluded).contains(app.getId())) {
         return false;
       }
@@ -454,8 +454,13 @@ public class ServiceNavigation extends AbstractRestWebService {
       } else {
         return false;
       }
+    } else if (isWorkflowApp(app)) {
+      if (Arrays.asList(appsExcluded).contains(app.getId())) {
+        return false;
+      }
+      return true;
     }
-    return isWorkflowApp(app);
+    return false;
   }
 
   private boolean isWorkflowApp(ComponentInstLight app) {
