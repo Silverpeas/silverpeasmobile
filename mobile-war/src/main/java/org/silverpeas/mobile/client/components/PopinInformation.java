@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 /**
  * @author: svu
  */
+@Deprecated
 public class PopinInformation extends PopupPanel implements ClickHandler{
 
   private Command callback;

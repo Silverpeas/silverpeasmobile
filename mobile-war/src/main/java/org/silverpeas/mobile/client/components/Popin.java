@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 /**
  * @author: svu
  */
+@Deprecated
 public class Popin extends PopupPanel {
 
     public static final int NORMAL_DURATION = 2000;
