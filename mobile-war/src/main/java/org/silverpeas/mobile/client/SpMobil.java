@@ -101,6 +101,7 @@ import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SpMobil implements EntryPoint, AuthenticationEventHandler {
@@ -240,17 +241,29 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   private static void checkInstallation() {
     PWAHelper.detectAppInstallation();
+
+    Command execNo = new Command() {
+      @Override
+      public void execute() {
+        Date expireAt = new Date();
+        long delay = 60*1000*60*24*30;
+        expireAt.setTime(expireAt.getTime()+delay);
+        Cookies.setCookie("ask_install", "no", expireAt);
+      }
+    };
+    Command execYes = new Command() {
+      @Override
+      public void execute() {
+        PWAHelper.installApp();
+      }
+    };
+
     Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
       @Override
       public boolean execute() {
-        if (!PWAHelper.isInstalledApp()) {
-
-          Snackbar.showConfirmation(msg.installation(), new Command() {
-            @Override
-            public void execute() {
-              PWAHelper.installApp();
-            }
-          }, null, false);
+        String cookie = Cookies.getCookie("ask_install");
+        if (!PWAHelper.isInstalledApp() && (cookie == null || cookie.isEmpty())) {
+          Snackbar.showConfirmation(msg.installation(), execYes, execNo, false);
         }
         return false;
       }
