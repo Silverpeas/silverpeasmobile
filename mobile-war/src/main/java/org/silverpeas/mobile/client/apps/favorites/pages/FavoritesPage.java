@@ -87,6 +87,7 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
       if (it instanceof MyLinkDTO) {
         FavoriteItem item = new FavoriteItem();
         item.setParent(this);
+        item.setMinimalView(true);
         item.setData((MyLinkDTO) it);
         currentCategory.addFavorite(item);
         item.getElement().addClassName("item-open");
@@ -127,7 +128,7 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
   }
 
   private List<MyLinkDTO> getSelectedFavorites() {
-    List<MyLinkDTO> selection = new ArrayList<>();
+    List<MyLinkDTO> selection = new ArrayList();
     for (int i = 0; i < favorites.getCount(); i++) {
       if (favorites.getWidget(i) instanceof FavoriteItem) {
         FavoriteItem item = (FavoriteItem) favorites.getWidget(i);

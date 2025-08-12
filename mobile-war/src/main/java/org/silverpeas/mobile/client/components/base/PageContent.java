@@ -62,8 +62,8 @@ public abstract class PageContent extends Composite implements View, NativePrevi
   protected String pageTitle;
   private HandlerRegistration registration;
   private SwipeRecognizer swipeRecognizer;
-  private List<ActionItem> actionsMenu = new ArrayList<>();
-  private List<ActionItem> actionsShortcuts = new ArrayList<>();
+  private List<ActionItem> actionsMenu = new ArrayList();
+  private List<ActionItem> actionsShortcuts = new ArrayList();
 
   private int changeSelectionNumber = 0;
 
