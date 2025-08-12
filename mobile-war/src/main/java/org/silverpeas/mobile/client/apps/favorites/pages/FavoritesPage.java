@@ -88,6 +88,7 @@ public class FavoritesPage extends PageContent implements FavoritesPagesEventHan
       if (it instanceof MyLinkDTO) {
         FavoriteItem item = new FavoriteItem();
         item.setParent(this);
+        item.setMinimalView(true);
         item.setData((MyLinkDTO) it);
         currentCategory.addFavorite(item);
         item.getElement().addClassName("item-open");

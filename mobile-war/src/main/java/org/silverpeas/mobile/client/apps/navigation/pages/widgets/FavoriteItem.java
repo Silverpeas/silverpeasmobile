@@ -120,7 +120,7 @@ public class FavoriteItem extends SelectableItem {
 
   @UiHandler("link")
   protected void endTouch(TouchEndEvent event) {
-    endTouch(event, minimalView, new Command() {
+    endTouch(event, !minimalView, new Command() {
       @Override
       public void execute() {
         HyperLinkDTO link = new HyperLinkDTO();

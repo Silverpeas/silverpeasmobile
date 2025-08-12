@@ -21,6 +21,13 @@ public class SelectableItem extends Composite {
     private Timer timerSelection = null;
     private Timer timerScroll = null;
 
+    public boolean isInSelectionMode() {
+        if (parent != null) {
+            return parent.isSelectionMode();
+        }
+        return false;
+    }
+
     public void setMultiSelection(boolean multiSelection) {
         this.multiSelection = multiSelection;
     }
@@ -38,7 +45,7 @@ public class SelectableItem extends Composite {
     }
 
     protected void startTouch(TouchStartEvent event, boolean selectable) {
-        if (!parent.isSelectionMode() && selectable) {
+        if (!isInSelectionMode() && selectable) {
             timerSelection = new Timer() {
                 @Override
                 public void run() {
@@ -48,7 +55,7 @@ public class SelectableItem extends Composite {
                 }
             };
             timerSelection.schedule(400);
-        } else if (parent.isSelectionMode() && selectable) {
+        } else if (isInSelectionMode() && selectable) {
             timerScroll = new Timer() {
                 @Override
                 public void run() {
@@ -82,7 +89,7 @@ public class SelectableItem extends Composite {
         if (timerSelection != null) timerSelection.cancel();
         if (!onMove) {
             if (selectable) {
-                if (!parent.isSelectionMode() && !unSelected) {
+                if (!isInSelectionMode() && !unSelected) {
                     onClickAction.execute();
                 }
             } else {
