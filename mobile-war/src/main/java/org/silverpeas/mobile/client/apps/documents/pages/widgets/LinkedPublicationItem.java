@@ -36,6 +36,7 @@ import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPubli
 import org.silverpeas.mobile.client.apps.documents.pages.PublicationPage;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
@@ -46,6 +47,12 @@ public class LinkedPublicationItem extends Composite {
   private static LinkedPublicationItemUiBinder uiBinder = GWT.create(LinkedPublicationItemUiBinder.class);
   @UiField Anchor link;
   protected DocumentsMessages msg = null;
+
+  private App app;
+
+  public void setApp(App app) {
+    this.app = app;
+  }
 
 
   interface LinkedPublicationItemUiBinder extends UiBinder<Widget, LinkedPublicationItem> {
@@ -70,6 +77,7 @@ public class LinkedPublicationItem extends Composite {
     DocumentsLoadPublicationEvent loadEvent = new DocumentsLoadPublicationEvent(content);
 
     PublicationPage page = new PublicationPage();
+    page.setApp(app);
     page.setPageTitle(msg.publicationTitle());
     page.show();
 

@@ -335,6 +335,7 @@ public class PublicationPage extends PageContent
       for (PublicationDTO linkedPublication : publication.getLinkedPublications()) {
         LinkedPublicationItem item = new LinkedPublicationItem();
         item.setData(linkedPublication);
+        item.setApp(getApp());
         linkedPublications.add(item);
       }
     }
