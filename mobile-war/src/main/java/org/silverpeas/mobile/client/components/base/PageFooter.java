@@ -74,6 +74,12 @@ public class PageFooter extends Composite {
     tchat.setHTML(ressources.chatShortcut().getText());
     contact.setHTML(ressources.contactsShortcut().getText());
 
+    tchat.getElement().setAttribute("aria-label",msg.tchat().asString());
+    contact.getElement().setAttribute("aria-label",msg.appContact().asString());
+    tasks.getElement().setAttribute("aria-label",msg.tasks());
+    favoris.getElement().setAttribute("aria-label", msg.favorites().asString());
+    browse.getElement().setAttribute("aria-label",msg.home());
+
     addCustomButtons();
   }
 

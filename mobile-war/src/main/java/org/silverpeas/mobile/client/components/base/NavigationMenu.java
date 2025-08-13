@@ -127,6 +127,9 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     iconShareBox.setInnerHTML(resources.sharebox().getText());
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
     search.getElement().setAttribute("placeholder", msg.search());
+
+    home.getElement().setAttribute("aria-label",msg.home());
+
   }
 
   public void setPersonalApps(List<ApplicationInstanceDTO> applicationInstanceDTOS) {

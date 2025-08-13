@@ -66,6 +66,7 @@ public class PageHeader extends Composite {
     ressources.css().ensureInjected();
     title.setInnerText(ResourcesManager.getLabel("mainpage.title"));
     actionsMenu.setActionsShortcuts(actionsShortcuts);
+    back.getElement().setAttribute("aria-label",msg.back());
   }
 
   public void addActionShortcut(ActionItem action) {
