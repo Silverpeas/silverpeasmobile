@@ -93,6 +93,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       GedNavigationPage page = new GedNavigationPage();
       page.setInstanceId(content.getInstanceId());
       page.setTopicId(content.getId());
+      page.setApp(this);
       page.show();
     }
 
@@ -130,6 +131,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       PublicationPage page = new PublicationPage();
       page.setPageTitle(msg.publicationTitle());
       page.setContent(content);
+      page.setApp(this);
       setMainPage(page);
       page.show();
       EventBus.getInstance().fireEvent(new DocumentsLoadPublicationEvent(content));
@@ -195,6 +197,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       page.setPageTitle(event.getInstance().getLabel());
       page.setInstanceId(event.getInstance().getId());
       page.setTopicId(null);
+      page.setApp(this);
       page.setPersonnal(event.getInstance().getPersonnal());
       page.show();
     }
@@ -337,6 +340,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       public void onSuccess(Method method, PublicationDTO publicationDTO) {
         PublicationPage page = new PublicationPage();
         page.setPageTitle(msg.publicationTitle());
+        page.setApp(DocumentsApp.this);
         page.show();
         ContentDTO content = new ContentDTO();
         content.setId(publicationDTO.getId());
