@@ -245,10 +245,10 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     Command execNo = new Command() {
       @Override
       public void execute() {
-        Date expireAt = new Date();
-        long delay = 60*1000*60*24*30;
-        expireAt.setTime(expireAt.getTime()+delay);
-        Cookies.setCookie("ask_install", "no", expireAt);
+        long duration = Long.parseLong(ResourcesManager.getParam("displayInstallQuestionFrequency"));
+        final long DURATION = 1000 * 60 * 60 * 24 * duration;
+        Date expires = new Date(System.currentTimeMillis() + DURATION);
+        Cookies.setCookie("ask_install", "no", expires);
       }
     };
     Command execYes = new Command() {
