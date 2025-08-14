@@ -117,6 +117,8 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     response.getOutputStream().print("<head>");
     response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
 
+    response.getOutputStream().print("<link rel=\"stylesheet\" href=\"" + "/silverpeas/spmobile/spmobile.css" + "\">");
+
     String urlCSS = mobileSettings.getString("styleSheet", "");
     if (!urlCSS.isEmpty()) {
       response.getOutputStream().print("<link rel=\"stylesheet\" href=\"" + urlCSS + "\">");

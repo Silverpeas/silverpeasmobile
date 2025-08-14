@@ -2486,7 +2486,7 @@ a.popin-btn {
 
 #real-element {
   padding: 0 0.5em;
-  background-color: var(--main-bg-color);
+  background-color: var(--white);
 }
 
 #real-element img {
