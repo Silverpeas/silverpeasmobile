@@ -284,7 +284,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     checkVersion();
     boolean displayCookiesInformation = Boolean.parseBoolean(ResourcesManager.getParam("displayCookiesInformation"));
     String cookie = Cookies.getCookie("accept_cookies");
-    if (displayCookiesInformation && (cookie == null || cookie.isEmpty())) {
+    if (!SSO & displayCookiesInformation && (cookie == null || cookie.isEmpty())) {
       displayCookiesPage();
     } else {
       loadIds(null);
