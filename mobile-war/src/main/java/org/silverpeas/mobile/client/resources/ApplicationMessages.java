@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2024 Silverpeas
+ * Copyright (C) 2000 - 2025 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -61,7 +61,7 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Corriger")
   String correctBtnLabel();
 
-  @DefaultMessage("© 2001-2024 <a target='_blank' href='http://www.silverpeas.com'>Silverpeas</a>	- Tous droits réservés")
+  @DefaultMessage("© 2001-2025 <a target='_blank' href='http://www.silverpeas.com'>Silverpeas</a>	- Tous droits réservés")
   SafeHtml copyright();
 
   @DefaultMessage("Parcourir la plateforme")
