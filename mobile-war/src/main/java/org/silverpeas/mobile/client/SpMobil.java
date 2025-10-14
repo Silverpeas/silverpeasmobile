@@ -405,9 +405,9 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     if (u != null) {
       tryToRelogin(null);
     } else {
-      String login = Document.get().getElementById("svpLogin").getAttribute("value");
-      String domainId = Document.get().getElementById("defaultDomain").getAttribute("value");
-      if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty() && !login.equalsIgnoreCase("undefined") && !domainId.equalsIgnoreCase("undefined")) {
+      String login = DOMUtils.getInputValueById("svpLogin");
+      String domainId = DOMUtils.getInputValueById("defaultDomain");
+      if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty()) {
         //SSO
         MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
           @Override

@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.client.common;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 
 /**
@@ -35,4 +36,10 @@ public class DOMUtils {
     var margin = parseInt(styles['marginTop']) + parseInt(styles['marginBottom']);
     return margin;
   }-*/;
+
+  public static String getInputValueById(String id) {
+    Element el = Document.get().getElementById(id);
+    if (el != null) return el.getAttribute("value");
+    return "";
+  }
 }
