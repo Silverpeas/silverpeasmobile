@@ -12,6 +12,8 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="org.silverpeas.kernel.bundle.SettingBundle" %>
 <%@ page import="org.silverpeas.bridge.MobilFilter" %>
+<%@ page import="java.net.URLDecoder" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
 
 <%--
   ~ Copyright (C) 2000 - 2025 Silverpeas
@@ -110,6 +112,16 @@
     String nocache = resource.getString("nocache");
     if (nocache.equalsIgnoreCase("true")) {
       response.setHeader("Clear-Site-Data", "\"cache\", \"storage\"");
+    }
+    Cookie[] cookies = request.getCookies();
+    for (int i = 0; i < cookies.length; i++) {
+      Cookie cookie = cookies[i];
+      if (cookie.getName( ).equalsIgnoreCase("svpLogin")) {
+        out.print("<input type='hidden' id='svpLogin' value='" + URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.toString()) + "'>");
+      }
+      if (cookie.getName( ).equalsIgnoreCase("defaultDomain")) {
+        out.print("<input type='hidden' id='defaultDomain' value='" + URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.toString()) + "'>");
+      }
     }
   %>
 

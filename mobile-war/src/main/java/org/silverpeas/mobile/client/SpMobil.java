@@ -36,7 +36,6 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -192,7 +191,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     EventBus.getInstance().addHandler(AbstractAuthenticationErrorEvent.TYPE, this);
 
     SSO = !ResourcesManager.getSSOPath().isEmpty();
-
+    if (SSO) GWT.log("SSO is detected");
     displayFirstPage();
 
     NodeList<Element> tags = Document.get().getElementsByTagName("meta");
@@ -245,7 +244,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     Command execNo = new Command() {
       @Override
       public void execute() {
-        long duration = Long.parseLong(ResourcesManager.getParam("displayInstallQuestionFrequency"));
+        long duration = Long.parseLong(ResourcesManager.getParam("displayInstallQuestionFrequency", "30"));
         final long DURATION = 1000 * 60 * 60 * 24 * duration;
         Date expires = new Date(System.currentTimeMillis() + DURATION);
         Cookies.setCookie("ask_install", "no", expires);
@@ -406,9 +405,9 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     if (u != null) {
       tryToRelogin(null);
     } else {
-      String login = Cookies.getCookie("svpLogin");
-      String domainId = Cookies.getCookie("defaultDomain");
-      if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty()) {
+      String login = Document.get().getElementById("svpLogin").getAttribute("value");
+      String domainId = Document.get().getElementById("defaultDomain").getAttribute("value");
+      if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty() && !login.equalsIgnoreCase("undefined") && !domainId.equalsIgnoreCase("undefined")) {
         //SSO
         MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
           @Override

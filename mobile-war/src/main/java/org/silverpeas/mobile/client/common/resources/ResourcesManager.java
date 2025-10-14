@@ -63,6 +63,13 @@ public class ResourcesManager {
     }
     return param;
   }
+
+  public static String getParam(String key, String defaultValue) {
+    String param = getParam(key);
+    if (param == null || param.isEmpty()) return defaultValue;
+    return param;
+  }
+
   public static String getSSOPath() {
     return Document.get().getElementById("ssoPath").getAttribute("value");
   }
