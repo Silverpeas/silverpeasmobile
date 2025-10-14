@@ -394,6 +394,12 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     SpMobil.getMainPage().setContent(new CookiesPage(), true);
   }
 
+  private String getInputValueById(String id) {
+    Element el = Document.get().getElementById(id);
+    if (el != null) return el.getAttribute("value");
+    return "";
+  }
+
   /**
    * Load ids in SQL Web Storage.
    */
@@ -402,8 +408,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     if (u != null) {
       tryToRelogin(null);
     } else {
-      String login = Cookies.getCookie("svpLogin");
-      String domainId = Cookies.getCookie("defaultDomain");
+      String login = getInputValueById("svpLogin");
+      String domainId = getInputValueById("defaultDomain");
       if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty()) {
         //SSO
         MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
