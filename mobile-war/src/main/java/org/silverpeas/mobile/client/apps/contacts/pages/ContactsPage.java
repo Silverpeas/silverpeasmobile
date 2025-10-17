@@ -26,19 +26,16 @@ package org.silverpeas.mobile.client.apps.contacts.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.contacts.events.app.ContactsLoadEvent;
 import org.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
 import org.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
@@ -50,31 +47,24 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
-import org.silverpeas.mobile.client.components.base.events.AbstractScrollEvent;
-import org.silverpeas.mobile.client.components.base.events.EndPageEvent;
-import org.silverpeas.mobile.client.components.base.events.ScrollEventHandler;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
-import java.util.Iterator;
-
-public class ContactsPage extends PageContent implements ContactsPagesEventHandler, ScrollEventHandler {
+public class ContactsPage extends PageContent implements ContactsPagesEventHandler {
 
   private static ContactsPageUiBinder uiBinder = GWT.create(ContactsPageUiBinder.class);
 
   @UiField(provided = true) protected ContactsMessages msg = null;
   @UiField HTMLPanel container;
-  @UiField Anchor mycontacts, allcontacts, allextcontacts;
+  @UiField Anchor mycontacts, allcontacts, allextcontacts, more;
   @UiField UnorderedList list;
   @UiField TextBox filter;
-  private int startIndex, pageSize = 0;
+  private int callNumber, startIndex, pageSize = 0;
   private String currentFilter = "";
   private String currentType = ContactFilters.MY;
-  private ContactItem itemWaiting;
-  private boolean callingNexData = false;
-  private boolean noMoreData = false;
-  private boolean limited = false;
-  private static Scheduler.RepeatingCommand command = null;
+  private static Timer command = null;
+
+  private static boolean cancelTimer = false;
 
   public void setContactsVisible(final boolean contactsVisible) {
     if (contactsVisible) {
@@ -105,13 +95,11 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     allextcontacts.getElement().setId("btn-all-contactsext");
     allextcontacts.setVisible(false);
     EventBus.getInstance().addHandler(AbstractContactsPagesEvent.TYPE, this);
-    EventBus.getInstance().addHandler(AbstractScrollEvent.TYPE, this);
 
     list.getElement().setId("list-contacts");
   }
 
   public void init(boolean limited) {
-    this.limited = limited;
     list.clear();
 
     String tabs = ResourcesManager.getParam("directory.display.tabs");
@@ -122,13 +110,13 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
         allcontacts.setVisible(tabs.contains("allcontacts"));
         allextcontacts.setVisible(tabs.contains("allextcontacts"));
 
-        //Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
       Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
         @Override
         public boolean execute() {
           if (defaultTab.equals("mycontacts")) {
+            computePosition();
             EventBus.getInstance().fireEvent(
-                new ContactsLoadEvent(ContactFilters.MY, filter.getText(), computePageSize(),
+                new ContactsLoadEvent(ContactFilters.MY, filter.getText(), pageSize,
                     startIndex));
             currentType = ContactFilters.MY;
             mycontacts.addStyleName("ui-btn-active");
@@ -138,8 +126,9 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
             }
             filter.setVisible(false);
           } else if (defaultTab.equals("allcontacts")) {
+            computePosition();
             EventBus.getInstance().fireEvent(
-                new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), computePageSize(),
+                new ContactsLoadEvent(ContactFilters.ALL, filter.getText(), pageSize,
                     startIndex));
             currentType = ContactFilters.ALL;
             allcontacts.addStyleName("ui-btn-active");
@@ -152,8 +141,9 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
             }
             filter.setVisible(true);
           } else if (defaultTab.equals("allextcontacts")) {
+            computePosition();
             EventBus.getInstance().fireEvent(
-                new ContactsLoadEvent(ContactFilters.ALL_EXT, filter.getText(), computePageSize(),
+                new ContactsLoadEvent(ContactFilters.ALL_EXT, filter.getText(), pageSize,
                     startIndex));
             currentType = ContactFilters.ALL_EXT;
             allextcontacts.addStyleName("ui-btn-active");
@@ -178,7 +168,6 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractContactsPagesEvent.TYPE, this);
-    EventBus.getInstance().removeHandler(AbstractScrollEvent.TYPE, this);
   }
 
   @UiHandler("mycontacts")
@@ -193,9 +182,9 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     filter.setVisible(false);
     currentFilter = "";
     list.clear();
-    pageSize = 0;
-    startIndex = 0;
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
+    callNumber = 0;
+    computePosition();
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), pageSize, startIndex));
   }
 
   @UiHandler("allcontacts")
@@ -210,9 +199,9 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     filter.setVisible(true);
     currentFilter = "";
     list.clear();
-    pageSize = 0;
-    startIndex = 0;
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
+    callNumber = 0;
+    computePosition();
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), pageSize, startIndex));
   }
 
   @UiHandler("allextcontacts")
@@ -228,38 +217,47 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     filter.setVisible(true);
     currentFilter = "";
     list.clear();
-    pageSize = 0;
-    startIndex = 0;
-    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
+    callNumber = 0;
+    computePosition();
+    EventBus.getInstance().fireEvent(new ContactsLoadEvent(currentType, filter.getText(), pageSize, startIndex));
+  }
+
+  @UiHandler("more")
+  protected void moreContacts(ClickEvent event) {
+    computePosition();
+    EventBus.getInstance()
+            .fireEvent(new ContactsLoadEvent(currentType, filter.getText(), pageSize, startIndex));
   }
 
   @UiHandler("filter")
   protected void filter(KeyUpEvent event) {
+    cancelTimer = true;
     if(!currentFilter.equalsIgnoreCase(filter.getText())) {
       currentFilter = filter.getText();
-
-      if (command == null) {
-        command = new Scheduler.RepeatingCommand() {
-          @Override
-          public boolean execute() {
-            list.clear();
-            pageSize = 0;
-            startIndex = 0;
-            EventBus.getInstance()
-                .fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
-            ContactsPage.command = null;
-            return false;
-          }
-        };
-        Scheduler.get().scheduleFixedDelay(command, 300);
+      if (command != null) {
+        command.cancel();
+        ContactsPage.command = null;
       }
+      command = new Timer() {
+        @Override
+        public void run() {
+          if (!cancelTimer) {
+            list.clear();
+            callNumber = 0;
+            computePosition();
+            EventBus.getInstance()
+                    .fireEvent(new ContactsLoadEvent(currentType, filter.getText(), pageSize, startIndex));
+            ContactsPage.command = null;
+          }
+        }
+      };
+      cancelTimer = false;
+      command.schedule(500);
     }
   }
 
   @Override
   public void onContactsLoaded(ContactsLoadedEvent event) {
-    noMoreData = event.getListUserDetailDTO().isEmpty();
-    list.remove(getWaitingItem());
 
     for (DetailUserDTO user : event.getListUserDetailDTO()) {
       if (user != null) {
@@ -268,7 +266,6 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
         list.add(item);
       }
     }
-    callingNexData = false;
   }
 
   @Override
@@ -276,44 +273,14 @@ public class ContactsPage extends PageContent implements ContactsPagesEventHandl
     this.stop();
   }
 
-  @Override
-  public void onScrollEndPage(final EndPageEvent event) {
-    if (!limited && callingNexData == false && noMoreData == false) {
-      callingNexData = true;
-      list.add(getWaitingItem());
-      Window.scrollTo(0, Document.get().getScrollHeight());
 
-      startIndex += computePageSize();
-      EventBus.getInstance()
-          .fireEvent(new ContactsLoadEvent(currentType, filter.getText(), computePageSize(), startIndex));
+  private void computePosition() {
+    pageSize = 15;
+    if (callNumber == 0) {
+      startIndex = 0;
+    } else {
+      startIndex += pageSize;
     }
-  }
-
-  private ContactItem getWaitingItem() {
-    if (itemWaiting == null) {
-      itemWaiting = new ContactItem();
-      itemWaiting.setData(SpMobil.getUser());
-      itemWaiting.hideData();
-      itemWaiting.setStyleName("csspinner traditional");
-    }
-    return itemWaiting;
-  }
-
-  private int computePageSize() {
-    if (pageSize == 0) {
-      // compute height available for items
-      int available = Window.getClientHeight() - (SpMobil.getMainPage().getHeaderHeight() + container.getOffsetHeight());
-
-      // compute item height
-      ContactItem item = new ContactItem();
-      item.setData(SpMobil.getUser());
-      item.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
-      list.add(item);
-      int itemHeight = item.getOffsetHeight();
-      pageSize =  (available / itemHeight) + 1; // add one for scroll
-      list.remove(item);
-    }
-
-    return pageSize;
+    callNumber++;
   }
 }

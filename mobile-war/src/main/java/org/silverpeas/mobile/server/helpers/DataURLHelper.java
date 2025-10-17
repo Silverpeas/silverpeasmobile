@@ -42,6 +42,21 @@ import java.io.FileOutputStream;
  */
 public class DataURLHelper {
 
+  public static boolean hasPersonnalizedAvatar(String photoFileName) {
+    int i = photoFileName.lastIndexOf("/");
+    if (i == -1) {
+      i = photoFileName.lastIndexOf("\\");
+    }
+    if (i != -1) {
+      photoFileName = photoFileName.substring(i + 1);
+    }
+
+
+    File originalImage =
+            new File(FileRepositoryManager.getAvatarPath() + File.separatorChar + photoFileName);
+    return originalImage.exists();
+  }
+
   /**
    * Return avatar dataurl
    *

@@ -39,4 +39,6 @@ public interface ContactsMessages extends Messages {
   String firstName();
   String lastName();
   String identity();
+
+  SafeHtml more();
 }

@@ -330,8 +330,13 @@ public class ServiceContact extends AbstractRestWebService {
                 }
 
                 if (filtered) {
-                    avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
-                            getSettings().getString("avatar.size", "24x"));
+
+                    if (DataURLHelper.hasPersonnalizedAvatar(userDetail.getAvatarFileName())) {
+                        avatar = "/silverpeas/display/avatar/" + getSettings().getString("avatar.size", "24x") + "/" + userDetail.getLogin() + ".jpg";
+                    } else {
+                        avatar = "/silverpeas/directory/jsp/icons/avatar.png";
+                    }
+
                     for (String prop : getUserProperties()) {
                         dto.addProperty(prop, userFull.getValue(prop));
                     }

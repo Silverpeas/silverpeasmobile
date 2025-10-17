@@ -53,6 +53,6 @@
     </div>
 
     <components:UnorderedList ui:field="list" styleName="list-contacts"></components:UnorderedList>
-
+    <g:Anchor ui:field="more" styleName="ui-btn ui-first-child"><ui:safehtml from="{msg.more}"/></g:Anchor>
   </g:HTMLPanel>
 </ui:UiBinder> 
