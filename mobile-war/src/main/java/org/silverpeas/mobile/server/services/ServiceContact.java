@@ -37,6 +37,9 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.contact.model.CompleteContact;
 import org.silverpeas.core.contact.model.ContactDetail;
 import org.silverpeas.core.contact.model.ContactPK;
+import org.silverpeas.core.contribution.content.form.DataRecord;
+import org.silverpeas.core.contribution.content.form.Form;
+import org.silverpeas.core.contribution.content.form.PagesContext;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.index.search.SearchEngineProvider;
 import org.silverpeas.core.index.search.model.MatchingIndexEntry;
@@ -339,6 +342,7 @@ public class ServiceContact extends AbstractRestWebService {
 
                     for (String prop : getUserProperties()) {
                         dto.addProperty(prop, userFull.getValue(prop));
+                        dto.addProperty(prop, userFull.getDefinedExtraFormValues(((UserDetail) user).getUserPreferences().getLanguage()).get(prop));
                     }
                 } else {
                     avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), "96x");
