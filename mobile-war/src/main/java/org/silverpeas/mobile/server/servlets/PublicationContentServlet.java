@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.server.servlets;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -40,48 +39,32 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
-import org.silverpeas.core.contribution.content.form.DataRecord;
-import org.silverpeas.core.contribution.content.form.Form;
-import org.silverpeas.core.contribution.content.form.FormException;
-import org.silverpeas.core.contribution.content.form.PagesContext;
-import org.silverpeas.core.contribution.content.form.RecordSet;
+import org.silverpeas.core.contribution.content.form.*;
 import org.silverpeas.core.contribution.content.form.field.FileField;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
-import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.core.web.mvc.controller.MainSessionController;
-import org.silverpeas.mobile.server.common.SpMobileLogModule;
+import org.silverpeas.mobile.server.helpers.FormXMLHelper;
 import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.net.FileNameMap;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Properties;
 
 @SuppressWarnings("serial")
 public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
-
-  public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = AbstractAuthenticateService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME;
   public static final String USERKEY_ATTRIBUT_NAME = "key";
 
   private OrganizationController organizationController = OrganizationController.get();
@@ -382,7 +365,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       checkUserInSession(request, response);
       processRequest(request, response);
     } catch (Exception e) {
-      e.printStackTrace();
+      SilverLogger.getLogger(this).error(e);
     }
   }
 
@@ -396,45 +379,29 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
 
   private String getUsedXMLTemplate(HttpServletRequest request, String instanceId)
       throws Exception {
-    return getMainSessionController(request).getComponentParameterValue(instanceId, "xmlTemplate");
+    return FormXMLHelper.getUsedXMLTemplate(request, instanceId);
   }
 
   public boolean isXMLTemplateUsed(HttpServletRequest request, String instanceId) throws Exception {
-    return StringUtil.isDefined(getUsedXMLTemplate(request, instanceId));
+    return FormXMLHelper.isXMLTemplateUsed(request, instanceId);
   }
-
-  protected MainSessionController getMainSessionController(HttpServletRequest request) throws Exception {
-    MainSessionController mainSessionController = (MainSessionController) request.getSession().getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
-    return mainSessionController;
-  }
-
   protected String getUserKeyInSession(HttpServletRequest request) {
     return (String) request.getSession().getAttribute(USERKEY_ATTRIBUT_NAME);
   }
 
   private PublicationTemplate getXMLTemplate(HttpServletRequest request, String instanceId)
       throws Exception {
-    registerXMLForm(request, instanceId);
-    return PublicationTemplateManager.getInstance().getPublicationTemplate(
-        instanceId + ":" + getUsedXMLTemplateShortname(request, instanceId));
+    return FormXMLHelper.getXMLTemplate(request, instanceId);
   }
 
   private void registerXMLForm(HttpServletRequest request, String instanceId) throws Exception {
-    if (isXMLTemplateUsed(request, instanceId)) {
-      // register xmlForm to component
-
-      PublicationTemplateManager.getInstance().addDynamicPublicationTemplate(
-          instanceId + ":" + getUsedXMLTemplateShortname(request, instanceId),
-          getUsedXMLTemplate(request, instanceId));
-      getUsedXMLTemplate(request, instanceId);
-    }
+   FormXMLHelper.registerXMLForm(request, instanceId);
   }
 
 
   private String getUsedXMLTemplateShortname(HttpServletRequest request, String instanceId)
       throws Exception {
-    String xmlFormName = getUsedXMLTemplate(request, instanceId);
-    return xmlFormName.substring(xmlFormName.indexOf('/') + 1, xmlFormName.indexOf('.'));
+    return FormXMLHelper.getUsedXMLTemplateShortname(request, instanceId);
   }
 
   private DataRecord getDataRecord(HttpServletRequest request, String instanceId) throws Exception {

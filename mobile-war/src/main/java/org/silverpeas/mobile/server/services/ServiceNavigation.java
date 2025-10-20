@@ -31,19 +31,30 @@ import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
+import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInst;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.annotation.WebService;
+import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
+import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
+import org.silverpeas.core.contribution.content.form.DataRecord;
+import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
 import org.silverpeas.core.contribution.model.ContributionIdentifier;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
+import org.silverpeas.core.util.URLUtil;
+import org.silverpeas.core.util.file.FileFolderManager;
+import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.kernel.logging.SilverLogger;
@@ -52,6 +63,7 @@ import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
+import org.silverpeas.mobile.server.helpers.FormXMLHelper;
 import org.silverpeas.mobile.server.services.helpers.FavoritesHelper;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
@@ -81,731 +93,797 @@ import java.util.function.Predicate;
 @Path(ServiceNavigation.PATH)
 public class ServiceNavigation extends AbstractRestWebService {
 
-  @Context
-  HttpServletRequest request;
+    @Context
+    HttpServletRequest request;
 
-  static final String PATH = "mobile/navigation";
+    static final String PATH = "mobile/navigation";
 
 
-  private final OrganizationController organizationController = OrganizationController.get();
+    private final OrganizationController organizationController = OrganizationController.get();
 
-  private boolean isUserGUIMobileForTablets() {
-    return getSettings().getBoolean("guiMobileForTablets", true);
-  }
-
-  @PUT
-  @Path("storeTokenMessaging/{token}/")
-  public void storeTokenMessaging(@PathParam("token") String token) {
-    NotificationsPushHelper.getInstance().storeToken(getUser().getId(), token);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("user/{login}/{domainId}/")
-  public DetailUserDTO getUser(@PathParam("login") String login,
-      @PathParam("domainId") String domainId) {
-
-    String id = null;
-    try {
-      id = Administration.get().getUserIdByLoginAndDomain(login, domainId);
-      UserDetail user = Administration.get().getUserDetail(id);
-
-      DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
-      userDTO = initSession(userDTO);
-
-      String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
-          getSettings().getString("big.avatar.size", "40x"));
-      userDTO.setAvatar(avatar);
-      return userDTO;
-
-    } catch (Exception e) {
-      SilverLogger.getLogger(this).error(e);
-      throw new WebApplicationException(e);
+    private boolean isUserGUIMobileForTablets() {
+        return getSettings().getBoolean("guiMobileForTablets", true);
     }
-  }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("setTabletMode")
-  public Boolean setTabletMode() {
-    if (!isUserGUIMobileForTablets()) {
-      request.getSession().setAttribute("tablet", Boolean.valueOf(true));
-      return Boolean.TRUE;
+    @PUT
+    @Path("storeTokenMessaging/{token}/")
+    public void storeTokenMessaging(@PathParam("token") String token) {
+        NotificationsPushHelper.getInstance().storeToken(getUser().getId(), token);
     }
-    return Boolean.FALSE;
-  }
 
-  @GET
-  @Path("clearAppCache")
-  public void clearAppCache() {
-    // clear cache
-    getHttpServletResponse().setHeader("Clear-Site-Data", "\"cache\", \"cookies\", \"storage\"");
-  }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("user/{login}/{domainId}/")
+    public DetailUserDTO getUser(@PathParam("login") String login,
+                                 @PathParam("domainId") String domainId) {
 
-  private static String getBaseUrl(HttpServletRequest request) {
-    String scheme = request.getScheme() + "://";
-    String serverName = request.getServerName();
-    String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
-    String contextPath = request.getContextPath();
-    return scheme + serverName + serverPort + contextPath;
-  }
-
-  private DetailUserDTO initSession(DetailUserDTO user) {
-    SynchronizerToken token = (SynchronizerToken) request.getSession().getAttribute("X-STKN");
-    if (user != null) {
-      UserDetail usr = organizationController.getUserDetail(user.getId());
-      setUserInSession(usr);
-      DetailUserDTO dto = UserHelper.getInstance().populate(usr);
-
-      if (token == null) {
-        // web security turn off
+        String id = null;
         try {
-          dto.setSessionKey(Administration.get().getUserFull(usr.getId()).getToken());
-        } catch (Exception e) {
-          SilverLogger.getLogger(this).error(e);
-        }
-      } else {
-        dto.setSessionKey(token.getValue());
-      }
-      return dto;
-    } else {
-      return null;
-    }
-  }
+            id = Administration.get().getUserIdByLoginAndDomain(login, domainId);
+            UserDetail user = Administration.get().getUserDetail(id);
 
-  protected void setUserInSession(UserDetail user) {
-    request.getSession().setAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME, user);
-  }
+            DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
+            userDTO = initSession(userDTO);
 
-  protected UserDetail getUserInSession() {
-    return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("homepage/{spaceId}/{zoom}/")
-  public HomePageDTO getHomePageData(@PathParam("spaceId") String spaceId, @PathParam("zoom") String zoom) {
-    if (spaceId.equals("null")) spaceId = null;
-
-    //initSilverpeasSession(request);
-    request.getSession().setAttribute("Silverpeas_Portlet_SpaceId", spaceId);
-
-    String look = "";
-    try {
-      look = getMainSessionController().getFavoriteLook();
-    } catch (Exception e) {
-      look = "Initial";
-      SilverLogger.getLogger(this).error(e);
-    }
-
-    SettingBundle settings = GraphicElementFactory.getLookSettings(look);
-
-    HomePageDTO data = new HomePageDTO();
-
-    data.setNewsDisplayer(
-        settings.getString("home.news.displayer", HomePageDTO.NEWS_DISPLAYER_CARROUSEL));
-
-    if (spaceId == null) {
-      data.setId("root");
-    } else {
-      data.setId(spaceId);
-    }
-    try {
-      if (spaceId != null) {
-        SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-        List<ComponentInst> apps = space.getAllComponentsInst();
-        int hiddenApps = 0;
-        for (ComponentInst app : apps) {
-          if (app.isHidden()) {
-            hiddenApps++;
-          }
-        }
-        data.setSpaceName(space.getName(getUser().getUserPreferences().getLanguage()));
-      }
-
-      int maxNews;
-      if (spaceId == null) {
-        maxNews = settings.getInteger("home.news.size", 3);
-      } else {
-        maxNews = settings.getInteger("space.homepage.news.nb", 3);
-      }
-
-      if ((spaceId == null && getSettings().getBoolean("homepage.lastnews", true)) ||
-              (spaceId != null && getSettings().getBoolean("spacehomepage.lastnews", true))) {
-        List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId, maxNews);
-        data.setNews(NewsHelper.getInstance().populate(lastNews, false));
-      }
-            
-      if (spaceId == null || spaceId.isEmpty()) {
-        List<LinkDetail> links =
-            FavoritesHelper.getInstance().getBookmarkPersoVisible(getUser().getId());
-        data.setFavorites(FavoritesHelper.getInstance().populate(links));
-      }
-      data.setSpacesAndApps(getSpacesAndApps(spaceId));
-
-
-      // last publications
-      if ((spaceId == null && getSettings().getBoolean("homepage.lastpublications", true)) ||
-          (spaceId != null && getSettings().getBoolean("spacehomepage.lastpublications", true))) {
-        try {
-          SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
-          ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
-          int max;
-          if (spaceId == null) {
-            max = settings.getInteger("home.publications.nb", 3);
-          } else {
-            max = settings.getInteger("space.homepage.latestpublications.nb", 3);
-          }
-          List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
-          for (PublicationDetail pub : pubs) {
-            if (pub.canBeAccessedBy(getUser())) {
-              PublicationDTO dto = new PublicationDTO();
-              dto.setId(pub.getId());
-              dto.setName(pub.getName());
-              dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
-              dto.setInstanceId(pub.getInstanceId());
-              lastPubs.add(dto);
-            }
-          }
-          data.setLastPublications(lastPubs);
+            String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
+                    getSettings().getString("big.avatar.size", "40x"));
+            userDTO.setAvatar(avatar);
+            return userDTO;
 
         } catch (Exception e) {
-          SilverLogger.getLogger(this).error(e);
+            SilverLogger.getLogger(this).error(e);
+            throw new WebApplicationException(e);
         }
-      }
+    }
 
-      // aurora shortcuts
-      List<ShortCutLinkDTO> shortCutLinkDTOList = new ArrayList<>();
-      if (spaceId == null || spaceId.isEmpty()) {
-        int i = 1;
-        while (i > 0) {
-          String url = settings.getString("Shortcut.home." + i + ".Url", "");
-          if (!url.isEmpty()) {
-            String text = settings.getString("Shortcut.home." + i + ".AltText", "");
-            String icon = settings.getString("Shortcut.home." + i + ".IconUrl", "");
-            ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
-            shortCutLinkDTO.setUrl(url);
-            shortCutLinkDTO.setText(text);
-            shortCutLinkDTO.setIcon(icon);
-            shortCutLinkDTOList.add(shortCutLinkDTO);
-          } else {
-            i = 0;
-            break;
-          }
-          i++;
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("setTabletMode")
+    public Boolean setTabletMode() {
+        if (!isUserGUIMobileForTablets()) {
+            request.getSession().setAttribute("tablet", Boolean.valueOf(true));
+            return Boolean.TRUE;
         }
-      }
-      data.setShortCuts(shortCutLinkDTOList);
-
-      // aurora tools
-      shortCutLinkDTOList = new ArrayList<>();
-      if (spaceId == null || spaceId.isEmpty()) {
-        int i = 1;
-        while (i > 0) {
-          String url = settings.getString("Shortcut.tool." + i + ".Url", "");
-          if (!url.isEmpty()) {
-            String text = settings.getString("Shortcut.tool." + i + ".AltText", "");
-            String icon = settings.getString("Shortcut.tool." + i + ".IconUrl", "");
-            ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
-            shortCutLinkDTO.setUrl(url);
-            shortCutLinkDTO.setText(text);
-            shortCutLinkDTO.setIcon(icon);
-            shortCutLinkDTOList.add(shortCutLinkDTO);
-          } else {
-            i = 0;
-            break;
-          }
-          i++;
-        }
-      }
-      data.setTools(shortCutLinkDTOList);
-
-
-      // upcomming events
-      NextEvents events = null;
-      List<CalendarEventDTO> eventsToDisplay = null;
-      String lang = getUser().getUserPreferences().getLanguage();
-      if ((spaceId == null && getSettings().getBoolean("homepage.lastevents", true))) {
-        boolean includeToday = settings.getBoolean("home.events.today.include", true);
-        List<String> allowedComponentIds =
-            Arrays.asList(getAllowedComponentIds(settings, "home.events.appId", "almanach"));
-        int nbDays = settings.getInteger("home.events.maxDays", 3);
-        boolean onlyImportant = settings.getBoolean("home.events.importantOnly", false);
-        events = EventsHelper.getInstance()
-            .getNextEvents(allowedComponentIds, includeToday, nbDays, onlyImportant);
-      } else if (spaceId != null && getSettings().getBoolean("spacehomepage.lastevents", true)) {
-        List<String> allowedAppIds = new ArrayList<>();
-        List<ComponentInstLight> components = getAllowedComponents(false, "almanach", spaceId);
-        for (ComponentInstLight component : components) {
-          allowedAppIds.add(component.getId());
-        }
-        events = EventsHelper.getInstance().getNextEvents(allowedAppIds, true, 5, false);
-      }
-      eventsToDisplay = EventsHelper.getInstance().populate(events, lang);
-      data.setLastEvents(eventsToDisplay);
-
-      // freezone
-
-      if ((spaceId == null && getSettings().getBoolean("homepage.freezone", true))) {
-        String pageWebAppId = settings.getString("home.freezone.appId", "");
-        if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
-          String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
-          html = "<div style='zoom:"+zoom+"'>" + html + "</div>";
-          data.setHtmlFreeZone(html);
-        }
-      } else if (spaceId != null) {
-        SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-        if (space.getFirstPageType() == HomePages.URL.getValue() &&
-                getSettings().getBoolean("spacehomepage.displayUrlType")) {
-          String url = space.getFirstPageExtraParam();
-          if (url.startsWith("/") && !url.startsWith("/silverpeas") && !url.startsWith("$")) url = "/silverpeas" + url;
-          String html = getIframe(url, zoom);
-          data.setHtmlFreeZone(html);
-        } else if (space.getFirstPageType() == HomePages.APP.getValue() && space.getFirstPageExtraParam().startsWith("webPage")) {
-          String appId = space.getFirstPageExtraParam();
-          String url = "/silverpeas/services/spmobile/PublicationContent" + "?id=" + appId + "&componentId=" + appId;
-          String html = getIframe(url, zoom);
-          data.setHtmlFreeZone(html);
-        }
-      }
-
-      // freezone thin
-      if ((spaceId == null && getSettings().getBoolean("homepage.freezonethin", true))) {
-        String pageWebAppId = settings.getString("home.freezone.thin.appId", "");
-        if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
-          String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
-          data.setHtmlFreeZoneThin(html);
-        }
-      }
-
-    } catch (Exception e) {
-      SilverLogger.getLogger(this).error(e);
-      throw new WebApplicationException(e);
+        return Boolean.FALSE;
     }
 
-    return data;
-  }
-
-  private String getIframe(String url, String zoom) {
-    String style = "border-style: none; width: 100%; overflow: hidden;";
-
-    String script = "o.contentWindow.document.body.style='zoom:" + zoom + "'; ";
-    script += "var h = o.contentWindow.document.body.scrollHeight;";
-    script += "o.style.height=h+'px'; ";
-
-    String html = "<iframe style='" + style + "' src='" + url + "' onload=\"" + "javascript:(function(o){" + script + "}(this));" + "\" scrolling='no'>";
-    html += "</iframe>";
-    return html;
-  }
-
-  private List<ComponentInstLight> getAllowedComponents(boolean visibleOnly, String name,
-      String spaceId) {
-    OrganizationController oc = OrganizationController.get();
-    String[] appIds = oc.getAvailCompoIdsAtRoot(spaceId, getUser().getId());
-    List<ComponentInstLight> components = new ArrayList<>();
-    Predicate<ComponentInstLight> canBeGet = c -> !visibleOnly || !c.isHidden();
-    Predicate<ComponentInstLight> matchesName =
-        c -> StringUtil.isNotDefined(name) || c.getName().equals(name);
-    for (String appId : appIds) {
-      ComponentInstLight component = oc.getComponentInstLight(appId);
-      if (canBeGet.test(component) && matchesName.test(component)) {
-        components.add(component);
-      }
+    @GET
+    @Path("clearAppCache")
+    public void clearAppCache() {
+        // clear cache
+        getHttpServletResponse().setHeader("Clear-Site-Data", "\"cache\", \"cookies\", \"storage\"");
     }
-    return components;
-  }
 
-  private String[] getAllowedComponentIds(SettingBundle settings, String param, String appName)
-      throws AdminException {
-    String paramValue = settings.getString(param, "");
-    String[] appIds;
-    if (paramValue.trim().equals("*")) {
-      appIds = organizationController.getComponentIdsForUser(getUser().getId(), appName);
-    } else {
-      appIds = StringUtil.split(paramValue, ' ');
+    private static String getBaseUrl(HttpServletRequest request) {
+        String scheme = request.getScheme() + "://";
+        String serverName = request.getServerName();
+        String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
+        String contextPath = request.getContextPath();
+        return scheme + serverName + serverPort + contextPath;
     }
-    return getAllowedComponents(appIds).toArray(new String[0]);
-  }
 
-  private List<String> getAllowedComponents(String... componentIds) throws AdminException {
-    List<String> allowedComponentIds = new ArrayList<>();
-    for (String componentId : componentIds) {
-      if (isComponentAvailable(componentId)) {
-        allowedComponentIds.add(componentId);
-      }
-    }
-    return allowedComponentIds;
-  }
+    private DetailUserDTO initSession(DetailUserDTO user) {
+        SynchronizerToken token = (SynchronizerToken) request.getSession().getAttribute("X-STKN");
+        if (user != null) {
+            UserDetail usr = organizationController.getUserDetail(user.getId());
+            setUserInSession(usr);
+            DetailUserDTO dto = UserHelper.getInstance().populate(usr);
 
-  private boolean isComponentAvailable(String componentId) throws AdminException {
-    return Administration.get().isComponentAvailableToUser(componentId, getUser().getId());
-  }
-
-  private boolean isSupportedApp(ComponentInstLight app) {
-    String[] appsExcluded = getSettings().getList("apps.exclude.intances", ",");
-    if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
-      String[] supportedApps = getSettings().getList("apps.supported", ",");
-      if (Arrays.asList(appsExcluded).contains(app.getId())) {
-        return false;
-      }
-
-      if (Arrays.asList(supportedApps).contains(app.getName())) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (isWorkflowApp(app)) {
-      if (Arrays.asList(appsExcluded).contains(app.getId())) {
-        return false;
-      }
-      return true;
-    }
-    return false;
-  }
-
-  private boolean isWorkflowApp(ComponentInstLight app) {
-    try {
-      return app.isWorkflow();
-    } catch (Throwable t) {
-      return false;
-    }
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("isWorkflowApp/{instanceId}/")
-  public Boolean isWorkflowApp(@PathParam("instanceId") String intanceId) {
-    try {
-      ComponentInstLight app = Administration.get().getComponentInstLight(intanceId);
-      return app.isWorkflow();
-    } catch (Throwable t) {
-      throw new WebApplicationException(t);
-    }
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("personalSpace/{userId}/")
-  public List<ApplicationInstanceDTO> getPersonnalSpaceContent(@PathParam("userId") String userId) {
-    try {
-      SpaceInst space = Administration.get().getPersonalSpace(userId);
-      List<ApplicationInstanceDTO> apps = new ArrayList<>();
-      for (ComponentInst app : space.getAllComponentsInst()) {
-        ApplicationInstanceDTO dto = populate(app, true);
-        apps.add(dto);
-      }
-      return apps;
-    } catch (AdminException e) {
-      SilverLogger.getLogger(this).error(e);
-      throw new WebApplicationException(e);
-    }
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("space/{spaceId}/")
-  public SpaceDTO getSpace(@PathParam("spaceId") String spaceId) {
-    try {
-      SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-      SpaceDTO dto = new SpaceDTO();
-      dto.setHomePageType(space.getFirstPageType());
-      dto.setHomePageParameter(space.getFirstPageExtraParam());
-      return dto;
-    } catch (AdminException e) {
-      SilverLogger.getLogger(this).error(e);
-      throw new WebApplicationException(e);
-    }
-  }
-
-  //TODO : remove appType
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("spacesAndApps/{rootSpaceId}/")
-  public List<SilverpeasObjectDTO> getSpacesAndApps(@PathParam("rootSpaceId") String rootSpaceId) {
-    ArrayList<SilverpeasObjectDTO> results = new ArrayList<>();
-    if (rootSpaceId !=null && rootSpaceId.equals("null")) rootSpaceId = null;
-    try {
-      if (rootSpaceId == null) {
-        String[] spaceIds = Administration.get().getAllRootSpaceIds(getUser().getId());
-        for (String spaceId : spaceIds) {
-          SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-          if (!space.isRemoved()) {
-            if (space.getLevel() == 0) {
-              if (containApp(space)) {
-                results.add(populate(space));
-              }
+            if (token == null) {
+                // web security turn off
+                try {
+                    dto.setSessionKey(Administration.get().getUserFull(usr.getId()).getToken());
+                } catch (Exception e) {
+                    SilverLogger.getLogger(this).error(e);
+                }
+            } else {
+                dto.setSessionKey(token.getValue());
             }
-          }
-        }
-        Collections.sort(results);
-      } else {
-        String[] spaceIds =
-            Administration.get().getAllowedSubSpaceIds(getUser().getId(), rootSpaceId);
-        for (String spaceId : spaceIds) {
-          SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-          if (!space.isRemoved()) {
-            if (("WA" + space.getDomainFatherId()).equals(rootSpaceId) ||
-                space.getDomainFatherId().equals(rootSpaceId)) {
-              if (containApp(space)) {
-                results.add(populate(space));
-              }
-            }
-          }
-        }
-        Collections.sort(results);
-        ArrayList<SilverpeasObjectDTO> partialResults = new ArrayList<>();
-        String[] appsIds = Administration.get().getAvailCompoIds(rootSpaceId, getUser().getId());
-        for (String appId : appsIds) {
-          ComponentInstLight app = Administration.get().getComponentInstLight(appId);
-          if (isSupportedApp(app) && app.getDomainFatherId().equals(rootSpaceId)) {
-            if (!app.isHidden()) {
-              SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
-              partialResults.add(populate(app, space.isPersonalSpace()));
-            }
-          }
-        }
-        Collections.sort(partialResults);
-        results.addAll(partialResults);
-      }
-
-    } catch (Exception e) {
-      SilverLogger.getLogger(this).error(e);
-    }
-    return results;
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("app/{instanceId}/{contentId}/{contentType}/")
-  public ApplicationInstanceDTO getApp(@PathParam("instanceId") String instanceId,
-      @PathParam("contentId") String contentId, @PathParam("contentType") String contentType) {
-    if (instanceId.equals("null")) instanceId = null;
-    String localId = "";
-    if (instanceId == null) {
-      if (contentType.equals(ContentsTypes.Publication.name())) {
-        PublicationDetail pub = PublicationService.get().getDetail(new PublicationPK(contentId));
-        if (pub == null) throw new NotFoundException();
-        instanceId = pub.getInstanceId();
-      } else if (contentType.equals(ContentsTypes.Media.name())) {
-        Media media = MediaServiceProvider.getMediaService().getMedia(new MediaPK(contentId));
-        if (media == null) throw new NotFoundException();
-        instanceId = media.getInstanceId();
-      } else if (contentType.equals(ContentsTypes.Event.name())) {
-        ContributionIdentifier contributionId =
-            ContributionIdentifier.decode(new String(StringUtil.fromBase64(contentId)));
-        localId = contributionId.getLocalId();
-        instanceId = contributionId.getComponentInstanceId();
-        if (instanceId.equals("?")) throw new NotFoundException();
-      }
-    }
-    ApplicationInstanceDTO dto = getApplicationInstanceDTO(instanceId);
-    if (dto == null) throw new NotFoundException();
-    dto.setExtraId(localId);
-    populateParameters(dto.getType(), dto.getId() , dto);
-    return dto;
-  }
-
-  private ApplicationInstanceDTO getApplicationInstanceDTO(final String instanceId) {
-    ApplicationInstanceDTO dto = null;
-    try {
-      ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
-      SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
-      dto = populate(app,space.isPersonalSpace());
-    } catch (Exception e) {
-      SilverLogger.getLogger(this).error(e);
-    }
-    return dto;
-  }
-
-  private boolean containApp(SpaceInst space) throws Exception {
-    String[] appsIds = Administration.get().getAvailCompoIds(space.getId(), getUser().getId());
-    for (String appId : appsIds) {
-      ComponentInstLight app = Administration.get().getComponentInstLight(appId);
-      if (isSupportedApp(app)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private String[] getUserRoles(String componentId, String userId) {
-    return organizationController.getUserProfiles(userId, componentId);
-  }
-
-  private SpaceDTO populate(SpaceInst space) {
-    SpaceDTO dto = new SpaceDTO();
-    dto.setId(space.getId());
-    dto.setLabel(space.getName());
-    dto.setPersonal(space.isPersonalSpace());
-    dto.setOrderNum(space.getOrderNum());
-
-    if (space.getFirstPageType() == HomePages.APP.getValue()) {
-      List<ComponentInst> apps = space.getAllComponentsInst();
-      int nbHiddenApps = 0;
-      String appNotHidden = "";
-      if (apps.size() == 1) {
-        dto.setHomePageType(HomePages.APP.getValue());
-      } else {
-        for (ComponentInst app : apps) {
-          if (app.isHidden()) {
-            nbHiddenApps++;
-          } else {
-            appNotHidden = app.getId();
-          }
-        }
-        if (apps.size() == nbHiddenApps || (apps.size() - 1 == nbHiddenApps &&
-            appNotHidden.equals(space.getFirstPageExtraParam()))) {
-          dto.setHomePageType(HomePages.APP.getValue());
+            return dto;
         } else {
-          dto.setHomePageType(HomePages.SILVERPEAS.getValue());
+            return null;
         }
-      }
-    } else {
-      dto.setHomePageType(space.getFirstPageType());
-    }
-    dto.setHomePageParameter(space.getFirstPageExtraParam());
-
-    return dto;
-  }
-  private ApplicationInstanceDTO populate(ComponentInst app, boolean personal) {
-    ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
-    dto.setId(app.getId());
-    dto.setLabel(app.getLabel());
-    dto.setType(app.getName());
-    dto.setOrderNum(app.getOrderNum());
-    dto.setPersonnal(personal);
-
-    populateParameters(app.getName(), app.getId(), dto);
-
-    return dto;
-  }
-
-  private void populateParameters(String name, String id, ApplicationInstanceDTO dto) {
-    Map<String, String> params = new HashMap<String, String>();
-    if (name.equals("quickinfo")) {
-      String value = "";
-      value = getMainSessionController().getComponentParameterValue(id, "thumbnailMandatory");
-      params.put("thumbnailMandatory", value);
-      value = getMainSessionController().getComponentParameterValue(id, "thumbnailWidthSize");
-      params.put("thumbnailWidthSize", value);
-      value = getMainSessionController().getComponentParameterValue(id, "thumbnailHeightSize");
-      params.put("thumbnailHeightSize", value);
-    }
-    dto.setParameters(params);
-  }
-
-  private ApplicationInstanceDTO populate(ComponentInstLight app,boolean personal) {
-    ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
-    dto.setId(app.getId());
-    dto.setLabel(app.getLabel());
-    dto.setType(app.getName());
-    dto.setOrderNum(app.getOrderNum());
-    dto.setWorkflow(isWorkflowApp(app));
-    dto.setPersonnal(personal);
-
-    RightDTO rights = new RightDTO();
-    String[] roles = getUserRoles(app.getId(), getUser().getId());
-    for (int i = 0; i < roles.length; i++) {
-      if (roles[i].equals("admin")) {
-        rights.setManager(true);
-      }
-      if (roles[i].equals("publisher")) {
-        rights.setPublisher(true);
-      }
-      if (roles[i].equals("writer")) {
-        rights.setWriter(true);
-      }
-      if (roles[i].equals("user")) {
-        rights.setReader(true);
-      }
-    }
-    dto.setRights(rights);
-
-    try {
-      String value = "";
-      try {
-        value = getMainSessionController().getComponentParameterValue(app.getId(), "notifications");
-        dto.setNotifiable(value.equals("yes"));
-      } catch (Exception e) {
-        dto.setNotifiable(false);
-      }
-      if (app.getName().equals("kmelia")) {
-        value = getMainSessionController().getComponentParameterValue(app.getId(), "tabComments");
-      } else if (app.getName().equals("gallery") || app.getName().equals("quickinfo")) {
-        value = getMainSessionController().getComponentParameterValue(app.getId(), "comments");
-      }
-
-      if (app.getName().equals("kmelia")) {
-        dto.setCommentable(value.equals("yes"));
-      } else if (app.getName().equals("gallery")) {
-        dto.setCommentable(true);
-        dto.setNotifiable(true);
-      } else if (app.getName().equals("blog")) {
-        dto.setCommentable(true);
-        dto.setNotifiable(true);
-      } else if (app.getName().equals("quickinfo")) {
-        dto.setCommentable(value.equals("yes"));
-        dto.setNotifiable(true);
-      }
-    } catch (Exception e) {
-      dto.setCommentable(false);
     }
 
-    try {
-      String value = "";
-      if (app.getName().equals("kmelia")) {
-        value = getMainSessionController().getComponentParameterValue(app.getId(), "tabContent");
-      }
-      dto.setAbleToStoreContent(value.equals("yes"));
-    } catch (Exception e) {
-      dto.setAbleToStoreContent(false);
+    protected void setUserInSession(UserDetail user) {
+        request.getSession().setAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME, user);
     }
 
-    if (app.getName().equals("kmelia")) {
-      try {
-        String value = "";
-        value = getMainSessionController().getComponentParameterValue(app.getId(), "useFolderSharing");
-        dto.setFolderSharing(Integer.parseInt(value));
-        value = getMainSessionController().getComponentParameterValue(app.getId(), "usePublicationSharing");
-        dto.setPublicationSharing(Integer.parseInt(value));
-        value = getMainSessionController().getComponentParameterValue(app.getId(), "useFileSharing");
-        dto.setFileSharing(Integer.parseInt(value));
-      } catch(Exception e) {
-        dto.setFolderSharing(0);
-        dto.setPublicationSharing(0);
-        dto.setFileSharing(0);
-      }
-    } else populateParameters(app.getName(), app.getId(), dto);
+    protected UserDetail getUserInSession() {
+        return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+    }
 
-    return dto;
-  }
+    private AuroraSpaceHomePageConfig getAuroraSpaceHomePageConfig(String spaceId) {
+        try {
+            if (spaceId != null && !spaceId.isEmpty()) {
+                SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+                if (space.getFirstPageType() == 0) {
+                    for (SilverpeasComponentInstance instance : space.getAllComponentInstances()) {
+                        if (instance.getName().equalsIgnoreCase("webPages")) {
+                            if (instance.getParameterValue("xmlTemplate").equalsIgnoreCase("auroraspacehomepage.xml")) {
+                                PublicationTemplate pubTemplate = FormXMLHelper.getXMLTemplate(request, instance.getId());
+                                RecordSet recordSet = pubTemplate.getRecordSet();
+                                DataRecord data = recordSet.getRecord("0");
+                                AuroraSpaceHomePageConfig config = new AuroraSpaceHomePageConfig();
+                                config.setIntroduction(getWysiwygFieldContent(data.getField("intro").getValue(), instance.getId()));
+                                config.setPicture(getImageFieldURL(data.getField("picture").getValue(), instance.getId()));
+
+                                //TODO : complete aurora fields
+                                return config;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    private String getImageFieldURL(String fieldValue, String componentId) {
+        SimpleDocumentPK attachmentPk;
+        if (StringUtil.isLong(fieldValue)) {
+            attachmentPk = new SimpleDocumentPK(null, componentId);
+            attachmentPk.setOldSilverpeasId(Long.parseLong(fieldValue));
+        } else {
+            attachmentPk = new SimpleDocumentPK(fieldValue, componentId);
+        }
+        SimpleDocument attachment = AttachmentServiceProvider
+                .getAttachmentService().searchDocumentById(
+                        attachmentPk, getUser().getUserPreferences().getLanguage());
+        if (attachment != null) {
+            return URLUtil.getApplicationURL() + attachment.getAttachmentURL();
+        }
+        return "";
+    }
+
+    private String getWysiwygFieldContent(String fieldValue, String componentId) {
+        final String DB_KEY = "xmlWysiwygField_";
+        final String DIRECTORY_NAME = "xmlWysiwyg";
+        String[] dirs = {DIRECTORY_NAME};
+        String fileName = fieldValue.substring(DB_KEY.length());
+        String path = FileRepositoryManager.getAbsolutePath(componentId, dirs);
+        Optional<String> content = FileFolderManager.getFileContent(path, fileName);
+        if (content.isEmpty()) return "";
+        return content.get();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("homepage/{spaceId}/{zoom}/")
+    public HomePageDTO getHomePageData(@PathParam("spaceId") String spaceId, @PathParam("zoom") String zoom) {
+        HomePageDTO data = new HomePageDTO();
+        try {
+            if (spaceId.equals("null")) spaceId = null;
+
+            //initSilverpeasSession(request);
+            request.getSession().setAttribute("Silverpeas_Portlet_SpaceId", spaceId);
+
+            String look = "";
+            try {
+                look = getMainSessionController().getFavoriteLook();
+            } catch (Exception e) {
+                look = "Initial";
+                SilverLogger.getLogger(this).error(e);
+            }
+
+            SettingBundle settings = GraphicElementFactory.getLookSettings(look);
+
+            // Navigation (spaces & apps)
+            if (spaceId == null) {
+                data.setId("root");
+            } else {
+                data.setId(spaceId);
+            }
+
+            if (spaceId != null) {
+                SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+                List<ComponentInst> apps = space.getAllComponentsInst();
+                int hiddenApps = 0;
+                for (ComponentInst app : apps) {
+                    if (app.isHidden()) {
+                        hiddenApps++;
+                    }
+                }
+                data.setSpaceName(space.getName(getUser().getUserPreferences().getLanguage()));
+            }
+            data.setSpacesAndApps(getSpacesAndApps(spaceId));
+
+            AuroraSpaceHomePageConfig pageConfig = getAuroraSpaceHomePageConfig(spaceId);
+            if (pageConfig != null) {
+                data.setAuroraConfig(pageConfig);
+            }
+
+            if (pageConfig == null) {
+
+                data.setNewsDisplayer(
+                        settings.getString("home.news.displayer", HomePageDTO.NEWS_DISPLAYER_CARROUSEL));
+                int maxNews;
+                if (spaceId == null) {
+                    maxNews = settings.getInteger("home.news.size", 3);
+                } else {
+                    maxNews = settings.getInteger("space.homepage.news.nb", 3);
+                }
+
+                if ((spaceId == null && getSettings().getBoolean("homepage.lastnews", true)) ||
+                        (spaceId != null && getSettings().getBoolean("spacehomepage.lastnews", true))) {
+                    List<News> lastNews = NewsHelper.getInstance().getLastNews(getUser().getId(), spaceId, maxNews);
+                    data.setNews(NewsHelper.getInstance().populate(lastNews, false));
+                }
+
+                if (spaceId == null || spaceId.isEmpty()) {
+                    List<LinkDetail> links =
+                            FavoritesHelper.getInstance().getBookmarkPersoVisible(getUser().getId());
+                    data.setFavorites(FavoritesHelper.getInstance().populate(links));
+                }
 
 
-  private PublicationHelper getPublicationHelper() throws Exception {
-    SettingBundle settings =
-        GraphicElementFactory.getLookSettings(GraphicElementFactory.DEFAULT_LOOK_NAME);
-    String helperClassName = settings.getString("publicationHelper",
-        "org.silverpeas.components.kmelia.KmeliaTransversal");
-    Class<?> helperClass = Class.forName(helperClassName);
-    PublicationHelper kmeliaTransversal =
-        (PublicationHelper) helperClass.getDeclaredConstructor().newInstance();
-    kmeliaTransversal.setMainSessionController(getMainSessionController());
+                // last publications
+                if ((spaceId == null && getSettings().getBoolean("homepage.lastpublications", true)) ||
+                        (spaceId != null && getSettings().getBoolean("spacehomepage.lastpublications", true))) {
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+                        ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
+                        int max;
+                        if (spaceId == null) {
+                            max = settings.getInteger("home.publications.nb", 3);
+                        } else {
+                            max = settings.getInteger("space.homepage.latestpublications.nb", 3);
+                        }
+                        List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
+                        for (PublicationDetail pub : pubs) {
+                            if (pub.canBeAccessedBy(getUser())) {
+                                PublicationDTO dto = new PublicationDTO();
+                                dto.setId(pub.getId());
+                                dto.setName(pub.getName());
+                                dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
+                                dto.setInstanceId(pub.getInstanceId());
+                                lastPubs.add(dto);
+                            }
+                        }
+                        data.setLastPublications(lastPubs);
 
-    return kmeliaTransversal;
-  }
+                    } catch (Exception e) {
+                        SilverLogger.getLogger(this).error(e);
+                    }
+                }
 
-  @Override
-  protected String getResourceBasePath() {
-    return PATH;
-  }
+                // aurora shortcuts
+                List<ShortCutLinkDTO> shortCutLinkDTOList = new ArrayList<>();
+                if (spaceId == null || spaceId.isEmpty()) {
+                    int i = 1;
+                    while (i > 0) {
+                        String url = settings.getString("Shortcut.home." + i + ".Url", "");
+                        if (!url.isEmpty()) {
+                            String text = settings.getString("Shortcut.home." + i + ".AltText", "");
+                            String icon = settings.getString("Shortcut.home." + i + ".IconUrl", "");
+                            ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
+                            shortCutLinkDTO.setUrl(url);
+                            shortCutLinkDTO.setText(text);
+                            shortCutLinkDTO.setIcon(icon);
+                            shortCutLinkDTOList.add(shortCutLinkDTO);
+                        } else {
+                            i = 0;
+                            break;
+                        }
+                        i++;
+                    }
+                }
+                data.setShortCuts(shortCutLinkDTOList);
 
-  @Override
-  public String getComponentId() {
-    return null;
-  }
+                // aurora tools
+                shortCutLinkDTOList = new ArrayList<>();
+                if (spaceId == null || spaceId.isEmpty()) {
+                    int i = 1;
+                    while (i > 0) {
+                        String url = settings.getString("Shortcut.tool." + i + ".Url", "");
+                        if (!url.isEmpty()) {
+                            String text = settings.getString("Shortcut.tool." + i + ".AltText", "");
+                            String icon = settings.getString("Shortcut.tool." + i + ".IconUrl", "");
+                            ShortCutLinkDTO shortCutLinkDTO = new ShortCutLinkDTO();
+                            shortCutLinkDTO.setUrl(url);
+                            shortCutLinkDTO.setText(text);
+                            shortCutLinkDTO.setIcon(icon);
+                            shortCutLinkDTOList.add(shortCutLinkDTO);
+                        } else {
+                            i = 0;
+                            break;
+                        }
+                        i++;
+                    }
+                }
+                data.setTools(shortCutLinkDTOList);
 
-  @Override
-  public void validateUserAuthorization(final UserPrivilegeValidation validation) {
-  }
+
+                // upcomming events
+                NextEvents events = null;
+                List<CalendarEventDTO> eventsToDisplay = null;
+                String lang = getUser().getUserPreferences().getLanguage();
+                if ((spaceId == null && getSettings().getBoolean("homepage.lastevents", true))) {
+                    boolean includeToday = settings.getBoolean("home.events.today.include", true);
+                    List<String> allowedComponentIds =
+                            Arrays.asList(getAllowedComponentIds(settings, "home.events.appId", "almanach"));
+                    int nbDays = settings.getInteger("home.events.maxDays", 3);
+                    boolean onlyImportant = settings.getBoolean("home.events.importantOnly", false);
+                    events = EventsHelper.getInstance()
+                            .getNextEvents(allowedComponentIds, includeToday, nbDays, onlyImportant);
+                } else if (spaceId != null && getSettings().getBoolean("spacehomepage.lastevents", true)) {
+                    List<String> allowedAppIds = new ArrayList<>();
+                    List<ComponentInstLight> components = getAllowedComponents(false, "almanach", spaceId);
+                    for (ComponentInstLight component : components) {
+                        allowedAppIds.add(component.getId());
+                    }
+                    events = EventsHelper.getInstance().getNextEvents(allowedAppIds, true, 5, false);
+                }
+                eventsToDisplay = EventsHelper.getInstance().populate(events, lang);
+                data.setLastEvents(eventsToDisplay);
+
+                // freezone
+
+                if ((spaceId == null && getSettings().getBoolean("homepage.freezone", true))) {
+                    String pageWebAppId = settings.getString("home.freezone.appId", "");
+                    if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
+                        String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
+                        html = "<div style='zoom:" + zoom + "'>" + html + "</div>";
+                        data.setHtmlFreeZone(html);
+                    }
+                } else if (spaceId != null) {
+                    SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+                    if (space.getFirstPageType() == HomePages.URL.getValue() &&
+                            getSettings().getBoolean("spacehomepage.displayUrlType")) {
+                        String url = space.getFirstPageExtraParam();
+                        if (url.startsWith("/") && !url.startsWith("/silverpeas") && !url.startsWith("$"))
+                            url = "/silverpeas" + url;
+                        String html = getIframe(url, zoom);
+                        data.setHtmlFreeZone(html);
+                    } else if (space.getFirstPageType() == HomePages.APP.getValue() && space.getFirstPageExtraParam().startsWith("webPage")) {
+                        String appId = space.getFirstPageExtraParam();
+                        String url = "/silverpeas/services/spmobile/PublicationContent" + "?id=" + appId + "&componentId=" + appId;
+                        String html = getIframe(url, zoom);
+                        data.setHtmlFreeZone(html);
+                    }
+                }
+
+                // freezone thin
+                if ((spaceId == null && getSettings().getBoolean("homepage.freezonethin", true))) {
+                    String pageWebAppId = settings.getString("home.freezone.thin.appId", "");
+                    if (pageWebAppId != null && !pageWebAppId.isEmpty() && isComponentAvailable(pageWebAppId)) {
+                        String html = WysiwygController.loadForReadOnly(pageWebAppId, pageWebAppId, lang);
+                        data.setHtmlFreeZoneThin(html);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            SilverLogger.getLogger(this).error(e);
+            throw new WebApplicationException(e);
+        }
+
+        return data;
+    }
+
+    private String getIframe(String url, String zoom) {
+        String style = "border-style: none; width: 100%; overflow: hidden;";
+
+        String script = "o.contentWindow.document.body.style='zoom:" + zoom + "'; ";
+        script += "var h = o.contentWindow.document.body.scrollHeight;";
+        script += "o.style.height=h+'px'; ";
+
+        String html = "<iframe style='" + style + "' src='" + url + "' onload=\"" + "javascript:(function(o){" + script + "}(this));" + "\" scrolling='no'>";
+        html += "</iframe>";
+        return html;
+    }
+
+    private List<ComponentInstLight> getAllowedComponents(boolean visibleOnly, String name,
+                                                          String spaceId) {
+        OrganizationController oc = OrganizationController.get();
+        String[] appIds = oc.getAvailCompoIdsAtRoot(spaceId, getUser().getId());
+        List<ComponentInstLight> components = new ArrayList<>();
+        Predicate<ComponentInstLight> canBeGet = c -> !visibleOnly || !c.isHidden();
+        Predicate<ComponentInstLight> matchesName =
+                c -> StringUtil.isNotDefined(name) || c.getName().equals(name);
+        for (String appId : appIds) {
+            ComponentInstLight component = oc.getComponentInstLight(appId);
+            if (canBeGet.test(component) && matchesName.test(component)) {
+                components.add(component);
+            }
+        }
+        return components;
+    }
+
+    private String[] getAllowedComponentIds(SettingBundle settings, String param, String appName)
+            throws AdminException {
+        String paramValue = settings.getString(param, "");
+        String[] appIds;
+        if (paramValue.trim().equals("*")) {
+            appIds = organizationController.getComponentIdsForUser(getUser().getId(), appName);
+        } else {
+            appIds = StringUtil.split(paramValue, ' ');
+        }
+        return getAllowedComponents(appIds).toArray(new String[0]);
+    }
+
+    private List<String> getAllowedComponents(String... componentIds) throws AdminException {
+        List<String> allowedComponentIds = new ArrayList<>();
+        for (String componentId : componentIds) {
+            if (isComponentAvailable(componentId)) {
+                allowedComponentIds.add(componentId);
+            }
+        }
+        return allowedComponentIds;
+    }
+
+    private boolean isComponentAvailable(String componentId) throws AdminException {
+        return Administration.get().isComponentAvailableToUser(componentId, getUser().getId());
+    }
+
+    private boolean isSupportedApp(ComponentInstLight app) {
+        String[] appsExcluded = getSettings().getList("apps.exclude.intances", ",");
+        if (EnumUtils.isValidEnum(Apps.class, app.getName())) {
+            String[] supportedApps = getSettings().getList("apps.supported", ",");
+            if (Arrays.asList(appsExcluded).contains(app.getId())) {
+                return false;
+            }
+
+            if (Arrays.asList(supportedApps).contains(app.getName())) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (isWorkflowApp(app)) {
+            if (Arrays.asList(appsExcluded).contains(app.getId())) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isWorkflowApp(ComponentInstLight app) {
+        try {
+            return app.isWorkflow();
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("isWorkflowApp/{instanceId}/")
+    public Boolean isWorkflowApp(@PathParam("instanceId") String intanceId) {
+        try {
+            ComponentInstLight app = Administration.get().getComponentInstLight(intanceId);
+            return app.isWorkflow();
+        } catch (Throwable t) {
+            throw new WebApplicationException(t);
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("personalSpace/{userId}/")
+    public List<ApplicationInstanceDTO> getPersonnalSpaceContent(@PathParam("userId") String userId) {
+        try {
+            SpaceInst space = Administration.get().getPersonalSpace(userId);
+            List<ApplicationInstanceDTO> apps = new ArrayList<>();
+            for (ComponentInst app : space.getAllComponentsInst()) {
+                ApplicationInstanceDTO dto = populate(app, true);
+                apps.add(dto);
+            }
+            return apps;
+        } catch (AdminException e) {
+            SilverLogger.getLogger(this).error(e);
+            throw new WebApplicationException(e);
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("space/{spaceId}/")
+    public SpaceDTO getSpace(@PathParam("spaceId") String spaceId) {
+        try {
+            SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+            SpaceDTO dto = new SpaceDTO();
+            dto.setHomePageType(space.getFirstPageType());
+            dto.setHomePageParameter(space.getFirstPageExtraParam());
+            return dto;
+        } catch (AdminException e) {
+            SilverLogger.getLogger(this).error(e);
+            throw new WebApplicationException(e);
+        }
+    }
+
+    //TODO : remove appType
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("spacesAndApps/{rootSpaceId}/")
+    public List<SilverpeasObjectDTO> getSpacesAndApps(@PathParam("rootSpaceId") String rootSpaceId) {
+        ArrayList<SilverpeasObjectDTO> results = new ArrayList<>();
+        if (rootSpaceId != null && rootSpaceId.equals("null")) rootSpaceId = null;
+        try {
+            if (rootSpaceId == null) {
+                String[] spaceIds = Administration.get().getAllRootSpaceIds(getUser().getId());
+                for (String spaceId : spaceIds) {
+                    SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+                    if (!space.isRemoved()) {
+                        if (space.getLevel() == 0) {
+                            if (containApp(space)) {
+                                results.add(populate(space));
+                            }
+                        }
+                    }
+                }
+                Collections.sort(results);
+            } else {
+                String[] spaceIds =
+                        Administration.get().getAllowedSubSpaceIds(getUser().getId(), rootSpaceId);
+                for (String spaceId : spaceIds) {
+                    SpaceInst space = Administration.get().getSpaceInstById(spaceId);
+                    if (!space.isRemoved()) {
+                        if (("WA" + space.getDomainFatherId()).equals(rootSpaceId) ||
+                                space.getDomainFatherId().equals(rootSpaceId)) {
+                            if (containApp(space)) {
+                                results.add(populate(space));
+                            }
+                        }
+                    }
+                }
+                Collections.sort(results);
+                ArrayList<SilverpeasObjectDTO> partialResults = new ArrayList<>();
+                String[] appsIds = Administration.get().getAvailCompoIds(rootSpaceId, getUser().getId());
+                for (String appId : appsIds) {
+                    ComponentInstLight app = Administration.get().getComponentInstLight(appId);
+                    if (isSupportedApp(app) && app.getDomainFatherId().equals(rootSpaceId)) {
+                        if (!app.isHidden()) {
+                            SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
+                            partialResults.add(populate(app, space.isPersonalSpace()));
+                        }
+                    }
+                }
+                Collections.sort(partialResults);
+                results.addAll(partialResults);
+            }
+
+        } catch (Exception e) {
+            SilverLogger.getLogger(this).error(e);
+        }
+        return results;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("app/{instanceId}/{contentId}/{contentType}/")
+    public ApplicationInstanceDTO getApp(@PathParam("instanceId") String instanceId,
+                                         @PathParam("contentId") String contentId, @PathParam("contentType") String contentType) {
+        if (instanceId.equals("null")) instanceId = null;
+        String localId = "";
+        if (instanceId == null) {
+            if (contentType.equals(ContentsTypes.Publication.name())) {
+                PublicationDetail pub = PublicationService.get().getDetail(new PublicationPK(contentId));
+                if (pub == null) throw new NotFoundException();
+                instanceId = pub.getInstanceId();
+            } else if (contentType.equals(ContentsTypes.Media.name())) {
+                Media media = MediaServiceProvider.getMediaService().getMedia(new MediaPK(contentId));
+                if (media == null) throw new NotFoundException();
+                instanceId = media.getInstanceId();
+            } else if (contentType.equals(ContentsTypes.Event.name())) {
+                ContributionIdentifier contributionId =
+                        ContributionIdentifier.decode(new String(StringUtil.fromBase64(contentId)));
+                localId = contributionId.getLocalId();
+                instanceId = contributionId.getComponentInstanceId();
+                if (instanceId.equals("?")) throw new NotFoundException();
+            }
+        }
+        ApplicationInstanceDTO dto = getApplicationInstanceDTO(instanceId);
+        if (dto == null) throw new NotFoundException();
+        dto.setExtraId(localId);
+        populateParameters(dto.getType(), dto.getId(), dto);
+        return dto;
+    }
+
+    private ApplicationInstanceDTO getApplicationInstanceDTO(final String instanceId) {
+        ApplicationInstanceDTO dto = null;
+        try {
+            ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
+            SpaceInst space = Administration.get().getSpaceInstById(app.getDomainFatherId());
+            dto = populate(app, space.isPersonalSpace());
+        } catch (Exception e) {
+            SilverLogger.getLogger(this).error(e);
+        }
+        return dto;
+    }
+
+    private boolean containApp(SpaceInst space) throws Exception {
+        String[] appsIds = Administration.get().getAvailCompoIds(space.getId(), getUser().getId());
+        for (String appId : appsIds) {
+            ComponentInstLight app = Administration.get().getComponentInstLight(appId);
+            if (isSupportedApp(app)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String[] getUserRoles(String componentId, String userId) {
+        return organizationController.getUserProfiles(userId, componentId);
+    }
+
+    private SpaceDTO populate(SpaceInst space) {
+        SpaceDTO dto = new SpaceDTO();
+        dto.setId(space.getId());
+        dto.setLabel(space.getName());
+        dto.setPersonal(space.isPersonalSpace());
+        dto.setOrderNum(space.getOrderNum());
+
+        if (space.getFirstPageType() == HomePages.APP.getValue()) {
+            List<ComponentInst> apps = space.getAllComponentsInst();
+            int nbHiddenApps = 0;
+            String appNotHidden = "";
+            if (apps.size() == 1) {
+                dto.setHomePageType(HomePages.APP.getValue());
+            } else {
+                for (ComponentInst app : apps) {
+                    if (app.isHidden()) {
+                        nbHiddenApps++;
+                    } else {
+                        appNotHidden = app.getId();
+                    }
+                }
+                if (apps.size() == nbHiddenApps || (apps.size() - 1 == nbHiddenApps &&
+                        appNotHidden.equals(space.getFirstPageExtraParam()))) {
+                    dto.setHomePageType(HomePages.APP.getValue());
+                } else {
+                    dto.setHomePageType(HomePages.SILVERPEAS.getValue());
+                }
+            }
+        } else {
+            dto.setHomePageType(space.getFirstPageType());
+        }
+        dto.setHomePageParameter(space.getFirstPageExtraParam());
+
+        return dto;
+    }
+
+    private ApplicationInstanceDTO populate(ComponentInst app, boolean personal) {
+        ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
+        dto.setId(app.getId());
+        dto.setLabel(app.getLabel());
+        dto.setType(app.getName());
+        dto.setOrderNum(app.getOrderNum());
+        dto.setPersonnal(personal);
+
+        populateParameters(app.getName(), app.getId(), dto);
+
+        return dto;
+    }
+
+    private void populateParameters(String name, String id, ApplicationInstanceDTO dto) {
+        Map<String, String> params = new HashMap<String, String>();
+        if (name.equals("quickinfo")) {
+            String value = "";
+            value = getMainSessionController().getComponentParameterValue(id, "thumbnailMandatory");
+            params.put("thumbnailMandatory", value);
+            value = getMainSessionController().getComponentParameterValue(id, "thumbnailWidthSize");
+            params.put("thumbnailWidthSize", value);
+            value = getMainSessionController().getComponentParameterValue(id, "thumbnailHeightSize");
+            params.put("thumbnailHeightSize", value);
+        }
+        dto.setParameters(params);
+    }
+
+    private ApplicationInstanceDTO populate(ComponentInstLight app, boolean personal) {
+        ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
+        dto.setId(app.getId());
+        dto.setLabel(app.getLabel());
+        dto.setType(app.getName());
+        dto.setOrderNum(app.getOrderNum());
+        dto.setWorkflow(isWorkflowApp(app));
+        dto.setPersonnal(personal);
+
+        RightDTO rights = new RightDTO();
+        String[] roles = getUserRoles(app.getId(), getUser().getId());
+        for (int i = 0; i < roles.length; i++) {
+            if (roles[i].equals("admin")) {
+                rights.setManager(true);
+            }
+            if (roles[i].equals("publisher")) {
+                rights.setPublisher(true);
+            }
+            if (roles[i].equals("writer")) {
+                rights.setWriter(true);
+            }
+            if (roles[i].equals("user")) {
+                rights.setReader(true);
+            }
+        }
+        dto.setRights(rights);
+
+        try {
+            String value = "";
+            try {
+                value = getMainSessionController().getComponentParameterValue(app.getId(), "notifications");
+                dto.setNotifiable(value.equals("yes"));
+            } catch (Exception e) {
+                dto.setNotifiable(false);
+            }
+            if (app.getName().equals("kmelia")) {
+                value = getMainSessionController().getComponentParameterValue(app.getId(), "tabComments");
+            } else if (app.getName().equals("gallery") || app.getName().equals("quickinfo")) {
+                value = getMainSessionController().getComponentParameterValue(app.getId(), "comments");
+            }
+
+            if (app.getName().equals("kmelia")) {
+                dto.setCommentable(value.equals("yes"));
+            } else if (app.getName().equals("gallery")) {
+                dto.setCommentable(true);
+                dto.setNotifiable(true);
+            } else if (app.getName().equals("blog")) {
+                dto.setCommentable(true);
+                dto.setNotifiable(true);
+            } else if (app.getName().equals("quickinfo")) {
+                dto.setCommentable(value.equals("yes"));
+                dto.setNotifiable(true);
+            }
+        } catch (Exception e) {
+            dto.setCommentable(false);
+        }
+
+        try {
+            String value = "";
+            if (app.getName().equals("kmelia")) {
+                value = getMainSessionController().getComponentParameterValue(app.getId(), "tabContent");
+            }
+            dto.setAbleToStoreContent(value.equals("yes"));
+        } catch (Exception e) {
+            dto.setAbleToStoreContent(false);
+        }
+
+        if (app.getName().equals("kmelia")) {
+            try {
+                String value = "";
+                value = getMainSessionController().getComponentParameterValue(app.getId(), "useFolderSharing");
+                dto.setFolderSharing(Integer.parseInt(value));
+                value = getMainSessionController().getComponentParameterValue(app.getId(), "usePublicationSharing");
+                dto.setPublicationSharing(Integer.parseInt(value));
+                value = getMainSessionController().getComponentParameterValue(app.getId(), "useFileSharing");
+                dto.setFileSharing(Integer.parseInt(value));
+            } catch (Exception e) {
+                dto.setFolderSharing(0);
+                dto.setPublicationSharing(0);
+                dto.setFileSharing(0);
+            }
+        } else populateParameters(app.getName(), app.getId(), dto);
+
+        return dto;
+    }
+
+
+    private PublicationHelper getPublicationHelper() throws Exception {
+        SettingBundle settings =
+                GraphicElementFactory.getLookSettings(GraphicElementFactory.DEFAULT_LOOK_NAME);
+        String helperClassName = settings.getString("publicationHelper",
+                "org.silverpeas.components.kmelia.KmeliaTransversal");
+        Class<?> helperClass = Class.forName(helperClassName);
+        PublicationHelper kmeliaTransversal =
+                (PublicationHelper) helperClass.getDeclaredConstructor().newInstance();
+        kmeliaTransversal.setMainSessionController(getMainSessionController());
+
+        return kmeliaTransversal;
+    }
+
+    @Override
+    protected String getResourceBasePath() {
+        return PATH;
+    }
+
+    @Override
+    public String getComponentId() {
+        return null;
+    }
+
+    @Override
+    public void validateUserAuthorization(final UserPrivilegeValidation validation) {
+    }
 
 }

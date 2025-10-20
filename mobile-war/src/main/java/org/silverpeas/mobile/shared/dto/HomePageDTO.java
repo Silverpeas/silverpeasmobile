@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.dto;
 
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+import org.silverpeas.mobile.shared.dto.navigation.AuroraSpaceHomePageConfig;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
@@ -38,6 +39,8 @@ public class HomePageDTO extends BaseDTO implements Serializable{
   private static final long serialVersionUID = 5388415881024885835L;
 
   private String spaceName;
+
+  private AuroraSpaceHomePageConfig auroraConfig;
 
   private List<SilverpeasObjectDTO> spacesAndApps;
   private List<NewsDTO> news = new ArrayList<NewsDTO>();
@@ -139,5 +142,13 @@ public class HomePageDTO extends BaseDTO implements Serializable{
 
   public void setNewsDisplayer(final String newsDisplayer) {
     this.newsDisplayer = newsDisplayer;
+  }
+
+  public AuroraSpaceHomePageConfig getAuroraConfig() {
+    return auroraConfig;
+  }
+
+  public void setAuroraConfig(AuroraSpaceHomePageConfig auroraConfig) {
+    this.auroraConfig = auroraConfig;
   }
 }

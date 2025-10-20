@@ -675,6 +675,11 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   width: 100%;
 }
 
+/***** Aurora space home page *****/
+.aurora-picture {
+  width: 100%;
+}
+
 /***** MENU****/
 #silverpeas-navmenu-panel {
   padding: 0;

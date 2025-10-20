@@ -28,11 +28,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
+import org.checkerframework.checker.guieffect.qual.UI;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.FavoriteItem;
 import org.silverpeas.mobile.client.apps.navigation.pages.widgets.HomePageItem;
@@ -78,6 +75,12 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   @UiField
   FocusPanel actus;
 
+  @UiField
+  HTML introduction;
+
+  @UiField
+  Image picture;
+
   interface HomePageUiBinder extends UiBinder<Widget, HomePageContent> {}
 
   public HomePageContent() {
@@ -113,6 +116,11 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     this.data = data;
     getElement().setClassName("space-content");
     getElement().setId(data.getId());
+
+    if (data.getAuroraConfig() != null) {
+      introduction.setHTML(data.getAuroraConfig().getIntroduction());
+      picture.setUrl(data.getAuroraConfig().getPicture());
+    }
 
     news.clear();
     if (config.isNewsDisplay()) {
