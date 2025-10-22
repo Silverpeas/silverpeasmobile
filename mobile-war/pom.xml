@@ -71,8 +71,8 @@
         <executions>
           <execution>
             <configuration>
-              <!--style>OBF</style-->
-              <style>DETAILED</style>
+              <style>OBF</style>
+              <!--style>DETAILED</style-->
               <modules>
                 <module>org.silverpeas.mobile.SpMobil</module>
               </modules>
