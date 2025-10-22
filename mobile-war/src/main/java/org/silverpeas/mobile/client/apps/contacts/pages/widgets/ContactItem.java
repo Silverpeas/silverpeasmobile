@@ -32,6 +32,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -131,16 +132,18 @@ public class ContactItem extends Composite implements ClickHandler {
 
     for (PropertyDTO prop :userData.getProperties()) {
       String value = prop.getValue();
-      if (value != null & !value.isEmpty()) {
-        if (isPhoneNumber(value)) {
-          HTMLPanel field = new HTMLPanel("");
-          createPhoneFragment(field, value);
-          createSmsFragment(field, value);
-          container.add(field);
-        } else {
-          HTML field = new HTML(value);
-          field.setStylePrimaryName(prop.getKey());
-          container.add(field);
+      if (value != null) {
+        if (!value.isEmpty()) {
+          if (isPhoneNumber(value)) {
+            HTMLPanel field = new HTMLPanel("");
+            createPhoneFragment(field, value);
+            createSmsFragment(field, value);
+            container.add(field);
+          } else {
+            HTML field = new HTML(value);
+            field.setStylePrimaryName(prop.getKey());
+            container.add(field);
+          }
         }
       }
     }
