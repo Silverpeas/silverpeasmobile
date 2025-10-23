@@ -96,23 +96,23 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     response.setContentType("text/html; charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
 
-    response.getOutputStream().print("<html>");
-    response.getOutputStream().print("<head>");
-    response.getOutputStream().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
+    response.getWriter().print("<html>");
+    response.getWriter().print("<head>");
+    response.getWriter().print("<meta http-equiv='content-type' content='text/html;charset=UTF-8' />");
 
-    response.getOutputStream().print("<link rel=\"stylesheet\" href=\"" + "/silverpeas/spmobile/spmobile.css" + "\">");
+    response.getWriter().print("<link rel=\"stylesheet\" href=\"" + "/silverpeas/spmobile/spmobile.css" + "\">");
 
     String urlCSS = mobileSettings.getString("styleSheet", "");
     if (!urlCSS.isEmpty()) {
-      response.getOutputStream().print("<link rel=\"stylesheet\" href=\"" + urlCSS + "\">");
+      response.getWriter().print("<link rel=\"stylesheet\" href=\"" + urlCSS + "\">");
     }
     String urlCSSWysiwyg = mobileSettings.getString("wysiwyg.styleSheet", "");
     if (!urlCSSWysiwyg.isEmpty()) {
-      response.getOutputStream().print("<link rel=\"stylesheet\" href=\"" + urlCSSWysiwyg + "\">");
+      response.getWriter().print("<link rel=\"stylesheet\" href=\"" + urlCSSWysiwyg + "\">");
     }
 
-    response.getOutputStream().print("</head>");
-    response.getOutputStream().print("<body>");
+    response.getWriter().print("</head>");
+    response.getWriter().print("<body>");
 
     String html = "";
     if (componentId != null && !componentId.isEmpty() && !componentId.startsWith("kmelia")) {
@@ -124,7 +124,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         DataRecord record = getDataRecord(request, componentId);
         html = pubTemplate.getViewForm().toString(context, record);
         html = tranformContent(request, record, html);
-        response.getOutputStream().print(html);
+        response.getWriter().print(html);
       } else {
         html = WysiwygController.loadForReadOnly(componentId, id,
             getUserInSession(request).getUserPreferences().getLanguage());
@@ -138,7 +138,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         displayWysiwyg(html, request, response, pub.getInstanceId());
       } else {
         // form xml
-        displayFormView(new PrintWriter(response.getOutputStream()), pub, request, ua);
+        displayFormView(response.getWriter(), pub, request, ua);
       }
     }
 
@@ -180,9 +180,8 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     }
 
     html = doc.outerHtml();
-    OutputStreamWriter out = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
-    writeContainer(out, html);
-    out.flush();
+    writeContainer(response.getWriter(), html);
+    response.getWriter().flush();
   }
 
   private void displayFormView(Writer out, PublicationDetail pub, HttpServletRequest request, String ua)
