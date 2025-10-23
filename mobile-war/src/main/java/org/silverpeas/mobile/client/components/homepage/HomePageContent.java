@@ -95,8 +95,6 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     shortCutsToolsSection.getElement().setAttribute("id", "shortCutsTools");
     freeZoneSection.getElement().setAttribute("id", "freeZone");
     freeZoneThinSection.getElement().setAttribute("id", "freeZoneThin");
-    Config conf = SpMobil.getConfiguration();
-    setConfig(conf);
     EventBus.getInstance().addHandler(SwipeEndEvent.getType(), this);
   }
 
@@ -117,28 +115,6 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
     getElement().setClassName("space-content");
     getElement().setId(data.getId());
 
-    if (data.getAuroraConfig() != null) {
-      introduction.setHTML(data.getAuroraConfig().getIntroduction());
-      picture.setUrl(data.getAuroraConfig().getPicture());
-    }
-
-    news.clear();
-    if (config.isNewsDisplay()) {
-      List<NewsDTO> newsDTOList = data.getNews();
-      int i = 1;
-      boolean v = true;
-      int max = newsDTOList.size();
-      for (NewsDTO newsDTO : newsDTOList) {
-        NewsItem item = new NewsItem();
-        item.setDisplayPager(data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL));
-        item.setData(i, max, newsDTO);
-        item.setVisible(v);
-        news.add(item);
-        i++;
-        if (data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) v = false;
-      }
-    }
-
     spaces.clear();
     List<SilverpeasObjectDTO> spacesList = data.getSpacesAndApps();
     for (SilverpeasObjectDTO space : spacesList) {
@@ -148,79 +124,105 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
       spaces.add(item);
     }
 
-
-    favoris.clear();
-    List<MyLinkDTO> favoritesList = data.getFavorites();
-    favorisSection.setVisible(!favoritesList.isEmpty() && config.isFavoritesDisplay());
-    for (MyLinkDTO favoriteDTO : favoritesList) {
-      if (favoriteDTO.getVisible()) {
-        FavoriteItem item = new FavoriteItem();
-        item.setMinimalView(true);
-        item.setData(favoriteDTO);
-        favoris.add(item);
+    if (data.getAuroraConfig() != null) {
+      introduction.setHTML(data.getAuroraConfig().getIntroduction());
+      picture.setUrl(data.getAuroraConfig().getPicture());
+      displayShortcuts(data.getAuroraConfig().getShortcuts(), shortCutsSection, shortcuts, "shortCut", true);
+      String lastPub = data.getAuroraConfig().getLatestPublications();
+      if (lastPub != null && !lastPub.trim().isEmpty() && !lastPub.trim().equalsIgnoreCase("0")) {
+        displayLastPublications(data.getAuroraConfig().getLastPublications(), true);
       }
+    } else {
+      Config conf = SpMobil.getConfiguration();
+      setConfig(conf);
+
+      news.clear();
+      if (config.isNewsDisplay()) {
+        List<NewsDTO> newsDTOList = data.getNews();
+        int i = 1;
+        boolean v = true;
+        int max = newsDTOList.size();
+        for (NewsDTO newsDTO : newsDTOList) {
+          NewsItem item = new NewsItem();
+          item.setDisplayPager(data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL));
+          item.setData(i, max, newsDTO);
+          item.setVisible(v);
+          news.add(item);
+          i++;
+          if (data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) v = false;
+        }
+      }
+
+      favoris.clear();
+      List<MyLinkDTO> favoritesList = data.getFavorites();
+      favorisSection.setVisible(!favoritesList.isEmpty() && config.isFavoritesDisplay());
+      for (MyLinkDTO favoriteDTO : favoritesList) {
+        if (favoriteDTO.getVisible()) {
+          FavoriteItem item = new FavoriteItem();
+          item.setMinimalView(true);
+          item.setData(favoriteDTO);
+          favoris.add(item);
+        }
+      }
+
+      displayShortcuts(data.getShortCuts(), shortCutsSection, shortcuts, "shortCut", config.isShortCutsDisplay());
+      displayShortcuts(data.getTools(), shortCutsToolsSection, shortcutstools, "shortCutTools", config.isShortCutsToolsDisplay());
+
+      displayLastPublications(data.getLastPublications(), config.isLastPublicationsDisplay());
+
+      lastEvents.clear();
+      List<CalendarEventDTO> eventsList = data.getLastEvents();
+      lastEventsSection.setVisible(!eventsList.isEmpty() && config.isLastEventsDisplay());
+      for (CalendarEventDTO eventDTO : eventsList) {
+        HomePageItem item = new HomePageItem();
+        item.setData(eventDTO);
+        lastEvents.add(item);
+      }
+
+      freeZoneSection.clear();
+      HTML html = new HTML(data.getHtmlFreeZone());
+      freeZoneSection.add(html);
+
+      freeZoneThinSection.clear();
+      HTML html2 = new HTML(data.getHtmlFreeZoneThin());
+      freeZoneThinSection.add(html2);
+
+      if (MobilUtils.isMobil() && data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) {
+        //Element e = Document.get().getElementById("actus");
+        //HTML actus = HTML.wrap(e);
+        swipeRecognizer = new SwipeRecognizer(actus);
+      }
+
+      // Display zones order
+      reorderZones(data);
     }
 
-    shortcutstools.clear();
-    List<ShortCutLinkDTO> shortCutLinkList = data.getTools();
-    shortCutsToolsSection.setVisible(!shortCutLinkList.isEmpty() && config.isShortCutsToolsDisplay());
-    int i = 1;
-    for (ShortCutLinkDTO shortCutLinkDTO : shortCutLinkList) {
-      ShortCutItem item = new ShortCutItem();
-      item.setData(shortCutLinkDTO);
-      item.setCssId("shortCutTools" + i);
-      shortcutstools.add(item);
-      i++;
-    }
+    Notification.activityStop();
+  }
 
-    shortcuts.clear();
-    shortCutLinkList = data.getShortCuts();
-    shortCutsSection.setVisible(!shortCutLinkList.isEmpty() && config.isShortCutsDisplay());
-    i = 1;
-    for (ShortCutLinkDTO shortCutLinkDTO : shortCutLinkList) {
-      ShortCutItem item = new ShortCutItem();
-      item.setData(shortCutLinkDTO);
-      item.setCssId("shortCut" + i);
-      shortcuts.add(item);
-      i++;
-    }
-
+  private void displayLastPublications(List<PublicationDTO> publicationsList, boolean display) {
     lastPublications.clear();
-    List<PublicationDTO> publicationsList = data.getLastPublications();
-    lastPublicationsSection.setVisible(!publicationsList.isEmpty() && config.isLastPublicationsDisplay());
+    lastPublicationsSection.setVisible(!publicationsList.isEmpty() && display);
     for (PublicationDTO publicationDTO : publicationsList) {
       HomePageItem item = new HomePageItem();
       item.setData(publicationDTO);
       lastPublications.add(item);
     }
+  }
 
-    lastEvents.clear();
-    List<CalendarEventDTO> eventsList = data.getLastEvents();
-    lastEventsSection.setVisible(!eventsList.isEmpty() && config.isLastEventsDisplay());
-    for (CalendarEventDTO eventDTO : eventsList) {
-      HomePageItem item = new HomePageItem();
-      item.setData(eventDTO);
-      lastEvents.add(item);
+  private void displayShortcuts(List<ShortCutLinkDTO> shortCutLinkList, HTMLPanel placeHolder, UnorderedList placeHolderList, String css, boolean display) {
+    placeHolderList.clear();
+    placeHolder.setVisible(!shortCutLinkList.isEmpty() && display);
+    int i = 1;
+    for (ShortCutLinkDTO shortCutLinkDTO : shortCutLinkList) {
+      if (!shortCutLinkDTO.getText().isEmpty() && !shortCutLinkDTO.getUrl().isEmpty()) {
+        ShortCutItem item = new ShortCutItem();
+        item.setData(shortCutLinkDTO);
+        item.setCssId(css + i);
+        placeHolderList.add(item);
+      }
+      i++;
     }
-
-    freeZoneSection.clear();
-    HTML html = new HTML(data.getHtmlFreeZone());
-    freeZoneSection.add(html);
-
-    freeZoneThinSection.clear();
-    HTML html2 = new HTML(data.getHtmlFreeZoneThin());
-    freeZoneThinSection.add(html2);
-
-    if (MobilUtils.isMobil() && data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) {
-      //Element e = Document.get().getElementById("actus");
-      //HTML actus = HTML.wrap(e);
-      swipeRecognizer = new SwipeRecognizer(actus);
-    }
-
-    // Display zones order
-    reorderZones(data);
-
-    Notification.activityStop();
   }
 
   private void reorderZones(final HomePageDTO data) {

@@ -26,7 +26,7 @@ package org.silverpeas.mobile.shared.dto;
 
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-import org.silverpeas.mobile.shared.dto.navigation.AuroraSpaceHomePageConfig;
+import org.silverpeas.mobile.shared.dto.navigation.aurora.AuroraSpaceHomePageConfig;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 

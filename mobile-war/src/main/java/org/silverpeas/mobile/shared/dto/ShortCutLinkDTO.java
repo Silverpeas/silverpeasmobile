@@ -24,11 +24,14 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 /**
  * @author svu
  */
+@JsonIgnoreProperties("objectValue")
 public class ShortCutLinkDTO implements Serializable {
 
   private String url;

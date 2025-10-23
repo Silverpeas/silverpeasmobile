@@ -34,7 +34,6 @@
       <g:HTML ui:field="introduction" styleName="aurora-introduction"></g:HTML>
       <g:Image ui:field="picture" styleName="aurora-picture"></g:Image>
 
-
       <g:FocusPanel ui:field="actus">
           <components:UnorderedList ui:field="news" styleName="carroussel-news"/>
       </g:FocusPanel>

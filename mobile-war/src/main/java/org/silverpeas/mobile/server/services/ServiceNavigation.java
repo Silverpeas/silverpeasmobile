@@ -49,7 +49,6 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
-import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
 import org.silverpeas.core.util.URLUtil;
@@ -74,6 +73,7 @@ import org.silverpeas.mobile.shared.dto.*;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.*;
+import org.silverpeas.mobile.shared.dto.navigation.aurora.AuroraSpaceHomePageConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -207,6 +207,42 @@ public class ServiceNavigation extends AbstractRestWebService {
                                 AuroraSpaceHomePageConfig config = new AuroraSpaceHomePageConfig();
                                 config.setIntroduction(getWysiwygFieldContent(data.getField("intro").getValue(), instance.getId()));
                                 config.setPicture(getImageFieldURL(data.getField("picture").getValue(), instance.getId()));
+                                List<ShortCutLinkDTO> shortcuts = new ArrayList<>();
+                                for (int i = 1; i <= 6; i++) {
+                                    ShortCutLinkDTO shortcut = new ShortCutLinkDTO();
+                                    shortcut.setUrl(data.getField("shortcutURL"+i).getValue());
+                                    shortcut.setText(data.getField("shortcutLabel"+i).getValue());
+
+                                    if (data.getField("shortcutIcon"+i).getValue() == null) {
+                                        shortcut.setIcon("");
+                                    } else {
+                                        String url = "/silverpeas/attached_file/componentId/" + instance.getId() + "/attachmentId/";
+                                        url += data.getField("shortcutIcon" + i).getValue();
+                                        url += "/lang/fr/name/logo-silverpeas.png";
+                                        shortcut.setIcon(url);
+                                    }
+                                    shortcuts.add(shortcut);
+                                }
+                                config.setShortcuts(shortcuts);
+                                config.setLatestPublications(data.getField("latestPublications").getValue());
+
+                                if (config.getLatestPublications() != null && !config.getLatestPublications().trim().isEmpty()) {
+                                    int max = Integer.valueOf(config.getLatestPublications());
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM");
+                                    ArrayList<PublicationDTO> lastPubs = new ArrayList<PublicationDTO>();
+                                    List<PublicationDetail> pubs = getPublicationHelper().getPublications(spaceId, max);
+                                    for (PublicationDetail pub : pubs) {
+                                        if (pub.canBeAccessedBy(getUser())) {
+                                            PublicationDTO dto = new PublicationDTO();
+                                            dto.setId(pub.getId());
+                                            dto.setName(pub.getName());
+                                            dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
+                                            dto.setInstanceId(pub.getInstanceId());
+                                            lastPubs.add(dto);
+                                        }
+                                    }
+                                    config.setLastPublications(lastPubs);
+                                }
 
                                 //TODO : complete aurora fields
                                 return config;

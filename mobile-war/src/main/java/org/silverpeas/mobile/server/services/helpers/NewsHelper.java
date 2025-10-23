@@ -294,7 +294,7 @@ public class NewsHelper {
 
   private File resizeImage(final File originalFile) {
     final String path;
-    String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), "x90");
+    String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), "x90"); //TODO : rendre paramétrable
     path = processor.processBefore(askedPath, SilverpeasFileProcessor.ProcessingContext.GETTING);
     return new File(path);
   }

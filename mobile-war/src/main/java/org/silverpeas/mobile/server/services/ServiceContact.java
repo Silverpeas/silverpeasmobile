@@ -321,7 +321,9 @@ public class ServiceContact extends AbstractRestWebService {
                 dto.setConnected(userFull.isConnected());
                 String avatar;
 
-                String path = userDetail.getDomain().getSettings().getString("property.ResourceFile") + "_" + dto.getLanguage();
+                String path = userDetail.getDomain().getSettings().getString("property.ResourceFile");
+                if (!dto.getLanguage().trim().isEmpty()) path += "_" + dto.getLanguage();
+                SilverLogger.getLogger(this).debug("Loading domain ressource file " + path);
                 SettingBundle domainMultiLang = ResourceLocator.getSettingBundle(path);
                 for (String prop : domainMultiLang.keySet()) {
                     String label = domainMultiLang.getString(prop);
