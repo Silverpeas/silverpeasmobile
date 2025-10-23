@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.faq.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.faq.events.pages.AbstractFaqPagesEvent;
@@ -38,6 +39,7 @@ import org.silverpeas.mobile.client.apps.faq.resources.FaqMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.faq.ReplyDTO;
 
 import java.util.List;
@@ -46,7 +48,7 @@ public class RepliesPage extends PageContent implements FaqPagesEventHandler {
 
   private static RepliesPageUiBinder uiBinder = GWT.create(RepliesPageUiBinder.class);
 
-  private List<ReplyDTO> data;
+  private QuestionDTO data;
 
   @UiField(provided = true) protected FaqMessages msg = null;
 
@@ -54,11 +56,15 @@ public class RepliesPage extends PageContent implements FaqPagesEventHandler {
   HTMLPanel container;
 
   @UiField
+  HTML description;
+
+  @UiField
   UnorderedList replies;
 
-  public void setData(final List<ReplyDTO> data) {
+  public void setData(final QuestionDTO data) {
     this.data = data;
-    for (ReplyDTO r : data) {
+    description.setHTML(data.getDescription());
+    for (ReplyDTO r : data.getReplies()) {
       ReplyItem item = new ReplyItem();
       item.setData(r);
       replies.add(item);

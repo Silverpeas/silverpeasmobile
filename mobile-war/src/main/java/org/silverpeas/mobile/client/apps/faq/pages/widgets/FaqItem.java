@@ -66,7 +66,7 @@ public class FaqItem extends Composite implements ClickHandler {
   public void onClick(final ClickEvent event) {
     RepliesPage page = new RepliesPage();
     page.setPageTitle(data.getTitle());
-    page.setData(data.getReplies());
+    page.setData(data);
     page.show();
   }
 }

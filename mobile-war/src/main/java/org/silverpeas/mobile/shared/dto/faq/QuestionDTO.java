@@ -33,7 +33,7 @@ import java.util.List;
  * @author svu
  */
 public class QuestionDTO implements Serializable {
-  private String title;
+  private String title, description;
 
   private CategoryDTO category;
 
@@ -61,5 +61,13 @@ public class QuestionDTO implements Serializable {
 
   public void setCategory(final CategoryDTO category) {
     this.category = category;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getDescription() {
+    return description;
   }
 }

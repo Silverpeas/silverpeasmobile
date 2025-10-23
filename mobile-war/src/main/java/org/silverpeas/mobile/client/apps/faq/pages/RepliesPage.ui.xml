@@ -30,6 +30,7 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.faq.resources.FaqMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
+    <g:HTML stylePrimaryName="question-description" ui:field="description"></g:HTML>
     <components:UnorderedList ui:field="replies" styleName="forms-list"/>
   </g:HTMLPanel>
 </ui:UiBinder> 
