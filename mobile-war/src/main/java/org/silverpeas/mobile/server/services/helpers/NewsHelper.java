@@ -69,6 +69,7 @@ public class NewsHelper {
   private final OrganizationController organizationController = OrganizationController.get();
   private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
   private final SettingBundle publicationSettings = ResourceLocator.getSettingBundle("org.silverpeas.publication.publicationSettings");
+  private final SettingBundle configuration = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
 
   public static NewsHelper getInstance() {
     if (instance == null) {
@@ -294,7 +295,8 @@ public class NewsHelper {
 
   private File resizeImage(final File originalFile) {
     final String path;
-    String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), "x90"); //TODO : rendre paramétrable
+    String size = configuration.getString("news.thumbnail.size", "x90");
+    String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), size);
     path = processor.processBefore(askedPath, SilverpeasFileProcessor.ProcessingContext.GETTING);
     return new File(path);
   }

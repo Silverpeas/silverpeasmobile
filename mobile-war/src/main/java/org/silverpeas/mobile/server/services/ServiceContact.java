@@ -323,7 +323,7 @@ public class ServiceContact extends AbstractRestWebService {
 
                 String path = userDetail.getDomain().getSettings().getString("property.ResourceFile");
                 if (!dto.getLanguage().trim().isEmpty()) path += "_" + dto.getLanguage();
-                SilverLogger.getLogger(this).debug("Loading domain ressource file " + path);
+                SilverLogger.getLogger(this).info("Loading domain ressource file " + path);
                 SettingBundle domainMultiLang = ResourceLocator.getSettingBundle(path);
                 for (String prop : domainMultiLang.keySet()) {
                     String label = domainMultiLang.getString(prop);
