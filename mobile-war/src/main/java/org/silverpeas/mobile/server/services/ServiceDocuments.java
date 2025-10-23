@@ -191,8 +191,6 @@ public class ServiceDocuments extends AbstractRestWebService {
                 }
               }
               topic.setPubCount(publications.size() - nbPubNotVisible);
-
-
               topic.setTerminal(childrenNumber == 0);
               if (nodeDetail.isBin()) {
                 trash = topic;
@@ -203,8 +201,9 @@ public class ServiceDocuments extends AbstractRestWebService {
           }
         }
       }
-
-      if (trash != null) {
+      String[] profiles =
+              organizationController.getUserProfiles(getUser().getId(), instanceId);
+      if (trash != null && !isSingleReader(profiles)) {
         boolean atfirst = getSettings().getBoolean("ged.trash.display.atfirst", true);
         if (atfirst) {
           topicsList.add(0, trash);
