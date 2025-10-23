@@ -48,6 +48,7 @@ import org.silverpeas.core.index.search.model.QueryDescription;
 import org.silverpeas.core.socialnetwork.relationship.RelationShipService;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.bundle.LocalizationBundle;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.kernel.logging.SilverLogger;
@@ -134,43 +135,50 @@ public class ServiceContact extends AbstractRestWebService {
                                            @QueryParam("startIndex") int startIndex) {
         ArrayList<DetailUserDTO> listUsers = new ArrayList<>();
         try {
-          switch (type) {
-            case ContactFilters.ALL: {
-              List tabUserDetail = getUsersByQuery(filter, "UserFull");
-              for (int i = 0; i < tabUserDetail.size(); i++) {
-                if (i >= startIndex && i < startIndex + pageSize) {
-                  DetailUserDTO dto = populate(tabUserDetail.get(i), true);
-                  if (dto != null) listUsers.add(dto);
+            switch (type) {
+                case ContactFilters.ALL: {
+                    List tabUserDetail = null;
+                    if (filter.isEmpty()) {
+                        tabUserDetail = Administration.get().getUsersOfDomains(getdomainsIds());
+                    } else {
+                        tabUserDetail = getUsersByQuery(filter, "UserFull");
+                    }
+                    for (int i = 0; i < tabUserDetail.size(); i++) {
+                        if (i >= startIndex && i < startIndex + pageSize) {
+                            DetailUserDTO dto = populate(tabUserDetail.get(i), true);
+                            if (dto != null) listUsers.add(dto);
+                        }
+                    }
+                    break;
                 }
-              }
-              break;
-            }
-            case ContactFilters.ALL_EXT: {
-              List tabUserDetail = getUsersByQuery(filter, "Contact");
-              for (int i = 0; i < tabUserDetail.size(); i++) {
-                if (i >= startIndex && i < startIndex + pageSize) {
-                  listUsers.add(populate(tabUserDetail.get(i), true));
+                case ContactFilters.ALL_EXT: {
+                    List tabUserDetail = getUsersByQuery(filter, "Contact");
+                    for (int i = 0; i < tabUserDetail.size(); i++) {
+                        if (i >= startIndex && i < startIndex + pageSize) {
+                            listUsers.add(populate(tabUserDetail.get(i), true));
+                        }
+                    }
+                    break;
                 }
-              }
-              break;
-            }
-            case ContactFilters.MY:
-              List<String> contactsIds =
-                  relationShipService.getMyContactsIds(Integer.parseInt(getUser().getId()));
+                case ContactFilters.MY:
+                    List<String> contactsIds =
+                            relationShipService.getMyContactsIds(Integer.parseInt(getUser().getId()));
 
-              for (int j = 0; j < contactsIds.size(); j++) {
-                if (j >= startIndex && j < startIndex + pageSize) {
-                  String id = contactsIds.get(j);
-                  UserDetail userDetail = organizationController.getUserDetail(id);
-                  DetailUserDTO userDTO = populate(userDetail, true);
-                  listUsers.add(userDTO);
-                }
-              }
-              break;
-              default:
-                  break;
-          }
+                    for (int j = 0; j < contactsIds.size(); j++) {
+                        if (j >= startIndex && j < startIndex + pageSize) {
+                            String id = contactsIds.get(j);
+                            UserDetail userDetail = organizationController.getUserDetail(id);
+                            DetailUserDTO userDTO = populate(userDetail, true);
+                            listUsers.add(userDTO);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
             defaultSortContacts(listUsers);
+        } catch (AdminException ade) {
+            SilverLogger.getLogger(this).error("ServiceContact.getContacts", "root.EX_NO_MESSAGE", ade);
         } catch (Exception e) {
             SilverLogger.getLogger(this).error("ServiceContact.getContacts", "root.EX_NO_MESSAGE", e);
             throw e;
@@ -324,7 +332,7 @@ public class ServiceContact extends AbstractRestWebService {
                 String path = userDetail.getDomain().getSettings().getString("property.ResourceFile");
                 if (!dto.getLanguage().trim().isEmpty()) path += "_" + dto.getLanguage();
                 SilverLogger.getLogger(this).info("Loading domain ressource file " + path);
-                SettingBundle domainMultiLang = ResourceLocator.getSettingBundle(path);
+                LocalizationBundle domainMultiLang = ResourceLocator.getLocalizationBundle(path);
                 for (String prop : domainMultiLang.keySet()) {
                     String label = domainMultiLang.getString(prop);
                     dto.addPropertyLabel(prop, label);
