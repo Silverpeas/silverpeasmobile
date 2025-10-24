@@ -252,11 +252,14 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         img.attr("src", data);
       }
     }
-
-    // remove all scripts
-    Elements scripts = doc.getElementsByTag("script");
-    for (Element script : scripts) {
-      script.remove();
+    
+    boolean includeJs = getSettings().getBoolean("allow.js.in.content");
+    if (!includeJs) {
+      // remove all scripts
+      Elements scripts = doc.getElementsByTag("script");
+      for (Element script : scripts) {
+        script.remove();
+      }
     }
 
     return doc.outerHtml();
