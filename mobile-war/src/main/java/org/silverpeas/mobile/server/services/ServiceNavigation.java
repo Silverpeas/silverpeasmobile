@@ -209,19 +209,24 @@ public class ServiceNavigation extends AbstractRestWebService {
                                 config.setPicture(getImageFieldURL(data.getField("picture").getValue(), instance.getId()));
                                 List<ShortCutLinkDTO> shortcuts = new ArrayList<>();
                                 for (int i = 1; i <= 6; i++) {
-                                    ShortCutLinkDTO shortcut = new ShortCutLinkDTO();
-                                    shortcut.setUrl(data.getField("shortcutURL"+i).getValue());
-                                    shortcut.setText(data.getField("shortcutLabel"+i).getValue());
+                                    String url = data.getField("shortcutURL"+i).getValue();
+                                    String label = data.getField("shortcutLabel"+i).getValue();
+                                    String icon = data.getField("shortcutIcon"+i).getValue();
+                                    if (!url.isEmpty()) {
+                                        ShortCutLinkDTO shortcut = new ShortCutLinkDTO();
+                                        shortcut.setUrl(url);
+                                        shortcut.setText(label);
 
-                                    if (data.getField("shortcutIcon"+i).getValue() == null) {
-                                        shortcut.setIcon("");
-                                    } else {
-                                        String url = "/silverpeas/attached_file/componentId/" + instance.getId() + "/attachmentId/";
-                                        url += data.getField("shortcutIcon" + i).getValue();
-                                        url += "/lang/fr/name/logo-silverpeas.png";
-                                        shortcut.setIcon(url);
+                                        if (icon == null) {
+                                            shortcut.setIcon("");
+                                        } else {
+                                            String urlIcon = "/silverpeas/attached_file/componentId/" + instance.getId() + "/attachmentId/";
+                                            urlIcon += data.getField("shortcutIcon" + i).getValue();
+                                            urlIcon += "/lang/fr/name/logo-silverpeas.png";
+                                            shortcut.setIcon(urlIcon);
+                                        }
+                                        shortcuts.add(shortcut);
                                     }
-                                    shortcuts.add(shortcut);
                                 }
                                 config.setShortcuts(shortcuts);
                                 config.setLatestPublications(data.getField("latestPublications").getValue());
