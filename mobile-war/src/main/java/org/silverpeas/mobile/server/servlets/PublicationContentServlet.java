@@ -167,21 +167,22 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       }
       img.attr("src", newSource);
     }
-    Elements anchors = doc.getElementsByTag("a");
-    for (Element a : anchors) {
-      String href = a.attr("href");
-      String target = a.attr("target");
-      if (!target.equalsIgnoreCase("_blank")) {
-        if (href.contains("/silverpeas/") && !href.contains(".jsp")) {
-          a.attr("href", "#");
-          a.attr("onclick", "parent.navigate('" + href + "');");
-        }
-      }
-    }
+    transformHyperlink(doc);
 
     html = doc.outerHtml();
     writeContainer(response.getWriter(), html);
     response.getWriter().flush();
+  }
+
+  private static void transformHyperlink(Document doc) {
+    Elements anchors = doc.getElementsByTag("a");
+    for (Element a : anchors) {
+      String href = a.attr("href");
+      if (href.contains("/silverpeas/") && !href.contains(".jsp")) {
+        a.attr("href", "#");
+        a.attr("onclick", "parent.navigate('" + href + "');");
+      }
+    }
   }
 
   private void displayFormView(Writer out, PublicationDetail pub, HttpServletRequest request, String ua)
@@ -252,6 +253,8 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         img.attr("src", data);
       }
     }
+
+    transformHyperlink(doc);
     
     boolean includeJs = getSettings().getBoolean("allow.js.in.content");
     if (!includeJs) {
