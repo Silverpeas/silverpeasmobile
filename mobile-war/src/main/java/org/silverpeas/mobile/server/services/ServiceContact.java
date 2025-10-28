@@ -344,18 +344,14 @@ public class ServiceContact extends AbstractRestWebService {
 
                 if (filtered) {
 
-                    if (DataURLHelper.hasPersonnalizedAvatar(userDetail.getAvatarFileName())) {
-                        avatar = "/silverpeas/display/avatar/" + getSettings().getString("avatar.size", "24x") + "/" + userDetail.getLogin() + ".jpg";
-                    } else {
-                        avatar = "/silverpeas/directory/jsp/icons/avatar.png";
-                    }
+                    avatar = getAvatar(userDetail, getSettings().getString("avatar.size", "24x"));
 
                     for (String prop : getUserProperties()) {
                         dto.addProperty(prop, userFull.getValue(prop));
                         dto.addProperty(prop, userFull.getDefinedExtraFormValues(((UserDetail) user).getUserPreferences().getLanguage()).get(prop));
                     }
                 } else {
-                    avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(), "96x");
+                    avatar = getAvatar(userDetail, getSettings().getString("profil.avatar.size", "96x"));
                     Map<String, String> fields = userFull.getAllDefinedValues(userFull.getUserPreferences().getLanguage());
                     for (Map.Entry<String, String> prop : fields.entrySet()) {
                         dto.addProperty(prop.getKey(), prop.getValue());
@@ -399,6 +395,16 @@ public class ServiceContact extends AbstractRestWebService {
             return dto;
         }
         return null;
+    }
+
+    private static String getAvatar(UserDetail userDetail, String size) {
+        String avatar;
+        if (DataURLHelper.hasPersonnalizedAvatar(userDetail.getAvatarFileName())) {
+            avatar = "/silverpeas/display/avatar/" + size + "/" + userDetail.getLogin() + ".jpg";
+        } else {
+            avatar = "/silverpeas/directory/jsp/icons/avatar.png";
+        }
+        return avatar;
     }
 
     @Override
