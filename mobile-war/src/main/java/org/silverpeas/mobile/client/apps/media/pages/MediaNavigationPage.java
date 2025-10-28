@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.media.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.media.events.app.MediaViewShowEvent;
@@ -41,6 +42,7 @@ import org.silverpeas.mobile.client.apps.media.pages.widgets.AlbumItem;
 import org.silverpeas.mobile.client.apps.media.pages.widgets.MediaItem;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.app.View;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
@@ -61,6 +63,9 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
 
   private static MediaNavigationPageUiBinder uiBinder = GWT.create(MediaNavigationPageUiBinder.class);
   @UiField UnorderedList list;
+
+  @UiField
+  HTML introduction;
   private AddMediaButton buttonImport = new AddMediaButton();
   private LoadingItem endline = new LoadingItem();
   private String rootAlbumId, instanceId;
@@ -103,6 +108,7 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
       if (root.getId() == null) {
         favorite.init(instanceId, instanceId, ContentsTypes.Component.name(), root.getName());
         share.init(root.getName(), root.getName(), LinksManager.createApplicationPermalink(instanceId));
+        introduction.setHTML(getApp().getApplicationInstance().getIntroduction());
       } else {
         favorite.init(instanceId, root.getId(), ContentsTypes.Album.name(), root.getName());
         share.init(root.getName(), root.getName(),LinksManager.createAlbumPermalink(instanceId, root.getId()));
@@ -169,5 +175,4 @@ public class MediaNavigationPage extends PageContent implements View, MediaNavig
     page.init(instanceId, album.getId(), rights);
     page.show();
   }
-
 }

@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.resourcesManager.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.AbstractResourcesManagerPagesEvent;
@@ -37,6 +38,7 @@ import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.AddReser
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.widgets.ReservationItem;
 import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesManagerMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -52,6 +54,9 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
 
   @UiField
   UnorderedList reservations;
+
+  @UiField
+  HTML introduction;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private AddReservationButton addReservation = new AddReservationButton();
@@ -108,6 +113,12 @@ public class ResourcesManagerPage extends PageContent implements ResourcesManage
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractResourcesManagerPagesEvent.TYPE, this);
+  }
+
+  @Override
+  public void setApp(final App app) {
+    super.setApp(app);
+    introduction.setHTML(app.getApplicationInstance().getIntroduction());
   }
 
 }

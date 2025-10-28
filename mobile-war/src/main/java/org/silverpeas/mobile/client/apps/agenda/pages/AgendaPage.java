@@ -33,10 +33,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.CalendarLoadEvent;
 import org.silverpeas.mobile.client.apps.agenda.events.pages.AbstractAgendaPagesEvent;
@@ -48,6 +45,7 @@ import org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.common.DateUtil;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.AddButton;
@@ -83,6 +81,9 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
 
   @UiField
   SpanElement message;
+
+  @UiField
+  HTML introduction;
 
   private AddToFavoritesButton buttonFavorite = new AddToFavoritesButton();
   private AddButton buttonCreate = new AddButton();
@@ -301,5 +302,11 @@ public class AgendaPage extends PageContent implements AgendaPagesEventHandler {
       }
     }
     return null;
+  }
+
+  @Override
+  public void setApp(final App app) {
+    super.setApp(app);
+    introduction.setHTML(app.getApplicationInstance().getIntroduction());
   }
 }

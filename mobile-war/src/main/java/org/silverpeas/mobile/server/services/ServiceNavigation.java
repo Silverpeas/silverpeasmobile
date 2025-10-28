@@ -821,6 +821,7 @@ public class ServiceNavigation extends AbstractRestWebService {
         dto.setOrderNum(app.getOrderNum());
         dto.setWorkflow(isWorkflowApp(app));
         dto.setPersonnal(personal);
+        dto.setIntroduction(loadIntroduction(app));
 
         RightDTO rights = new RightDTO();
         String[] roles = getUserRoles(app.getId(), getUser().getId());
@@ -898,8 +899,21 @@ public class ServiceNavigation extends AbstractRestWebService {
 
         return dto;
     }
-
-
+    private String loadIntroduction(ComponentInstLight app) {
+        String intro = WysiwygController.load(app.getId(), "Intro", getUser().getUserPreferences().getLanguage());
+        if (app.getId().startsWith("classifieds") || app.getId().startsWith("kmelia")) {
+            intro = WysiwygController.load(app.getId(), "Node_0", getUser().getUserPreferences().getLanguage());
+        } else {
+            ComponentInstLight component = OrganizationController.get().getComponentInstLight(app.getId());
+            if (component.isWorkflow()) {
+                intro = WysiwygController.load(app.getId(), app.getId(), getUser().getUserPreferences().getLanguage());
+            }
+        }
+        if (StringUtil.isNotDefined(intro)) {
+            intro = "";
+        }
+        return intro;
+    }
     private PublicationHelper getPublicationHelper() throws Exception {
         SettingBundle settings =
                 GraphicElementFactory.getLookSettings(GraphicElementFactory.DEFAULT_LOOK_NAME);

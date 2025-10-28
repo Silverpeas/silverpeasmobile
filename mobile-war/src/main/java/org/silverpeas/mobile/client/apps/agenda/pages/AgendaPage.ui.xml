@@ -31,7 +31,7 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.agenda.resources.AgendaMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content">
-    <h2 class="appHeader"></h2>
+    <g:HTML ui:field="introduction" styleName="app-introduction"></g:HTML>
 
     <div class="ui-corner-all ui-control-horizontal">
       <div class="ui-control-controls"> <g:Anchor styleName="ui-btn-active  ui-btn  ui-first-child" ui:field="week"><span class="ui-btn-inner ui-corner-left"><span class="ui-btn-text"><ui:text from="{msg.weekFilter}" /></span></span></g:Anchor><g:Anchor styleName="ui-btn ui-btn-up-c ui-last-child" ui:field="mouth"><span class="ui-btn-inner"><span class="ui-btn-text"><ui:text from="{msg.mouthFilter}" /></span></span></g:Anchor> </div>

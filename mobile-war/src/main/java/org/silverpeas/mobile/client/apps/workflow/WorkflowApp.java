@@ -100,6 +100,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
     if (event.getInstance().getWorkflow()) {
       setApplicationInstance(event.getInstance());
       WorkflowPage page = new WorkflowPage();
+      page.setApp(this);
       page.show();
       loadInstances(new WorkflowLoadInstancesEvent());
     }

@@ -27,6 +27,7 @@ package org.silverpeas.mobile.client.apps.documents.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
@@ -57,6 +58,9 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
 
   @UiField HTMLPanel container;
   @UiField UnorderedList list;
+
+  @UiField
+  HTML introduction;
 
   private TopicDTO root;
   private String rootTopicId, instanceId;
@@ -97,6 +101,9 @@ public class GedNavigationPage extends PageContent implements View, GedNavigatio
   public void setTopicId(String rootTopicId) {
     Notification.activityStart();
     this.setRootTopicId(rootTopicId);
+    if (rootTopicId == null) {
+      introduction.setHTML(getApp().getApplicationInstance().getIntroduction());
+    }
     EventBus.getInstance().fireEvent(new DocumentsLoadGedItemsEvent(instanceId, rootTopicId));
   }
 

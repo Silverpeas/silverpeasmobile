@@ -29,6 +29,7 @@
              xmlns:components="urn:import:org.silverpeas.mobile.client.components">
 
   <g:HTMLPanel ui:field="container" styleName="content">
+    <g:HTML ui:field="introduction" styleName="app-introduction"></g:HTML>
     <components:UnorderedList ui:field="list" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

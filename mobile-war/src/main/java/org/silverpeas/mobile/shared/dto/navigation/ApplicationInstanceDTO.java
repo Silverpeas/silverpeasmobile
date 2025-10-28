@@ -43,6 +43,8 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   private int publicationSharing;
   private int fileSharing;
 
+  private String introduction;
+
   private Map<String, String> parameters;
 
   private boolean personnal;
@@ -125,4 +127,6 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   public Map<String, String> getParameters() {
     return parameters;
   }
+  public String getIntroduction() { return introduction; }
+  public void setIntroduction(String introduction) { this.introduction = introduction; }
 }

@@ -31,6 +31,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
@@ -48,6 +49,7 @@ import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.ViewMyRequest
 import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.ViewRequestsToValidateButton;
 import org.silverpeas.mobile.client.apps.formsonline.resources.FormsOnlineMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -64,6 +66,9 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
 
   @UiField
   UnorderedList forms;
+
+  @UiField
+  HTML introduction;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private ViewMyRequestsButton myRequests = new ViewMyRequestsButton();
@@ -117,5 +122,11 @@ public class FormsOnlinePage extends PageContent implements FormsOnlinePagesEven
   public void stop() {
     super.stop();
     EventBus.getInstance().removeHandler(AbstractFormsOnlinePagesEvent.TYPE, this);
+  }
+
+  @Override
+  public void setApp(final App app) {
+    super.setApp(app);
+    introduction.setHTML(app.getApplicationInstance().getIntroduction());
   }
 }

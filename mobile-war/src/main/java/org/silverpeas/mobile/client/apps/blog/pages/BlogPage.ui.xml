@@ -31,6 +31,7 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.blog.resources.BlogMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
+    <g:HTML ui:field="introduction" styleName="app-introduction"></g:HTML>
     <div class="content-navigation"><g:ListBox ui:field="categories" styleName="filter-list"/></div>
     <components:UnorderedList ui:field="news" styleName="liste-billet"/>
   </g:HTMLPanel>

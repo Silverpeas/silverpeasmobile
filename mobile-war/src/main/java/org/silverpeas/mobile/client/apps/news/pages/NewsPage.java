@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.documents.events.pages.navigation.*;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
@@ -36,6 +37,7 @@ import org.silverpeas.mobile.client.apps.news.events.pages.*;
 import org.silverpeas.mobile.client.apps.news.pages.widgets.NewsItem;
 import org.silverpeas.mobile.client.apps.news.resources.NewsMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -53,6 +55,9 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler, GedN
 
   @UiField(provided = true) protected NewsMessages msg = null;
   @UiField UnorderedList news;
+
+  @UiField
+  HTML introduction;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private ShareButton share = new ShareButton();
@@ -80,6 +85,12 @@ public class NewsPage extends PageContent implements NewsPagesEventHandler, GedN
         page.show();
       }
     });
+  }
+
+  @Override
+  public void setApp(final App app) {
+    super.setApp(app);
+    introduction.setHTML(app.getApplicationInstance().getIntroduction());
   }
 
   @Override

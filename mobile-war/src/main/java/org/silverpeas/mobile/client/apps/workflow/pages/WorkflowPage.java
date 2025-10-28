@@ -31,10 +31,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowLoadInstanceEvent;
 import org.silverpeas.mobile.client.apps.workflow.events.app.WorkflowRoleChangeEvent;
@@ -46,6 +43,7 @@ import org.silverpeas.mobile.client.apps.workflow.events.pages.WorkflowPagesEven
 import org.silverpeas.mobile.client.apps.workflow.pages.widgets.ActionButton;
 import org.silverpeas.mobile.client.apps.workflow.resources.WorkflowMessages;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowDataDTO;
@@ -62,6 +60,9 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
   FlexTable instances;
   @UiField
   ListBox roles;
+
+  @UiField
+  HTML introduction;
 
   private String instanceId;
   private WorkflowMessages msg;
@@ -177,5 +178,10 @@ public class WorkflowPage extends PageContent implements WorkflowPagesEventHandl
     EventBus.getInstance().removeHandler(AbstractWorkflowPagesEvent.TYPE, this);
   }
 
+  @Override
+  public void setApp(final App app) {
+    super.setApp(app);
+    introduction.setHTML(app.getApplicationInstance().getIntroduction());
+  }
 
 }

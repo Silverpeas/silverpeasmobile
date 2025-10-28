@@ -870,6 +870,10 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   z-index: 2;
 }
 
+.app-introduction {
+  padding: 1em;
+}
+
 .folder-ged a, .folder-galery a, .publication a, .media a, .trash a, .app-actuality a, .app-ged a, .app-medialib a,
 .publication.ui-input-text, .app-blog a, .app-pageWeb a, .app-workflow a, .app-link a, .app-almanach a, .app-formsOnline a, .app-classifieds a, .app-survey a, .app-faq a, .app-polling a,
 .app-resourcesManager a, .app-orgaChartGroup a {

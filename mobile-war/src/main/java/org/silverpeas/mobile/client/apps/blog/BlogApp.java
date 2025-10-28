@@ -50,7 +50,6 @@ import java.util.List;
 public class BlogApp extends App implements BlogAppEventHandler, NavigationEventHandler {
 
   private BlogMessages msg;
-  private ApplicationInstanceDTO instance;
 
   public BlogApp(){
     super();
@@ -74,7 +73,7 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
       @Override
       public void attempt() {
         super.attempt();
-        ServicesLocator.getServiceBlog().getPosts(instance.getId(), event.getCategoryId(), this);
+        ServicesLocator.getServiceBlog().getPosts(getApplicationInstance().getId(), event.getCategoryId(), this);
       }
 
       @Override
@@ -90,9 +89,10 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
   @Override
   public void appInstanceChanged(final NavigationAppInstanceChangedEvent event) {
     if (event.getInstance().getType().equals(Apps.blog.name())) {
-      this.instance = event.getInstance();
+      setApplicationInstance(event.getInstance());
       BlogPage page = new BlogPage();
       page.setPageTitle(event.getInstance().getLabel());
+      page.setApp(this);
       page.show();
     }
   }

@@ -31,6 +31,7 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
+    <g:HTML ui:field="introduction" styleName="app-introduction"></g:HTML>
     <div class="content-navigation filter-classifield">
       <span class="ui-btn-text"><ui:text from="{msg.category}"/></span>
       <g:ListBox ui:field="categories" styleName="filter-list"/>

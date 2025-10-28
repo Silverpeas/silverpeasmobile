@@ -30,6 +30,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
@@ -40,6 +41,7 @@ import org.silverpeas.mobile.client.apps.blog.pages.widgets.BlogItem;
 import org.silverpeas.mobile.client.apps.blog.resources.BlogMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -64,6 +66,9 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
   UnorderedList news;
   @UiField
   ListBox categories;
+
+  @UiField
+  HTML introduction;
 
   private AddToFavoritesButton favorite = new AddToFavoritesButton();
   private ShareButton share = new ShareButton();
@@ -138,5 +143,11 @@ public class BlogPage extends PageContent implements BlogPagesEventHandler {
   @UiHandler("categories")
   protected void onChanged(ChangeEvent event) {
     EventBus.getInstance().fireEvent(new BlogLoadEvent(((ListBox)event.getSource()).getSelectedValue()));
+  }
+
+  @Override
+  public void setApp(final App app) {
+    super.setApp(app);
+    introduction.setHTML(app.getApplicationInstance().getIntroduction());
   }
 }

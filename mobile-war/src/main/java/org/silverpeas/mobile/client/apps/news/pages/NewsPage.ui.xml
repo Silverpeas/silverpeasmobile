@@ -31,7 +31,7 @@
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.news.resources.NewsMessages' />
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
-    <h2 class="appHeader"></h2>
+    <g:HTML ui:field="introduction" styleName="app-introduction"></g:HTML>
     <components:UnorderedList ui:field="news" styleName="liste-news"/>
   </g:HTMLPanel>
 </ui:UiBinder> 

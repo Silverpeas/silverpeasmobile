@@ -29,6 +29,7 @@
 
   <g:HTMLPanel ui:field="container" styleName="content ui-content ui-body-a">
     <h2 class="appHeader"></h2>
+    <g:HTML ui:field="introduction" styleName="app-introduction"></g:HTML>
     <g:ListBox ui:field="roles" styleName="workflow-roles" visible="false"/>
     <g:FlexTable ui:field="instances" styleName="workflow-list"/>
   </g:HTMLPanel>

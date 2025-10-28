@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsLoadEvent;
@@ -39,6 +40,7 @@ import org.silverpeas.mobile.client.apps.classifieds.pages.widgets.ClassifiedIte
 import org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
 import org.silverpeas.mobile.client.common.EventBus;
+import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.components.UnorderedList;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -58,6 +60,8 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
   @UiField
   ListBox types;
 
+  @UiField
+  HTML introduction;
 
   private ClassifiedsDTO data;
   private final AddToFavoritesButton favorite = new AddToFavoritesButton();
@@ -123,5 +127,11 @@ public class ClassifiedsPage extends PageContent implements ClassifiedsPagesEven
   @UiHandler("types")
   protected void onChangedType(ChangeEvent event) {
     displayList();
+  }
+
+  @Override
+  public void setApp(final App app) {
+    super.setApp(app);
+    introduction.setHTML(app.getApplicationInstance().getIntroduction());
   }
 }

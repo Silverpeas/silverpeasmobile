@@ -31,6 +31,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -62,6 +63,9 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
 
   @UiField
   HTMLPanel container;
+
+  @UiField
+  HTML introduction;
 
   @UiField
   UnorderedList faqs;
@@ -108,6 +112,7 @@ public class FaqPage extends PageContent implements FaqPagesEventHandler {
     if (app.getApplicationInstance().getRights().getPublisher() || app.getApplicationInstance().getRights().getManager()) {
       addActionShortcut(ask);
     }
+    introduction.setHTML(app.getApplicationInstance().getIntroduction());
   }
 
   public void setData(List<QuestionDTO> data) {
