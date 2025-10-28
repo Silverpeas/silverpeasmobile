@@ -30,6 +30,7 @@ import org.silverpeas.components.delegatednews.service.DelegatedNewsServiceProvi
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.model.Photo;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
+import org.silverpeas.components.quickinfo.NewsByStatus;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
@@ -157,11 +158,16 @@ public class NewsHelper {
     return aNews;
   }
 
-  public List<News> getNewsByAppId(String appId, boolean managerAccess) {
+  public List<News> getNewsByAppId(String appId, boolean managerAccess, String userId) {
     QuickInfoService service = QuickInfoServiceProvider.getQuickInfoService();
-    List<News> news;
+    List<News> news = new ArrayList<>();
     if (managerAccess) {
-      news = service.getAllNews(appId);
+
+      NewsByStatus nbs = service.getAllNewsByStatus(appId, userId);
+      news.addAll(nbs.getDrafts());
+      news.addAll(nbs.getNotYetVisibles());
+      news.addAll(nbs.getVisibles());
+      news.addAll(nbs.getNoMoreVisibles());
     } else {
       news = service.getVisibleNews(appId);
     }
@@ -216,7 +222,6 @@ public class NewsHelper {
     news.setContent(n.getContent());
     news.setDraft(n.getPublication().isDraft());
     news.setVisible(n.getPublication().isVisible());
-
     news.setStartDate(n.getVisibility().getPeriod().getStartDate().toString().replaceAll("Z", ""));
     news.setEndDate(n.getVisibility().getPeriod().getEndDate().toString().replaceAll("Z", ""));
     news.setIdNews(n.getId());

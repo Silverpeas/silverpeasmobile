@@ -164,7 +164,7 @@ public class ServiceNews extends AbstractRestWebService {
     String[] profiles =
         OrganizationController.get().getUserProfiles(getUser().getId(), componentId);
     boolean managerAccess = isManagerOrPublisher(profiles);
-    List<News> news = NewsHelper.getInstance().getNewsByAppId(componentId, managerAccess);
+    List<News> news = NewsHelper.getInstance().getNewsByAppId(componentId, managerAccess, getUser().getId());
     List<NewsDTO> newsDTO = NewsHelper.getInstance().populate(news, managerAccess);
     return newsDTO;
   }
