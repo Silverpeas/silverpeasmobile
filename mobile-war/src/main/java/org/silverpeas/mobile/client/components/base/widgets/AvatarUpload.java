@@ -110,7 +110,7 @@ public class AvatarUpload extends Composite {
   @UiHandler("avatar")
   void upload(ClickEvent event) {
     if (Boolean.parseBoolean(ResourcesManager.getParam("avatar.updatable"))) {
-      if (!NetworkHelper.isOnline()) {
+      if (NetworkHelper.isOnline()) {
         clickOnInputFile(file.getElement());
       } else {
         Notification.alert(msg.needToBeOnline());
