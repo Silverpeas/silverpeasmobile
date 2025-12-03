@@ -37,6 +37,8 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -130,6 +132,18 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     iconShareBox.setInnerHTML(resources.sharebox().getText());
     searchButton.setInnerHTML(resources.search().getText());
     EventBus.getInstance().addHandler(AbstractPageEvent.TYPE, this);
+
+    Event.sinkEvents(searchButton, Event.ONCLICK);
+
+    Event.setEventListener(searchButton, new EventListener() {
+      @Override
+      public void onBrowserEvent(Event event) {
+        if (event.getTypeInt() == Event.ONCLICK) {
+          SpMobil.search(search.getText());
+          event.preventDefault();
+        }
+      }
+    });
   }
 
   public void setPersonalApps(List<ApplicationInstanceDTO> applicationInstanceDTOS) {
@@ -205,11 +219,6 @@ public class NavigationMenu extends Composite implements PageEventHandler {
       SpMobil.search(search.getText());
     }
   }
-
-  /*@UiHandler("searchButton")
-  protected void searchIos(ClickEvent event) {
-    SpMobil.search(search.getText());
-  }*/
 
   @UiHandler("home")
   protected void goHome(ClickEvent event) {
