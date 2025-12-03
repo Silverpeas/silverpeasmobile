@@ -204,7 +204,9 @@ public class ServiceDocuments extends AbstractRestWebService {
         }
       }
 
-      if (trash != null) {
+      String[] profiles =
+              organizationController.getUserProfiles(getUser().getId(), instanceId);
+      if (trash != null && !isSingleReader(profiles)) {
         boolean atfirst = getSettings().getBoolean("ged.trash.display.atfirst", true);
         if (atfirst) {
           topicsList.add(0, trash);
