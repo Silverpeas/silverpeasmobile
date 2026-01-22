@@ -205,8 +205,8 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals("Component") &&
-        event.getContent().getInstanceId().startsWith(Apps.kmelia.name())) {
+    if (!event.getContent().getInstanceId().startsWith(Apps.kmelia.name())) return;
+    if (event.getContent().getType().equals("Component")) {
       loadAppInstance(event.getContent(), new Command() {
         @Override
         public void execute() {

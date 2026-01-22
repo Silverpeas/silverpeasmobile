@@ -145,7 +145,8 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (event.getContent().getType().equals("Component") && event.getContent().getInstanceId().startsWith(Apps.classifieds.name())) {
+    if (!event.getContent().getInstanceId().startsWith(Apps.classifieds.name())) return;
+    if (event.getContent().getType().equals("Component")) {
       super.showContent(event);
     } else {
       startWithContent(event.getContent());
