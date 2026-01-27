@@ -41,11 +41,15 @@ import org.silverpeas.core.security.authentication.exception.AuthenticationExcep
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.mobile.server.dao.SecurityCode;
+import org.silverpeas.mobile.server.dao.statistics.StatisticsDAO;
+import org.silverpeas.mobile.server.dao.token.TokenDAO;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
+import ua_parser.Client;
+import ua_parser.Parser;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -82,6 +86,9 @@ public class ServiceConnection extends AbstractRestWebService {
 
   @Inject
   private OrganizationController organizationController;
+
+  @Inject
+  private StatisticsDAO statisticsDAO;
 
   static final String PATH = "mobile/connection";
 
@@ -164,7 +171,75 @@ public class ServiceConnection extends AbstractRestWebService {
     // chat init
     chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, user, "");
 
+    // Add connexion in stats
+    statisticsDAO.saveLoginEvent(Long.parseLong(userId), getPlatform(),getSettings().getString("version"),
+            getOsVersion(), getClientIp(getHttpRequest()), getPreferredLanguage(getHttpRequest()), getDevice());
+
     return userDTO;
+  }
+
+  public String getPreferredLanguage(HttpServletRequest request) {
+    String acceptLanguage = request.getHeader("Accept-Language");
+    if (acceptLanguage == null || acceptLanguage.isEmpty()) {
+      return null;
+    }
+
+    // Prend la première langue (ex: fr-FR)
+    String firstLang = acceptLanguage.split(",")[0];
+
+    // Garde uniquement les 2 premiers caractères
+    return firstLang.substring(0, Math.min(2, firstLang.length())).toLowerCase();
+  }
+
+  private String getClientIp(HttpServletRequest request) {
+    String ip = request.getHeader("X-Forwarded-For");
+    if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+      ip = request.getHeader("X-Real-IP");
+    }
+    if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+      ip = request.getRemoteAddr();
+    }
+
+    // Si X-Forwarded-For contient plusieurs IP séparées par des virgules, prendre la première
+    if (ip != null && ip.contains(",")) {
+      ip = ip.split(",")[0].trim();
+    }
+    return ip;
+  }
+
+  private short getPlatform() {
+    HttpServletRequest request = this.getHttpRequest();
+    String userAgent = request.getHeader("User-Agent");
+    short platform = 0; // 1=ios, 2=android, 0=autre
+
+    Parser parser = new Parser();
+    Client client = parser.parse(userAgent);
+
+    if (client.os.family.equalsIgnoreCase("android")) {
+      platform = 2; // Android
+    } else if(client.os.family.equalsIgnoreCase("ios")) {
+      platform = 1; // iOS
+    }
+
+    return platform;
+  }
+
+  private String getOsVersion() {
+    HttpServletRequest request = this.getHttpRequest();
+    String userAgent = request.getHeader("User-Agent");
+    Parser parser = new Parser();
+    Client client = parser.parse(userAgent);
+
+    return client.os.major + "." + client.os.minor;
+  }
+
+  private String getDevice() {
+    HttpServletRequest request = this.getHttpRequest();
+    String userAgent = request.getHeader("User-Agent");
+    Parser parser = new Parser();
+    Client client = parser.parse(userAgent);
+
+    return client.device.family;
   }
 
   @GET

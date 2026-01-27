@@ -1,4 +1,4 @@
-CREATE TABLE st_token_pushnotification
+CREATE TABLE IF NOT EXISTS st_token_pushnotification
 (
   id bigint NOT NULL,
   userid VARCHAR(16) NOT NULL,
