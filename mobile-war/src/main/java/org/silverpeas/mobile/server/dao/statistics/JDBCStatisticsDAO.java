@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.server.dao.statistics;
 
 import org.silverpeas.kernel.SilverpeasRuntimeException;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.dao.token.JDBCTokenRequester;
 import org.silverpeas.mobile.server.dao.token.TokenDAO;
 
@@ -55,7 +56,7 @@ public class JDBCStatisticsDAO implements StatisticsDAO {
       JDBCStatisticsRequester requester = getRequester();
       requester.saveLoginEvent(con, userId, platform, appVersion, osVersion, ipAddress, countryCode, device);
     } catch (Exception re) {
-      throw new SilverpeasRuntimeException(re.getMessage(), re);
+      SilverLogger.getLogger(this).error(re);
     }
   }
 }
