@@ -46,6 +46,9 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.io.file.ImageResizingProcessor;
+import org.silverpeas.core.io.file.SilverpeasFileProcessor;
+import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
@@ -91,6 +94,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
 
     String id = request.getParameter("id");
     String componentId = request.getParameter("componentId");
+    String width = request.getParameter("width");
     String ua = request.getHeader("User-Agent");
 
     response.setContentType("text/html; charset=UTF-8");
@@ -123,22 +127,22 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         PublicationTemplate pubTemplate = getXMLTemplate(request, componentId);
         DataRecord record = getDataRecord(request, componentId);
         html = pubTemplate.getViewForm().toString(context, record);
-        html = tranformContent(request, record, html);
+        html = tranformContent(request, record, html, width);
         response.getWriter().print(html);
       } else {
         html = WysiwygController.loadForReadOnly(componentId, id,
             getUserInSession(request).getUserPreferences().getLanguage());
-        displayWysiwyg(html, request, response, componentId);
+        displayWysiwyg(html, request, response, componentId, width);
       }
     } else {
       PublicationDetail pub = getKmeliaBm().getPublicationDetail(new PublicationPK(id));
       if (pub.getInfoId().equals("0")) {
         // wysiwyg
         html = pub.getContent().getRenderer().renderView();
-        displayWysiwyg(html, request, response, pub.getInstanceId());
+        displayWysiwyg(html, request, response, pub.getInstanceId(), width);
       } else {
         // form xml
-        displayFormView(response.getWriter(), pub, request, ua);
+        displayFormView(response.getWriter(), pub, request, ua, width);
       }
     }
 
@@ -148,7 +152,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
   }
 
   private void displayWysiwyg(String html, HttpServletRequest request, HttpServletResponse response,
-      String instanceId) throws IOException {
+      String instanceId, String width) throws IOException {
     html = "<html><body>" + html + "</body></html>";
     Document doc = Jsoup.parse(html);
 
@@ -163,7 +167,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       String newSource = source;
       if (source.contains("/silverpeas")) {
         // need to convert in dataurl
-        newSource = convertSpImageUrlToDataUrl(source);
+        newSource = convertSpImageUrlToDataUrl(source, width);
       }
       img.attr("src", newSource);
     }
@@ -185,7 +189,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     }
   }
 
-  private void displayFormView(Writer out, PublicationDetail pub, HttpServletRequest request, String ua)
+  private void displayFormView(Writer out, PublicationDetail pub, HttpServletRequest request, String ua, String width)
       throws Exception {
 
     UserDetail user = getUserInSession(request);
@@ -206,13 +210,13 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     Form xmlForm = pubTemplate.getViewForm();
     String html = xmlForm.toString(xmlContext, xmlData);
 
-    html = tranformContent(request, xmlData, html);
+    html = tranformContent(request, xmlData, html, width);
     writeContainer(out, html);
     out.flush();
   }
 
   private String tranformContent(final HttpServletRequest request, final DataRecord xmlData,
-      final String html) throws FormException {
+      final String html, final String width) throws FormException {
     Document doc = Jsoup.parse(html);
 
     // transform user fields
@@ -249,7 +253,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
       } else if (img.attr("src").startsWith("/silverpeas/attached_file/componentId/")) {
         // convert url to dataurl
         String data = img.attr("src");
-        data = convertImageAttachmentUrl(data, data);
+        data = convertImageAttachmentUrl(data, data, width);
         img.attr("src", data);
       }
     }
@@ -278,7 +282,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     out.write("</div>");
   }
 
-  private String convertSpImageUrlToDataUrl(String url) {
+  private String convertSpImageUrlToDataUrl(String url, String width) {
     String data = url;
     if (url.contains("GalleryInWysiwyg")) {
       try {
@@ -291,7 +295,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
 
         String path = FileRepositoryManager.getAbsolutePath(instanceId, rep);
         File f = new File(path + photo.getFileName());
-
+        f = resizeImage(f, width + "x");
         FileInputStream is = new FileInputStream(f);
         byte[] binaryData = new byte[(int) f.length()];
         is.read(binaryData);
@@ -303,7 +307,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
             .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
       }
     } else if (url.contains("attachmentId")) {
-      data = convertImageAttachmentUrl(url, data);
+      data = convertImageAttachmentUrl(url, data, width);
     } else {
       try {
         if (url.startsWith("/silverpeas")) {
@@ -330,7 +334,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     return data;
   }
 
-  private String convertImageAttachmentUrl(final String url, String data) {
+  private String convertImageAttachmentUrl(final String url, String data, String width) {
 
     String attachmentId = url.substring(url.indexOf("attachmentId/") + "attachmentId/".length());
     attachmentId = attachmentId.substring(0, attachmentId.indexOf("/"));
@@ -350,6 +354,10 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
 
     try {
       File f = new File(attachment.getAttachmentPath());
+
+
+      f = resizeImage(f, width + "x");
+
       FileInputStream is = new FileInputStream(f);
       byte[] binaryData = new byte[(int) f.length()];
       is.read(binaryData);
@@ -361,6 +369,18 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
           .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
     }
     return data;
+  }
+
+  private File resizeImage(final File originalFile, String size) {
+    ImageResizingProcessor processor = ServiceProvider.getService(ImageResizingProcessor.class);
+    final String path;
+    String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), size);
+    path = processor.processBefore(askedPath, SilverpeasFileProcessor.ProcessingContext.GETTING);
+    return new File(path);
+  }
+
+  private String pathForOriginalImageSize(File originalImage,String name, String size) {
+    return originalImage.getParent() + File.separator + size + File.separator + name;
   }
 
 

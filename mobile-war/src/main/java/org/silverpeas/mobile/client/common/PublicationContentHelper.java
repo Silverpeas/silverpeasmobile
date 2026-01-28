@@ -51,8 +51,7 @@ public class PublicationContentHelper {
         (SpMobil.getMainPage().getHeaderHeight() + SpMobil.getMainPage().getFooterHeight());
     int widthAvailable = Window.getClientWidth();
     // display content
-    final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId;
-
+    final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId + "&width=" + widthAvailable;
 
     try {
       new RequestBuilder(RequestBuilder.GET, url).sendRequest(null, new RequestCallback() {
@@ -76,7 +75,8 @@ public class PublicationContentHelper {
   }
 
   public static void showContent(String pubId, String appId, Element basement) {
-    final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId;
+    int widthAvailable = Window.getClientWidth();
+    final String url = UrlUtils.getServicesLocation() + "PublicationContent" + "?id=" + pubId + "&componentId=" + appId + "&width=" + widthAvailable;
     String zoom = SpMobil.getContentZoomLevel();
     IFrameElement iframeC = Document.get().createIFrameElement();
     iframeC.setId("htmlContent");
