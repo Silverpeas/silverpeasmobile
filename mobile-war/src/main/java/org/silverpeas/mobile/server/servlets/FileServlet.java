@@ -38,12 +38,16 @@ import org.silverpeas.core.subscription.SubscriptionServiceProvider;
 import org.silverpeas.core.subscription.service.NodeSubscriptionResource;
 import org.silverpeas.core.subscription.util.SubscriptionSubscriberList;
 import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.mobile.server.helpers.AntivirusHelper;
+import org.silverpeas.mobile.server.helpers.AntivirusResult;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -128,6 +132,7 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
         File file = new File(tempDir + File.separator + fileName);
         try {
           item.write(file);
+          if (scanAntivirus(response, file)) return;
           if(folderId.isEmpty()) {
             addFileToPublication(request, fileName, componentId, publicationId, file);
           } else {
@@ -138,6 +143,22 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
         }
       }
     }
+  }
+
+  private boolean scanAntivirus(HttpServletResponse response, File file) throws IOException {
+    AntivirusResult r = AntivirusHelper.scan(new FileInputStream(file));
+    if (!r.isSafe()) {
+      if (r.isError() && !getSettings().getBoolean("antivirus.allow.fileunverified", true)) {
+        SilverLogger.getLogger(this).warn("Impossible to verify if the file is virus-free :" + file.getName());
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "");
+        return true;
+      } else {
+        SilverLogger.getLogger(this).error("File " + file.getName() + " infected with : " + r.getVirusName());
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "");
+        return true;
+      }
+    }
+    return false;
   }
 
   private void addFileToPublication(HttpServletRequest request, String name, String componentId, String publicationId,

@@ -109,6 +109,10 @@ public class AddFileButton extends ActionItem {
         Notification.alert(msg.maxUploadError());
       } else if (codeError == 415) {
         Notification.alert(msg.fileNotSupportedError());
+      } else if (codeError == 403) {
+          Notification.alert(msg.fileNotVerifiedError());
+      } else if (codeError == 400) {
+          Notification.alert(msg.fileInfectedError());
       }
       Notification.activityStop();
     }
