@@ -154,7 +154,9 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (!event.getContent().getInstanceId().startsWith(Apps.almanach.name())) return;
+    if (event.getContent().getInstanceId() != null) {
+      if (!event.getContent().getInstanceId().startsWith(Apps.almanach.name())) return;
+    }
     if (event.getContent().getType().equals("Component")) {
       super.showContent(event);
     } else if (event.getContent().getType().equals(ContentsTypes.Event.name())) {
