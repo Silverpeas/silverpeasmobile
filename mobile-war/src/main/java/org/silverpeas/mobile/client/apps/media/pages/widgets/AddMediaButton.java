@@ -53,9 +53,12 @@ public class AddMediaButton extends ActionItem {
     interface AddMediaButtonUiBinder extends UiBinder<Widget, AddMediaButton> {
     }
 
-    @UiField FileUpload file;
-    @UiField Anchor link;
-    @UiField(provided = true) protected MediaMessages msg = null;
+    @UiField
+    FileUpload file;
+    @UiField
+    Anchor link;
+    @UiField(provided = true)
+    protected MediaMessages msg = null;
 
 
     private String instanceIdValue, albumIdValue;
@@ -79,24 +82,28 @@ public class AddMediaButton extends ActionItem {
 
     @UiHandler("file")
     void upload(ChangeEvent event) {
-      Notification.activityStartImmediately();
-      String url = UrlUtils.getUploadLocation();
-      url +=  "MediaAction";
-      upload(this, file.getElement(), instanceIdValue, albumIdValue, url, SpMobil.getUserToken());
+        Notification.activityStartImmediately();
+        String url = UrlUtils.getUploadLocation();
+        url += "MediaAction";
+        upload(this, file.getElement(), instanceIdValue, albumIdValue, url, SpMobil.getUserToken());
     }
 
     public void mediaUploadedSuccessfully() {
-      EventBus.getInstance().fireEvent(new MediasLoadMediaItemsEvent(instanceIdValue, albumIdValue));
+        EventBus.getInstance().fireEvent(new MediasLoadMediaItemsEvent(instanceIdValue, albumIdValue));
     }
 
     public void mediaNotUploaded(int codeError) {
-      GWT.log("error " + codeError);
-      if (codeError == 413) {
-        Notification.alert(msg.maxUploadError());
-      } else if (codeError == 415) {
-        Notification.alert(msg.mediaNotSupportedError());
-      }
-      Notification.activityStop();
+        GWT.log("error " + codeError);
+        if (codeError == 413) {
+            Notification.alert(msg.maxUploadError());
+        } else if (codeError == 415) {
+            Notification.alert(msg.mediaNotSupportedError());
+        } else if (codeError == 403) {
+            Notification.alert(msg.fileNotVerifiedError());
+        } else if (codeError == 400) {
+            Notification.alert(msg.fileInfectedError());
+        }
+        Notification.activityStop();
     }
 
     @UiHandler("link")
@@ -109,24 +116,24 @@ public class AddMediaButton extends ActionItem {
     }
 
     private static native void upload(AddMediaButton button, Element input, String componentId, String albumId, String url, String token) /*-{
-      var xhr = new XMLHttpRequest();
-      var fd = new FormData();
-      xhr.open("POST", url, false);
-      xhr.setRequestHeader("X-Silverpeas-Session", token);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-          // Every thing ok, file uploaded
-          button.@org.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton::mediaUploadedSuccessfully()();
-        } else {
-          button.@org.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton::mediaNotUploaded(I)(xhr.status);
+        var xhr = new XMLHttpRequest();
+        var fd = new FormData();
+        xhr.open("POST", url, false);
+        xhr.setRequestHeader("X-Silverpeas-Session", token);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Every thing ok, file uploaded
+                button.@org.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton::mediaUploadedSuccessfully()();
+            } else {
+                button.@org.silverpeas.mobile.client.apps.media.pages.widgets.AddMediaButton::mediaNotUploaded(I)(xhr.status);
+            }
+        };
+        fd.append("componentId", componentId);
+        fd.append("albumId", albumId);
+        for (var i = 0; i < input.files.length; i++) {
+            fd.append("upload_file" + i, input.files[i]);
         }
-      };
-      fd.append("componentId", componentId);
-      fd.append("albumId", albumId);
-      for(var i = 0; i < input.files.length ; i++) {
-        fd.append("upload_file"+i, input.files[i]);
-      }
-      xhr.send(fd);
+        xhr.send(fd);
     }-*/;
 
     private static native void clickOnInputFile(Element elem) /*-{

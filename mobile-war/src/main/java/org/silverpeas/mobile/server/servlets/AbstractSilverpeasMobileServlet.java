@@ -28,13 +28,19 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.mobile.server.helpers.AntivirusHelper;
+import org.silverpeas.mobile.server.helpers.AntivirusResult;
 import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
-public abstract  class AbstractSilverpeasMobileServlet extends HttpServlet {
+public abstract class AbstractSilverpeasMobileServlet extends HttpServlet {
 
     protected void checkUserInSession(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
@@ -42,16 +48,32 @@ public abstract  class AbstractSilverpeasMobileServlet extends HttpServlet {
         }
     }
 
-  protected UserDetail getUserInSession(HttpServletRequest request) {
-    return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
-  }
+    protected UserDetail getUserInSession(HttpServletRequest request) {
+        return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+    }
 
-  protected MainSessionController getMainSessionController(HttpServletRequest request) throws Exception {
-    MainSessionController mainSessionController = (MainSessionController) request.getSession().getAttribute(AbstractAuthenticateService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
-    return mainSessionController;
-  }
+    protected MainSessionController getMainSessionController(HttpServletRequest request) throws Exception {
+        MainSessionController mainSessionController = (MainSessionController) request.getSession().getAttribute(AbstractAuthenticateService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
+        return mainSessionController;
+    }
 
-  protected static SettingBundle getSettings() {
-    return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
-  }
+    protected static SettingBundle getSettings() {
+        return ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
+    }
+
+    protected boolean scanAntivirus(HttpServletResponse response, File file) throws IOException {
+        AntivirusResult r = AntivirusHelper.scan(new FileInputStream(file));
+        if (!r.isSafe()) {
+            if (r.isError() && !getSettings().getBoolean("antivirus.allow.fileunverified", true)) {
+                SilverLogger.getLogger(this).warn("Impossible to verify if the file is virus-free :" + file.getName());
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "");
+                return true;
+            } else {
+                SilverLogger.getLogger(this).error("File " + file.getName() + " infected with : " + r.getVirusName());
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "");
+                return true;
+            }
+        }
+        return false;
+    }
 }

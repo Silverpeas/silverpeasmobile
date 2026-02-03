@@ -27,16 +27,25 @@ package org.silverpeas.mobile.client.apps.media.resources;
 import com.google.gwt.i18n.client.Messages;
 
 public interface MediaMessages extends Messages {
-  String title();
-  String lastUpdate(String updateDate, String updater);
-  String creation(String creationDate, String creator);
-  String sizeK(String size);
-  String sizeM(String size);
-  String dimensions(String l, String h);
+    String title();
 
-  String importMedia();
+    String lastUpdate(String updateDate, String updater);
 
-  String maxUploadError();
+    String creation(String creationDate, String creator);
 
-  String mediaNotSupportedError();
+    String sizeK(String size);
+
+    String sizeM(String size);
+
+    String dimensions(String l, String h);
+
+    String importMedia();
+
+    String maxUploadError();
+
+    String mediaNotSupportedError();
+
+    String fileNotVerifiedError();
+
+    String fileInfectedError();
 }

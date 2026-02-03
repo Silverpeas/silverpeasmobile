@@ -147,6 +147,7 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
         File file = new File(tempDir + File.separator + fileName);
         try {
           item.write(file);
+          if (scanAntivirus(response, file)) return;
           createMedia(request, response, fileName, getUserInSession(request).getId(), componentId, albumId, file, false, "", "", true);
         } catch (Exception e) {
           e.printStackTrace();

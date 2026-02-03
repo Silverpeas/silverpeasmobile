@@ -145,22 +145,6 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
     }
   }
 
-  private boolean scanAntivirus(HttpServletResponse response, File file) throws IOException {
-    AntivirusResult r = AntivirusHelper.scan(new FileInputStream(file));
-    if (!r.isSafe()) {
-      if (r.isError() && !getSettings().getBoolean("antivirus.allow.fileunverified", true)) {
-        SilverLogger.getLogger(this).warn("Impossible to verify if the file is virus-free :" + file.getName());
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "");
-        return true;
-      } else {
-        SilverLogger.getLogger(this).error("File " + file.getName() + " infected with : " + r.getVirusName());
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "");
-        return true;
-      }
-    }
-    return false;
-  }
-
   private void addFileToPublication(HttpServletRequest request, String name, String componentId, String publicationId,
                                     File file) throws Exception {
 
