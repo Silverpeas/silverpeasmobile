@@ -65,6 +65,8 @@ import org.silverpeas.mobile.client.apps.webpage.WebPageApp;
 import org.silverpeas.mobile.client.apps.workflow.WorkflowApp;
 import org.silverpeas.mobile.client.common.*;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.auth.BiometricAuthHelper;
+import org.silverpeas.mobile.client.common.auth.resources.BiometricMessages;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.event.ExceptionEvent;
 import org.silverpeas.mobile.client.common.event.authentication.AbstractAuthenticationErrorEvent;
@@ -152,6 +154,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     checkVersion();
     checkInstallation();
 
+    checkBiometrics();
 
     // init connexion supervision
     NetworkHelper.getInstance();
@@ -236,6 +239,23 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     apps.add(new FaqApp());
     apps.add(new ResourcesManagerApp());
     apps.add(new OrgChartGroupApp());
+  }
+
+  private static void checkBiometrics() {
+    boolean biometricsAuthEnable = Boolean.parseBoolean(ResourcesManager.getParam("authentification.biometrics", "false"));
+    if (biometricsAuthEnable) {
+      if (BiometricAuthHelper.isRegistered()) {
+        BiometricAuthHelper.loginLocal(success -> {
+          if (!success) {
+            BiometricMessages biometricMessages = GWT.create(BiometricMessages.class);
+            Window.alert(biometricMessages.authFailed());
+            return;
+          }
+        });
+      } else {
+        BiometricAuthHelper.register();
+      }
+    }
   }
 
   private static void checkInstallation() {
