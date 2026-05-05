@@ -24,14 +24,14 @@
 
 package org.silverpeas.mobile.server.servlets;
 
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.silverstatistics.volume.service.SilverStatisticsManager;
 import org.silverpeas.mobile.server.helpers.MediaHelper;
 import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 import java.util.Date;
 
 /**
@@ -40,7 +40,7 @@ import java.util.Date;
 public class SessionManager implements HttpSessionListener {
 
   @Inject
-  private SilverStatisticsManager myStatisticsManager = null;
+  private SilverStatisticsManager myStatisticsManager;
 
   @Override
   public void sessionCreated(final HttpSessionEvent httpSessionEvent) {

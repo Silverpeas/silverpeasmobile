@@ -37,10 +37,10 @@ import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;

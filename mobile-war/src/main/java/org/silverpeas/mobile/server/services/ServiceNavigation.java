@@ -75,10 +75,10 @@ import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.*;
 import org.silverpeas.mobile.shared.dto.navigation.aurora.AuroraSpaceHomePageConfig;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Predicate;

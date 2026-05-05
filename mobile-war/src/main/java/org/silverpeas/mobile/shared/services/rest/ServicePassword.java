@@ -29,8 +29,8 @@ import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.password.PasswordControlDTO;
 import org.silverpeas.mobile.shared.dto.password.PasswordDTO;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
 
 /**
  * @author svu

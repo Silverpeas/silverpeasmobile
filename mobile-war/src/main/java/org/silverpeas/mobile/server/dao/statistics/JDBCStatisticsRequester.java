@@ -27,7 +27,7 @@ package org.silverpeas.mobile.server.dao.statistics;
 
 import org.silverpeas.core.persistence.jdbc.DBUtil;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

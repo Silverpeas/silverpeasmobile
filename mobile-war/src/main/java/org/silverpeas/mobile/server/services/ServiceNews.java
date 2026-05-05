@@ -24,30 +24,25 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.util.Streams;
-import org.silverpeas.core.ResourceReference;
-import org.silverpeas.core.date.Period;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
+import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.annotation.WebService;
+import org.silverpeas.core.date.Period;
 import org.silverpeas.core.io.media.image.thumbnail.control.ThumbnailController;
+import org.silverpeas.core.util.file.FileItem;
+import org.silverpeas.core.util.file.FileUtil;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.mobile.server.common.LocalDiskFileItem;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
-import static java.time.OffsetDateTime.ofInstant;
-import static org.silverpeas.core.cache.service.VolatileIdentifierProvider.newVolatileIntegerIdentifierOn;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import java.io.File;
-import java.io.FileInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -55,13 +50,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.time.OffsetDateTime.ofInstant;
+import static org.silverpeas.core.cache.service.VolatileIdentifierProvider.newVolatileIntegerIdentifierOn;
+
 @WebService
 @Authorized
 @Path(ServiceNews.PATH + "/{appId}")
 public class ServiceNews extends AbstractRestWebService {
-
-  @Context
-  HttpServletRequest request;
 
   @PathParam("appId")
   private String componentId;
@@ -69,7 +64,6 @@ public class ServiceNews extends AbstractRestWebService {
   static final String PATH = "mobile/news";
 
   private SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
-  private OrganizationController organizationController = OrganizationController.get();
 
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
@@ -131,20 +125,18 @@ public class ServiceNews extends AbstractRestWebService {
   private void setPeriod(NewsDTO news, News n2) throws ParseException {
     Date start = new Date();
     Date end = null;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    if (!news.getStartDate().isEmpty()) start = sdf.parse(news.getStartDate());
-    if (!news.getEndDate().isEmpty()) end = sdf.parse(news.getEndDate());
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    if (!news.getStartDate().isEmpty()) start = format.parse(news.getStartDate());
+    if (!news.getEndDate().isEmpty()) end = format.parse(news.getEndDate());
     n2.setVisibilityPeriod(getPeriod(start, end));
   }
 
   private void setVignette(NewsDTO news, News n2) throws Exception {
     if (news.getVignette() != null && !news.getVignette().isEmpty()) {
       File f = DataURLHelper.createPictureFromUrlData(news.getVignette(), n2.getComponentInstanceId() + "-" + n2.getId());
-      DiskFileItemFactory factory = new DiskFileItemFactory();
-      FileItem fi = factory.createItem("WAIMGVAR0", "image/" + f.getName().substring(f.getName().lastIndexOf(".")), false, f.getAbsolutePath());
-      Streams.copy(new FileInputStream(f), fi.getOutputStream(), true);
+      LocalDiskFileItem item = new LocalDiskFileItem(f, FileUtil.getMimeType(f.getAbsolutePath()));
       List<FileItem> items = new ArrayList<>();
-      items.add(fi);
+      items.add(item);
       ThumbnailController.processThumbnail(new ResourceReference(n2.getPublicationId(), componentId), items);
     }
   }
@@ -165,17 +157,15 @@ public class ServiceNews extends AbstractRestWebService {
         OrganizationController.get().getUserProfiles(getUser().getId(), componentId);
     boolean managerAccess = isManagerOrPublisher(profiles);
     List<News> news = NewsHelper.getInstance().getNewsByAppId(componentId, managerAccess, getUser().getId());
-    List<NewsDTO> newsDTO = NewsHelper.getInstance().populate(news, managerAccess);
-    return newsDTO;
+    return NewsHelper.getInstance().populate(news, managerAccess);
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("byPubId/{pubId}")
-  public NewsDTO getNewsByPubId(@PathParam("appId") String appId, @PathParam("pubId") String pubId) {
+  public NewsDTO getNewsByPubId(@PathParam("pubId") String pubId) {
     News n = QuickInfoService.get().getNewsByForeignId(pubId);
-    NewsDTO n2 = NewsHelper.getInstance().populate(n, false);
-    return n2;
+    return NewsHelper.getInstance().populate(n, false);
   }
 
 
@@ -201,4 +191,11 @@ public class ServiceNews extends AbstractRestWebService {
     return this.componentId;
   }
 
+  public SimpleDateFormat getSdf() {
+    return sdf;
+  }
+
+  public void setSdf(SimpleDateFormat sdf) {
+    this.sdf = sdf;
+  }
 }

@@ -27,7 +27,7 @@ package org.silverpeas.mobile.client.apps.news.events.pages;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 import java.util.List;
 
 public class NewsLoadedEvent extends AbstractNewsPagesEvent {

@@ -6,7 +6,7 @@ import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class FormXMLHelper {
 

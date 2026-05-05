@@ -26,7 +26,7 @@ package org.silverpeas.mobile.server.services.helpers;
 
 import org.apache.commons.codec.binary.Base64;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
-import org.silverpeas.components.delegatednews.service.DelegatedNewsServiceProvider;
+import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.model.Photo;
 import org.silverpeas.components.gallery.service.MediaServiceProvider;
@@ -55,9 +55,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalField;
 import java.util.*;
 
 /**
@@ -81,7 +78,7 @@ public class NewsHelper {
 
   public List<News> getLastNews(String userId, String spaceId, int maxNews) throws Exception {
     if (spaceId != null) {
-      List<String> appIds = new ArrayList<String>();
+      List<String> appIds = new ArrayList<>();
       String[] cIds = organizationController.getAvailCompoIds(spaceId, userId);
       for (String id : cIds) {
         if (StringUtil.startsWithIgnoreCase(id, "quickinfo")) {
@@ -127,7 +124,7 @@ public class NewsHelper {
 
   private List<News> getDelegatedNews(String userId, int maxNews) throws Exception {
     List<News> news = new ArrayList();
-    List<DelegatedNews> delegatedNews = DelegatedNewsServiceProvider.getDelegatedNewsService().getAllValidDelegatedNews();
+    List<DelegatedNews> delegatedNews = DelegatedNewsService.get().getAllValidDelegatedNews();
     UserDetail u = Administration.get().getUserDetail(userId);
     Date now = new Date();
     int count = 0;

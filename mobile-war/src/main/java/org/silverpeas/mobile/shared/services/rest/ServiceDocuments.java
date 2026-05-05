@@ -32,8 +32,8 @@ import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
 

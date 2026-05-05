@@ -29,8 +29,8 @@ import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.dao.token.JDBCTokenRequester;
 import org.silverpeas.mobile.server.dao.token.TokenDAO;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.sql.Connection;
 import java.util.List;
 

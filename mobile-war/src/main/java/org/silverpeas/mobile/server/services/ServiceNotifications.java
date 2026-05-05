@@ -58,11 +58,11 @@ import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.notifications.*;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

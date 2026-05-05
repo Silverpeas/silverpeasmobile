@@ -41,9 +41,9 @@ import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.dao.token.TokenDAO;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;

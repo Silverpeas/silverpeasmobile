@@ -24,6 +24,9 @@
 
 package org.silverpeas.mobile.server.servlets;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,11 +57,7 @@ import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.FormXMLHelper;
-import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.FileNameMap;
 import java.net.URL;

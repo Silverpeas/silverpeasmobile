@@ -32,7 +32,7 @@ import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
 
-import javax.activation.MimetypesFileTypeMap;
+import jakarta.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

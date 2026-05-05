@@ -33,16 +33,16 @@ import org.silverpeas.mobile.server.helpers.AntivirusHelper;
 import org.silverpeas.mobile.server.helpers.AntivirusResult;
 import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 public abstract class AbstractSilverpeasMobileServlet extends HttpServlet {
 
-    protected void checkUserInSession(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void checkUserInSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }

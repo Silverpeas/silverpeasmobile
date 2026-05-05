@@ -24,35 +24,28 @@
 
 package org.silverpeas.mobile.server.common;
 
-import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.silverpeas.core.util.file.FileItem;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 
-public class LocalDiskFileItem extends DiskFileItem {
+public class LocalDiskFileItem implements FileItem, Serializable {
 
   private static final long serialVersionUID = 1L;
-  private File file;
+  private final File file;
+  private final String contentType;
 
   @Override
   public InputStream getInputStream() throws IOException {
-    InputStream inputStream = new FileInputStream(file.getAbsolutePath());
-    return inputStream;
+    return new FileInputStream(file);
   }
 
   public LocalDiskFileItem(File file, String contentType) {
-    super("WAIMGVAR0", contentType, false, file.getName(), 2097152, file);
     this.file = file;
-  }
-
-  @Override
-  public boolean isInMemory() {
-    return false;
+    this.contentType = contentType;
   }
 
   @Override
@@ -61,12 +54,23 @@ public class LocalDiskFileItem extends DiskFileItem {
   }
 
   @Override
-  public byte[] get() {
-    try {
-      return IOUtils.toByteArray(new FileInputStream(file.getAbsolutePath()));
-    } catch (Exception e) {
-      return null;
-    }
+  public String getContentType() {
+    return contentType;
+  }
+
+  @Override
+  public void saveTo(File file) throws IOException {
+    FileUtils.copyInputStreamToFile(getInputStream(), file);
+  }
+
+  @Override
+  public void delete() throws IOException {
+    Files.delete(file.toPath());
+  }
+
+  @Override
+  public boolean isFormField() {
+    return false;
   }
 
   @Override
@@ -75,9 +79,28 @@ public class LocalDiskFileItem extends DiskFileItem {
   }
 
   @Override
-  public OutputStream getOutputStream() throws IOException {
-    OutputStream outputStream = new FileOutputStream(file.getAbsolutePath());
-    return outputStream;
+  public String getContent(Charset charset) {
+    return new String(read(), charset);
+  }
+
+  @Override
+  public String getContent() {
+    return new String(read());
+  }
+
+  @Override
+  public String getFileName() {
+    return file.getName();
+  }
+
+  private byte[] read() {
+    byte[] data = new byte[(int) getSize()];
+    try (InputStream input = getInputStream()) {
+      IOUtils.readFully(input, data);
+    } catch (IOException e) {
+      data = null;
+    }
+    return data;
   }
 
 }

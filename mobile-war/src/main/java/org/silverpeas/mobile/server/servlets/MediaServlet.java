@@ -24,11 +24,12 @@
 
 package org.silverpeas.mobile.server.servlets;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import jakarta.activation.MimetypesFileTypeMap;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.silverpeas.components.gallery.GalleryComponentSettings;
 import org.silverpeas.components.gallery.constant.MediaResolution;
@@ -39,48 +40,39 @@ import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.model.Photo;
 import org.silverpeas.components.gallery.notification.user.GalleryUserAlertNotification;
 import org.silverpeas.components.gallery.service.GalleryService;
-import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.node.model.NodePK;
-import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.util.file.FileItem;
+import org.silverpeas.core.util.file.FileUploadSizeLimitException;
+import org.silverpeas.core.util.file.FileUploadUtil;
+import org.silverpeas.kernel.SilverpeasRuntimeException;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
 import org.silverpeas.mobile.server.helpers.MediaHelper;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-@SuppressWarnings("serial")
 public class MediaServlet extends AbstractSilverpeasMobileServlet {
 
-  private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
-  private static long MAX_FILE_SIZE      = 1024 * 1024 * 100; // 100MB
-  private static long MAX_REQUEST_SIZE   = 1024 * 1024 * 110; // 110MB
+  @Inject
+  private GalleryService galleryService;
 
   @Override
   public void init(final ServletConfig config) throws ServletException {
     super.init(config);
-    MAX_FILE_SIZE = FileRepositoryManager.getUploadMaximumFileSize();
-    MAX_REQUEST_SIZE = (long) (MAX_FILE_SIZE * 1.1);
   }
 
   protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     String action = request.getParameter("action");
     if (action.equals("view")) {
       String id = request.getParameter("id");
-      String instanceId = request.getParameter("instanceId");
       Photo photo = getPicture(id);
       if (photo.canBeAccessedBy(getUserInSession(request))) {
         InputStream input = photo.getFile(MediaResolution.ORIGINAL).inputStream();
-        response.setContentType(((Photo) photo).getFileMimeType().getMimeType());
+        response.setContentType((photo).getFileMimeType().getMimeType());
         response.setHeader("content-disposition", "attachment; filename=" + photo.getName());
         IOUtils.copy(input, response.getOutputStream());
       } else {
@@ -89,7 +81,7 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
     }
   }
 
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
     try {
       checkUserInSession(request, response);
       processRequest(request, response);
@@ -98,57 +90,35 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
     }
   }
 
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String componentId = "";
     String albumId = "";
     String tempDir = MediaHelper.getTemporaryUploadMediaPath();
 
-    // configures upload settings
-    DiskFileItemFactory factory = new DiskFileItemFactory();
-    // sets memory threshold - beyond which files are stored in disk
-    factory.setSizeThreshold(MEMORY_THRESHOLD);
-    // sets temporary location to store files
-    factory.setRepository(new File(tempDir));
-
-    ServletFileUpload upload = new ServletFileUpload(factory);
-
-    // sets maximum size of upload file
-    upload.setFileSizeMax(MAX_FILE_SIZE);
-
-    // sets maximum size of request (include file + form data)
-    upload.setSizeMax(MAX_REQUEST_SIZE);
-
-    // Parse the request
-    @SuppressWarnings("unchecked")
-    List<FileItem> items = null;
+    List<FileItem> items;
     try {
-      items = upload.parseRequest(request);
-    } catch(FileUploadBase.FileSizeLimitExceededException eu) {
+      items = FileUploadUtil.parseRequest(request);
+    } catch(FileUploadSizeLimitException e) {
       response.sendError(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
       return;
-    } catch (FileUploadException e) {
-      e.printStackTrace();
+    } catch (SilverpeasRuntimeException e) {
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      return;
     }
 
     // Process the uploaded items
-    Iterator iter = items.iterator();
-    while (iter.hasNext())
-    {
-      FileItem item = (FileItem) iter.next();
-      if (item.isFormField())
-      {
-        if (item.getFieldName().equals("componentId")) componentId = item.getString();
-        if (item.getFieldName().equals("albumId")) albumId = item.getString();
+    for (FileItem item : items) {
+      if (item.isFormField()) {
+        if (item.getFieldName().equals("componentId")) componentId = item.getContent();
+        if (item.getFieldName().equals("albumId")) albumId = item.getContent();
 
-      }
-      else {
-        String fileName = item.getName();
+      } else {
+        String fileName = item.getFileName();
         File file = new File(tempDir + File.separator + fileName);
         try {
-          item.write(file);
+          item.saveTo(file);
           if (scanAntivirus(response, file)) return;
-          createMedia(request, response, fileName, getUserInSession(request).getId(), componentId, albumId, file, false, "", "", true);
+          createMedia(request, response, componentId, albumId, file);
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -156,24 +126,22 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
     }
   }
 
-  private Photo getPicture(String pictureId) throws Exception {
-    Photo photoDetail = getGalleryService().getPhoto(new MediaPK(pictureId));
-    return photoDetail;
+  private Photo getPicture(String pictureId) {
+    return getGalleryService().getPhoto(new MediaPK(pictureId));
   }
 
-  private GalleryService getGalleryService() throws Exception {
-    return MediaServiceProvider.getMediaService();
+  private GalleryService getGalleryService() {
+    return galleryService;
   }
 
-  private String createMedia(HttpServletRequest request, HttpServletResponse response, String name, String userId, String componentId,
-      String albumId, File file, boolean watermark, String watermarkHD,
-      String watermarkOther, boolean download)
+  private void createMedia(HttpServletRequest request, HttpServletResponse response, String componentId,
+      String albumId, File file)
       throws Exception {
 
     // création de la photo
     String type = new MimetypesFileTypeMap().getContentType(file);
 
-    List<FileItem> parameters = new ArrayList<FileItem>();
+    List<FileItem> parameters = new ArrayList<>();
     LocalDiskFileItem item = new LocalDiskFileItem(file, type);
     parameters.add(item);
 
@@ -181,7 +149,7 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
     MediaDataCreateDelegate delegate = null;
     if (type.contains("image")) {
       delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
-    } if (type.contains("audio")) {
+    } else if (type.contains("audio")) {
       delegate = new MediaDataCreateDelegate(MediaType.Sound, "fr", albumId, parameters);
     } else if (type.contains("video")) {
       parameters.clear();
@@ -201,7 +169,7 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
     //TODO : use right language
     if (delegate == null) {
       response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
-      return null;
+      return;
     }
 
     Media newMedia = getGalleryService().createMedia(getUserInSession(request), componentId, GalleryComponentSettings.getWatermark(componentId), delegate);
@@ -211,6 +179,6 @@ public class MediaServlet extends AbstractSilverpeasMobileServlet {
     GalleryUserAlertNotification n = new GalleryUserAlertNotification(new NodePK(albumId, componentId), newMedia, sender);
     n.build().send();
 
-    return newMedia.getId();
+    newMedia.getId();
   }
 }

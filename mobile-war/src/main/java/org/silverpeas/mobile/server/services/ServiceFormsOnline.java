@@ -24,7 +24,8 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.apache.commons.fileupload.FileItem;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -46,6 +47,7 @@ import org.silverpeas.core.contribution.content.form.form.XmlForm;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateImpl;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.util.file.FileItem;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.kernel.SilverpeasException;
@@ -62,10 +64,6 @@ import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -78,9 +76,6 @@ import static java.util.Collections.emptyList;
 @Authorized
 @Path(ServiceFormsOnline.PATH + "/{appId}")
 public class ServiceFormsOnline extends AbstractRestWebService {
-
-  @Context
-  HttpServletRequest request;
 
   static final String PATH = "mobile/formsOnline";
 
@@ -253,10 +248,10 @@ public class ServiceFormsOnline extends AbstractRestWebService {
     if (f.getFormWithData() instanceof XmlForm) {
       XmlForm formXml = ((XmlForm) f.getFormWithData());
       if (formXml != null) {
-        DataRecord record = formXml.getData();
+        DataRecord data = formXml.getData();
         List<FormFieldDTO> dataForm = new ArrayList<>();
-        for (String name : record.getFieldNames()) {
-          Field field = record.getField(name);
+        for (String name : data.getFieldNames()) {
+          Field field = data.getField(name);
           FormFieldDTO fieldDTO = populateField(f, field);
           dataForm.add(fieldDTO);
         }
@@ -264,10 +259,10 @@ public class ServiceFormsOnline extends AbstractRestWebService {
       }
     } else {
       HtmlForm formHTML = ((HtmlForm) f.getFormWithData());
-      DataRecord record = formHTML.getData();
+      DataRecord data = formHTML.getData();
       List<FormFieldDTO> dataForm = new ArrayList<>();
-      for (String name : record.getFieldNames()) {
-        Field field = record.getField(name);
+      for (String name : data.getFieldNames()) {
+        Field field = data.getField(name);
         FormFieldDTO fieldDTO = populateField(f, field);
         dataForm.add(fieldDTO);
       }
@@ -289,12 +284,12 @@ public class ServiceFormsOnline extends AbstractRestWebService {
           if (field.getValue() != null) {
             if (field.getValue().contains("##")) {
               String[] fiedValues = field.getValue().split("##");
-              String fieldDisplayValue = "";
+              StringBuilder fieldDisplayValue = new StringBuilder();
               for (String fieldValue : fiedValues) {
                 int index = Arrays.asList(keys).indexOf(fieldValue);
-                fieldDisplayValue += values[index] + " ";
+                fieldDisplayValue.append(values[index]).append(" ");
               }
-              fieldDTO.setValue(fieldDisplayValue);
+              fieldDTO.setValue(fieldDisplayValue.toString());
               fieldDTO.setValueId(field.getValue());
             } else {
               int index = Arrays.asList(keys).indexOf(field.getValue());

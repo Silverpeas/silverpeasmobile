@@ -40,10 +40,10 @@ import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDetailDTO;
 import org.silverpeas.mobile.shared.dto.faq.ReplyDTO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

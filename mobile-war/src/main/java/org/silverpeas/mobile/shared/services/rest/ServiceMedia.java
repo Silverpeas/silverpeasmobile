@@ -36,10 +36,10 @@ import org.silverpeas.mobile.shared.dto.media.VideoDTO;
 import org.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import java.util.List;
 
 /**
@@ -53,33 +53,33 @@ public interface ServiceMedia extends RestService {
   public void uploadPicture(@PathParam("name") String name, @PathParam("data") String data, @PathParam("idGallery") String idGallery, @PathParam("idAlbum") String idAlbum, MethodCallback<Void> callback);
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("{appId}/media/{id}")
   public void getMedia(@PathParam("appId") String instanceId, @PathParam("id") String id, MethodCallback<MediaDTO> callback);
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("{appId}/albumsandpics/{rootAlbumId}/{callNumber}")
   public void getAlbumsAndPictures(@PathParam("appId") String instanceId, @PathParam("rootAlbumId") String rootAlbumId, @PathParam("callNumber") int callNumber, MethodCallback<StreamingList<BaseDTO>> callback);
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("{appId}/sound/{id}")
   public void getSound(@PathParam("appId") String instanceId, @PathParam("id") String soundId, MethodCallback<SoundDTO> callback);
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("{appId}/video/{videoId}")
   public void getVideo(@PathParam("appId") String instanceId, @PathParam("videoId") String videoId, MethodCallback<VideoDTO> callback);
 
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("{appId}/videostream/{videoId}")
   public void getVideoStreaming(@PathParam("appId") String instanceId, @PathParam("videoId") String videoId, MethodCallback<VideoStreamingDTO> callback);
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("{appId}/photo/{pictureId}")
   public void getPreviewPicture(@PathParam("appId") String instanceId, @PathParam("pictureId") String pictureId, MethodCallback<PhotoDTO> callback);
 }

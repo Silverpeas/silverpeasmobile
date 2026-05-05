@@ -38,9 +38,9 @@ import org.silverpeas.mobile.shared.dto.PropertyDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +64,7 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
   private String componentId;
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("")
   public GroupOrgChartDTO getOrgChart() throws Exception {
     ComponentInst app = Administration.get().getComponentInst(componentId);

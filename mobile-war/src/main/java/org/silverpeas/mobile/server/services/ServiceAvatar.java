@@ -24,24 +24,22 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.apache.commons.fileupload.FileItem;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.kernel.util.StringUtil;
+import org.silverpeas.core.util.file.FileItem;
 import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.util.file.FileUploadUtil;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.helpers.ImageProfil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
 
@@ -49,9 +47,6 @@ import java.util.List;
 @Authorized
 @Path(ServiceAvatar.PATH)
 public class ServiceAvatar extends AbstractRestWebService {
-
-  @Context
-  HttpServletRequest request;
 
   static final String PATH = "mobile/avatar";
 
@@ -65,9 +60,9 @@ public class ServiceAvatar extends AbstractRestWebService {
     FileItem file = FileUploadUtil.getFile(parameters, "upload_file0");
     ImageProfil img = new ImageProfil(user.getAvatarFileName());
 
-    if (file != null && StringUtil.isDefined(file.getName())) {// Create or Update
+    if (file != null && StringUtil.isDefined(file.getFileName())) {// Create or Update
       // extension
-      String extension = FileRepositoryManager.getFileExtension(file.getName());
+      String extension = FileRepositoryManager.getFileExtension(file.getFileName());
       if (extension != null && extension.equalsIgnoreCase("jpeg")) {
         extension = "jpg";
       }
@@ -100,6 +95,7 @@ public class ServiceAvatar extends AbstractRestWebService {
 
   @Override
   public void validateUserAuthorization(final UserPrivilegeValidation validation) {
+    // no validation to perform
   }
 
 }

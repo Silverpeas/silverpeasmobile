@@ -29,7 +29,7 @@ import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-import javax.ws.rs.*;
+import jakarta.ws.rs.*;
 import java.util.List;
 
 /**

@@ -40,7 +40,7 @@
 
 
   <properties>
-    <gwtVersion>2.12.2</gwtVersion>
+    <gwtVersion>2.13.0</gwtVersion>
     <gwtMojoPluginVersion>2.10.0</gwtMojoPluginVersion>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
@@ -115,22 +115,8 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.5.0-b01</version>
-      <scope>provided</scope>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-api</artifactId>
     </dependency>
 
     <dependency>
@@ -296,7 +282,7 @@
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
-      <version>1.15.3</version>
+      <version>1.22.2</version>
     </dependency>
 
     <!--dependency>
@@ -314,25 +300,14 @@
 
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-jaxb-annotations</artifactId>
+      <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>1</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>2.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
+      <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-client</artifactId>
-      <version>1.19.4</version>
+      <version>3.1.11</version>
     </dependency>
 
     <dependency>
@@ -400,9 +375,8 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.6.0</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
     </dependency>
 
     <dependency>

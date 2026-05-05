@@ -24,116 +24,69 @@
 
 package org.silverpeas.mobile.server.servlets;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import jakarta.inject.Inject;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.node.model.NodePK;
-import org.silverpeas.core.subscription.SubscriptionServiceProvider;
-import org.silverpeas.core.subscription.service.NodeSubscriptionResource;
-import org.silverpeas.core.subscription.util.SubscriptionSubscriberList;
+import org.silverpeas.core.util.file.FileItem;
 import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.mobile.server.helpers.AntivirusHelper;
-import org.silverpeas.mobile.server.helpers.AntivirusResult;
+import org.silverpeas.core.util.file.FileUploadSizeLimitException;
+import org.silverpeas.core.util.file.FileUploadUtil;
+import org.silverpeas.kernel.SilverpeasRuntimeException;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
-@SuppressWarnings("serial")
 public class FileServlet extends AbstractSilverpeasMobileServlet {
 
-  private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
-  private static long MAX_FILE_SIZE      = 1024 * 1024 * 100; // 100MB
-  private static long MAX_REQUEST_SIZE   = 1024 * 1024 * 110; // 110MB
+  @Inject
+  private KmeliaService kmeliaService;
 
   @Override
   public void init(final ServletConfig config) throws ServletException {
     super.init(config);
-    MAX_FILE_SIZE = FileRepositoryManager.getUploadMaximumFileSize();
-    MAX_REQUEST_SIZE = (long) (MAX_FILE_SIZE * 1.1);
   }
 
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-  }
-
-  protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    try {
-      checkUserInSession(request, response);
-      processRequest(request, response);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
-
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String componentId = "";
     String publicationId = "";
     String folderId = "";
+    FileUploadUtil.parseRequest(request);
     String tempDir = FileRepositoryManager.getTemporaryPath();
 
-    // configures upload settings
-    DiskFileItemFactory factory = new DiskFileItemFactory();
-    // sets memory threshold - beyond which files are stored in disk
-    factory.setSizeThreshold(MEMORY_THRESHOLD);
-    // sets temporary location to store files
-    factory.setRepository(new File(tempDir));
-
-    ServletFileUpload upload = new ServletFileUpload(factory);
-
-    // sets maximum size of upload file
-    upload.setFileSizeMax(MAX_FILE_SIZE);
-
-    // sets maximum size of request (include file + form data)
-    upload.setSizeMax(MAX_REQUEST_SIZE);
-
     // Parse the request
-    @SuppressWarnings("unchecked")
-    List<FileItem> items = null;
+    List<FileItem> items;
     try {
-      items = upload.parseRequest(request);
-    } catch(FileUploadBase.FileSizeLimitExceededException eu) {
+      items = FileUploadUtil.parseRequest(request);
+    } catch (FileUploadSizeLimitException e) {
       response.sendError(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
       return;
-    } catch (FileUploadException e) {
-      e.printStackTrace();
+    } catch (SilverpeasRuntimeException e) {
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      return;
     }
 
     // Process the uploaded items
-    Iterator iter = items.iterator();
-    while (iter.hasNext())
-    {
-      FileItem item = (FileItem) iter.next();
-      if (item.isFormField())
-      {
-        if (item.getFieldName().equals("componentId")) componentId = item.getString();
-        if (item.getFieldName().equals("folderId")) folderId = item.getString();
-        if (item.getFieldName().equals("publicationId")) publicationId = item.getString();
+    for (FileItem item : items) {
+      if (item.isFormField()) {
+        if (item.getFieldName().equals("componentId")) componentId = item.getContent();
+        if (item.getFieldName().equals("folderId")) folderId = item.getContent();
+        if (item.getFieldName().equals("publicationId")) publicationId = item.getContent();
 
-      }
-      else {
-        String fileName = item.getName();
+      } else {
+        String fileName = item.getFileName();
         File file = new File(tempDir + File.separator + fileName);
         try {
-          item.write(file);
+          item.saveTo(file);
           if (scanAntivirus(response, file)) return;
-          if(folderId.isEmpty()) {
+          if (folderId.isEmpty()) {
             addFileToPublication(request, fileName, componentId, publicationId, file);
           } else {
             createPublication(request, fileName, componentId, folderId, file);
@@ -145,16 +98,17 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
     }
   }
 
-  private void addFileToPublication(HttpServletRequest request, String name, String componentId, String publicationId,
-                                    File file) throws Exception {
+  private void addFileToPublication(HttpServletRequest request, String name, String componentId,
+      String publicationId,
+      File file) throws Exception {
 
     PublicationPK pk = new PublicationPK(publicationId, componentId);
-    KmeliaService.get().addAttachmentToPublication(pk, getUserInSession(request).getId(), name, "",
-            FileUtils.readFileToByteArray(file));
+    kmeliaService.addAttachmentToPublication(pk, getUserInSession(request).getId(), name, "",
+        FileUtils.readFileToByteArray(file));
   }
 
-  private String createPublication(HttpServletRequest request, String name,
-                                   String componentId, String folderId, File file) throws Exception {
+  private void createPublication(HttpServletRequest request, String name,
+      String componentId, String folderId, File file) throws Exception {
 
     PublicationDetail pub = PublicationDetail.builder().build();
     pub.setName(file.getName());
@@ -165,19 +119,12 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
     NodePK node = new NodePK(folderId);
     node.setComponentName(componentId);
 
-    String pubId = KmeliaService.get().createPublicationIntoTopic(pub, node);
+    String pubId = kmeliaService.createPublicationIntoTopic(pub, node);
     pk.setId(pubId);
 
-    KmeliaService.get().addAttachmentToPublication(pk, getUserInSession(request).getId(), name, "", FileUtils.readFileToByteArray(file));
-
-
-    SubscriptionSubscriberList l = SubscriptionServiceProvider.getSubscribeService()
-            .getSubscribers(NodeSubscriptionResource.from(node));
-
-
-    KmeliaService.get().getUserNotification(node).send();
-
-    return pubId;
+    kmeliaService.addAttachmentToPublication(pk, getUserInSession(request).getId(), name, "",
+        FileUtils.readFileToByteArray(file));
+    kmeliaService.getUserNotification(node).send();
   }
 
 }

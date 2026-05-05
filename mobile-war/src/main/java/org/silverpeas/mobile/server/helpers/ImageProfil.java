@@ -28,8 +28,8 @@ import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.io.file.SilverpeasFile;
 import org.silverpeas.core.io.file.SilverpeasFileProvider;
 
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
+import jakarta.activation.MimeType;
+import jakarta.activation.MimeTypeParseException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

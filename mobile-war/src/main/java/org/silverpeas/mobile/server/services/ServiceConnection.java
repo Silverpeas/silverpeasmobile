@@ -42,7 +42,6 @@ import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.mobile.server.dao.SecurityCode;
 import org.silverpeas.mobile.server.dao.statistics.StatisticsDAO;
-import org.silverpeas.mobile.server.dao.token.TokenDAO;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -51,19 +50,19 @@ import org.silverpeas.mobile.shared.exceptions.AuthenticationException.Authentic
 import ua_parser.Client;
 import ua_parser.Parser;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -151,7 +150,7 @@ public class ServiceConnection extends AbstractRestWebService {
     setUserInSession(user);
 
     try {
-      setMainsessioncontroller(login, password, domainId);
+      authenticate(login, password, domainId);
     } catch (SilverpeasException e) {
       throw new WebApplicationException(AuthenticationError.CanCreateMainSessionController.name());
     }

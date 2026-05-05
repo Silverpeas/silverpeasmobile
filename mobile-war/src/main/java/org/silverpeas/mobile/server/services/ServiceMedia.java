@@ -24,68 +24,38 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.apache.commons.fileupload.FileItem;
+import jakarta.activation.MimetypesFileTypeMap;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
 import org.silverpeas.components.gallery.GalleryComponentSettings;
 import org.silverpeas.components.gallery.constant.MediaResolution;
 import org.silverpeas.components.gallery.constant.MediaType;
 import org.silverpeas.components.gallery.delegate.MediaDataCreateDelegate;
-import org.silverpeas.components.gallery.model.AlbumDetail;
-import org.silverpeas.components.gallery.model.Media;
-import org.silverpeas.components.gallery.model.MediaCriteria;
-import org.silverpeas.components.gallery.model.MediaPK;
-import org.silverpeas.components.gallery.model.Photo;
+import org.silverpeas.components.gallery.model.*;
 import org.silverpeas.components.gallery.service.GalleryService;
-import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.Administration;
-import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.admin.service.OrganizationControllerProvider;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
 import org.silverpeas.core.node.model.NodePK;
-import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.core.util.file.FileItem;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.core.webapi.media.streaming.StreamingProviderDataEntity;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.server.common.LocalDiskFileItem;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
-import org.silverpeas.mobile.shared.dto.media.AlbumDTO;
-import org.silverpeas.mobile.shared.dto.media.MediaDTO;
-import org.silverpeas.mobile.shared.dto.media.PhotoDTO;
-import org.silverpeas.mobile.shared.dto.media.SoundDTO;
-import org.silverpeas.mobile.shared.dto.media.VideoDTO;
-import org.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
-import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.media.*;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.MediaException;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static org.silverpeas.kernel.util.StringUtil.EMPTY;
 
@@ -99,28 +69,27 @@ import static org.silverpeas.kernel.util.StringUtil.EMPTY;
 @Path(ServiceMedia.PATH + "/{appId}")
 public class ServiceMedia extends AbstractRestWebService {
 
-  @Context
-  HttpServletRequest request;
+  @Inject
+  private Administration admin;
+
+  @Inject
+  private GalleryService galleryService;
 
   @PathParam("appId")
   private String componentId;
 
   static final String PATH = "mobile/medialib";
 
-
-  private OrganizationController organizationController = OrganizationControllerProvider.getOrganisationController();
-
   /**
    * Importation d'une image dans un album.
    */
   @POST
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Consumes(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Consumes(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("add/{name}/{data}/{idGallery}/{idAlbum}")
   public void uploadPicture(@PathParam("name") String name, @PathParam("data") String data, @PathParam("idGallery") String idGallery, @PathParam("idAlbum") String idAlbum) {
     String extension = "jpg";
-    if (data.indexOf("data:image/jpeg;base64,") != -1) {
-      data = data.substring("data:image/jpeg;base64,".length());
+    if (data.contains("data:image/jpeg;base64,")) {
       extension = "jpg";
     }
 
@@ -134,57 +103,42 @@ public class ServiceMedia extends AbstractRestWebService {
       outputStream.close();
 
       File file = new File(filename);
-
-      // récupération de la configuration de la gallery
-      boolean watermark = "yes".equalsIgnoreCase(organizationController.getComponentParameterValue(idGallery, "watermark"));
-      boolean download = !"no".equalsIgnoreCase(organizationController.getComponentParameterValue(idGallery, "download"));
-      String watermarkHD = organizationController.getComponentParameterValue(idGallery, "WatermarkHD");
-      if(!StringUtil.isInteger(watermarkHD))  {
-        watermarkHD = "";
-      }
-      String watermarkOther = organizationController.getComponentParameterValue(idGallery, "WatermarkOther");
-      if(!StringUtil.isInteger(watermarkOther))  {
-        watermarkOther = "";
-      }
-
       // creation de la photo dans l'albums
-      createPhoto(name, getUser().getId(), idGallery, idAlbum, file, watermark, watermarkHD, watermarkOther, download);
-      file.delete();
+      createPhoto(idGallery, idAlbum, file);
+      Files.delete(file.toPath());
 
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.uploadPicture", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
     }
   }
 
-  private String createPhoto(String name, String userId, String componentId,
-      String albumId, File file, boolean watermark, String watermarkHD,
-      String watermarkOther, boolean download)
+  private void createPhoto(String componentId, String albumId, File file)
       throws Exception {
 
     // création de la photo
-    List<FileItem> parameters = new ArrayList<FileItem>();
+    List<FileItem> parameters = new ArrayList<>();
     String type = new MimetypesFileTypeMap().getContentType(file);
     LocalDiskFileItem item = new LocalDiskFileItem(file, type);
     parameters.add(item);
     MediaDataCreateDelegate
         delegate = new MediaDataCreateDelegate(MediaType.Photo, "fr", albumId, parameters);
 
-    Media newMedia = getGalleryService().createMedia(Administration.get().getUserDetail(getUser().getId()), componentId, GalleryComponentSettings.getWatermark(componentId), delegate);
+    Media newMedia = getGalleryService().createMedia(admin.getUserDetail(getUser().getId()), componentId, GalleryComponentSettings.getWatermark(componentId), delegate);
 
-    return newMedia.getId();
+    newMedia.getId();
   }
 
   /**
    * Retourne la liste des albums d'une appli media.
    */
-  private List<AlbumDTO> getAlbums(String instanceId, String rootAlbumId) throws MediaException, AuthenticationException {
+  private List<AlbumDTO> getAlbums(String instanceId, String rootAlbumId) throws MediaException {
 
-    ArrayList<AlbumDTO> results = new ArrayList<AlbumDTO>();
+    ArrayList<AlbumDTO> results = new ArrayList<>();
     try {
       if (rootAlbumId.equalsIgnoreCase("null")) rootAlbumId = null;
       if (rootAlbumId == null) {
         AlbumDTO rootAlbum = new AlbumDTO();
-        ComponentInstLight app = Administration.get().getComponentInstLight(instanceId);
+        ComponentInstLight app = admin.getComponentInstLight(instanceId);
         rootAlbum.setName(app.getLabel());
         rootAlbum.setRoot(true);
         results.add(rootAlbum);
@@ -209,13 +163,13 @@ public class ServiceMedia extends AbstractRestWebService {
         }
       }
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getAlbums", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
       throw new MediaException(e);
     }
     return results;
   }
 
-  private AlbumDTO populate(final AlbumDetail albumDetail) throws Exception {
+  private AlbumDTO populate(final AlbumDetail albumDetail) {
     AlbumDTO album = new AlbumDTO();
     album.setId(albumDetail.getId());
     album.setName(albumDetail.getName());
@@ -224,8 +178,8 @@ public class ServiceMedia extends AbstractRestWebService {
     return album;
   }
 
-  private int countMedias(final AlbumDetail albumDetail) throws Exception {
-    int count = 0;
+  private int countMedias(final AlbumDetail albumDetail) {
+    int count;
     Collection<Media> allMedias = getGalleryService().getAllMedia(albumDetail.getNodePK(),
             MediaCriteria.VISIBILITY.VISIBLE_ONLY);
     count = allMedias.size();
@@ -240,125 +194,117 @@ public class ServiceMedia extends AbstractRestWebService {
     return count;
   }
 
-  private List<MediaDTO> getMedias(String instanceId, String albumId) throws MediaException, AuthenticationException {
+  private List<MediaDTO> getMedias(String instanceId, String albumId) throws MediaException {
 
-    ArrayList<MediaDTO> results = new ArrayList<MediaDTO>();
+    ArrayList<MediaDTO> results = new ArrayList<>();
     if (albumId.equalsIgnoreCase("null")) albumId = null;
     if (albumId == null) return results;
     try {
       Collection<Media> medias = getGalleryService().getAllMedia(new NodePK(albumId, instanceId),
               MediaCriteria.VISIBILITY.VISIBLE_ONLY);
-      Iterator<Media> iMedias = medias.iterator();
-      while (iMedias.hasNext()) {
-        Media media = (Media) iMedias.next();
+      for (Media media : medias) {
         results.add(getMedia(media));
       }
       return results;
 
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getAllMedias", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
       throw new MediaException(e);
     }
   }
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("media/{id}")
-  public MediaDTO getMedia(@PathParam("appId") String instanceId, @PathParam("id") String id) {
-    MediaDTO dto = null;
+  public MediaDTO getMedia(@PathParam("id") String id) {
+    MediaDTO dto;
     try {
       Media media = getGalleryService().getMedia(new MediaPK(id));
       dto = getMedia(media);
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getMedia", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
       throw new WebApplicationException(e);
     }
     return dto;
   }
 
-  private MediaDTO getMedia(Media media) throws Exception {
+  private MediaDTO getMedia(Media media) {
     if (media.getType().isPhoto()) {
-      PhotoDTO photo = getPhoto(media.getInstanceId(), media.getId(), MediaResolution.SMALL);
-      return photo;
+      return getPhoto(media.getId(), MediaResolution.SMALL);
     } else if (media.getType().isSound()) {
-      SoundDTO sound = getSound(media);
-      return sound;
+      return getSound(media);
     } else if (media.getType().isStreaming()) {
-      VideoStreamingDTO video = getVideoStreaming(media);
-      return video;
+      return getVideoStreaming(media);
     } else if (media.getType().isVideo()) {
-      VideoDTO video = getVideo(media);
-      return video;
+      return getVideo(media);
     }
     return null;
   }
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("albumsandpics/{rootAlbumId}/{callNumber}")
   public StreamingList<BaseDTO> getAlbumsAndPictures(@PathParam("appId") String instanceId, @PathParam("rootAlbumId") String rootAlbumId, @PathParam("callNumber") int callNumber) {
     int callSize = 25;
 
     String cacheKey = instanceId+rootAlbumId;
-    CommandCreateList command = new CommandCreateList() {
-      @Override
-      public List execute() throws Exception {
-        List list = new ArrayList<BaseDTO>();
-        list.addAll(getAlbums(instanceId, rootAlbumId));
-        list.addAll(getMedias(instanceId, rootAlbumId));
-        return list;
-      }
+    CommandCreateList command = () -> {
+      List<BaseDTO> list = new ArrayList<>();
+      list.addAll(getAlbums(instanceId, rootAlbumId));
+      list.addAll(getMedias(instanceId, rootAlbumId));
+      return list;
     };
-    StreamingList streamingList = null;
+    StreamingList<BaseDTO> streamingList;
     try {
       streamingList = createStreamingList(command, callNumber, callSize, cacheKey);
     } catch (AuthenticationException e) {
       throw new NotAuthorizedException(e);
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getAlbumsAndPictures", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
       throw new WebApplicationException(e);
     }
     return streamingList;
   }
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("sound/{id}")
-  public SoundDTO getSound(@PathParam("appId") String instanceId, @PathParam("id") String soundId){
+  public SoundDTO getSound(@PathParam("id") String soundId){
 
-    Media sound = null;
+    Media sound;
     try {
       sound = getGalleryService().getMedia(new MediaPK(soundId));
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getSound", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
+      throw e;
     }
     return getSound(sound);
   }
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("video/{videoId}")
-  public VideoDTO getVideo(@PathParam("appId") String instanceId, @PathParam("videoId") String videoId) {
-
-    Media video = null;
+  public VideoDTO getVideo(@PathParam("videoId") String videoId) {
+    Media video;
     try {
       video = getGalleryService().getMedia(new MediaPK(videoId));
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getVideo", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
+      throw e;
     }
     return getVideo(video);
   }
 
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("videostream/{videoId}")
-  public VideoStreamingDTO getVideoStreaming(@PathParam("appId") String instanceId, @PathParam("videoId") String videoId) {
-
-    Media video = null;
+  public VideoStreamingDTO getVideoStreaming(@PathParam("videoId") String videoId) {
+    Media video;
     try {
       video = getGalleryService().getMedia(new MediaPK(videoId));
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getVideoStreaming", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
+      throw e;
     }
     return getVideoStreaming(video);
   }
@@ -367,15 +313,15 @@ public class ServiceMedia extends AbstractRestWebService {
    * Retourne la photo preview.
    */
   @GET
-  @Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
   @Path("photo/{pictureId}")
-  public PhotoDTO getPreviewPicture(@PathParam("appId") String instanceId, @PathParam("pictureId") String pictureId) {
-
-    PhotoDTO picture = null;
+  public PhotoDTO getPreviewPicture(@PathParam("pictureId") String pictureId) {
+    PhotoDTO picture;
     try {
-      picture = getPhoto(instanceId, pictureId, MediaResolution.PREVIEW);
+      picture = getPhoto(pictureId, MediaResolution.PREVIEW);
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error("ServiceMediaImpl.getPreviewPicture", "root.EX_NO_MESSAGE", e);
+      SilverLogger.getLogger(this).error(e);
+      throw e;
     }
     return picture;
   }
@@ -429,15 +375,9 @@ public class ServiceMedia extends AbstractRestWebService {
 
   private VideoDTO getVideo(Media media) {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
     long d = media.getVideo().getDuration() / 1000;
     Date duration = new Date(d*1000);
-    SimpleDateFormat durationFormat = new SimpleDateFormat("HH:mm:ss");
-    if (d < (60 * 59)) {
-      durationFormat = new SimpleDateFormat("mm:ss");
-    } else if (d < 59) {
-      durationFormat = new SimpleDateFormat("ss");
-    }
+    SimpleDateFormat durationFormat = getDurationFormat(d);
 
     VideoDTO video = new VideoDTO();
     video.setName(media.getName());
@@ -468,49 +408,11 @@ public class ServiceMedia extends AbstractRestWebService {
     return video;
   }
 
-  private byte[] getBytesFromInputStream(InputStream inStream)
-      throws IOException {
-
-    // Get the size of the file
-    long streamLength = inStream.available();
-
-    if (streamLength > Integer.MAX_VALUE) {
-      // File is too large
-    }
-
-    // Create the byte array to hold the data
-    byte[] bytes = new byte[(int) streamLength];
-
-    // Read in the bytes
-    int offset = 0;
-    int numRead = 0;
-    while (offset < bytes.length
-        && (numRead = inStream.read(bytes,
-        offset, bytes.length - offset)) >= 0) {
-      offset += numRead;
-    }
-
-    // Ensure all the bytes have been read in
-    if (offset < bytes.length) {
-      throw new IOException("Could not completely read file ");
-    }
-
-    // Close the input stream and return bytes
-    inStream.close();
-    return bytes;
-  }
-
   private SoundDTO getSound(Media media) {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
     long d = media.getSound().getDuration() / 1000;
     Date duration = new Date(d*1000);
-    SimpleDateFormat durationFormat = new SimpleDateFormat("HH:mm:ss");
-    if (d < (60 * 59)) {
-      durationFormat = new SimpleDateFormat("mm:ss");
-    } else if (d < 59) {
-      durationFormat = new SimpleDateFormat("ss");
-    }
+    SimpleDateFormat durationFormat = getDurationFormat(d);
 
     SoundDTO sound = new SoundDTO();
     sound.setName(media.getName());
@@ -541,7 +443,17 @@ public class ServiceMedia extends AbstractRestWebService {
     return sound;
   }
 
-  private PhotoDTO getPhoto(String instanceId, String pictureId, MediaResolution size) throws Exception {
+  private SimpleDateFormat getDurationFormat(long d) {
+    SimpleDateFormat durationFormat = new SimpleDateFormat("HH:mm:ss");
+    if (d < 59) {
+      durationFormat = new SimpleDateFormat("ss");
+    } else if (d < (60 * 59)) {
+      durationFormat = new SimpleDateFormat("mm:ss");
+    }
+    return durationFormat;
+  }
+
+  private PhotoDTO getPhoto(String pictureId, MediaResolution size) {
     PhotoDTO picture;
     Photo photoDetail = getGalleryService().getPhoto(new MediaPK(pictureId));
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -581,8 +493,8 @@ public class ServiceMedia extends AbstractRestWebService {
     return picture;
   }
 
-  private GalleryService getGalleryService() throws Exception {
-    return MediaServiceProvider.getMediaService();
+  private GalleryService getGalleryService() {
+    return galleryService;
   }
 
   @Override

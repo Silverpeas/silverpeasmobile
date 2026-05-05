@@ -1,8 +1,8 @@
 package org.silverpeas.mobile.server.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.silverpeas.kernel.SilverpeasException;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
-import org.silverpeas.core.security.authentication.AuthenticationResponse;
 import org.silverpeas.core.security.authentication.AuthenticationService;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 import org.silverpeas.core.security.session.SessionInfo;
@@ -17,9 +17,6 @@ import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.mobile.server.common.CommandCreateList;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,22 +35,11 @@ public abstract class AbstractRestWebService extends RESTWebService {
         .getAttribute(MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
   }
 
-  protected void setMainsessioncontroller(String login, String password, String domainId)
+  protected void authenticate(String login, String password, String domainId)
       throws SilverpeasException {
     AuthenticationService authService = AuthenticationServiceProvider.getService();
     AuthenticationCredential credential = AuthenticationCredential.newWithAsLogin(login);
-    AuthenticationResponse response =
-        authService.authenticate(credential.withAsPassword(password).withAsDomainId(domainId));
-    String key;
-    if (response == null) {
-      key = null;
-    } else if (response.getStatus().succeeded()) {
-      key = response.getToken();
-    } else {
-      key = response.getStatus().getCode();
-    }
-    MainSessionController mainSessionController =
-        new MainSessionController(key, getHttpRequest().getSession());
+    authService.authenticate(credential.withAsPassword(password).withAsDomainId(domainId));
   }
 
   protected void initSilverpeasSession(HttpServletRequest request) {
@@ -83,14 +69,15 @@ public abstract class AbstractRestWebService extends RESTWebService {
     }
   }
 
-  protected StreamingList createStreamingList(CommandCreateList command, int callNumber,
+  @SuppressWarnings("unchecked")
+  protected StreamingList<BaseDTO> createStreamingList(CommandCreateList command, int callNumber,
       int callSize, String cacheKey) throws Exception {
-    List list;
+    List<BaseDTO> list;
     if (callNumber == 0) {
       list = command.execute();
       getHttpRequest().getSession().setAttribute(cacheKey, list);
     } else {
-      list = (ArrayList<BaseDTO>) getHttpRequest().getSession().getAttribute(cacheKey);
+      list = (List<BaseDTO>) getHttpRequest().getSession().getAttribute(cacheKey);
     }
 
 
@@ -105,7 +92,7 @@ public abstract class AbstractRestWebService extends RESTWebService {
       callSize = list.size() - calledSize;
     }
     StreamingList<BaseDTO> streamingList =
-        new StreamingList<BaseDTO>(list.subList(calledSize, calledSize + callSize), moreElements);
+        new StreamingList<>(list.subList(calledSize, calledSize + callSize), moreElements);
     if (!streamingList.getMoreElement()) {
       getHttpRequest().getSession().removeAttribute(cacheKey);
     }
