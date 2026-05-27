@@ -28,7 +28,7 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
-import jakarta.ws.rs.*;
+import javax.ws.rs.*;
 
 @Path("/mobile/orgchartgroup")
 public interface ServiceOrgChartGroup extends RestService {

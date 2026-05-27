@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 public class DomainDTO implements  Serializable {
@@ -43,5 +45,12 @@ public class DomainDTO implements  Serializable {
   }
   public void setName(String name) {
     this.name = name;
+  }
+
+  public static DomainDTO fromJSON(JsPropertyMap<Object> json) {
+    DomainDTO dto = new DomainDTO();
+    dto.setId((String) json.get("id"));
+    dto.setName((String) json.get("name"));
+    return dto;
   }
 }

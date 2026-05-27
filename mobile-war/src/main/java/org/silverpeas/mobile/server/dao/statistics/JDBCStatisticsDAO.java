@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.server.dao.statistics;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import org.silverpeas.kernel.SilverpeasRuntimeException;
 import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.dao.token.JDBCTokenRequester;
@@ -39,7 +40,7 @@ import static org.silverpeas.core.persistence.jdbc.DBUtil.openConnection;
 /**
  * @author svu
  */
-@Named("statisticsDAO")
+@ApplicationScoped
 public class JDBCStatisticsDAO implements StatisticsDAO {
 
   @Inject

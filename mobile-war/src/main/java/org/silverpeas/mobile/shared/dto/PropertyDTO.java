@@ -1,10 +1,19 @@
 package org.silverpeas.mobile.shared.dto;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 public class PropertyDTO implements Serializable {
     private String key;
     private String value;
+
+    public static PropertyDTO fromJSON(JsPropertyMap<Object> json) {
+        PropertyDTO dto = new PropertyDTO();
+        dto.setKey((String) json.get("key"));
+        dto.setValue((String) json.get("value"));
+        return dto;
+    }
 
     public String getKey() {
         return key;

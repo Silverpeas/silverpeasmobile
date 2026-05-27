@@ -71,8 +71,8 @@
         <executions>
           <execution>
             <configuration>
-              <style>OBF</style>
-              <!--style>DETAILED</style-->
+              <!--style>OBF</style-->
+              <style>DETAILED</style>
               <modules>
                 <module>org.silverpeas.mobile.SpMobil</module>
               </modules>
@@ -391,6 +391,29 @@
       <version>2.1.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.elemental2</groupId>
+      <artifactId>elemental2-dom</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.elemental2</groupId>
+      <artifactId>elemental2-promise</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.elemental2</groupId>
+      <artifactId>elemental2-core</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>2.1.1</version>
+    </dependency>
 
   </dependencies>
 

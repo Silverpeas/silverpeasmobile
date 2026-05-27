@@ -38,6 +38,7 @@ import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -105,7 +106,7 @@ public class TwoFactorPage extends PageContent {
   void requestCode(ClickEvent event) {
     codeField.setText("");
     codeField.getElement().getStyle().clearBackgroundColor();
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -120,7 +121,7 @@ public class TwoFactorPage extends PageContent {
    */
   @UiHandler("go")
   void connexion(ClickEvent e) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -128,8 +129,8 @@ public class TwoFactorPage extends PageContent {
       }
 
       @Override
-      public void onSuccess(Method method, Boolean valid) {
-        super.onSuccess(method, valid);
+      public void onSuccess(Boolean valid) {
+        super.onSuccess(valid);
         if (valid) {
           AuthentificationManager.getInstance()
                   .authenticateOnSilverpeas(login, password, domainId, null);

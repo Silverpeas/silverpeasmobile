@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 
@@ -83,7 +84,7 @@ public class TermsOfServicePage extends PageContent {
 
   @UiHandler("accept")
   void accept(ClickEvent e) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -91,8 +92,8 @@ public class TermsOfServicePage extends PageContent {
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
-        super.onSuccess(method, unused);
+      public void onSuccess(final Void unused) {
+        super.onSuccess(unused);
         SpMobil.getMainPage().showFooter();
         SpMobil.displayMainPage();
       }

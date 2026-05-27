@@ -42,6 +42,9 @@ import org.silverpeas.mobile.client.common.event.authentication.AuthenticationEr
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -169,7 +172,7 @@ public class AuthentificationManager {
                 SpMobil.displayMainPage();
               } else if (statusError == 401 || statusError == 500) {
 
-                MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
+                RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
                   @Override
                   public void attempt() {
                     super.attempt();
@@ -177,14 +180,14 @@ public class AuthentificationManager {
                   }
 
                   @Override
-                  public void onFailure(final Method method, final Throwable t) {
+                  public void onFailure(final RestMethod method, final Throwable t) {
                     super.onFailure(method, t);
                     EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
                   }
 
                   @Override
-                  public void onSuccess(final Method method, final Boolean exist) {
-                    super.onSuccess(method, exist);
+                  public void onSuccess(final Boolean exist) {
+                    super.onSuccess(exist);
                     if (exist) {
                       AuthenticationException ex = new AuthenticationException(
                           AuthenticationException.AuthenticationError.PwdNotAvailable);
@@ -214,7 +217,7 @@ public class AuthentificationManager {
               SpMobil.setUserProfile(userProfile);
 
 
-              MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
+              RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<DetailUserDTO>() {
                 @Override
                 public void attempt() {
                   super.attempt();
@@ -227,8 +230,8 @@ public class AuthentificationManager {
                 }
 
                 @Override
-                public void onSuccess(final Method method, final DetailUserDTO user) {
-                  super.onSuccess(method, user);
+                public void onSuccess(final DetailUserDTO user) {
+                  super.onSuccess(user);
                   SpMobil.setUser(user, true);
 
                   ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
@@ -261,7 +264,7 @@ public class AuthentificationManager {
                 }
 
                 @Override
-                public void onFailure(final Method method, final Throwable t) {
+                public void onFailure(final RestMethod method, final Throwable t) {
                   //super.onFailure(method, t);
                   GWT.log("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
                   if (t instanceof AuthenticationException) {

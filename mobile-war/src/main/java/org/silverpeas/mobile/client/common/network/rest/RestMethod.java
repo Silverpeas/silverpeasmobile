@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -22,23 +22,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.silverpeas.mobile.shared.services.rest;
+package org.silverpeas.mobile.client.common.network.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
+import elemental2.dom.RequestInit;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+public class RestMethod {
 
-/**
- * @author svu
- */
-@Path("/mobile/hyperlink")
-public interface ServiceHyperLink extends RestService {
+    private String HTTPMethod;
+    private String url;
+    private int statusCode;
 
-  @GET
-  @Path("{appId}/")
-  public void getUrl(@PathParam("appId") String appId, MethodCallback<HyperLinkDTO> callback);
+    public RestMethod(RequestInit init) {
+        this.HTTPMethod = init.getMethod();
+        this.url = init.getReferrer();
+    }
+
+    public String getHTTPMethod() {
+        return HTTPMethod;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
 }

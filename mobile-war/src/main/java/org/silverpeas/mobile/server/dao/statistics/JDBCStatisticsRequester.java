@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.server.dao.statistics;
 
 
+import jakarta.enterprise.context.ApplicationScoped;
 import org.silverpeas.core.persistence.jdbc.DBUtil;
 
 import jakarta.inject.Singleton;
@@ -39,7 +40,7 @@ import java.util.List;
 /**
  * @author svu
  */
-@Singleton
+@ApplicationScoped
 public class JDBCStatisticsRequester {
 
   protected JDBCStatisticsRequester() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,67 +24,73 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/mobile/connection")
-public interface ServiceConnection extends RestService {
+public class ServiceConnection extends AbstractService {
+    public final static String PATH = "/silverpeas/services/mobile/connection";
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("securityCode/{login}/{domainId}")
-  void generateSecurityCode(@PathParam("login") String login, @PathParam("domainId") String domainId,
-    MethodCallback<Void> callback);
+    public void generateSecurityCode(String login, String domainId, RestCallback<Void> callback) {
+        get(PATH + "/securityCode/" + encode(login) + "/" + encode(domainId),
+                result -> null,
+                callback);
+    }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("securityCode/check/{login}/{domainId}/{code}")
-  void checkSecurityCode(@PathParam("login") String login, @PathParam("domainId") String domainId,
-                                   @PathParam("code") String code, MethodCallback<Boolean> callback);
+    public void checkSecurityCode(String login, String domainId, String code, RestCallback<Boolean> callback) {
+        get(PATH + "/securityCode/" + encode(login) + "/" + encode(domainId) + "/" + encode(code),
+                this::asBoolean,
+                callback);
+    }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("domains/")
-  void getDomains(MethodCallback<List<DomainDTO>> callback);
+    public void getDomains(RestCallback<List<DomainDTO>> callback) {
+        get(PATH + "/domains/",
+                this::mapDomains,
+                callback);
+    }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("setTabletMode/")
-  void setTabletMode(MethodCallback<Boolean> callback);
+    private List<DomainDTO> mapDomains(Object result) {
+        return mapArray(result, DomainDTO::fromJSON);
+    }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("userExist/{login}/{domainId}")
-  void userExist(@PathParam("login") String login, @PathParam("domainId") String domainId,
-      MethodCallback<Boolean> callback);
+    public void setTabletMode(RestCallback<Boolean> callback) {
+        put(PATH + "/setTabletMode/",
+                null,
+                this::asBoolean,
+                callback);
+    }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("userAcceptsTermsOfService/")
-  void userAcceptsTermsOfService(MethodCallback<Void> callback);
+    public void userExist(String login, String domainId, RestCallback<Boolean> callback) {
+        get(PATH + "/userExist/" + encode(login) + "/" + encode(domainId),
+                this::asBoolean,
+                callback);
+    }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("changePwd/")
-  void changePwd(String newPwd, MethodCallback<Void> callback);
+    public void userAcceptsTermsOfService(RestCallback<Void> callback) {
+        put(PATH + "/userAcceptsTermsOfService/",
+                null,
+                result -> null,
+                callback);
+    }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("login")
-  void login(List<String> ids, MethodCallback<DetailUserDTO> callback);
+    public void changePwd(String newPwd, RestCallback<Void> callback) {
+        put(PATH + "/changePwd/" + encode(newPwd),
+                null,
+                result -> null,
+                callback);
+    }
+
+    public void login(List<String> ids, RestCallback<DetailUserDTO> callback) {
+        post(PATH + "/login/",
+                toJsonArray(ids),
+                result -> DetailUserDTO.fromJSON(
+                        (JsPropertyMap<Object>) result
+                ),
+                callback
+        );
+    }
 
 }

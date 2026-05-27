@@ -40,6 +40,8 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -194,7 +196,7 @@ public class ConnexionPage extends PageContent {
    */
   private void loadDomains() {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<DomainDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<DomainDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -202,8 +204,8 @@ public class ConnexionPage extends PageContent {
       }
 
       @Override
-      public void onSuccess(final Method method, final List<DomainDTO> result) {
-        super.onSuccess(method, result);
+      public void onSuccess(final List<DomainDTO> result) {
+        super.onSuccess(result);
         displayDomains(result);
       }
     };

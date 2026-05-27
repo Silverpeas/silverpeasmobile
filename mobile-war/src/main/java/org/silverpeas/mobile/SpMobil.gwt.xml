@@ -35,6 +35,10 @@
 
   <inherits name="com.googlecode.gwt.crypto.Crypto"/>
 
+  <inherits name="elemental2.core.Core"/>
+  <inherits name="elemental2.dom.Dom"/>
+  <inherits name="elemental2.promise.Promise"/>
+
   <source path="client"/>
   <source path="shared"/>
   <entry-point class="org.silverpeas.mobile.client.SpMobil"/>

@@ -77,7 +77,7 @@ public class ServiceConnection extends AbstractRestWebService {
   private static ConcurrentHashMap<String, SecurityCode> securityCodeRequests = new ConcurrentHashMap<>();
   private static long CODE_MAX_DURATION = 30;
 
-  @Inject
+  /*@Inject*/ //TODO : Fix injection
   ChatUserAuthenticationListener chatUserAuthenticationListener;
 
   @Context
@@ -168,7 +168,7 @@ public class ServiceConnection extends AbstractRestWebService {
     }
 
     // chat init
-    chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, user, "");
+    if (chatUserAuthenticationListener != null) chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, user, "");
 
     // Add connexion in stats
     statisticsDAO.saveLoginEvent(Long.parseLong(userId), getPlatform(),getSettings().getString("version"),

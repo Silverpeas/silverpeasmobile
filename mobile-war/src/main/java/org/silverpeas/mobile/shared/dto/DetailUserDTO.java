@@ -24,6 +24,9 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +55,41 @@ public class DetailUserDTO implements Serializable{
   private List<PropertyDTO> properties = new ArrayList<>();
   private Map<String, String> propertiesLabel = new HashMap<>();
 
-  public void addPropertyLabel(String prop, String label) {
+    public static DetailUserDTO fromJSON(JsPropertyMap<Object> json) {
+      DetailUserDTO dto = new DetailUserDTO();
+      dto.setId((String) json.get("id"));
+      dto.setLastName((String) json.get("lastName"));
+      dto.seteMail((String) json.get("eMail"));
+      dto.setFirstName((String) json.get("firstName"));
+
+      dto.setAvatar((String) json.get("avatar"));
+      dto.setPhoneNumber((String) json.get("phoneNumber"));
+      dto.setCellularPhoneNumber((String) json.get("cellularPhoneNumber"));
+      dto.setFaxPhoneNumber((String) json.get("faxPhoneNumber"));
+      dto.setStatus((String) json.get("status"));
+      dto.setLanguage((String) json.get("language"));
+      dto.setToken((String) json.get("token"));
+      dto.setZone((String) json.get("zone"));
+      dto.setSessionKey((String) json.get("sessionKey"));
+
+      Object connected = json.get("connected");
+      if (connected != null) {
+        dto.setConnected((boolean) connected);
+      }
+
+      Object notificationBox = json.get("notificationBox");
+      if (notificationBox != null) {
+        dto.setNotificationBox((boolean) notificationBox);
+      }
+
+      Object ldap = json.get("ldap");
+      if (ldap != null) {
+        dto.setLdap((boolean) ldap);
+      }
+      return dto;
+    }
+
+    public void addPropertyLabel(String prop, String label) {
     this.propertiesLabel.put(prop, label);
   }
 
