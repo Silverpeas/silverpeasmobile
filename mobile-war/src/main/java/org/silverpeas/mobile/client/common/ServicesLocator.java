@@ -32,12 +32,9 @@ import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
 import org.silverpeas.mobile.shared.services.rest.*;
 
 public class ServicesLocator {
-  private static SpMobileRpcRequestBuilder builder = new SpMobileRpcRequestBuilder();
   private static RestDispatcher dispatcher = new RestDispatcher();
 
-  private static org.silverpeas.mobile.shared.services.rest.ServiceConnection serviceConnectionRest = GWT.create(
-      org.silverpeas.mobile.shared.services.rest.ServiceConnection.class);
-
+  private static ServiceConnection serviceConnectionRest = GWT.create(ServiceConnection.class);
   private static ServiceContact serviceContact = GWT.create(ServiceContact.class);
   private static ServiceTask serviceTasks = GWT.create(ServiceTask.class);
   private static ServiceNavigation serviceNavigation = GWT.create(ServiceNavigation.class);
@@ -216,7 +213,6 @@ public class ServicesLocator {
   }
 
   public static ServiceConnection getServiceConnection() {
-    initRestContext();
     return serviceConnectionRest;
   }
 

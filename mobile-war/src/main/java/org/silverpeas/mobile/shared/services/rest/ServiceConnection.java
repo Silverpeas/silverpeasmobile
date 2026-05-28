@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
+import elemental2.core.Global;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -41,7 +42,7 @@ public class ServiceConnection extends AbstractService {
     }
 
     public void checkSecurityCode(String login, String domainId, String code, RestCallback<Boolean> callback) {
-        get(PATH + "/securityCode/" + encode(login) + "/" + encode(domainId) + "/" + encode(code),
+        get(PATH + "/securityCode/check/" + encode(login) + "/" + encode(domainId) + "/" + encode(code),
                 this::asBoolean,
                 callback);
     }
@@ -77,8 +78,8 @@ public class ServiceConnection extends AbstractService {
     }
 
     public void changePwd(String newPwd, RestCallback<Void> callback) {
-        put(PATH + "/changePwd/" + encode(newPwd),
-                null,
+        put(PATH + "/changePwd/",
+                Global.JSON.stringify(newPwd),
                 result -> null,
                 callback);
     }
