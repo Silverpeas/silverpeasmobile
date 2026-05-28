@@ -25,8 +25,6 @@
 package org.silverpeas.mobile.client.apps.blog;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.blog.events.app.AbstractBlogAppEvent;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogAppEventHandler;
 import org.silverpeas.mobile.client.apps.blog.events.app.BlogLoadEvent;
@@ -40,9 +38,8 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
-import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 
 import java.util.List;
@@ -69,7 +66,7 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
 
   @Override
   public void loadBlog(final BlogLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<PostDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<PostDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -77,8 +74,8 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
       }
 
       @Override
-      public void onSuccess(final Method method, final List<PostDTO> posts) {
-        super.onSuccess(method, posts);
+      public void onSuccess(final List<PostDTO> posts) {
+        super.onSuccess(posts);
         EventBus.getInstance().fireEvent(new BlogLoadedEvent(posts));
       }
     };

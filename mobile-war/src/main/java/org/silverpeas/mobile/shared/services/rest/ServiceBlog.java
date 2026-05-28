@@ -24,23 +24,31 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/mobile/blog")
-public interface ServiceBlog extends RestService {
+public class ServiceBlog extends AbstractService {
 
-  @GET
+  public final static String PATH = "/silverpeas/services/mobile/blog/";
+
+  /*@GET
   @Path("{appId}/category/{categoryId}")
   public void getPosts(@PathParam("appId") String appId, @PathParam("categoryId") String categoryId, MethodCallback<List<PostDTO>> callback);
+*/
+
+  public void getPosts(String appId, String categoryId, RestCallback<List<PostDTO>> callback) {
+    get(PATH + encode(appId) + "/category/" + encode(categoryId),
+            this::mapPosts,
+            callback);
+  }
+
+  private List<PostDTO> mapPosts(Object result) {
+    return mapArray(result, PostDTO::fromJSON);
+  }
 
 }

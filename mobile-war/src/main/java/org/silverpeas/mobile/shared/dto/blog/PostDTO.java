@@ -24,7 +24,9 @@
 
 package org.silverpeas.mobile.shared.dto.blog;
 
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.DomainDTO;
 
 import java.io.Serializable;
 
@@ -112,4 +114,17 @@ public class PostDTO extends BaseDTO implements Serializable {
   public void setInstanceId(final String instanceId) {
     this.instanceId = instanceId;
   }
+
+    public static PostDTO fromJSON(JsPropertyMap<Object> json) {
+      PostDTO dto = new PostDTO();
+      dto.setId((String) json.get("id"));
+      dto.setTitle((String) json.get("title"));
+      dto.setCategoryId((String) json.get("categoryId"));
+      dto.setCategoryName((String) json.get("categoryName"));
+      dto.setCreatorName((String) json.get("creatorName"));
+      dto.setDateEvent((String) json.get("dateEvent"));
+      dto.setCreationDate((String) json.get("creationDate"));
+      dto.setInstanceId((String) json.get("instanceId"));
+      return dto;
+    }
 }

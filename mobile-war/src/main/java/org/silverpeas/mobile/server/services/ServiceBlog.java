@@ -68,7 +68,7 @@ public class ServiceBlog extends AbstractRestWebService {
     if (categoryId.equalsIgnoreCase("all")) {
       posts = BlogServiceFactory.getBlogService().getAllPosts(componentId);
     } else {
-      posts = BlogServiceFactory.getBlogService().getPostsByCategory(categoryId, componentId, new BlogFilters(false));
+      posts = BlogServiceFactory.getBlogService().getPostsByCategory(componentId, categoryId, new BlogFilters(false));
     }
 
     postsDTO = populate(posts);
