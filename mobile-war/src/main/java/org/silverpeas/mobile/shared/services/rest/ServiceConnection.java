@@ -79,7 +79,7 @@ public class ServiceConnection extends AbstractService {
 
     public void changePwd(String newPwd, RestCallback<Void> callback) {
         put(PATH + "/changePwd/",
-                Global.JSON.stringify(newPwd),
+                newPwd,
                 result -> null,
                 callback);
     }
