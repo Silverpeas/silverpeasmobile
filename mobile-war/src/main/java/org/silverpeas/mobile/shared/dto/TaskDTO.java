@@ -25,16 +25,30 @@
 package org.silverpeas.mobile.shared.dto;
 
 
-public class TaskDTO extends BaseDTO {
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jsinterop.base.JsPropertyMap;
+
+import java.io.Serializable;
+
+public class TaskDTO implements Serializable {
 
   private static final long serialVersionUID = 2921606984249560882L;
 
+  private String id;
   private int percentCompleted;
   private String priority;
   private String name = "";
   private String delegator = "";
   private String endDate = "";
   private String externalId;
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(final String id) {
+    this.id = id;
+  }
 
   @Override
   public boolean equals(Object obj) {
@@ -87,5 +101,36 @@ public class TaskDTO extends BaseDTO {
 
   public String getExternalId() {
     return externalId;
+  }
+
+    public static TaskDTO fromJSON(JsPropertyMap<Object> json) {
+      TaskDTO dto = new TaskDTO();
+      dto.setId((String) json.get("id"));
+      dto.setName((String) json.get("name"));
+      Object percentObj = json.get("percentCompleted");
+      if (percentObj != null) {
+        dto.setPercentCompleted(((Number) percentObj).intValue());
+      }
+
+      dto.setPriority((String) json.get("priority"));
+      dto.setDelegator((String) json.get("delegator"));
+      dto.setEndDate((String) json.get("endDate"));
+      dto.setExternalId((String) json.get("externalId"));
+
+      return dto;
+    }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("id", getId());
+    json.set("name", getName());
+    json.set("percentCompleted", getPercentCompleted());
+    json.set("priority", getPriority());
+    json.set("delegator", getDelegator());
+    json.set("endDate", getEndDate());
+    json.set("externalId", getExternalId());
+
+    return json;
   }
 }

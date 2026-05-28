@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -35,11 +36,6 @@ import java.util.List;
 public class ServiceBlog extends AbstractService {
 
   public final static String PATH = "/silverpeas/services/mobile/blog/";
-
-  /*@GET
-  @Path("{appId}/category/{categoryId}")
-  public void getPosts(@PathParam("appId") String appId, @PathParam("categoryId") String categoryId, MethodCallback<List<PostDTO>> callback);
-*/
 
   public void getPosts(String appId, String categoryId, RestCallback<List<PostDTO>> callback) {
     get(PATH + encode(appId) + "/category/" + encode(categoryId),

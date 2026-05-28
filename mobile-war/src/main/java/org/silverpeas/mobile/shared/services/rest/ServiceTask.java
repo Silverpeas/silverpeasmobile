@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,42 +24,63 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import elemental2.core.JsArray;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/mobile/personalTask")
-public interface ServiceTask extends RestService {
+public class ServiceTask extends AbstractService {
 
+  public final static String PATH = "/silverpeas/services/mobile/personalTask";
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("all")
-  public void loadTasks(MethodCallback<List<TaskDTO>> callback);
+  public void loadTasks(RestCallback<List<TaskDTO>> callback) {
+    get(PATH + "/all/",
+            this::mapTasks,
+            callback);
+  }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("")
-  public void updateTask(TaskDTO task, MethodCallback<Void> callback);
+  private List<TaskDTO> mapTasks(Object result) {
+    return mapArray(result, TaskDTO::fromJSON);
+  }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("")
-  public void deleteTasks(List<TaskDTO> tasks, MethodCallback<Void> callback);
+  public void updateTask(TaskDTO task, RestCallback<Void> callback) {
+    put(PATH,
+            Global.JSON.stringify(Js.asAny(task.toJSON())),
+            null,
+            callback);
+  }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("")
-  public void createTask(TaskDTO task, MethodCallback<TaskDTO> callback);
+  public void deleteTasks(List<TaskDTO> tasks, RestCallback<Void> callback) {
+
+    JsArray<Object> array = new JsArray<>();
+    for (TaskDTO task : tasks) {
+      array.push(task.toJSON());
+    }
+    String payload = Global.JSON.stringify(array);
+
+    delete(
+            PATH,
+            payload,
+            obj -> null,
+            callback
+    );
+  }
+
+  public void createTask(TaskDTO task, RestCallback<TaskDTO> callback) {
+    post(PATH,
+            Global.JSON.stringify(Js.asAny(task.toJSON())),
+            result -> TaskDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback
+    );
+  }
 
 }

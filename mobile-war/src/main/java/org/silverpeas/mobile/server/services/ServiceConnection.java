@@ -385,12 +385,12 @@ public class ServiceConnection extends AbstractRestWebService {
   }
 
   protected void setUserInSession(UserDetail user) {
-    request.getSession().setAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME, user);
+    request.getSession().setAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME, user);
   }
 
   protected UserDetail getUserInSession() {
     return (UserDetail) request.getSession()
-        .getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+        .getAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME);
   }
 
   @Override

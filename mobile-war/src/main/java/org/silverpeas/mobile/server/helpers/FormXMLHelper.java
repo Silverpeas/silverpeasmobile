@@ -4,13 +4,13 @@ import org.silverpeas.core.contribution.template.publication.PublicationTemplate
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.silverpeas.mobile.server.services.AbstractRestWebService;
 
 public class FormXMLHelper {
 
-    public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = AbstractAuthenticateService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME;
+    public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = AbstractRestWebService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME;
 
     public static PublicationTemplate getXMLTemplate(HttpServletRequest request, String instanceId)
             throws Exception {

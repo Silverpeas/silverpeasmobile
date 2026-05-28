@@ -186,11 +186,11 @@ public class ServiceNavigation extends AbstractRestWebService {
     }
 
     protected void setUserInSession(UserDetail user) {
-        request.getSession().setAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME, user);
+        request.getSession().setAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME, user);
     }
 
     protected UserDetail getUserInSession() {
-        return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+        return (UserDetail) request.getSession().getAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME);
     }
 
     private AuroraSpaceHomePageConfig getAuroraSpaceHomePageConfig(String spaceId) {

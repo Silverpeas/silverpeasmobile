@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpSessionListener;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.silverstatistics.volume.service.SilverStatisticsManager;
 import org.silverpeas.mobile.server.helpers.MediaHelper;
-import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
+import org.silverpeas.mobile.server.services.AbstractRestWebService;
 
 import java.util.Date;
 
@@ -55,7 +55,7 @@ public class SessionManager implements HttpSessionListener {
       MediaHelper.cleanTemporaryFiles(httpSessionEvent.getSession().getId());
 
       UserDetail user = (UserDetail) httpSessionEvent.getSession()
-          .getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+          .getAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME);
       if (user != null) {
         Date now = new Date();
         long duration = now.getTime() - httpSessionEvent.getSession().getCreationTime();

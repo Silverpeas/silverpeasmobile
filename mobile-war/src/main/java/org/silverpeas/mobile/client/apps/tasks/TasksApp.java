@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
@@ -71,7 +72,7 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
   public void loadTasks(final TasksLoadEvent event) {
     Notification.activityStart();
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TaskDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<TaskDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -79,8 +80,8 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
       }
 
       @Override
-      public void onSuccess(final Method method, final List<TaskDTO> tasks) {
-        super.onSuccess(method, tasks);
+      public void onSuccess(final List<TaskDTO> tasks) {
+        super.onSuccess(tasks);
         EventBus.getInstance().fireEvent(new TasksLoadedEvent(tasks));
       }
     };
@@ -90,7 +91,7 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
   @Override
   public void updateTask(final TaskUpdateEvent event) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -98,8 +99,8 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
-        super.onSuccess(method, unused);
+      public void onSuccess(final Void unused) {
+        super.onSuccess(unused);
         EventBus.getInstance().fireEvent(new TaskUpdatedEvent(event.getTask()));
       }
     };
@@ -109,7 +110,7 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
   @Override
   public void createTask(final TaskCreateEvent event) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<TaskDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<TaskDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -117,8 +118,8 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
       }
 
       @Override
-      public void onSuccess(final Method method, final TaskDTO taskDTO) {
-        super.onSuccess(method, taskDTO);
+      public void onSuccess(final TaskDTO taskDTO) {
+        super.onSuccess(taskDTO);
         EventBus.getInstance().fireEvent(new TaskCreatedEvent(taskDTO));
       }
     };
@@ -127,15 +128,15 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
 
   @Override
   public void deleteTask(TasksDeleteEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
         ServicesLocator.getServiceTasks().deleteTasks(event.getTasks(), this);
       }
       @Override
-      public void onSuccess(Method method, Void unused) {
-        super.onSuccess(method, unused);
+      public void onSuccess(Void unused) {
+        super.onSuccess(unused);
         loadTasks(new TasksLoadEvent());
       }
     };

@@ -24,6 +24,7 @@ import java.util.List;
  */
 public abstract class AbstractRestWebService extends RESTWebService {
 
+  public static final String USER_ATTRIBUT_NAME = "user";
   public static final String MAINSESSIONCONTROLLER_ATTRIBUT_NAME = "SilverSessionController";
 
   protected static SettingBundle getSettings() {

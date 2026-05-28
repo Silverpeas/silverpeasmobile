@@ -24,7 +24,6 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import elemental2.core.Global;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;

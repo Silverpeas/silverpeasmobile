@@ -31,11 +31,12 @@ import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.AntivirusHelper;
 import org.silverpeas.mobile.server.helpers.AntivirusResult;
-import org.silverpeas.mobile.server.services.AbstractAuthenticateService;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.silverpeas.mobile.server.services.AbstractRestWebService;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,17 +44,17 @@ import java.io.IOException;
 public abstract class AbstractSilverpeasMobileServlet extends HttpServlet {
 
     protected void checkUserInSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME) == null) {
+        if (request.getSession().getAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME) == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
     protected UserDetail getUserInSession(HttpServletRequest request) {
-        return (UserDetail) request.getSession().getAttribute(AbstractAuthenticateService.USER_ATTRIBUT_NAME);
+        return (UserDetail) request.getSession().getAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME);
     }
 
     protected MainSessionController getMainSessionController(HttpServletRequest request) throws Exception {
-        MainSessionController mainSessionController = (MainSessionController) request.getSession().getAttribute(AbstractAuthenticateService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
+        MainSessionController mainSessionController = (MainSessionController) request.getSession().getAttribute(AbstractRestWebService.MAINSESSIONCONTROLLER_ATTRIBUT_NAME);
         return mainSessionController;
     }
 
