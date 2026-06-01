@@ -24,58 +24,82 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
  * @author svu
  */
 public class MyLinkCategoryDTO implements Serializable {
+    @JsonIgnore
+    private Number catId;
+    private String uri;
 
-  private String catId;
+    @JsonIgnore
+    private Number position;
+    private String name;
+    private String description;
 
-  private String position;
-  private String name;
-  private String description;
+    private String userId;
 
-  private String userId;
+    public String getUri() {
+        return uri;
+    }
 
-  public String getCatId() {
-    return catId;
-  }
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
 
-  public void setCatId(String catId) {
-    this.catId = catId;
-  }
+    public Number getCatId() {
+        return catId;
+    }
 
-  public String getPosition() {
-    return position;
-  }
+    public void setCatId(Number catId) {
+        this.catId = catId;
+    }
 
-  public void setPosition(String position) {
-    this.position = position;
-  }
+    public Number getPosition() {
+        return position;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public void setPosition(Number position) {
+        this.position = position;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public String getUserId() {
-    return userId;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public static MyLinkCategoryDTO fromJSON(JsPropertyMap<Object> json) {
+        MyLinkCategoryDTO dto = new MyLinkCategoryDTO();
+        dto.setUri((String) json.get("uri"));
+        dto.setCatId((Number) json.get("catId"));
+        dto.setPosition((Number) json.get("position"));
+        dto.setName((String) json.get("name"));
+        dto.setDescription((String) json.get("description"));
+        dto.setUserId((String) json.get("userId"));
+        return dto;
+    }
 }

@@ -25,16 +25,17 @@
 package org.silverpeas.mobile.shared.services.rest;
 
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
+import elemental2.core.Global;
 import elemental2.core.JsArray;
-import elemental2.dom.AbortController;
-import elemental2.dom.DomGlobal;
-import elemental2.dom.Headers;
-import elemental2.dom.RequestInit;
+import elemental2.dom.*;
+import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.network.SpMobileRequestBuilder;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+
 import static elemental2.dom.DomGlobal.fetch;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class AbstractService {
         return URL.encodeQueryString(param);
     }
 
-    public RequestInit initRequest (String method, String contentType) {
+    public RequestInit initRequest(String method, String contentType) {
         AbortController controller = new AbortController();
         RequestInit init = RequestInit.create();
         init.setMethod(method);
@@ -102,15 +103,27 @@ public class AbstractService {
                         return null;
                     }
 
-                    return response.json();
+                    return response.text();
+                })
+                .then(text -> {
+                    if (text == null || text.trim().isEmpty()) {
+                        callback.onSuccess(null);
+                        return null;
+                    }
+                    return Js.cast(Global.JSON.parse(text));
                 })
                 .then(result -> {
+                    if (result == null) {
+                        callback.onSuccess(null);
+                        return null;
+                    }
+
                     callback.onSuccess(mapper.apply(result));
                     return null;
                 })
                 .catch_(err -> {
                     callback.onFailure(restMethod,
-                            new RuntimeException(err.toString()));
+                            new RuntimeException(err != null ? err.toString() : "unknown error"));
                     return null;
                 });
     }
@@ -119,7 +132,6 @@ public class AbstractService {
             String url,
             Function<Object, T> mapper,
             RestCallback<T> callback) {
-
         request("GET", url, null, mapper, callback);
     }
 
@@ -140,6 +152,7 @@ public class AbstractService {
 
         request("PUT", url, body, mapper, callback);
     }
+
     protected <T> void delete(
             String url,
             Object body,
@@ -156,7 +169,7 @@ public class AbstractService {
                 .collect(java.util.stream.Collectors.joining(",", "[", "]"));
     }
 
-    protected  <T> List<T> mapArray(
+    protected <T> List<T> mapArray(
             Object result,
             Function<JsPropertyMap<Object>, T> mapper) {
 

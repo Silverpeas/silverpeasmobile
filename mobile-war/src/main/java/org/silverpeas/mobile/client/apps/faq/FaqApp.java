@@ -100,7 +100,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (!event.getContent().getInstanceId().startsWith(Apps.questionReply.name())) return;
+    if (event.getContent().getInstanceId() == null || !event.getContent().getInstanceId().startsWith(Apps.questionReply.name())) return;
     if (event.getContent().getType().equals("Component")) {
       super.showContent(event);
     }

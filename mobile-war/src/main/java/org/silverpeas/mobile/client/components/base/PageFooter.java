@@ -107,6 +107,7 @@ public class PageFooter extends Composite {
     PageHistory.getInstance().goBackToFirst();
     ContentDTO content = new ContentDTO();
     content.setType(ContentsTypes.Favortis.toString());
+    content.setInstanceId("");
     EventBus.getInstance().fireEvent(new NavigationShowContentEvent(content));
     RippleAnimation.play(event, 150);
   }

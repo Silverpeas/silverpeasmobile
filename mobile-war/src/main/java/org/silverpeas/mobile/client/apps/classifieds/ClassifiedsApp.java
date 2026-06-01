@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.classifieds;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.AbstractClassifiedsAppEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsAppEventHandler;
@@ -145,7 +146,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (!event.getContent().getInstanceId().startsWith(Apps.classifieds.name())) return;
+    if (event.getContent().getInstanceId() == null || !event.getContent().getInstanceId().startsWith(Apps.classifieds.name())) return;
     if (event.getContent().getType().equals("Component")) {
       super.showContent(event);
     } else {

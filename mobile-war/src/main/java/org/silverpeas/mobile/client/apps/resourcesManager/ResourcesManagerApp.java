@@ -103,7 +103,7 @@ public class ResourcesManagerApp extends App
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    if (!event.getContent().getInstanceId().startsWith(Apps.resourcesManager.name())) return;
+    if (event.getContent().getInstanceId() == null || !event.getContent().getInstanceId().startsWith(Apps.resourcesManager.name())) return;
     if (event.getContent().getType().equals("Component")) {
       super.showContent(event);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,38 +24,58 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.MyLinkCategoryDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
-import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/mylinks")
-public interface ServiceMyLinks extends RestService {
+public class ServiceMyLinks extends AbstractService {
+
+  public final static String PATH = "/silverpeas/services/mylinks";
+
+  public void addLink(MyLinkDTO newLink, RestCallback<MyLinkDTO> callback) {
+    post(PATH,
+            Global.JSON.stringify(Js.asAny(newLink.toJSON())),
+            result -> MyLinkDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback
+    );
+  }
+
+  public void getMyLinks(RestCallback<List<MyLinkDTO>> callback) {
+    get(PATH,
+            this::mapMyLinks,
+            callback);
+  }
+
+  private List<MyLinkDTO> mapMyLinks(Object result) {
+    return mapArray(result, MyLinkDTO::fromJSON);
+  }
+
+  public void deleteLink(String linkId, RestCallback<Void> callback) {
+    delete(
+            PATH + "/" + encode(linkId),
+            null,
+            text -> null,
+            callback
+    );
+  }
+
+  private List<MyLinkCategoryDTO> mapMyLinkCategories(Object result) {
+    return mapArray(result, MyLinkCategoryDTO::fromJSON);
+  }
 
 
-  @POST
-  @Path("/")
-  public void addLink(MyLinkDTO newLink, MethodCallback<MyLinkDTO> callback);
-
-  @GET
-  @Path("/")
-  public void getMyLinks(MethodCallback<List<MyLinkDTO>> callback);
-
-  @DELETE
-  @Path("{linkId}")
-  public void deleteLink(final @PathParam("linkId") String linkId, MethodCallback<Void> callback);
-
-  @GET
-  @Path("categories")
-  @Produces(MediaType.APPLICATION_JSON)
-  public void getMyCategories(MethodCallback<List<MyLinkCategoryDTO>> callback);
-
+  public void getMyCategories(RestCallback<List<MyLinkCategoryDTO>> callback) {
+    get(PATH + "/categories",
+            this::mapMyLinkCategories,
+            callback);
+  }
 }

@@ -34,9 +34,9 @@ import org.silverpeas.mobile.shared.services.rest.*;
 public class ServicesLocator {
   private static RestDispatcher dispatcher = new RestDispatcher();
 
-  private static ServiceConnection serviceConnectionRest = GWT.create(ServiceConnection.class);
+  private static ServiceConnection serviceConnectionRest = new ServiceConnection();
   private static ServiceContact serviceContact = GWT.create(ServiceContact.class);
-  private static ServiceTask serviceTasks = GWT.create(ServiceTask.class);
+  private static ServiceTask serviceTasks = new ServiceTask();
   private static ServiceNavigation serviceNavigation = GWT.create(ServiceNavigation.class);
   private static ServiceRSE serviceRSE = GWT.create(ServiceRSE.class);
   private static ServiceDocuments serviceDocuments = GWT.create(ServiceDocuments.class);
@@ -49,7 +49,7 @@ public class ServicesLocator {
   private static ServiceWorkflow serviceWorkflow = GWT.create(ServiceWorkflow.class);
   private static ServiceHyperLink serviceHyperLink = GWT.create(ServiceHyperLink.class);
 
-  private static ServiceBlog serviceBlog = GWT.create(ServiceBlog.class);
+  private static ServiceBlog serviceBlog = new ServiceBlog();
   private static ServiceAuthentication serviceRestAuthentication = GWT.create(ServiceAuthentication.class);
   private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
   private static ServiceUserCalendar serviceUserCalendar = GWT.create(ServiceUserCalendar.class);
@@ -59,7 +59,7 @@ public class ServicesLocator {
   private static ServiceComment serviceRestComment = GWT.create(ServiceComment.class);
 
   private static ServiceTickets serviceRestTickets = GWT.create(ServiceTickets.class);
-  private static ServiceMyLinks serviceMyLinks = GWT.create(ServiceMyLinks.class);
+  private static ServiceMyLinks serviceMyLinks = new ServiceMyLinks();
   private static ServicePassword servicePassword = GWT.create(ServicePassword.class);
 
   private static ServiceFaq serviceFaq = GWT.create(ServiceFaq.class);
@@ -118,7 +118,7 @@ public class ServicesLocator {
   }
 
   public static ServiceMyLinks getServiceMyLinks() {
-    initRestContext();
+
     return serviceMyLinks;
   }
 

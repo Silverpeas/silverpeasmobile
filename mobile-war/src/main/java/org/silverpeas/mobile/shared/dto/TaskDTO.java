@@ -24,8 +24,7 @@
 
 package org.silverpeas.mobile.shared.dto;
 
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;

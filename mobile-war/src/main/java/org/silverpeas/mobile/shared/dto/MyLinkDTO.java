@@ -24,6 +24,10 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gwt.core.client.GWT;
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -31,113 +35,156 @@ import java.io.Serializable;
  */
 public class MyLinkDTO implements Serializable {
 
-  private String uri = "";
-  private int linkId = -1;
-  private int position = -1;
-  private String name = "";
-  private String description = "";
-  private String url = "";
-  private boolean visible = true;
-  private boolean popup = false;
-  private String userId = "";
-  private String instanceId = "";
-  private String objectId = "";
+    private String uri = "";
+    @JsonIgnore //TODO remove after RestyGWT removal
+    private Number linkId = -1;
+    @JsonIgnore
+    private Number position = -1;
+    private String name = "";
+    private String description = "";
+    private String url = "";
+    private Boolean visible = true;
+    private Boolean popup = false;
+    private String userId = "";
+    private String instanceId = "";
+    private String objectId = "";
 
-  private String categoryId = "";
+    @JsonIgnore
+    private Number categoryId;
 
-  public String getUri() {
-    return uri;
-  }
+    public String getUri() {
+        return uri;
+    }
 
-  public void setUri(final String uri) {
-    this.uri = uri;
-  }
+    public void setUri(final String uri) {
+        this.uri = uri;
+    }
 
-  public int getLinkId() {
-    return linkId;
-  }
+    public Number getLinkId() {
+        return linkId;
+    }
 
-  public void setLinkId(final int linkId) {
-    this.linkId = linkId;
-  }
+    public void setLinkId(final Number linkId) {
+        this.linkId = linkId;
+    }
 
-  public int getPosition() {
-    return position;
-  }
+    public Number getPosition() {
+        return position;
+    }
 
-  public void setPosition(final int position) {
-    this.position = position;
-  }
+    public void setPosition(final Number position) {
+        this.position = position;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(final String name) {
-    this.name = name;
-  }
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public void setDescription(final String description) {
-    this.description = description;
-  }
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-  public String getUrl() {
-    return url;
-  }
+    public String getUrl() {
+        return url;
+    }
 
-  public void setUrl(final String url) {
-    this.url = url;
-  }
+    public void setUrl(final String url) {
+        this.url = url;
+    }
 
-  public boolean getVisible() {
-    return visible;
-  }
+    public Boolean getVisible() {
+        return visible;
+    }
 
-  public void setVisible(final boolean visible) {
-    this.visible = visible;
-  }
+    public void setVisible(final Boolean visible) {
+        this.visible = visible;
+    }
 
-  public boolean getPopup() {
-    return popup;
-  }
+    public Boolean getPopup() {
+        return popup;
+    }
 
-  public void setPopup(final boolean popup) {
-    this.popup = popup;
-  }
+    public void setPopup(final Boolean popup) {
+        this.popup = popup;
+    }
 
-  public String getUserId() {
-    return userId;
-  }
+    public String getUserId() {
+        return userId;
+    }
 
-  public void setUserId(final String userId) {
-    this.userId = userId;
-  }
+    public void setUserId(final String userId) {
+        this.userId = userId;
+    }
 
-  public String getInstanceId() {
-    return instanceId;
-  }
+    public String getInstanceId() {
+        return instanceId;
+    }
 
-  public void setInstanceId(final String instanceId) {
-    this.instanceId = instanceId;
-  }
+    public void setInstanceId(final String instanceId) {
+        this.instanceId = instanceId;
+    }
 
-  public String getObjectId() {
-    return objectId;
-  }
+    public String getObjectId() {
+        return objectId;
+    }
 
-  public void setObjectId(final String objectId) {
-    this.objectId = objectId;
-  }
+    public void setObjectId(final String objectId) {
+        this.objectId = objectId;
+    }
 
-  public String getCategoryId() {
-    return categoryId;
-  }
+    public Number getCategoryId() {
+        return categoryId;
+    }
 
-  public void setCategoryId(String categoryId) {
-    this.categoryId = categoryId;
-  }
+    public void setCategoryId(Number categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public JsPropertyMap<Object> toJSON() {
+        JsPropertyMap<Object> json = JsPropertyMap.of();
+
+        json.set("uri", getUri());
+        json.set("linkId", getLinkId());
+        json.set("position", getPosition());
+        json.set("name", getName());
+        json.set("description", getDescription());
+        json.set("url", getUrl());
+        json.set("visible", getVisible());
+        json.set("popup", getPopup());
+        json.set("userId", getUserId());
+        json.set("instanceId", getInstanceId());
+        json.set("objectId", getObjectId());
+        json.set("categoryId", getCategoryId());
+
+        return json;
+    }
+
+    public static MyLinkDTO fromJSON(JsPropertyMap<Object> json) {
+        MyLinkDTO dto = new MyLinkDTO();
+        try {
+            dto.setUri((String) json.get("uri"));
+            dto.setLinkId(((Number) json.get("linkId")).intValue());
+            dto.setPosition(((Number) json.get("position")).intValue());
+            dto.setName((String) json.get("name"));
+            dto.setDescription((String) json.get("description"));
+            dto.setUrl((String) json.get("url"));
+            dto.setVisible((Boolean) json.get("visible"));
+            dto.setPopup((Boolean) json.get("popup"));
+            dto.setUserId((String) json.get("userId"));
+            dto.setInstanceId((String) json.get("instanceId"));
+            dto.setObjectId((String) json.get("objectId"));
+            dto.setCategoryId((Number) json.get("categoryId"));
+        }catch (Throwable t) {
+            GWT.log("ERREUR", t);
+        }
+        return dto;
+    }
 }

@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.favorites;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.favorites.events.app.*;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
@@ -39,13 +38,16 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.MyLinkCategoryDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class FavoritesApp extends App implements FavoritesAppEventHandler, NavigationEventHandler {
 
@@ -69,8 +71,7 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
     @Override
     public void loadFavorites(final FavoritesLoadEvent event) {
-
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<MyLinkCategoryDTO>>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<MyLinkCategoryDTO>>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -78,18 +79,18 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
             }
 
             @Override
-            public void onSuccess(Method method, List<MyLinkCategoryDTO> categories) {
-                super.onSuccess(method, categories);
+            public void onSuccess(List<MyLinkCategoryDTO> categories) {
+                super.onSuccess(categories);
                 loadMyLinks(categories);
             }
         };
         action.attempt();
     }
     private void loadMyLinks(List<MyLinkCategoryDTO> categories) {
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<MyLinkDTO>>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<MyLinkDTO>>() {
           @Override
-          public void onSuccess(final Method method, final List<MyLinkDTO> links) {
-            super.onSuccess(method, links);
+          public void onSuccess(final List<MyLinkDTO> links) {
+            super.onSuccess(links);
             List groupedList = new ArrayList<>();
             List noCatList = new ArrayList<>();
             MyLinkCategoryDTO itemNoCat = new MyLinkCategoryDTO();
@@ -103,7 +104,7 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
               Collections.sort(noCatList, new Comparator<MyLinkDTO>() {
                   @Override
                   public int compare(MyLinkDTO o1, MyLinkDTO o2) {
-                      return o1.getPosition() - o2.getPosition();
+                      return o1.getPosition().intValue() - o2.getPosition().intValue();
                   }
               });
             groupedList.addAll(noCatList);
@@ -118,7 +119,7 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
                     Collections.sort(catList, new Comparator<MyLinkDTO>() {
                         @Override
                         public int compare(MyLinkDTO o1, MyLinkDTO o2) {
-                            return o1.getPosition() - o2.getPosition();
+                            return o1.getPosition().intValue() - o2.getPosition().intValue();
                         }
                     });
                     groupedList.addAll(catList);
@@ -138,10 +139,10 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
     @Override
   public void addFavorite(final AddFavoriteEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<MyLinkDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<MyLinkDTO>() {
       @Override
-      public void onSuccess(final Method method, final MyLinkDTO myLinkDTO) {
-        super.onSuccess(method, myLinkDTO);
+      public void onSuccess(final MyLinkDTO myLinkDTO) {
+        super.onSuccess(myLinkDTO);
       }
 
       @Override
@@ -173,7 +174,6 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
           super.attempt();
           ServicesLocator.getServiceNavigation().getApp(event.getInstanceId(), null, null, this);
         }
-
         @Override
         public void onFailure(final Method method, final Throwable t) {
           super.onFailure(method, t);
@@ -181,8 +181,7 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
         }
 
         @Override
-        public void onSuccess(final Method method,
-            final ApplicationInstanceDTO applicationInstanceDTO) {
+        public void onSuccess(final Method method, final ApplicationInstanceDTO applicationInstanceDTO) {
           super.onSuccess(method, applicationInstanceDTO);
           EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(applicationInstanceDTO));
         }
@@ -192,7 +191,7 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
 
     @Override
     public void deleteFavorites(FavoritesDeleteEvent favoritesDeleteEvent) {
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
             private int i = 1;
             @Override
             public void attempt() {
@@ -203,10 +202,10 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
             }
 
             @Override
-            public void onSuccess(Method method, Void unused) {
+            public void onSuccess(Void unused) {
                 i++;
                 if (i > favoritesDeleteEvent.getSelection().size()) {
-                    super.onSuccess(method, unused);
+                    super.onSuccess(unused);
                     loadFavorites(new FavoritesLoadEvent());
                 }
             }
