@@ -38,6 +38,7 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.base.events.apps.AppEvent;
 import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
@@ -115,8 +116,8 @@ public class ProfileApp extends App {
                         }
 
                         @Override
-                        public void onSuccess(final Void unused) {
-                          super.onSuccess(unused);
+                        public void onSuccess(final RestMethod method, final Void unused) {
+                          super.onSuccess(method,unused);
                           EventBus.getInstance().fireEvent(new PageEvent(ProfileApp.this, ProfileEvents.POSTED.toString(), ""));
                         }
                       };

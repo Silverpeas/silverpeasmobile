@@ -38,6 +38,7 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -79,8 +80,8 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
             }
 
             @Override
-            public void onSuccess(List<MyLinkCategoryDTO> categories) {
-                super.onSuccess(categories);
+            public void onSuccess(final RestMethod method, List<MyLinkCategoryDTO> categories) {
+                super.onSuccess(method, categories);
                 loadMyLinks(categories);
             }
         };
@@ -89,8 +90,8 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
     private void loadMyLinks(List<MyLinkCategoryDTO> categories) {
         RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<MyLinkDTO>>() {
           @Override
-          public void onSuccess(final List<MyLinkDTO> links) {
-            super.onSuccess(links);
+          public void onSuccess(final RestMethod method, final List<MyLinkDTO> links) {
+            super.onSuccess(method, links);
             List groupedList = new ArrayList<>();
             List noCatList = new ArrayList<>();
             MyLinkCategoryDTO itemNoCat = new MyLinkCategoryDTO();
@@ -141,8 +142,8 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
   public void addFavorite(final AddFavoriteEvent event) {
         RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<MyLinkDTO>() {
       @Override
-      public void onSuccess(final MyLinkDTO myLinkDTO) {
-        super.onSuccess(myLinkDTO);
+      public void onSuccess(final RestMethod method, final MyLinkDTO myLinkDTO) {
+        super.onSuccess(method, myLinkDTO);
       }
 
       @Override
@@ -202,10 +203,10 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
             }
 
             @Override
-            public void onSuccess(Void unused) {
+            public void onSuccess(final RestMethod method, Void unused) {
                 i++;
                 if (i > favoritesDeleteEvent.getSelection().size()) {
-                    super.onSuccess(unused);
+                    super.onSuccess(method, unused);
                     loadFavorites(new FavoritesLoadEvent());
                 }
             }

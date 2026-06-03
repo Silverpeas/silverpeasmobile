@@ -77,6 +77,7 @@ import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
@@ -537,8 +538,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           }
 
           @Override
-          public void onSuccess(final Boolean desktopMode) {
-            super.onSuccess(desktopMode);
+          public void onSuccess(final RestMethod method, final Boolean desktopMode) {
+            super.onSuccess(method, desktopMode);
             if (desktopMode) {
               String url = Window.Location.getHref();
               url = url.substring(0, url.indexOf("silverpeas") + "silverpeas".length());

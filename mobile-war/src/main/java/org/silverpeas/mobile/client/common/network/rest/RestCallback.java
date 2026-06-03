@@ -26,5 +26,5 @@ package org.silverpeas.mobile.client.common.network.rest;
 
 public interface RestCallback<T> {
     void onFailure(RestMethod method, Throwable t);
-    void onSuccess(T result);
+    void onSuccess(RestMethod method, T result);
 }

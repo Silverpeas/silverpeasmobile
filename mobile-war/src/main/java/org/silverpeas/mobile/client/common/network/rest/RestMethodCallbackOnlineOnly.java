@@ -86,7 +86,7 @@ public abstract class RestMethodCallbackOnlineOnly<T> implements RestCallback<T>
   }
 
   @Override
-  public void onSuccess(T result) {
+  public void onSuccess(RestMethod method, T result) {
     Notification.activityStop();
   }
 }

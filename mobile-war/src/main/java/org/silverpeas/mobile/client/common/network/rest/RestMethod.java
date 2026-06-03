@@ -24,13 +24,16 @@
 
 package org.silverpeas.mobile.client.common.network.rest;
 
+import elemental2.dom.Headers;
 import elemental2.dom.RequestInit;
+import org.bouncycastle.asn1.cms.AttributeTable;
 
 public class RestMethod {
 
     private String HTTPMethod;
     private String url;
     private int statusCode;
+    private Headers headers;
 
     public RestMethod(RequestInit init) {
         this.HTTPMethod = init.getMethod();
@@ -51,5 +54,13 @@ public class RestMethod {
 
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public void setHeaders(Headers headers) {
+        this.headers = headers;
+    }
+
+    public Headers getHeaders() {
+        return headers;
     }
 }

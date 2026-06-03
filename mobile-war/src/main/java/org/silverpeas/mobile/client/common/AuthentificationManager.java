@@ -163,10 +163,10 @@ public class AuthentificationManager {
     if (NetworkHelper.isOnline()) {
       ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
 
-          new MethodCallback<UserProfileDTO>() {
+          new RestCallback<UserProfileDTO>() {
             @Override
-            public void onFailure(final Method method, final Throwable throwable) {
-              int statusError = method.getResponse().getStatusCode();
+            public void onFailure(final RestMethod method, final Throwable throwable) {
+              int statusError = method.getStatusCode();
               if (statusError == 403) {
                 Notification.activityStop();
                 SpMobil.displayMainPage();
@@ -186,8 +186,8 @@ public class AuthentificationManager {
                   }
 
                   @Override
-                  public void onSuccess(final Boolean exist) {
-                    super.onSuccess(exist);
+                  public void onSuccess(final RestMethod method, final Boolean exist) {
+                    super.onSuccess(method, exist);
                     if (exist) {
                       AuthenticationException ex = new AuthenticationException(
                           AuthenticationException.AuthenticationError.PwdNotAvailable);
@@ -208,11 +208,11 @@ public class AuthentificationManager {
             }
 
             @Override
-            public void onSuccess(final Method method, final UserProfileDTO userProfile) {
+            public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
 
-              AuthentificationManager.getInstance().addHeader("X-STKN", method.getResponse().getHeader("X-STKN"));
+              AuthentificationManager.getInstance().addHeader("X-STKN", method.getHeaders().get("X-STKN"));
               AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session",
-                  method.getResponse().getHeader("X-Silverpeas-Session"));
+                  method.getHeaders().get("X-Silverpeas-Session"));
 
               SpMobil.setUserProfile(userProfile);
 
@@ -230,8 +230,8 @@ public class AuthentificationManager {
                 }
 
                 @Override
-                public void onSuccess(final DetailUserDTO user) {
-                  super.onSuccess(user);
+                public void onSuccess(final RestMethod method, final DetailUserDTO user) {
+                  super.onSuccess(method, user);
                   SpMobil.setUser(user, true);
 
                   ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {

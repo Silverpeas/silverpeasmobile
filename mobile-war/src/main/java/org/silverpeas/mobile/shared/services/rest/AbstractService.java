@@ -25,7 +25,7 @@
 package org.silverpeas.mobile.shared.services.rest;
 
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Window;
+import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import elemental2.core.Global;
 import elemental2.core.JsArray;
 import elemental2.dom.*;
@@ -43,18 +43,25 @@ import java.util.List;
 import java.util.function.Function;
 
 public class AbstractService {
+
+    private String token = null;
     public String encode(String param) {
         return URL.encodeQueryString(param);
     }
 
-    public RequestInit initRequest(String method, String contentType) {
+    private RequestInit initRequest(String method, String contentType) {
         AbortController controller = new AbortController();
         RequestInit init = RequestInit.create();
         init.setMethod(method);
 
         Headers headers = new Headers();
         headers.append("Content-Type", contentType);
-        headers.append("Authorization", "Bearer " + AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
+
+        if (token != null) {
+            headers.append("Authorization", "Basic " + token);
+        } else {
+            headers.append("Authorization", "Basic " + AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
+        }
         init.setHeaders(headers);
 
         init.setSignal(controller.signal);
@@ -94,6 +101,7 @@ public class AbstractService {
         fetch(url, init)
                 .then(response -> {
                     restMethod.setStatusCode(response.status);
+                    restMethod.setHeaders(response.headers);
 
                     if (!response.ok) {
                         throw new RuntimeException("HTTP " + response.status);
@@ -107,18 +115,18 @@ public class AbstractService {
                 })
                 .then(text -> {
                     if (text == null || text.trim().isEmpty()) {
-                        callback.onSuccess(null);
+                        callback.onSuccess(restMethod,null);
                         return null;
                     }
                     return Js.cast(Global.JSON.parse(text));
                 })
                 .then(result -> {
                     if (result == null) {
-                        callback.onSuccess(null);
+                        callback.onSuccess(restMethod,null);
                         return null;
                     }
 
-                    callback.onSuccess(mapper.apply(result));
+                    callback.onSuccess(restMethod, mapper.apply(result));
                     return null;
                 })
                 .catch_(err -> {
@@ -190,5 +198,20 @@ public class AbstractService {
 
     protected Boolean asBoolean(Object result) {
         return (Boolean) result;
+    }
+
+    public void initContext(final String login, final String password,
+                            final String domainId) {
+        String credentials = login + "@domain" + domainId + ":" + password;
+        byte[] credentialsEncoded = Base64.encode(credentials.getBytes());
+        this.token = convertByteArrayToString(credentialsEncoded);
+    }
+
+    private static String convertByteArrayToString(byte[] byteArray) {
+        String s = "";
+        for (int i = 0; i < byteArray.length; i++) {
+            s += (char) (byteArray[i]);
+        }
+        return s;
     }
 }

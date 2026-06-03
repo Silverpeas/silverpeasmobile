@@ -38,6 +38,7 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -74,8 +75,8 @@ public class BlogApp extends App implements BlogAppEventHandler, NavigationEvent
       }
 
       @Override
-      public void onSuccess(final List<PostDTO> posts) {
-        super.onSuccess(posts);
+      public void onSuccess(final RestMethod method, final List<PostDTO> posts) {
+        super.onSuccess(method, posts);
         EventBus.getInstance().fireEvent(new BlogLoadedEvent(posts));
       }
     };

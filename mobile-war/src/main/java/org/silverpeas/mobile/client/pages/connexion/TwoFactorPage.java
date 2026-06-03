@@ -38,6 +38,7 @@ import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
@@ -129,8 +130,8 @@ public class TwoFactorPage extends PageContent {
       }
 
       @Override
-      public void onSuccess(Boolean valid) {
-        super.onSuccess(valid);
+      public void onSuccess(final RestMethod method, Boolean valid) {
+        super.onSuccess(method,valid);
         if (valid) {
           AuthentificationManager.getInstance()
                   .authenticateOnSilverpeas(login, password, domainId, null);

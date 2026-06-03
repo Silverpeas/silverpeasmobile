@@ -25,7 +25,9 @@
 package org.silverpeas.mobile.shared.dto.authentication;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.shared.dto.TaskDTO;
 
 /**
  * @author svu
@@ -278,5 +280,52 @@ public class UserProfileDTO implements IUserProfile {
     return user;
   }
 
+  public static UserProfileDTO fromJSON(JsPropertyMap<Object> json) {
+    UserProfileDTO dto = new UserProfileDTO();
+    if (json == null) {
+      return dto;
+    }
+
+    dto.setId((String) json.get("id"));
+    dto.setSpecificId((String) json.get("specificId"));
+    dto.setDomainId((String) json.get("domainId"));
+    dto.setLogin((String) json.get("login"));
+    dto.setFirstName((String) json.get("firstName"));
+    dto.setLastName((String) json.get("lastName"));
+    dto.seteMail((String) json.get("eMail"));
+    dto.setAccessLevel((String) json.get("accessLevel"));
+    dto.setStatus((String) json.get("status"));
+
+    dto.setUri((String) json.get("uri"));
+    dto.setContactsUri((String) json.get("contactsUri"));
+    dto.setWebPage((String) json.get("webPage"));
+    dto.setAvatar((String) json.get("avatar"));
+    dto.setDomainName((String) json.get("domainName"));
+    dto.setFullName((String) json.get("fullName"));
+    dto.setLanguage((String) json.get("language"));
+    dto.setApiToken((String) json.get("apiToken"));
+
+    Object connected = json.get("connected");
+    if (connected instanceof Boolean) {
+      dto.setConnected((Boolean) connected);
+    }
+
+    Object anonymous = json.get("anonymous");
+    if (anonymous instanceof Boolean) {
+      dto.setAnonymous((Boolean) anonymous);
+    }
+
+    Object deletedState = json.get("deletedState");
+    if (deletedState instanceof Boolean) {
+      dto.setDeletedState((Boolean) deletedState);
+    }
+
+    Object deactivatedState = json.get("deactivatedState");
+    if (deactivatedState instanceof Boolean) {
+      dto.setDeactivatedState((Boolean) deactivatedState);
+    }
+
+    return dto;
+  }
 
 }

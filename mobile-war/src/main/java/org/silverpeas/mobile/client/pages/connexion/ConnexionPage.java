@@ -204,8 +204,8 @@ public class ConnexionPage extends PageContent {
       }
 
       @Override
-      public void onSuccess(final List<DomainDTO> result) {
-        super.onSuccess(result);
+      public void onSuccess(final RestMethod method, final List<DomainDTO> result) {
+        super.onSuccess(method,result);
         displayDomains(result);
       }
     };

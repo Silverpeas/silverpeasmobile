@@ -41,6 +41,7 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
@@ -80,8 +81,8 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
       }
 
       @Override
-      public void onSuccess(final List<TaskDTO> tasks) {
-        super.onSuccess(tasks);
+      public void onSuccess(final RestMethod method, final List<TaskDTO> tasks) {
+        super.onSuccess(method, tasks);
         EventBus.getInstance().fireEvent(new TasksLoadedEvent(tasks));
       }
     };
@@ -99,8 +100,8 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
       }
 
       @Override
-      public void onSuccess(final Void unused) {
-        super.onSuccess(unused);
+      public void onSuccess(final RestMethod method, final Void unused) {
+        super.onSuccess(method, unused);
         EventBus.getInstance().fireEvent(new TaskUpdatedEvent(event.getTask()));
       }
     };
@@ -118,8 +119,8 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
       }
 
       @Override
-      public void onSuccess(final TaskDTO taskDTO) {
-        super.onSuccess(taskDTO);
+      public void onSuccess(final RestMethod method, final TaskDTO taskDTO) {
+        super.onSuccess(method,taskDTO);
         EventBus.getInstance().fireEvent(new TaskCreatedEvent(taskDTO));
       }
     };
@@ -135,8 +136,8 @@ public class TasksApp extends App implements TasksAppEventHandler, NavigationEve
         ServicesLocator.getServiceTasks().deleteTasks(event.getTasks(), this);
       }
       @Override
-      public void onSuccess(Void unused) {
-        super.onSuccess(unused);
+      public void onSuccess(final RestMethod method, Void unused) {
+        super.onSuccess(method,unused);
         loadTasks(new TasksLoadEvent());
       }
     };
