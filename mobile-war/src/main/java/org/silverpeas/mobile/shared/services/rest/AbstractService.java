@@ -44,7 +44,7 @@ import java.util.function.Function;
 
 public class AbstractService {
 
-    private String token = null;
+    private static String token = null;
     public String encode(String param) {
         return URL.encodeQueryString(param);
     }
@@ -56,12 +56,7 @@ public class AbstractService {
 
         Headers headers = new Headers();
         headers.append("Content-Type", contentType);
-
-        if (token != null) {
-            headers.append("Authorization", "Basic " + token);
-        } else {
-            headers.append("Authorization", "Basic " + AuthentificationManager.getInstance().getHeader(AuthentificationManager.XSTKN));
-        }
+        headers.append("Authorization", "Basic " + token);
         init.setHeaders(headers);
 
         init.setSignal(controller.signal);

@@ -33,6 +33,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -132,12 +133,16 @@ public class CommentsPage extends PageContent implements View, CommentsPagesEven
   private void renderList() {
     commentsList.clear();
     setSelectionMode(false);
-    for (CommentDTO comment : comments) {
-      Comment c = new Comment();
-      c.setParent(this);
-      c.setComment(comment);
-      c.setRight(getApp().getApplicationInstance().getRights());
-      commentsList.add(c);
+    try {
+      for (CommentDTO comment : comments) {
+        Comment c = new Comment();
+        c.setParent(this);
+        c.setComment(comment);
+        c.setRight(getApp().getApplicationInstance().getRights());
+        commentsList.add(c);
+      }
+    } catch (Throwable t) {
+      GWT.log("ERREUR", t);
     }
   }
 

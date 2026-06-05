@@ -56,7 +56,7 @@ public class ServicesLocator {
   private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
   private static ServiceRestDocuments serviceRestDocuments = GWT.create(
       ServiceRestDocuments.class);
-  private static ServiceComment serviceRestComment = GWT.create(ServiceComment.class);
+  private static ServiceComment serviceRestComment = new ServiceComment();
 
   private static ServiceTickets serviceRestTickets = GWT.create(ServiceTickets.class);
   private static ServiceMyLinks serviceMyLinks = new ServiceMyLinks();
@@ -83,13 +83,11 @@ public class ServicesLocator {
   }
 
   public static ServiceAuthentication getRestServiceAuthentication(String login, String password, String domainId) {
-    //initRestContext(login, password, domainId);
     serviceRestAuthentication.initContext(login, password, domainId);
     return serviceRestAuthentication;
   }
 
   public static ServiceBlog getServiceBlog() {
-    //initRestContext();
     return serviceBlog;
   }
 
@@ -124,7 +122,6 @@ public class ServicesLocator {
   }
 
   public static ServiceComment getRestServiceComment() {
-    initRestContext();
     return serviceRestComment;
   }
 

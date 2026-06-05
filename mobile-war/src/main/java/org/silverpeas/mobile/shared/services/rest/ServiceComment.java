@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,49 +24,60 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
+
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/comments")
-public interface ServiceComment extends RestService {
 
+public class ServiceComment extends AbstractService {
 
-  @POST
-  @Path("{componentId}/{contentType}/{contentId}/")
-  public void saveNewComment(@PathParam("componentId") String componentId,
-      @PathParam("contentType") String contentType, @PathParam("contentId") String contentId,
-      CommentDTO commentToSave, MethodCallback<CommentDTO> callback);
+  public final static String PATH = "/silverpeas/services/comments/";
+  public void saveNewComment(String componentId, String contentType, String contentId,
+                             CommentDTO commentToSave, RestCallback<CommentDTO> callback) {
+    post(PATH + encode(componentId) + "/" + encode(contentType) + "/" + encode(contentId),
+            Global.JSON.stringify(Js.asAny(commentToSave.toJSON())),
+            result -> CommentDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback
+    );
+  }
 
-  @GET
-  @Path("{componentId}/{contentType}/{contentId}/")
-  public void getAllComments(@PathParam("componentId") String componentId,
-      @PathParam("contentType") String contentType, @PathParam("contentId") String contentId,
-      MethodCallback<List<CommentDTO>> callback);
+  public void getAllComments(String componentId, String contentType, String contentId,
+                             RestCallback<List<CommentDTO>> callback) {
+    get(PATH + encode(componentId) + "/" + encode(contentType) + "/" + encode(contentId),
+            this::mapComments,
+            callback);
+  }
 
-  @DELETE
-  @Path("{componentId}/{contentType}/{contentId}/{commentId}")
-  public void deleteComment(@PathParam("componentId") String componentId,
-                            @PathParam("contentType") String contentType,
-                            @PathParam("contentId") String contentId,
-                            @PathParam("commentId") String commentId,
-                            MethodCallback<Void> callback);
+  private List<CommentDTO> mapComments(Object result) {
+    return mapArray(result, CommentDTO::fromJSON);
+  }
+  public void deleteComment(String componentId, String contentType, String contentId, String commentId,
+                            RestCallback<Void> callback) {
+    delete(
+            PATH + encode(componentId) + "/" + encode(contentType) + "/" + encode(contentId) + "/" + encode(commentId),
+            null,
+            text -> null,
+            callback
+    );
 
-  @PUT
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{componentId}/{contentType}/{contentId}/{commentId}")
-  public void updateComment(@PathParam("componentId") String componentId,
-                            @PathParam("contentType") String contentType,
-                            @PathParam("contentId") String contentId,
-                            @PathParam("commentId") String commentId,
-                            CommentDTO comment,
-                            MethodCallback<CommentDTO> callback);
+  }
+  public void updateComment(String componentId, String contentType, String contentId, String commentId,
+                            CommentDTO comment, RestCallback<CommentDTO> callback) {
+
+    put(PATH + encode(componentId) + "/" + encode(contentType) + "/" + encode(contentId) + "/" + encode(commentId),
+            Global.JSON.stringify(Js.asAny(comment.toJSON())),
+            result -> CommentDTO.fromJSON(
+                    (JsPropertyMap<Object>) result),
+            callback);
+  }
 }

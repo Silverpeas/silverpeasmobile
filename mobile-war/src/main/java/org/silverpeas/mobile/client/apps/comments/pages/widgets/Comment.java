@@ -85,7 +85,7 @@ public class Comment extends SelectableItem {
   }
 
   private void render() {
-    content.setInnerHTML(comment.getTextForHtml());
+    content.setInnerHTML(comment.getText());
 
     if (comment.getModificationDate().isEmpty()) {
       date.setInnerHTML(" - " + comment.getCreationDate());

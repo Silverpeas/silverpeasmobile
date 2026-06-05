@@ -24,8 +24,10 @@
 
 package org.silverpeas.mobile.shared.dto.comments;
 
+import com.google.gwt.user.client.Window;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
-
 import java.io.Serializable;
 
 /**
@@ -45,7 +47,6 @@ public class CommentDTO implements Serializable {
   private String resourceType = "";
   private String resourceId = "";
   private String text = "";
-  private String textForHtml = "";
   private UserProfileDTO author;
   private String currentUserLanguage = "";
   private String creationDate = ""; //date in the format displayed for the current user
@@ -98,14 +99,6 @@ public class CommentDTO implements Serializable {
 
   public void setText(final String text) {
     this.text = text;
-    this.textForHtml = "";
-  }
-
-  public String getTextForHtml() {
-    if (textForHtml.isEmpty()) {
-      textForHtml = text;
-    }
-    return textForHtml;
   }
 
   public UserProfileDTO getAuthor() {
@@ -146,5 +139,58 @@ public class CommentDTO implements Serializable {
 
   public void setIndexed(final boolean indexed) {
     this.indexed = indexed;
+  }
+
+  public static CommentDTO fromJSON(JsPropertyMap<Object> json) {
+    CommentDTO dto = new CommentDTO();
+
+    dto.setUri((String) json.get("uri"));
+    dto.setId((String) json.get("id"));
+    dto.setComponentId((String) json.get("componentId"));
+    dto.setResourceType((String) json.get("resourceType"));
+    dto.setResourceId((String) json.get("resourceId"));
+    dto.setText((String) json.get("text"));
+
+    Object authorValue = json.get("author");
+    if (authorValue != null) {
+      dto.setAuthor(
+              UserProfileDTO.fromJSON(
+                      Js.uncheckedCast(authorValue)
+              )
+      );
+    }
+
+    dto.setCurrentUserLanguage((String) json.get("currentUserLanguage"));
+    dto.setCreationDate((String) json.get("creationDate"));
+    dto.setModificationDate((String) json.get("modificationDate"));
+
+    Object indexedValue = json.get("indexed");
+    if (indexedValue instanceof Boolean) {
+      dto.setIndexed((Boolean) indexedValue);
+    }
+
+    return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("uri", getUri());
+    json.set("id", getId());
+    json.set("componentId", getComponentId());
+    json.set("resourceType", getResourceType());
+    json.set("resourceId", getResourceId());
+    json.set("text", getText());
+    //json.set("textForHtml", getTextForHtml());
+    json.set("currentUserLanguage", getCurrentUserLanguage());
+    json.set("creationDate", getCreationDate());
+    json.set("modificationDate", getModificationDate());
+    json.set("indexed", isIndexed());
+
+    if (author != null) {
+      json.set("author", author.toJSON());
+    }
+
+    return json;
   }
 }

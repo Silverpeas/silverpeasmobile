@@ -458,7 +458,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
               p.setLastName(detailUserDTO.getLastName());
               p.setLanguage(detailUserDTO.getLanguage());
               p.setId(detailUserDTO.getId());
-              p.seteMail(detailUserDTO.geteMail());
+              p.setEmailAddress(detailUserDTO.geteMail());
               setUserProfile(p);
             }
             ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {

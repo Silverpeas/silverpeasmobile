@@ -37,6 +37,8 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
@@ -72,7 +74,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
     @Override
     public void loadComments(final CommentsLoadEvent event) {
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CommentDTO>>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<CommentDTO>>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -81,7 +83,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
             }
 
             @Override
-            public void onSuccess(final Method method, final List<CommentDTO> result) {
+            public void onSuccess(RestMethod method, List<CommentDTO> result) {
                 super.onSuccess(method, result);
                 EventBus.getInstance().fireEvent(new CommentsLoadedEvent(result));
             }
@@ -98,7 +100,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
         dto.setResourceId(event.getContentId());
         dto.setResourceType(event.getContentType());
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<CommentDTO>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -106,7 +108,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
             }
 
             @Override
-            public void onSuccess(final Method method, final CommentDTO result) {
+            public void onSuccess(final RestMethod method, final CommentDTO result) {
                 super.onSuccess(method, result);
                 EventBus.getInstance().fireEvent(new CommentAddedEvent(result));
             }
@@ -116,7 +118,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
     @Override
     public void deleteComment(DeleteCommentEvent event) {
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
 
             @Override
             public void attempt() {
@@ -126,7 +128,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
             }
 
             @Override
-            public void onSuccess(Method method, Void unused) {
+            public void onSuccess(RestMethod method, Void unused) {
                 super.onSuccess(method, unused);
                 EventBus.getInstance().fireEvent(new CommentDeletedEvent(event.getComment()));
             }
@@ -141,7 +143,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
 
     @Override
     public void updateComment(UpdateCommentEvent event) {
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CommentDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<CommentDTO>() {
 
             @Override
             public void attempt() {
@@ -151,7 +153,7 @@ public class CommentsApp extends App implements CommentsAppEventHandler {
             }
 
             @Override
-            public void onSuccess(Method method, CommentDTO comment) {
+            public void onSuccess(RestMethod method, CommentDTO comment) {
                 super.onSuccess(method, comment);
                 EventBus.getInstance().fireEvent(new CommentUpdatedEvent(event.getComment()));
             }

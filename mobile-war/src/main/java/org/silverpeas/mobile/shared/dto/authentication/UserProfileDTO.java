@@ -27,12 +27,13 @@ package org.silverpeas.mobile.shared.dto.authentication;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
-import org.silverpeas.mobile.shared.dto.TaskDTO;
+
+import java.io.Serializable;
 
 /**
  * @author svu
  */
-public class UserProfileDTO implements IUserProfile {
+public class UserProfileDTO implements IUserProfile, Serializable {
   private String uri;
   private String contactsUri;
   private String webPage;
@@ -50,11 +51,8 @@ public class UserProfileDTO implements IUserProfile {
   private String login;
   private String firstName;
   private String lastName;
-  private String eMail;
+  private String emailAddress;
   private String accessLevel;
-  private String status;
-  private boolean deletedState;
-  private boolean deactivatedState;
 
   public String getUri() {
     return uri;
@@ -184,12 +182,12 @@ public class UserProfileDTO implements IUserProfile {
     this.lastName = lastName;
   }
 
-  public String geteMail() {
-    return eMail;
+  public String getEmailAddress() {
+    return emailAddress;
   }
 
-  public void seteMail(final String eMail) {
-    this.eMail = eMail;
+  public void setEmailAddress(final String emailAddress) {
+    this.emailAddress = emailAddress;
   }
 
   public String getAccessLevel() {
@@ -198,30 +196,6 @@ public class UserProfileDTO implements IUserProfile {
 
   public void setAccessLevel(final String accessLevel) {
     this.accessLevel = accessLevel;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(final String status) {
-    this.status = status;
-  }
-
-  public boolean isDeletedState() {
-    return deletedState;
-  }
-
-  public void setDeletedState(final boolean deletedState) {
-    this.deletedState = deletedState;
-  }
-
-  public boolean isDeactivatedState() {
-    return deactivatedState;
-  }
-
-  public void setDeactivatedState(final boolean deactivatedState) {
-    this.deactivatedState = deactivatedState;
   }
 
   public AutoBean<IUserProfile> getAutoBean () {
@@ -233,20 +207,12 @@ public class UserProfileDTO implements IUserProfile {
     b.as().setConnected(isConnected());
     b.as().setApiToken(getApiToken());
     b.as().setContactsUri(getContactsUri());
-    b.as().setDeletedState(isDeletedState());
     b.as().setDomainId(getDomainId());
-    b.as().seteMail(geteMail());
-    b.as().setLanguage(getLanguage());
-    b.as().setLogin(getLogin());
-    b.as().setFirstName(getFirstName());
-    b.as().setDomainName(getDomainName());
-    b.as().setFullName(getFullName());
-    b.as().setStatus(getStatus());
+    b.as().setEmailAddress(getEmailAddress());
     b.as().setUri(getUri());
     b.as().setLastName(getLastName());
     b.as().setSpecificId(getSpecificId());
     b.as().setWebPage(getWebPage());
-    b.as().setDeactivatedState(isDeactivatedState());
     return b;
   }
 
@@ -261,20 +227,17 @@ public class UserProfileDTO implements IUserProfile {
       user.setConnected(b.as().isConnected());
       user.setApiToken(b.as().getApiToken());
       user.setContactsUri(b.as().getContactsUri());
-      user.setDeletedState(b.as().isDeletedState());
       user.setDomainId(b.as().getDomainId());
-      user.seteMail(b.as().geteMail());
+      user.setEmailAddress(b.as().getEmailAddress());
       user.setLanguage(b.as().getLanguage());
       user.setLogin(b.as().getLogin());
       user.setFirstName(b.as().getFirstName());
       user.setDomainName(b.as().getDomainName());
       user.setFullName(b.as().getFullName());
-      user.setStatus(b.as().getStatus());
       user.setUri(b.as().getUri());
       user.setLastName(b.as().getLastName());
       user.setSpecificId(b.as().getSpecificId());
       user.setWebPage(b.as().getWebPage());
-      user.setDeactivatedState(b.as().isDeactivatedState());
     }
 
     return user;
@@ -292,9 +255,8 @@ public class UserProfileDTO implements IUserProfile {
     dto.setLogin((String) json.get("login"));
     dto.setFirstName((String) json.get("firstName"));
     dto.setLastName((String) json.get("lastName"));
-    dto.seteMail((String) json.get("eMail"));
+    dto.setEmailAddress((String) json.get("emailAddress"));
     dto.setAccessLevel((String) json.get("accessLevel"));
-    dto.setStatus((String) json.get("status"));
 
     dto.setUri((String) json.get("uri"));
     dto.setContactsUri((String) json.get("contactsUri"));
@@ -304,7 +266,6 @@ public class UserProfileDTO implements IUserProfile {
     dto.setFullName((String) json.get("fullName"));
     dto.setLanguage((String) json.get("language"));
     dto.setApiToken((String) json.get("apiToken"));
-
     Object connected = json.get("connected");
     if (connected instanceof Boolean) {
       dto.setConnected((Boolean) connected);
@@ -315,17 +276,36 @@ public class UserProfileDTO implements IUserProfile {
       dto.setAnonymous((Boolean) anonymous);
     }
 
-    Object deletedState = json.get("deletedState");
-    if (deletedState instanceof Boolean) {
-      dto.setDeletedState((Boolean) deletedState);
-    }
-
-    Object deactivatedState = json.get("deactivatedState");
-    if (deactivatedState instanceof Boolean) {
-      dto.setDeactivatedState((Boolean) deactivatedState);
-    }
-
     return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("id", id);
+    json.set("specificId", specificId);
+    json.set("domainId", domainId);
+
+    json.set("login", login);
+    json.set("firstName", firstName);
+    json.set("lastName", lastName);
+    json.set("emailAddress", emailAddress);
+    json.set("accessLevel", accessLevel);
+
+    json.set("uri", uri);
+    json.set("contactsUri", contactsUri);
+    json.set("webPage", webPage);
+
+    json.set("avatar", avatar);
+    json.set("domainName", domainName);
+    json.set("fullName", fullName);
+    json.set("language", language);
+    json.set("apiToken", apiToken);
+
+    json.set("connected", connected);
+    json.set("anonymous", anonymous);
+
+    return json;
   }
 
 }

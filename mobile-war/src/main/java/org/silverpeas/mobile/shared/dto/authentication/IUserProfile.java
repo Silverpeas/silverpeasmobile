@@ -68,24 +68,12 @@ public interface IUserProfile {
 
   public void setLastName(final String lastName);
 
-  public String geteMail();
+  public String getEmailAddress();
 
-  public void seteMail(final String eMail);
+  public void setEmailAddress(final String eMail);
 
   public String getAccessLevel();
 
   public void setAccessLevel(final String accessLevel);
-
-  public String getStatus();
-
-  public void setStatus(final String status);
-
-  public boolean isDeletedState();
-
-  public void setDeletedState(final boolean deletedState);
-
-  public boolean isDeactivatedState();
-
-  public void setDeactivatedState(final boolean deactivatedState);
 
 }
