@@ -24,21 +24,23 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/mobile/search")
-public interface ServiceSearch extends RestService {
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{query}")
-  void search(@PathParam("query") String query, MethodCallback<List<ResultDTO>> callback);
+
+public class ServiceSearch extends AbstractService {
+
+  public final static String PATH = "/silverpeas/services/mobile/search";
+
+  public void search(String query, RestCallback<List<ResultDTO>> callback) {
+    get(PATH + "/" + query,
+            this::mapResults,
+            callback);
+  }
+
+  private List<ResultDTO> mapResults(Object result) {
+    return mapArray(result, ResultDTO::fromJSON);
+  }
 }

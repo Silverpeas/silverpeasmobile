@@ -24,8 +24,11 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
+import jsinterop.base.JsPropertyMap;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
+import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
 
 import javax.ws.rs.GET;
@@ -35,10 +38,20 @@ import javax.ws.rs.PathParam;
 /**
  * @author svu
  */
-@Path("/mobile/hyperlink")
-public interface ServiceHyperLink extends RestService {
+//@Path("/mobile/hyperlink")
+public class ServiceHyperLink extends AbstractService {
 
-  @GET
+  public final static String PATH = "/silverpeas/services/mobile/hyperlink";
+
+  /*@GET
   @Path("{appId}/")
   public void getUrl(@PathParam("appId") String appId, MethodCallback<HyperLinkDTO> callback);
+*/
+  public void getUrl(String appId, RestCallback<HyperLinkDTO> callback) {
+    get(PATH + "/" + appId,
+            result -> HyperLinkDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback);
+  }
 }

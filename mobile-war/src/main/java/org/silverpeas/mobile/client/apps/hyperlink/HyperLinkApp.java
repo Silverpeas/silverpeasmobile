@@ -38,6 +38,8 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -66,14 +68,14 @@ public class HyperLinkApp extends App implements NavigationEventHandler {
     if (event.getInstance().getType().equals(Apps.hyperlink.name())) {
       this.instance = event.getInstance();
 
-      ServicesLocator.getServiceHyperLink().getUrl(instance.getId(), new MethodCallback<HyperLinkDTO>() {
+      ServicesLocator.getServiceHyperLink().getUrl(instance.getId(), new RestMethodCallbackOnlineOnly<HyperLinkDTO>() {
         @Override
-        public void onFailure(final Method method, final Throwable t) {
+        public void onFailure(final RestMethod method, final Throwable t) {
           EventBus.getInstance().fireEvent(new ErrorEvent(t));
         }
 
         @Override
-        public void onSuccess(Method method, HyperLinkDTO hyperLinkDTO) {
+        public void onSuccess(RestMethod method, HyperLinkDTO hyperLinkDTO) {
           openLink(hyperLinkDTO);
         }
       });

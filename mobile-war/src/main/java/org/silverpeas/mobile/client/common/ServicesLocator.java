@@ -41,13 +41,13 @@ public class ServicesLocator {
   private static ServiceRSE serviceRSE = GWT.create(ServiceRSE.class);
   private static ServiceDocuments serviceDocuments = GWT.create(ServiceDocuments.class);
   private static ServiceMedia serviceMedia = GWT.create(ServiceMedia.class);
-  private static ServiceSearch serviceSearch = GWT.create(ServiceSearch.class);
+  private static ServiceSearch serviceSearch = new ServiceSearch();
   private static ServiceNotifications serviceNotifications = GWT.create(ServiceNotifications.class);
   private static ServiceNews serviceNews = new ServiceNews();
   private static ServiceClassifieds serviceClassifieds = GWT.create(ServiceClassifieds.class);
   private static ServiceSurvey serviceSurvey = GWT.create(ServiceSurvey.class);
   private static ServiceWorkflow serviceWorkflow = GWT.create(ServiceWorkflow.class);
-  private static ServiceHyperLink serviceHyperLink = GWT.create(ServiceHyperLink.class);
+  private static ServiceHyperLink serviceHyperLink = new ServiceHyperLink();
 
   private static ServiceBlog serviceBlog = new ServiceBlog();
   private static ServiceAuthentication serviceRestAuthentication = new ServiceAuthentication();
@@ -150,7 +150,6 @@ public class ServicesLocator {
   }
 
   public static ServiceHyperLink getServiceHyperLink() {
-    initRestContext();
     return serviceHyperLink;
   }
 
@@ -179,7 +178,6 @@ public class ServicesLocator {
   }
 
   public static ServiceSearch getServiceSearch() {
-    initRestContext();
     return serviceSearch;
   }
 

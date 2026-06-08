@@ -563,7 +563,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   public static void search(final String query) {
     Notification.activityStart();
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ResultDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<ResultDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -571,7 +571,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
       }
 
       @Override
-      public void onSuccess(final Method method, final List<ResultDTO> results) {
+      public void onSuccess(final RestMethod method, final List<ResultDTO> results) {
         super.onSuccess(method, results);
         getMainPage().resetSearchField();
         getMainPage().closeMenu();

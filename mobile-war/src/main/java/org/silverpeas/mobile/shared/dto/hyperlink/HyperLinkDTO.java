@@ -24,7 +24,9 @@
 
 package org.silverpeas.mobile.shared.dto.hyperlink;
 
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 
 import java.io.Serializable;
 
@@ -59,5 +61,13 @@ public class HyperLinkDTO implements Serializable {
 
   public void setInternalLink(boolean internalLink) {
     this.internalLink = internalLink;
+  }
+
+  public static HyperLinkDTO fromJSON(JsPropertyMap<Object> json) {
+    HyperLinkDTO dto = new HyperLinkDTO();
+    dto.setUrl((String) json.get("url"));
+    dto.setOpenNewWindow(Boolean.TRUE.equals(json.get("openNewWindow")));
+    dto.setInternalLink(Boolean.TRUE.equals(json.get("internalLink")));
+    return dto;
   }
 }

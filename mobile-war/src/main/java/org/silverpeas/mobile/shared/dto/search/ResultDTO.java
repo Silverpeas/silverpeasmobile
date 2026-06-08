@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.search;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 public class ResultDTO implements Serializable{
@@ -75,4 +77,14 @@ public class ResultDTO implements Serializable{
   public void setAttachmentId(final String attachmentId) {
     this.attachmentId = attachmentId;
   }
+
+    public static ResultDTO fromJSON(JsPropertyMap<Object> json) {
+      ResultDTO dto = new ResultDTO();
+      dto.setId((String) json.get("id"));
+      dto.setTitle((String) json.get("title"));
+      dto.setType((String) json.get("type"));
+      dto.setComponentId((String) json.get("componentId"));
+      dto.setAttachmentId((String) json.get("attachmentId"));
+      return dto;
+    }
 }
