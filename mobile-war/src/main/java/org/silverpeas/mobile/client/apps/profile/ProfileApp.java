@@ -98,14 +98,14 @@ public class ProfileApp extends App {
               final String pwd = (String) event.getData();
               PasswordDTO dto = new PasswordDTO();
               dto.setValue(pwd);
-              ServicesLocator.getServicePassword().checking(dto, new MethodCallback<PasswordControlDTO>() {
+              ServicesLocator.getServicePassword().checking(dto, new RestMethodCallbackOnlineOnly<PasswordControlDTO>() {
                 @Override
-                public void onFailure(final Method method, final Throwable throwable) {
+                public void onFailure(final RestMethod method, final Throwable throwable) {
                   EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
                 }
 
                 @Override
-                public void onSuccess(final Method method, final PasswordControlDTO passwordControlDTO) {
+                public void onSuccess(final RestMethod method, final PasswordControlDTO passwordControlDTO) {
                     if (passwordControlDTO.isCorrect()) {
                       RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
 

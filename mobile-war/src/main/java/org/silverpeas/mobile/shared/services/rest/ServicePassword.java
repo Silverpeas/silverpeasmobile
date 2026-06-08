@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,24 +24,33 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.password.PasswordControlDTO;
 import org.silverpeas.mobile.shared.dto.password.PasswordDTO;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 
 /**
  * @author svu
  */
-@Path("/password/policy")
-public interface ServicePassword extends RestService {
+//@Path("/password/policy")
+public class ServicePassword extends AbstractService {
 
+  public final static String PATH = "/silverpeas/services/password/policy";
 
-  @POST
+  /*@POST
   @Path("/checking")
-  public void checking(PasswordDTO value, MethodCallback<PasswordControlDTO> callback);
+  public void checking(PasswordDTO value, MethodCallback<PasswordControlDTO> callback);*/
 
+  public void checking(PasswordDTO value, RestCallback<PasswordControlDTO> callback) {
+    post(PATH + "/checking",
+            Global.JSON.stringify(Js.asAny(value.toJSON())),
+            result -> PasswordControlDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback
+    );
+  }
 
 }

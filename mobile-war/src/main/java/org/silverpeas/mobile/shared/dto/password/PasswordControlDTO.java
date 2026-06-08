@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.password;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -31,8 +33,8 @@ import java.io.Serializable;
  */
 public class PasswordControlDTO implements Serializable {
 
-  String[] requiredRuleIdsInError;
-  String[] combinedRuleIdsInError;
+  transient String[] requiredRuleIdsInError;
+  transient String[] combinedRuleIdsInError;
   boolean isRuleCombinationRespected;
   boolean isCorrect;
 
@@ -66,5 +68,22 @@ public class PasswordControlDTO implements Serializable {
 
   public void setIsCorrect(final boolean isCorrect) {
     this.isCorrect = isCorrect;
+  }
+
+  public static PasswordControlDTO fromJSON(JsPropertyMap<Object> json) {
+    PasswordControlDTO dto = new PasswordControlDTO();
+
+    Object v = json.get("isCorrect");
+    if (v != null) {
+      dto.setIsCorrect((Boolean) v);
+    }
+
+    Object draft = json.get("isRuleCombinationRespected");
+    if (draft != null) {
+      dto.setIsRuleCombinationRespected((Boolean) draft);
+    }
+
+    return dto;
+
   }
 }
