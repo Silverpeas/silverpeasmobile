@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,37 +24,54 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/mobile/news")
-public interface ServiceNews extends RestService {
+public class ServiceNews extends AbstractService {
 
-  @GET
-  @Path("{appId}/all")
-  public void getNews(@PathParam("appId") String appId, MethodCallback<List<NewsDTO>> callback);
+  public final static String PATH = "/silverpeas/services/mobile/news/";
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{appId}/create")
-  public void createNews(@PathParam("appId") String appId, NewsDTO news, MethodCallback<NewsDTO> callback);
+  public void getNews(String appId, RestCallback<List<NewsDTO>> callback) {
+    get(PATH + encode(appId) + "/all",
+            this::mapNews,
+            callback);
+  }
 
-  @PUT
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{appId}/update")
-  public void updateNews(@PathParam("appId") String appId, NewsDTO news, MethodCallback<Void> callback);
+  private List<NewsDTO> mapNews(Object result) {
+    return mapArray(result, NewsDTO::fromJSON);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/byPubId/{pubId}")
-  public void getNewsByPubId(@PathParam("appId") String appId, @PathParam("pubId") String pubId, MethodCallback<NewsDTO> callback);
+  public void createNews(String appId, NewsDTO news, RestCallback<NewsDTO> callback) {
+    post(PATH + encode(appId) + "/create",
+            Global.JSON.stringify(Js.asAny(news.toJSON())),
+            result -> NewsDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback
+    );
+  }
+
+  public void updateNews(String appId, NewsDTO news, RestCallback<Void> callback) {
+    put(PATH + encode(appId) + "/update",
+            Global.JSON.stringify(Js.asAny(news.toJSON())),
+            result -> null,
+            callback);
+  }
+
+  public void getNewsByPubId(String appId, String pubId, RestCallback<NewsDTO> callback) {
+    get(PATH + encode(appId) + "/byPubId/" + encode(pubId),
+            result -> NewsDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback);
+  }
 
 }

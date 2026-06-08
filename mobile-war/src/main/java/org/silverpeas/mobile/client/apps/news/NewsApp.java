@@ -40,6 +40,8 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
@@ -68,7 +70,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
 
   @Override
   public void loadNews(final NewsLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<NewsDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<NewsDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -76,7 +78,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       }
 
       @Override
-      public void onSuccess(final Method method, final List<NewsDTO> news) {
+      public void onSuccess(final RestMethod method, final List<NewsDTO> news) {
         super.onSuccess(method, news);
         EventBus.getInstance().fireEvent(new NewsLoadedEvent(getApplicationInstance(), news));
       }
@@ -86,7 +88,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
 
   @Override
   public void createNews(NewsCreateEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<NewsDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<NewsDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -94,13 +96,13 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       }
 
       @Override
-      public void onFailure(Method method, Throwable t) {
+      public void onFailure(RestMethod method, Throwable t) {
         super.onFailure(method, t);
         EventBus.getInstance().fireEvent(new NewsSavedEvent(true, null));
       }
 
       @Override
-      public void onSuccess(Method method, NewsDTO dto) {
+      public void onSuccess(RestMethod method, NewsDTO dto) {
         super.onSuccess(method, dto);
         EventBus.getInstance().fireEvent(new NewsSavedEvent(false, dto));
       }
@@ -110,7 +112,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
 
   @Override
   public void loadOneNews(OneNewsLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<NewsDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<NewsDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -118,7 +120,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       }
 
       @Override
-      public void onSuccess(Method method, NewsDTO newsDTO) {
+      public void onSuccess(RestMethod method, NewsDTO newsDTO) {
         super.onSuccess(method, newsDTO);
         EventBus.getInstance().fireEvent(new OneNewsLoadedEvent(newsDTO));
       }
@@ -128,7 +130,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
 
   @Override
   public void updateNews(NewsUpdateEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -136,13 +138,13 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       }
 
       @Override
-      public void onSuccess(Method method, Void unused) {
+      public void onSuccess(RestMethod method, Void unused) {
         super.onSuccess(method, unused);
         EventBus.getInstance().fireEvent(new NewsSavedEvent(false, null));
       }
 
       @Override
-      public void onFailure(Method method, Throwable t) {
+      public void onFailure(RestMethod method, Throwable t) {
         super.onFailure(method, t);
         EventBus.getInstance().fireEvent(new NewsSavedEvent(true, null));
       }

@@ -87,6 +87,7 @@ public class ServiceNews extends AbstractRestWebService {
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("create")
   public NewsDTO createNews(NewsDTO news) {
 

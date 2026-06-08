@@ -43,7 +43,7 @@ public class ServicesLocator {
   private static ServiceMedia serviceMedia = GWT.create(ServiceMedia.class);
   private static ServiceSearch serviceSearch = GWT.create(ServiceSearch.class);
   private static ServiceNotifications serviceNotifications = GWT.create(ServiceNotifications.class);
-  private static ServiceNews serviceNews = GWT.create(ServiceNews.class);
+  private static ServiceNews serviceNews = new ServiceNews();
   private static ServiceClassifieds serviceClassifieds = GWT.create(ServiceClassifieds.class);
   private static ServiceSurvey serviceSurvey = GWT.create(ServiceSurvey.class);
   private static ServiceWorkflow serviceWorkflow = GWT.create(ServiceWorkflow.class);
@@ -117,7 +117,6 @@ public class ServicesLocator {
   }
 
   public static ServiceMyLinks getServiceMyLinks() {
-
     return serviceMyLinks;
   }
 
@@ -171,7 +170,6 @@ public class ServicesLocator {
   }
 
   public static ServiceNews getServiceNews() {
-    initRestContext();
     return serviceNews;
   }
 
