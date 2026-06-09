@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,8 +25,6 @@
 package org.silverpeas.mobile.client.apps.contacts;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.contacts.events.app.*;
 import org.silverpeas.mobile.client.apps.contacts.events.pages.ContactsLoadedEvent;
 import org.silverpeas.mobile.client.apps.contacts.pages.ContactPage;
@@ -38,7 +36,8 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
@@ -68,7 +67,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
 
   @Override
   public void loadContacts(final ContactsLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<DetailUserDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<DetailUserDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -78,7 +77,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
       }
 
       @Override
-      public void onSuccess(final Method method, final List<DetailUserDTO> result) {
+      public void onSuccess(final RestMethod method, final List<DetailUserDTO> result) {
         super.onSuccess(method, result);
         // Notify view
         EventBus.getInstance().fireEvent(new ContactsLoadedEvent(result));
@@ -89,7 +88,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
 
   @Override
   public void loadContact(ContactLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<DetailUserDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -97,7 +96,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
       }
 
       @Override
-      public void onSuccess(Method method, DetailUserDTO detailUserDTO) {
+      public void onSuccess(RestMethod method, DetailUserDTO detailUserDTO) {
         super.onSuccess(method, detailUserDTO);
         ContactPage page = new ContactPage();
         page.setPageTitle(detailUserDTO.getFirstName() + " " + detailUserDTO.getLastName());
@@ -121,7 +120,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
     page.setPersonnalContactsVisible(false);
     page.init(true);
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<DetailUserDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<DetailUserDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -130,7 +129,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
       }
 
       @Override
-      public void onSuccess(final Method method, final List<DetailUserDTO> result) {
+      public void onSuccess(final RestMethod method, final List<DetailUserDTO> result) {
         super.onSuccess(method, result);
         ContactsApp.super.start();
         // Notify view
@@ -149,7 +148,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals(ContentsTypes.Contacts.toString())) {
 
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ContactFilters>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ContactFilters>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -157,7 +156,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
         }
 
         @Override
-        public void onFailure(final Method method, final Throwable t) {
+        public void onFailure(final RestMethod method, final Throwable t) {
           super.onFailure(method, t);
           ContactsPage page = (ContactsPage) getMainPage();
           if (page != null) {
@@ -171,7 +170,7 @@ public class ContactsApp extends App implements ContactsAppEventHandler, Navigat
         }
 
         @Override
-        public void onSuccess(final Method method, final ContactFilters result) {
+        public void onSuccess(final RestMethod method, final ContactFilters result) {
           super.onSuccess(method, result);
           ContactsPage page = (ContactsPage) getMainPage();
           if (page != null) {

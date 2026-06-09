@@ -86,6 +86,39 @@ public class DetailUserDTO implements Serializable{
       if (ldap != null) {
         dto.setLdap((boolean) ldap);
       }
+
+      Object propertiesObj = json.get("properties");
+      if (propertiesObj != null) {
+        JsArray<Object> propertiesArray = (JsArray<Object>) propertiesObj;
+
+        List<PropertyDTO> properties = new ArrayList<>();
+
+        for (int i = 0; i < propertiesArray.length; i++) {
+          JsPropertyMap<Object> propertyJson =
+                  (JsPropertyMap<Object>) propertiesArray.getAt(i);
+
+          properties.add(PropertyDTO.fromJSON(propertyJson));
+        }
+
+        dto.setProperties(properties);
+      }
+
+
+
+      Object propertiesLabelObj = json.get("propertiesLabel");
+      if (propertiesLabelObj != null) {
+        JsPropertyMap<Object> labelsJson =
+                (JsPropertyMap<Object>) propertiesLabelObj;
+
+        Map<String, String> labels = new HashMap<>();
+
+        labelsJson.forEach(key -> {
+          labels.put(key, (String) labelsJson.get(key));
+        });
+
+        dto.setPropertiesLabel(labels);
+      }
+
       return dto;
     }
 

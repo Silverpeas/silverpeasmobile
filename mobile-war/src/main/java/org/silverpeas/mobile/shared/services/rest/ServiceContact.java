@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,40 +24,50 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/mobile/contact")
-public interface ServiceContact extends RestService {
+public class ServiceContact extends AbstractService {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("contact/{userId}/")
-  void getContact(@PathParam("userId") String userId,
-                   MethodCallback<DetailUserDTO> callback);
+  public final static String PATH = "/silverpeas/services/mobile/contact";
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("paging/{type}/")
-  void getContacts(@PathParam("type") String type, @QueryParam("filter") String filter,
-      @QueryParam("pageSize") int pageSize, @QueryParam("startIndex") int startIndex,
-      MethodCallback<List<DetailUserDTO>> callback);
+  public void getContact(String userId, RestCallback<DetailUserDTO> callback) {
+    get(PATH + "/contact/" + encode(userId),
+            result -> DetailUserDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("hasContacts/")
-  void hasContacts(MethodCallback<ContactFilters> callback);
+  public void getContacts(String type, String filter, int pageSize, int startIndex,
+                   RestCallback<List<DetailUserDTO>> callback) {
+    get(PATH + "/paging/" + encode(type) + "/?filter=" + encode(filter) + "&pageSize=" + pageSize + "&startIndex=" + startIndex,
+            this::mapContacts,
+            callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{type}/")
-  void getContactsFiltered(@PathParam("type") String type, @QueryParam("filter") String filter,
-      MethodCallback<List<DetailUserDTO>> callback);
+  public void hasContacts(RestCallback<ContactFilters> callback) {
+    get(PATH + "/hasContacts/",
+            result -> ContactFilters.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback);
+  }
+
+  public void getContactsFiltered(String type, String filter,
+                                  RestCallback<List<DetailUserDTO>> callback) {
+    get(PATH + encode(type) + "/?filter=" + encode(filter),
+            this::mapContacts,
+            callback);
+  }
+
+  private List<DetailUserDTO> mapContacts(Object result) {
+    return mapArray(result, DetailUserDTO::fromJSON);
+  }
+
 
 }

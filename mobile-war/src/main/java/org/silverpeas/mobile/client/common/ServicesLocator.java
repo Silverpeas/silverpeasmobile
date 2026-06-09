@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -28,14 +28,13 @@ import com.google.gwt.core.client.GWT;
 import org.fusesource.restygwt.client.Defaults;
 import org.silverpeas.mobile.client.common.network.RestAuthenticationDispatcher;
 import org.silverpeas.mobile.client.common.network.RestDispatcher;
-import org.silverpeas.mobile.client.common.network.SpMobileRpcRequestBuilder;
 import org.silverpeas.mobile.shared.services.rest.*;
 
 public class ServicesLocator {
   private static RestDispatcher dispatcher = new RestDispatcher();
 
   private static ServiceConnection serviceConnectionRest = new ServiceConnection();
-  private static ServiceContact serviceContact = GWT.create(ServiceContact.class);
+  private static ServiceContact serviceContact = new ServiceContact();
   private static ServiceTask serviceTasks = new ServiceTask();
   private static ServiceNavigation serviceNavigation = GWT.create(ServiceNavigation.class);
   private static ServiceRSE serviceRSE = GWT.create(ServiceRSE.class);
@@ -202,7 +201,6 @@ public class ServicesLocator {
   }
 
   public static ServiceTask getServiceTasks() {
-    //initRestContext();
     return serviceTasks;
   }
 
@@ -211,7 +209,6 @@ public class ServicesLocator {
   }
 
   public static ServiceContact getServiceContact() {
-    initRestContext();
     return serviceContact;
   }
 

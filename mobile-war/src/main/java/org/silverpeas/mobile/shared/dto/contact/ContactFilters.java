@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.contact;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 public class ContactFilters implements Serializable {
@@ -35,7 +37,6 @@ public class ContactFilters implements Serializable {
 
   private boolean hasContacts;
   private boolean hasPersonnalContacts;
-
 
   public boolean isHasContacts() {
     return hasContacts;
@@ -51,5 +52,22 @@ public class ContactFilters implements Serializable {
 
   public void setHasPersonnalContacts(final boolean hasPersonnalContacts) {
     this.hasPersonnalContacts = hasPersonnalContacts;
+  }
+
+  public static ContactFilters fromJSON(JsPropertyMap<Object> json) {
+    ContactFilters dto = new ContactFilters();
+
+
+    Object hasContacts = json.get("hasContacts");
+    if (hasContacts != null) {
+      dto.setHasContacts((boolean) hasContacts);
+    }
+
+    Object hasPersonnalContacts = json.get("hasPersonnalContacts");
+    if (hasPersonnalContacts != null) {
+      dto.setHasPersonnalContacts((boolean) hasPersonnalContacts);
+    }
+
+    return dto;
   }
 }
