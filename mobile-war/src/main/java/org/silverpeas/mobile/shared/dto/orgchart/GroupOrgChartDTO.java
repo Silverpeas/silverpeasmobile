@@ -25,23 +25,34 @@
 package org.silverpeas.mobile.shared.dto.orgchart;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonTypeName("GroupOrgChartDTO")
-public class GroupOrgChartDTO extends BaseDTO implements Serializable {
+public class GroupOrgChartDTO implements Serializable {
 
+  private String id;
   private static final long serialVersionUID = 5338415881024885835L;
   private String name;
   private List<UserDTO> users = new ArrayList<>();
   private List<GroupOrgChartDTO> subGroups = new ArrayList<>();
   private List<UserDTO> boss = new ArrayList<>();
 
-  public void setName(String name) {
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+    public void setName(String name) {
     this.name = name;
   }
 
@@ -76,4 +87,85 @@ public class GroupOrgChartDTO extends BaseDTO implements Serializable {
   public List<UserDTO> getBoss() { return boss; }
 
   public void setBoss(List<UserDTO> boss) { this.boss = boss; }
+
+  public static GroupOrgChartDTO fromJSON(JsPropertyMap<Object> json) {
+    GroupOrgChartDTO dto = new GroupOrgChartDTO();
+    dto.setId((String) json.get("id"));
+    dto.setName((String) json.get("name"));
+
+    Object usersObj = json.get("users");
+    if (usersObj != null) {
+      JsArray<Object> usersArray = (JsArray<Object>) usersObj;
+
+      List<UserDTO> users = new ArrayList<>();
+      for (int i = 0; i < usersArray.length; i++) {
+        JsPropertyMap<Object> userJson =
+                (JsPropertyMap<Object>) usersArray.getAt(i);
+
+        users.add(UserDTO.fromJSON(userJson));
+      }
+      dto.setUsers(users);
+    }
+
+    Object subGroupsObj = json.get("subGroups");
+    if (subGroupsObj != null) {
+      JsArray<Object> subGroupsArray = (JsArray<Object>) subGroupsObj;
+
+      List<GroupOrgChartDTO> subGroups = new ArrayList<>();
+      for (int i = 0; i < subGroupsArray.length; i++) {
+        JsPropertyMap<Object> groupJson =
+                (JsPropertyMap<Object>) subGroupsArray.getAt(i);
+
+        subGroups.add(GroupOrgChartDTO.fromJSON(groupJson));
+      }
+      dto.setSubGroups(subGroups);
+    }
+
+    // boss
+    Object bossObj = json.get("boss");
+    if (bossObj != null) {
+      JsArray<Object> bossArray = (JsArray<Object>) bossObj;
+
+      List<UserDTO> bosses = new ArrayList<>();
+      for (int i = 0; i < bossArray.length; i++) {
+        JsPropertyMap<Object> bossJson =
+                (JsPropertyMap<Object>) bossArray.getAt(i);
+
+        bosses.add(UserDTO.fromJSON(bossJson));
+      }
+      dto.setBoss(bosses);
+    }
+
+    return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("id", id);
+    json.set("name", name);
+
+    // users
+    JsArray<Object> usersArray = new JsArray<>();
+    for (UserDTO user : users) {
+      usersArray.push(user.toJSON());
+    }
+    json.set("users", usersArray);
+
+    // subGroups
+    JsArray<Object> subGroupsArray = new JsArray<>();
+    for (GroupOrgChartDTO subGroup : subGroups) {
+      subGroupsArray.push(subGroup.toJSON());
+    }
+    json.set("subGroups", subGroupsArray);
+
+    // boss
+    JsArray<Object> bossArray = new JsArray<>();
+    for (UserDTO user : boss) {
+      bossArray.push(user.toJSON());
+    }
+    json.set("boss", bossArray);
+
+    return json;
+  }
 }

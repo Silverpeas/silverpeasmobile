@@ -1,5 +1,6 @@
 package org.silverpeas.mobile.shared.dto;
 
+import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;
@@ -30,6 +31,10 @@ public class PropertyDTO implements Serializable {
     public void setValue(String value) {
         this.value = value;
     }
-
-
+    public JsPropertyMap<Object> toJSON() {
+        JsPropertyMap<Object> json = JsPropertyMap.of();
+        json.set("key", key);
+        json.set("value", value);
+        return json;
+    }
 }

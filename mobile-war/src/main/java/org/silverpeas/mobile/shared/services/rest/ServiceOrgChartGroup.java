@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,18 +24,22 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
-import javax.ws.rs.*;
+import javax.ws.rs.PathParam;
 
-@Path("/mobile/orgchartgroup")
-public interface ServiceOrgChartGroup extends RestService {
+public class ServiceOrgChartGroup extends AbstractService {
 
-  @GET
-  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("{appId}/")
-  void getOrgChart(@PathParam("appId") String appId, MethodCallback<GroupOrgChartDTO> callback);
+  public final static String PATH = "/silverpeas/services/mobile/orgchartgroup/";
+
+  public void getOrgChart(String appId, RestCallback<GroupOrgChartDTO> callback) {
+    get(PATH + encode(appId),
+            result -> GroupOrgChartDTO.fromJSON(
+                    (JsPropertyMap<Object>) result
+            ),
+            callback);
+  }
 
 }

@@ -135,13 +135,15 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
 
   private List<PropertyDTO> rulesExetrator(String rules) {
     List<PropertyDTO> rulesList = new ArrayList<>();
-    String [] rulesInfos = rules.split(";");
-    for (String rule : rulesInfos) {
-      String [] r = rule.split("=");
-      PropertyDTO p = new PropertyDTO();
-      p.setKey(r[0]);
-      p.setValue(r[1]);
-      rulesList.add(p);
+    if (!rules.isEmpty()) {
+      String[] rulesInfos = rules.split(";");
+      for (String rule : rulesInfos) {
+        String[] r = rule.split("=");
+        PropertyDTO p = new PropertyDTO();
+        p.setKey(r[0]);
+        p.setValue(r[1]);
+        rulesList.add(p);
+      }
     }
     return rulesList;
   }
@@ -167,20 +169,22 @@ public class ServiceOrgChartGroup extends AbstractRestWebService {
     dto.setLastName(user.getLastName());
     dto.seteMail(user.getEmailAddress());
     dto.setAvatar(user.getAvatar());
-    String [] properties = propertiesToDisplay.split(";");
-    for (String property : properties) {
-      String [] p = property.split("=");
-      PropertyDTO prop = new PropertyDTO();
-      prop.setKey(p[0].trim());
-      String f = p[1].trim();
-      String v = Administration.get().getUserFull(user.getId()).getValue(f);
-      if (v.isEmpty()) {
-        Map<String, String> extrasProps = PublicationTemplateManager.getInstance().getDirectoryFormValues(user.getId(), user.getDomainId(), user.getUserPreferences().getLanguage());
-        v = extrasProps.get(f);
-        extrasProps.size();
+    if (!propertiesToDisplay.isEmpty()) {
+      String[] properties = propertiesToDisplay.split(";");
+      for (String property : properties) {
+        String[] p = property.split("=");
+        PropertyDTO prop = new PropertyDTO();
+        prop.setKey(p[0].trim());
+        String f = p[1].trim();
+        String v = Administration.get().getUserFull(user.getId()).getValue(f);
+        if (v.isEmpty()) {
+          Map<String, String> extrasProps = PublicationTemplateManager.getInstance().getDirectoryFormValues(user.getId(), user.getDomainId(), user.getUserPreferences().getLanguage());
+          v = extrasProps.get(f);
+          extrasProps.size();
+        }
+        prop.setValue(v);
+        dto.addProperty(prop);
       }
-      prop.setValue(v);
-      dto.addProperty(prop);
     }
     return dto;
   }

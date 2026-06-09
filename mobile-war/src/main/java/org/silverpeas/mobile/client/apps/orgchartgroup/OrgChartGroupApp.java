@@ -24,7 +24,6 @@
 package org.silverpeas.mobile.client.apps.orgchartgroup;
 
 import com.google.gwt.core.client.GWT;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -37,7 +36,6 @@ import org.silverpeas.mobile.client.apps.orgchartgroup.pages.OrgChartGroupPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -81,7 +79,7 @@ public class OrgChartGroupApp extends App implements NavigationEventHandler, Org
         if (event.getInstance().getType().equals(Apps.orgchartGroup.name())) {
             setApplicationInstance(event.getInstance());
 
-            MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<GroupOrgChartDTO>() {
+            RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<GroupOrgChartDTO>() {
                 @Override
                 public void attempt() {
                     super.attempt();
@@ -89,7 +87,7 @@ public class OrgChartGroupApp extends App implements NavigationEventHandler, Org
                 }
 
                 @Override
-                public void onSuccess(Method method, GroupOrgChartDTO groupOrgChartDTO) {
+                public void onSuccess(RestMethod method, GroupOrgChartDTO groupOrgChartDTO) {
                     super.onSuccess(method, groupOrgChartDTO);
                     OrgChartGroupPage page = new OrgChartGroupPage();
                     page.setApp(OrgChartGroupApp.this);

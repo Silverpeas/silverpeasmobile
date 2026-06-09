@@ -25,16 +25,19 @@
 package org.silverpeas.mobile.shared.dto;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonTypeName("UserDTO")
-public class UserDTO extends BaseDTO implements Serializable{
+public class UserDTO extends BaseDTO implements Serializable {
 
   private static final long serialVersionUID = 5388415881024885835L;
 
+  private String id;
   private String lastName;
   private String eMail;
   private String firstName;
@@ -42,7 +45,36 @@ public class UserDTO extends BaseDTO implements Serializable{
   private String password;
   private List<PropertyDTO> properties = new ArrayList<PropertyDTO>();
 
-  public List<PropertyDTO> getProperties() { return properties; }
+    public static UserDTO fromJSON(JsPropertyMap<Object> json) {
+      UserDTO dto = new UserDTO();
+      dto.setId((String) json.get("id"));
+      dto.setLastName((String) json.get("lastName"));
+      dto.setFirstName((String) json.get("firstName"));
+      dto.seteMail((String) json.get("eMail"));
+      dto.setAvatar((String) json.get("avatar"));
+      dto.setPassword((String) json.get("password"));
+
+      // properties
+      Object propertiesObj = json.get("properties");
+      if (propertiesObj != null) {
+        JsArray<Object> propertiesArray = (JsArray<Object>) propertiesObj;
+
+        List<PropertyDTO> properties = new ArrayList<>();
+
+        for (int i = 0; i < propertiesArray.length; i++) {
+          JsPropertyMap<Object> propJson =
+                  (JsPropertyMap<Object>) propertiesArray.getAt(i);
+
+          properties.add(PropertyDTO.fromJSON(propJson));
+        }
+
+        dto.setProperties(properties);
+      }
+
+      return dto;
+    }
+
+    public List<PropertyDTO> getProperties() { return properties; }
 
   public void setProperties(List<PropertyDTO> properties) { this.properties = properties; }
 
@@ -99,5 +131,40 @@ public class UserDTO extends BaseDTO implements Serializable{
   @Override
   public int hashCode() {
     return Integer.parseInt(getId());
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+    json.set("id", id);
+    json.set("lastName", lastName);
+    json.set("firstName", firstName);
+    json.set("eMail", eMail);
+    json.set("avatar", avatar);
+    json.set("password", password);
+
+    // properties
+    JsArray<Object> propertiesArray = new JsArray<>();
+    for (PropertyDTO property : properties) {
+      propertiesArray.push(property.toJSON());
+    }
+    json.set("properties", propertiesArray);
+
+    return json;
   }
 }
