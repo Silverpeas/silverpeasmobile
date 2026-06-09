@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,9 +25,9 @@
 package org.silverpeas.mobile.shared.dto.faq;
 
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author svu
@@ -60,4 +60,14 @@ public class CategoryDTO implements Serializable {
   public void setDescription(final String description) {
     this.description = description;
   }
+
+    public static CategoryDTO fromJSON(JsPropertyMap<Object> json) {
+      CategoryDTO dto = new CategoryDTO();
+
+      dto.setId((String) json.get("id"));
+      dto.setTitle((String) json.get("title"));
+      dto.setDescription((String) json.get("description"));
+
+      return dto;
+    }
 }

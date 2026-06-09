@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,34 +24,49 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDetailDTO;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/mobile/faq")
-public interface ServiceFaq extends RestService {
+public class ServiceFaq extends AbstractService {
 
-  @GET
-  @Path("{appId}/question/all")
-  public void getAllQuestions(@PathParam("appId") String appId,
-      MethodCallback<List<QuestionDTO>> callback);
+    private static final String PATH = "/silverpeas/services/mobile/faq";
 
-  @GET
-  @Path("{appId}/category/all")
-  public void getAllCategories(@PathParam("appId") String appId,
-      MethodCallback<List<CategoryDTO>> callback);
+    public void getAllQuestions(String appId, RestCallback<List<QuestionDTO>> callback) {
+        String url = PATH + "/" + encode(appId) + "/question/all";
 
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{appId}/question")
-  public void createQuestion(@PathParam("appId") String appId, QuestionDetailDTO question, MethodCallback<QuestionDetailDTO> callback);
+        get(
+                url,
+                result -> mapArray(result, QuestionDTO::fromJSON),
+                callback
+        );
+    }
+
+    public void getAllCategories(String appId, RestCallback<List<CategoryDTO>> callback) {
+        String url = PATH + "/" + encode(appId) + "/category/all";
+        get(
+                url,
+                result -> mapArray(result, CategoryDTO::fromJSON),
+                callback
+        );
+    }
+
+    public void createQuestion(String appId, QuestionDetailDTO question, RestCallback<QuestionDetailDTO> callback) {
+        String url = PATH + "/" + encode(appId) + "/question";
+        post(
+                url,
+                Global.JSON.stringify(Js.asAny(question.toJSON())),
+                result -> QuestionDetailDTO.fromJSON((JsPropertyMap<Object>) result),
+                callback
+        );
+    }
 }

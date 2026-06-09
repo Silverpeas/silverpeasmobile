@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.shared.dto.faq;
 
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 
 import java.io.Serializable;
@@ -38,7 +39,17 @@ public class ReplyDTO implements Serializable {
   private String content;
   private List<SimpleDocumentDTO> attachments;
 
-  public String getTitle() {
+    public static ReplyDTO fromJSON(JsPropertyMap<Object> json) {
+      ReplyDTO dto = new ReplyDTO();
+
+      dto.setId((String) json.get("id"));
+      dto.setTitle((String) json.get("title"));
+      dto.setContent((String) json.get("content"));
+
+      return dto;
+    }
+
+    public String getTitle() {
     return title;
   }
 

@@ -40,6 +40,8 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.shared.dto.documents.DocumentType;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
@@ -77,7 +79,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
     if (event.getInstance().getType().equals(Apps.questionReply.name())) {
       this.setApplicationInstance(event.getInstance());
 
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<QuestionDTO>>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<QuestionDTO>>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -85,7 +87,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
         }
 
         @Override
-        public void onSuccess(final Method method, final List<QuestionDTO> questions) {
+        public void onSuccess(final RestMethod method, final List<QuestionDTO> questions) {
           super.onSuccess(method, questions);
           FaqPage page = new FaqPage();
           page.setApp(FaqApp.this);
@@ -109,7 +111,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
   @Override
   public void loadCategories(final FaqCategoriesLoadEvent event) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CategoryDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<CategoryDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -117,7 +119,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
       }
 
       @Override
-      public void onSuccess(final Method method, final List<CategoryDTO> categories) {
+      public void onSuccess(final RestMethod method, final List<CategoryDTO> categories) {
         super.onSuccess(method, categories);
         EventBus.getInstance().fireEvent(new FaqCategoriesLoadedEvent(categories));
       }
@@ -148,7 +150,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
 
   @Override
   public void onCreateQuestion(QuestionCreateEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<QuestionDetailDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<QuestionDetailDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -156,7 +158,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
       }
 
       @Override
-      public void onSuccess(Method method, QuestionDetailDTO questionDetailDTO) {
+      public void onSuccess(RestMethod method, QuestionDetailDTO questionDetailDTO) {
         super.onSuccess(method, questionDetailDTO);
         Snackbar.show(msg.createConfirmation(), Snackbar.DELAY, Snackbar.INFO);
         reloadFaq();
@@ -167,7 +169,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
 
 
   private void reloadFaq() {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<QuestionDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<QuestionDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -175,7 +177,7 @@ public class FaqApp extends App implements NavigationEventHandler, FaqAppEventHa
       }
 
       @Override
-      public void onSuccess(final Method method, final List<QuestionDTO> questions) {
+      public void onSuccess(final RestMethod method, final List<QuestionDTO> questions) {
         super.onSuccess(method, questions);
         FaqPage page = (FaqPage) getMainPage();
         page.setData(questions);

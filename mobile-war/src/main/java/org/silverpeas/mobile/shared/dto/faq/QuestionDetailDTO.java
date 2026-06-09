@@ -25,6 +25,9 @@
 package org.silverpeas.mobile.shared.dto.faq;
 
 
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.DetailUserDTO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,40 +36,70 @@ import java.util.List;
  * @author svu
  */
 public class QuestionDetailDTO implements Serializable {
-  private long id;
-  private String question;
-  private String categoryId;
-  private String description;
+    private long id;
+    private String question;
+    private String categoryId;
+    private String description;
+    public String getQuestion() {
+        return question;
+    }
 
-  public String getQuestion() {
-    return question;
-  }
+    public void setQuestion(String question) {
+        this.question = question;
+    }
 
-  public void setQuestion(String question) {
-    this.question = question;
-  }
+    public String getCategoryId() {
+        return categoryId;
+    }
 
-  public String getCategoryId() {
-    return categoryId;
-  }
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
 
-  public void setCategoryId(String categoryId) {
-    this.categoryId = categoryId;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public long getId() {
+        return id;
+    }
 
-  public long getId() {
-    return id;
-  }
+    public static QuestionDetailDTO fromJSON(JsPropertyMap<Object> json) {
+        QuestionDetailDTO dto = new QuestionDetailDTO();
+
+        Object idObj = json.get("id");
+        if (idObj != null) {
+            if (idObj instanceof Number) {
+                dto.setId(((Number) idObj).longValue());
+            } else {
+                dto.setId(Long.parseLong(idObj.toString()));
+            }
+        }
+
+        dto.setQuestion((String) json.get("question"));
+        dto.setQuestion((String) json.get("categoryId"));
+        dto.setQuestion((String) json.get("description"));
+
+        return dto;
+    }
+
+    public JsPropertyMap<Object> toJSON() {
+        JsPropertyMap<Object> json = JsPropertyMap.of();
+
+        json.set("id", getId());
+        json.set("question", getQuestion());
+        json.set("categoryId", getCategoryId());
+        json.set("description", getDescription());
+
+        return json;
+    }
+
 }

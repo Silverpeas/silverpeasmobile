@@ -25,6 +25,10 @@
 package org.silverpeas.mobile.shared.dto.faq;
 
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.PropertyDTO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,41 +37,69 @@ import java.util.List;
  * @author svu
  */
 public class QuestionDTO implements Serializable {
-  private String title, description;
+    private String title, description;
 
-  private CategoryDTO category;
+    private CategoryDTO category;
 
-  private List<ReplyDTO> replies = new ArrayList<>();
+    private List<ReplyDTO> replies = new ArrayList<>();
 
-  public List<ReplyDTO> getReplies() {
-    return replies;
-  }
+    public List<ReplyDTO> getReplies() {
+        return replies;
+    }
 
-  public void setReplies(final List<ReplyDTO> replies) {
-    this.replies = replies;
-  }
+    public void setReplies(final List<ReplyDTO> replies) {
+        this.replies = replies;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void setTitle(final String title) {
-    this.title = title;
-  }
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 
-  public CategoryDTO getCategory() {
-    return category;
-  }
+    public CategoryDTO getCategory() {
+        return category;
+    }
 
-  public void setCategory(final CategoryDTO category) {
-    this.category = category;
-  }
+    public void setCategory(final CategoryDTO category) {
+        this.category = category;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public String getDescription() {
+        return description;
+    }
+
+    public static QuestionDTO fromJSON(JsPropertyMap<Object> json) {
+        QuestionDTO dto = new QuestionDTO();
+
+        dto.setTitle((String) json.get("title"));
+        dto.setDescription((String) json.get("description"));
+
+        Object categoryObj = json.get("category");
+        if (categoryObj != null) {
+            JsPropertyMap<Object> catMap = (JsPropertyMap<Object>) categoryObj;
+            dto.setCategory(CategoryDTO.fromJSON(catMap));
+        }
+
+        Object repliesObj = json.get("replies");
+        if (repliesObj != null) {
+
+        }
+        JsArray<Object> repliesArray = (JsArray<Object>) repliesObj;
+        List<ReplyDTO> replies = new ArrayList<>();
+        for (int i = 0; i < repliesArray.length; i++) {
+            JsPropertyMap<Object> propertyJson =
+                    (JsPropertyMap<Object>) repliesArray.getAt(i);
+            replies.add(ReplyDTO.fromJSON(propertyJson));
+        }
+        dto.setReplies(replies);
+
+        return dto;
+    }
 }
