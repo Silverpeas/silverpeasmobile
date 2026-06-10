@@ -25,6 +25,8 @@
 package org.silverpeas.mobile.client.apps.resourcesManager;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Timer;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -45,6 +47,8 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.TextCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.reservations.Errors;
@@ -79,7 +83,7 @@ public class ResourcesManagerApp extends App
     if (event.getInstance().getType().equals(Apps.resourcesManager.name())) {
       setApplicationInstance(event.getInstance());
 
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ReservationDTO>>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<ReservationDTO>>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -87,7 +91,7 @@ public class ResourcesManagerApp extends App
         }
 
         @Override
-        public void onSuccess(final Method method, final List<ReservationDTO> reservationDTOS) {
+        public void onSuccess(final RestMethod method, final List<ReservationDTO> reservationDTOS) {
           super.onSuccess(method, reservationDTOS);
           ResourcesManagerPage page = new ResourcesManagerPage();
           page.setApp(ResourcesManagerApp.this);
@@ -111,7 +115,7 @@ public class ResourcesManagerApp extends App
 
   @Override
   public void addReservation(final AddReservationEvent event) {
-    TextCallbackOnlineOnly checkAction = new TextCallbackOnlineOnly() {
+    RestMethodCallbackOnlineOnly checkAction = new RestMethodCallbackOnlineOnly<String>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -120,11 +124,11 @@ public class ResourcesManagerApp extends App
       }
 
       @Override
-      public void onSuccess(final Method method, final String error) {
-        super.onSuccess(method, error);
-        if (error.isEmpty()) {
-          MethodCallbackOnlineOnly action =
-              new MethodCallbackOnlineOnly<List<ResourceDTO>>() {
+      public void onSuccess(final RestMethod method, final String result) {
+        super.onSuccess(method, result);
+        if (result == null) {
+          RestMethodCallbackOnlineOnly action =
+              new RestMethodCallbackOnlineOnly<List<ResourceDTO>>() {
                 @Override
                 public void attempt() {
                   super.attempt();
@@ -135,7 +139,7 @@ public class ResourcesManagerApp extends App
                 }
 
                 @Override
-                public void onSuccess(final Method method,
+                public void onSuccess(final RestMethod method,
                     final List<ResourceDTO> resources) {
                   super.onSuccess(method, resources);
 
@@ -147,9 +151,9 @@ public class ResourcesManagerApp extends App
                 }
               };
           action.attempt();
-        } else if (error.equals(Errors.dateOrder.toString())) {
+        } else if (result.equals(Errors.dateOrder.toString())) {
           Snackbar.showWithCloseButton(msg.errorDateOrder(), Snackbar.ERROR);
-        } else if (error.equals(Errors.earlierDate.toString())) {
+        } else if (result.equals(Errors.earlierDate.toString())) {
           Snackbar.showWithCloseButton(msg.errorEarlierDate(), Snackbar.ERROR);
         }
       }
@@ -159,7 +163,7 @@ public class ResourcesManagerApp extends App
 
   @Override
   public void saveReservation(final SaveReservationEvent saveReservationEvent) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReservationDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ReservationDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -168,7 +172,7 @@ public class ResourcesManagerApp extends App
       }
 
       @Override
-      public void onSuccess(final Method method, final ReservationDTO reservation) {
+      public void onSuccess(final RestMethod method, final ReservationDTO reservation) {
         super.onSuccess(method, reservation);
         Snackbar.show(msg.saved(), Snackbar.DELAY, Snackbar.INFO);
         getMainPage().back();
@@ -183,7 +187,7 @@ public class ResourcesManagerApp extends App
 
   @Override
   public void deleteReservation(final DeleteReservationEvent deleteReservationEvent) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -192,7 +196,7 @@ public class ResourcesManagerApp extends App
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
+      public void onSuccess(final RestMethod method, final Void unused) {
         super.onSuccess(method, unused);
         getMainPage().back();
         DeletedReservationEvent event = new DeletedReservationEvent();

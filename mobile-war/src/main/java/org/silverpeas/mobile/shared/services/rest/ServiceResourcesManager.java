@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,58 +24,54 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.client.TextCallback;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
  * @author svu
  */
-@Path("/mobile/resourcesManager")
-public interface ServiceResourcesManager extends RestService {
+public class ServiceResourcesManager extends AbstractService {
 
-  @GET
-  @Produces(MediaType.TEXT_PLAIN)
-  @Path("{appId}/resources/checkdates/{startDate}/{endDate}")
-  public void checkDates(@PathParam("appId") String appId, @PathParam("startDate") String startDate,
-      @PathParam("endDate") String endDate, TextCallback callback);
+  private static final String PATH = "/silverpeas/services/mobile/resourcesManager";
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/resources/available/{startDate}/{endDate}")
-  public void getAvailableResources(@PathParam("appId") String appId,
-      @PathParam("startDate") String startDate, @PathParam("endDate") String endDate,
-      MethodCallback<List<ResourceDTO>> callback);
+  public void checkDates(String appId, String startDate, String endDate, RestCallback<String> callback) {
+    String url = PATH + "/" + encode(appId) + "/resources/checkdates/" + encode(startDate) + "/" + encode(endDate);
+    getText(url, result -> (String) result, callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/reservations/my")
-  public void getMyReservations(@PathParam("appId") String appId,
-      MethodCallback<List<ReservationDTO>> callback);
+  public void getAvailableResources(String appId, String startDate, String endDate, RestCallback<List<ResourceDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/resources/available/" + encode(startDate) + "/" + encode(endDate);
+    get(url, result -> mapArray(result, ResourceDTO::fromJSON), callback);
+  }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{appId}/saveReservation")
-  public void saveReservation(@PathParam("appId") String appId, ReservationDTO dto,
-      MethodCallback<ReservationDTO> callback);
+  public void getMyReservations(String appId, RestCallback<List<ReservationDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/reservations/my";
+    get(url, result -> mapArray(result, ReservationDTO::fromJSON), callback);
+  }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{appId}/reservation")
-  public void deleteReservation(@PathParam("appId") String appId, ReservationDTO reservation,
-      MethodCallback<Void> callback);
+  public void saveReservation(String appId, ReservationDTO reservation, RestCallback<ReservationDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/saveReservation";
+    post(
+            url,
+            Global.JSON.stringify(Js.asAny(reservation.toJSON())),
+            result -> ReservationDTO.fromJSON((JsPropertyMap<Object>) result),
+            callback
+    );
+  }
+
+  public void deleteReservation(String appId, ReservationDTO reservation, RestCallback<Void> callback) {
+    String url = PATH + "/" + encode(appId) + "/reservation";
+    delete(
+            url,
+            Global.JSON.stringify(Js.asAny(reservation.toJSON())),
+            result -> null,
+            callback
+    );
+  }
 }

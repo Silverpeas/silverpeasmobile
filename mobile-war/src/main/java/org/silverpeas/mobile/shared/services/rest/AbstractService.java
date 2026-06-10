@@ -83,9 +83,9 @@ public class AbstractService {
             String url,
             Object body,
             Function<Object, T> mapper,
-            RestCallback<T> callback) {
+            RestCallback<T> callback, String contentType) {
 
-        RequestInit init = initRequest(method, "application/json");
+        RequestInit init = initRequest(method, contentType);
 
         if (body != null) {
             init.setBody(body.toString());
@@ -131,11 +131,29 @@ public class AbstractService {
                 });
     }
 
+    protected <T> void request(
+            String method,
+            String url,
+            Object body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback) {
+
+        request(method, url, body, mapper,callback, "application/json");
+
+    }
+
     protected <T> void get(
             String url,
             Function<Object, T> mapper,
             RestCallback<T> callback) {
         request("GET", url, null, mapper, callback);
+    }
+
+    protected <T> void getText(
+            String url,
+            Function<Object, T> mapper,
+            RestCallback<T> callback) {
+        request("GET", url, null, mapper, callback, "text/plain");
     }
 
     protected <T> void post(
