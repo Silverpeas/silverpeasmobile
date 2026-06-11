@@ -110,14 +110,13 @@ public class AbstractService {
                 })
                 .then(text -> {
                     if (text == null || text.trim().isEmpty()) {
-                        callback.onSuccess(restMethod,null);
                         return null;
                     }
                     return Js.cast(Global.JSON.parse(text));
                 })
                 .then(result -> {
                     if (result == null) {
-                        callback.onSuccess(restMethod,null);
+                        callback.onSuccess(restMethod, null);
                         return null;
                     }
 

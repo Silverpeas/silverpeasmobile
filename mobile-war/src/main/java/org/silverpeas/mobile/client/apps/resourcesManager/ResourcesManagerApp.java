@@ -25,18 +25,11 @@
 package org.silverpeas.mobile.client.apps.resourcesManager;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Timer;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AbstractResourcesManagerAppEvent;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AddReservationEvent;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.DeleteReservationEvent;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.ResourcesManagerAppEventHandler;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.SaveReservationEvent;
+import org.silverpeas.mobile.client.apps.resourcesManager.events.app.*;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.DeletedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.events.pages.SavedReservationEvent;
 import org.silverpeas.mobile.client.apps.resourcesManager.pages.ReservationSelectionPage;
@@ -45,8 +38,6 @@ import org.silverpeas.mobile.client.apps.resourcesManager.resources.ResourcesMan
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.client.common.network.TextCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.Snackbar;
@@ -175,8 +166,7 @@ public class ResourcesManagerApp extends App
       public void onSuccess(final RestMethod method, final ReservationDTO reservation) {
         super.onSuccess(method, reservation);
         Snackbar.show(msg.saved(), Snackbar.DELAY, Snackbar.INFO);
-        getMainPage().back();
-        getMainPage().back();
+        getMainPage().back(2);
         SavedReservationEvent event = new SavedReservationEvent();
         event.setData(reservation);
         EventBus.getInstance().fireEvent(event);

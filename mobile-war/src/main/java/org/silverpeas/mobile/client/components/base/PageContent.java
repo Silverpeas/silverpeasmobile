@@ -134,6 +134,12 @@ public abstract class PageContent extends Composite implements View, NativePrevi
     PageHistory.getInstance().back();
   }
 
+  public void back(int nb) {
+    for (int i = 0; i < nb; i++) {
+      PageHistory.getInstance().back();
+    }
+  }
+
   public void hide() {
     String appName = "";
     if (getApp() != null) appName = getApp().getAppName();
