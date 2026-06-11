@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.formsonline;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -47,5 +49,12 @@ public class ValidationRequestDTO implements Serializable {
 
   public void setComment(final String comment) {
     this.comment = comment;
+  }
+
+  public Object toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+    json.set("decision", getDecision());
+    json.set("comment", getComment());
+    return json;
   }
 }

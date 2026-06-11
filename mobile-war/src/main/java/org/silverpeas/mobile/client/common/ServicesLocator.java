@@ -62,7 +62,7 @@ public class ServicesLocator {
   private static ServicePassword servicePassword = GWT.create(ServicePassword.class);
 
   private static ServiceFaq serviceFaq = GWT.create(ServiceFaq.class);
-  private static ServiceFormsOnline serviceFormsOnline = GWT.create(ServiceFormsOnline.class);
+  private static ServiceFormsOnline serviceFormsOnline = new ServiceFormsOnline();
   private static ServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService();
 
   private static ServiceResourcesManager serviceResourcesManager = GWT.create(ServiceResourcesManager.class);
@@ -101,7 +101,6 @@ public class ServicesLocator {
   }
 
   public static ServiceFormsOnline getServiceFormsOnline() {
-    initRestContext();
     return serviceFormsOnline;
   }
 

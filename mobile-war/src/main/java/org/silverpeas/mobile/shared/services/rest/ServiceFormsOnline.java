@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,74 +24,162 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
+import org.silverpeas.mobile.shared.dto.GroupDTO;
+import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
+ * Service for handling requests related to online forms.
  * @author svu
  */
-@Path("/mobile/formsOnline")
-public interface ServiceFormsOnline extends RestService {
+public class ServiceFormsOnline extends AbstractService {
 
+  private static final String PATH = "/silverpeas/services/mobile/formsOnline";
 
-  @POST
-  @Path("{appId}/loadRequest/{requestId}")
-  public void loadRequest(@PathParam("appId") String appId, @PathParam("requestId") String requestId, MethodCallback<FormRequestDTO> callback);
+  /**
+   * Load a form request.
+   * @param appId
+   * @param requestId
+   * @param callback
+   */
+  public void loadRequest(String appId, String requestId, RestCallback<FormRequestDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/loadRequest/" + encode(requestId);
+    post(
+            url,
+            null, // Pas de corps pour cette requête POST
+            result -> FormRequestDTO.fromJSON((JsPropertyMap<Object>) result),
+            callback
+    );
+  }
 
-  @GET
-  @Path("{appId}/sendables")
-  public void getSendablesForms(@PathParam("appId") String appId,
-      MethodCallback<List<FormDTO>> callback);
+  /**
+   * Retrieve the forms that can be submitted for a given application.
+   * @param appId
+   * @param callback
+   */
+  public void getSendablesForms(String appId, RestCallback<List<FormDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/sendables";
+    get(url, result -> mapArray(result, FormDTO::fromJSON), callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/myrequests")
-  public void getMyRequests(@PathParam("appId") String appId, MethodCallback<List<FormRequestDTO>> callback);
+  /**
+   * Retrieve the user's requests for a given application.
+   * @param appId .
+   * @param callback
+   */
+  public void getMyRequests(String appId, RestCallback<List<FormRequestDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/myrequests";
+    get(url, result -> mapArray(result, FormRequestDTO::fromJSON), callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/formlayer/{formName}/{layerType}")
-  public void getFormLayer(@PathParam("appId") String appId, @PathParam("formName") String formName,
-                             @PathParam("layerType") String layerType, MethodCallback<FormLayerDTO> callback);
+  /**
+   * Retrieve a form layer.
+   * @param appId
+   * @param formName
+   * @param layerType
+   * @param callback
+   */
+  public void getFormLayer(String appId, String formName, String layerType, RestCallback<FormLayerDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/formlayer/" + encode(formName) + "/" + encode(layerType);
+    get(url, result -> FormLayerDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @GET
-  @Path("{appId}/form/{formName}")
-  public void getForm(@PathParam("appId") String appId, @PathParam("formName") String formName,
-      MethodCallback<List<FormFieldDTO>> callback);
+  /**
+   * Get form.
+   * @param appId
+   * @param formName
+   * @param callback
+   */
+  public void getForm(String appId, String formName, RestCallback<List<FormFieldDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/form/" + encode(formName);
+    get(url, result -> mapArray(result, FormFieldDTO::fromJSON), callback);
+  }
 
-  @POST
-  @Path("{appId}/saveForm/{formId}")
-  public void saveForm(@PathParam("appId") String appId, @PathParam("formId") String formId, MethodCallback<Boolean> callback);
+  /**
+   * Save form.
+   * @param appId .
+   * @param formId
+   * @param callback
+   */
+  public void saveForm(String appId, String formId, RestCallback<Boolean> callback) {
+    String url = PATH + "/" + encode(appId) + "/saveForm/" + encode(formId);
+    post(
+            url,
+            null,
+            result -> Js.asBoolean(result),
+            callback
+    );
+  }
 
-  @GET
-  @Path("{appId}/form/{formName}/{fieldName}")
-  public void getUserField(@PathParam("appId") String appId, @PathParam("formName") String formName,
-      @PathParam("fieldName") String fieldName, MethodCallback<List<BaseDTO>> callback);
+  /**
+   * Get a user field.
+   * @param appId
+   * @param formName
+   * @param fieldName
+   * @param callback
+   */
+  public void getUserField(String appId, String formName, String fieldName, RestCallback<List<BaseDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/form/" + encode(formName) + "/" + encode(fieldName);
+    get(url, result -> mapArray(result, ServiceFormsOnline::userFieldFromJSON), callback);
+  }
 
-  @GET
-  @Path("{appId}/requests/{formId}")
-  public void getRequests(@PathParam("appId") String appId, @PathParam("formId") String formId, MethodCallback<List<FormRequestDTO>> callback);
+  private static BaseDTO userFieldFromJSON(JsPropertyMap<Object> json) {
+    BaseDTO dto = null;
+    String classe = json.get("className").toString();
+    if (classe.equalsIgnoreCase(UserDTO.class.getSimpleName())) {
+      dto = UserDTO.fromJSON(json);
+    } else if (classe.equalsIgnoreCase(GroupDTO.class.getSimpleName())) {
+      dto = GroupDTO.fromJSON(json);
+    }
+    return dto;
+  }
 
-  @GET
-  @Path("{appId}/receivables")
-  public void getReceivablesForms(@PathParam("appId") String appId, MethodCallback<List<FormDTO>> callback);
+  /**
+   * Retrieve the requests for a given form.
+   * @param appId
+   * @param formId
+   * @param callback
+   */
+  public void getRequests(String appId, String formId, RestCallback<List<FormRequestDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/requests/" + encode(formId);
+    get(url, result -> mapArray(result, FormRequestDTO::fromJSON), callback);
+  }
 
-  @POST
-  @Path("{appId}/processRequest/{requestId}")
-  public void processRequest(@PathParam("appId") String appId, @PathParam("requestId") String requestId, ValidationRequestDTO validation, MethodCallback<Void> callback);
+  /**
+   * Retrieve the forms eligible for a given application.
+   * @param appId
+   * @param callback
+   */
+  public void getReceivablesForms(String appId, RestCallback<List<FormDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/receivables";
+    get(url, result -> mapArray(result, FormDTO::fromJSON), callback);
+  }
 
+  /**
+   * Process a form request.
+   * @param appId
+   * @param requestId
+   * @param validation
+   * @param callback
+   */
+  public void processRequest(String appId, String requestId, ValidationRequestDTO validation, RestCallback<Void> callback) {
+    String url = PATH + "/" + encode(appId) + "/processRequest/" + encode(requestId);
+    post(
+            url,
+            Global.JSON.stringify(Js.asAny(validation.toJSON())),
+            result -> null,
+            callback
+    );
+  }
 }

@@ -24,10 +24,10 @@
 
 package org.silverpeas.mobile.shared.dto.formsonline;
 
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -172,4 +172,75 @@ public class FormRequestDTO implements Serializable {
     public void setValidator(int validator) {
         this.validator = validator;
     }
+
+  public static FormRequestDTO fromJSON(JsPropertyMap<Object> json) {
+    FormRequestDTO dto = new FormRequestDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setComments(json.get("comments") != null ? json.get("comments").toString() : null);
+    dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+    dto.setDescription(json.get("description") != null ? json.get("description").toString() : null);
+    dto.setCreator(json.get("creator") != null ? json.get("creator").toString() : null);
+    dto.setCreationDate(json.get("creationDate") != null ? json.get("creationDate").toString() : null);
+    dto.setFormName(json.get("formName") != null ? json.get("formName").toString() : null);
+    dto.setFormId(json.get("formId") != null ? json.get("formId").toString() : null);
+    dto.setStateLabel(json.get("stateLabel") != null ? json.get("stateLabel").toString() : null);
+
+    // int state
+    Object stateObj = json.get("state");
+    if (stateObj != null) {
+      try {
+        dto.setState(Integer.parseInt(stateObj.toString()));
+      } catch (NumberFormatException e) {
+        dto.setState(0);
+      }
+    }
+
+    // int validator
+    Object validatorObj = json.get("validator");
+    if (validatorObj != null) {
+      try {
+        dto.setValidator(Integer.parseInt(validatorObj.toString()));
+      } catch (NumberFormatException e) {
+        dto.setValidator(0);
+      }
+    }
+
+    // data (List<FormFieldDTO>)
+    Object dataObj = json.get("data");
+    if (dataObj != null) {
+      try {
+        List<FormFieldDTO> list = new java.util.ArrayList<>();
+
+        jsinterop.base.JsArrayLike<Object> array =
+                jsinterop.base.Js.asArrayLike(dataObj);
+
+        for (int i = 0; i < array.getLength(); i++) {
+          Object item = array.getAt(i);
+          if (item != null) {
+            JsPropertyMap<Object> map = (JsPropertyMap<Object>) item;
+            list.add(FormFieldDTO.fromJSON(map));
+          }
+        }
+
+        dto.setData(list);
+
+      } catch (Exception e) {
+        dto.setData(null);
+      }
+    }
+
+    // htmlLayer (FormLayerDTO)
+    Object layerObj = json.get("htmlLayer");
+    if (layerObj != null) {
+      try {
+        JsPropertyMap<Object> map = (JsPropertyMap<Object>) layerObj;
+        dto.setHtmlLayer(FormLayerDTO.fromJSON(map));
+      } catch (Exception e) {
+        dto.setHtmlLayer(null);
+      }
+    }
+
+    return dto;
+  }
 }

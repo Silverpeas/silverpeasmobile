@@ -45,7 +45,11 @@ public class UserDTO extends BaseDTO implements Serializable {
   private String password;
   private List<PropertyDTO> properties = new ArrayList<PropertyDTO>();
 
-    public static UserDTO fromJSON(JsPropertyMap<Object> json) {
+  public UserDTO() {
+    setClassName(this.getClass().getSimpleName());
+  }
+
+  public static UserDTO fromJSON(JsPropertyMap<Object> json) {
       UserDTO dto = new UserDTO();
       dto.setId((String) json.get("id"));
       dto.setLastName((String) json.get("lastName"));

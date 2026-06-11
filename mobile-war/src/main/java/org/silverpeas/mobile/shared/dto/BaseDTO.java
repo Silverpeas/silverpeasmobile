@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
@@ -68,6 +69,10 @@ public abstract class BaseDTO implements Serializable {
 
   private static final long serialVersionUID = 8186851689918190659L;
 
+  private String id;
+
+  private String className;
+
   public String getId() {
     return id;
   }
@@ -76,6 +81,11 @@ public abstract class BaseDTO implements Serializable {
     this.id = id;
   }
 
-  private String id;
+  public String getClassName() {
+    return className;
+  }
 
+  public void setClassName(String className) {
+    this.className = className;
+  }
 }

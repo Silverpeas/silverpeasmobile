@@ -25,14 +25,21 @@
 package org.silverpeas.mobile.shared.dto;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
 import java.io.Serializable;
 
 @JsonTypeName("GroupDTO")
-public class GroupDTO extends BaseDTO implements Serializable{
+public class GroupDTO extends BaseDTO implements Serializable {
 
   private static final long serialVersionUID = 5388415881024885835L;
   private String name;
+
+  public GroupDTO() {
+    setClassName(this.getClass().getSimpleName());
+  }
+
   private int nbMembers;
   public int getNbMembers() {
     return nbMembers;
@@ -47,5 +54,23 @@ public class GroupDTO extends BaseDTO implements Serializable{
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public static GroupDTO fromJSON(JsPropertyMap<Object> json) {
+    GroupDTO dto = new GroupDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setName(json.get("name") != null ? json.get("name").toString() : null);
+
+    Object nbMembersObj = json.get("nbMembers");
+    if (nbMembersObj != null) {
+      try {
+        dto.setNbMembers(Integer.parseInt(nbMembersObj.toString()));
+      } catch (NumberFormatException e) {
+        dto.setNbMembers(0);
+      }
+    }
+
+    return dto;
   }
 }

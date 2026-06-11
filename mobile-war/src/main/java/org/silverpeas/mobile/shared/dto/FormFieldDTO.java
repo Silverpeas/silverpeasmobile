@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,7 @@ package org.silverpeas.mobile.shared.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gwt.dom.client.Element;
-import org.silverpeas.core.contribution.content.form.FieldValuesTemplate;
+import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -160,4 +160,44 @@ public class FormFieldDTO implements Serializable {
   public String getInstanceId() {
     return instanceId;
   }
+
+  public static FormFieldDTO fromJSON(JsPropertyMap<Object> json) {
+    FormFieldDTO dto = new FormFieldDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setName(json.get("name") != null ? json.get("name").toString() : null);
+    dto.setLabel(json.get("label") != null ? json.get("label").toString() : null);
+    dto.setValue(json.get("value") != null ? json.get("value").toString() : null);
+    dto.setValueId(json.get("valueId") != null ? json.get("valueId").toString() : null);
+    dto.setType(json.get("type") != null ? json.get("type").toString() : null);
+    dto.setDisplayerName(json.get("displayerName") != null ? json.get("displayerName").toString() : null);
+    dto.setInstanceId(json.get("instanceId") != null ? json.get("instanceId").toString() : null);
+
+    Object readOnlyObj = json.get("readOnly");
+    if (readOnlyObj != null) {
+      dto.setReadOnly(Boolean.parseBoolean(readOnlyObj.toString()));
+    }
+
+    Object mandatoryObj = json.get("mandatory");
+    if (mandatoryObj != null) {
+      dto.setMandatory(Boolean.parseBoolean(mandatoryObj.toString()));
+    }
+
+    Object valuesObj = json.get("values");
+    if (valuesObj != null) {
+      JsPropertyMap<String> valuesMap = (JsPropertyMap<String>) valuesObj;
+      Map<String, String> values = new java.util.HashMap<>();
+      String[] keys = getKeys(valuesMap);
+      for (String key : keys) {
+        values.put(key, valuesMap.get(key));
+      }
+      dto.setValues(values);
+    }
+
+    return dto;
+  }
+
+  private static native String[] getKeys(JsPropertyMap<?> map) /*-{
+    return Object.keys(map);
+  }-*/;
 }

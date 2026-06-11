@@ -57,6 +57,8 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -100,7 +102,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     @Override
     public void loadFormsOnline(final FormsOnlineLoadEvent event) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormDTO>>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<FormDTO>>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -108,7 +110,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
             }
 
             @Override
-            public void onSuccess(final Method method, final List<FormDTO> forms) {
+            public void onSuccess(final RestMethod method, final List<FormDTO> forms) {
                 super.onSuccess(method, forms);
                 FormsOnlineLoadedEvent event = new FormsOnlineLoadedEvent();
                 event.setForms(forms);
@@ -135,16 +137,16 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
         String xmlFormName = event.getForm().getXmlFormName();
 
         ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(),
-                xmlFormName, "update", new MethodCallback<FormLayerDTO>() {
+                xmlFormName, "update", new RestMethodCallbackOnlineOnly<FormLayerDTO>() {
                     @Override
-                    public void onFailure(Method method, Throwable throwable) {
+                    public void onFailure(RestMethod method, Throwable throwable) {
                         EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
                     }
 
                     @Override
-                    public void onSuccess(Method method, final FormLayerDTO layer) {
+                    public void onSuccess(RestMethod method, final FormLayerDTO layer) {
 
-                        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormFieldDTO>>() {
+                        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<FormFieldDTO>>() {
                             @Override
                             public void attempt() {
                                 super.attempt();
@@ -153,7 +155,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
                             }
 
                             @Override
-                            public void onSuccess(final Method method, final List<FormFieldDTO> formFieldsDTO) {
+                            public void onSuccess(final RestMethod method, final List<FormFieldDTO> formFieldsDTO) {
                                 super.onSuccess(method, formFieldsDTO);
                                 FormLoadedEvent event = new FormLoadedEvent();
                                 event.setFormFields(formFieldsDTO);
@@ -225,7 +227,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     @Override
     public void loadUserField(final FormOnlineLoadUserFieldEvent event) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<BaseDTO>>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -233,7 +235,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
             }
 
             @Override
-            public void onSuccess(final Method method, final List<BaseDTO> users) {
+            public void onSuccess(final RestMethod method, final List<BaseDTO> users) {
                 super.onSuccess(method, users);
                 AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users, true);
                 EventBus.getInstance().fireEvent(ev);
@@ -251,7 +253,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     public void loadFormsOnlineAsReceiver(
             final FormsOnlineAsReceiverLoadEvent formsOnlineAsReceiverLoadEvent) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormDTO>>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<FormDTO>>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -259,7 +261,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
             }
 
             @Override
-            public void onSuccess(final Method method, final List<FormDTO> forms) {
+            public void onSuccess(final RestMethod method, final List<FormDTO> forms) {
                 super.onSuccess(method, forms);
                 FormsOnlineAsReceiverPage page = new FormsOnlineAsReceiverPage();
                 page.setPageTitle(getApplicationInstance().getLabel());
@@ -277,7 +279,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
      */
     @Override
     public void loadFormOnlineAsReceiver(final FormOnlineAsReceiverLoadEvent event) {
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<FormRequestDTO>>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -285,7 +287,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
             }
 
             @Override
-            public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
+            public void onSuccess(final RestMethod method, final List<FormRequestDTO> requests) {
                 super.onSuccess(method, requests);
                 FormOnlineRequestsPage page = new FormOnlineRequestsPage();
                 page.setTitle(getApplicationInstance().getLabel());
@@ -299,7 +301,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     @Override
     public void validationRequest(final FormsOnlineValidationRequestEvent event) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -307,7 +309,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
             }
 
             @Override
-            public void onSuccess(final Method method, final Void aVoid) {
+            public void onSuccess(final RestMethod method, final Void aVoid) {
                 super.onSuccess(method, aVoid);
                 EventBus.getInstance().fireEvent(new FormsOnlineRequestValidatedEvent(event.getData()));
             }
@@ -323,7 +325,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     @Override
     public void loadMyRequests(final FormOnlineMyRequestLoadEvent formOnlineMyRequestLoadEvent) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<FormRequestDTO>>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<FormRequestDTO>>() {
             @Override
             public void attempt() {
                 super.attempt();
@@ -331,7 +333,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
             }
 
             @Override
-            public void onSuccess(final Method method, final List<FormRequestDTO> requests) {
+            public void onSuccess(final RestMethod method, final List<FormRequestDTO> requests) {
                 super.onSuccess(method, requests);
                 FormOnlineRequestsPage page = new FormOnlineRequestsPage();
                 page.setData(requests, true);
@@ -351,18 +353,18 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
     public void loadFormRequest(
             final FormsOnlineLoadRequestEvent loadEvent) {
 
-        ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(), loadEvent.getData().getFormName(), "view", new MethodCallback<FormLayerDTO>() {
+        ServicesLocator.getServiceFormsOnline().getFormLayer(getApplicationInstance().getId(), loadEvent.getData().getFormName(), "view", new RestMethodCallbackOnlineOnly<FormLayerDTO>() {
 
             @Override
-            public void onFailure(Method method, Throwable throwable) {
+            public void onFailure(RestMethod method, Throwable throwable) {
                 EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
             }
 
 
             @Override
-            public void onSuccess(Method method, final FormLayerDTO layer) {
+            public void onSuccess(RestMethod method, final FormLayerDTO layer) {
 
-                MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<FormRequestDTO>() {
+                RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<FormRequestDTO>() {
                     @Override
                     public void attempt() {
                         super.attempt();
@@ -370,7 +372,7 @@ public class FormsOnlineApp extends App implements FormsOnlineAppEventHandler, N
                     }
 
                     @Override
-                    public void onSuccess(final Method method, final FormRequestDTO data) {
+                    public void onSuccess(final RestMethod method, final FormRequestDTO data) {
                         super.onSuccess(method, data);
                         data.setHtmlLayer(layer);
                         EventBus.getInstance().fireEvent(new FormRequestStatusChangedEvent(data));

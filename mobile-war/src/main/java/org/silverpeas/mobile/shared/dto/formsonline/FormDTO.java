@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.shared.dto.formsonline;
 
+import jsinterop.base.JsPropertyMap;
 import java.io.Serializable;
 
 /**
@@ -80,5 +81,34 @@ public class FormDTO implements Serializable {
 
   public void setNbRequests(final int nbRequests) {
     this.nbRequests = nbRequests;
+  }
+
+  public static FormDTO fromJSON(JsPropertyMap<Object> json) {
+    FormDTO dto = new FormDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+    dto.setDescription(json.get("description") != null ? json.get("description").toString() : null);
+    dto.setXmlFormName(json.get("xmlFormName") != null ? json.get("xmlFormName").toString() : null);
+
+    Object receiverObj = json.get("receiver");
+    if (receiverObj != null) {
+      if (receiverObj instanceof Boolean) {
+        dto.setReceiver((Boolean) receiverObj);
+      } else {
+        dto.setReceiver(Boolean.parseBoolean(receiverObj.toString()));
+      }
+    }
+
+    Object nbRequestsObj = json.get("nbRequests");
+    if (nbRequestsObj != null) {
+      try {
+        dto.setNbRequests(Integer.parseInt(nbRequestsObj.toString()));
+      } catch (NumberFormatException e) {
+        dto.setNbRequests(0);
+      }
+    }
+
+    return dto;
   }
 }
