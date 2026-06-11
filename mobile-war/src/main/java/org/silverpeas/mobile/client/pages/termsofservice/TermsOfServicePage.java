@@ -68,14 +68,14 @@ public class TermsOfServicePage extends PageContent {
 
     SpMobil.getMainPage().hideFooter();
 
-    ServicesLocator.getServiceTermsOfService().getContent(new TextCallback() {
+    ServicesLocator.getServiceTermsOfService().getContent(new RestMethodCallbackOnlineOnly<String>() {
       @Override
-      public void onFailure(final Method method, final Throwable throwable) {
+      public void onFailure(final RestMethod method, final Throwable throwable) {
         EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
       }
 
       @Override
-      public void onSuccess(final Method method, final String text) {
+      public void onSuccess(final RestMethod method, final String text) {
         terms.setHTML(text);
       }
     });

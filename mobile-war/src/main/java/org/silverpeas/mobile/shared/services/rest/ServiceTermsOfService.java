@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,24 +24,32 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.client.TextCallback;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import jsinterop.base.Js;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 
 /**
+ * Service for handling requests related to the Terms and Conditions of Use (TCU).
  * @author svu
  */
-@Path("/mobile/termsOfService")
-public interface ServiceTermsOfService extends RestService {
+public class ServiceTermsOfService extends AbstractService {
 
-  @GET
-  @Path("show")
-  public void show(MethodCallback<Boolean> callback);
+  private static final String PATH = "/silverpeas/services/mobile/termsOfService";
 
-  @GET
-  @Path("content")
-  public void getContent(TextCallback callback);
+  /**
+   * Check whether the Terms and Conditions of Use need to be displayed.
+   * @param callback Le callback pour gérer la réponse (booléen).
+   */
+  public void show(RestCallback<Boolean> callback) {
+    String url = PATH + "/show";
+    get(url, result -> Js.asBoolean(result), callback);
+  }
+
+  /**
+   * Retrieve the content of the Terms and Conditions of Use.
+   * @param callback Le callback pour gérer la réponse (texte brut).
+   */
+  public void getContent(RestCallback<String> callback) {
+    String url = PATH + "/content";
+    getText(url, result -> (String) result, callback);
+  }
 }

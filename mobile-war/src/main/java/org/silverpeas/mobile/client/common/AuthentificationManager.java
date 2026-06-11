@@ -234,9 +234,9 @@ public class AuthentificationManager {
                   super.onSuccess(method, user);
                   SpMobil.setUser(user, true);
 
-                  ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
+                  ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<Boolean>() {
                     @Override
-                    public void onFailure(final Method method, final Throwable throwable) {
+                    public void onFailure(final RestMethod method, final Throwable throwable) {
                       if (throwable instanceof AuthenticationException) {
                         EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
                       } else {
@@ -245,7 +245,7 @@ public class AuthentificationManager {
                     }
 
                     @Override
-                    public void onSuccess(final Method method, final Boolean showTermsOfServices) {
+                    public void onSuccess(final RestMethod method, final Boolean showTermsOfServices) {
 
                       Notification.activityStop();
                       AuthentificationManager.getInstance().storeUser(user, userProfile, login,

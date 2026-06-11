@@ -461,15 +461,15 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
               p.setEmailAddress(detailUserDTO.geteMail());
               setUserProfile(p);
             }
-            ServicesLocator.getServiceTermsOfService().show(new MethodCallback<Boolean>() {
+            ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<Boolean>() {
               @Override
-              public void onFailure(final Method method, final Throwable throwable) {
+              public void onFailure(final RestMethod method, final Throwable throwable) {
                 Notification.activityStop();
                 EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
               }
 
               @Override
-              public void onSuccess(final Method method, final Boolean showTerms) {
+              public void onSuccess(final RestMethod method, final Boolean showTerms) {
                 if (showTerms) {
                   SpMobil.displayTermsOfServicePage();
                 } else {
