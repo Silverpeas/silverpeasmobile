@@ -69,9 +69,9 @@ public class ProfileApp extends App {
             if (event.getName().equals(ProfileEvents.POST.toString())) {
                 final String postStatus = (String) event.getData();
                 if (postStatus != null && postStatus.length() > 0) {
-                  TextCallback action = new TextCallback() {
+                  RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<String>() {
                     @Override
-                    public void onFailure(final Method method, final Throwable t) {
+                    public void onFailure(final RestMethod method, final Throwable t) {
                       if (NetworkHelper.isOnline()) {
                         EventBus.getInstance().fireEvent(new ErrorEvent(t));
                       } else {
@@ -80,7 +80,7 @@ public class ProfileApp extends App {
                     }
 
                     @Override
-                    public void onSuccess(final Method method, final String s) {
+                    public void onSuccess(final RestMethod method, final String s) {
                       Notification.activityStop();
                       StatusDTO status = new StatusDTO();
                       status.setCreationDate(new Date());

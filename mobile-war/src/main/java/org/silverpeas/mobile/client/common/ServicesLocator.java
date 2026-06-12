@@ -37,7 +37,7 @@ public class ServicesLocator {
   private static ServiceContact serviceContact = new ServiceContact();
   private static ServiceTask serviceTasks = new ServiceTask();
   private static ServiceNavigation serviceNavigation = GWT.create(ServiceNavigation.class);
-  private static ServiceRSE serviceRSE = GWT.create(ServiceRSE.class);
+  private static ServiceRSE serviceRSE = new ServiceRSE();
   private static ServiceDocuments serviceDocuments = GWT.create(ServiceDocuments.class);
   private static ServiceMedia serviceMedia = GWT.create(ServiceMedia.class);
   private static ServiceSearch serviceSearch = new ServiceSearch();
@@ -189,7 +189,6 @@ public class ServicesLocator {
   }
 
   public static ServiceRSE getServiceRSE() {
-    initRestContext();
     return serviceRSE;
   }
 

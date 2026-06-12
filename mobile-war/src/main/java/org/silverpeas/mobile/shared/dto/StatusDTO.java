@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,9 +36,36 @@ public class StatusDTO implements Serializable, Comparable<StatusDTO> {
 	 private int id;
 	 private int userId;
 	 private Date creationDate;
-	 private String description = "";	 
-	 
-	public int compareTo(StatusDTO o) {		
+	 private String description = "";
+
+    public static StatusDTO fromJSON(JsPropertyMap<Object> json) {
+		StatusDTO dto = new StatusDTO();
+
+		Object id = json.get("id");
+		if (id != null) {
+			dto.setId(((Number) id).intValue());
+		}
+
+		Object userId = json.get("userId");
+		if (userId != null) {
+			dto.setUserId(((Number) userId).intValue());
+		}
+
+		Object creationDate = json.get("creationDate");
+		if (creationDate != null) {
+			dto.setCreationDate(new Date(((Number) creationDate).longValue()));
+		}
+
+		dto.setDescription(
+				json.get("description") != null
+						? json.get("description").toString()
+						: null
+		);
+
+		return dto;
+    }
+
+    public int compareTo(StatusDTO o) {
 		return getCreationDate().compareTo(o.getCreationDate()) * -1;
 	}
 

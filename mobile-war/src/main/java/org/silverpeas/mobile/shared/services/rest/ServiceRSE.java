@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,32 +24,30 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.client.TextCallback;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.StatusDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 /**
+ * Service pour gérer les requêtes liées au statut RSE (Responsabilité Sociétale des Entreprises).
  * @author svu
  */
-@Path("/mobile/rse")
-public interface ServiceRSE extends RestService {
+public class ServiceRSE extends AbstractService {
 
-  @POST
-  @Produces(MediaType.TEXT_PLAIN)
-  @Path("status/{textStatus}")
-  public void updateStatus(@PathParam("textStatus") String textStatus, TextCallback callback);
+  private static final String PATH = "/silverpeas/services/mobile/rse";
 
+  public void updateStatus(String textStatus, RestCallback<String> callback) {
+    String url = PATH + "/status/" + encode(textStatus);
+    post(
+            url,
+            null,
+            result -> (String) result,
+            callback
+    );
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("status")
-  public void getStatus(MethodCallback<StatusDTO> callback);
+  public void getStatus(RestCallback<StatusDTO> callback) {
+    String url = PATH + "/status";
+    get(url, result -> StatusDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 }
