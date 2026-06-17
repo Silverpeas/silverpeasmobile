@@ -55,6 +55,8 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
 import org.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
 import org.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
@@ -112,7 +114,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       @Override
       public void onSuccess(final Method method, final MediaDTO media) {
         super.onSuccess(method, media);
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -120,7 +122,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
                     .getApp(media.getInstance(), media.getId(), contentSource.getType(), this);
           }
           @Override
-          public void onFailure(final Method method, final Throwable t) {
+          public void onFailure(final RestMethod method, final Throwable t) {
             super.onFailure(method, t);
             if (NetworkHelper.needToGoOffine(t)) {
               Notification.alert(globalMsg.needToBeOnline());
@@ -130,7 +132,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           }
 
           @Override
-          public void onSuccess(final Method method,
+          public void onSuccess(final RestMethod method,
                                 final ApplicationInstanceDTO app) {
             super.onSuccess(method, app);
             commentable = app.getCommentable();
@@ -220,14 +222,14 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
   }
 
   private void loadAppInstance(final ContentDTO content) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
       @Override
       public void attempt() {
         ServicesLocator.getServiceNavigation()
                 .getApp(content.getInstanceId(), content.getId(), content.getType(), this);
       }
       @Override
-      public void onSuccess(final Method method,
+      public void onSuccess(final RestMethod method,
                             final ApplicationInstanceDTO app) {
         super.onSuccess(method, app);
         setApplicationInstance(app);
@@ -250,7 +252,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       startWithContent(event.getContent());
     } else if (event.getContent().getType().equals(ContentsTypes.Album.name()) ||
             event.getContent().getType().equals(ContentsTypes.Folder.name())) {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -258,13 +260,13 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
         }
 
         @Override
-        public void onFailure(final Method method, final Throwable t) {
+        public void onFailure(final RestMethod method, final Throwable t) {
           super.onFailure(method, t);
           EventBus.getInstance().fireEvent(new ErrorEvent(t));
         }
 
         @Override
-        public void onSuccess(final Method method,
+        public void onSuccess(final RestMethod method,
             final ApplicationInstanceDTO applicationInstanceDTO) {
           super.onSuccess(method, applicationInstanceDTO);
           MediaNavigationPage page = new MediaNavigationPage();

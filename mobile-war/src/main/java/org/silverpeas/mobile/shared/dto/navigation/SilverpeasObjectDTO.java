@@ -26,6 +26,7 @@ package org.silverpeas.mobile.shared.dto.navigation;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;
 
@@ -38,9 +39,11 @@ import java.io.Serializable;
 public abstract class SilverpeasObjectDTO implements Serializable, Comparable<SilverpeasObjectDTO> {
 
   private String id;
+
   private String label;
   private Integer orderNum;
 
+  private String className;
 
   public String getId() {
     return id;
@@ -69,5 +72,19 @@ public abstract class SilverpeasObjectDTO implements Serializable, Comparable<Si
   @Override
   public int compareTo(SilverpeasObjectDTO o) {
     return orderNum.compareTo(o.orderNum);
+  }
+
+  public void fromSuperJSON(JsPropertyMap<Object> json) {
+    this.setId(json.get("id") != null ? json.get("id").toString() : "");
+    this.setLabel(json.get("label") != null ? json.get("label").toString() : "");
+    this.setOrderNum(json.get("orderNum") != null ? ((Number) json.get("orderNum")).intValue() : 0);
+  }
+
+  public String getClassName() {
+    return className;
+  }
+
+  public void setClassName(String className) {
+    this.className = className;
   }
 }

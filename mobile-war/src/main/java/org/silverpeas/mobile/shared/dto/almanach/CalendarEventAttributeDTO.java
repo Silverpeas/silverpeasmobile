@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -33,7 +35,9 @@ public class CalendarEventAttributeDTO implements Serializable {
   private String name;
   private String value;
 
-  public String getName() {
+
+
+    public String getName() {
     return name;
   }
 
@@ -47,5 +51,18 @@ public class CalendarEventAttributeDTO implements Serializable {
 
   public void setValue(final String value) {
     this.value = value;
+  }
+
+  public static CalendarEventAttributeDTO fromJSON(JsPropertyMap<Object> json) {
+    CalendarEventAttributeDTO dto = new CalendarEventAttributeDTO();
+
+    if (json == null) {
+      return dto;
+    }
+
+    dto.setName(json.get("name") != null ? json.get("name").toString() : "");
+    dto.setValue(json.get("value") != null ? json.get("value").toString() : "");
+
+    return dto;
   }
 }

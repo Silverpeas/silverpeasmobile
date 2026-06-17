@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,6 +23,8 @@
  */
 
 package org.silverpeas.mobile.shared.dto.almanach;
+
+import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;
 
@@ -65,5 +67,26 @@ public class CalendarEventAttendeeDTO implements Serializable {
 
   public void setPresenceStatus(final PresenceStatusDTO presenceStatus) {
     this.presenceStatus = presenceStatus;
+  }
+
+  public static CalendarEventAttendeeDTO fromJSON(JsPropertyMap<Object> json) {
+    CalendarEventAttendeeDTO dto = new CalendarEventAttendeeDTO();
+
+    if (json == null) {
+      return dto;
+    }
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : "");
+    dto.setFullName(json.get("fullName") != null ? json.get("fullName").toString() : "");
+
+    dto.setParticipationStatus(json.get("participationStatus") != null
+            ? ParticipationStatusDTO.valueOf(json.get("participationStatus").toString())
+            : null);
+
+    dto.setPresenceStatus(json.get("presenceStatus") != null
+            ? PresenceStatusDTO.valueOf(json.get("presenceStatus").toString())
+            : null);
+
+    return dto;
   }
 }

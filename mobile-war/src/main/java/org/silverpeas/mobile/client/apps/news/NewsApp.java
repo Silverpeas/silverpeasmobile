@@ -170,7 +170,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
   }
 
   private void loadAppInstance(final ContentDTO content) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
       @Override
       public void attempt() {
@@ -179,7 +179,7 @@ public class NewsApp extends App implements NewsAppEventHandler, NavigationEvent
       }
 
       @Override
-      public void onSuccess(final Method method,
+      public void onSuccess(final RestMethod method,
                             final ApplicationInstanceDTO app) {
         super.onSuccess(method, app);
         setApplicationInstance(app);

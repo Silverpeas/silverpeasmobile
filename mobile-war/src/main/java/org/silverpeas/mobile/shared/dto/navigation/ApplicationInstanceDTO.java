@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.navigation;
 
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.RightDTO;
 
 import java.io.Serializable;
@@ -49,7 +51,7 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
 
   private boolean personnal;
 
-  public String getType() {
+    public String getType() {
     return type;
   }
 
@@ -129,4 +131,51 @@ public class ApplicationInstanceDTO extends SilverpeasObjectDTO implements Seria
   }
   public String getIntroduction() { return introduction; }
   public void setIntroduction(String introduction) { this.introduction = introduction; }
+
+  public ApplicationInstanceDTO() {
+      setClassName(ApplicationInstanceDTO.class.getSimpleName());
+  }
+
+  public static ApplicationInstanceDTO fromJSON(JsPropertyMap<Object> json) {
+    ApplicationInstanceDTO dto = new ApplicationInstanceDTO();
+
+    dto.fromSuperJSON(json);
+
+    dto.setType(json.get("type") != null ? json.get("type").toString() : "");
+    dto.setExtraId(json.get("extraId") != null ? json.get("extraId").toString() : "");
+    dto.setIntroduction(json.get("introduction") != null ? json.get("introduction").toString() : "");
+
+    // booleans
+    dto.setCommentable(json.get("commentable") != null ? Boolean.parseBoolean(json.get("commentable").toString()) : false);
+    dto.setNotifiable(json.get("notifiable") != null ? Boolean.parseBoolean(json.get("notifiable").toString()) : false);
+    dto.setAbleToStoreContent(json.get("ableToStoreContent") != null ? Boolean.parseBoolean(json.get("ableToStoreContent").toString()) : false);
+    dto.setWorkflow(json.get("workflow") != null ? Boolean.parseBoolean(json.get("workflow").toString()) : false);
+    dto.setPersonnal(json.get("personnal") != null ? Boolean.parseBoolean(json.get("personnal").toString()) : false);
+
+    // integers
+    dto.setFolderSharing(json.get("folderSharing") != null ? ((Number) json.get("folderSharing")).intValue() : 0);
+    dto.setPublicationSharing(json.get("publicationSharing") != null ? ((Number) json.get("publicationSharing")).intValue() : 0);
+    dto.setFileSharing(json.get("fileSharing") != null ? ((Number) json.get("fileSharing")).intValue() : 0);
+
+    // ===== parameters =====
+    Object paramsObj = json.get("parameters");
+    if (paramsObj != null) {
+      JsPropertyMap<String> paramsMap = (JsPropertyMap<String>) paramsObj;
+      Map<String, String> values = new java.util.HashMap<>();
+      String[] keys = getKeys(paramsMap);
+      for (String key : keys) {
+        values.put(key, paramsMap.get(key));
+      }
+      dto.setParameters(values);
+    }
+
+    // ===== rights =====
+    dto.setRights(RightDTO.fromJSON((JsPropertyMap<Object>) json.get("rights")));
+
+    return dto;
+  }
+
+  private static native String[] getKeys(JsPropertyMap<?> map) /*-{
+    return Object.keys(map);
+  }-*/;
 }

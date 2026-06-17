@@ -29,6 +29,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ScriptElement;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 
 /**
  * @author svu
@@ -59,7 +60,7 @@ public class PushNotificationsManager {
 
   public static void storeToken(String token) {
     if (NetworkHelper.isOnline()) {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
         @Override
         public void attempt() {
           ServicesLocator.getServiceNavigation().storeTokenMessaging(token, this);

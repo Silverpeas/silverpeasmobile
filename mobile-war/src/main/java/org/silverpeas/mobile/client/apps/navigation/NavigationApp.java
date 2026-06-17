@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.navigation;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.navigation.events.app.AbstractNavigationAppEvent;
@@ -41,6 +42,8 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.ShortCutRouter;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.HomePageDTO;
@@ -82,7 +85,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
     public void loadSpacesAndApps(final LoadSpacesAndAppsEvent event) {
       //TODO : replace call getSpaceAndApps by getHomePage
 
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<HomePageDTO>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<HomePageDTO>() {
 
         @Override
         public void attempt() {
@@ -90,7 +93,7 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
         }
 
         @Override
-        public void onSuccess(final Method method, final HomePageDTO result) {
+        public void onSuccess(final RestMethod method, final HomePageDTO result) {
           super.onSuccess(method, result);
           EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
         }
@@ -111,13 +114,13 @@ public class NavigationApp extends App implements NavigationAppEventHandler,Navi
           } else {
               id = event.getContent().getInstanceId();
           }
-          MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<SpaceDTO>() {
+          RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<SpaceDTO>() {
               @Override
               public void attempt() {
                   ServicesLocator.getServiceNavigation().getSpace(id, this);
               }
               @Override
-              public void onSuccess(Method method, SpaceDTO space) {
+              public void onSuccess(RestMethod method, SpaceDTO space) {
                   if (space.getHomePageType() == HomePages.APP.getValue()) {
                       ShortCutRouter.route(SpMobil.getUser(), space.getHomePageParameter(), "Component", null, null, null);
                   } else {

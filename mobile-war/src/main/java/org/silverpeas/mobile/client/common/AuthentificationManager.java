@@ -234,7 +234,7 @@ public class AuthentificationManager {
                   super.onSuccess(method, user);
                   SpMobil.setUser(user, true);
 
-                  ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<Boolean>() {
+                  ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<String>() {
                     @Override
                     public void onFailure(final RestMethod method, final Throwable throwable) {
                       if (throwable instanceof AuthenticationException) {
@@ -245,12 +245,11 @@ public class AuthentificationManager {
                     }
 
                     @Override
-                    public void onSuccess(final RestMethod method, final Boolean showTermsOfServices) {
-
+                    public void onSuccess(final RestMethod method, final String showTermsOfServices) {
                       Notification.activityStop();
                       AuthentificationManager.getInstance().storeUser(user, userProfile, login,
                           password, domainId);
-                      if (showTermsOfServices) {
+                      if (Boolean.parseBoolean(showTermsOfServices)) {
                         SpMobil.displayTermsOfServicePage();
                       } else {
                         if (attempt == null) {
@@ -322,19 +321,19 @@ public class AuthentificationManager {
 
   public void clearCache() {
     // clear app cache
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         ServicesLocator.getServiceNavigation().clearAppCache(this);
       }
 
       @Override
-      public void onFailure(final Method method, final Throwable t) {
+      public void onFailure(final RestMethod method, final Throwable t) {
 
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
+      public void onSuccess(final RestMethod method, final Void unused) {
       }
     };
     action.attempt();

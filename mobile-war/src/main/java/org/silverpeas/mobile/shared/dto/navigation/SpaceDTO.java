@@ -24,51 +24,75 @@
 
 package org.silverpeas.mobile.shared.dto.navigation;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 
 public class SpaceDTO extends SilverpeasObjectDTO implements Serializable {
 
-  private static final long serialVersionUID = 1L;
-  boolean personal;
-  private int homePageType;
-  private String homePageParameter;
 
-  public int getHomePageType() {
-    return homePageType;
-  }
 
-  public void setHomePageType(final int homePageType) {
-    this.homePageType = homePageType;
-  }
+    private static final long serialVersionUID = 1L;
+    boolean personal;
+    private int homePageType;
+    private String homePageParameter;
 
-  public String getHomePageParameter() {
-    return homePageParameter;
-  }
-
-  public void setHomePageParameter(final String homePageParameter) {
-    this.homePageParameter = homePageParameter;
-  }
-
-  public boolean isPersonal() {
-    return personal;
-  }
-
-  public void setPersonal(boolean personal) {
-    this.personal = personal;
-  }
-
-  @Override
-  public int compareTo(SilverpeasObjectDTO o) {
-    if (o instanceof SpaceDTO) {
-      if (isPersonal()) {
-        return 100;
-      } else {
-        return Integer.valueOf(getOrderNum()).compareTo(((SpaceDTO) o).getOrderNum());
-      }
-    } else {
-      return super.compareTo(o);
+    public SpaceDTO() {
+        setClassName(SpaceDTO.class.getSimpleName());
     }
-  }
+
+    public int getHomePageType() {
+        return homePageType;
+    }
+
+    public void setHomePageType(final int homePageType) {
+        this.homePageType = homePageType;
+    }
+
+    public String getHomePageParameter() {
+        return homePageParameter;
+    }
+
+    public void setHomePageParameter(final String homePageParameter) {
+        this.homePageParameter = homePageParameter;
+    }
+
+    public boolean isPersonal() {
+        return personal;
+    }
+
+    public void setPersonal(boolean personal) {
+        this.personal = personal;
+    }
+
+    @Override
+    public int compareTo(SilverpeasObjectDTO o) {
+        if (o instanceof SpaceDTO) {
+            if (isPersonal()) {
+                return 100;
+            } else {
+                return Integer.valueOf(getOrderNum()).compareTo(((SpaceDTO) o).getOrderNum());
+            }
+        } else {
+            return super.compareTo(o);
+        }
+    }
+
+    public static SpaceDTO fromJSON(JsPropertyMap<Object> json) {
+        SpaceDTO dto = new SpaceDTO();
+
+        if (json == null) {
+            return dto;
+        }
+
+        dto.fromSuperJSON(json);
+
+        dto.setPersonal(json.get("personal") != null ? Boolean.parseBoolean(json.get("personal").toString()) : false);
+        dto.setHomePageType(json.get("homePageType") != null ? ((Number) json.get("homePageType")).intValue() : 0);
+        dto.setHomePageParameter(json.get("homePageParameter") != null ? json.get("homePageParameter").toString() : "");
+
+        return dto;
+    }
 
 }

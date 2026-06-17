@@ -25,40 +25,54 @@
 package org.silverpeas.mobile.shared.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;
 
 /**
  * @author svu
  */
-@JsonIgnoreProperties("objectValue")
 public class ShortCutLinkDTO implements Serializable {
 
-  private String url;
-  private String text;
-  private String icon;
+    private String url;
+    private String text;
+    private String icon;
 
-  public String getUrl() {
-    return url;
-  }
+    public String getUrl() {
+        return url;
+    }
 
-  public void setUrl(final String url) {
-    this.url = url;
-  }
+    public void setUrl(final String url) {
+        this.url = url;
+    }
 
-  public String getText() {
-    return text;
-  }
+    public String getText() {
+        return text;
+    }
 
-  public void setText(final String text) {
-    this.text = text;
-  }
+    public void setText(final String text) {
+        this.text = text;
+    }
 
-  public String getIcon() {
-    return icon;
-  }
+    public String getIcon() {
+        return icon;
+    }
 
-  public void setIcon(final String icon) {
-    this.icon = icon;
-  }
+    public void setIcon(final String icon) {
+        this.icon = icon;
+    }
+
+    public static ShortCutLinkDTO fromJSON(JsPropertyMap<Object> json) {
+        ShortCutLinkDTO dto = new ShortCutLinkDTO();
+
+        if (json == null) {
+            return dto;
+        }
+
+        dto.setUrl(json.get("url") != null ? json.get("url").toString() : "");
+        dto.setText(json.get("text") != null ? json.get("text").toString() : "");
+        dto.setIcon(json.get("icon") != null ? json.get("icon").toString() : "");
+
+        return dto;
+    }
 }

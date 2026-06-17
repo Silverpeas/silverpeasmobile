@@ -54,7 +54,7 @@ public class ServiceTermsOfService extends AbstractRestWebService {
   static final String PATH = "mobile/termsOfService";
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.TEXT_PLAIN)
   @Path("show")
   public Boolean isShow() {
     SettingBundle resource = ResourceLocator.getSettingBundle("org.silverpeas.authentication.settings.authenticationSettings");

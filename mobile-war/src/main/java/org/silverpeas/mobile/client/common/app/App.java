@@ -34,6 +34,8 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.events.apps.AbstractAppEvent;
@@ -115,7 +117,7 @@ public abstract class App implements AppEventHandler, NavigationEventHandler {
 
   @Override
   public void showContent(final NavigationShowContentEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -123,7 +125,7 @@ public abstract class App implements AppEventHandler, NavigationEventHandler {
       }
 
       @Override
-      public void onSuccess(final Method method,
+      public void onSuccess(final RestMethod method,
           final ApplicationInstanceDTO applicationInstanceDTO) {
         super.onSuccess(method, applicationInstanceDTO);
         NavigationAppInstanceChangedEvent evt = new NavigationAppInstanceChangedEvent(instance);
@@ -131,7 +133,7 @@ public abstract class App implements AppEventHandler, NavigationEventHandler {
       }
 
       @Override
-      public void onFailure(final Method method, final Throwable t) {
+      public void onFailure(final RestMethod method, final Throwable t) {
         super.onFailure(method, t);
         EventBus.getInstance().fireEvent(new ErrorEvent(t));
       }

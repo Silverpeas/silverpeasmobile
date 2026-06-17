@@ -24,14 +24,14 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import elemental2.core.Global;
 import elemental2.core.JsArray;
 import elemental2.dom.*;
-import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.client.common.AuthentificationManager;
+import org.silverpeas.mobile.client.common.DEBUG;
 import org.silverpeas.mobile.client.common.network.SpMobileRequestBuilder;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
@@ -46,7 +46,10 @@ public class AbstractService {
 
     private static String token = null;
     public String encode(String param) {
-        return URL.encodeQueryString(param);
+        if (param != null) {
+            return URL.encodeQueryString(param);
+        }
+        return param;
     }
 
     private RequestInit initRequest(String method, String contentType) {
@@ -85,7 +88,17 @@ public class AbstractService {
             Function<Object, T> mapper,
             RestCallback<T> callback, String contentType) {
 
-        RequestInit init = initRequest(method, contentType);
+        if (isJsonResponse(contentType)) {
+            requestJson(method, url, body, mapper, callback);
+        } else {
+            requestText(method, url, body, (RestCallback<String>) callback);
+        }
+    }
+
+    protected <T> void requestJson(String method, String url, Object body, Function<Object, T> mapper,
+            RestCallback<T> callback) {
+        DEBUG.log(this, "requestJson " + method + " " + url);
+        RequestInit init = initRequest(method, "application/json");
 
         if (body != null) {
             init.setBody(body.toString());
@@ -109,25 +122,69 @@ public class AbstractService {
                     return response.text();
                 })
                 .then(text -> {
+
                     if (text == null || text.trim().isEmpty()) {
-                        return null;
-                    }
-                    return Js.cast(Global.JSON.parse(text));
-                })
-                .then(result -> {
-                    if (result == null) {
                         callback.onSuccess(restMethod, null);
                         return null;
                     }
 
-                    callback.onSuccess(restMethod, mapper.apply(result));
+                    try {
+                        Object json = Global.JSON.parse(text);
+                        T result = mapper.apply(json);
+                        callback.onSuccess(restMethod, result);
+                    } catch (Exception e) {
+                        callback.onFailure(restMethod, e);
+                    }
+
                     return null;
                 })
                 .catch_(err -> {
                     callback.onFailure(restMethod,
-                            new RuntimeException(err != null ? err.toString() : "unknown error"));
+                            new RuntimeException(String.valueOf(err)));
                     return null;
                 });
+    }
+
+    protected void requestText(String method, String url, Object body, RestCallback<String> callback) {
+        DEBUG.log(this, "requestText " + method + " " + url);
+        RequestInit init = initRequest(method, "text/plain");
+
+        if (body != null) {
+            init.setBody(body.toString());
+        }
+
+        RestMethod restMethod = new RestMethod(init);
+
+        fetch(url, init)
+                .then(response -> {
+                    restMethod.setStatusCode(response.status);
+                    restMethod.setHeaders(response.headers);
+
+                    if (!response.ok) {
+                        throw new RuntimeException("HTTP " + response.status);
+                    }
+
+                    if (response.status == 204) {
+                        callback.onSuccess(restMethod, null);
+                        return null;
+                    }
+
+                    return response.text();
+                })
+                .then(text -> {
+                    callback.onSuccess(restMethod, text);
+                            //(text == null || text.isEmpty()) ? null : text);
+                    return null;
+                })
+                .catch_(err -> {
+                    callback.onFailure(restMethod,
+                            new RuntimeException(String.valueOf(err)));
+                    return null;
+                });
+    }
+
+    private boolean isJsonResponse(String contentType) {
+        return contentType != null && contentType.contains("application/json");
     }
 
     protected <T> void request(

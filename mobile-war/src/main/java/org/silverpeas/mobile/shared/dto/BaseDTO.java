@@ -88,4 +88,10 @@ public abstract class BaseDTO implements Serializable {
   public void setClassName(String className) {
     this.className = className;
   }
+
+  public void fromSuperJSON(JsPropertyMap<Object> json) {
+    if (json.get("id") != null) {
+      this.setId(json.get("id").toString());
+    }
+  }
 }

@@ -30,6 +30,6 @@ import java.io.Serializable;
  * @author svu
  */
 public enum PriorityDTO implements Serializable {
-  NORMAL,
-  HIGH;
+    NORMAL,
+    HIGH;
 }

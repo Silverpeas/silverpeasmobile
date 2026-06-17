@@ -40,8 +40,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.autobean.shared.AutoBean;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
+import java.util.Map;
 import org.silverpeas.mobile.client.apps.agenda.AgendaApp;
 import org.silverpeas.mobile.client.apps.blog.BlogApp;
 import org.silverpeas.mobile.client.apps.classifieds.ClassifiedsApp;
@@ -347,6 +346,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   public static void displayMainPage() {
     SpMobil.getMainPage().showFooter();
+
     if (!Window.Location.getHref().contains("?locale=") &&
         !user.getLanguage().equalsIgnoreCase("fr")) {
       Window.Location.replace(Window.Location.getHref() + "?locale=" + user.getLanguage());
@@ -367,7 +367,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     } else if (shortcutContentType != null && shortcutContentType.equalsIgnoreCase("Url") && shortcutAppId != null) {
       LinksManager.openIframePage(shortcutAppId);
     } else {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<HomePageDTO>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<HomePageDTO>() {
 
         @Override
         public void attempt() {
@@ -375,7 +375,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
         }
 
         @Override
-        public void onSuccess(final Method method, final HomePageDTO result) {
+        public void onSuccess(final RestMethod method, final HomePageDTO result) {
           super.onSuccess(method, result);
           // send event to main home page
           EventBus.getInstance().fireEvent(new HomePageLoadedEvent(result));
@@ -392,14 +392,14 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
 
   private static void displayPersonnalApps () {
     if (getUser() != null && !getMainPage().isPersonalAppsInitialized()) {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ApplicationInstanceDTO>>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<ApplicationInstanceDTO>>() {
         @Override
         public void attempt() {
           ServicesLocator.getServiceNavigation().getPersonnalSpaceContent(getUser().getId(), this);
         }
 
         @Override
-        public void onSuccess(Method method, List<ApplicationInstanceDTO> applicationInstanceDTOS) {
+        public void onSuccess(RestMethod method, List<ApplicationInstanceDTO> applicationInstanceDTOS) {
           getMainPage().setPersonalApps(applicationInstanceDTOS);
         }
       };
@@ -431,7 +431,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
       String domainId = DOMUtils.getInputValueById("defaultDomain");
       if (login != null && domainId != null && !login.isEmpty() && !domainId.isEmpty()) {
         //SSO
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<DetailUserDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<DetailUserDTO>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -439,13 +439,13 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           }
 
           @Override
-          public void onFailure(Method method, Throwable t) {
+          public void onFailure(RestMethod method, Throwable t) {
             tabletGesture(false);
             displayLoginPage(null);
           }
 
           @Override
-          public void onSuccess(Method method, DetailUserDTO detailUserDTO) {
+          public void onSuccess(RestMethod method, DetailUserDTO detailUserDTO) {
             super.onSuccess(method, detailUserDTO);
             setUser(detailUserDTO, true);
             setUserProfile(UserProfileDTO.getBean(
@@ -461,7 +461,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
               p.setEmailAddress(detailUserDTO.geteMail());
               setUserProfile(p);
             }
-            ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<Boolean>() {
+            ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<String>() {
               @Override
               public void onFailure(final RestMethod method, final Throwable throwable) {
                 Notification.activityStop();
@@ -469,8 +469,8 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
               }
 
               @Override
-              public void onSuccess(final RestMethod method, final Boolean showTerms) {
-                if (showTerms) {
+              public void onSuccess(final RestMethod method, final String showTerms) {
+                if (Boolean.parseBoolean(showTerms)) {
                   SpMobil.displayTermsOfServicePage();
                 } else {
                   SpMobil.displayMainPage();
@@ -511,7 +511,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     if (MobilUtils.isTablet()) {
       if (connected) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -519,7 +519,7 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
           }
 
           @Override
-          public void onSuccess(final Method method, final Boolean desktopMode) {
+          public void onSuccess(final RestMethod method, final Boolean desktopMode) {
             super.onSuccess(method, desktopMode);
             if (desktopMode) {
               String url = Window.Location.getHref();

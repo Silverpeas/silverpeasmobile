@@ -53,6 +53,8 @@ import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.components.attachments.AttachmentsManager;
@@ -106,7 +108,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   private void loadAppInstance(final ContentDTO content, Command callback) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
       @Override
       public void attempt() {
@@ -115,7 +117,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
 
       @Override
-      public void onSuccess(final Method method,
+      public void onSuccess(final RestMethod method,
           final ApplicationInstanceDTO app) {
         super.onSuccess(method, app);
         setApplicationInstance(app);

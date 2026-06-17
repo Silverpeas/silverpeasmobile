@@ -44,6 +44,8 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.UserDTO;
@@ -161,7 +163,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       super.showContent(event);
     } else if (event.getContent().getType().equals(ContentsTypes.Event.name())) {
       final String contributionId = event.getContent().getContributionId();
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
 
         @Override
         public void attempt() {
@@ -170,7 +172,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         }
 
         @Override
-        public void onSuccess(final Method method,
+        public void onSuccess(final RestMethod method,
             final ApplicationInstanceDTO app) {
           super.onSuccess(method, app);
           setApplicationInstance(app);

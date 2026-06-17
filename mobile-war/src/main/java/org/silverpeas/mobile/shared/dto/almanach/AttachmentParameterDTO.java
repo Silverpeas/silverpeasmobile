@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -47,5 +49,18 @@ public class AttachmentParameterDTO implements Serializable {
 
   public void setValue(final String value) {
     this.value = value;
+  }
+
+  public static AttachmentParameterDTO fromJSON(JsPropertyMap<Object> json) {
+    AttachmentParameterDTO dto = new AttachmentParameterDTO();
+
+    if (json == null) {
+      return dto;
+    }
+
+    dto.setName(json.get("name") != null ? json.get("name").toString() : "");
+    dto.setValue(json.get("value") != null ? json.get("value").toString() : "");
+
+    return dto;
   }
 }

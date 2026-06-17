@@ -169,20 +169,20 @@ public class FavoritesApp extends App implements FavoritesAppEventHandler, Navig
   @Override
   public void gotoApp(final GotoAppEvent event) {
 
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
         @Override
         public void attempt() {
           super.attempt();
           ServicesLocator.getServiceNavigation().getApp(event.getInstanceId(), null, null, this);
         }
         @Override
-        public void onFailure(final Method method, final Throwable t) {
+        public void onFailure(final RestMethod method, final Throwable t) {
           super.onFailure(method, t);
           EventBus.getInstance().fireEvent(new ErrorEvent(t));
         }
 
         @Override
-        public void onSuccess(final Method method, final ApplicationInstanceDTO applicationInstanceDTO) {
+        public void onSuccess(final RestMethod method, final ApplicationInstanceDTO applicationInstanceDTO) {
           super.onSuccess(method, applicationInstanceDTO);
           EventBus.getInstance().fireEvent(new NavigationAppInstanceChangedEvent(applicationInstanceDTO));
         }

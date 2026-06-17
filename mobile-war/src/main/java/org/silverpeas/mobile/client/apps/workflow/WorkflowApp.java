@@ -56,6 +56,8 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineBackground;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.StreamingList;
@@ -110,7 +112,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals("Component")) {
 
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Boolean>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -119,7 +121,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
         }
 
         @Override
-        public void onSuccess(final Method method, final Boolean workflow) {
+        public void onSuccess(final RestMethod method, final Boolean workflow) {
           super.onSuccess(method, workflow);
           if (workflow) {
             ApplicationInstanceDTO app = new ApplicationInstanceDTO();

@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -35,6 +37,7 @@ public class RightDTO implements Serializable {
   private boolean writer = false;
   private boolean publisher = false;
   private boolean manager = false;
+
 
   public boolean getReader() {
     return reader;
@@ -66,5 +69,21 @@ public class RightDTO implements Serializable {
 
   public void setManager(final boolean manager) {
     this.manager = manager;
+  }
+
+
+  public static RightDTO fromJSON(JsPropertyMap<Object> json) {
+    RightDTO dto = new RightDTO();
+
+    if (json == null) {
+      return dto;
+    }
+
+    dto.setReader(json.get("reader") != null ? Boolean.parseBoolean(json.get("reader").toString()) : false);
+    dto.setWriter(json.get("writer") != null ? Boolean.parseBoolean(json.get("writer").toString()) : false);
+    dto.setPublisher(json.get("publisher") != null ? Boolean.parseBoolean(json.get("publisher").toString()) : false);
+    dto.setManager(json.get("manager") != null ? Boolean.parseBoolean(json.get("manager").toString()) : false);
+
+    return dto;
   }
 }

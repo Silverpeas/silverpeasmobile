@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,79 +24,134 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
-import org.fusesource.restygwt.client.TextCallback;
-import org.silverpeas.mobile.shared.dto.DetailUserDTO;
-import org.silverpeas.mobile.shared.dto.HomePageDTO;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
+import org.silverpeas.mobile.shared.dto.*;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
+ * Service to manage requests related to navigation within Silverpeas.
  * @author svu
  */
-@Path("/mobile/navigation")
-public interface ServiceNavigation extends RestService {
+public class ServiceNavigation extends AbstractService {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("space/{spaceId}/")
-  public void getSpace(@PathParam("spaceId") String spaceId, MethodCallback<SpaceDTO> callback);
+  private static final String PATH = "/silverpeas/services/mobile/navigation";
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("personalSpace/{userId}/")
-  public void getPersonnalSpaceContent(@PathParam("userId") String userId, MethodCallback<List<ApplicationInstanceDTO>> callback);
+  /**
+   * Retrieves a space by its ID.
+   * @param spaceId
+   * @param callback
+   */
+  public void getSpace(String spaceId, RestCallback<SpaceDTO> callback) {
+    String url = PATH + "/space/" + encode(spaceId) + "/";
+    get(url, result -> SpaceDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("spacesAndApps/{rootSpaceId}/")
-  public void getSpacesAndApps(@PathParam("rootSpaceId") String rootSpaceId,
-      MethodCallback<List<SilverpeasObjectDTO>> callback);
+  /**
+   * Retrieves the contents of a user's personal space.
+   * @param userId
+   * @param callback
+   */
+  public void getPersonnalSpaceContent(String userId, RestCallback<List<ApplicationInstanceDTO>> callback) {
+    String url = PATH + "/personalSpace/" + encode(userId) + "/";
+    get(url, result -> mapArray(result, ApplicationInstanceDTO::fromJSON), callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("app/{instanceId}/{contentId}/{contentType}/")
-  public void getApp(@PathParam("instanceId") String instanceId,
-      @PathParam("contentId") String contentId, @PathParam("contentType") String contentType, MethodCallback<ApplicationInstanceDTO> callback);
+  /**
+   * Retrieves spaces and applications from a root space.
+   * @param rootSpaceId
+   * @param callback
+   */
+  public void getSpacesAndApps(String rootSpaceId, RestCallback<List<SilverpeasObjectDTO>> callback) {
+    String url = PATH + "/spacesAndApps/" + encode(rootSpaceId) + "/";
+    get(url, result -> mapArray(result, ServiceNavigation::spacesAndAppsFromJSON), callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("user/{login}/{domainId}/")
-  public void getUser(@PathParam("login") String login, @PathParam("domainId") String domainId, MethodCallback<DetailUserDTO> callback);
+  private static SilverpeasObjectDTO spacesAndAppsFromJSON(JsPropertyMap<Object> json) {
+    SilverpeasObjectDTO dto = null;
+    Object type = json.get("className");
+    if (type != null && type.toString().contains(ApplicationInstanceDTO.class.getSimpleName())) {
+      dto = ApplicationInstanceDTO.fromJSON(json);
+    } else if (type != null && type.toString().contains(SpaceDTO.class.getSimpleName())) {
+      dto = SpaceDTO.fromJSON(json);
+    }
+    return dto;
+  }
 
+  /**
+   * Retrieves an application by its instance ID, content ID, and content type.
+   * @param instanceId
+   * @param contentId
+   * @param contentType
+   * @param callback
+   */
+  public void getApp(String instanceId, String contentId, String contentType, RestCallback<ApplicationInstanceDTO> callback) {
+    String url = PATH + "/app/" + encode(instanceId) + "/" + encode(contentId) + "/" + encode(contentType) + "/";
+    get(url, result -> ApplicationInstanceDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("setTabletMode")
-  public void setTabletMode(MethodCallback<Boolean> callback);
+  /**
+   * Retrieves a user's details by their login and domain ID.
+   * @param login
+   * @param domainId
+   * @param callback
+   */
+  public void getUser(String login, String domainId, RestCallback<DetailUserDTO> callback) {
+    String url = PATH + "/user/" + encode(login) + "/" + encode(domainId) + "/";
+    get(url, result -> DetailUserDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @GET
-  @Path("clearAppCache")
-  public void clearAppCache(MethodCallback<Void> callback);
+  /**
+   * Enables tablet mode.
+   * @param callback
+   */
+  public void setTabletMode(RestCallback<Boolean> callback) {
+    String url = PATH + "/setTabletMode";
+    post(url, null, result -> Js.asBoolean(result), callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("homepage/{spaceId}/{zoom}/")
-  public void getHomePageData(@PathParam("spaceId") String spaceId, @PathParam("zoom") String zoom, MethodCallback<HomePageDTO> callback);
+  /**
+   * Clears the application cache.
+   * @param callback
+   */
+  public void clearAppCache(RestCallback<Void> callback) {
+    String url = PATH + "/clearAppCache";
+    get(url, result -> null, callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("isWorkflowApp/{instanceId}/")
-  public void isWorkflowApp(@PathParam("instanceId") String intanceId, MethodCallback<Boolean> callback);
+  /**
+   * Retrieves homepage data for a given space.
+   * @param spaceId
+   * @param zoom
+   * @param callback
+   */
+  public void getHomePageData(String spaceId, String zoom, RestCallback<HomePageDTO> callback) {
+    String url = PATH + "/homepage/" + encode(spaceId) + "/" + encode(zoom) + "/";
+    get(url, result -> HomePageDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @PUT
-  @Path("storeTokenMessaging/{token}/")
-  public void storeTokenMessaging(@PathParam("token") String token, MethodCallback<Void> callback);
+  /**
+   * Checks whether an application is of workflow type.
+   * @param instanceId
+   * @param callback
+   */
+  public void isWorkflowApp(String instanceId, RestCallback<Boolean> callback) {
+    String url = PATH + "/isWorkflowApp/" + encode(instanceId) + "/";
+    get(url, result -> Js.asBoolean(result), callback);
+  }
+
+  /**
+   * Stores a messaging token.
+   * @param token
+   * @param callback
+   */
+  public void storeTokenMessaging(String token, RestCallback<Void> callback) {
+    String url = PATH + "/storeTokenMessaging/" + encode(token) + "/";
+    put(url, null, result -> null, callback);
+  }
 }

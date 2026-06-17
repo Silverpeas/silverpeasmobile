@@ -171,8 +171,8 @@ public class MyLinkDTO implements Serializable {
         MyLinkDTO dto = new MyLinkDTO();
         try {
             dto.setUri((String) json.get("uri"));
-            dto.setLinkId(((Number) json.get("linkId")).intValue());
-            dto.setPosition(((Number) json.get("position")).intValue());
+            if (json.get("linkId") != null) dto.setLinkId(((Number) json.get("linkId")).intValue());
+            if (json.get("position") != null) dto.setPosition(((Number) json.get("position")).intValue());
             dto.setName((String) json.get("name"));
             dto.setDescription((String) json.get("description"));
             dto.setUrl((String) json.get("url"));
@@ -182,7 +182,7 @@ public class MyLinkDTO implements Serializable {
             dto.setInstanceId((String) json.get("instanceId"));
             dto.setObjectId((String) json.get("objectId"));
             dto.setCategoryId((Number) json.get("categoryId"));
-        }catch (Throwable t) {
+        } catch (Throwable t) {
             GWT.log("ERREUR", t);
         }
         return dto;

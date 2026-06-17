@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.documents;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
@@ -53,7 +55,7 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 
   private List<String> notAllowedDownloads;
 
-  public String getName() {
+    public String getName() {
     return name;
   }
   public void setName(String name) {
@@ -164,5 +166,60 @@ public class PublicationDTO extends BaseDTO implements Serializable, Comparable<
 
   public void setPublishable(boolean publishable) {
     this.publishable = publishable;
+  }
+
+  public static PublicationDTO fromJSON(JsPropertyMap<Object> json) {
+    PublicationDTO dto = new PublicationDTO();
+
+    if (json == null) {
+      return dto;
+    }
+
+    dto.fromSuperJSON(json);
+
+    dto.setName(json.get("name") != null ? json.get("name").toString() : "");
+    dto.setDescription(json.get("description") != null ? json.get("description").toString() : "");
+    dto.setVersion(json.get("version") != null ? json.get("version").toString() : "");
+    dto.setCreator(json.get("creator") != null ? json.get("creator").toString() : "");
+    dto.setUpdater(json.get("updater") != null ? json.get("updater").toString() : "");
+    dto.setCreationDate(json.get("creationDate") != null ? json.get("creationDate").toString() : "");
+    dto.setUpdateDate(json.get("updateDate") != null ? json.get("updateDate").toString() : "");
+    dto.setInstanceId(json.get("instanceId") != null ? json.get("instanceId").toString() : "");
+    dto.setVignette(json.get("vignette") != null ? json.get("vignette").toString() : "");
+
+    dto.setCommentsNumber(json.get("commentsNumber") != null ? ((Number) json.get("commentsNumber")).intValue() : 0);
+    dto.setViewsNumber(json.get("viewsNumber") != null ? ((Number) json.get("viewsNumber")).intValue() : 0);
+
+    dto.setContent(json.get("content") != null ? Boolean.parseBoolean(json.get("content").toString()) : false);
+    dto.setDraft(json.get("draft") != null ? Boolean.parseBoolean(json.get("draft").toString()) : false);
+    dto.setPublishable(json.get("publishable") != null ? Boolean.parseBoolean(json.get("publishable").toString()) : false);
+
+    // ===== linked publications =====
+    if (json.get("linkedPublications") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("linkedPublications");
+
+      List<PublicationDTO> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+        result.add(PublicationDTO.fromJSON(map));
+      }
+
+      dto.setLinkedPublications(result);
+    }
+
+    // ===== not allowed downloads =====
+    if (json.get("notAllowedDownloads") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("notAllowedDownloads");
+
+      List<String> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        String na = (String) list.getAt(i);
+        result.add(na);
+      }
+
+      dto.setNotAllowedDownloads(result);
+    }
+
+    return dto;
   }
 }

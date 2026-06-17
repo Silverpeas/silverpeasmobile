@@ -1,5 +1,8 @@
 package org.silverpeas.mobile.shared.dto.navigation.aurora;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
@@ -54,4 +57,42 @@ public class AuroraSpaceHomePageConfig implements Serializable {
     public void setLastPublications(List<PublicationDTO> lastPublications) {
         this.lastPublications = lastPublications;
     }
+
+    public static AuroraSpaceHomePageConfig fromJSON(JsPropertyMap<Object> json) {
+        AuroraSpaceHomePageConfig dto = new AuroraSpaceHomePageConfig();
+
+        if (json == null) {
+            return dto;
+        }
+
+        dto.setIntroduction(json.get("introduction") != null ? json.get("introduction").toString() : "");
+        dto.setPicture(json.get("picture") != null ? json.get("picture").toString() : "");
+        dto.setLatestPublications(json.get("latestPublications") != null ? json.get("latestPublications").toString() : "");
+
+        // ===== shortcuts =====
+        if (json.get("shortcuts") != null) {
+            List<ShortCutLinkDTO> result = new ArrayList<>();
+            JsArray<Object> list = (JsArray<Object>) json.get("shortcuts");
+            for (int i = 0; i < list.length; i++) {
+                JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+                result.add(ShortCutLinkDTO.fromJSON(map));
+            }
+            dto.setShortcuts(result);
+        }
+
+        // ===== last publications =====
+        if (json.get("lastPublications") != null) {
+            JsArray<Object> list = (JsArray<Object>) json.get("lastPublications");
+
+            List<PublicationDTO> result = new ArrayList<>();
+            for (int i = 0; i < list.length; i++) {
+                JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+                result.add(PublicationDTO.fromJSON(map));
+            }
+
+            dto.setLastPublications(result);
+        }
+        return dto;
+    }
 }
+

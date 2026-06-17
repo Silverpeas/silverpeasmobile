@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
+import com.google.gwt.user.client.Window;
 import jsinterop.base.Js;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 
@@ -39,9 +40,9 @@ public class ServiceTermsOfService extends AbstractService {
    * Check whether the Terms and Conditions of Use need to be displayed.
    * @param callback Le callback pour gérer la réponse (booléen).
    */
-  public void show(RestCallback<Boolean> callback) {
+  public void show(RestCallback<String> callback) {
     String url = PATH + "/show";
-    get(url, result -> Js.asBoolean(result), callback);
+    getText(url, result -> (String) result, callback);
   }
 
   /**

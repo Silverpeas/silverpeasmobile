@@ -111,90 +111,95 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   }
 
   public void setData(HomePageDTO data) {
-    this.data = data;
-    getElement().setClassName("space-content");
-    getElement().setId(data.getId());
+    try {
+      this.data = data;
+      getElement().setClassName("space-content");
+      getElement().setId(data.getId());
 
-    spaces.clear();
-    List<SilverpeasObjectDTO> spacesList = data.getSpacesAndApps();
-    for (SilverpeasObjectDTO space : spacesList) {
-      NavigationItem item = new NavigationItem();
-      item.setData(space);
-      item.getElement().setId(space.getId());
-      spaces.add(item);
-    }
-
-    if (data.getAuroraConfig() != null) {
-      introduction.setHTML(data.getAuroraConfig().getIntroduction());
-      picture.setUrl(data.getAuroraConfig().getPicture());
-      displayShortcuts(data.getAuroraConfig().getShortcuts(), shortCutsSection, shortcuts, "shortCut", true);
-      String lastPub = data.getAuroraConfig().getLatestPublications();
-      if (lastPub != null && !lastPub.trim().isEmpty() && !lastPub.trim().equalsIgnoreCase("0")) {
-        displayLastPublications(data.getAuroraConfig().getLastPublications(), true);
+      spaces.clear();
+      List<SilverpeasObjectDTO> spacesList = data.getSpacesAndApps();
+      for (SilverpeasObjectDTO space : spacesList) {
+        NavigationItem item = new NavigationItem();
+        item.setData(space);
+        item.getElement().setId(space.getId());
+        spaces.add(item);
       }
-    } else {
-      Config conf = SpMobil.getConfiguration();
-      setConfig(conf);
 
-      news.clear();
-      if (config.isNewsDisplay()) {
-        List<NewsDTO> newsDTOList = data.getNews();
-        int i = 1;
-        boolean v = true;
-        int max = newsDTOList.size();
-        for (NewsDTO newsDTO : newsDTOList) {
-          NewsItem item = new NewsItem();
-          item.setDisplayPager(data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL));
-          item.setData(i, max, newsDTO);
-          item.setVisible(v);
-          news.add(item);
-          i++;
-          if (data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) v = false;
+      if (data.getAuroraConfig() != null) {
+        introduction.setHTML(data.getAuroraConfig().getIntroduction());
+        picture.setUrl(data.getAuroraConfig().getPicture());
+        displayShortcuts(data.getAuroraConfig().getShortcuts(), shortCutsSection, shortcuts, "shortCut", true);
+        String lastPub = data.getAuroraConfig().getLatestPublications();
+        if (lastPub != null && !lastPub.trim().isEmpty() && !lastPub.trim().equalsIgnoreCase("0")) {
+          displayLastPublications(data.getAuroraConfig().getLastPublications(), true);
         }
-      }
+      } else {
+        Config conf = SpMobil.getConfiguration();
+        setConfig(conf);
 
-      favoris.clear();
-      List<MyLinkDTO> favoritesList = data.getFavorites();
-      favorisSection.setVisible(!favoritesList.isEmpty() && config.isFavoritesDisplay());
-      for (MyLinkDTO favoriteDTO : favoritesList) {
-        if (favoriteDTO.getVisible()) {
-          FavoriteItem item = new FavoriteItem();
-          item.setMinimalView(true);
-          item.setData(favoriteDTO);
-          favoris.add(item);
+        news.clear();
+        if (config.isNewsDisplay()) {
+          List<NewsDTO> newsDTOList = data.getNews();
+          int i = 1;
+          boolean v = true;
+          int max = newsDTOList.size();
+          for (NewsDTO newsDTO : newsDTOList) {
+            NewsItem item = new NewsItem();
+            item.setDisplayPager(data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL));
+            item.setData(i, max, newsDTO);
+            item.setVisible(v);
+            news.add(item);
+            i++;
+            if (data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) v = false;
+          }
         }
+
+        favoris.clear();
+        List<MyLinkDTO> favoritesList = data.getFavorites();
+        favorisSection.setVisible(!favoritesList.isEmpty() && config.isFavoritesDisplay());
+        for (MyLinkDTO favoriteDTO : favoritesList) {
+          if (favoriteDTO.getVisible()) {
+            FavoriteItem item = new FavoriteItem();
+            item.setMinimalView(true);
+            item.setData(favoriteDTO);
+            favoris.add(item);
+          }
+        }
+
+        displayShortcuts(data.getShortCuts(), shortCutsSection, shortcuts, "shortCut", config.isShortCutsDisplay());
+        displayShortcuts(data.getTools(), shortCutsToolsSection, shortcutstools, "shortCutTools", config.isShortCutsToolsDisplay());
+
+        displayLastPublications(data.getLastPublications(), config.isLastPublicationsDisplay());
+
+        lastEvents.clear();
+        List<CalendarEventDTO> eventsList = data.getLastEvents();
+        lastEventsSection.setVisible(!eventsList.isEmpty() && config.isLastEventsDisplay());
+        for (CalendarEventDTO eventDTO : eventsList) {
+          HomePageItem item = new HomePageItem();
+          item.setData(eventDTO);
+          lastEvents.add(item);
+        }
+
+        freeZoneSection.clear();
+        HTML html = new HTML(data.getHtmlFreeZone());
+        freeZoneSection.add(html);
+
+        freeZoneThinSection.clear();
+        HTML html2 = new HTML(data.getHtmlFreeZoneThin());
+        freeZoneThinSection.add(html2);
+
+        if (MobilUtils.isMobil() && data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) {
+          //Element e = Document.get().getElementById("actus");
+          //HTML actus = HTML.wrap(e);
+          swipeRecognizer = new SwipeRecognizer(actus);
+        }
+
+        // Display zones order
+        reorderZones(data);
       }
 
-      displayShortcuts(data.getShortCuts(), shortCutsSection, shortcuts, "shortCut", config.isShortCutsDisplay());
-      displayShortcuts(data.getTools(), shortCutsToolsSection, shortcutstools, "shortCutTools", config.isShortCutsToolsDisplay());
-
-      displayLastPublications(data.getLastPublications(), config.isLastPublicationsDisplay());
-
-      lastEvents.clear();
-      List<CalendarEventDTO> eventsList = data.getLastEvents();
-      lastEventsSection.setVisible(!eventsList.isEmpty() && config.isLastEventsDisplay());
-      for (CalendarEventDTO eventDTO : eventsList) {
-        HomePageItem item = new HomePageItem();
-        item.setData(eventDTO);
-        lastEvents.add(item);
-      }
-
-      freeZoneSection.clear();
-      HTML html = new HTML(data.getHtmlFreeZone());
-      freeZoneSection.add(html);
-
-      freeZoneThinSection.clear();
-      HTML html2 = new HTML(data.getHtmlFreeZoneThin());
-      freeZoneThinSection.add(html2);
-
-      if (MobilUtils.isMobil() && data.getNewsDisplayer().equals(HomePageDTO.NEWS_DISPLAYER_CARROUSEL)) {
-        //Element e = Document.get().getElementById("actus");
-        //HTML actus = HTML.wrap(e);
-        swipeRecognizer = new SwipeRecognizer(actus);
-      }
-
-      // Display zones order
-      reorderZones(data);
+    } catch (Exception e) {
+      GWT.log("ERROR",e);
     }
 
     Notification.activityStop();

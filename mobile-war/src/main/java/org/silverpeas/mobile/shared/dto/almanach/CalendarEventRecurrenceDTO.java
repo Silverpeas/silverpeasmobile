@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -33,6 +35,7 @@ public class CalendarEventRecurrenceDTO implements Serializable {
   private CalendarEventRecurrenceDTO.FrequencyDTO frequency;
   private int count = 0;
   private String endDate = null;
+
   //private List<CalendarEventRecurrenceEntity.DayOfWeekOccurrenceEntity> daysOfWeek = new ArrayList(7);
 
   public FrequencyDTO getFrequency() {
@@ -59,6 +62,24 @@ public class CalendarEventRecurrenceDTO implements Serializable {
     this.endDate = endDate;
   }
 
+  public static CalendarEventRecurrenceDTO fromJSON(JsPropertyMap<Object> json) {
+    CalendarEventRecurrenceDTO dto = new CalendarEventRecurrenceDTO();
+
+    if (json == null) {
+      return dto;
+    }
+
+    // frequency (safe cast + null check)
+    dto.setFrequency(json.get("frequency") != null ? FrequencyDTO.fromJSON((JsPropertyMap<Object>) json.get("frequency")) : null);
+
+    // count (safe number)
+    dto.setCount(json.get("count") != null ? ((Number) json.get("count")).intValue() : 0);
+
+    // endDate
+    dto.setEndDate(json.get("endDate") != null ? json.get("endDate").toString() : "");
+
+    return dto;
+  }
 
   public static class FrequencyDTO implements Serializable {
     private int interval;
@@ -78,6 +99,22 @@ public class CalendarEventRecurrenceDTO implements Serializable {
 
     public void setTimeUnit(TimeUnitDTO timeUnit) {
       this.timeUnit = timeUnit;
+    }
+
+    public static FrequencyDTO fromJSON(JsPropertyMap<Object> json) {
+      FrequencyDTO dto = new FrequencyDTO();
+
+      if (json == null) {
+        return dto;
+      }
+
+      // interval
+      dto.setInterval(json.get("interval") != null ? ((Number) json.get("interval")).intValue() : 0);
+
+      // timeUnit (safe enum)
+      dto.setTimeUnit(json.get("timeUnit") != null ? TimeUnitDTO.valueOf(json.get("timeUnit").toString()) : null);
+
+      return dto;
     }
   }
 }
