@@ -99,7 +99,7 @@ public class FavoritesHelper {
     MyLinkDTO dto = new MyLinkDTO();
     dto.setName(link.getName());
     dto.setDescription(link.getDescription());
-    dto.setPosition(link.getPosition());
+    dto.setPosition(Double.valueOf(link.getPosition()));
     dto.setUrl(link.getUrl());
     return dto;
   }

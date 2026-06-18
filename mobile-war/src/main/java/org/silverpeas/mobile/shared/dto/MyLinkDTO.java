@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -30,49 +30,52 @@ import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;
 
-/**
- * @author svu
- */
+import com.google.gwt.core.client.GWT;
+import jsinterop.base.JsPropertyMap;
+
+import java.io.Serializable;
+
 public class MyLinkDTO implements Serializable {
 
     private String uri = "";
-    @JsonIgnore //TODO remove after RestyGWT removal
-    private Number linkId = -1;
-    @JsonIgnore
-    private Number position = -1;
+
+    private Double linkId = -1d;
+    private Double position = -1d;
+
     private String name = "";
     private String description = "";
     private String url = "";
+
     private Boolean visible = true;
     private Boolean popup = false;
+
     private String userId = "";
     private String instanceId = "";
     private String objectId = "";
 
-    @JsonIgnore
-    private Number categoryId;
+    private Double categoryId;
 
     public String getUri() {
         return uri;
     }
 
-    public void setUri(final String uri) {
+    public void setUri(String uri) {
         this.uri = uri;
     }
 
-    public Number getLinkId() {
+    public Double getLinkId() {
         return linkId;
     }
 
-    public void setLinkId(final Number linkId) {
+    public void setLinkId(Double linkId) {
         this.linkId = linkId;
     }
 
-    public Number getPosition() {
+    public Double getPosition() {
         return position;
     }
 
-    public void setPosition(final Number position) {
+    public void setPosition(Double position) {
         this.position = position;
     }
 
@@ -80,7 +83,7 @@ public class MyLinkDTO implements Serializable {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -88,7 +91,7 @@ public class MyLinkDTO implements Serializable {
         return description;
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -96,7 +99,7 @@ public class MyLinkDTO implements Serializable {
         return url;
     }
 
-    public void setUrl(final String url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 
@@ -104,7 +107,7 @@ public class MyLinkDTO implements Serializable {
         return visible;
     }
 
-    public void setVisible(final Boolean visible) {
+    public void setVisible(Boolean visible) {
         this.visible = visible;
     }
 
@@ -112,7 +115,7 @@ public class MyLinkDTO implements Serializable {
         return popup;
     }
 
-    public void setPopup(final Boolean popup) {
+    public void setPopup(Boolean popup) {
         this.popup = popup;
     }
 
@@ -120,7 +123,7 @@ public class MyLinkDTO implements Serializable {
         return userId;
     }
 
-    public void setUserId(final String userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -128,7 +131,7 @@ public class MyLinkDTO implements Serializable {
         return instanceId;
     }
 
-    public void setInstanceId(final String instanceId) {
+    public void setInstanceId(String instanceId) {
         this.instanceId = instanceId;
     }
 
@@ -136,55 +139,83 @@ public class MyLinkDTO implements Serializable {
         return objectId;
     }
 
-    public void setObjectId(final String objectId) {
+    public void setObjectId(String objectId) {
         this.objectId = objectId;
     }
 
-    public Number getCategoryId() {
+    public Double getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Number categoryId) {
+    public void setCategoryId(Double categoryId) {
         this.categoryId = categoryId;
     }
 
     public JsPropertyMap<Object> toJSON() {
         JsPropertyMap<Object> json = JsPropertyMap.of();
 
-        json.set("uri", getUri());
-        json.set("linkId", getLinkId());
-        json.set("position", getPosition());
-        json.set("name", getName());
-        json.set("description", getDescription());
-        json.set("url", getUrl());
-        json.set("visible", getVisible());
-        json.set("popup", getPopup());
-        json.set("userId", getUserId());
-        json.set("instanceId", getInstanceId());
-        json.set("objectId", getObjectId());
-        json.set("categoryId", getCategoryId());
+        json.set("uri", uri);
+        json.set("linkId", linkId);
+        json.set("position", position);
+        json.set("name", name);
+        json.set("description", description);
+        json.set("url", url);
+        json.set("visible", visible);
+        json.set("popup", popup);
+        json.set("userId", userId);
+        json.set("instanceId", instanceId);
+        json.set("objectId", objectId);
+
+        if (categoryId != null) {
+            json.set("categoryId", categoryId);
+        }
 
         return json;
     }
 
     public static MyLinkDTO fromJSON(JsPropertyMap<Object> json) {
         MyLinkDTO dto = new MyLinkDTO();
+
         try {
             dto.setUri((String) json.get("uri"));
-            if (json.get("linkId") != null) dto.setLinkId(((Number) json.get("linkId")).intValue());
-            if (json.get("position") != null) dto.setPosition(((Number) json.get("position")).intValue());
+
+            Object linkId = json.get("linkId");
+            if (linkId instanceof Number) {
+                dto.setLinkId(((Number) linkId).doubleValue());
+            }
+
+            Object position = json.get("position");
+            if (position instanceof Number) {
+                dto.setPosition(((Number) position).doubleValue());
+            }
+
             dto.setName((String) json.get("name"));
             dto.setDescription((String) json.get("description"));
             dto.setUrl((String) json.get("url"));
-            dto.setVisible((Boolean) json.get("visible"));
-            dto.setPopup((Boolean) json.get("popup"));
+
+            Object visible = json.get("visible");
+            if (visible instanceof Boolean) {
+                dto.setVisible((Boolean) visible);
+            }
+
+            Object popup = json.get("popup");
+            if (popup instanceof Boolean) {
+                dto.setPopup((Boolean) popup);
+            }
+
             dto.setUserId((String) json.get("userId"));
             dto.setInstanceId((String) json.get("instanceId"));
             dto.setObjectId((String) json.get("objectId"));
-            dto.setCategoryId((Number) json.get("categoryId"));
+
+            Object categoryId = json.get("categoryId");
+            if (categoryId instanceof Number) {
+                dto.setCategoryId(((Number) categoryId).doubleValue());
+            }
+
         } catch (Throwable t) {
-            GWT.log("ERREUR", t);
+            GWT.log("ERREUR parsing MyLinkDTO", t);
         }
+
         return dto;
     }
 }

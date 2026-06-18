@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.shared.dto.tickets;
 
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 
 import java.io.Serializable;
@@ -209,4 +210,59 @@ public class TicketDTO implements Serializable {
   public String getName() {
     return name;
   }
+  public static TicketDTO fromJSON(JsPropertyMap<Object> json) {
+    if (json == null) {
+      return null;
+    }
+
+    TicketDTO dto = new TicketDTO();
+    dto.setSharedObjectId(json.get("sharedObjectId") != null ? json.get("sharedObjectId").toString() : null);
+    dto.setSharedObjectType(json.get("sharedObjectType") != null ? json.get("sharedObjectType").toString() : null);
+    dto.setComponentId(json.get("componentId") != null ? json.get("componentId").toString() : null);
+    dto.setValidity(json.get("validity") != null ? json.get("validity").toString() : null);
+    dto.setUrl(json.get("url") != null ? json.get("url").toString() : null);
+    dto.setUri(json.get("uri") != null ? json.get("uri").toString() : null);
+    dto.setEndDateStr(json.get("endDateStr") != null ? json.get("endDateStr").toString() : null);
+    dto.setEndDateFormat(json.get("endDateFormat") != null ? json.get("endDateFormat").toString() : null);
+    dto.setNbAccessMax(json.get("nbAccessMax") != null ? json.get("nbAccessMax").toString() : null);
+    dto.setUsers(json.get("users") != null ? json.get("users").toString() : null);
+    dto.setExternalEmails(json.get("externalEmails") != null ? json.get("externalEmails").toString() : null);
+    dto.setAdditionalMessage(json.get("additionalMessage") != null ? json.get("additionalMessage").toString() : null);
+    dto.setCreationDate(json.get("creationDate") != null ? json.get("creationDate").toString() : null);
+    dto.setNbAccess(json.get("nbAccess") != null ? json.get("nbAccess").toString() : null);
+    dto.setToken(json.get("token") != null ? json.get("token").toString() : null);
+    dto.setValid(json.get("valid") != null ? json.get("valid").toString() : null);
+    dto.setModified(json.get("modified") != null ? json.get("modified").toString() : null);
+    dto.setContinuous(json.get("continuous") != null ? json.get("continuous").toString() : null);
+    dto.setName(json.get("name") != null ? json.get("name").toString() : null);
+
+    return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("sharedObjectId", sharedObjectId);
+    json.set("sharedObjectType", sharedObjectType);
+    json.set("componentId", componentId);
+    json.set("validity", validity);
+    json.set("url", url);
+    json.set("uri", uri);
+    json.set("endDateStr", endDateStr);
+    json.set("endDateFormat", endDateFormat);
+    json.set("nbAccessMax", nbAccessMax);
+    json.set("users", users);
+    json.set("externalEmails", externalEmails);
+    json.set("additionalMessage", additionalMessage);
+    json.set("creationDate", creationDate);
+    json.set("nbAccess", nbAccess);
+    json.set("token", token);
+    json.set("valid", valid);
+    json.set("modified", modified);
+    json.set("continuous", continuous);
+    json.set("name", name);
+
+    return json;
+  }
+
 }

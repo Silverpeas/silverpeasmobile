@@ -78,7 +78,7 @@ public class SharesBoxApp extends App
   @Override
   public void showContent(final NavigationShowContentEvent event) {
     if (event.getContent().getType().equals(ContentsTypes.  SharesBox.toString())) {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TicketDTO>>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<TicketDTO>>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -86,7 +86,7 @@ public class SharesBoxApp extends App
         }
 
         @Override
-        public void onFailure(Method method, Throwable t) {
+        public void onFailure(RestMethod method, Throwable t) {
           SharesBoxPage page = new SharesBoxPage();
           setMainPage(page);
           page.show();
@@ -94,7 +94,7 @@ public class SharesBoxApp extends App
         }
 
         @Override
-        public void onSuccess(Method method, List<TicketDTO> ticketDTOS) {
+        public void onSuccess(RestMethod method, List<TicketDTO> ticketDTOS) {
           super.onSuccess(method, ticketDTOS);
 
           MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TicketDTO>>() {

@@ -319,14 +319,14 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void share(DocumentsSharingEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<TicketDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<TicketDTO>() {
       @Override
       public void attempt() {
         super.attempt();
         ServicesLocator.getRestServiceTickets().createTicket(event.getTicket().getComponentId(), event.getTicket(), this);
       }
       @Override
-      public void onSuccess(Method method, TicketDTO dto) {
+      public void onSuccess(RestMethod method, TicketDTO dto) {
         super.onSuccess(method, dto);
         Snackbar.showWithCloseButton(dto.getUrl(), Snackbar.INFO);
         Html5Utils.copyInClipboard(dto.getUrl());

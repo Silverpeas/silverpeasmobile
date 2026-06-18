@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,26 +24,45 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-import javax.ws.rs.*;
 import java.util.List;
 
 /**
+ * Service pour gérer les requêtes liées aux tickets.
  * @author svu
  */
-@Path("/mytickets")
-public interface ServiceTickets extends RestService {
+public class ServiceTickets extends AbstractService {
 
+  private static final String PATH = "/silverpeas/services/mytickets";
 
-  @POST
-  @Path("{componentId}/")
-  public void createTicket(@PathParam("componentId") String componentId, TicketDTO dto, MethodCallback<TicketDTO> callback);
+  /**
+   * Crée un nouveau ticket pour un composant donné.
+   * @param componentId L'ID du composant.
+   * @param ticket Le ticket à créer.
+   * @param callback Le callback pour gérer la réponse (TicketDTO).
+   */
+  public void createTicket(String componentId, TicketDTO ticket, RestCallback<TicketDTO> callback) {
+    String url = PATH + "/" + encode(componentId) + "/";
+    post(
+            url,
+            Global.JSON.stringify(Js.asAny(ticket.toJSON())),
+            result -> TicketDTO.fromJSON((JsPropertyMap<Object>) result),
+            callback
+    );
+  }
 
-
-  @GET
-  public void getMyTickets(@QueryParam("page") final String page, MethodCallback<List<TicketDTO>> callback);
-
+  /**
+   * Récupère les tickets de l'utilisateur avec une pagination.
+   * @param page Le numéro de la page (paramètre de requête).
+   * @param callback Le callback pour gérer la réponse (liste de TicketDTO).
+   */
+  public void getMyTickets(String page, RestCallback<List<TicketDTO>> callback) {
+    String url = PATH + "?page=" + encode(page);
+    get(url, result -> mapArray(result, TicketDTO::fromJSON), callback);
+  }
 }
