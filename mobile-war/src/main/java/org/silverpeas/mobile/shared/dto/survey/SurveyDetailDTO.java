@@ -24,6 +24,10 @@
 
 package org.silverpeas.mobile.shared.dto.survey;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,5 +89,64 @@ public class SurveyDetailDTO implements Serializable {
 
   public void setQuestions(final List<QuestionDTO> questions) {
     this.questions = questions;
+  }
+
+  public static SurveyDetailDTO fromJSON(JsPropertyMap<Object> json) {
+    if (json == null) {
+      return null;
+    }
+
+    SurveyDetailDTO dto = new SurveyDetailDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+
+    dto.setComments(json.get("comments") != null ? json.get("comments").toString() : null);
+
+    dto.setAnonymComment(json.get("anonymComment") != null &&
+            Boolean.parseBoolean(json.get("anonymComment").toString()));
+
+    dto.setCanParticipate(json.get("canParticipate") != null &&
+            Boolean.parseBoolean(json.get("canParticipate").toString()));
+
+    dto.setNbParticipation(json.get("nbParticipation") != null
+            ? Integer.parseInt(json.get("nbParticipation").toString())
+            : 0);
+    if (json.get("questions") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("questions");
+      List<QuestionDTO> result = new ArrayList<>();
+
+
+        for (int i = 0; i < list.length; i++) {
+          JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+          result.add(QuestionDTO.fromJSON(map));
+        }
+        dto.setQuestions(result);
+    }
+
+    return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("id", getId());
+    json.set("comments", getComments());
+    json.set("anonymComment", isAnonymComment());
+    json.set("canParticipate", isCanParticipate());
+    json.set("nbParticipation", getNbParticipation());
+
+    if (getQuestions() != null) {
+      List<JsPropertyMap<Object>> questionsJson = new ArrayList<>();
+
+      for (QuestionDTO q : getQuestions()) {
+        if (q != null) {
+          questionsJson.add(q.toJSON());
+        }
+      }
+
+      json.set("questions", questionsJson.toArray());
+    }
+
+    return json;
   }
 }

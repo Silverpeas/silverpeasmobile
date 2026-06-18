@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.survey;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -35,7 +37,8 @@ public class AnswerDTO implements Serializable {
   private String comments;
   private String image;
 
-  public String getId() {
+
+    public String getId() {
     return id;
   }
 
@@ -65,5 +68,31 @@ public class AnswerDTO implements Serializable {
 
   public void setImage(final String image) {
     this.image = image;
+  }
+
+  public static AnswerDTO fromJSON(JsPropertyMap<Object> json) {
+    if (json == null) {
+      return null;
+    }
+
+    AnswerDTO dto = new AnswerDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setLabel(json.get("label") != null ? json.get("label").toString() : null);
+    dto.setComments(json.get("comments") != null ? json.get("comments").toString() : null);
+    dto.setImage(json.get("image") != null ? json.get("image").toString() : null);
+
+    return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("id", getId());
+    json.set("label", getLabel());
+    json.set("comments", getComments());
+    json.set("image", getImage());
+
+    return json;
   }
 }

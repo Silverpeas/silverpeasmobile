@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,35 +24,57 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/mobile/survey")
-public interface ServiceSurvey extends RestService {
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/all")
-  public void getSurveys(@PathParam("appId") String appId, MethodCallback<List<SurveyDTO>> callback);
+/**
+ * Service to manage requests related to surveys.
+ * @author svu
+ */
+public class ServiceSurvey extends AbstractService {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/{id}")
-  public void getSurvey(@PathParam("appId") String appId, @PathParam("id") String id, MethodCallback<SurveyDetailDTO> callback);
+  private static final String PATH = "/silverpeas/services/mobile/survey";
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{appId}/")
-  public void saveSurvey(@PathParam("appId") String appId, final SurveyDetailDTO data, MethodCallback<Void> callback);
+  /**
+   * Retrieves all surveys for a given application.
+   * @param appId The ID of the application.
+   * @param callback The callback to handle the response (list of SurveyDTO).
+   */
+  public void getSurveys(String appId, RestCallback<List<SurveyDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/all";
+    get(url, result -> mapArray(result, SurveyDTO::fromJSON), callback);
+  }
+
+  /**
+   * Retrieves a specific survey by its ID.
+   * @param appId The ID of the application.
+   * @param id The ID of the survey.
+   * @param callback The callback to handle the response (SurveyDetailDTO).
+   */
+  public void getSurvey(String appId, String id, RestCallback<SurveyDetailDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/" + encode(id);
+    get(url, result -> SurveyDetailDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
+
+  /**
+   * Saves a survey for a given application.
+   * @param appId The ID of the application.
+   * @param survey The survey data to save.
+   * @param callback The callback to handle the response (no data returned).
+   */
+  public void saveSurvey(String appId, SurveyDetailDTO survey, RestCallback<Void> callback) {
+    String url = PATH + "/" + encode(appId) + "/";
+    post(
+            url,
+            Global.JSON.stringify(Js.asAny(survey.toJSON())),
+            result -> null,
+            callback
+    );
+  }
 }

@@ -46,6 +46,8 @@ import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
@@ -120,8 +122,8 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
   @Override
   public void loadSurveys(final SurveysLoadEvent event) {
 
-    MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<List<SurveyDTO>>() {
+    RestMethodCallbackOnlineOnly action =
+        new RestMethodCallbackOnlineOnly<List<SurveyDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -129,7 +131,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
           }
 
           @Override
-          public void onSuccess(final Method method, final List<SurveyDTO> result) {
+          public void onSuccess(final RestMethod method, final List<SurveyDTO> result) {
             super.onSuccess(method, result);
             EventBus.getInstance()
                 .fireEvent(new SurveysLoadedEvent(result, getApplicationInstance().getId()));
@@ -140,8 +142,8 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
 
   @Override
   public void loadSurvey(final SurveyLoadEvent event) {
-    MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<SurveyDetailDTO>() {
+    RestMethodCallbackOnlineOnly action =
+        new RestMethodCallbackOnlineOnly<SurveyDetailDTO>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -150,7 +152,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
           }
 
           @Override
-          public void onSuccess(final Method method, final SurveyDetailDTO surveyDetailDTO) {
+          public void onSuccess(final RestMethod method, final SurveyDetailDTO surveyDetailDTO) {
             super.onSuccess(method, surveyDetailDTO);
             EventBus.getInstance().fireEvent(new SurveyLoadedEvent(surveyDetailDTO));
           }
@@ -168,7 +170,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
       }
     }
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -177,7 +179,7 @@ public class SurveyApp extends App implements SurveyAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
+      public void onSuccess(final RestMethod method, final Void unused) {
         super.onSuccess(method, unused);
         EventBus.getInstance().fireEvent(new UpdateParticipationNumberEvent(event.getData()));
         PageHistory.getInstance().back();

@@ -24,6 +24,10 @@
 
 package org.silverpeas.mobile.shared.dto.survey;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +42,9 @@ public class QuestionDTO implements Serializable {
   private List<AnswerDTO> answers = new ArrayList<>();
   private List<ResponseDTO> responses = new ArrayList<>();
 
-  public void setAnswers(final List<AnswerDTO> answers) {
+
+
+    public void setAnswers(final List<AnswerDTO> answers) {
     this.answers = answers;
   }
 
@@ -76,5 +82,79 @@ public class QuestionDTO implements Serializable {
 
   public List<ResponseDTO> getResponses() {
     return responses;
+  }
+
+  public static QuestionDTO fromJSON(JsPropertyMap<Object> json) {
+    if (json == null) {
+      return null;
+    }
+
+    QuestionDTO dto = new QuestionDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setType(json.get("type") != null ? json.get("type").toString() : null);
+    dto.setLabel(json.get("label") != null ? json.get("label").toString() : null);
+
+    // answers
+    if (json.get("answers") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("answers");
+
+      List<AnswerDTO> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+        result.add(AnswerDTO.fromJSON(map));
+      }
+
+      dto.setAnswers(result);
+    }
+
+    // responses
+    if (json.get("responses") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("responses");
+
+      List<ResponseDTO> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+        result.add(ResponseDTO.fromJSON(map));
+      }
+
+      dto.setResponses(result);
+    }
+
+    return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("id", getId());
+    json.set("type", getType());
+    json.set("label", getLabel());
+
+    if (getAnswers() != null) {
+      List<JsPropertyMap<Object>> answersJson = new ArrayList<>();
+
+      for (AnswerDTO a : getAnswers()) {
+        if (a != null) {
+          answersJson.add(a.toJSON());
+        }
+      }
+
+      json.set("answers", answersJson.toArray());
+    }
+
+    if (getResponses() != null) {
+      List<JsPropertyMap<Object>> responsesJson = new ArrayList<>();
+
+      for (ResponseDTO r : getResponses()) {
+        if (r != null) {
+          responsesJson.add(r.toJSON());
+        }
+      }
+
+      json.set("responses", responsesJson.toArray());
+    }
+
+    return json;
   }
 }

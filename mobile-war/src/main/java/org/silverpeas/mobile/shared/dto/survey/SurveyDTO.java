@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,6 +23,8 @@
  */
 
 package org.silverpeas.mobile.shared.dto.survey;
+
+import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;
 
@@ -138,5 +140,33 @@ public class SurveyDTO implements Serializable {
 
   public void setResultView(final int resultView) {
     this.resultView = resultView;
+  }
+
+  public static SurveyDTO fromJSON(JsPropertyMap<Object> json) {
+    if (json == null) {
+      return null;
+    }
+
+    SurveyDTO dto = new SurveyDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setCreator(json.get("creator") != null ? json.get("creator").toString() : null);
+    dto.setCreationDate(json.get("creationDate") != null ? json.get("creationDate").toString() : null);
+    dto.setBeginDate(json.get("beginDate") != null ? json.get("beginDate").toString() : null);
+    dto.setEndDate(json.get("endDate") != null ? json.get("endDate").toString() : null);
+    dto.setNbVotes(json.get("nbVotes") != null ? json.get("nbVotes").toString() : null);
+
+    dto.setNbMaxParticipations(json.get("nbMaxParticipations") != null ? Integer.parseInt(json.get("nbMaxParticipations").toString())  : 0);
+
+    dto.setAnonymous(json.get("anonymous") != null && Boolean.parseBoolean(json.get("anonymous").toString()));
+
+    dto.setName(json.get("name") != null ? json.get("name").toString() : null);
+    dto.setDescription(json.get("description") != null ? json.get("description").toString() : null);
+
+    dto.setResultMode(json.get("resultMode") != null ? Integer.parseInt(json.get("resultMode").toString()) : 0);
+
+    dto.setResultView(json.get("resultView") != null ? Integer.parseInt(json.get("resultView").toString())  : 0);
+
+    return dto;
   }
 }
