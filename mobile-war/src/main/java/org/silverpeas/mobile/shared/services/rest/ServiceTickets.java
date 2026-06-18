@@ -33,7 +33,7 @@ import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 import java.util.List;
 
 /**
- * Service pour gérer les requêtes liées aux tickets.
+ * Service for managing requests related to sharing tickets.
  * @author svu
  */
 public class ServiceTickets extends AbstractService {
@@ -41,10 +41,10 @@ public class ServiceTickets extends AbstractService {
   private static final String PATH = "/silverpeas/services/mytickets";
 
   /**
-   * Crée un nouveau ticket pour un composant donné.
-   * @param componentId L'ID du composant.
-   * @param ticket Le ticket à créer.
-   * @param callback Le callback pour gérer la réponse (TicketDTO).
+   * Create a new ticket.
+   * @param componentId
+   * @param ticket
+   * @param callback
    */
   public void createTicket(String componentId, TicketDTO ticket, RestCallback<TicketDTO> callback) {
     String url = PATH + "/" + encode(componentId) + "/";
@@ -57,9 +57,9 @@ public class ServiceTickets extends AbstractService {
   }
 
   /**
-   * Récupère les tickets de l'utilisateur avec une pagination.
-   * @param page Le numéro de la page (paramètre de requête).
-   * @param callback Le callback pour gérer la réponse (liste de TicketDTO).
+   * Retrieve the user's tickets with pagination.
+   * @param page
+   * @param callback
    */
   public void getMyTickets(String page, RestCallback<List<TicketDTO>> callback) {
     String url = PATH + "?page=" + encode(page);

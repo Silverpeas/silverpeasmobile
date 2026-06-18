@@ -297,8 +297,8 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void loadAttachments(final DocumentsLoadAttachmentsEvent event) {
-    MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
+    RestMethodCallbackOnlineOnly action =
+        new RestMethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -308,7 +308,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
           }
 
           @Override
-          public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
+          public void onSuccess(final RestMethod method, final List<SimpleDocumentDTO> attachments) {
             super.onSuccess(method, attachments);
             EventBus.getInstance().fireEvent(new PublicationAttachmentsLoadedEvent(attachments, getApplicationInstance().getFileSharing()));
           }

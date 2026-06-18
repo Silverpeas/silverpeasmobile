@@ -390,7 +390,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   public void loadAttachments(final AttachmentsLoadEvent event) {
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<SimpleDocumentDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -399,7 +399,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final List<SimpleDocumentDTO> attachments) {
+      public void onSuccess(final RestMethod method, final List<SimpleDocumentDTO> attachments) {
         super.onSuccess(method, attachments);
         EventBus.getInstance().fireEvent(new AttachmentsLoadedEvent(attachments));
       }

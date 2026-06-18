@@ -24,6 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.documents;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**
@@ -202,5 +204,38 @@ public class SimpleDocumentDTO implements Serializable {
   }
   public boolean isDownloadable() {
     return this.downloadable;
+  }
+
+  public static SimpleDocumentDTO fromJSON(JsPropertyMap<Object> json) {
+    if (json == null) {
+      return null;
+    }
+
+    SimpleDocumentDTO dto = new SimpleDocumentDTO();
+
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setInstanceId(json.get("instanceId") != null ? json.get("instanceId").toString() : null);
+    dto.setFileName(json.get("fileName") != null ? json.get("fileName").toString() : null);
+    dto.setDescription(json.get("description") != null ? json.get("description").toString() : null);
+    dto.setContentType(json.get("contentType") != null ? json.get("contentType").toString() : null);
+    dto.setUpdatedBy(json.get("updatedBy") != null ? json.get("updatedBy").toString() : null);
+    dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+    dto.setCreatedBy(json.get("createdBy") != null ? json.get("createdBy").toString() : null);
+    dto.setLang(json.get("lang") != null ? json.get("lang").toString() : null);
+    dto.setIcon(json.get("icon") != null ? json.get("icon").toString() : null);
+    dto.setPermalink(json.get("permalink") != null ? json.get("permalink").toString() : null);
+    dto.setDownloadUrl(json.get("downloadUrl") != null ? json.get("downloadUrl").toString() : null);
+    dto.setVersioned(json.get("versioned") != null ? json.get("versioned").toString() : null);
+    dto.setComment(json.get("comment") != null ? json.get("comment").toString() : null);
+    dto.setSpId(json.get("spId") != null ? json.get("spId").toString() : null);
+
+    dto.setSize(json.get("size") != null ? Long.parseLong(json.get("size").toString()) : 0L);
+    dto.setCreationDate(json.get("creationDate") != null ? Long.parseLong(json.get("creationDate").toString()) : 0L);
+    dto.setUpdateDate(json.get("updateDate") != null ? Long.parseLong(json.get("updateDate").toString()) : 0L);
+
+    dto.setDownloadable(json.get("downloadable") != null &&
+            Boolean.parseBoolean(json.get("downloadable").toString()));
+
+    return dto;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,24 +24,38 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import java.util.List;
 
 /**
+ * Service pour gérer les requêtes liées aux documents.
  * @author svu
  */
-@Path("/documents")
-public interface ServiceRestDocuments extends RestService {
+public class ServiceRestDocuments extends AbstractService {
 
-  @GET
-  @Path("{componentId}/resource/{resourceId}/types/{type}/{lang}/")
-  public void getDocumentsByType(@PathParam("componentId") String componentId,
-      @PathParam("resourceId") String resourceId, @PathParam("type") String type,
-      @PathParam("lang") String lang, MethodCallback<List<SimpleDocumentDTO>> callback);
+  private static final String PATH = "/silverpeas/services/documents";
+
+  /**
+   * Retrieve documents of a given type for a specific resource and language.
+   * @param componentId
+   * @param resourceId
+   * @param type
+   * @param lang
+   * @param callback
+   */
+  public void getDocumentsByType(
+          String componentId,
+          String resourceId,
+          String type,
+          String lang,
+          RestCallback<List<SimpleDocumentDTO>> callback) {
+    String url = PATH + "/" +
+            encode(componentId) + "/resource/" +
+            encode(resourceId) + "/types/" +
+            encode(type) + "/" +
+            encode(lang) + "/";
+    get(url, result -> mapArray(result, SimpleDocumentDTO::fromJSON), callback);
+  }
 }

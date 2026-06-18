@@ -53,8 +53,7 @@ public class ServicesLocator {
   private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
   private static ServiceUserCalendar serviceUserCalendar = GWT.create(ServiceUserCalendar.class);
   private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
-  private static ServiceRestDocuments serviceRestDocuments = GWT.create(
-      ServiceRestDocuments.class);
+  private static ServiceRestDocuments serviceRestDocuments = new ServiceRestDocuments();
   private static ServiceComment serviceRestComment = new ServiceComment();
 
   private static ServiceTickets serviceRestTickets = new ServiceTickets();
@@ -126,7 +125,6 @@ public class ServicesLocator {
   }
 
   public static ServiceRestDocuments getRestServiceDocuments() {
-    initRestContext();
     return serviceRestDocuments;
   }
 
