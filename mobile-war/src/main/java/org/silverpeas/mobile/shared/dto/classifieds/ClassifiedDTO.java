@@ -24,126 +24,234 @@
 
 package org.silverpeas.mobile.shared.dto.classifieds;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
+import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author svu
  */
-public class ClassifiedDTO extends BaseDTO {
-  private String title;
-  private String description;
-  private String price;
-  private String type;
-  private String category;
-  private List<String> pictures;
-  private String creatorName;
-  private String creatorId;
-  private String creationDate;
-  private String updateDate;
-  private int commentsNumber;
-  private List<FormFieldDTO> fields;
-  private boolean showPrice;
+public class ClassifiedDTO {
 
-  public String getTitle() {
-    return title;
-  }
+    private String id;
+    private String title;
+    private String description;
+    private String price;
+    private String type;
+    private String category;
+    private List<String> pictures;
+    private String creatorName;
+    private String creatorId;
+    private String creationDate;
+    private String updateDate;
+    private int commentsNumber;
+    private List<FormFieldDTO> fields;
+    private boolean showPrice;
 
-  public void setTitle(final String title) {
-    this.title = title;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  public void setDescription(final String description) {
-    this.description = description;
-  }
+    public boolean isShowPrice() {
+        return showPrice;
+    }
 
-  public String getPrice() {
-    return price;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void setPrice(final String price) {
-    this.price = price;
-  }
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 
-  public String getType() {
-    return type;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public void setType(final String type) {
-    this.type = type;
-  }
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-  public String getCategory() {
-    return category;
-  }
+    public String getPrice() {
+        return price;
+    }
 
-  public void setCategory(final String category) {
-    this.category = category;
-  }
+    public void setPrice(final String price) {
+        this.price = price;
+    }
 
-  public List<String> getPictures() {
-    return pictures;
-  }
+    public String getType() {
+        return type;
+    }
 
-  public void setPictures(final List<String> pictures) {
-    this.pictures = pictures;
-  }
+    public void setType(final String type) {
+        this.type = type;
+    }
 
-  public String getCreatorName() {
-    return creatorName;
-  }
+    public String getCategory() {
+        return category;
+    }
 
-  public void setCreatorName(final String creatorName) {
-    this.creatorName = creatorName;
-  }
+    public void setCategory(final String category) {
+        this.category = category;
+    }
 
-  public String getCreationDate() {
-    return creationDate;
-  }
+    public List<String> getPictures() {
+        return pictures;
+    }
 
-  public void setCreationDate(final String creationDate) {
-    this.creationDate = creationDate;
-  }
+    public void setPictures(final List<String> pictures) {
+        this.pictures = pictures;
+    }
 
-  public String getUpdateDate() {
-    return updateDate;
-  }
+    public String getCreatorName() {
+        return creatorName;
+    }
 
-  public void setUpdateDate(final String updateDate) {
-    this.updateDate = updateDate;
-  }
+    public void setCreatorName(final String creatorName) {
+        this.creatorName = creatorName;
+    }
 
-  public int getCommentsNumber() {
-    return commentsNumber;
-  }
+    public String getCreationDate() {
+        return creationDate;
+    }
 
-  public void setCommentsNumber(final int commentsNumber) {
-    this.commentsNumber = commentsNumber;
-  }
+    public void setCreationDate(final String creationDate) {
+        this.creationDate = creationDate;
+    }
 
-  public String getCreatorId() {
-    return creatorId;
-  }
+    public String getUpdateDate() {
+        return updateDate;
+    }
 
-  public void setCreatorId(final String creatorId) {
-    this.creatorId = creatorId;
-  }
+    public void setUpdateDate(final String updateDate) {
+        this.updateDate = updateDate;
+    }
 
-  public List<FormFieldDTO> getFields() {
-    return fields;
-  }
+    public int getCommentsNumber() {
+        return commentsNumber;
+    }
 
-  public void setFields(final List<FormFieldDTO> fields) {
-    this.fields = fields;
-  }
+    public void setCommentsNumber(final int commentsNumber) {
+        this.commentsNumber = commentsNumber;
+    }
 
-  public boolean getShowPrice() { return showPrice; }
+    public String getCreatorId() {
+        return creatorId;
+    }
 
-  public void setShowPrice(final boolean showPrice) { this.showPrice = showPrice; }
+    public void setCreatorId(final String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public List<FormFieldDTO> getFields() {
+        return fields;
+    }
+
+    public void setFields(final List<FormFieldDTO> fields) {
+        this.fields = fields;
+    }
+
+    public boolean getShowPrice() {
+        return showPrice;
+    }
+
+    public void setShowPrice(final boolean showPrice) {
+        this.showPrice = showPrice;
+    }
+
+    public JsPropertyMap<Object> toJSON_IdOnly() {
+        JsPropertyMap<Object> json = JsPropertyMap.of();
+        json.set("id", getId());
+        return json;
+    }
+
+    public JsPropertyMap<Object> toJSON() {
+        JsPropertyMap<Object> json = JsPropertyMap.of();
+
+            json.set("id", getId());
+            json.set("title", getTitle());
+            json.set("description", getDescription());
+            json.set("price", getPrice());
+            json.set("type", getType());
+            json.set("category", getCategory());
+            json.set("creatorName", getCreatorName());
+            json.set("creatorId", getCreatorId());
+            json.set("creationDate", getCreationDate());
+            json.set("updateDate", getUpdateDate());
+            json.set("commentsNumber", getCommentsNumber());
+            json.set("showPrice", getShowPrice());
+
+            if (getPictures() != null) {
+                JsArray<Object> list = new JsArray<>();
+                for (String f : getPictures()) {
+                    list.push(f);
+                }
+                json.set("pictures", list);
+            }
+
+
+            if (getFields() != null) {
+                JsArray<Object> list = new JsArray<>();
+                for (FormFieldDTO f : getFields()) {
+                    list.push(f.toJSON());
+                }
+                json.set("fields", list);
+            }
+        return json;
+    }
+
+    public static ClassifiedDTO fromJSON(JsPropertyMap<Object> json) {
+        ClassifiedDTO dto = new ClassifiedDTO();
+
+        dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+        dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+        dto.setDescription(json.get("description") != null ? json.get("description").toString() : null);
+        dto.setPrice(json.get("price") != null ? json.get("price").toString() : null);
+        dto.setType(json.get("type") != null ? json.get("type").toString() : null);
+        dto.setCategory(json.get("category") != null ? json.get("category").toString() : null);
+        dto.setCreatorName(json.get("creatorName") != null ? json.get("creatorName").toString() : null);
+        dto.setCreatorId(json.get("creatorId") != null ? json.get("creatorId").toString() : null);
+        dto.setCreationDate(json.get("creationDate") != null ? json.get("creationDate").toString() : null);
+        dto.setUpdateDate(json.get("updateDate") != null ? json.get("updateDate").toString() : null);
+
+        dto.setCommentsNumber(json.get("commentsNumber") != null ? Integer.parseInt(json.get("commentsNumber").toString()) : 0);
+        dto.setShowPrice(json.get("showPrice") != null && Boolean.parseBoolean(json.get("showPrice").toString()));
+
+
+        if (json.get("pictures") != null) {
+            JsArray<Object> list = (JsArray<Object>) json.get("pictures");
+            List<String> result = new ArrayList<>();
+            for (int i = 0; i < list.length; i++) {
+                result.add((String) list.getAt(i));
+            }
+            dto.setPictures(result);
+        }
+
+        if (json.get("fields") != null) {
+             List<FormFieldDTO> result = new ArrayList<>();
+            JsArray<Object> list = (JsArray<Object>) json.get("fields");
+            for (int i = 0; i < list.length; i++) {
+                JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+                result.add(FormFieldDTO.fromJSON(map));
+            }
+            dto.setFields(result);
+        } else {
+            dto.setFields(new ArrayList<>());
+        }
+
+        return dto;
+    }
 }

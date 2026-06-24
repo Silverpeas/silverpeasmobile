@@ -200,4 +200,32 @@ public class FormFieldDTO implements Serializable {
   private static native String[] getKeys(JsPropertyMap<?> map) /*-{
     return Object.keys(map);
   }-*/;
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("id", getId());
+    json.set("name", getName());
+    json.set("label", getLabel());
+    json.set("value", getValue());
+    json.set("valueId", getValueId());
+    json.set("type", getType());
+    json.set("displayerName", getDisplayerName());
+    json.set("instanceId", getInstanceId());
+
+    json.set("readOnly", isReadOnly());
+    json.set("mandatory", isMandatory());
+
+    if (getValues() != null) {
+      JsPropertyMap<Object> valuesJson = JsPropertyMap.of();
+
+      for (Map.Entry<String, String> e : getValues().entrySet()) {
+        valuesJson.set(e.getKey(), e.getValue());
+      }
+
+      json.set("values", valuesJson);
+    }
+
+    return json;
+  }
 }

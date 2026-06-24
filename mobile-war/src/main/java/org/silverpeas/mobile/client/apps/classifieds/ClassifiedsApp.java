@@ -44,6 +44,8 @@ import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.ContentDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
@@ -73,7 +75,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
 
   @Override
   public void loadClassifieds(final ClassifiedsLoadEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ClassifiedsDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ClassifiedsDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -81,7 +83,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
       }
 
       @Override
-      public void onSuccess(final Method method, final ClassifiedsDTO result) {
+      public void onSuccess(final RestMethod method, final ClassifiedsDTO result) {
         super.onSuccess(method, result);
         EventBus.getInstance().fireEvent(new ClassifiedsLoadedEvent(result));
       }
@@ -91,7 +93,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
 
   @Override
   public void sendMessage(final ClassifiedsSendMessageEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly() {
       @Override
       public void attempt() {
         super.attempt();
@@ -119,7 +121,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
     appDTO.setId(content.getInstanceId());
     setApplicationInstance(appDTO);
     if (content.getType().equals(ContentsTypes.Classified.toString())) {
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ClassifiedsDTO>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ClassifiedsDTO>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -127,7 +129,7 @@ public class ClassifiedsApp extends App implements ClassifiedsAppEventHandler, N
         }
 
         @Override
-        public void onSuccess(final Method method, final ClassifiedsDTO data) {
+        public void onSuccess(final RestMethod method, final ClassifiedsDTO data) {
           super.onSuccess(method, data);
           ClassifiedDTO c = data.getClassifieds().get(0);
           ClassifiedPage page = new ClassifiedPage();

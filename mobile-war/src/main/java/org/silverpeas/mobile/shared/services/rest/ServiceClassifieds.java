@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,42 +24,56 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 /**
+ * Service to manage requests related to classifieds.
  * @author svu
  */
-@Path("/mobile/classifieds")
-public interface ServiceClassifieds extends RestService {
+public class ServiceClassifieds extends AbstractService {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/{Id}")
-  public void getClassified(@PathParam("appId") String appId, @PathParam("Id") String id,
-      MethodCallback<ClassifiedsDTO> callback);
+  private static final String PATH = "/silverpeas/services/mobile/classifieds";
 
-  @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{appId}/{instanceId}/{message}")
-  public void sendMessageToOwner(@PathParam("appId") String appId, @PathParam("message") String message, ClassifiedDTO dto,
-      MethodCallback<Void> callback);
+  /**
+   * Retrieves a specific classified by its ID.
+   * @param appId The ID of the application.
+   * @param id The ID of the classified.
+   * @param callback The callback to handle the response (ClassifiedsDTO).
+   */
+  public void getClassified(String appId, String id, RestCallback<ClassifiedsDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/" + encode(id);
+    get(url, result -> ClassifiedsDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("{appId}/all")
-  public void getClassifieds(@PathParam("appId") String appId, MethodCallback<ClassifiedsDTO> callback);
+  /**
+   * Sends a message to the owner of a classified.
+   * @param appId The ID of the application.
+   * @param message The message to send.
+   * @param classifiedDTO The classified data.
+   * @param callback The callback to handle the response (no data returned).
+   */
+  public void sendMessageToOwner(String appId, String message, ClassifiedDTO classifiedDTO, RestCallback<Void> callback) {
+    String url = PATH + "/" + encode(appId) + "/" + encode(message);
+    post(
+            url,
+            Global.JSON.stringify(Js.asAny(classifiedDTO.toJSON_IdOnly())),
+            result -> null,
+            callback
+    );
+  }
+
+  /**
+   * Retrieves all classifieds for a given application.
+   * @param appId The ID of the application.
+   * @param callback The callback to handle the response (ClassifiedsDTO).
+   */
+  public void getClassifieds(String appId, RestCallback<ClassifiedsDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/all";
+    get(url, result -> ClassifiedsDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 }
-
-

@@ -43,7 +43,7 @@ public class ServicesLocator {
   private static ServiceSearch serviceSearch = new ServiceSearch();
   private static ServiceNotifications serviceNotifications = GWT.create(ServiceNotifications.class);
   private static ServiceNews serviceNews = new ServiceNews();
-  private static ServiceClassifieds serviceClassifieds = GWT.create(ServiceClassifieds.class);
+  private static ServiceClassifieds serviceClassifieds = new ServiceClassifieds();
   private static ServiceSurvey serviceSurvey = GWT.create(ServiceSurvey.class);
   private static ServiceWorkflow serviceWorkflow = GWT.create(ServiceWorkflow.class);
   private static ServiceHyperLink serviceHyperLink = new ServiceHyperLink();
@@ -153,7 +153,6 @@ public class ServicesLocator {
   }
 
   public static ServiceClassifieds getServiceClassifieds() {
-    initRestContext();
     return serviceClassifieds;
   }
 

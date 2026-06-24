@@ -96,7 +96,7 @@ public class ServiceClassifieds extends AbstractRestWebService {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @Path("{instanceId}/{message}")
+  @Path("/{message}")
   public void sendMessageToOwner(@PathParam("message") String message, ClassifiedDTO dto) {
     ClassifiedDetail classified = getClassifiedDetailById(dto.getId(), componentId);
     UserNotificationHelper.buildAndSend(new ClassifiedOwnerNotification(classified,
