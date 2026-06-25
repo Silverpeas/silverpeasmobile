@@ -97,14 +97,14 @@ public class SharesBoxApp extends App
         public void onSuccess(RestMethod method, List<TicketDTO> ticketDTOS) {
           super.onSuccess(method, ticketDTOS);
 
-          MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TicketDTO>>() {
+          RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<TicketDTO>>() {
             @Override
             public void attempt() {
               super.attempt();
               ServicesLocator.getServiceDocuments().getTickets(null, ticketDTOS, this);
             }
             @Override
-            public void onSuccess(Method method, List<TicketDTO> ticketDTOS) {
+            public void onSuccess(RestMethod method, List<TicketDTO> ticketDTOS) {
               super.onSuccess(method, ticketDTOS);
               SharesBoxPage page = new SharesBoxPage();
               page.setData(ticketDTOS);
@@ -121,7 +121,7 @@ public class SharesBoxApp extends App
 
   @Override
   public void deleteShares(DeleteSharesEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<TicketDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<TicketDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -129,7 +129,7 @@ public class SharesBoxApp extends App
       }
 
       @Override
-      public void onSuccess(Method method, List<TicketDTO> ticketDTOS) {
+      public void onSuccess(RestMethod method, List<TicketDTO> ticketDTOS) {
         super.onSuccess(method, ticketDTOS);
         EventBus.getInstance().fireEvent(new SharesDeletedEvent(ticketDTOS));
       }

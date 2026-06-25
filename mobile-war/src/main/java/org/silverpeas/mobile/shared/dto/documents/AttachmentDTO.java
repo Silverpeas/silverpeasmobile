@@ -24,111 +24,144 @@
 
 package org.silverpeas.mobile.shared.dto.documents;
 
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.media.MediaDTO;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class AttachmentDTO implements Serializable {
+public class AttachmentDTO {
 
-  private static final long serialVersionUID = 1L;
-
-  private String type = null;
-  private long size;
-  private String author = null;
-  private String title = null;
-  private int orderNum;
-  private String id;
-  private String instanceId;
-  private String lang;
-  private String userId;
-  private boolean downloadAllowed;
-  private String description;
+    private String type = null;
+    private long size;
+    private String author = null;
+    private String title = null;
+    private int orderNum;
+    private String id;
+    private String instanceId;
+    private String lang;
+    private String userId;
+    private boolean downloadAllowed;
+    private String description;
 
 
-  public String getType() {
-    return type;
-  }
+    public String getType() {
+        return type;
+    }
 
-  public void setType(String type) {
-    this.type = type;
-  }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-  public long getSize() {
-    return size;
-  }
+    public long getSize() {
+        return size;
+    }
 
-  public void setSize(long size) {
-    this.size = size;
-  }
+    public void setSize(long size) {
+        this.size = size;
+    }
 
-  public String getAuthor() {
-    return author;
-  }
+    public String getAuthor() {
+        return author;
+    }
 
-  public void setAuthor(String author) {
-    this.author = author;
-  }
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public int getOrderNum() {
-    return orderNum;
-  }
+    public int getOrderNum() {
+        return orderNum;
+    }
 
-  public void setOrderNum(int orderNum) {
-    this.orderNum = orderNum;
-  }
+    public void setOrderNum(int orderNum) {
+        this.orderNum = orderNum;
+    }
 
-  public String getUserId() {
-    return userId;
-  }
+    public String getUserId() {
+        return userId;
+    }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-  public String getInstanceId() {
-    return instanceId;
-  }
+    public String getInstanceId() {
+        return instanceId;
+    }
 
-  public void setInstanceId(String instanceId) {
-    this.instanceId = instanceId;
-  }
+    public void setInstanceId(String instanceId) {
+        this.instanceId = instanceId;
+    }
 
-  public String getLang() {
-    return lang;
-  }
+    public String getLang() {
+        return lang;
+    }
 
-  public void setLang(String lang) {
-    this.lang = lang;
-  }
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 
-  public String getId() {
-    return id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public void setId(String id) {
-    this.id = id;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  public void setDownloadAllowed(final boolean downloadAllowed) {
-    this.downloadAllowed = downloadAllowed;
-  }
+    public void setDownloadAllowed(final boolean downloadAllowed) {
+        this.downloadAllowed = downloadAllowed;
+    }
 
-  public boolean isDownloadAllowed() {
-    return downloadAllowed;
-  }
+    public boolean isDownloadAllowed() {
+        return downloadAllowed;
+    }
 
-  public void setDescription(final String description) {
-    this.description = description;
-  }
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public String getDescription() {
+        return description;
+    }
+
+    public static AttachmentDTO fromJSON(JsPropertyMap<Object> json) {
+        AttachmentDTO dto = new AttachmentDTO();
+        if (json == null) {
+            return dto;
+        }
+
+        dto.setType(json.get("type") != null ? json.get("type").toString() : null);
+        dto.setSize(json.get("size") != null
+                ? Long.parseLong(json.get("size").toString())
+                : 0L);
+        dto.setAuthor(json.get("author") != null ? json.get("author").toString() : null);
+        dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+        dto.setOrderNum(json.get("orderNum") != null
+                ? Integer.parseInt(json.get("orderNum").toString())
+                : 0);
+        dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+        dto.setInstanceId(json.get("instanceId") != null
+                ? json.get("instanceId").toString()
+                : null);
+        dto.setLang(json.get("lang") != null ? json.get("lang").toString() : null);
+        dto.setUserId(json.get("userId") != null ? json.get("userId").toString() : null);
+
+        dto.setDownloadAllowed(json.get("downloadAllowed") != null
+                && Boolean.parseBoolean(json.get("downloadAllowed").toString()));
+
+        dto.setDescription(json.get("description") != null
+                ? json.get("description").toString()
+                : null);
+
+        return dto;
+    }
 }

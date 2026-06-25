@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,47 +24,78 @@
 
 package org.silverpeas.mobile.shared.dto.documents;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
+import jsinterop.base.JsPropertyMap;
 
-import java.io.Serializable;
+public class TopicDTO extends DocumentDTO implements Comparable<TopicDTO> {
 
-public class TopicDTO extends BaseDTO implements Serializable, Comparable<TopicDTO> {
+    private String name;
 
-  private static final long serialVersionUID = 1L;
-  private String name;
-  private boolean terminal;
-  private int pubCount;
-  private boolean root = false;
+    private boolean terminal;
+    private int pubCount;
+    private boolean root = false;
 
-  public String getName() {
-    return name;
-  }
-  public void setName(String name) {
-    this.name = name;
-  }
-  @Override
-  public int compareTo(TopicDTO o) {
-    return name.compareTo(o.getName());
-  }
-  public boolean isTerminal() {
-    return terminal;
-  }
-  public void setTerminal(boolean terminal) {
-    this.terminal = terminal;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public boolean isRoot() {
-    return root;
-  }
-  public void setRoot(boolean root) {
-    this.root = root;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public int getPubCount() {
-    return pubCount;
-  }
+    @Override
+    public int compareTo(TopicDTO o) {
+        return name.compareTo(o.getName());
+    }
 
-  public void setPubCount(final int pubCount) {
-    this.pubCount = pubCount;
-  }
+    public boolean isTerminal() {
+        return terminal;
+    }
+
+    public void setTerminal(boolean terminal) {
+        this.terminal = terminal;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot(boolean root) {
+        this.root = root;
+    }
+
+    public int getPubCount() {
+        return pubCount;
+    }
+
+    public void setPubCount(final int pubCount) {
+        this.pubCount = pubCount;
+    }
+
+    public TopicDTO() {
+        setClassName(this.getClass().getSimpleName());
+    }
+
+    public static TopicDTO fromJSON(JsPropertyMap<Object> json) {
+        TopicDTO dto = new TopicDTO();
+        if (json == null) {
+            return dto;
+        }
+
+        dto.setClassName(dto.getClass().getSimpleName());
+        dto.fromSuperJSON(json);
+
+        dto.setName(json.get("name") != null ? json.get("name").toString() : null);
+
+        dto.setTerminal(json.get("terminal") != null
+                && Boolean.parseBoolean(json.get("terminal").toString()));
+
+        dto.setRoot(json.get("root") != null
+                && Boolean.parseBoolean(json.get("root").toString()));
+
+        dto.setPubCount(json.get("pubCount") instanceof Number
+                ? ((Number) json.get("pubCount")).intValue()
+                : 0);
+
+        return dto;
+    }
 }

@@ -145,8 +145,8 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       NavigationAppInstanceChangedEvent event = new NavigationAppInstanceChangedEvent(data);
       appInstanceChanged(event);
     } else if (content.getType().equals(ContentsTypes.Attachment.toString())) {
-      MethodCallbackOnlineOnly action =
-          new MethodCallbackOnlineOnly<AttachmentDTO>() {
+      RestMethodCallbackOnlineOnly action =
+          new RestMethodCallbackOnlineOnly<AttachmentDTO>() {
             @Override
             public void attempt() {
               super.attempt();
@@ -155,7 +155,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
             }
 
             @Override
-            public void onSuccess(final Method method, final AttachmentDTO attachement) {
+            public void onSuccess(final RestMethod method, final AttachmentDTO attachement) {
               super.onSuccess(method, attachement);
               try {
                 String url = Window.Location.getPath() + "spmobil/Attachment";
@@ -240,7 +240,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   @Override
   public void loadTopics(final DocumentsLoadGedItemsEvent event) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -249,7 +249,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
 
       @Override
-      public void onSuccess(final Method method, final List<BaseDTO> result) {
+      public void onSuccess(final RestMethod method, final List<BaseDTO> result) {
         super.onSuccess(method, result);
 
         EventBus.getInstance().fireEvent(new GedItemsLoadedEvent(result, getApplicationInstance().getFolderSharing(),
@@ -273,7 +273,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   @Override
   public void loadPublication(final DocumentsLoadPublicationEvent event) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<PublicationDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<PublicationDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -283,7 +283,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
 
       @Override
-      public void onSuccess(final Method method, final PublicationDTO result) {
+      public void onSuccess(final RestMethod method, final PublicationDTO result) {
         super.onSuccess(method, result);
         EventBus.getInstance().fireEvent(
             new PublicationLoadedEvent(result, getApplicationInstance().getCommentable(),
@@ -337,14 +337,14 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
 
   @Override
   public void nextPublication(DocumentsNextPublicationEvent event) {
-    ServicesLocator.getServiceDocuments().getNextPublication(event.getPublication().getInstanceId(), event.getPublication().getId(), event.getDirection(), new MethodCallback<PublicationDTO>() {
+    ServicesLocator.getServiceDocuments().getNextPublication(event.getPublication().getInstanceId(), event.getPublication().getId(), event.getDirection(), new RestMethodCallbackOnlineOnly<PublicationDTO>() {
       @Override
-      public void onFailure(Method method, Throwable throwable) {
+      public void onFailure(RestMethod method, Throwable throwable) {
         EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
       }
 
       @Override
-      public void onSuccess(Method method, PublicationDTO publicationDTO) {
+      public void onSuccess(RestMethod method, PublicationDTO publicationDTO) {
         PublicationPage page = new PublicationPage();
         page.setApp(DocumentsApp.this);
         page.setPageTitle(msg.publicationTitle());
@@ -360,7 +360,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
   @Override
   public void publish(DocumentsPublishEvent event) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<PublicationDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<PublicationDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -369,7 +369,7 @@ public class DocumentsApp extends App implements NavigationEventHandler, Documen
       }
 
       @Override
-      public void onSuccess(Method method, PublicationDTO publication) {
+      public void onSuccess(RestMethod method, PublicationDTO publication) {
         super.onSuccess(method, publication);
         EventBus.getInstance().fireEvent(new PublicationPublishedEvent(publication));
         // update folder
