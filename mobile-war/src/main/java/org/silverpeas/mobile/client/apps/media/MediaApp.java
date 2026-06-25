@@ -104,7 +104,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   private void displayContent(ContentDTO contentSource) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<MediaDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<MediaDTO>() {
 
       @Override
       public void attempt() {
@@ -112,7 +112,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       }
 
       @Override
-      public void onSuccess(final Method method, final MediaDTO media) {
+      public void onSuccess(final RestMethod method, final MediaDTO media) {
         super.onSuccess(method, media);
         RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ApplicationInstanceDTO>() {
           @Override
@@ -284,7 +284,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     boolean moreElements = true;
     int callNumber = 0;
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<StreamingList<BaseDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<StreamingList<BaseDTO>>() {
 
       @Override
       public void attempt() {
@@ -293,7 +293,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       }
 
       @Override
-      public void onSuccess(final Method method, final StreamingList<BaseDTO> result) {
+      public void onSuccess(final RestMethod method, final StreamingList<BaseDTO> result) {
         super.onSuccess(method, result);
         setStopLoading(false);
         currentAlbumsItems = result.getList();
@@ -310,7 +310,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
   private void loadNextPartAlbums(String instanceId, String rootAlbumId, final int callNumber) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<StreamingList<BaseDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<StreamingList<BaseDTO>>() {
 
       @Override
       public void attempt() {
@@ -319,7 +319,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
       }
 
       @Override
-      public void onSuccess(final Method method, final StreamingList<BaseDTO> result) {
+      public void onSuccess(final RestMethod method, final StreamingList<BaseDTO> result) {
         super.onSuccess(method, result);
         currentAlbumsItems.addAll(result.getList());
         EventBus.getInstance().fireEvent(new MoreDataLoadedEvent(rootAlbumId, result.getList()));
@@ -339,7 +339,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
     if (event.getMedia() == null) {
       if (event.getContentType().equals(ContentsTypes.Photo.toString())) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<PhotoDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<PhotoDTO>() {
           @Override
           public void attempt() {
             ServicesLocator.getServiceMedia()
@@ -347,7 +347,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           }
 
           @Override
-          public void onSuccess(final Method method, final PhotoDTO preview) {
+          public void onSuccess(final RestMethod method, final PhotoDTO preview) {
             super.onSuccess(method, preview);
             EventBus.getInstance()
                 .fireEvent(new MediaPreviewLoadedEvent(preview, commentable, notifiable));
@@ -357,7 +357,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
       } else if (event.getContentType().equals(ContentsTypes.Sound.toString())) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<SoundDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<SoundDTO>() {
 
           @Override
           public void attempt() {
@@ -366,7 +366,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           }
 
           @Override
-          public void onSuccess(final Method method, final SoundDTO sound) {
+          public void onSuccess(final RestMethod method, final SoundDTO sound) {
             super.onSuccess(method, sound);
             EventBus.getInstance()
                 .fireEvent(new MediaPreviewLoadedEvent(sound, commentable, notifiable));
@@ -376,7 +376,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
       } else if (event.getContentType().equals(ContentsTypes.Video.toString())) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<VideoDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<VideoDTO>() {
 
           @Override
           public void attempt() {
@@ -385,7 +385,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           }
 
           @Override
-          public void onSuccess(final Method method, final VideoDTO video) {
+          public void onSuccess(final RestMethod method, final VideoDTO video) {
             super.onSuccess(method, video);
             EventBus.getInstance()
                 .fireEvent(new MediaPreviewLoadedEvent(video, commentable, notifiable));
@@ -395,7 +395,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
 
       } else if (event.getContentType().equals(ContentsTypes.Streaming.toString())) {
 
-        MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<VideoStreamingDTO>() {
+        RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<VideoStreamingDTO>() {
 
           @Override
           public void attempt() {
@@ -404,7 +404,7 @@ public class MediaApp extends App implements NavigationEventHandler, MediaAppEve
           }
 
           @Override
-          public void onSuccess(final Method method, final VideoStreamingDTO video) {
+          public void onSuccess(final RestMethod method, final VideoStreamingDTO video) {
             super.onSuccess(method, video);
             EventBus.getInstance()
                 .fireEvent(new MediaPreviewLoadedEvent(video, commentable, notifiable));

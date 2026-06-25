@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.shared.dto.media;
 
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 
 public class AlbumDTO extends BaseDTO implements Comparable<AlbumDTO> {
@@ -31,6 +32,10 @@ public class AlbumDTO extends BaseDTO implements Comparable<AlbumDTO> {
   private String name;
   private int countMedia;
   private boolean root = false;
+
+  public AlbumDTO() {
+    setClassName(this.getClass().getSimpleName());
+  }
 
   public String getName() {
     return name;
@@ -59,5 +64,26 @@ public class AlbumDTO extends BaseDTO implements Comparable<AlbumDTO> {
 
   public void setRoot(final boolean root) {
     this.root = root;
+  }
+
+
+  public static AlbumDTO fromJSON(JsPropertyMap<Object> json) {
+    return fromJSON(json, null);
+  }
+  public static AlbumDTO fromJSON(JsPropertyMap<Object> json, AlbumDTO dto) {
+
+    if (dto == null) dto = new AlbumDTO();
+    if (json == null) {
+      return dto;
+    }
+
+    dto.fromSuperJSON(json);
+    dto.setClassName(dto.getClass().getSimpleName());
+
+    dto.setRoot(json.get("root") != null ? Boolean.parseBoolean(json.get("root").toString()) : false);
+    dto.setName(json.get("name") != null ? json.get("name").toString() : null);
+    dto.setCountMedia(json.get("countMedia") != null ? Integer.parseInt(json.get("countMedia").toString()) : 0);
+
+    return dto;
   }
 }

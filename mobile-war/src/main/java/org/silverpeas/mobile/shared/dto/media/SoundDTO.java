@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,19 +24,35 @@
 
 package org.silverpeas.mobile.shared.dto.media;
 
-import java.io.Serializable;
+import jsinterop.base.JsPropertyMap;
 
-public class SoundDTO extends MediaDTO implements Serializable {
 
+public class SoundDTO extends MediaDTO {
   private String duration;
-
-  private static final long serialVersionUID = 1L;
-
   public String getDuration() {
     return duration;
   }
 
+  public SoundDTO() {
+    setClassName(this.getClass().getSimpleName());
+  }
+
   public void setDuration(final String duration) {
     this.duration = duration;
+  }
+
+  public static SoundDTO fromJSON(JsPropertyMap<Object> json) {
+
+    SoundDTO dto = new SoundDTO();
+    if (json == null) {
+      return dto;
+    }
+
+    dto.setClassName(dto.getClass().getSimpleName());
+    MediaDTO.fromJSON(json, dto);
+
+    dto.setDuration(json.get("duration") != null ? json.get("duration").toString() : null);
+
+    return dto;
   }
 }

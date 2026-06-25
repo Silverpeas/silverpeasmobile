@@ -24,28 +24,48 @@
 
 package org.silverpeas.mobile.shared.dto.media;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
-public class VideoDTO extends MediaDTO implements Serializable {
+public class VideoDTO extends MediaDTO {
 
-  private String duration;
-  private String dataPoster;
+    private String duration;
+    private String dataPoster;
 
-  private static final long serialVersionUID = 1L;
+    public VideoDTO() {
+        setClassName(this.getClass().getSimpleName());
+    }
 
-  public String getDuration() {
-    return duration;
-  }
+    public String getDuration() {
+        return duration;
+    }
 
-  public void setDuration(final String duration) {
-    this.duration = duration;
-  }
+    public void setDuration(final String duration) {
+        this.duration = duration;
+    }
 
-  public String getDataPoster() {
-    return dataPoster;
-  }
+    public String getDataPoster() {
+        return dataPoster;
+    }
 
-  public void setDataPoster(final String dataPoster) {
-    this.dataPoster = dataPoster;
-  }
+    public void setDataPoster(final String dataPoster) {
+        this.dataPoster = dataPoster;
+    }
+
+    public static VideoDTO fromJSON(JsPropertyMap<Object> json) {
+
+        VideoDTO dto = new VideoDTO();
+        if (json == null) {
+            return dto;
+        }
+
+        dto.setClassName(dto.getClass().getSimpleName());
+        MediaDTO.fromJSON(json, dto);
+
+        dto.setDuration(json.get("duration") != null ? json.get("duration").toString() : null);
+        dto.setDataPoster(json.get("dataPoster") != null ? json.get("dataPoster").toString() : null);
+
+        return dto;
+    }
 }

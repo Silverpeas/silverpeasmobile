@@ -24,6 +24,12 @@
 
 package org.silverpeas.mobile.shared;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.MyLinkDTO;
+import org.silverpeas.mobile.shared.dto.media.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,5 +76,37 @@ public class StreamingList<B> implements Serializable {
 
   public void setFirstCall(final boolean firstCall) {
     this.firstCall = firstCall;
+  }
+
+  public static StreamingList<BaseDTO> fromJSON(JsPropertyMap<Object> json) {
+    StreamingList dto = new StreamingList();
+    if (json == null) {
+      return dto;
+    }
+
+    dto.setFirstCall(json.get("firstCall") != null ? Boolean.parseBoolean(json.get("firstCall").toString()) : false);
+    dto.setMoreElement(json.get("moreElement") != null ? Boolean.parseBoolean(json.get("moreElement").toString()) : false);
+
+    if (json.get("list") != null) {
+      List<BaseDTO> result = new ArrayList<>();
+      JsArray<Object> list = (JsArray<Object>) json.get("list");
+      for (int i = 0; i < list.length; i++) {
+        JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+        if (map.get("className").equals(AlbumDTO.class.getSimpleName())) {
+          result.add(AlbumDTO.fromJSON(map));
+        } else if (map.get("className").equals(PhotoDTO.class.getSimpleName())) {
+          result.add(PhotoDTO.fromJSON(map));
+        } else if (map.get("className").equals(VideoDTO.class.getSimpleName())) {
+          result.add(VideoDTO.fromJSON(map));
+        } else if (map.get("className").equals(VideoStreamingDTO.class.getSimpleName())) {
+          result.add(VideoStreamingDTO.fromJSON(map));
+        } else if (map.get("className").equals(SoundDTO.class.getSimpleName())) {
+          result.add(SoundDTO.fromJSON(map));
+        }
+      }
+      dto.setList(result);
+    }
+
+    return dto;
   }
 }

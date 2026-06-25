@@ -24,37 +24,58 @@
 
 package org.silverpeas.mobile.shared.dto.media;
 
+import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
-public class VideoStreamingDTO extends MediaDTO implements Serializable {
+public class VideoStreamingDTO extends MediaDTO {
 
-  private String duration;
-  private String url;
-  private String urlPoster;
+    private String duration;
+    private String url;
+    private String urlPoster;
 
-  private static final long serialVersionUID = 1L;
+    public VideoStreamingDTO() {
+        setClassName(this.getClass().getSimpleName());
+    }
 
-  public String getUrl() {
-    return url;
-  }
+    public String getUrl() {
+        return url;
+    }
 
-  public void setUrl(final String url) {
-    this.url = url;
-  }
+    public void setUrl(final String url) {
+        this.url = url;
+    }
 
-  public String getDuration() {
-    return duration;
-  }
+    public String getDuration() {
+        return duration;
+    }
 
-  public void setDuration(final String duration) {
-    this.duration = duration;
-  }
+    public void setDuration(final String duration) {
+        this.duration = duration;
+    }
 
-  public String getUrlPoster() {
-    return urlPoster;
-  }
+    public String getUrlPoster() {
+        return urlPoster;
+    }
 
-  public void setUrlPoster(final String urlPoster) {
-    this.urlPoster = urlPoster;
-  }
+    public void setUrlPoster(final String urlPoster) {
+        this.urlPoster = urlPoster;
+    }
+
+    public static VideoStreamingDTO fromJSON(JsPropertyMap<Object> json) {
+
+        VideoStreamingDTO dto = new VideoStreamingDTO();
+        if (json == null) {
+            return dto;
+        }
+
+        dto.setClassName(dto.getClass().getSimpleName());
+        MediaDTO.fromJSON(json, dto);
+
+        dto.setDuration(json.get("duration") != null ? json.get("duration").toString() : null);
+        dto.setUrl(json.get("url") != null ? json.get("url").toString() : null);
+        dto.setUrlPoster(json.get("urlPoster") != null ? json.get("urlPoster").toString() : null);
+
+        return dto;
+    }
 }

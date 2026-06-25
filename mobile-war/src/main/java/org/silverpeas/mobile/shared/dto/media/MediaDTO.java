@@ -24,106 +24,139 @@
 
 package org.silverpeas.mobile.shared.dto.media;
 
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
 
 public class MediaDTO extends BaseDTO implements Serializable {
 
-  private static final long serialVersionUID = 1L;
-  private boolean download;
-  private String title;
-  private String name;
-  private String updateDate;
-  private String updater;
-  private String creator;
-  private String creationDate;
-  private int commentsNumber;
-  private String instance;
-  private String mimeType;
-  private long size;
+    private static final long serialVersionUID = 1L;
+    private boolean download;
+    private String title;
+    private String name;
+    private String updateDate;
+    private String updater;
+    private String creator;
+    private String creationDate;
+    private int commentsNumber;
+    private String instance;
+    private String mimeType;
+    private long size;
 
-  public boolean getDownload() {
-    return download;
-  }
-  public void setDownload(boolean download) {
-    this.download = download;
-  }
-  public String getTitle() {
-    return title;
-  }
-  public void setTitle(String title) {
-    this.title = title;
-  }
-  public void setName(final String name) {
-    this.name = name;
-  }
+    public boolean getDownload() {
+        return download;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public void setDownload(boolean download) {
+        this.download = download;
+    }
 
-  public String getUpdateDate() {
-    return updateDate;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void setUpdateDate(final String updateDate) {
-    this.updateDate = updateDate;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public String getUpdater() {
-    return updater;
-  }
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-  public void setUpdater(final String updater) {
-    this.updater = updater;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setCommentsNumber(final int commentsNumber) {
-    this.commentsNumber = commentsNumber;
-  }
+    public String getUpdateDate() {
+        return updateDate;
+    }
 
-  public int getCommentsNumber() {
-    return commentsNumber;
-  }
+    public void setUpdateDate(final String updateDate) {
+        this.updateDate = updateDate;
+    }
 
-  public String getInstance() {
-    return instance;
-  }
+    public String getUpdater() {
+        return updater;
+    }
 
-  public void setInstance(final String instance) {
-    this.instance = instance;
-  }
+    public void setUpdater(final String updater) {
+        this.updater = updater;
+    }
 
-  public String getMimeType() {
-    return mimeType;
-  }
+    public void setCommentsNumber(final int commentsNumber) {
+        this.commentsNumber = commentsNumber;
+    }
 
-  public void setMimeType(final String mimeType) {
-    this.mimeType = mimeType;
-  }
+    public int getCommentsNumber() {
+        return commentsNumber;
+    }
 
-  public void setSize(final long size) {
-    this.size = size;
-  }
+    public String getInstance() {
+        return instance;
+    }
 
-  public long getSize() {
-    return size;
-  }
+    public void setInstance(final String instance) {
+        this.instance = instance;
+    }
 
-  public String getCreator() {
-    return creator;
-  }
+    public String getMimeType() {
+        return mimeType;
+    }
 
-  public void setCreator(final String creator) {
-    this.creator = creator;
-  }
+    public void setMimeType(final String mimeType) {
+        this.mimeType = mimeType;
+    }
 
-  public String getCreationDate() {
-    return creationDate;
-  }
+    public void setSize(final long size) {
+        this.size = size;
+    }
 
-  public void setCreationDate(final String creationDate) {
-    this.creationDate = creationDate;
-  }
+    public long getSize() {
+        return size;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(final String creator) {
+        this.creator = creator;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(final String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public static MediaDTO fromJSON(JsPropertyMap<Object> json) {
+        return fromJSON(json, null);
+    }
+    public static MediaDTO fromJSON(JsPropertyMap<Object> json, MediaDTO dto) {
+
+        if (dto == null) dto = new MediaDTO();
+        if (json == null) {
+            return dto;
+        }
+
+        dto.fromSuperJSON(json);
+        dto.setClassName(dto.getClass().getSimpleName());
+
+        dto.setDownload(json.get("download") != null ? Boolean.parseBoolean(json.get("download").toString()) : false);
+        dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+        dto.setName(json.get("name") != null ? json.get("name").toString() : null);
+        dto.setUpdateDate(json.get("updateDate") != null ? json.get("updateDate").toString() : null);
+        dto.setUpdater(json.get("updater") != null ? json.get("updater").toString() : null);
+        dto.setCreator(json.get("creator") != null ? json.get("creator").toString() : null);
+        dto.setCreationDate(json.get("creationDate") != null ? json.get("creationDate").toString() : null);
+        dto.setInstance(json.get("instance") != null ? json.get("instance").toString() : null);
+        dto.setMimeType(json.get("mimeType") != null ? json.get("mimeType").toString() : null);
+        dto.setCommentsNumber(json.get("commentsNumber") != null ? Integer.parseInt(json.get("commentsNumber").toString()) : 0);
+        dto.setSize(json.get("size") != null ? Long.parseLong(json.get("size").toString()) : 0L);
+
+        return dto;
+    }
 }

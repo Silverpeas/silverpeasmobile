@@ -24,16 +24,17 @@
 
 package org.silverpeas.mobile.shared.dto.media;
 
-import java.io.Serializable;
+import jsinterop.base.JsPropertyMap;
 
-public class PhotoDTO extends MediaDTO implements Serializable {
-
-  private static final long serialVersionUID = 1L;
-
+public class PhotoDTO extends MediaDTO {
   private String dataPhoto;
   private String format;
   private int sizeH;
   private int sizeL;
+
+  public PhotoDTO() {
+    setClassName(this.getClass().getSimpleName());
+  }
 
   public String getDataPhoto() {
     return dataPhoto;
@@ -63,4 +64,23 @@ public class PhotoDTO extends MediaDTO implements Serializable {
   public int getSizeL() {
     return sizeL;
   }
+
+  public static PhotoDTO fromJSON(JsPropertyMap<Object> json) {
+
+    PhotoDTO dto = new PhotoDTO();
+    if (json == null) {
+      return dto;
+    }
+
+    dto.setClassName(dto.getClass().getSimpleName());
+    MediaDTO.fromJSON(json, dto);
+
+    dto.setDataPhoto(json.get("dataPhoto") != null ? json.get("dataPhoto").toString() : null);
+    dto.setFormat(json.get("format") != null ? json.get("format").toString() : null);
+    dto.setSizeH(json.get("sizeH") != null ? ((Number) json.get("sizeH")).intValue() : 0);
+    dto.setSizeL(json.get("sizeL") != null ? ((Number) json.get("sizeL")).intValue() : 0);
+
+    return dto;
+  }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,62 +24,101 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.media.MediaDTO;
 import org.silverpeas.mobile.shared.dto.media.PhotoDTO;
 import org.silverpeas.mobile.shared.dto.media.SoundDTO;
 import org.silverpeas.mobile.shared.dto.media.VideoDTO;
 import org.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
-import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import java.util.List;
 
 /**
+ * Service to manage requests related to media library.
  * @author svu
  */
-@Path("/mobile/medialib")
-public interface ServiceMedia extends RestService {
+public class ServiceMedia extends AbstractService {
 
-  @GET
-  @Path("add/{name}/{data}/{idGallery}/{idAlbum}")
-  public void uploadPicture(@PathParam("name") String name, @PathParam("data") String data, @PathParam("idGallery") String idGallery, @PathParam("idAlbum") String idAlbum, MethodCallback<Void> callback);
+  private static final String PATH = "/silverpeas/services/mobile/medialib";
 
-  @GET
-  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("{appId}/media/{id}")
-  public void getMedia(@PathParam("appId") String instanceId, @PathParam("id") String id, MethodCallback<MediaDTO> callback);
+  /**
+   * Uploads a picture.
+   * @param name The name of the picture.
+   * @param data The data of the picture.
+   * @param idGallery The ID of the gallery.
+   * @param idAlbum The ID of the album.
+   * @param callback The callback to handle the response (no data returned).
+   */
+  public void uploadPicture(String name, String data, String idGallery, String idAlbum, RestCallback<Void> callback) {
+    String url = PATH + "/add/" + encode(name) + "/" + encode(data) + "/" + encode(idGallery) + "/" + encode(idAlbum);
+    get(url, result -> null, callback);
+  }
 
-  @GET
-  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("{appId}/albumsandpics/{rootAlbumId}/{callNumber}")
-  public void getAlbumsAndPictures(@PathParam("appId") String instanceId, @PathParam("rootAlbumId") String rootAlbumId, @PathParam("callNumber") int callNumber, MethodCallback<StreamingList<BaseDTO>> callback);
+  /**
+   * Retrieves a media by its ID.
+   * @param appId The ID of the application.
+   * @param id The ID of the media.
+   * @param callback The callback to handle the response (MediaDTO).
+   */
+  public void getMedia(String appId, String id, RestCallback<MediaDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/media/" + encode(id);
+    get(url, result -> MediaDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @GET
-  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("{appId}/sound/{id}")
-  public void getSound(@PathParam("appId") String instanceId, @PathParam("id") String soundId, MethodCallback<SoundDTO> callback);
+  /**
+   * Retrieves albums and pictures for a given root album.
+   * @param appId The ID of the application.
+   * @param rootAlbumId The ID of the root album.
+   * @param callNumber The call number.
+   * @param callback The callback to handle the response (StreamingList of BaseDTO).
+   */
+  public void getAlbumsAndPictures(String appId, String rootAlbumId, int callNumber, RestCallback<StreamingList<BaseDTO>> callback) {
+    String url = PATH + "/" + encode(appId) + "/albumsandpics/" + encode(rootAlbumId) + "/" + callNumber;
+    get(url, result -> StreamingList.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @GET
-  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("{appId}/video/{videoId}")
-  public void getVideo(@PathParam("appId") String instanceId, @PathParam("videoId") String videoId, MethodCallback<VideoDTO> callback);
+  /**
+   * Retrieves a sound by its ID.
+   * @param appId The ID of the application.
+   * @param soundId The ID of the sound.
+   * @param callback The callback to handle the response (SoundDTO).
+   */
+  public void getSound(String appId, String soundId, RestCallback<SoundDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/sound/" + encode(soundId);
+    get(url, result -> SoundDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
+  /**
+   * Retrieves a video by its ID.
+   * @param appId The ID of the application.
+   * @param videoId The ID of the video.
+   * @param callback The callback to handle the response (VideoDTO).
+   */
+  public void getVideo(String appId, String videoId, RestCallback<VideoDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/video/" + encode(videoId);
+    get(url, result -> VideoDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @GET
-  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("{appId}/videostream/{videoId}")
-  public void getVideoStreaming(@PathParam("appId") String instanceId, @PathParam("videoId") String videoId, MethodCallback<VideoStreamingDTO> callback);
+  /**
+   * Retrieves a streaming video by its ID.
+   * @param appId The ID of the application.
+   * @param videoId The ID of the video.
+   * @param callback The callback to handle the response (VideoStreamingDTO).
+   */
+  public void getVideoStreaming(String appId, String videoId, RestCallback<VideoStreamingDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/videostream/" + encode(videoId);
+    get(url, result -> VideoStreamingDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 
-  @GET
-  @Produces(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
-  @Path("{appId}/photo/{pictureId}")
-  public void getPreviewPicture(@PathParam("appId") String instanceId, @PathParam("pictureId") String pictureId, MethodCallback<PhotoDTO> callback);
+  /**
+   * Retrieves a preview picture by its ID.
+   * @param appId The ID of the application.
+   * @param pictureId The ID of the picture.
+   * @param callback The callback to handle the response (PhotoDTO).
+   */
+  public void getPreviewPicture(String appId, String pictureId, RestCallback<PhotoDTO> callback) {
+    String url = PATH + "/" + encode(appId) + "/photo/" + encode(pictureId);
+    get(url, result -> PhotoDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 }
