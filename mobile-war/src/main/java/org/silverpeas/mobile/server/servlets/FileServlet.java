@@ -58,7 +58,7 @@ public class FileServlet extends AbstractSilverpeasMobileServlet {
     String componentId = "";
     String publicationId = "";
     String folderId = "";
-    FileUploadUtil.parseRequest(request);
+    //FileUploadUtil.parseRequest(request);
     String tempDir = FileRepositoryManager.getTemporaryPath();
 
     // Parse the request
