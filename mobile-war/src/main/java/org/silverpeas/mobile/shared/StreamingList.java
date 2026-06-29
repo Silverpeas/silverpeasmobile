@@ -27,8 +27,8 @@ package org.silverpeas.mobile.shared;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.media.*;
+import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class StreamingList<B> implements Serializable {
     this.firstCall = firstCall;
   }
 
-  public static StreamingList<BaseDTO> fromJSON(JsPropertyMap<Object> json) {
+  public static <T> StreamingList<T> fromJSON(JsPropertyMap<Object> json) {
     StreamingList dto = new StreamingList();
     if (json == null) {
       return dto;
@@ -102,6 +102,8 @@ public class StreamingList<B> implements Serializable {
           result.add(VideoStreamingDTO.fromJSON(map));
         } else if (map.get("className").equals(SoundDTO.class.getSimpleName())) {
           result.add(SoundDTO.fromJSON(map));
+        } else if (map.get("className").equals(WorkflowInstanceDTO.class.getSimpleName())) {
+          result.add(WorkflowInstanceDTO.fromJSON(map));
         }
       }
       dto.setList(result);

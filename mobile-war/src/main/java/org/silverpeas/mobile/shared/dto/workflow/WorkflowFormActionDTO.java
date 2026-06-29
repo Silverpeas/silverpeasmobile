@@ -24,6 +24,10 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +42,7 @@ public class WorkflowFormActionDTO implements Serializable {
   public WorkflowFormActionDTO() {
   }
 
-  @Override
+    @Override
   public boolean equals(Object obj) {
     return ((WorkflowFormActionDTO) obj).getId().equals(getId());
   }
@@ -75,5 +79,31 @@ public class WorkflowFormActionDTO implements Serializable {
 
   public void setActionName(final String actionName) {
     this.actionName = actionName;
+  }
+
+  public static WorkflowFormActionDTO fromJSON(JsPropertyMap<Object> json) {
+
+    WorkflowFormActionDTO dto = new WorkflowFormActionDTO();
+    if (json == null) {
+      return dto;
+    }
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+    dto.setActionName(json.get("actionName") != null ? json.get("actionName").toString() : null);
+
+    if (json.get("fields") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("fields");
+      List<WorkflowFieldDTO> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+        result.add(WorkflowFieldDTO.fromJSON(map));
+      }
+      dto.setFields(result);
+    } else {
+      dto.setFields(new ArrayList<>());
+    }
+
+    return dto;
+
   }
 }

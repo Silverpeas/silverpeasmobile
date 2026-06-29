@@ -37,6 +37,7 @@ import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
+import org.silverpeas.mobile.shared.helpers.UserFieldHelper;
 
 import java.util.List;
 
@@ -132,18 +133,7 @@ public class ServiceFormsOnline extends AbstractService {
    */
   public void getUserField(String appId, String formName, String fieldName, RestCallback<List<BaseDTO>> callback) {
     String url = PATH + "/" + encode(appId) + "/form/" + encode(formName) + "/" + encode(fieldName);
-    get(url, result -> mapArray(result, ServiceFormsOnline::userFieldFromJSON), callback);
-  }
-
-  private static BaseDTO userFieldFromJSON(JsPropertyMap<Object> json) {
-    BaseDTO dto = null;
-    Object type = json.get("className");
-    if (type != null && type.toString().contains(UserDTO.class.getSimpleName())) {
-      dto = UserDTO.fromJSON(json);
-    } else if (type != null && type.toString().contains(GroupDTO.class.getSimpleName())) {
-      dto = GroupDTO.fromJSON(json);
-    }
-    return dto;
+    get(url, result -> mapArray(result, UserFieldHelper::userFieldFromJSON), callback);
   }
 
   /**

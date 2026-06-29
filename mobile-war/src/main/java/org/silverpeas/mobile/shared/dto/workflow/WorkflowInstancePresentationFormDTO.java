@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,11 +24,15 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
-import java.io.Serializable;
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WorkflowInstancePresentationFormDTO implements Serializable {
+public class WorkflowInstancePresentationFormDTO {
 
   private String instanceId;
   private List<FieldPresentationDTO> fields;
@@ -40,7 +44,7 @@ public class WorkflowInstancePresentationFormDTO implements Serializable {
   public WorkflowInstancePresentationFormDTO() {
   }
 
-  @Override
+    @Override
   public boolean equals(Object obj) {
     return ((WorkflowInstancePresentationFormDTO) obj).getId().equals(getId());
   }
@@ -88,4 +92,44 @@ public class WorkflowInstancePresentationFormDTO implements Serializable {
   public String getState() { return state; }
 
   public void setState(String state) { this.state = state; }
+
+  public static WorkflowInstancePresentationFormDTO fromJSON(JsPropertyMap<Object> json) {
+    WorkflowInstancePresentationFormDTO dto = new WorkflowInstancePresentationFormDTO();
+    if (json == null) {
+      return dto;
+    }
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+    dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+    dto.setState(json.get("state") != null ? json.get("state").toString() : null);
+    dto.setInstanceId(json.get("instanceId") != null ? json.get("instanceId").toString() : null);
+
+    Object actionsObj = json.get("actions");
+    if (actionsObj != null) {
+      JsPropertyMap<String> actionsMap = (JsPropertyMap<String>) actionsObj;
+      Map<String, String> actionss = new HashMap<>();
+      String[] keys = getKeys(actionsMap);
+      for (String key : keys) {
+        actionss.put(key, actionsMap.get(key));
+      }
+      dto.setActions(actionss);
+    }
+
+    if (json.get("fields") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("fields");
+      List<FieldPresentationDTO> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
+        result.add(FieldPresentationDTO.fromJSON(map));
+      }
+      dto.setFields(result);
+    } else {
+      dto.setFields(new ArrayList<>());
+    }
+
+    return dto;
+  }
+
+  private static native String[] getKeys(JsPropertyMap<?> map) /*-{
+    return Object.keys(map);
+  }-*/;
 }

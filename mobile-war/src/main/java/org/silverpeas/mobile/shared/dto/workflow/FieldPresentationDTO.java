@@ -25,94 +25,109 @@
 package org.silverpeas.mobile.shared.dto.workflow;
 
 
-import java.io.Serializable;
+import jsinterop.base.JsPropertyMap;
 
-public class FieldPresentationDTO implements Serializable{
 
-  private String label;
-  private String value;
-  private String type;
-  private String displayerName;
-  private String instanceId;
-  private String id;
+public class FieldPresentationDTO {
 
-  public FieldPresentationDTO() {
-  }
+    private String label;
+    private String value;
+    private String type;
+    private String displayerName;
+    private String instanceId;
+    private String id;
 
-  public FieldPresentationDTO(final String key, final String value, final String id, final String type, String displayerName) {
-    this.label = key;
-    this.value = value;
-    setId(id);
-    this.type = type;
-    this.displayerName = displayerName;
-  }
+    public FieldPresentationDTO() {
+    }
 
-  public String getId() {
-    return id;
-  }
+    public FieldPresentationDTO(final String key, final String value, final String id, final String type, String displayerName) {
+        this.label = key;
+        this.value = value;
+        setId(id);
+        this.type = type;
+        this.displayerName = displayerName;
+    }
 
-  public void setId(final String id) {
-    this.id = id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public String getLabel() {
-    return label;
-  }
+    public void setId(final String id) {
+        this.id = id;
+    }
 
-  public void setLabel(final String label) {
-    this.label = label;
-  }
+    public String getLabel() {
+        return label;
+    }
 
-  public String getValue() {
-    return value;
-  }
+    public void setLabel(final String label) {
+        this.label = label;
+    }
 
-  public void setValue(final String value) {
-    this.value = value;
-  }
+    public String getValue() {
+        return value;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    FieldPresentationDTO other = (FieldPresentationDTO) obj;
-    if (getId() == null) {
-      return false;
-    } else if (!getId().equals(other.getId()))
-      return false;
-    return true;
-  }
+    public void setValue(final String value) {
+        this.value = value;
+    }
 
-  @Override
-  public int hashCode() {
-    return Integer.parseInt(getId());
-  }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        FieldPresentationDTO other = (FieldPresentationDTO) obj;
+        if (getId() == null) {
+            return false;
+        } else if (!getId().equals(other.getId()))
+            return false;
+        return true;
+    }
 
-  public String getType() {
-    return type;
-  }
+    @Override
+    public int hashCode() {
+        return Integer.parseInt(getId());
+    }
 
-  public void setType(final String type) {
-    this.type = type;
-  }
+    public String getType() {
+        return type;
+    }
 
-  public String getDisplayerName() {
-    return displayerName;
-  }
+    public void setType(final String type) {
+        this.type = type;
+    }
 
-  public void setDisplayerName(final String displayerName) {
-    this.displayerName = displayerName;
-  }
+    public String getDisplayerName() {
+        return displayerName;
+    }
 
-  public String getInstanceId() {
-    return instanceId;
-  }
+    public void setDisplayerName(final String displayerName) {
+        this.displayerName = displayerName;
+    }
 
-  public void setInstanceId(final String instanceId) {
-    this.instanceId = instanceId;
-  }
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(final String instanceId) {
+        this.instanceId = instanceId;
+    }
+
+    public static FieldPresentationDTO fromJSON(JsPropertyMap<Object> json) {
+        FieldPresentationDTO dto = new FieldPresentationDTO();
+        if (json == null) {
+            return dto;
+        }
+        dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+        dto.setLabel(json.get("label") != null ? json.get("label").toString() : null);
+        dto.setValue(json.get("value") != null ? json.get("value").toString() : null);
+        dto.setType(json.get("type") != null ? json.get("type").toString() : null);
+        dto.setDisplayerName(json.get("displayerName") != null ? json.get("displayerName").toString() : null);
+        dto.setInstanceId(json.get("instanceId") != null ? json.get("instanceId").toString() : null);
+        return dto;
+    }
 }

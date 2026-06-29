@@ -57,6 +57,7 @@ import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineBackground;
 import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineBackground;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -149,8 +150,8 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstances(final WorkflowLoadInstancesEvent event) {
-    MethodCallbackOnlineBackground action =
-        new MethodCallbackOnlineBackground<WorkflowDataDTO>() {
+    RestMethodCallbackOnlineBackground action =
+        new RestMethodCallbackOnlineBackground<WorkflowDataDTO>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -159,7 +160,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
           }
 
           @Override
-          public void onSuccess(final Method method, final WorkflowDataDTO dto) {
+          public void onSuccess(final RestMethod method, final WorkflowDataDTO dto) {
             super.onSuccess(method, dto);
             WorkflowLoadedDataEvent e = new WorkflowLoadedDataEvent();
             e.setData(dto);
@@ -174,7 +175,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   }
 
   private void loadWorkflowInstances(final WorkflowRoleChangeEvent event, final int nbCall) {
-    MethodCallbackOnlineOnly action2 = new MethodCallbackOnlineOnly<StreamingList<WorkflowInstanceDTO>>() {
+    RestMethodCallbackOnlineOnly action2 = new RestMethodCallbackOnlineOnly<StreamingList<WorkflowInstanceDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -183,7 +184,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       }
 
       @Override
-      public void onSuccess(final Method method,
+      public void onSuccess(final RestMethod method,
           final StreamingList<WorkflowInstanceDTO> instances) {
         super.onSuccess(method, instances);
         WorkflowLoadedInstancesEvent eventPage = new WorkflowLoadedInstancesEvent();
@@ -201,8 +202,8 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadInstance(final WorkflowLoadInstanceEvent event) {
-    MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<WorkflowInstancePresentationFormDTO>() {
+    RestMethodCallbackOnlineOnly action =
+        new RestMethodCallbackOnlineOnly<WorkflowInstancePresentationFormDTO>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -211,7 +212,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
           }
 
           @Override
-          public void onSuccess(final Method method,
+          public void onSuccess(final RestMethod method,
               final WorkflowInstancePresentationFormDTO form) {
             super.onSuccess(method, form);
             WorkflowPresentationPage page = new WorkflowPresentationPage();
@@ -226,7 +227,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
   public void loadActionForm(final WorkflowLoadActionFormEvent event) {
     currentAction = event.getActionName();
     currentState = event.getState();
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<WorkflowFormActionDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<WorkflowFormActionDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -235,7 +236,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       }
 
       @Override
-      public void onSuccess(final Method method, final WorkflowFormActionDTO dto) {
+      public void onSuccess(final RestMethod method, final WorkflowFormActionDTO dto) {
         super.onSuccess(method, dto);
         dto.setActionName(currentAction);
         WorkflowActionFormPage page = new WorkflowActionFormPage();
@@ -248,7 +249,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
 
   @Override
   public void loadUserField(final WorkflowLoadUserFieldEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -258,7 +259,7 @@ public class WorkflowApp extends App implements NavigationEventHandler, Workflow
       }
 
       @Override
-      public void onSuccess(final Method method, final List<BaseDTO> users) {
+      public void onSuccess(final RestMethod method, final List<BaseDTO> users) {
         super.onSuccess(method, users);
         AllowedUsersAndGroupsLoadedEvent ev = new AllowedUsersAndGroupsLoadedEvent(users, true);
         EventBus.getInstance().fireEvent(ev);

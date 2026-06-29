@@ -29,9 +29,8 @@ import org.silverpeas.mobile.shared.dto.BaseDTO;
 
 import java.io.Serializable;
 
-public class MediaDTO extends BaseDTO implements Serializable {
+public class MediaDTO extends BaseDTO {
 
-    private static final long serialVersionUID = 1L;
     private boolean download;
     private String title;
     private String name;

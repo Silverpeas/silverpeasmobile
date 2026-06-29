@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.shared.dto.workflow;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 
 
@@ -39,6 +40,13 @@ public class WorkflowFieldDTO extends FormFieldDTO {
 
   public void setActionName(final String actionName) {
     this.actionName = actionName;
+  }
+
+  public static WorkflowFieldDTO fromJSON(JsPropertyMap<Object> json) {
+    WorkflowFieldDTO dto = new WorkflowFieldDTO();
+    dto.setId(json.get("actionName") != null ? json.get("actionName").toString() : null);
+    dto = FormFieldDTO.fromJSON(dto, json);
+    return dto;
   }
 
 }

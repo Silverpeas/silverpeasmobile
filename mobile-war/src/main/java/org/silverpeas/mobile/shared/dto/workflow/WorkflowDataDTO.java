@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,13 +24,15 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
-import java.io.Serializable;
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WorkflowDataDTO implements Serializable {
-
-
+public class WorkflowDataDTO {
 
   private Map<String,List<String>> headerLabels;
 
@@ -72,4 +74,59 @@ public class WorkflowDataDTO implements Serializable {
   public void setRolesAllowedToCreate(final List<String> rolesAllowedToCreate) {
     this.rolesAllowedToCreate = rolesAllowedToCreate;
   }
+
+  public static WorkflowDataDTO fromJSON(JsPropertyMap<Object> json) {
+
+    WorkflowDataDTO dto = new WorkflowDataDTO();
+    if (json == null) {
+      return dto;
+    }
+    dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+
+    // roles
+    Object rolesObj = json.get("roles");
+    if (rolesObj != null) {
+      JsPropertyMap<String> rolesMap = (JsPropertyMap<String>) rolesObj;
+      Map<String, String> roless = new HashMap<>();
+      String[] keys = getKeys(rolesMap);
+      for (String key : keys) {
+        roless.put(key, rolesMap.get(key));
+      }
+      dto.setRoles(roless);
+    }
+
+    // rolesAllowedToCreate
+    if (json.get("rolesAllowedToCreate") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("rolesAllowedToCreate");
+      List<String> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        result.add((String) list.getAt(i));
+      }
+      dto.setRolesAllowedToCreate(result);
+    }
+
+    // headerLabels
+    Object headersLabelsObj = json.get("headerLabels");
+
+    if (headersLabelsObj != null) {
+      JsPropertyMap<JsArray<String>> headersLabelsMap = (JsPropertyMap<JsArray<String>>) headersLabelsObj;
+      Map<String, List<String>> headersLab = new HashMap<>();
+      String[] keys = getKeys(headersLabelsMap);
+      for (String key : keys) {
+        JsArray<String> array = headersLabelsMap.get(key);
+        List<String> values = new ArrayList<>();
+        for (int i = 0; i < array.length; i++) {
+          values.add(array.getAt(i));
+        }
+        headersLab.put(key, values);
+      }
+
+      dto.setHeaderLabels(headersLab);
+    }
+    return dto;
+  }
+
+  private static native String[] getKeys(JsPropertyMap<?> map) /*-{
+    return Object.keys(map);
+  }-*/;
 }

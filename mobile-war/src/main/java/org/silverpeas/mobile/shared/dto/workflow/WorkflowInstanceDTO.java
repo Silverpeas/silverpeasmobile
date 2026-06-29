@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,31 +24,26 @@
 
 package org.silverpeas.mobile.shared.dto.workflow;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.shared.dto.BaseDTO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkflowInstanceDTO implements Serializable {
-
+public class WorkflowInstanceDTO extends BaseDTO {
 
   private String title;
   private String state;
   private List<String> headerFieldsValues = new ArrayList<String>();
-  private String id;
 
   public WorkflowInstanceDTO() {
+    setClassName(WorkflowInstanceDTO.class.getSimpleName());
   }
 
   public void setHeaderFieldsValues(final List<String> headerFieldsValues) {
     this.headerFieldsValues = headerFieldsValues;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(final String id) {
-    this.id = id;
   }
 
   @Override
@@ -78,5 +73,26 @@ public class WorkflowInstanceDTO implements Serializable {
 
   public List<String> getHeaderFieldsValues() {
     return headerFieldsValues;
+  }
+
+  public static WorkflowInstanceDTO fromJSON(JsPropertyMap<Object> json) {
+    WorkflowInstanceDTO dto = new WorkflowInstanceDTO();
+    if (json == null) {
+      return dto;
+    }
+    dto.fromSuperJSON(json);
+    dto.setState(json.get("state") != null ? json.get("state").toString() : null);
+    dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+
+    if (json.get("headerFieldsValues") != null) {
+      JsArray<Object> list = (JsArray<Object>) json.get("headerFieldsValues");
+      List<String> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        result.add((String) list.getAt(i));
+      }
+      dto.setHeaderFieldsValues(result);
+    }
+
+    return dto;
   }
 }

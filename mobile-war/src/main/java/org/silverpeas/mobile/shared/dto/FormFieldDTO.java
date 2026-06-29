@@ -36,7 +36,7 @@ import java.util.Map;
  */
 
 @JsonIgnoreProperties("objectValue")
-public class FormFieldDTO implements Serializable {
+public class FormFieldDTO {
 
   private boolean readOnly;
   private boolean mandatory;
@@ -161,9 +161,7 @@ public class FormFieldDTO implements Serializable {
     return instanceId;
   }
 
-  public static FormFieldDTO fromJSON(JsPropertyMap<Object> json) {
-    FormFieldDTO dto = new FormFieldDTO();
-
+  protected static <T extends FormFieldDTO> T fromJSON(T dto, JsPropertyMap<Object> json) {
     dto.setId(json.get("id") != null ? json.get("id").toString() : null);
     dto.setName(json.get("name") != null ? json.get("name").toString() : null);
     dto.setLabel(json.get("label") != null ? json.get("label").toString() : null);
@@ -193,6 +191,13 @@ public class FormFieldDTO implements Serializable {
       }
       dto.setValues(values);
     }
+    return dto;
+  }
+
+  public static FormFieldDTO fromJSON(JsPropertyMap<Object> json) {
+    FormFieldDTO dto = new FormFieldDTO();
+    dto = fromJSON(dto, json);
+
 
     return dto;
   }
