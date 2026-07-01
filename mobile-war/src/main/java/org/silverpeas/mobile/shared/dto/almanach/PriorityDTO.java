@@ -29,7 +29,7 @@ import java.io.Serializable;
 /**
  * @author svu
  */
-public enum PriorityDTO implements Serializable {
+public enum PriorityDTO {
     NORMAL,
     HIGH;
 }

@@ -31,7 +31,7 @@ import java.io.Serializable;
 /**
  * @author svu
  */
-public class CalendarEventAttendeeDTO implements Serializable {
+public class CalendarEventAttendeeDTO {
   private String id;
   private String fullName;
   private ParticipationStatusDTO participationStatus;
@@ -88,5 +88,14 @@ public class CalendarEventAttendeeDTO implements Serializable {
             : null);
 
     return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+    json.set("id", getId());
+    json.set("fullName", getFullName());
+    json.set("participationStatus", participationStatus.name());
+    json.set("presenceStatus", presenceStatus.name());
+    return json;
   }
 }

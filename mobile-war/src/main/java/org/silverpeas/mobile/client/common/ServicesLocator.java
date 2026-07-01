@@ -50,22 +50,22 @@ public class ServicesLocator {
 
   private static ServiceBlog serviceBlog = new ServiceBlog();
   private static ServiceAuthentication serviceRestAuthentication = new ServiceAuthentication();
-  private static ServiceAlmanach serviceAlmanach = GWT.create(ServiceAlmanach.class);
-  private static ServiceUserCalendar serviceUserCalendar = GWT.create(ServiceUserCalendar.class);
+  private static ServiceAlmanach serviceAlmanach = new ServiceAlmanach();
+  private static ServiceUserCalendar serviceUserCalendar = new ServiceUserCalendar();
   private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
   private static ServiceRestDocuments serviceRestDocuments = new ServiceRestDocuments();
   private static ServiceComment serviceRestComment = new ServiceComment();
 
   private static ServiceTickets serviceRestTickets = new ServiceTickets();
   private static ServiceMyLinks serviceMyLinks = new ServiceMyLinks();
-  private static ServicePassword servicePassword = GWT.create(ServicePassword.class);
+  private static ServicePassword servicePassword = new ServicePassword();
 
-  private static ServiceFaq serviceFaq = GWT.create(ServiceFaq.class);
+  private static ServiceFaq serviceFaq = new ServiceFaq();
   private static ServiceFormsOnline serviceFormsOnline = new ServiceFormsOnline();
   private static ServiceTermsOfService serviceTermsOfService = new ServiceTermsOfService();
 
-  private static ServiceResourcesManager serviceResourcesManager = GWT.create(ServiceResourcesManager.class);
-  private static ServiceOrgChartGroup serviceOrgChartGroup = GWT.create(ServiceOrgChartGroup.class);
+  private static ServiceResourcesManager serviceResourcesManager = new ServiceResourcesManager();
+  private static ServiceOrgChartGroup serviceOrgChartGroup = new ServiceOrgChartGroup();
 
   private static void initRestContext() {
       Defaults.getServiceRoot().equals("/silverpeas/services");
@@ -108,7 +108,6 @@ public class ServicesLocator {
   }
 
   public static ServicePassword getServicePassword() {
-    initRestContext();
     return servicePassword;
   }
 
@@ -134,12 +133,10 @@ public class ServicesLocator {
   }
 
   public static ServiceUserCalendar getServiceUserCalendar() {
-    initRestContext();
     return serviceUserCalendar;
   }
 
   public static ServiceAlmanach getServiceAlmanach() {
-    initRestContext();
     return serviceAlmanach;
   }
 
@@ -156,7 +153,6 @@ public class ServicesLocator {
   }
 
   public static ServiceSurvey getServiceSurvey() {
-    initRestContext();
     return serviceSurvey;
   }
 
@@ -174,7 +170,6 @@ public class ServicesLocator {
   }
 
   public static ServiceMedia getServiceMedia() {
-    initRestContext();
     return serviceMedia;
   }
 
@@ -203,7 +198,6 @@ public class ServicesLocator {
   }
 
   public static ServiceOrgChartGroup getServiceOrgChartGroup() {
-    initRestContext();
     return serviceOrgChartGroup;
   }
 

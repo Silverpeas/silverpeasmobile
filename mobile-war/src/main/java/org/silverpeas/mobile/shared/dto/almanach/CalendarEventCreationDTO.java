@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
 import java.io.Serializable;
@@ -33,126 +34,160 @@ import java.util.List;
 /**
  * @author svu
  */
-public class CalendarEventCreationDTO implements Serializable {
+public class CalendarEventCreationDTO {
 
-  private String eventType;
-  private String occurrenceType;
-  private String startDate;
-  private String endDate;
-  private String eventId;
-  private CalendarDTO calendar;
-  private String title;
-  private boolean onAllDay;
-  private String visibility;
-  private String priority;
-  private String description;
-  private CalendarEventRecurrenceDTO recurrence;
+    private String eventType;
+    private String occurrenceType;
+    private String startDate;
+    private String endDate;
+    private String eventId;
+    private CalendarDTO calendar;
+    private String title;
+    private boolean onAllDay;
+    private String visibility;
+    private String priority;
+    private String description;
+    private CalendarEventRecurrenceDTO recurrence;
 
-  // "attributes": [{"name": "externalUrl"}],
-  // attachmentParameters": []
-  private List<CalendarEventAttendeeDTO> attendees;
+    // "attributes": [{"name": "externalUrl"}],
+    // attachmentParameters": []
+    private List<CalendarEventAttendeeDTO> attendees;
 
-  public String getEventType() {
-    return eventType;
-  }
+    public String getEventType() {
+        return eventType;
+    }
 
-  public void setEventType(String eventType) {
-    this.eventType = eventType;
-  }
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
 
-  public String getOccurrenceType() {
-    return occurrenceType;
-  }
+    public String getOccurrenceType() {
+        return occurrenceType;
+    }
 
-  public void setOccurrenceType(String occurrenceType) {
-    this.occurrenceType = occurrenceType;
-  }
+    public void setOccurrenceType(String occurrenceType) {
+        this.occurrenceType = occurrenceType;
+    }
 
-  public String getStartDate() {
-    return startDate;
-  }
+    public String getStartDate() {
+        return startDate;
+    }
 
-  public void setStartDate(String startDate) {
-    this.startDate = startDate;
-  }
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
 
-  public String getEndDate() {
-    return endDate;
-  }
+    public String getEndDate() {
+        return endDate;
+    }
 
-  public void setEndDate(String endDate) {
-    this.endDate = endDate;
-  }
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 
-  public String getEventId() {
-    return eventId;
-  }
+    public String getEventId() {
+        return eventId;
+    }
 
-  public void setEventId(String eventId) {
-    this.eventId = eventId;
-  }
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
 
-  public CalendarDTO getCalendar() {
-    return calendar;
-  }
+    public CalendarDTO getCalendar() {
+        return calendar;
+    }
 
-  public void setCalendar(CalendarDTO calendar) {
-    this.calendar = calendar;
-  }
+    public void setCalendar(CalendarDTO calendar) {
+        this.calendar = calendar;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public boolean getOnAllDay() {
-    return onAllDay;
-  }
+    public boolean getOnAllDay() {
+        return onAllDay;
+    }
 
-  public void setOnAllDay(boolean onAllDay) {
-    this.onAllDay = onAllDay;
-  }
+    public void setOnAllDay(boolean onAllDay) {
+        this.onAllDay = onAllDay;
+    }
 
-  public String getVisibility() {
-    return visibility;
-  }
+    public String getVisibility() {
+        return visibility;
+    }
 
-  public void setVisibility(String visibility) {
-    this.visibility = visibility;
-  }
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
 
-  public String getPriority() {
-    return priority;
-  }
+    public String getPriority() {
+        return priority;
+    }
 
-  public void setPriority(String priority) {
-    this.priority = priority;
-  }
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public CalendarEventRecurrenceDTO getRecurrence() {
-    return recurrence;
-  }
+    public CalendarEventRecurrenceDTO getRecurrence() {
+        return recurrence;
+    }
 
-  public void setRecurrence(CalendarEventRecurrenceDTO recurrence) {
-    this.recurrence = recurrence;
-  }
+    public void setRecurrence(CalendarEventRecurrenceDTO recurrence) {
+        this.recurrence = recurrence;
+    }
 
-  public List<CalendarEventAttendeeDTO> getAttendees() {
-    return attendees;
-  }
+    public List<CalendarEventAttendeeDTO> getAttendees() {
+        return attendees;
+    }
 
-  public void setAttendees(List<CalendarEventAttendeeDTO> attendees) {
-    this.attendees = attendees;
+    public void setAttendees(List<CalendarEventAttendeeDTO> attendees) {
+        this.attendees = attendees;
+    }
+
+  public Object toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("eventType", getEventType());
+    json.set("occurrenceType", getOccurrenceType());
+    json.set("startDate", getStartDate());
+    json.set("endDate", getEndDate());
+    json.set("eventId", getEventId());
+
+    if (getCalendar() != null) {
+      json.set("calendar", getCalendar().toJSON());
+    }
+
+    json.set("title", getTitle());
+    json.set("onAllDay", getOnAllDay());
+    json.set("visibility", getVisibility());
+    json.set("priority", getPriority());
+    json.set("description", getDescription());
+
+    if (getRecurrence() != null) {
+      json.set("recurrence", getRecurrence().toJSON());
+    }
+
+    if (getAttendees() != null) {
+      List<Object> attendeesJson = new ArrayList<>();
+      for (CalendarEventAttendeeDTO attendee : getAttendees()) {
+        attendeesJson.add(attendee.toJSON());
+      }
+      json.set("attendees", attendeesJson.toArray());
+    }
+
+    return json;
   }
 }

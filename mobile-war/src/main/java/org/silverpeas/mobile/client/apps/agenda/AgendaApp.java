@@ -130,7 +130,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       page.setPageTitle(event.getInstance().getLabel());
       loadUsersAndGroups(page);
 
-      MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CalendarDTO>>() {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<CalendarDTO>>() {
         @Override
         public void attempt() {
           super.attempt();
@@ -142,7 +142,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         }
 
         @Override
-        public void onSuccess(final Method method, final List<CalendarDTO> calendars) {
+        public void onSuccess(final RestMethod method, final List<CalendarDTO> calendars) {
           super.onSuccess(method, calendars);
           AgendaApp.this.calendars = calendars;
           page.setApp(AgendaApp.this);
@@ -189,7 +189,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   public void loadCalendarEvents(final CalendarLoadEvent event) {
     getAppEvents().clear();
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<CalendarEventDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<CalendarEventDTO>>() {
 
       private int retainUntil = 1;
       private int callNumber = 0;
@@ -228,12 +228,11 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
         if (event.getCalendar() != null) {
           currentAppId = getCalendarInstanceId(event.getCalendar());
           if (getApplicationInstance().getType().equals(Apps.userCalendar.name())) {
-            ServicesLocator.getServiceUserCalendar()
-                .getOccurences(currentAppId, event.getCalendar().getId(), startDateOfWindowTime,
-                    endDateOfWindowTime, SpMobil.getUser().getZone(), this);
+            ServicesLocator.getServiceUserCalendar().getOccurrences(currentAppId, event.getCalendar().getId(), startDateOfWindowTime,
+                            endDateOfWindowTime, SpMobil.getUser().getZone(), this);
           } else {
             ServicesLocator.getServiceAlmanach()
-                .getOccurences(currentAppId, event.getCalendar().getId(), startDateOfWindowTime,
+                .getOccurrences(currentAppId, event.getCalendar().getId(), startDateOfWindowTime,
                     endDateOfWindowTime, SpMobil.getUser().getZone(), this);
           }
         } else {
@@ -243,11 +242,11 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
             currentAppId = getCalendarInstanceId(cal);
             if (getApplicationInstance().getType().equals(Apps.userCalendar.name())) {
               ServicesLocator.getServiceUserCalendar()
-                  .getOccurences(currentAppId, cal.getId(), startDateOfWindowTime,
+                  .getOccurrences(currentAppId, cal.getId(), startDateOfWindowTime,
                       endDateOfWindowTime, SpMobil.getUser().getZone(), this);
             } else {
               ServicesLocator.getServiceAlmanach()
-                  .getOccurences(currentAppId, cal.getId(), startDateOfWindowTime,
+                  .getOccurrences(currentAppId, cal.getId(), startDateOfWindowTime,
                       endDateOfWindowTime, SpMobil.getUser().getZone(), this);
             }
           }
@@ -256,7 +255,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final List<CalendarEventDTO> events) {
+      public void onSuccess(final RestMethod method, final List<CalendarEventDTO> events) {
         super.onSuccess(method, events);
 
         allEvents.addAll(events);
@@ -296,7 +295,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   public void loadReminders(final RemindersLoadEvent event) {
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<ReminderDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<ReminderDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -305,9 +304,9 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final List<ReminderDTO> reminders) {
+      public void onSuccess(final RestMethod method, final List<ReminderDTO> reminders) {
         super.onSuccess(method, reminders);
-        MethodCallbackOnlineOnly action2 = new MethodCallbackOnlineOnly<List<String>>() {
+        RestMethodCallbackOnlineOnly action2 = new RestMethodCallbackOnlineOnly<List<String>>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -316,7 +315,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
           }
 
           @Override
-          public void onSuccess(final Method method, final List<String> durations) {
+          public void onSuccess(final RestMethod method, final List<String> durations) {
             super.onSuccess(method, durations);
             EventBus.getInstance().fireEvent(new RemindersLoadedEvent(reminders, durations));
           }
@@ -330,7 +329,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void updateReminder(final ReminderUpdateEvent event) {
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ReminderDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -339,7 +338,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final ReminderDTO result) {
+      public void onSuccess(final RestMethod method, final ReminderDTO result) {
         super.onSuccess(method, result);
       }
     };
@@ -349,7 +348,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void createReminder(final ReminderCreateEvent event) {
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<ReminderDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<ReminderDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -358,7 +357,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final ReminderDTO result) {
+      public void onSuccess(final RestMethod method, final ReminderDTO result) {
         super.onSuccess(method, result);
         EventBus.getInstance().fireEvent(new ReminderAddedEvent(result));
       }
@@ -369,7 +368,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   @Override
   public void deleteReminder(final ReminderDeleteEvent event) {
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -378,7 +377,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final Void result) {
+      public void onSuccess(final RestMethod method, final Void result) {
         super.onSuccess(method, result);
         EventBus.getInstance().fireEvent(new ReminderDeletedEvent());
       }
@@ -411,9 +410,9 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
   public void participation(final ParticipationEvent event) {
 
     String currentAppId = getCalendarInstanceId(event.getEvent().getCalendarId());
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CalendarEventDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<CalendarEventDTO>() {
       @Override
-      public void onSuccess(final Method method, final CalendarEventDTO dto) {
+      public void onSuccess(final RestMethod method, final CalendarEventDTO dto) {
         super.onSuccess(method, dto);
         EventBus.getInstance().fireEvent(new ParticipationUpdatedEvent(event.getStatus()));
       }
@@ -431,7 +430,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   @Override
   public void createEvent(EventCreateEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<CalendarEventDTO>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<CalendarEventDTO>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -439,7 +438,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(Method method, CalendarEventDTO event) {
+      public void onSuccess(RestMethod method, CalendarEventDTO event) {
         super.onSuccess(method, event);
         EventBus.getInstance().fireEvent(new EventSavedEvent());
       }

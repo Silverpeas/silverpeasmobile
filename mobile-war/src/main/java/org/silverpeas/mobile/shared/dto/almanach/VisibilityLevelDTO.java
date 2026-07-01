@@ -31,7 +31,7 @@ import java.io.Serializable;
 /**
  * @author svu
  */
-public enum VisibilityLevelDTO implements Serializable {
+public enum VisibilityLevelDTO {
   PUBLIC,
   PRIVATE,
   CONFIDENTIAL;

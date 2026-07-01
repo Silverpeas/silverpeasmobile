@@ -24,85 +24,120 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
-import java.io.Serializable;
+import jsinterop.base.JsPropertyMap;
 
 /**
  * @author svu
  */
-public class CalendarDTO implements Serializable {
-  private String id;
-  private String title;
-  private String zoneId;
-  private String uri;
+public class CalendarDTO {
+    private String id;
+    private String title;
+    private String zoneId;
+    private String uri;
 
-  private boolean main;
-  private boolean userMainPersonal;
-  private boolean userPersonal;
-  private String ownerName;
+    private boolean main;
+    private boolean userMainPersonal;
+    private boolean userPersonal;
+    private String ownerName;
 
 
-  public String getId() {
-    return id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public void setId(final String id) {
-    this.id = id;
-  }
+    public void setId(final String id) {
+        this.id = id;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void setTitle(final String title) {
-    this.title = title;
-  }
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 
-  public String getZoneId() {
-    return zoneId;
-  }
+    public String getZoneId() {
+        return zoneId;
+    }
 
-  public void setZoneId(final String zoneId) {
-    this.zoneId = zoneId;
-  }
+    public void setZoneId(final String zoneId) {
+        this.zoneId = zoneId;
+    }
 
-  public boolean isMain() {
-    return main;
-  }
+    public boolean isMain() {
+        return main;
+    }
 
-  public void setMain(final boolean main) {
-    this.main = main;
-  }
+    public void setMain(final boolean main) {
+        this.main = main;
+    }
 
-  public boolean isUserMainPersonal() {
-    return userMainPersonal;
-  }
+    public boolean isUserMainPersonal() {
+        return userMainPersonal;
+    }
 
-  public void setUserMainPersonal(final boolean userMainPersonal) {
-    this.userMainPersonal = userMainPersonal;
-  }
+    public void setUserMainPersonal(final boolean userMainPersonal) {
+        this.userMainPersonal = userMainPersonal;
+    }
 
-  public boolean isUserPersonal() {
-    return userPersonal;
-  }
+    public boolean isUserPersonal() {
+        return userPersonal;
+    }
 
-  public void setUserPersonal(final boolean userPersonal) {
-    this.userPersonal = userPersonal;
-  }
+    public void setUserPersonal(final boolean userPersonal) {
+        this.userPersonal = userPersonal;
+    }
 
-  public String getOwnerName() {
-    return ownerName;
-  }
+    public String getOwnerName() {
+        return ownerName;
+    }
 
-  public void setOwnerName(final String ownerName) {
-    this.ownerName = ownerName;
-  }
+    public void setOwnerName(final String ownerName) {
+        this.ownerName = ownerName;
+    }
 
-  public String getUri() {
-    return uri;
-  }
+    public String getUri() {
+        return uri;
+    }
 
-  public void setUri(final String uri) {
-    this.uri = uri;
-  }
+    public void setUri(final String uri) {
+        this.uri = uri;
+    }
 
+    public static CalendarDTO fromJSON(JsPropertyMap<Object> json) {
+        CalendarDTO dto = new CalendarDTO();
+
+        dto.setId(json.get("id") != null ? json.get("id").toString() : null);
+        dto.setTitle(json.get("title") != null ? json.get("title").toString() : null);
+        dto.setZoneId(json.get("zoneId") != null ? json.get("zoneId").toString() : null);
+        dto.setUri(json.get("uri") != null ? json.get("uri").toString() : null);
+
+        dto.setMain(Boolean.parseBoolean(String.valueOf(json.get("main"))));
+        dto.setUserMainPersonal(Boolean.parseBoolean(String.valueOf(json.get("userMainPersonal"))));
+        dto.setUserPersonal(Boolean.parseBoolean(String.valueOf(json.get("userPersonal"))));
+
+        dto.setOwnerName(json.get("ownerName") != null
+                ? json.get("ownerName").toString()
+                : null);
+
+        return dto;
+    }
+
+    public JsPropertyMap<Object> toJSON() {
+        JsPropertyMap<Object> json = JsPropertyMap.of();
+
+        json.set("id", getId());
+        json.set("title", getTitle());
+        json.set("zoneId", getZoneId());
+        json.set("uri", getUri());
+
+        json.set("main", isMain());
+        json.set("userMainPersonal", isUserMainPersonal());
+        json.set("userPersonal", isUserPersonal());
+
+        json.set("ownerName", getOwnerName());
+
+        return json;
+    }
 }

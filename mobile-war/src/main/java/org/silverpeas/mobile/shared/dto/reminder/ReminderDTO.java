@@ -162,4 +162,30 @@ public class ReminderDTO implements Serializable {
 
         return dto;
     }
+
+    public Object toJSON() {
+        JsPropertyMap<Object> json = JsPropertyMap.of();
+
+        json.set("id", getId());
+        json.set("cId", getcId());
+        json.set("cProperty", getcProperty());
+        json.set("userId", getUserId());
+        json.set("dateTime", getDateTime());
+        
+
+        json.set("text", getText());
+        json.set("processName", getProcessName());
+
+        // numeric fields
+        json.set("duration", getDuration().intValue());
+
+        // enum
+        json.set("timeUnit", getTimeUnit() != null ? getTimeUnit().name() : null);
+
+        // booleans
+        json.set("canBeModified", isCanBeModified());
+        json.set("canBeDeleted", isCanBeDeleted());
+
+        return json;
+    }
 }

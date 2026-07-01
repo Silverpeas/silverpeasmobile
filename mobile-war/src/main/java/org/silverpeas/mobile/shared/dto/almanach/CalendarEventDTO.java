@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.shared.dto.almanach;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
@@ -37,7 +38,7 @@ import java.util.List;
 /**
  * @author svu
  */
-public class CalendarEventDTO implements Serializable {
+public class CalendarEventDTO {
 
     private String eventUri;
     private String calendarUri;
@@ -59,7 +60,7 @@ public class CalendarEventDTO implements Serializable {
     private List<CalendarEventAttributeDTO> attributes = new ArrayList<>();
     private String occurrenceId;
     //private PdcClassificationEntity pdcClassification;
-    private List<AttachmentParameterDTO> attachmentParameters = new ArrayList<>();
+    //private List<AttachmentParameterDTO> attachmentParameters = new ArrayList<>();
     private ReminderDTO reminder;
     private String ownerName;
     private String createDate;
@@ -255,14 +256,6 @@ public class CalendarEventDTO implements Serializable {
         this.reminder = reminder;
     }
 
-    public List<AttachmentParameterDTO> getAttachmentParameters() {
-        return attachmentParameters;
-    }
-
-    public void setAttachmentParameters(final List<AttachmentParameterDTO> attachmentParameters) {
-        this.attachmentParameters = attachmentParameters;
-    }
-
     public String getEventUri() {
         return eventUri;
     }
@@ -337,7 +330,6 @@ public class CalendarEventDTO implements Serializable {
             dto.setVisibility(json.get("visibility") != null ? VisibilityLevelDTO.valueOf(json.get("visibility").toString()) : null);
             dto.setPriority(json.get("priority") != null ? PriorityDTO.valueOf(json.get("priority").toString()) : null);
 
-
             dto.setRecurrence(CalendarEventRecurrenceDTO.fromJSON((JsPropertyMap<Object>) json.get("recurrence")));
             dto.setReminder(ReminderDTO.fromJSON((JsPropertyMap<Object>) json.get("reminder")));
 
@@ -362,17 +354,6 @@ public class CalendarEventDTO implements Serializable {
                 }
 
                 dto.setAttributes(result);
-            }
-
-            if (json.get("attachmentParameters") != null) {
-                JsArray<Object> list = (JsArray<Object>) json.get("attachmentParameters");
-                List<AttachmentParameterDTO> result = new ArrayList<>();
-                for (int i = 0; i < list.length; i++) {
-                    JsPropertyMap<Object> map = (JsPropertyMap<Object>) list.getAt(i);
-                    result.add(AttachmentParameterDTO.fromJSON(map));
-                }
-
-                dto.setAttachmentParameters(result);
             }
             
         } catch (Throwable t) {

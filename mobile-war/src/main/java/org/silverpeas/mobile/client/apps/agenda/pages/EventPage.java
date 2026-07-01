@@ -209,6 +209,7 @@ public class EventPage  extends PageContent implements EventPagesEventHandler {
     } else {
       reccurence.getStyle().setDisplay(Style.Display.BLOCK);
       String frequencyLabel = "";
+
       if (event.getRecurrence().getFrequency().getTimeUnit().name().equalsIgnoreCase("DAY")) {
         frequencyLabel = msg.DAY();
       } else if (event.getRecurrence().getFrequency().getTimeUnit().name().equalsIgnoreCase("WEEK")) {

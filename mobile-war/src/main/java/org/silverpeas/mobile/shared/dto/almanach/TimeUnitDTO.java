@@ -29,7 +29,7 @@ import java.io.Serializable;
 /**
  * @author svu
  */
-public enum TimeUnitDTO implements Serializable {
+public enum TimeUnitDTO {
   MILLISECOND,
   SECOND,
   MINUTE,

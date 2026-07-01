@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,39 +24,62 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**
+ * Service to manage requests related to user calendars.
  * @author svu
  */
-@Path("/usercalendar")
-public interface ServiceUserCalendar extends RestService {
+public class ServiceUserCalendar extends AbstractService {
 
-  @GET
-  @Path("{componentInstanceId}/")
-  public void getCalendars(@PathParam("componentInstanceId") String componentInstanceId,
-      MethodCallback<List<CalendarDTO>> callback);
+  private static final String PATH = "/silverpeas/services/usercalendar";
 
-  @GET
-  @Path("{componentInstanceId}/{calendarId}/events/occurrences/")
-  public void getOccurences(@PathParam("componentInstanceId") String componentInstanceId,
-      @PathParam("calendarId") String calendarId,
-      @QueryParam("startDateOfWindowTime") String startDateOfWindowTime,
-      @QueryParam("endDateOfWindowTime") String endDateOfWindowTime,
-      @QueryParam("zoneid") String zoneid, MethodCallback<List<CalendarEventDTO>> callback);
+  /**
+   * Retrieves calendars for a given component instance.
+   * @param componentInstanceId The ID of the component instance.
+   * @param callback The callback to handle the response (list of CalendarDTO).
+   */
+  public void getCalendars(String componentInstanceId, RestCallback<List<CalendarDTO>> callback) {
+    String url = PATH + "/" + encode(componentInstanceId) + "/";
+    get(url, result -> mapArray(result, CalendarDTO::fromJSON), callback);
+  }
 
-  @GET
-  @Path("{calendarId}/events/{eventId}")
-  public void getEvent(@PathParam("calendarId") String calendarId,
-      @PathParam("eventId") String eventId, MethodCallback<CalendarEventDTO> callback);
+  /**
+   * Retrieves occurrences of calendar events for a given calendar and time window.
+   * @param componentInstanceId The ID of the component instance.
+   * @param calendarId The ID of the calendar.
+   * @param startDateOfWindowTime The start date of the time window.
+   * @param endDateOfWindowTime The end date of the time window.
+   * @param zoneid The timezone ID.
+   * @param callback The callback to handle the response (list of CalendarEventDTO).
+   */
+  public void getOccurrences(
+          String componentInstanceId,
+          String calendarId,
+          String startDateOfWindowTime,
+          String endDateOfWindowTime,
+          String zoneid,
+          RestCallback<List<CalendarEventDTO>> callback) {
+    String url = PATH + "/" + encode(componentInstanceId) + "/" + encode(calendarId) + "/events/occurrences/" +
+            "?startDateOfWindowTime=" + encode(startDateOfWindowTime) +
+            "&endDateOfWindowTime=" + encode(endDateOfWindowTime) +
+            "&zoneid=" + encode(zoneid);
+    get(url, result -> mapArray(result, CalendarEventDTO::fromJSON), callback);
+  }
 
+  /**
+   * Retrieves a specific event from a calendar.
+   * @param calendarId The ID of the calendar.
+   * @param eventId The ID of the event.
+   * @param callback The callback to handle the response (CalendarEventDTO).
+   */
+  public void getEvent(String calendarId, String eventId, RestCallback<CalendarEventDTO> callback) {
+    String url = PATH + "/" + encode(calendarId) + "/events/" + encode(eventId);
+    get(url, result -> CalendarEventDTO.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 }

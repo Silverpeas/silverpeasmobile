@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,51 +24,137 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import com.google.gwt.user.client.Window;
+import elemental2.core.Global;
+import elemental2.core.JsArray;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Service to manage requests related to reminders.
  * @author svu
  */
-@Path("/reminder")
-public interface ServiceReminder extends RestService {
+public class ServiceReminder extends AbstractService {
 
-  @GET
-  @Path("/{componentInstanceId}/{type}/{localId}/possibledurations/{property}")
-  public void getPossibleDurations(@PathParam("componentInstanceId") String componentInstanceId,
-      @PathParam("type") String type, @PathParam("localId") String localId,
-      @PathParam("property") String property, MethodCallback<List<String>> callback);
+  private static final String PATH = "/silverpeas/services/reminder";
 
-  @GET
-  @Path("/{componentInstanceId}/{type}/{localId}")
-  public void getReminders(@PathParam("componentInstanceId") String componentInstanceId,
-      @PathParam("type") String type, @PathParam("localId") String localId, MethodCallback<List<ReminderDTO>> callback);
+  /**
+   * Retrieves possible durations for a reminder.
+   * @param componentInstanceId The ID of the component instance.
+   * @param type The type of the reminder.
+   * @param localId The local ID.
+   * @param property The property for which to get possible durations.
+   * @param callback The callback to handle the response (list of strings).
+   */
+  public void getPossibleDurations(
+          String componentInstanceId,
+          String type,
+          String localId,
+          String property,
+          RestCallback<List<String>> callback) {
+    String url = PATH + "/" + encode(componentInstanceId) + "/" +
+            encode(type) + "/" + encode(localId) +
+            "/possibledurations/" + encode(property);
+    get(url, result -> mapArrayToListOfStrings(result), callback);
+  }
 
+  /**
+   * Retrieves reminders for a given component instance, type, and local ID.
+   * @param componentInstanceId The ID of the component instance.
+   * @param type The type of the reminder.
+   * @param localId The local ID.
+   * @param callback The callback to handle the response (list of ReminderDTO).
+   */
+  public void getReminders(
+          String componentInstanceId,
+          String type,
+          String localId,
+          RestCallback<List<ReminderDTO>> callback) {
+    String url = PATH + "/" + encode(componentInstanceId) + "/" +
+            encode(type) + "/" + encode(localId);
+    get(url, result -> mapArray(result, ReminderDTO::fromJSON), callback);
+  }
 
+  /**
+   * Creates a new reminder.
+   * @param componentInstanceId The ID of the component instance.
+   * @param type The type of the reminder.
+   * @param localId The local ID.
+   * @param reminderDTO The reminder data to create.
+   * @param callback The callback to handle the response (ReminderDTO).
+   */
+  public void createReminder(
+          String componentInstanceId,
+          String type,
+          String localId,
+          ReminderDTO reminderDTO,
+          RestCallback<ReminderDTO> callback) {
+    String url = PATH + "/" + encode(componentInstanceId) + "/" +
+            encode(type) + "/" + encode(localId);
+    post(
+            url,
+            Global.JSON.stringify(Js.asAny(reminderDTO.toJSON())),
+            result -> ReminderDTO.fromJSON((JsPropertyMap<Object>) result),
+            callback
+    );
+  }
 
-  @POST
-  @Path("/{componentInstanceId}/{type}/{localId}")
-  public void createReminder(@PathParam("componentInstanceId") String componentInstanceId,
-      @PathParam("type") String type, @PathParam("localId") String localId, ReminderDTO dto, MethodCallback<ReminderDTO> callback);
+  /**
+   * Deletes a reminder.
+   * @param componentInstanceId The ID of the component instance.
+   * @param type The type of the reminder.
+   * @param localId The local ID.
+   * @param id The ID of the reminder to delete.
+   * @param callback The callback to handle the response (no data returned).
+   */
+  public void deleteReminder(
+          String componentInstanceId,
+          String type,
+          String localId,
+          String id,
+          RestCallback<Void> callback) {
+    String url = PATH + "/" + encode(componentInstanceId) + "/" +
+            encode(type) + "/" + encode(localId) + "/" + encode(id);
+    delete(url, null, result -> null, callback);
+  }
 
-  @DELETE
-  @Path("/{componentInstanceId}/{type}/{localId}/{id}")
-  public void deleteReminder(@PathParam("componentInstanceId") String componentInstanceId,
-      @PathParam("type") String type, @PathParam("localId") String localId, @PathParam("id") String id, MethodCallback<Void> callback);
+  /**
+   * Updates an existing reminder.
+   * @param componentInstanceId The ID of the component instance.
+   * @param type The type of the reminder.
+   * @param localId The local ID.
+   * @param id The ID of the reminder to update.
+   * @param reminderDTO The reminder data to update.
+   * @param callback The callback to handle the response (ReminderDTO).
+   */
+  public void updateReminder(
+          String componentInstanceId,
+          String type,
+          String localId,
+          String id,
+          ReminderDTO reminderDTO,
+          RestCallback<ReminderDTO> callback) {
+    String url = PATH + "/" + encode(componentInstanceId) + "/" +
+            encode(type) + "/" + encode(localId) + "/" + encode(id);
+    put(
+            url,
+            Global.JSON.stringify(Js.asAny(reminderDTO.toJSON())),
+            result -> ReminderDTO.fromJSON((JsPropertyMap<Object>) result),
+            callback
+    );
+  }
 
-
-  @PUT
-  @Path("/{componentInstanceId}/{type}/{localId}/{id}")
-  public void updateReminder(@PathParam("componentInstanceId") String componentInstanceId,
-      @PathParam("type") String type, @PathParam("localId") String localId, @PathParam("id") String id, ReminderDTO dto, MethodCallback<ReminderDTO> callback);
-
+  private List<String> mapArrayToListOfStrings(Object json) {
+      JsArray<Object> list = (JsArray<Object>) json;
+      List<String> result = new ArrayList<>();
+      for (int i = 0; i < list.length; i++) {
+        result.add((String) list.getAt(i));
+      }
+      return result;
+  }
 }
