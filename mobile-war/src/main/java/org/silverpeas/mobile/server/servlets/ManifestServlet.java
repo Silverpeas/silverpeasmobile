@@ -25,14 +25,14 @@
 package org.silverpeas.mobile.server.servlets;
 
 
-import org.apache.commons.io.IOUtils;
-import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.kernel.logging.SilverLogger;
-
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;

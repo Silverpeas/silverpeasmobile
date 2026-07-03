@@ -24,18 +24,13 @@
 
 package org.silverpeas.mobile.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDTO extends BaseDTO implements Serializable {
-
-  private static final long serialVersionUID = 5388415881024885835L;
+public class UserDTO extends BaseDTO {
 
   private String id;
   private String lastName;
@@ -161,6 +156,7 @@ public class UserDTO extends BaseDTO implements Serializable {
     json.set("eMail", eMail);
     json.set("avatar", avatar);
     json.set("password", password);
+    json.set("className", getClass().getSimpleName());
 
     // properties
     JsArray<Object> propertiesArray = new JsArray<>();

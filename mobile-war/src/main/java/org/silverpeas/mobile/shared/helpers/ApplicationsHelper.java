@@ -1,6 +1,5 @@
 package org.silverpeas.mobile.shared.helpers;
 
-import com.google.gwt.user.client.Window;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 

@@ -24,11 +24,7 @@
 
 package org.silverpeas.mobile.client.components;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;

@@ -24,6 +24,11 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.components.kmelia.model.TopicDetail;
 import org.silverpeas.components.kmelia.service.KmeliaService;
 import org.silverpeas.core.admin.ProfiledObjectId;
@@ -58,11 +63,6 @@ import org.silverpeas.mobile.shared.dto.GroupDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.notifications.*;
 
-import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -356,11 +356,11 @@ public class ServiceNotifications extends AbstractRestWebService {
         new NotificationSender(notificationToSendDTO.getNotification().getInstanceId());
     NotificationMetaData metaData = new NotificationMetaData();
 
-    for (BaseDTO receiver : notificationToSendDTO.getReceivers()) {
-      if (receiver instanceof UserDTO) {
-        metaData.addUserRecipient(new UserRecipient((receiver).getId()));
-      } else if (receiver instanceof GroupDTO) {
-        metaData.addGroupRecipient(new GroupRecipient((receiver).getId()));
+    for (ReceiverDTO receiver : notificationToSendDTO.getReceivers()) {
+      if (receiver.getType().equals(ReceiverDTO.TYPE_USER)) {
+        metaData.addUserRecipient(new UserRecipient(receiver.getId()));
+      } else if (receiver.getType().equals(ReceiverDTO.TYPE_GROUP)) {
+        metaData.addGroupRecipient(new GroupRecipient(receiver.getId()));
       }
     }
 

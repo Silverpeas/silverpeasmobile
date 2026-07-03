@@ -26,7 +26,6 @@ package org.silverpeas.mobile.client.apps.documents.events.app;
 
 
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
 public class DocumentsPublishEvent extends AbstractDocumentsAppEvent {
 

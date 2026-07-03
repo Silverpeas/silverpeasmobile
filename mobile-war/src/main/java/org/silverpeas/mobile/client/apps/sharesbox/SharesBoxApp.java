@@ -25,8 +25,6 @@
 package org.silverpeas.mobile.client.apps.sharesbox;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
@@ -40,7 +38,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;

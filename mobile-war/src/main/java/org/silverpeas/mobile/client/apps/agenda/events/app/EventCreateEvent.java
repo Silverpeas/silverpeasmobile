@@ -25,8 +25,6 @@
 package org.silverpeas.mobile.client.apps.agenda.events.app;
 
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventCreationDTO;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
-import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
 public class EventCreateEvent extends AbstractAgendaAppEvent {
   private CalendarEventCreationDTO event;

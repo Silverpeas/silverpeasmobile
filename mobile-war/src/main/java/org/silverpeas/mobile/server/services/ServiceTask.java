@@ -24,23 +24,23 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.personalorganizer.model.Attendee;
 import org.silverpeas.core.personalorganizer.model.ToDoHeader;
 import org.silverpeas.core.personalorganizer.service.SilverpeasCalendar;
-import org.silverpeas.kernel.bundle.LocalizationBundle;
-import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.bundle.LocalizationBundle;
+import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.mobile.shared.dto.TaskDTO;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;

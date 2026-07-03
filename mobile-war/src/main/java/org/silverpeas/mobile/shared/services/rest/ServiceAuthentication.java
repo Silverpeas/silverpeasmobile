@@ -24,17 +24,9 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import elemental2.core.Global;
-import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
-import org.silverpeas.mobile.shared.dto.TaskDTO;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 
 /**
  * @author svu

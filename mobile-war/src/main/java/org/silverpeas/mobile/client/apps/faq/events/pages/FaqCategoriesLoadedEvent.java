@@ -24,9 +24,6 @@
 
 package org.silverpeas.mobile.client.apps.faq.events.pages;
 
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
-import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.faq.CategoryDTO;
 
 import java.util.List;

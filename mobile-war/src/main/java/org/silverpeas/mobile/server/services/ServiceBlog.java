@@ -24,13 +24,6 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.silverpeas.components.blog.model.PostDetail;
-import org.silverpeas.components.blog.service.BlogFilters;
-import org.silverpeas.components.blog.service.BlogServiceFactory;
-import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.core.web.rs.annotation.Authorized;
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -38,6 +31,13 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import org.silverpeas.components.blog.model.PostDetail;
+import org.silverpeas.components.blog.service.BlogFilters;
+import org.silverpeas.components.blog.service.BlogServiceFactory;
+import org.silverpeas.core.annotation.WebService;
+import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.mobile.shared.dto.blog.PostDTO;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;

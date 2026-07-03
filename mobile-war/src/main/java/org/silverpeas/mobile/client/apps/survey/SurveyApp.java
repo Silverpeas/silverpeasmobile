@@ -25,16 +25,11 @@
 package org.silverpeas.mobile.client.apps.survey;
 
 import com.google.gwt.core.client.GWT;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.apps.survey.events.app.AbstractSurveyAppEvent;
-import org.silverpeas.mobile.client.apps.survey.events.app.SurveyAppEventHandler;
-import org.silverpeas.mobile.client.apps.survey.events.app.SurveyLoadEvent;
-import org.silverpeas.mobile.client.apps.survey.events.app.SurveySaveEvent;
-import org.silverpeas.mobile.client.apps.survey.events.app.SurveysLoadEvent;
+import org.silverpeas.mobile.client.apps.survey.events.app.*;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveyLoadedEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.SurveysLoadedEvent;
 import org.silverpeas.mobile.client.apps.survey.events.pages.UpdateParticipationNumberEvent;
@@ -45,7 +40,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.ContentDTO;

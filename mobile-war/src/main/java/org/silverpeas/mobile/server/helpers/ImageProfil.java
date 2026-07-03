@@ -23,13 +23,13 @@
  */
 package org.silverpeas.mobile.server.helpers;
 
-import org.silverpeas.core.util.file.FileUtil;
-import org.silverpeas.core.util.file.FileRepositoryManager;
-import org.silverpeas.core.io.file.SilverpeasFile;
-import org.silverpeas.core.io.file.SilverpeasFileProvider;
-
 import jakarta.activation.MimeType;
 import jakarta.activation.MimeTypeParseException;
+import org.silverpeas.core.io.file.SilverpeasFile;
+import org.silverpeas.core.io.file.SilverpeasFileProvider;
+import org.silverpeas.core.util.file.FileRepositoryManager;
+import org.silverpeas.core.util.file.FileUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

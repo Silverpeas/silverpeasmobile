@@ -24,8 +24,6 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.Window;
-import jsinterop.base.Js;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 
 /**

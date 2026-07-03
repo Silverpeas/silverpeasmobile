@@ -42,8 +42,6 @@ import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationStatus;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
 
-import java.util.ArrayList;
-
 public class ReservationDetailPage extends PageContent implements ResourcesManagerPagesEventHandler {
 
   private static ReservationDetailPageUiBinder uiBinder = GWT.create(ReservationDetailPageUiBinder.class);

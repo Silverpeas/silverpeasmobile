@@ -26,7 +26,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:components="urn:import:org.silverpeas.mobile.client.components"
-             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base"
              xmlns:widgets="urn:import:org.silverpeas.mobile.client.apps.comments.pages.widgets">
 
   <ui:with field='msg' type='org.silverpeas.mobile.client.apps.classifieds.resources.ClassifiedsMessages' />

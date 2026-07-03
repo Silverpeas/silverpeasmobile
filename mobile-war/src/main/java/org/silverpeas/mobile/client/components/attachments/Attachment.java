@@ -44,7 +44,6 @@ import org.silverpeas.mobile.client.common.mobil.MobilUtils;
 import org.silverpeas.mobile.client.common.navigation.UrlUtils;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
-import org.silverpeas.mobile.client.components.IframePage;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.documents.SimpleDocumentDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;

@@ -27,7 +27,6 @@ package org.silverpeas.mobile.client.apps.agenda;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
 import org.silverpeas.mobile.client.apps.agenda.events.app.*;
@@ -43,7 +42,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
@@ -459,7 +457,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
 
   public void loadUsersAndGroups(AgendaPage page) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -470,7 +468,7 @@ public class AgendaApp extends App implements AgendaAppEventHandler, NavigationE
       }
 
       @Override
-      public void onSuccess(final Method method, final List<BaseDTO> baseDTOS) {
+      public void onSuccess(final RestMethod method, final List<BaseDTO> baseDTOS) {
         super.onSuccess(method, baseDTOS);
         List<BaseDTO> users = new ArrayList<>();
         for (BaseDTO dto : baseDTOS) {

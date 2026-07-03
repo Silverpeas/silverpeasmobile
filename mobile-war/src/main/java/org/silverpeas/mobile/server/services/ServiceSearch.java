@@ -24,6 +24,11 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.index.search.PlainSearchResult;
@@ -36,11 +41,6 @@ import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
 import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 

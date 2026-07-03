@@ -28,7 +28,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gwt.dom.client.Element;
 import jsinterop.base.JsPropertyMap;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**

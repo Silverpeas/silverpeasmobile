@@ -25,19 +25,12 @@
 package org.silverpeas.mobile.client.apps.classifieds.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.classifieds.pages.ClassifiedPage;
-import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 
 public class PictureItem extends Composite {
 

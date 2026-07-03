@@ -52,10 +52,15 @@ import org.silverpeas.mobile.shared.dto.media.*;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 import org.silverpeas.mobile.shared.exceptions.MediaException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import static org.silverpeas.kernel.util.StringUtil.EMPTY;
 

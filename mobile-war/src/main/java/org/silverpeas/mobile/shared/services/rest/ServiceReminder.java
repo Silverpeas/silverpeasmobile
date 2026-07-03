@@ -24,7 +24,6 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.user.client.Window;
 import elemental2.core.Global;
 import elemental2.core.JsArray;
 import jsinterop.base.Js;

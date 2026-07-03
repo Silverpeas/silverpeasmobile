@@ -26,11 +26,8 @@ package org.silverpeas.mobile.shared.dto.faq;
 
 
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author svu

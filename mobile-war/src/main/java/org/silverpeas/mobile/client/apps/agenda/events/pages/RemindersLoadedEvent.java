@@ -24,7 +24,6 @@
 
 package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
 import java.util.List;

@@ -26,11 +26,8 @@ package org.silverpeas.mobile.shared.dto;
 
 import jsinterop.base.JsPropertyMap;
 
-import java.io.Serializable;
+public class TaskDTO {
 
-public class TaskDTO implements Serializable {
-
-  private static final long serialVersionUID = 2921606984249560882L;
 
   private String id;
   private int percentCompleted;

@@ -24,9 +24,6 @@
 
 package org.silverpeas.mobile.server.dao.statistics;
 
-import java.sql.Connection;
-import java.util.List;
-
 /**
  * @author svu
  */

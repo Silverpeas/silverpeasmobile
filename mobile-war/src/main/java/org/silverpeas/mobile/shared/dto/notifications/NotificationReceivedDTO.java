@@ -24,14 +24,12 @@
 
 package org.silverpeas.mobile.shared.dto.notifications;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-
-import java.io.Serializable;
+import jsinterop.base.JsPropertyMap;
 
 /**
  * @author: svu
  */
-public class NotificationReceivedDTO extends NotificationBoxDTO implements Serializable {
+public class NotificationReceivedDTO extends NotificationBoxDTO {
 
   private String date;
   private String link;
@@ -43,6 +41,7 @@ public class NotificationReceivedDTO extends NotificationBoxDTO implements Seria
   public NotificationReceivedDTO() {
     super();
     setSended(false);
+    setClassName(getClass().getSimpleName());
   }
 
   public String getDate() {
@@ -91,6 +90,27 @@ public class NotificationReceivedDTO extends NotificationBoxDTO implements Seria
 
   public void setReaden(final int readen) {
     this.readen = readen;
+  }
+
+  public static NotificationReceivedDTO fromJSON(JsPropertyMap<Object> json) {
+    NotificationReceivedDTO dto = new NotificationReceivedDTO();
+
+    if (json == null) {
+      return dto;
+    }
+    dto.setClassName(dto.getClass().getSimpleName());
+
+    NotificationBoxDTO.fromJSON(json, dto);
+
+    dto.setTitle(json.get("title") != null ? json.get("title").toString() : "");
+    dto.setDate(json.get("date") != null ? json.get("date").toString() : "");
+    dto.setLink(json.get("link") != null ? json.get("link").toString() : "");
+    dto.setSource(json.get("source") != null ? json.get("source").toString() : "");
+    dto.setAuthor(json.get("author") != null ? json.get("author").toString() : "");
+
+    Object readen = json.get("readen");
+    dto.setReaden(readen != null ? ((Double) readen).intValue() : 0);
+    return dto;
   }
 
 }

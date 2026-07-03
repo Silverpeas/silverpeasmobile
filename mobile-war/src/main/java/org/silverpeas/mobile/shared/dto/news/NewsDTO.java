@@ -24,11 +24,7 @@
 
 package org.silverpeas.mobile.shared.dto.news;
 
-import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
-import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 import java.io.Serializable;
 

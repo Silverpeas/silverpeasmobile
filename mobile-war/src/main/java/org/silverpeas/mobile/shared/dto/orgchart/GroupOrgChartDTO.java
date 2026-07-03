@@ -24,11 +24,8 @@
 
 package org.silverpeas.mobile.shared.dto.orgchart;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 
 import java.io.Serializable;

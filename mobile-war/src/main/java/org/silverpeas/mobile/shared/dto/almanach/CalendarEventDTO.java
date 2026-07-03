@@ -25,13 +25,10 @@
 package org.silverpeas.mobile.shared.dto.almanach;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

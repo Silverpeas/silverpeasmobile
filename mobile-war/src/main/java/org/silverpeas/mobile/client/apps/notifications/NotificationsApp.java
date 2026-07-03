@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.notifications;
 
 import com.google.gwt.core.client.GWT;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.notifications.events.app.AbstractNotificationsAppEvent;
 import org.silverpeas.mobile.client.apps.notifications.events.app.NotificationsAppEventHandler;
@@ -36,13 +35,18 @@ import org.silverpeas.mobile.client.apps.notifications.resources.NotificationsMe
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.components.userselection.events.pages.AllowedUsersAndGroupsLoadedEvent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.GroupDTO;
+import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationToSendDTO;
+import org.silverpeas.mobile.shared.dto.notifications.ReceiverDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,7 +89,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
 
   public void loadUsersAndGroups() {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<List<BaseDTO>>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<List<BaseDTO>>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -94,7 +98,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
       }
 
       @Override
-      public void onSuccess(final Method method, final List<BaseDTO> baseDTOS) {
+      public void onSuccess(final RestMethod method, final List<BaseDTO> baseDTOS) {
         super.onSuccess(method, baseDTOS);
         // Notify view
         EventBus.getInstance().fireEvent(new AllowedUsersAndGroupsLoadedEvent(baseDTOS, userOnly));
@@ -106,7 +110,7 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
   @Override
   public void sendNotification(final SendNotificationEvent event) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -117,13 +121,26 @@ public class NotificationsApp extends App implements NotificationsAppEventHandle
 
         NotificationToSendDTO dto = new NotificationToSendDTO();
         dto.setNotification(n);
-        dto.setReceivers(event.getReceivers());
+
+        List<ReceiverDTO> list = new ArrayList<>();
+        for (BaseDTO receiver : event.getReceivers()) {
+          ReceiverDTO r = new ReceiverDTO();
+          if (receiver instanceof UserDTO) {
+            r.setId(((UserDTO) receiver).getId());
+            r.setType(ReceiverDTO.TYPE_USER);
+          } else if (receiver instanceof GroupDTO) {
+            r.setId(receiver.getId());
+            r.setType(ReceiverDTO.TYPE_GROUP);
+          }
+        }
+
+        dto.setReceivers(list);
         dto.setSubject(event.getSubject());
         ServicesLocator.getServiceNotifications().send(dto, this);
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
+      public void onSuccess(final RestMethod method, final Void unused) {
         super.onSuccess(method, unused);
         // Notify view
         EventBus.getInstance().fireEvent(new NotificationSendedEvent());

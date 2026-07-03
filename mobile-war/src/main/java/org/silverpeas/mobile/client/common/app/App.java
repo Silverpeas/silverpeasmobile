@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.common.app;
 
 import com.google.gwt.user.client.ui.SimplePanel;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
@@ -33,7 +32,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;

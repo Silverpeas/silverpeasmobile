@@ -24,24 +24,23 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.core.security.authentication.AuthenticationCredential;
-import org.silverpeas.core.security.authentication.exception.AuthenticationException;
-import org.silverpeas.core.security.authentication.verifier.AuthenticationUserVerifierFactory;
-import org.silverpeas.core.template.SilverpeasTemplate;
-import org.silverpeas.core.template.SilverpeasTemplates;
-import org.silverpeas.kernel.bundle.ResourceLocator;
-import org.silverpeas.kernel.bundle.SettingBundle;
-import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.core.web.rs.UserPrivilegeValidation;
-import org.silverpeas.core.web.rs.annotation.Authorized;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import org.silverpeas.core.annotation.WebService;
+import org.silverpeas.core.security.authentication.AuthenticationCredential;
+import org.silverpeas.core.security.authentication.exception.AuthenticationException;
+import org.silverpeas.core.security.authentication.verifier.AuthenticationUserVerifierFactory;
+import org.silverpeas.core.template.SilverpeasTemplate;
+import org.silverpeas.core.template.SilverpeasTemplates;
+import org.silverpeas.core.web.rs.UserPrivilegeValidation;
+import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
+import org.silverpeas.kernel.logging.SilverLogger;
 
 @WebService
 @Authorized

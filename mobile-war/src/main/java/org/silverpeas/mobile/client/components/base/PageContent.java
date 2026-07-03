@@ -43,12 +43,7 @@ import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.base.events.apps.StopLoadingDataEvent;
-import org.silverpeas.mobile.client.components.base.events.page.AbstractPageEvent;
-import org.silverpeas.mobile.client.components.base.events.page.DataLoadedEvent;
-import org.silverpeas.mobile.client.components.base.events.page.LoadingDataFinishEvent;
-import org.silverpeas.mobile.client.components.base.events.page.MoreDataLoadedEvent;
-import org.silverpeas.mobile.client.components.base.events.page.PageEvent;
-import org.silverpeas.mobile.client.components.base.events.page.PageEventHandler;
+import org.silverpeas.mobile.client.components.base.events.page.*;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,41 +24,59 @@
 
 package org.silverpeas.mobile.shared.dto.notifications;
 
+import elemental2.core.JsArray;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
+import org.silverpeas.mobile.shared.dto.GroupDTO;
+import org.silverpeas.mobile.shared.dto.UserDTO;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author: svu
  */
-public class NotificationToSendDTO implements Serializable {
+public class NotificationToSendDTO {
 
-  private NotificationDTO notification;
-  private List<BaseDTO> receivers;
-  private String subject;
+    private NotificationDTO notification;
+    private List<ReceiverDTO> receivers;
+    private String subject;
 
-  public NotificationDTO getNotification() {
-    return notification;
-  }
+    public NotificationDTO getNotification() {
+        return notification;
+    }
 
-  public void setNotification(final NotificationDTO notification) {
-    this.notification = notification;
-  }
+    public void setNotification(final NotificationDTO notification) {
+        this.notification = notification;
+    }
 
-  public List<BaseDTO> getReceivers() {
-    return receivers;
-  }
+    public List<ReceiverDTO> getReceivers() {
+        return receivers;
+    }
 
-  public void setReceivers(final List<BaseDTO> receivers) {
-    this.receivers = receivers;
-  }
+    public void setReceivers(final List<ReceiverDTO> receivers) {
+        this.receivers = receivers;
+    }
 
-  public String getSubject() {
-    return subject;
-  }
+    public String getSubject() {
+        return subject;
+    }
 
-  public void setSubject(final String subject) {
-    this.subject = subject;
-  }
+    public void setSubject(final String subject) {
+        this.subject = subject;
+    }
+
+    public Object toJSON() {
+        JsPropertyMap<Object> json = JsPropertyMap.of();
+        json.set("subject", getSubject());
+        json.set("notification", notification != null ? notification.toJSON() : null);
+
+        if (receivers != null) {
+            JsArray<Object> list = new JsArray<>();
+            for (ReceiverDTO receiver : receivers) {
+                list.push(receiver.toJSON());
+            }
+            json.set("receivers", list);
+        }
+        return json;
+    }
 }

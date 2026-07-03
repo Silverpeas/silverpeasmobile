@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.shared.dto.navigation;
 
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.RightDTO;
 
 import java.io.Serializable;

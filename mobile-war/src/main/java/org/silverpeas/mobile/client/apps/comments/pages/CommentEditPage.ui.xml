@@ -24,7 +24,7 @@
 
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:components="urn:import:org.silverpeas.mobile.client.components">
+>
   <g:HTMLPanel ui:field="container" styleName="content comments">
     <h2 ui:field="title" class="publiName"></h2>
 

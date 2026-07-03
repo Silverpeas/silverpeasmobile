@@ -25,9 +25,9 @@
 package org.silverpeas.mobile.server.dao.token;
 
 
+import jakarta.inject.Singleton;
 import org.silverpeas.core.persistence.jdbc.DBUtil;
 
-import jakarta.inject.Singleton;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

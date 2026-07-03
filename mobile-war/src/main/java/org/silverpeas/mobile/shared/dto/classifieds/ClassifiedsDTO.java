@@ -27,7 +27,6 @@ package org.silverpeas.mobile.shared.dto.classifieds;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,8 +24,6 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
-import java.io.Serializable;
-
 /**
  * @author svu
  */

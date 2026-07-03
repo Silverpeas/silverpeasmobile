@@ -24,6 +24,10 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.components.resourcesmanager.ResourcesManagerProvider;
 import org.silverpeas.components.resourcesmanager.model.Reservation;
 import org.silverpeas.components.resourcesmanager.model.Resource;
@@ -39,26 +43,16 @@ import org.silverpeas.core.notification.user.client.UserRecipient;
 import org.silverpeas.core.ui.DisplayI18NHelper;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.Link;
-import org.silverpeas.kernel.bundle.LocalizationBundle;
-import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.core.util.URLUtil;
-import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.bundle.LocalizationBundle;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.mobile.shared.dto.reservations.Errors;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 import org.silverpeas.mobile.shared.dto.reservations.ResourceDTO;
-import org.silverpeas.mobile.shared.dto.reservations.Errors;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;

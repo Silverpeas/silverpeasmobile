@@ -25,25 +25,14 @@
 package org.silverpeas.mobile.client.apps.formsonline.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.favorites.pages.widgets.AddToFavoritesButton;
-import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineAsReceiverLoadEvent;
 import org.silverpeas.mobile.client.apps.formsonline.events.app.FormsOnlineLoadEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.AbstractFormsOnlinePagesEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormLoadedEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormRequestStatusChangedEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormSavedEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineLoadedEvent;
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlinePagesEventHandler;
-import org.silverpeas.mobile.client.apps.formsonline.events.pages.FormsOnlineRequestValidatedEvent;
+import org.silverpeas.mobile.client.apps.formsonline.events.pages.*;
 import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.FormOnlineItem;
 import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.ViewMyRequestsButton;
 import org.silverpeas.mobile.client.apps.formsonline.pages.widgets.ViewRequestsToValidateButton;

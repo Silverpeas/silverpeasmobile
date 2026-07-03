@@ -24,23 +24,25 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import elemental2.core.Global;
 import elemental2.core.JsArray;
-import elemental2.dom.*;
+import elemental2.dom.AbortController;
+import elemental2.dom.DomGlobal;
+import elemental2.dom.Headers;
+import elemental2.dom.RequestInit;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.DEBUG;
 import org.silverpeas.mobile.client.common.network.SpMobileRequestBuilder;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 
-import static elemental2.dom.DomGlobal.fetch;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+
+import static elemental2.dom.DomGlobal.fetch;
 
 public class AbstractService {
 
@@ -118,7 +120,6 @@ public class AbstractService {
                     if (response.status == 204) {
                         return null;
                     }
-
                     return response.text();
                 })
                 .then(text -> {
@@ -139,7 +140,7 @@ public class AbstractService {
                     return null;
                 })
                 .catch_(err -> {
-                    callback.onFailure(restMethod,
+                                   callback.onFailure(restMethod,
                             new RuntimeException(String.valueOf(err)));
                     return null;
                 });

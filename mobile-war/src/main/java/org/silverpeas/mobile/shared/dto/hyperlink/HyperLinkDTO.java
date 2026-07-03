@@ -25,8 +25,6 @@
 package org.silverpeas.mobile.shared.dto.hyperlink;
 
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.search.ResultDTO;
 
 import java.io.Serializable;
 

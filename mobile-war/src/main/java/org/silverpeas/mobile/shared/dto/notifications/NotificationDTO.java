@@ -24,14 +24,12 @@
 
 package org.silverpeas.mobile.shared.dto.notifications;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-
-import java.io.Serializable;
+import jsinterop.base.JsPropertyMap;
 
 /**
  * @author: svu
  */
-public class NotificationDTO implements Serializable {
+public class NotificationDTO {
 
   public final static String TYPE_PUBLICATION = "Publication";
 
@@ -85,5 +83,16 @@ public class NotificationDTO implements Serializable {
 
   public void setInstanceId(String instanceId) {
     this.instanceId = instanceId;
+  }
+
+  public Object toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+
+    json.set("contentId", getContentId());
+    json.set("contentType", getContentType());
+    json.set("message", getMessage());
+    json.set("instanceId", getInstanceId());
+
+    return json;
   }
 }

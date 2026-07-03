@@ -24,10 +24,7 @@
 
 package org.silverpeas.mobile.client.apps.survey.events.pages;
 
-import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
 import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
-
-import java.util.List;
 
 public class UpdateParticipationNumberEvent extends AbstractSurveyPagesEvent {
 

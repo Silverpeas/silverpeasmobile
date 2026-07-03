@@ -24,6 +24,11 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.silverpeas.components.yellowpages.service.YellowpagesService;
 import org.silverpeas.core.admin.service.AdminException;
@@ -37,9 +42,6 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.contact.model.CompleteContact;
 import org.silverpeas.core.contact.model.ContactDetail;
 import org.silverpeas.core.contact.model.ContactPK;
-import org.silverpeas.core.contribution.content.form.DataRecord;
-import org.silverpeas.core.contribution.content.form.Form;
-import org.silverpeas.core.contribution.content.form.PagesContext;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.index.search.SearchEngineProvider;
 import org.silverpeas.core.index.search.model.MatchingIndexEntry;
@@ -50,7 +52,6 @@ import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
 import org.silverpeas.kernel.bundle.LocalizationBundle;
 import org.silverpeas.kernel.bundle.ResourceLocator;
-import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
@@ -60,11 +61,6 @@ import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.contact.ContactFilters;
 import org.silverpeas.mobile.shared.dto.contact.ContactScope;
 
-import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
 import java.util.*;
 
 @WebService

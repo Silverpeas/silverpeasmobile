@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.faq.events.pages;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.silverpeas.mobile.client.apps.faq.events.app.QuestionCreateEvent;
 
 public interface FaqPagesEventHandler extends EventHandler{
 

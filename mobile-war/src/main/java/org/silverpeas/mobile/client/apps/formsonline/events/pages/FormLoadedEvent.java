@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.formsonline.events.pages;
 
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 
 import java.util.List;

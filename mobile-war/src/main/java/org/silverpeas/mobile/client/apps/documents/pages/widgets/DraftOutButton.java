@@ -25,29 +25,16 @@
 package org.silverpeas.mobile.client.apps.documents.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.SpMobil;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadGedItemsEvent;
-import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadPublicationEvent;
 import org.silverpeas.mobile.client.apps.documents.resources.DocumentsMessages;
-import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.Notification;
-import org.silverpeas.mobile.client.common.navigation.UrlUtils;
-import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.components.base.ActionItem;
 import org.silverpeas.mobile.client.components.base.ActionsMenu;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
-import org.silverpeas.mobile.shared.dto.ContentDTO;
-import org.silverpeas.mobile.shared.dto.ContentsTypes;
 
 
 /**

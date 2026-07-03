@@ -24,6 +24,10 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.components.classifieds.model.ClassifiedDetail;
 import org.silverpeas.components.classifieds.notification.ClassifiedOwnerNotification;
 import org.silverpeas.components.classifieds.service.ClassifiedService;
@@ -38,7 +42,6 @@ import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.attachment.util.SimpleDocumentList;
 import org.silverpeas.core.contribution.content.form.DataRecord;
-import org.silverpeas.core.contribution.content.form.FieldValuesTemplate;
 import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.content.form.record.GenericFieldTemplate;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
@@ -55,10 +58,6 @@ import org.silverpeas.mobile.shared.dto.FormFieldDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

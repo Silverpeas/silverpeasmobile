@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.shared.dto.formsonline;
 
 import jsinterop.base.JsPropertyMap;
+
 import java.io.Serializable;
 
 /**

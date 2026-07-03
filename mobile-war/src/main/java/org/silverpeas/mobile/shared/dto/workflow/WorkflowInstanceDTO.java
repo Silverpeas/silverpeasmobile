@@ -28,7 +28,6 @@ import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

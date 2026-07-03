@@ -31,15 +31,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.MarkAsReadNotificationsEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBoxPage;
 import org.silverpeas.mobile.client.apps.notificationsbox.resources.NotificationsMessages;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.ActionItem;
-import org.silverpeas.mobile.client.components.base.ActionsMenu;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
-
-import java.util.List;
 
 /**
  * @author: svu

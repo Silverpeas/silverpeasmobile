@@ -24,8 +24,6 @@
 
 package org.silverpeas.mobile.client.apps.formsonline.events.app;
 
-import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
-
 public class FormOnlineMyRequestLoadEvent extends AbstractFormsOnlineAppEvent {
 
   @Override

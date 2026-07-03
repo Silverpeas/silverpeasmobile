@@ -24,6 +24,12 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.user.model.Group;
@@ -38,9 +44,6 @@ import org.silverpeas.mobile.shared.dto.PropertyDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -25,15 +25,8 @@
 package org.silverpeas.mobile.shared.services.rest;
 
 import jsinterop.base.JsPropertyMap;
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
-import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 
 /**
  * @author svu

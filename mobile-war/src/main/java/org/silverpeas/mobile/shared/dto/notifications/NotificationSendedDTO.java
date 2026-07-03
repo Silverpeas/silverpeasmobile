@@ -24,14 +24,12 @@
 
 package org.silverpeas.mobile.shared.dto.notifications;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
-
-import java.io.Serializable;
+import jsinterop.base.JsPropertyMap;
 
 /**
  * @author: svu
  */
-public class NotificationSendedDTO extends NotificationBoxDTO implements Serializable {
+public class NotificationSendedDTO extends NotificationBoxDTO {
 
   private String date;
   private String link;
@@ -41,6 +39,7 @@ public class NotificationSendedDTO extends NotificationBoxDTO implements Seriali
   public NotificationSendedDTO() {
     super();
     setSended(true);
+    setClassName(getClass().getSimpleName());
   }
 
   public String getDate() {
@@ -73,6 +72,22 @@ public class NotificationSendedDTO extends NotificationBoxDTO implements Seriali
 
   public void setSource(final String source) {
     this.source = source;
+  }
+
+  public static NotificationSendedDTO fromJSON(JsPropertyMap<Object> json) {
+    NotificationSendedDTO dto = new NotificationSendedDTO();
+
+    if (json == null) {
+      return dto;
+    }
+    dto.setClassName(dto.getClass().getSimpleName());
+
+    dto.setTitle(json.get("title") != null ? json.get("title").toString() : "");
+    dto.setDate(json.get("date") != null ? json.get("date").toString() : "");
+    dto.setLink(json.get("link") != null ? json.get("link").toString() : "");
+    dto.setSource(json.get("source") != null ? json.get("source").toString() : "");
+
+    return dto;
   }
 
 }

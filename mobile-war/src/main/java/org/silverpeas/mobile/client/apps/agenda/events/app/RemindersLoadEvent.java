@@ -24,8 +24,6 @@
 
 package org.silverpeas.mobile.client.apps.agenda.events.app;
 
-import org.silverpeas.mobile.client.apps.agenda.events.TimeRange;
-import org.silverpeas.mobile.shared.dto.almanach.CalendarDTO;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 
 public class RemindersLoadEvent extends AbstractAgendaAppEvent {

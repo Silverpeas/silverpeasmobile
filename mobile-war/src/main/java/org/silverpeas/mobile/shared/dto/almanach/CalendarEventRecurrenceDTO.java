@@ -24,7 +24,6 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
-import com.google.gwt.user.client.Window;
 import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;

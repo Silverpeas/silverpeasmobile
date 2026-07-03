@@ -24,6 +24,10 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.components.kmelia.KmeliaPublicationHelper;
 import org.silverpeas.components.kmelia.model.KmeliaPublication;
 import org.silverpeas.components.kmelia.model.KmeliaPublicationSort;
@@ -38,12 +42,10 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.comment.service.CommentServiceProvider;
-import org.silverpeas.core.contribution.attachment.AttachmentService;
 import org.silverpeas.core.contribution.attachment.AttachmentServiceProvider;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.attachment.util.SimpleDocumentList;
-import org.silverpeas.core.contribution.publication.dao.PublicationCriteria;
 import org.silverpeas.core.contribution.publication.model.*;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.io.media.image.thumbnail.ThumbnailSettings;
@@ -51,17 +53,16 @@ import org.silverpeas.core.node.model.NodeDetail;
 import org.silverpeas.core.node.model.NodePK;
 import org.silverpeas.core.node.service.NodeService;
 import org.silverpeas.core.sharing.services.SharingServiceProvider;
-import org.silverpeas.core.sharing.services.SharingTicketService;
 import org.silverpeas.core.silverstatistics.access.service.StatisticService;
-import org.silverpeas.kernel.bundle.LocalizationBundle;
-import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.core.util.ServiceProvider;
-import org.silverpeas.kernel.bundle.SettingBundle;
-import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.core.util.file.FileServerUtils;
-import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.bundle.LocalizationBundle;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.documents.AttachmentDTO;
@@ -69,15 +70,10 @@ import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.documents.TopicDTO;
 import org.silverpeas.mobile.shared.dto.tickets.TicketDTO;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**

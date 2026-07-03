@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.components.homepage;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Window;
 
 /**
  * @author svu

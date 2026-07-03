@@ -25,8 +25,6 @@
 package org.silverpeas.mobile.client.apps.resourcesManager.events.pages;
 
 
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.AbstractResourcesManagerAppEvent;
-import org.silverpeas.mobile.client.apps.resourcesManager.events.app.ResourcesManagerAppEventHandler;
 import org.silverpeas.mobile.shared.dto.reservations.ReservationDTO;
 
 public class DeletedReservationEvent extends AbstractResourcesManagerPagesEvent {

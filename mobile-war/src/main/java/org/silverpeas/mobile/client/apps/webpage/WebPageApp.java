@@ -25,8 +25,6 @@
 package org.silverpeas.mobile.client.apps.webpage;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.documents.pages.PublicationPage;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
@@ -34,15 +32,9 @@ import org.silverpeas.mobile.client.apps.navigation.events.app.external.Navigati
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
 import org.silverpeas.mobile.client.apps.webpage.resources.WebPageMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
-import org.silverpeas.mobile.shared.dto.ContentsTypes;
-import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.Apps;
-
-import java.util.ServiceLoader;
 
 public class WebPageApp extends App implements NavigationEventHandler {
 

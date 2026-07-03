@@ -28,8 +28,6 @@ import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
-import javax.ws.rs.PathParam;
-
 public class ServiceOrgChartGroup extends AbstractService {
 
   public final static String PATH = "/silverpeas/services/mobile/orgchartgroup/";

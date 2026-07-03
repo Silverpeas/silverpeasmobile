@@ -24,6 +24,10 @@
 
 package org.silverpeas.mobile.server.services;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.core.admin.service.OrganizationControllerProvider;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.questioncontainer.answer.model.Answer;
@@ -32,31 +36,13 @@ import org.silverpeas.core.questioncontainer.container.model.QuestionContainerHe
 import org.silverpeas.core.questioncontainer.container.model.QuestionContainerPK;
 import org.silverpeas.core.questioncontainer.container.service.QuestionContainerService;
 import org.silverpeas.core.questioncontainer.question.model.Question;
-import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.core.web.rs.annotation.Authorized;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
-import org.silverpeas.mobile.shared.dto.survey.AnswerDTO;
-import org.silverpeas.mobile.shared.dto.survey.QuestionDTO;
-import org.silverpeas.mobile.shared.dto.survey.ResponseDTO;
-import org.silverpeas.mobile.shared.dto.survey.SurveyDTO;
-import org.silverpeas.mobile.shared.dto.survey.SurveyDetailDTO;
+import org.silverpeas.mobile.shared.dto.survey.*;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Service de gestion des news.

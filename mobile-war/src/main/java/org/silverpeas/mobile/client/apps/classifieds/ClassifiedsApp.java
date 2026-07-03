@@ -25,8 +25,6 @@
 package org.silverpeas.mobile.client.apps.classifieds;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.AbstractClassifiedsAppEvent;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsAppEventHandler;
 import org.silverpeas.mobile.client.apps.classifieds.events.app.ClassifiedsLoadEvent;
@@ -43,7 +41,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.Notification;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.shared.dto.ContentDTO;

@@ -24,9 +24,11 @@
 
 package org.silverpeas.mobile.server.services;
 
-import org.silverpeas.core.mail.MailAddress;
-import org.silverpeas.core.mail.MailSending;
-import org.silverpeas.kernel.SilverpeasException;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
@@ -34,12 +36,15 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.annotation.WebService;
+import org.silverpeas.core.mail.MailAddress;
+import org.silverpeas.core.mail.MailSending;
 import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationResponse;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 import org.silverpeas.core.security.authentication.exception.AuthenticationException;
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
+import org.silverpeas.kernel.SilverpeasException;
 import org.silverpeas.mobile.server.dao.SecurityCode;
 import org.silverpeas.mobile.server.dao.statistics.StatisticsDAO;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
@@ -50,20 +55,10 @@ import org.silverpeas.mobile.shared.exceptions.AuthenticationException.Authentic
 import ua_parser.Client;
 import ua_parser.Parser;
 
-import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.NotAuthorizedException;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

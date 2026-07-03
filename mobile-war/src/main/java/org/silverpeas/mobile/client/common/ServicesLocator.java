@@ -24,14 +24,9 @@
 
 package org.silverpeas.mobile.client.common;
 
-import com.google.gwt.core.client.GWT;
-import org.fusesource.restygwt.client.Defaults;
-import org.silverpeas.mobile.client.common.network.RestAuthenticationDispatcher;
-import org.silverpeas.mobile.client.common.network.RestDispatcher;
 import org.silverpeas.mobile.shared.services.rest.*;
 
 public class ServicesLocator {
-  private static RestDispatcher dispatcher = new RestDispatcher();
 
   private static ServiceConnection serviceConnectionRest = new ServiceConnection();
   private static ServiceContact serviceContact = new ServiceContact();
@@ -41,10 +36,10 @@ public class ServicesLocator {
   private static ServiceDocuments serviceDocuments = new ServiceDocuments();
   private static ServiceMedia serviceMedia = new ServiceMedia();
   private static ServiceSearch serviceSearch = new ServiceSearch();
-  private static ServiceNotifications serviceNotifications = GWT.create(ServiceNotifications.class);
+  private static ServiceNotifications serviceNotifications = new ServiceNotifications();
   private static ServiceNews serviceNews = new ServiceNews();
   private static ServiceClassifieds serviceClassifieds = new ServiceClassifieds();
-  private static ServiceSurvey serviceSurvey = GWT.create(ServiceSurvey.class);
+  private static ServiceSurvey serviceSurvey = new ServiceSurvey();
   private static ServiceWorkflow serviceWorkflow = new ServiceWorkflow();
   private static ServiceHyperLink serviceHyperLink = new ServiceHyperLink();
 
@@ -52,7 +47,7 @@ public class ServicesLocator {
   private static ServiceAuthentication serviceRestAuthentication = new ServiceAuthentication();
   private static ServiceAlmanach serviceAlmanach = new ServiceAlmanach();
   private static ServiceUserCalendar serviceUserCalendar = new ServiceUserCalendar();
-  private static ServiceReminder serviceReminder = GWT.create(ServiceReminder.class);
+  private static ServiceReminder serviceReminder = new ServiceReminder();
   private static ServiceRestDocuments serviceRestDocuments = new ServiceRestDocuments();
   private static ServiceComment serviceRestComment = new ServiceComment();
 
@@ -67,19 +62,6 @@ public class ServicesLocator {
   private static ServiceResourcesManager serviceResourcesManager = new ServiceResourcesManager();
   private static ServiceOrgChartGroup serviceOrgChartGroup = new ServiceOrgChartGroup();
 
-  private static void initRestContext() {
-      Defaults.getServiceRoot().equals("/silverpeas/services");
-      Defaults.setServiceRoot("/silverpeas/services");
-      Defaults.setDispatcher(dispatcher);
-  }
-
-  private static void initRestContext(String login, String password, String domainId) {
-    RestAuthenticationDispatcher disp = new RestAuthenticationDispatcher(login, password, domainId);
-    Defaults.getServiceRoot().equals("/silverpeas/services");
-    Defaults.setServiceRoot("/silverpeas/services");
-    Defaults.setDispatcher(disp);
-  }
-
   public static ServiceAuthentication getRestServiceAuthentication(String login, String password, String domainId) {
     serviceRestAuthentication.initContext(login, password, domainId);
     return serviceRestAuthentication;
@@ -90,12 +72,10 @@ public class ServicesLocator {
   }
 
   public static ServiceResourcesManager getServiceResourcesManager() {
-    initRestContext();
     return serviceResourcesManager;
   }
 
   public static ServiceFaq getServiceFaq() {
-    initRestContext();
     return serviceFaq;
   }
 
@@ -128,7 +108,6 @@ public class ServicesLocator {
   }
 
   public static ServiceReminder getServiceReminder() {
-    initRestContext();
     return serviceReminder;
   }
 
@@ -161,7 +140,6 @@ public class ServicesLocator {
   }
 
   public static ServiceNotifications getServiceNotifications() {
-    initRestContext();
     return serviceNotifications;
   }
 

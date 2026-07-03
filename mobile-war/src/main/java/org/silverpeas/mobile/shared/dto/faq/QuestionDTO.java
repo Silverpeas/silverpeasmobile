@@ -27,7 +27,6 @@ package org.silverpeas.mobile.shared.dto.faq;
 
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.PropertyDTO;
 
 import java.io.Serializable;
 import java.util.ArrayList;

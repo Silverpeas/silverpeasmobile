@@ -24,14 +24,9 @@
 
 package org.silverpeas.mobile.shared.dto.classifieds;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-import org.silverpeas.mobile.shared.dto.MyLinkDTO;
-import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 
 import java.util.ArrayList;
 import java.util.List;

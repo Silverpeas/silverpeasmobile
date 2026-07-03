@@ -26,7 +26,6 @@ package org.silverpeas.mobile.client.common.network.rest;
 
 import elemental2.dom.Headers;
 import elemental2.dom.RequestInit;
-import org.bouncycastle.asn1.cms.AttributeTable;
 
 public class RestMethod {
 

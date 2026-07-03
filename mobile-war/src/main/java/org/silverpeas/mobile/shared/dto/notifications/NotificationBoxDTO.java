@@ -24,17 +24,21 @@
 
 package org.silverpeas.mobile.shared.dto.notifications;
 
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-
-import java.io.Serializable;
 
 /**
  * @author: svu
  */
-public class NotificationBoxDTO implements Serializable {
+public class NotificationBoxDTO extends BaseDTO {
 
   private long idNotif;
   private boolean sended;
+
+  public NotificationBoxDTO() {
+    super();
+  }
 
   public long getIdNotif() {
     return idNotif;
@@ -48,7 +52,36 @@ public class NotificationBoxDTO implements Serializable {
     return sended;
   }
 
-  protected void setSended(boolean sended) {
+  public void setSended(boolean sended) {
     this.sended = sended;
+  }
+
+  public Object toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+    json.set("idNotif", idNotif);
+    json.set("sended", Boolean.valueOf(sended));
+    return json;
+  }
+
+  public static NotificationBoxDTO fromJSON(JsPropertyMap<Object> json, NotificationBoxDTO dto) {
+
+    if (dto == null) {
+      dto = new NotificationBoxDTO();
+    }
+    if (json == null) {
+      return dto;
+    }
+
+    Object idNotif = json.get("idNotif");
+    if (idNotif != null) {
+      dto.setIdNotif((long) Js.asDouble(idNotif));
+    }
+
+    Object sended = json.get("sended");
+    if (sended != null) {
+      dto.setSended(Boolean.TRUE.equals(sended));
+    }
+
+    return dto;
   }
 }

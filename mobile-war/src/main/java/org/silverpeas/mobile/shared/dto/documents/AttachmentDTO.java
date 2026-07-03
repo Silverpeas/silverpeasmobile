@@ -25,10 +25,6 @@
 package org.silverpeas.mobile.shared.dto.documents;
 
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.media.MediaDTO;
-
-import java.io.Serializable;
-import java.util.Date;
 
 public class AttachmentDTO {
 

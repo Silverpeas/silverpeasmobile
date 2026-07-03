@@ -24,10 +24,7 @@
 
 package org.silverpeas.mobile.client.apps.classifieds.events.pages;
 
-import org.silverpeas.mobile.shared.dto.blog.PostDTO;
 import org.silverpeas.mobile.shared.dto.classifieds.ClassifiedsDTO;
-
-import java.util.List;
 
 public class ClassifiedsLoadedEvent extends AbstractClassifiedsPagesEvent {
 

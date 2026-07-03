@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.shared.dto.tickets;
 
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 
 import java.io.Serializable;
 

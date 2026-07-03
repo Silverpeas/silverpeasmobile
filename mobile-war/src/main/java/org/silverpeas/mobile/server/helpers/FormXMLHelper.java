@@ -1,11 +1,10 @@
 package org.silverpeas.mobile.server.helpers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.kernel.util.StringUtil;
-
-import jakarta.servlet.http.HttpServletRequest;
 import org.silverpeas.mobile.server.services.AbstractRestWebService;
 
 public class FormXMLHelper {

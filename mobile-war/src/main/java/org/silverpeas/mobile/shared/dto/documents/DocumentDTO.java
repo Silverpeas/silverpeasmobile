@@ -1,6 +1,5 @@
 package org.silverpeas.mobile.shared.dto.documents;
 
-import com.google.gwt.user.client.Window;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;

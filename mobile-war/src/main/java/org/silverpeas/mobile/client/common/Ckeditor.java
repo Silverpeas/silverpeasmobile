@@ -1,6 +1,5 @@
 package org.silverpeas.mobile.client.common;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 
 public class Ckeditor {

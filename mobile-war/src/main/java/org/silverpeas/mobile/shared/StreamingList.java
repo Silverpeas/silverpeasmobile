@@ -28,6 +28,8 @@ import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.media.*;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
+import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 import org.silverpeas.mobile.shared.dto.workflow.WorkflowInstanceDTO;
 
 import java.io.Serializable;
@@ -104,6 +106,10 @@ public class StreamingList<B> implements Serializable {
           result.add(SoundDTO.fromJSON(map));
         } else if (map.get("className").equals(WorkflowInstanceDTO.class.getSimpleName())) {
           result.add(WorkflowInstanceDTO.fromJSON(map));
+        } else if(map.get("className").equals(NotificationSendedDTO.class.getSimpleName())) {
+          result.add(NotificationSendedDTO.fromJSON(map));
+        } else if (map.get("className").equals(NotificationReceivedDTO.class.getSimpleName())) {
+          result.add(NotificationReceivedDTO.fromJSON(map));
         }
       }
       dto.setList(result);

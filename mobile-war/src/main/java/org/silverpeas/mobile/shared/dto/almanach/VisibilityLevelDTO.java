@@ -24,10 +24,6 @@
 
 package org.silverpeas.mobile.shared.dto.almanach;
 
-import jsinterop.base.JsPropertyMap;
-
-import java.io.Serializable;
-
 /**
  * @author svu
  */

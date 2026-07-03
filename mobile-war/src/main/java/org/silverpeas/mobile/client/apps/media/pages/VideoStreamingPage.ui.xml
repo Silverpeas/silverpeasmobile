@@ -24,7 +24,6 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:base="urn:import:org.silverpeas.mobile.client.components.base"
              xmlns:widgets="urn:import:org.silverpeas.mobile.client.apps.comments.pages.widgets">
     <g:HTMLPanel styleName="content">
       <h2 class="mediaName" ui:field="mediaTitle"></h2>

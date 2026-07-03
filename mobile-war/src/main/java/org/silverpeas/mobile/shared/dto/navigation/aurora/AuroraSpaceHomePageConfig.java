@@ -2,7 +2,6 @@ package org.silverpeas.mobile.shared.dto.navigation.aurora;
 
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.ShortCutLinkDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 

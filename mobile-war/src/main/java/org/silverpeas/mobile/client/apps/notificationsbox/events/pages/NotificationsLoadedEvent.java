@@ -28,8 +28,6 @@ package org.silverpeas.mobile.client.apps.notificationsbox.events.pages;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 
-import java.util.List;
-
 public class NotificationsLoadedEvent extends AbstractNotificationsBoxPagesEvent {
 
   StreamingList<NotificationReceivedDTO> notifications;

@@ -24,10 +24,6 @@
 
 package org.silverpeas.mobile.client.apps.agenda.events.pages;
 
-import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
-
-import java.util.List;
-
 public class EventSavedEvent extends AbstractEditEventPagesEvent {
 
   public EventSavedEvent(){

@@ -25,15 +25,10 @@
 package org.silverpeas.mobile.server.dao.statistics;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import org.silverpeas.kernel.SilverpeasRuntimeException;
-import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.mobile.server.dao.token.JDBCTokenRequester;
-import org.silverpeas.mobile.server.dao.token.TokenDAO;
-
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import org.silverpeas.kernel.logging.SilverLogger;
+
 import java.sql.Connection;
-import java.util.List;
 
 import static org.silverpeas.core.persistence.jdbc.DBUtil.openConnection;
 

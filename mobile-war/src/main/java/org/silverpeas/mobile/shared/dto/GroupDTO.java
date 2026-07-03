@@ -24,16 +24,10 @@
 
 package org.silverpeas.mobile.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 
-import java.io.Serializable;
+public class GroupDTO extends BaseDTO {
 
-@JsonTypeName("GroupDTO")
-public class GroupDTO extends BaseDTO implements Serializable {
-
-  private static final long serialVersionUID = 5388415881024885835L;
   private String name;
 
   public GroupDTO() {
@@ -72,5 +66,14 @@ public class GroupDTO extends BaseDTO implements Serializable {
     }
 
     return dto;
+  }
+
+  public JsPropertyMap<Object> toJSON() {
+    JsPropertyMap<Object> json = JsPropertyMap.of();
+    json.set("id", getId());
+    json.set("name", getName());
+    json.set("nbMembers", Integer.valueOf(getNbMembers()));
+    json.set("className", getClass().getSimpleName());
+    return json;
   }
 }

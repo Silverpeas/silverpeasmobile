@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.server.helpers;
 
+import jakarta.activation.MimetypesFileTypeMap;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.silverpeas.core.io.file.SilverpeasFile;
@@ -32,9 +33,7 @@ import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.mobile.server.common.SpMobileLogModule;
 
-import jakarta.activation.MimetypesFileTypeMap;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 /**

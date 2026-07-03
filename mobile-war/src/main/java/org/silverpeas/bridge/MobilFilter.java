@@ -24,6 +24,9 @@
 
 package org.silverpeas.bridge;
 
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.silverpeas.components.gallery.model.Media;
 import org.silverpeas.components.gallery.model.MediaPK;
 import org.silverpeas.components.gallery.service.GalleryService;
@@ -39,19 +42,11 @@ import org.silverpeas.core.questioncontainer.container.service.QuestionContainer
 import org.silverpeas.core.security.token.TokenGenerator;
 import org.silverpeas.core.security.token.TokenGeneratorProvider;
 import org.silverpeas.core.security.token.synchronizer.SynchronizerToken;
-import org.silverpeas.kernel.bundle.ResourceLocator;
-import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

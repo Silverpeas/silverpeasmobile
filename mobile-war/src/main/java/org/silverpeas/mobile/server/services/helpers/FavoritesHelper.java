@@ -28,7 +28,6 @@ import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.mylinks.service.MyLinksService;
 import org.silverpeas.core.util.ServiceProvider;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
-import org.silverpeas.mobile.shared.dto.FavoriteDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 
 import java.util.ArrayList;

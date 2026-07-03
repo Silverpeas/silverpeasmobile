@@ -1,6 +1,5 @@
 package org.silverpeas.mobile.shared.dto;
 
-import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 
 import java.io.Serializable;

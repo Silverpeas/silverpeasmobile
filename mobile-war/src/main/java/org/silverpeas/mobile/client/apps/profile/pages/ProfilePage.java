@@ -32,7 +32,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import org.apache.ecs.html.Div;
 import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.apps.profile.ProfileApp;
 import org.silverpeas.mobile.client.apps.profile.events.ProfileEvents;

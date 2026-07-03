@@ -26,8 +26,6 @@ package org.silverpeas.mobile.shared.dto.media;
 
 import jsinterop.base.JsPropertyMap;
 
-import java.io.Serializable;
-
 public class VideoStreamingDTO extends MediaDTO {
 
     private String duration;

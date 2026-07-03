@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.favorites;
 
 import com.google.gwt.core.client.GWT;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.favorites.events.app.*;
 import org.silverpeas.mobile.client.apps.favorites.events.pages.FavoritesLoadedEvent;
 import org.silverpeas.mobile.client.apps.favorites.pages.FavoritesPage;
@@ -37,7 +36,6 @@ import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -46,8 +44,9 @@ import org.silverpeas.mobile.shared.dto.MyLinkCategoryDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
 
-import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class FavoritesApp extends App implements FavoritesAppEventHandler, NavigationEventHandler {

@@ -42,8 +42,6 @@ import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDTO;
 import org.silverpeas.mobile.shared.dto.faq.ReplyDTO;
 
-import java.util.List;
-
 public class RepliesPage extends PageContent implements FaqPagesEventHandler {
 
   private static RepliesPageUiBinder uiBinder = GWT.create(RepliesPageUiBinder.class);

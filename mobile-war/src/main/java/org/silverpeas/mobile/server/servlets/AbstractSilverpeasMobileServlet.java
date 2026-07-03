@@ -24,17 +24,16 @@
 
 package org.silverpeas.mobile.server.servlets;
 
-import org.silverpeas.core.admin.user.model.UserDetail;
-import org.silverpeas.kernel.bundle.ResourceLocator;
-import org.silverpeas.kernel.bundle.SettingBundle;
-import org.silverpeas.core.web.mvc.controller.MainSessionController;
-import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.mobile.server.helpers.AntivirusHelper;
-import org.silverpeas.mobile.server.helpers.AntivirusResult;
-
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.web.mvc.controller.MainSessionController;
+import org.silverpeas.kernel.bundle.ResourceLocator;
+import org.silverpeas.kernel.bundle.SettingBundle;
+import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.mobile.server.helpers.AntivirusHelper;
+import org.silverpeas.mobile.server.helpers.AntivirusResult;
 import org.silverpeas.mobile.server.services.AbstractRestWebService;
 
 import java.io.File;

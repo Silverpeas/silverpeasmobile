@@ -30,13 +30,10 @@ import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-import org.silverpeas.mobile.shared.dto.GroupDTO;
-import org.silverpeas.mobile.shared.dto.UserDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormLayerDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.FormRequestDTO;
 import org.silverpeas.mobile.shared.dto.formsonline.ValidationRequestDTO;
-import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import org.silverpeas.mobile.shared.helpers.UserFieldHelper;
 
 import java.util.List;

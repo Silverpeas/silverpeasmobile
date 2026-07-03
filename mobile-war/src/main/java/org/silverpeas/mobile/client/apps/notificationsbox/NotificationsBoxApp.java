@@ -25,34 +25,25 @@
 package org.silverpeas.mobile.client.apps.notificationsbox;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
-import org.fusesource.restygwt.client.Method;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.AbstractNavigationEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationAppInstanceChangedEvent;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationEventHandler;
 import org.silverpeas.mobile.client.apps.navigation.events.app.external.NavigationShowContentEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.AbstractNotificationsBoxAppEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.DeleteNotificationsEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.MarkAsReadNotificationsEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsBoxAppEventHandler;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsLoadEvent;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationsSendedLoadEvent;
+import org.silverpeas.mobile.client.apps.notificationsbox.events.app.*;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsLoadedEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.events.pages.NotificationsSendedLoadedEvent;
 import org.silverpeas.mobile.client.apps.notificationsbox.pages.NotificationsBoxPage;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.ServicesLocator;
 import org.silverpeas.mobile.client.common.app.App;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineBackground;
-import org.silverpeas.mobile.client.common.network.MethodCallbackOnlineOnly;
+import org.silverpeas.mobile.client.common.network.rest.RestMethod;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineBackground;
+import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.ContentsTypes;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
-
-import java.util.List;
 
 public class NotificationsBoxApp extends App
     implements NotificationsBoxAppEventHandler, NavigationEventHandler {
@@ -86,8 +77,8 @@ public class NotificationsBoxApp extends App
   }
 
   private void loadNotifications(NotificationsLoadEvent event, int nbCall) {
-    MethodCallbackOnlineBackground action =
-        new MethodCallbackOnlineBackground<StreamingList<NotificationReceivedDTO>>() {
+    RestMethodCallbackOnlineBackground action =
+        new RestMethodCallbackOnlineBackground<StreamingList<NotificationReceivedDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -95,7 +86,7 @@ public class NotificationsBoxApp extends App
           }
 
           @Override
-          public void onSuccess(final Method method,
+          public void onSuccess(final RestMethod method,
               final StreamingList<NotificationReceivedDTO> notificationReceivedDTOS) {
             super.onSuccess(method, notificationReceivedDTOS);
             EventBus.getInstance()
@@ -110,7 +101,7 @@ public class NotificationsBoxApp extends App
 
   @Override
   public void readenNotification(final NotificationReadenEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -123,7 +114,7 @@ public class NotificationsBoxApp extends App
   @Override
   public void deleteNotifications(final DeleteNotificationsEvent event) {
 
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -131,9 +122,9 @@ public class NotificationsBoxApp extends App
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
+      public void onSuccess(final RestMethod method, final Void unused) {
         super.onSuccess(method, unused);
-        if (event.getSelection().get(0) instanceof NotificationSendedDTO) {
+        if (event.getSelection().get(0).getClassName().equals(NotificationSendedDTO.class.getSimpleName())) {
           loadNotificationsSended(new NotificationsSendedLoadEvent(), 0);
         } else {
           loadNotifications(new NotificationsLoadEvent(), 0);
@@ -145,7 +136,7 @@ public class NotificationsBoxApp extends App
 
   @Override
   public void markAsReadNotifications(final MarkAsReadNotificationsEvent event) {
-    MethodCallbackOnlineOnly action = new MethodCallbackOnlineOnly<Void>() {
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
       public void attempt() {
         super.attempt();
@@ -153,7 +144,7 @@ public class NotificationsBoxApp extends App
       }
 
       @Override
-      public void onSuccess(final Method method, final Void unused) {
+      public void onSuccess(final RestMethod method, final Void unused) {
         super.onSuccess(method, unused);
         loadNotifications(new NotificationsLoadEvent(), 0);
       }
@@ -168,8 +159,8 @@ public class NotificationsBoxApp extends App
   }
 
   private void loadNotificationsSended(NotificationsSendedLoadEvent event, int nbCall) {
-    MethodCallbackOnlineOnly action =
-        new MethodCallbackOnlineOnly<StreamingList<NotificationSendedDTO>>() {
+    RestMethodCallbackOnlineOnly action =
+        new RestMethodCallbackOnlineOnly<StreamingList<NotificationSendedDTO>>() {
           @Override
           public void attempt() {
             super.attempt();
@@ -177,7 +168,7 @@ public class NotificationsBoxApp extends App
           }
 
           @Override
-          public void onSuccess(final Method method,
+          public void onSuccess(final RestMethod method,
               final StreamingList<NotificationSendedDTO> notificationSendedDTOS) {
             super.onSuccess(method, notificationSendedDTOS);
             EventBus.getInstance()

@@ -24,10 +24,7 @@
 
 package org.silverpeas.mobile.client.apps.documents.events.pages.navigation;
 
-import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
-
-import java.util.List;
 
 public class GedItemPublishedEvent extends AbstractGedNavigationPagesEvent {
 

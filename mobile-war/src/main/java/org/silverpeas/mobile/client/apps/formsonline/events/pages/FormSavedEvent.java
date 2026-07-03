@@ -24,10 +24,6 @@
 
 package org.silverpeas.mobile.client.apps.formsonline.events.pages;
 
-import org.silverpeas.mobile.shared.dto.FormFieldDTO;
-
-import java.util.List;
-
 public class FormSavedEvent extends AbstractFormsOnlinePagesEvent {
 
 

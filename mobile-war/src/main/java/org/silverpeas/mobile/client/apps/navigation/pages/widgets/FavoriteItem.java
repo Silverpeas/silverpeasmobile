@@ -27,7 +27,6 @@ package org.silverpeas.mobile.client.apps.navigation.pages.widgets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.TouchEndEvent;
 import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchStartEvent;
@@ -35,22 +34,15 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.silverpeas.mobile.client.apps.notificationsbox.events.app.NotificationReadenEvent;
-import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.navigation.LinksManager;
 import org.silverpeas.mobile.client.components.base.widgets.SelectableItem;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
-import org.silverpeas.mobile.shared.dto.FavoriteDTO;
 import org.silverpeas.mobile.shared.dto.MyLinkDTO;
 import org.silverpeas.mobile.shared.dto.hyperlink.HyperLinkDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
-import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 
 public class FavoriteItem extends SelectableItem {
 

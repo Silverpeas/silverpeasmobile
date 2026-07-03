@@ -24,10 +24,10 @@
 
 package org.silverpeas.mobile.server.dao.token;
 
-import org.silverpeas.kernel.SilverpeasRuntimeException;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import org.silverpeas.kernel.SilverpeasRuntimeException;
+
 import java.sql.Connection;
 import java.util.List;
 

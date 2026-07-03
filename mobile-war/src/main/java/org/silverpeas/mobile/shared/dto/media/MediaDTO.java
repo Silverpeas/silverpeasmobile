@@ -27,8 +27,6 @@ package org.silverpeas.mobile.shared.dto.media;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 
-import java.io.Serializable;
-
 public class MediaDTO extends BaseDTO {
 
     private boolean download;

@@ -26,16 +26,10 @@ package org.silverpeas.mobile.server.dao.statistics;
 
 
 import jakarta.enterprise.context.ApplicationScoped;
-import org.silverpeas.core.persistence.jdbc.DBUtil;
 
-import jakarta.inject.Singleton;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * @author svu

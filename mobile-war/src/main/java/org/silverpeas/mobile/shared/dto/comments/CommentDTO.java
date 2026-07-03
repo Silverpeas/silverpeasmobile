@@ -24,10 +24,10 @@
 
 package org.silverpeas.mobile.shared.dto.comments;
 
-import com.google.gwt.user.client.Window;
 import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
+
 import java.io.Serializable;
 
 /**

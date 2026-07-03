@@ -25,15 +25,14 @@
 package org.silverpeas.mobile.shared.dto;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import elemental2.core.JsArray;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.almanach.CalendarEventDTO;
 import org.silverpeas.mobile.shared.dto.documents.PublicationDTO;
 import org.silverpeas.mobile.shared.dto.navigation.ApplicationInstanceDTO;
+import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import org.silverpeas.mobile.shared.dto.navigation.SpaceDTO;
 import org.silverpeas.mobile.shared.dto.navigation.aurora.AuroraSpaceHomePageConfig;
-import org.silverpeas.mobile.shared.dto.navigation.SilverpeasObjectDTO;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
 import java.io.Serializable;

@@ -32,22 +32,19 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.*;
-import org.silverpeas.mobile.client.apps.contacts.events.pages.AbstractContactsPagesEvent;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.contacts.pages.ContactPage;
-import org.silverpeas.mobile.client.apps.orgchartgroup.events.app.AbstractOrgChartGroupAppEvent;
 import org.silverpeas.mobile.client.apps.orgchartgroup.events.app.ContactLoadEvent;
 import org.silverpeas.mobile.client.apps.orgchartgroup.events.ui.AbstractOrgChartGroupeUIEvent;
 import org.silverpeas.mobile.client.apps.orgchartgroup.events.ui.ContactLoadedEvent;
 import org.silverpeas.mobile.client.apps.orgchartgroup.events.ui.OrgChartGroupUIEventHandler;
-import org.silverpeas.mobile.client.apps.orgchartgroup.pages.OrgChartGroupPage;
 import org.silverpeas.mobile.client.apps.orgchartgroup.resources.OrgChartGroupMessages;
 import org.silverpeas.mobile.client.common.EventBus;
-import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.PropertyDTO;
 import org.silverpeas.mobile.shared.dto.UserDTO;
-import org.silverpeas.mobile.shared.dto.orgchart.GroupOrgChartDTO;
 
 public class OrgaChartUserItem extends Composite implements OrgChartGroupUIEventHandler {
 

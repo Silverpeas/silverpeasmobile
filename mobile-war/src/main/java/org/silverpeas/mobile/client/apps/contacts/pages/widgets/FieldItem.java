@@ -27,7 +27,10 @@ package org.silverpeas.mobile.client.apps.contacts.pages.widgets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.contacts.resources.ContactsResources;
 import org.silverpeas.mobile.client.resources.ApplicationResources;
 

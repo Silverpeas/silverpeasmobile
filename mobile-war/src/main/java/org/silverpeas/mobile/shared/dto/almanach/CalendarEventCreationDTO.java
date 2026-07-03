@@ -25,9 +25,7 @@
 package org.silverpeas.mobile.shared.dto.almanach;
 
 import jsinterop.base.JsPropertyMap;
-import org.silverpeas.mobile.shared.dto.reminder.ReminderDTO;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

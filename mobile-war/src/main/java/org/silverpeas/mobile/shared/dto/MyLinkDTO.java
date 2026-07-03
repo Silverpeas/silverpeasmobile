@@ -24,12 +24,6 @@
 
 package org.silverpeas.mobile.shared.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.gwt.core.client.GWT;
-import jsinterop.base.JsPropertyMap;
-
-import java.io.Serializable;
-
 import com.google.gwt.core.client.GWT;
 import jsinterop.base.JsPropertyMap;
 

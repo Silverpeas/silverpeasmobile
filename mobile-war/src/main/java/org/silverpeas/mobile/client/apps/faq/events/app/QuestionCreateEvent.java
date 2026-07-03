@@ -24,8 +24,6 @@
 
 package org.silverpeas.mobile.client.apps.faq.events.app;
 
-import org.silverpeas.mobile.client.apps.faq.events.pages.AbstractFaqPagesEvent;
-import org.silverpeas.mobile.client.apps.faq.events.pages.FaqPagesEventHandler;
 import org.silverpeas.mobile.shared.dto.faq.QuestionDetailDTO;
 
 public class QuestionCreateEvent extends AbstractFaqAppEvent {

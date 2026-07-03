@@ -26,7 +26,6 @@ package org.silverpeas.mobile.shared.dto.blog;
 
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.DomainDTO;
 
 import java.io.Serializable;
 

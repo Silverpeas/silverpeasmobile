@@ -28,11 +28,7 @@ import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
-import org.silverpeas.mobile.shared.dto.media.MediaDTO;
-import org.silverpeas.mobile.shared.dto.media.PhotoDTO;
-import org.silverpeas.mobile.shared.dto.media.SoundDTO;
-import org.silverpeas.mobile.shared.dto.media.VideoDTO;
-import org.silverpeas.mobile.shared.dto.media.VideoStreamingDTO;
+import org.silverpeas.mobile.shared.dto.media.*;
 
 /**
  * Service to manage requests related to media library.

@@ -28,7 +28,6 @@ import elemental2.core.Global;
 import jsinterop.base.Js;
 import jsinterop.base.JsPropertyMap;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
-
 import org.silverpeas.mobile.shared.dto.comments.CommentDTO;
 
 import java.util.List;

@@ -25,7 +25,6 @@
 package org.silverpeas.mobile.client.apps.config.pages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,7 +32,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -46,10 +44,7 @@ import org.silverpeas.mobile.client.apps.config.events.pages.ConfigPagesEventHan
 import org.silverpeas.mobile.client.apps.config.resources.ConfigMessages;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.components.base.PageContent;
-import org.silverpeas.mobile.client.components.userselection.widgets.events.ChangeEvent;
 import org.silverpeas.mobile.shared.dto.configuration.Config;
-
-import javax.print.Doc;
 
 /**
  * @author: svu

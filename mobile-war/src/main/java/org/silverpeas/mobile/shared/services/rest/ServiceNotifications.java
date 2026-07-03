@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000 - 2025 Silverpeas
+ * Copyright (C) 2000 - 2026 Silverpeas
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -24,63 +24,126 @@
 
 package org.silverpeas.mobile.shared.services.rest;
 
-import org.fusesource.restygwt.client.MethodCallback;
-import org.fusesource.restygwt.client.RestService;
+import elemental2.core.Global;
+import elemental2.core.JsArray;
+import jsinterop.base.Js;
+import jsinterop.base.JsPropertyMap;
+import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.StreamingList;
 import org.silverpeas.mobile.shared.dto.BaseDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationBoxDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationReceivedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationSendedDTO;
 import org.silverpeas.mobile.shared.dto.notifications.NotificationToSendDTO;
+import org.silverpeas.mobile.shared.helpers.UserFieldHelper;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/mobile/notification")
-public interface ServiceNotifications extends RestService {
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("allowedUsersAndGroups/{componentId}/{contentId}")
-  void getAllowedUsersAndGroups(@PathParam("componentId") String componentId, @PathParam("contentId") String contentId, MethodCallback<List<BaseDTO>> callback);
+/**
+ * Service to manage requests related to notifications.
+ * @author svu
+ */
+public class ServiceNotifications extends AbstractService {
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("readed/{id}")
-  void markAsReaden(@PathParam("id") long id, MethodCallback<Void> callback);
+  private static final String PATH = "/silverpeas/services/mobile/notification";
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("readed/")
-  void markAsRead(List<NotificationBoxDTO> selection, MethodCallback<Void> callback);
+  /**
+   * Retrieves allowed users and groups for a given component and content.
+   * @param componentId The ID of the component.
+   * @param contentId The ID of the content.
+   * @param callback The callback to handle the response (list of BaseDTO).
+   */
+  public void getAllowedUsersAndGroups(String componentId, String contentId, RestCallback<List<BaseDTO>> callback) {
+    String url = PATH + "/allowedUsersAndGroups/" + encode(componentId) + "/" + encode(contentId);
+    get(url, result -> mapArray(result, UserFieldHelper::userFieldFromJSON), callback);
+  }
 
-  @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("")
-  void delete(List<NotificationBoxDTO> selection, MethodCallback<Void> callback);
+  /**
+   * Marks a notification as read by its ID.
+   * @param id The ID of the notification to mark as read.
+   * @param callback The callback to handle the response (no data returned).
+   */
+  public void markAsReaden(long id, RestCallback<Void> callback) {
+    String url = PATH + "/readed/" + id;
+    put(url, null, result -> null, callback);
+  }
 
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("send/")
-  void send(NotificationToSendDTO notification, MethodCallback<Void> callback);
+  /**
+   * Marks a list of notifications as read.
+   * @param selection The list of notifications to mark as read.
+   * @param callback The callback to handle the response (no data returned).
+   */
+  public void markAsRead(List<NotificationBoxDTO> selection, RestCallback<Void> callback) {
+    String url = PATH + "/readed/";
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("sended/{callNumber}")
-  void getUserSendedNotifications(@PathParam("callNumber") int callNumber, MethodCallback<StreamingList<NotificationSendedDTO>> callback);
+    JsArray<Object> array = new JsArray<>();
+    for (NotificationBoxDTO sel : selection) {
+      array.push(sel.toJSON());
+    }
+    String payload = Global.JSON.stringify(array);
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("received/{callNumber}")
-  void getUserNotifications(@PathParam("callNumber") int callNumber, MethodCallback<StreamingList<NotificationReceivedDTO>> callback);
+    put(
+            url,
+            payload,
+            result -> null,
+            callback
+    );
+  }
+
+  /**
+   * Deletes a list of notifications.
+   * @param selection The list of notifications to delete.
+   * @param callback The callback to handle the response (no data returned).
+   */
+  public void delete(List<NotificationBoxDTO> selection, RestCallback<Void> callback) {
+    String url = PATH;
+
+    JsArray<Object> array = new JsArray<>();
+    for (NotificationBoxDTO sel : selection) {
+      array.push(sel.toJSON());
+    }
+    String payload = Global.JSON.stringify(array);
+
+    delete(
+            url,
+            payload,
+            result -> null,
+            callback
+    );
+  }
+
+  /**
+   * Sends a notification.
+   * @param notification The notification to send.
+   * @param callback The callback to handle the response (no data returned).
+   */
+  public void send(NotificationToSendDTO notification, RestCallback<Void> callback) {
+    String url = PATH + "/send/";
+    put(
+            url,
+            Global.JSON.stringify(Js.asAny(notification.toJSON())),
+            result -> null,
+            callback
+    );
+  }
+
+  /**
+   * Retrieves sent notifications for the current user.
+   * @param callNumber The call number for pagination.
+   * @param callback The callback to handle the response (StreamingList of NotificationSendedDTO).
+   */
+  public void getUserSendedNotifications(int callNumber, RestCallback<StreamingList<NotificationSendedDTO>> callback) {
+    String url = PATH + "/sended/" + callNumber;
+    get(url, result -> StreamingList.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
+
+  /**
+   * Retrieves received notifications for the current user.
+   * @param callNumber The call number for pagination.
+   * @param callback The callback to handle the response (StreamingList of NotificationReceivedDTO).
+   */
+  public void getUserNotifications(int callNumber, RestCallback<StreamingList<NotificationReceivedDTO>> callback) {
+    String url = PATH + "/received/" + callNumber;
+    get(url, result -> StreamingList.fromJSON((JsPropertyMap<Object>) result), callback);
+  }
 }

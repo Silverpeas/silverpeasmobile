@@ -25,15 +25,7 @@
 package org.silverpeas.mobile.client.common.reconizer.swipe;
 
 import com.google.gwt.dom.client.Touch;
-import com.google.gwt.event.dom.client.HasAllTouchHandlers;
-import com.google.gwt.event.dom.client.TouchCancelEvent;
-import com.google.gwt.event.dom.client.TouchCancelHandler;
-import com.google.gwt.event.dom.client.TouchEndEvent;
-import com.google.gwt.event.dom.client.TouchEndHandler;
-import com.google.gwt.event.dom.client.TouchMoveEvent;
-import com.google.gwt.event.dom.client.TouchMoveHandler;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.dom.client.*;
 import org.silverpeas.mobile.client.common.EventBus;
 import org.silverpeas.mobile.client.common.event.touch.TouchCopy;
 
