@@ -499,7 +499,7 @@ public class ServiceDocuments extends AbstractRestWebService {
         PublicationDetail pubLinked =
             getPubBm().getDetail(new PublicationPK(link.getTarget().getId()));
         PublicationDTO linkDto = new PublicationDTO();
-        linkDto.setId(link.getId());
+        linkDto.setId(link.getTarget().getId());
         linkDto.setName(pubLinked.getName());
         linkDto.setUpdateDate(sdf.format(pubLinked.getLastUpdateDate()));
         linkedPub.add(linkDto);

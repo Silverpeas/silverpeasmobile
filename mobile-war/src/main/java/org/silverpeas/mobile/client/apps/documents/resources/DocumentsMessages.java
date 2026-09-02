@@ -66,4 +66,6 @@ public interface DocumentsMessages extends Messages {
   String draftOut();
 
   String edit();
+
+  String linkedPublicationsTitle();
 }

@@ -75,7 +75,7 @@ public class PublicationPage extends PageContent
   private boolean notifiable;
 
   @UiField
-  HeadingElement title;
+  HeadingElement title, titleLinkedPublications;
   @UiField
   FocusPanel supercontainer;
   @UiField
@@ -317,6 +317,7 @@ public class PublicationPage extends PageContent
         content.getStyle().setDisplay(Style.Display.NONE);
       }
       // links
+      titleLinkedPublications.setInnerText(msg.linkedPublicationsTitle());
       for (PublicationDTO linkedPublication : publication.getLinkedPublications()) {
         LinkedPublicationItem item = new LinkedPublicationItem();
         item.setData(linkedPublication);
