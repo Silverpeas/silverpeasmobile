@@ -72,4 +72,6 @@ public interface DocumentsMessages extends Messages {
   String fileNotVerifiedError();
 
   String fileInfectedError();
+
+  String linkedPublicationsTitle();
 }

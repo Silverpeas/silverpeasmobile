@@ -1109,12 +1109,17 @@ audio::-webkit-media-controls-enclosure {
 
 }
 
-.publiName, .mediaName, .title-instruction {
+.publiName, .mediaName, .title-instruction, .titleLinkedPublications {
   padding:0 2em 0.75em 1em;
   margin: 0;
   font-size:1.05em;
   font-weight: normal;
   min-height: 1.5em;
+}
+
+.titleLinkedPublications {
+  padding-top: 1em;
+  padding-bottom: 0;
 }
 
 .appHeader {
@@ -1173,6 +1178,10 @@ audio::-webkit-media-controls-enclosure {
 .list-detail-event  > * {
   padding:1em;
   padding-left: 1em;
+}
+
+#linkedPublications {
+  padding-left : 1em;
 }
 
 #linkedPublications li {
