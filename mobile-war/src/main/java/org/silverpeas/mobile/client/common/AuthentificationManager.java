@@ -159,8 +159,15 @@ public class AuthentificationManager {
           new RestCallback<UserProfileDTO>() {
             @Override
             public void onFailure(final RestMethod method, final Throwable throwable) {
+              String twoFactorRequired = method.getHeaders() == null
+                  ? null
+                  : method.getHeaders().get("X-Silverpeas-2FA-Required");
+              GWT.log("Authentication failed: status=" + method.getStatusCode()
+                  + ", X-Silverpeas-2FA-Required=" + twoFactorRequired);
+
               if (method.getStatusCode() == 401 &&
-                  "true".equalsIgnoreCase(method.getHeaders().get("X-Silverpeas-2FA-Required"))) {
+                  "true".equalsIgnoreCase(twoFactorRequired)) {
+                GWT.log("2FA challenge detected, displaying TwoFactorPage");
                 Notification.activityStop();
                 TwoFactorPage page = new TwoFactorPage();
                 page.setIds(login, password, domainId);
