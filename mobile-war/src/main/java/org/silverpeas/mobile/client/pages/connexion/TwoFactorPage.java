@@ -55,7 +55,7 @@ public class TwoFactorPage extends PageContent {
   @UiField(provided = true)
   protected ApplicationMessages msg = null;
   @UiField
-  Anchor sendCode, go;
+  Anchor go;
 
   @UiField
   PasswordTextBox codeField;
@@ -101,13 +101,6 @@ public class TwoFactorPage extends PageContent {
   @UiHandler("codeField")
   void codeChange(ChangeEvent event) {
     codeField.getElement().getStyle().clearBackgroundColor();
-  }
-
-  @UiHandler("sendCode")
-  void requestCode(ClickEvent event) {
-    codeField.setText("");
-    codeField.getElement().getStyle().clearBackgroundColor();
-    codeField.setFocus(true);
   }
 
   /**
