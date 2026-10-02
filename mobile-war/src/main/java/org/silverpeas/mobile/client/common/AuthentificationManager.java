@@ -173,7 +173,7 @@ public class AuthentificationManager {
 
             @Override
             public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-              completeAuthentication(login, password, domainId, userProfile, attempt);
+              completeAuthentication(login, password, domainId, method, userProfile, attempt);
             }
           });
     } else {
@@ -206,8 +206,10 @@ public class AuthentificationManager {
   }
 
   private void completeAuthentication(final String login, final String password,
-      final String domainId, final UserProfileDTO userProfile, final Command attempt) {
-    addHeader(XSTKN, methodHeader(userProfile, XSTKN));
+      final String domainId, final RestMethod authenticationMethod,
+      final UserProfileDTO userProfile, final Command attempt) {
+    addHeader(XSTKN, authenticationMethod.getHeaders().get(XSTKN));
+    addHeader(XSilverpeasSession, authenticationMethod.getHeaders().get(XSilverpeasSession));
     SpMobil.setUserProfile(userProfile);
 
     RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<DetailUserDTO>() {
@@ -264,9 +266,6 @@ public class AuthentificationManager {
     action.attempt();
   }
 
-  private String methodHeader(UserProfileDTO ignored, String name) {
-    return null;
-  }
 
   private void handleAuthenticationFailure(final String login, final String domainId,
       final RestMethod method, final Throwable throwable) {
