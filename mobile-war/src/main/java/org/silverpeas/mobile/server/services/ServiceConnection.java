@@ -39,7 +39,6 @@ import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.security.authentication.exception.AuthenticationException;
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
-import org.silverpeas.mobile.server.dao.SecurityCode;
 import org.silverpeas.mobile.server.dao.statistics.StatisticsDAO;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
