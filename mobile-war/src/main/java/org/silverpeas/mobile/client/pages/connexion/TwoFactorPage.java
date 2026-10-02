@@ -70,7 +70,6 @@ public class TwoFactorPage extends PageContent {
     this.login = login;
     this.password = password;
     this.domainId = domainId;
-    requestCode(null);
   }
 
   interface TwoFactorPageUiBinder extends UiBinder<Widget, TwoFactorPage> {}
@@ -108,14 +107,7 @@ public class TwoFactorPage extends PageContent {
   void requestCode(ClickEvent event) {
     codeField.setText("");
     codeField.getElement().getStyle().clearBackgroundColor();
-    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceConnection().generateSecurityCode(login, domainId, this);
-      }
-    };
-    action.attempt();
+    codeField.setFocus(true);
   }
 
   /**
@@ -123,24 +115,14 @@ public class TwoFactorPage extends PageContent {
    */
   @UiHandler("go")
   void connexion(ClickEvent e) {
-    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceConnection().checkSecurityCode(login, domainId, codeField.getText(), this);
-      }
+    String code = codeField.getText();
+    if (code == null || code.trim().isEmpty()) {
+      codeField.getElement().getStyle().setBackgroundColor("#ec9c01");
+      return;
+    }
 
-      @Override
-      public void onSuccess(final RestMethod method, Boolean valid) {
-        super.onSuccess(method,valid);
-        if (valid) {
-          AuthentificationManager.getInstance()
-                  .authenticateOnSilverpeas(login, password, domainId, null);
-        } else {
-          codeField.getElement().getStyle().setBackgroundColor("#ec9c01");
-        }
-      }
-    };
-    action.attempt();
+    codeField.getElement().getStyle().clearBackgroundColor();
+    AuthentificationManager.getInstance()
+        .authenticateTwoFactor(login, password, domainId, code.trim(), null);
   }
 }
