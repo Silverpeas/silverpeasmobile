@@ -48,7 +48,7 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Silverpeas &gt; Ecran de connexion")
   SafeHtml loginTitle();
 
-  @DefaultMessage("Silverpeas &gt; Code de sécurité")
+  @DefaultMessage("Silverpeas &gt; Authentification à deux facteurs")
   SafeHtml twoFactorTitle();
 
   @DefaultMessage("Information")
