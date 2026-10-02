@@ -34,6 +34,7 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.event.authentication.AuthenticationErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
+import org.silverpeas.mobile.client.pages.connexion.TwoFactorPage;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
@@ -155,127 +156,154 @@ public class AuthentificationManager {
     Notification.activityStart();
     if (NetworkHelper.isOnline()) {
       ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
-
           new RestCallback<UserProfileDTO>() {
             @Override
             public void onFailure(final RestMethod method, final Throwable throwable) {
-              int statusError = method.getStatusCode();
-              if (statusError == 403) {
+              if (method.getStatusCode() == 401 &&
+                  "true".equalsIgnoreCase(method.getHeaders().get("X-Silverpeas-2FA-Required"))) {
                 Notification.activityStop();
-                SpMobil.displayMainPage();
-              } else if (statusError == 401 || statusError == 500) {
-
-                RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
-                  @Override
-                  public void attempt() {
-                    super.attempt();
-                    ServicesLocator.getServiceConnection().userExist(login, domainId, this);
-                  }
-
-                  @Override
-                  public void onFailure(final RestMethod method, final Throwable t) {
-                    super.onFailure(method, t);
-                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
-                  }
-
-                  @Override
-                  public void onSuccess(final RestMethod method, final Boolean exist) {
-                    super.onSuccess(method, exist);
-                    if (exist) {
-                      AuthenticationException ex = new AuthenticationException(
-                          AuthenticationException.AuthenticationError.PwdNotAvailable);
-                      ex.setLogin(login);
-                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
-                    } else {
-                      AuthenticationException ex = new AuthenticationException(
-                          AuthenticationException.AuthenticationError.LoginNotAvailable);
-                      ex.setLogin(login);
-                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
-                    }
-                  }
-                };
-                action.attempt();
-              } else {
-                EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                TwoFactorPage page = new TwoFactorPage();
+                page.setIds(login, password, domainId);
+                com.google.gwt.user.client.ui.RootPanel.get().clear();
+                com.google.gwt.user.client.ui.RootPanel.get().add(page);
+                return;
               }
+              handleAuthenticationFailure(login, domainId, method, throwable);
             }
 
             @Override
             public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-
-              AuthentificationManager.getInstance().addHeader("X-STKN", method.getHeaders().get("X-STKN"));
-              AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session",
-                  method.getHeaders().get("X-Silverpeas-Session"));
-
-              SpMobil.setUserProfile(userProfile);
-
-
-              RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<DetailUserDTO>() {
-                @Override
-                public void attempt() {
-                  super.attempt();
-                  List<String> ids = new ArrayList<>();
-                  ids.add(login);
-                  ids.add(password);
-                  ids.add(domainId);
-
-                  ServicesLocator.getServiceConnection().login(ids, this);
-                }
-
-                @Override
-                public void onSuccess(final RestMethod method, final DetailUserDTO user) {
-                  super.onSuccess(method, user);
-                  SpMobil.setUser(user, true);
-
-                  ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<String>() {
-                    @Override
-                    public void onFailure(final RestMethod method, final Throwable throwable) {
-                      if (throwable instanceof AuthenticationException) {
-                        EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
-                      } else {
-                        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-                      }
-                    }
-
-                    @Override
-                    public void onSuccess(final RestMethod method, final String showTermsOfServices) {
-                      Notification.activityStop();
-                      AuthentificationManager.getInstance().storeUser(user, userProfile, login,
-                          password, domainId);
-                      if (Boolean.parseBoolean(showTermsOfServices)) {
-                        SpMobil.displayTermsOfServicePage();
-                      } else {
-                        if (attempt == null) {
-                          SpMobil.displayMainPage();
-                        } else {
-                          attempt.execute();
-                        }
-                      }
-                    }
-                  });
-                }
-
-                @Override
-                public void onFailure(final RestMethod method, final Throwable t) {
-                  //super.onFailure(method, t);
-                  GWT.log("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
-                  if (t instanceof AuthenticationException) {
-                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
-                  } else {
-                    EventBus.getInstance().fireEvent(new ErrorEvent(t));
-                  }
-                }
-              };
-              action.attempt();
+              completeAuthentication(login, password, domainId, userProfile, attempt);
             }
           });
     } else {
-      //TODO : terms of service in offline mode ?
       Notification.activityStop();
       loadUser();
       SpMobil.displayMainPage();
     }
   }
+
+  public void authenticateTwoFactor(final String login, final String password,
+      final String domainId, final String code, final Command attempt) {
+    Notification.activityStart();
+    ServicesLocator.getRestServiceAuthentication(login, password, domainId)
+        .authenticateTwoFactor(code, new RestCallback<UserProfileDTO>() {
+          @Override
+          public void onFailure(final RestMethod method, final Throwable throwable) {
+            Notification.activityStop();
+            if (method.getStatusCode() == 401) {
+              EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+            }
+          }
+
+          @Override
+          public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+            completeAuthentication(login, password, domainId, userProfile, attempt);
+          }
+        });
+  }
+
+  private void completeAuthentication(final String login, final String password,
+      final String domainId, final UserProfileDTO userProfile, final Command attempt) {
+    addHeader(XSTKN, methodHeader(userProfile, XSTKN));
+    SpMobil.setUserProfile(userProfile);
+
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<DetailUserDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        List<String> ids = new ArrayList<>();
+        ids.add(login);
+        ids.add(password);
+        ids.add(domainId);
+        ServicesLocator.getServiceConnection().login(ids, this);
+      }
+
+      @Override
+      public void onSuccess(final RestMethod method, final DetailUserDTO user) {
+        super.onSuccess(method, user);
+        SpMobil.setUser(user, true);
+        ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<String>() {
+          @Override
+          public void onFailure(final RestMethod method, final Throwable throwable) {
+            if (throwable instanceof AuthenticationException) {
+              EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+            }
+          }
+
+          @Override
+          public void onSuccess(final RestMethod method, final String showTermsOfServices) {
+            Notification.activityStop();
+            AuthentificationManager.getInstance().storeUser(user, userProfile, login,
+                password, domainId);
+            if (Boolean.parseBoolean(showTermsOfServices)) {
+              SpMobil.displayTermsOfServicePage();
+            } else if (attempt == null) {
+              SpMobil.displayMainPage();
+            } else {
+              attempt.execute();
+            }
+          }
+        });
+      }
+
+      @Override
+      public void onFailure(final RestMethod method, final Throwable t) {
+        GWT.log("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
+        if (t instanceof AuthenticationException) {
+          EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
+        } else {
+          EventBus.getInstance().fireEvent(new ErrorEvent(t));
+        }
+      }
+    };
+    action.attempt();
+  }
+
+  private String methodHeader(UserProfileDTO ignored, String name) {
+    return null;
+  }
+
+  private void handleAuthenticationFailure(final String login, final String domainId,
+      final RestMethod method, final Throwable throwable) {
+    int statusError = method.getStatusCode();
+    if (statusError == 403) {
+      Notification.activityStop();
+      SpMobil.displayMainPage();
+    } else if (statusError == 401 || statusError == 500) {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
+        @Override
+        public void attempt() {
+          super.attempt();
+          ServicesLocator.getServiceConnection().userExist(login, domainId, this);
+        }
+
+        @Override
+        public void onFailure(final RestMethod method, final Throwable t) {
+          super.onFailure(method, t);
+          EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
+        }
+
+        @Override
+        public void onSuccess(final RestMethod method, final Boolean exist) {
+          super.onSuccess(method, exist);
+          AuthenticationException ex = new AuthenticationException(
+              exist ? AuthenticationException.AuthenticationError.PwdNotAvailable :
+                  AuthenticationException.AuthenticationError.LoginNotAvailable);
+          ex.setLogin(login);
+          EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+        }
+      };
+      action.attempt();
+    } else {
+      EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+    }
+  }
+
 
   public void injectAuthenticationHttpHeaders(RequestBuilder builder) {
     if (getHeader(AuthentificationManager.XSTKN) != null) {
