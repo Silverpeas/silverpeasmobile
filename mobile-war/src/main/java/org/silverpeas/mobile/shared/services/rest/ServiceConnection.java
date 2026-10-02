@@ -34,18 +34,6 @@ import java.util.List;
 public class ServiceConnection extends AbstractService {
     public final static String PATH = "/silverpeas/services/mobile/connection";
 
-    public void generateSecurityCode(String login, String domainId, RestCallback<Void> callback) {
-        get(PATH + "/securityCode/" + encode(login) + "/" + encode(domainId),
-                result -> null,
-                callback);
-    }
-
-    public void checkSecurityCode(String login, String domainId, String code, RestCallback<Boolean> callback) {
-        get(PATH + "/securityCode/check/" + encode(login) + "/" + encode(domainId) + "/" + encode(code),
-                this::asBoolean,
-                callback);
-    }
-
     public void getDomains(RestCallback<List<DomainDTO>> callback) {
         get(PATH + "/domains/",
                 this::mapDomains,
