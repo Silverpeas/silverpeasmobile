@@ -38,9 +38,6 @@ import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.mail.MailAddress;
 import org.silverpeas.core.mail.MailSending;
-import org.silverpeas.core.security.authentication.AuthenticationCredential;
-import org.silverpeas.core.security.authentication.AuthenticationResponse;
-import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 import org.silverpeas.core.security.authentication.exception.AuthenticationException;
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
@@ -56,10 +53,7 @@ import ua_parser.Client;
 import ua_parser.Parser;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service de gestion des connexions.
@@ -68,9 +62,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @WebService
 @Path(ServiceConnection.PATH)
 public class ServiceConnection extends AbstractRestWebService {
-
-  private static ConcurrentHashMap<String, SecurityCode> securityCodeRequests = new ConcurrentHashMap<>();
-  private static long CODE_MAX_DURATION = 30;
 
   /*@Inject*/ //TODO : Fix injection
   ChatUserAuthenticationListener chatUserAuthenticationListener;
@@ -100,40 +91,6 @@ public class ServiceConnection extends AbstractRestWebService {
     String password = ids.get(1);
     String domainId = ids.get(2);
 
-    // vérification
-    AuthenticationCredential credential = getCredentials(login, password, domainId);
-    AuthenticationResponse result =
-        AuthenticationServiceProvider.getService().authenticate(credential);
-    if (result == null || result.getStatus().isInError()) {
-      AuthenticationResponse.Status status =
-          result == null ? AuthenticationResponse.Status.BAD_LOGIN_PASSWORD : result.getStatus();
-      WebApplicationException e;
-      switch (status) {
-        case NO_PASSWORD:
-          e = new WebApplicationException(AuthenticationError.PwdNotAvailable.name());
-          break;
-        case PASSWORD_EXPIRED:
-          e = new WebApplicationException(AuthenticationError.PwdExpired.name());
-          break;
-        case PASSWORD_TO_CHANGE:
-          e = new WebApplicationException(AuthenticationError.PwdMustBeChanged.name());
-          break;
-        case PASSWORD_EMAIL_TO_CHANGE_ON_FIRST_LOGIN:
-          e = new WebApplicationException(AuthenticationError.PwdMustBeChangedOnFirstLogin.name());
-          break;
-        case USER_ACCOUNT_BLOCKED:
-          e = new WebApplicationException(AuthenticationError.UserAccountBlocked.name());
-          break;
-        case USER_ACCOUNT_DEACTIVATED:
-          e = new WebApplicationException(AuthenticationError.UserAccountDeactivated.name());
-          break;
-        default:
-          e = new WebApplicationException(AuthenticationError.BadCredential.name());
-          break;
-      }
-      throw e;
-    }
-
     // récupération des informations de l'utilisateur
     String userId;
     try {
@@ -144,12 +101,9 @@ public class ServiceConnection extends AbstractRestWebService {
     UserDetail user = getUserDetail(userId);
     setUserInSession(user);
 
-    try {
-      authenticate(login, password, domainId);
-    } catch (SilverpeasException e) {
-      throw new WebApplicationException(AuthenticationError.CanCreateMainSessionController.name());
+    if (getMainSessionController() == null) {
+      initSilverpeasSession(request);
     }
-    initSilverpeasSession(request);
 
     DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
 
@@ -234,69 +188,6 @@ public class ServiceConnection extends AbstractRestWebService {
     Client client = parser.parse(userAgent);
 
     return client.device.family;
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("securityCode/check/{login}/{domainId}/{code}")
-  public Boolean checkSecurityCode(@PathParam("login") String login, @PathParam("domainId") String domainId,
-                                   @PathParam("code") String code) {
-      Boolean valid = Boolean.FALSE;
-    try {
-      String userId = Administration.get().getUserIdByLoginAndDomain(login, domainId);
-      UserDetail user = Administration.get().getUserDetail(userId);
-      SecurityCode sc = securityCodeRequests.get(user.getEmailAddress());
-      if (sc == null) return Boolean.FALSE;
-      Date now = new Date();
-      long diff = (now.getTime() - sc.getCreationDate().getTime()) / (1000 * 60);
-      if (diff < CODE_MAX_DURATION) {
-      return sc.getCode().equals(code);
-      }
-    } catch (Throwable e) {
-      throw new WebApplicationException(e);
-    }
-    return valid;
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("securityCode/{login}/{domainId}")
-  public void generateSecurityCode(@PathParam("login") String login, @PathParam("domainId") String domainId) {
-
-      try {
-          String userId = Administration.get().getUserIdByLoginAndDomain(login, domainId);
-          UserDetail user = Administration.get().getUserDetail(userId);
-        if (securityCodeRequests.containsKey(user.getEmailAddress())) {
-          SecurityCode sc = securityCodeRequests.get(user.getEmailAddress());
-          Date now = new Date();
-          long diff = (now.getTime() - sc.getCreationDate().getTime()) / 1000;
-          if (diff >= CODE_MAX_DURATION) {
-            securityCodeRequests.remove(user.getEmailAddress());
-            String code = generateSecurityCode(user);
-            sendSecurityCode(user, code);
-          }
-        } else {
-          String code = generateSecurityCode(user);
-          sendSecurityCode(user, code);
-        }
-      } catch (Throwable e) {
-          throw new WebApplicationException(e);
-      }
-  }
-
-  private void sendSecurityCode(UserDetail user, String code) {
-    MailSending mail = MailSending.from(MailAddress.eMail(user.getEmailAddress()));
-    mail = mail.to(MailAddress.eMail(user.getEmailAddress()));
-    mail = mail.withContent("Code de sécurité");
-    mail = mail.withTextContent("Votre code est : " + code);
-    mail.send();
-  }
-
-  private String generateSecurityCode(UserDetail user) {
-    Random random = new Random();
-    String code = String.format("%04d", random.nextInt(10000));
-    securityCodeRequests.put(user.getEmailAddress(), new SecurityCode(code, new Date()));
-    return code;
   }
 
   @GET
@@ -403,13 +294,4 @@ public class ServiceConnection extends AbstractRestWebService {
     // no need to validate the authorization
   }
 
-  private AuthenticationCredential getCredentials(String login, String password, String domainId) {
-    try {
-      return AuthenticationCredential.newWithAsLogin(login)
-          .withAsPassword(password)
-          .withAsDomainId(domainId);
-    } catch (AuthenticationException e) {
-      throw new WebApplicationException(AuthenticationError.BadCredential.name());
-    }
-  }
 }
