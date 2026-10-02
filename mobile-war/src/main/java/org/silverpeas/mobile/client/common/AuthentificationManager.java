@@ -200,7 +200,7 @@ public class AuthentificationManager {
 
           @Override
           public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-            completeAuthentication(login, password, domainId, userProfile, attempt);
+            completeAuthentication(login, password, domainId, method, userProfile, attempt);
           }
         });
   }
