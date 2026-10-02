@@ -40,7 +40,6 @@
         <div id="code-formLogin">
           <g:PasswordTextBox ui:field="codeField" name="code"/>
         </div>
-          <g:Anchor ui:field="sendCode"><ui:safehtml from="{msg.reSendSecurityCode}"/></g:Anchor>
 
         <div class=" ui-controlgroup ui-controlgroup-horizontal">
           <div class="ui-controlgroup-controls ">
