@@ -10,7 +10,7 @@
  * the GPL, you may redistribute this Program in connection with Free/Libre
  * Open Source Software ("FLOSS") applications as described in Silverpeas's
  * FLOSS exception.  You should have received a copy of the text describing
- * the FLOSS exception, and it is also available here:
+ * Silverpeas's FLOSS exception, and it is also available here:
  * "https://www.silverpeas.org/legal/floss_exception.html"
  *
  * This program is distributed in the hope that it will be useful,
@@ -58,6 +58,7 @@ public class AbstractService {
         AbortController controller = new AbortController();
         RequestInit init = RequestInit.create();
         init.setMethod(method);
+        init.setCredentials("same-origin");
 
         Headers headers = new Headers();
         headers.append("Content-Type", contentType);
@@ -227,7 +228,6 @@ public class AbstractService {
             String body,
             Function<Object, T> mapper,
             RestCallback<T> callback) {
-
         request("PUT", url, body, mapper, callback);
     }
 
@@ -236,33 +236,23 @@ public class AbstractService {
             Object body,
             Function<Object, T> mapper,
             RestCallback<T> callback) {
-
         request("DELETE", url, body, mapper, callback);
     }
 
     protected String toJsonArray(List<String> values) {
-
         return values.stream()
-                .map(v -> "\"" + escapeJson(v) + "\"")
+                .map(v -> "\\\"" + escapeJson(v) + "\\\"")
                 .collect(java.util.stream.Collectors.joining(",", "[", "]"));
     }
 
     protected <T> List<T> mapArray(
             Object result,
             Function<JsPropertyMap<Object>, T> mapper) {
-
         JsArray<Object> array = (JsArray<Object>) result;
-
         List<T> values = new ArrayList<>();
-
         for (int i = 0; i < array.length; i++) {
-            values.add(
-                    mapper.apply(
-                            (JsPropertyMap<Object>) array.getAt(i)
-                    )
-            );
+            values.add(mapper.apply((JsPropertyMap<Object>) array.getAt(i)));
         }
-
         return values;
     }
 
