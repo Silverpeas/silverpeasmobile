@@ -71,9 +71,9 @@ public class ServiceConnection extends AbstractService {
                 callback);
     }
 
-    public void login(List<String> ids, RestCallback<DetailUserDTO> callback) {
+    public void login(RestCallback<DetailUserDTO> callback) {
         post(PATH + "/login/",
-                toJsonArray(ids),
+                null,
                 result -> DetailUserDTO.fromJSON(
                         (JsPropertyMap<Object>) result
                 ),
