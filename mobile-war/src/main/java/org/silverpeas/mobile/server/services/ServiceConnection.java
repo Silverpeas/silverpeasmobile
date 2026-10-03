@@ -38,6 +38,9 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.annotation.WebService;
 import org.silverpeas.core.security.authentication.exception.AuthenticationException;
+import org.silverpeas.core.security.session.SessionInfo;
+import org.silverpeas.core.security.session.SessionManagement;
+import org.silverpeas.core.security.session.SessionManagementProvider;
 import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.mobile.server.dao.statistics.StatisticsDAO;
@@ -84,13 +87,14 @@ public class ServiceConnection extends AbstractRestWebService {
   @Path("login")
   public DetailUserDTO login() {
 
-    User user = getUser();
-    if (user == null) {
+    SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
+    SessionInfo sessionInfo = sessionManagement.validateSession(request.getSession().getId());
+    if (sessionInfo.getSessionId() == null || sessionInfo.getUserDetail() == null) {
       throw new NotAuthorizedException(getHttpServletResponse());
     }
 
-    String userId = user.getId();
-    UserDetail userDetail = getUserDetail(userId);
+    UserDetail userDetail = sessionInfo.getUserDetail();
+    String userId = userDetail.getId();
     setUserInSession(userDetail);
 
     if (getMainSessionController() == null) {
