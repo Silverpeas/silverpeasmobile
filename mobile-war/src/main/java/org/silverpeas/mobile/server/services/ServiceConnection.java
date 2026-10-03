@@ -9,19 +9,18 @@
  * As a special exception to the terms and conditions of version 3.0 of
  * the GPL, you may redistribute this Program in connection with Free/Libre
  * Open Source Software ("FLOSS") applications as described in Silverpeas's
- * FLOSS exception.  You should have received a copy of the text describing
+ * FLOSS exception. You should have received a copy of the text describing
  * the FLOSS exception, and it is also available here:
  * "https://www.silverpeas.org/legal/floss_exception.html"
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.silverpeas.mobile.server.services;
 
 import jakarta.inject.Inject;
@@ -33,25 +32,24 @@ import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.annotation.WebService;
-import org.silverpeas.core.security.authentication.exception.AuthenticationException;
 import org.silverpeas.core.chat.ChatUsersRegistration;
+import org.silverpeas.core.security.session.SessionInfo;
+import org.silverpeas.core.security.session.SessionManagement;
+import org.silverpeas.core.security.session.SessionManagementProvider;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.mobile.server.dao.statistics.StatisticsDAO;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.DomainDTO;
-import org.silverpeas.mobile.shared.exceptions.AuthenticationException.AuthenticationError;
 import ua_parser.Client;
 import ua_parser.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service de gestion des connexions.
@@ -60,9 +58,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @WebService
 @Path(ServiceConnection.PATH)
 public class ServiceConnection extends AbstractRestWebService {
-
-  private static ConcurrentHashMap<String, SecurityCode> securityCodeRequests = new ConcurrentHashMap<>();
-  private static long CODE_MAX_DURATION = 30;
 
   @Inject
   private ChatUsersRegistration chatUsersRegistration;
@@ -87,14 +82,19 @@ public class ServiceConnection extends AbstractRestWebService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("login")
   public DetailUserDTO login() {
-
-    User user = getUser();
-    if (user == null) {
+    SessionManagement sessionManagement = SessionManagementProvider.getSessionManagement();
+    SessionInfo sessionInfo = sessionManagement.validateSession(request.getSession().getId());
+    if (sessionInfo == null || sessionInfo.getSessionId() == null ||
+            sessionInfo.getUserDetail() == null) {
       throw new NotAuthorizedException(getHttpServletResponse());
     }
 
-    String userId = user.getId();
-    UserDetail userDetail = getUserDetail(userId);
+    UserDetail userDetail = getUserDetail(sessionInfo.getUserDetail().getId());
+    if (userDetail == null) {
+      throw new NotAuthorizedException(getHttpServletResponse());
+    }
+
+    String userId = userDetail.getId();
     setUserInSession(userDetail);
 
     if (getMainSessionController() == null) {
@@ -104,7 +104,7 @@ public class ServiceConnection extends AbstractRestWebService {
     DetailUserDTO userDTO = UserHelper.getInstance().populate(userDetail);
 
     String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
-        getSettings().getString("big.avatar.size", "40x"));
+            getSettings().getString("big.avatar.size", "40x"));
     userDTO.setAvatar(avatar);
     try {
       userDTO.setStatus(new ServiceRSE().getStatus().getDescription());
@@ -114,12 +114,13 @@ public class ServiceConnection extends AbstractRestWebService {
 
     // chat init
     request.getSession().setAttribute("Silverpeas.Chat",
-            chatUsersRegistration.isChatServiceEnabled() && user != null && !user.isAnonymous() &&
-                    !user.isAccessGuest());
+            chatUsersRegistration.isChatServiceEnabled() && !userDetail.isAnonymous() &&
+                    !userDetail.isAccessGuest());
 
     // Add connexion in stats
-    statisticsDAO.saveLoginEvent(Long.parseLong(userId), getPlatform(),getSettings().getString("version"),
-            getOsVersion(), getClientIp(getHttpRequest()), getPreferredLanguage(getHttpRequest()), getDevice());
+    statisticsDAO.saveLoginEvent(Long.parseLong(userId), getPlatform(),
+            getSettings().getString("version"), getOsVersion(), getClientIp(getHttpRequest()),
+            getPreferredLanguage(getHttpRequest()), getDevice());
 
     return userDTO;
   }
@@ -157,13 +158,12 @@ public class ServiceConnection extends AbstractRestWebService {
     HttpServletRequest request = this.getHttpRequest();
     String userAgent = request.getHeader("User-Agent");
     short platform = 0; // 1=ios, 2=android, 0=autre
-
     Parser parser = new Parser();
     Client client = parser.parse(userAgent);
 
     if (client.os.family.equalsIgnoreCase("android")) {
       platform = 2; // Android
-    } else if(client.os.family.equalsIgnoreCase("ios")) {
+    } else if (client.os.family.equalsIgnoreCase("ios")) {
       platform = 1; // iOS
     }
 
@@ -192,7 +192,7 @@ public class ServiceConnection extends AbstractRestWebService {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("userExist/{login}/{domainId}")
   public Boolean userExist(@PathParam("login") String login,
-      @PathParam("domainId") String domainId) {
+                           @PathParam("domainId") String domainId) {
     try {
       String id = getUserId(login, domainId);
       return id != null;
@@ -274,7 +274,7 @@ public class ServiceConnection extends AbstractRestWebService {
 
   protected UserDetail getUserInSession() {
     return (UserDetail) request.getSession()
-        .getAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME);
+            .getAttribute(AbstractRestWebService.USER_ATTRIBUT_NAME);
   }
 
   @Override
@@ -291,5 +291,4 @@ public class ServiceConnection extends AbstractRestWebService {
   public void validateUserAuthorization(final UserPrivilegeValidation validation) {
     // no need to validate the authorization
   }
-
 }
