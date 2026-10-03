@@ -241,7 +241,7 @@ public class AbstractService {
 
     protected String toJsonArray(List<String> values) {
         return values.stream()
-                .map(v -> "\\\"" + escapeJson(v) + "\\\"")
+                .map(v -> "\"" + escapeJson(v) + "\"")
                 .collect(java.util.stream.Collectors.joining(",", "[", "]"));
     }
 
