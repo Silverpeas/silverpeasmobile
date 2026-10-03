@@ -33,6 +33,7 @@ import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.admin.user.model.UserFull;
 import org.silverpeas.core.annotation.WebService;
@@ -81,29 +82,24 @@ public class ServiceConnection extends AbstractRestWebService {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("login")
-  public DetailUserDTO login(List<String> ids) {
+  public DetailUserDTO login() {
 
-    String login = ids.get(0);
-    String password = ids.get(1);
-    String domainId = ids.get(2);
-
-    // récupération des informations de l'utilisateur
-    String userId;
-    try {
-      userId = getUserId(login, domainId);
-    } catch (Exception e) {
-      throw new WebApplicationException(AuthenticationError.Host.name());
+    User user = getUser();
+    if (user == null) {
+      throw new NotAuthorizedException(getHttpServletResponse());
     }
-    UserDetail user = getUserDetail(userId);
-    setUserInSession(user);
+
+    String userId = user.getId();
+    UserDetail userDetail = getUserDetail(userId);
+    setUserInSession(userDetail);
 
     if (getMainSessionController() == null) {
       initSilverpeasSession(request);
     }
 
-    DetailUserDTO userDTO = UserHelper.getInstance().populate(user);
+    DetailUserDTO userDTO = UserHelper.getInstance().populate(userDetail);
 
-    String avatar = DataURLHelper.convertAvatarToUrlData(user.getAvatarFileName(),
+    String avatar = DataURLHelper.convertAvatarToUrlData(userDetail.getAvatarFileName(),
         getSettings().getString("big.avatar.size", "40x"));
     userDTO.setAvatar(avatar);
     try {
@@ -113,7 +109,7 @@ public class ServiceConnection extends AbstractRestWebService {
     }
 
     // chat init
-    if (chatUserAuthenticationListener != null) chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, user, "");
+    if (chatUserAuthenticationListener != null) chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, userDetail, "");
 
     // Add connexion in stats
     statisticsDAO.saveLoginEvent(Long.parseLong(userId), getPlatform(),getSettings().getString("version"),
