@@ -48,8 +48,6 @@ import org.silverpeas.mobile.shared.dto.authentication.IUserProfile;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author: svu
@@ -162,12 +160,8 @@ public class AuthentificationManager {
               String twoFactorRequired = method.getHeaders() == null
                   ? null
                   : method.getHeaders().get("X-Silverpeas-2FA-Required");
-              GWT.log("Authentication failed: status=" + method.getStatusCode()
-                  + ", X-Silverpeas-2FA-Required=" + twoFactorRequired);
-
-              if (method.getStatusCode() == 401 &&
+if (method.getStatusCode() == 401 &&
                   "true".equalsIgnoreCase(twoFactorRequired)) {
-                GWT.log("2FA challenge detected, displaying TwoFactorPage");
                 Notification.activityStop();
                 TwoFactorPage page = new TwoFactorPage();
                 page.setIds(login, password, domainId);
@@ -223,11 +217,7 @@ public class AuthentificationManager {
       @Override
       public void attempt() {
         super.attempt();
-        List<String> ids = new ArrayList<>();
-        ids.add(login);
-        ids.add(password);
-        ids.add(domainId);
-        ServicesLocator.getServiceConnection().login(ids, this);
+        ServicesLocator.getServiceConnection().login(this);
       }
 
       @Override
@@ -262,7 +252,6 @@ public class AuthentificationManager {
 
       @Override
       public void onFailure(final RestMethod method, final Throwable t) {
-        GWT.log("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
         if (t instanceof AuthenticationException) {
           EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
         } else {
