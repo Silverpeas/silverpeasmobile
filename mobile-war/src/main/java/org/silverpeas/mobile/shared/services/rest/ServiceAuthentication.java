@@ -41,14 +41,14 @@ public class ServiceAuthentication extends AbstractService {
   public void authentication(MethodCallback<UserProfileDTO> callback);*/
 
   public void authentication(RestCallback<UserProfileDTO> callback) {
-    post(PATH,
+    postBasic(PATH,
         null,
         result -> UserProfileDTO.fromJSON((JsPropertyMap<Object>) result),
         callback);
   }
 
   public void authenticateTwoFactor(String code, RestCallback<UserProfileDTO> callback) {
-    post(PATH + "/two-factor?code=" + encode(code),
+    postBasic(PATH + "/two-factor?code=" + encode(code),
         null,
         result -> UserProfileDTO.fromJSON((JsPropertyMap<Object>) result),
         callback);
