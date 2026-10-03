@@ -93,8 +93,13 @@ public class ServiceConnection extends AbstractRestWebService {
       throw new NotAuthorizedException(getHttpServletResponse());
     }
 
-    UserDetail userDetail = sessionInfo.getUserDetail();
-    String userId = userDetail.getId();
+    User user = sessionInfo.getUserDetail();
+    if (user == null) {
+      throw new NotAuthorizedException(getHttpServletResponse());
+    }
+
+    String userId = user.getId();
+    UserDetail userDetail = getUserDetail(userId);
     setUserInSession(userDetail);
 
     if (getMainSessionController() == null) {
