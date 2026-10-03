@@ -54,7 +54,7 @@ public class AbstractService {
         return param;
     }
 
-    private RequestInit initRequest(String method, String contentType) {
+    private RequestInit initRequest(String method, String contentType, boolean useSession) {
         AbortController controller = new AbortController();
         RequestInit init = RequestInit.create();
         init.setMethod(method);
@@ -62,10 +62,14 @@ public class AbstractService {
 
         Headers headers = new Headers();
         headers.append("Content-Type", contentType);
-        String session = org.silverpeas.mobile.client.common.AuthentificationManager.getInstance()
-                .getHeader(org.silverpeas.mobile.client.common.AuthentificationManager.XSilverpeasSession);
-        if (session != null && !session.isEmpty()) {
-            headers.append("X-Silverpeas-Session", session);
+        if (useSession) {
+            String session = org.silverpeas.mobile.client.common.AuthentificationManager.getInstance()
+                    .getHeader(org.silverpeas.mobile.client.common.AuthentificationManager.XSilverpeasSession);
+            if (session != null && !session.isEmpty()) {
+                headers.append("X-Silverpeas-Session", session);
+            } else {
+                headers.append("Authorization", "Basic " + token);
+            }
         } else {
             headers.append("Authorization", "Basic " + token);
         }
@@ -80,6 +84,13 @@ public class AbstractService {
         return init;
     }
 
+    private RequestInit initRequest(String method, String contentType) {
+        return initRequest(method, contentType, true);
+    }
+
+    protected RequestInit initBasicRequest(String method, String contentType) {
+        return initRequest(method, contentType, false);
+    }
     public String escapeJson(String s) {
         if (s == null) return "";
 
@@ -106,8 +117,13 @@ public class AbstractService {
 
     protected <T> void requestJson(String method, String url, Object body, Function<Object, T> mapper,
             RestCallback<T> callback) {
+        requestJson(method, url, body, mapper, callback, true);
+    }
+
+    protected <T> void requestJson(String method, String url, Object body, Function<Object, T> mapper,
+            RestCallback<T> callback, boolean useSession) {
         DEBUG.log(this, "requestJson " + method + " " + url);
-        RequestInit init = initRequest(method, "application/json");
+        RequestInit init = initRequest(method, "application/json", useSession);
 
         if (body != null) {
             init.setBody(body.toString());
@@ -154,8 +170,13 @@ public class AbstractService {
     }
 
     protected void requestText(String method, String url, Object body, RestCallback<String> callback) {
+        requestText(method, url, body, callback, true);
+    }
+
+    protected void requestText(String method, String url, Object body, RestCallback<String> callback,
+            boolean useSession) {
         DEBUG.log(this, "requestText " + method + " " + url);
-        RequestInit init = initRequest(method, "text/plain");
+        RequestInit init = initRequest(method, "text/plain", useSession);
 
         if (body != null) {
             init.setBody(body.toString());
@@ -206,6 +227,29 @@ public class AbstractService {
 
     }
 
+    protected <T> void requestBasic(
+            String method,
+            String url,
+            Object body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback) {
+
+        requestBasicInternal(method, url, body, mapper, callback, "application/json");
+    }
+
+    private <T> void requestBasicInternal(
+            String method,
+            String url,
+            Object body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback, String contentType) {
+        if (isJsonResponse(contentType)) {
+            requestJson(method, url, body, mapper, callback, false);
+        } else {
+            requestText(method, url, body, (RestCallback<String>) callback, false);
+        }
+    }
+
     protected <T> void get(
             String url,
             Function<Object, T> mapper,
@@ -227,6 +271,15 @@ public class AbstractService {
             RestCallback<T> callback) {
 
         request("POST", url, body, mapper, callback);
+    }
+
+    protected <T> void postBasic(
+            String url,
+            String body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback) {
+
+        requestBasic("POST", url, body, mapper, callback);
     }
 
     protected <T> void put(
