@@ -62,7 +62,13 @@ public class AbstractService {
 
         Headers headers = new Headers();
         headers.append("Content-Type", contentType);
-        headers.append("Authorization", "Basic " + token);
+        String session = org.silverpeas.mobile.client.common.AuthentificationManager.getInstance()
+                .getHeader(org.silverpeas.mobile.client.common.AuthentificationManager.XSilverpeasSession);
+        if (session != null && !session.isEmpty()) {
+            headers.append("X-Silverpeas-Session", session);
+        } else {
+            headers.append("Authorization", "Basic " + token);
+        }
         init.setHeaders(headers);
 
         init.setSignal(controller.signal);
