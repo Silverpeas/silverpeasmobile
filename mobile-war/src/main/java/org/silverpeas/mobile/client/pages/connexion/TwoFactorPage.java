@@ -75,16 +75,14 @@ public class TwoFactorPage extends PageContent {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
 
-    codeField.getElement().setId("totp-code");
-    codeField.getElement().setAttribute("inputmode", "numeric");
-    codeField.getElement().setAttribute("pattern", "[0-9]*");
-    codeField.getElement().setAttribute("autocomplete", "one-time-code");
+    codeField.getElement().setId("Password");
     codeField.getElement().setAttribute("autocapitalize", "none");
     codeField.getElement().setAttribute("autocorrect", "off");
     codeField.getElement().setAttribute("spellcheck", "off");
+    codeField.getElement().setAttribute("autocomplete", "off");
     codeField.getElement().setAttribute("placeholder", msg.codeLabel().asString());
     form.getElement().setId("formLogin");
-    form.getElement().setAttribute("autocomplete", "off");
+    form.getElement().setAttribute("autocomplete","off");
 
     version.setId("version");
     version.setInnerText(msg.version() + " " + ResourcesManager.getVersion());
