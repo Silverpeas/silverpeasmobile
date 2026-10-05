@@ -10,8 +10,7 @@
  * the GPL, you may redistribute this Program in connection with Free/Libre
  * Open Source Software ("FLOSS") applications as described in Silverpeas's
  * FLOSS exception.  You should have received a copy of the text describing
- * the FLOSS exception, and it is also available here:
- * "https://www.silverpeas.org/legal/floss_exception.html"
+ * the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -110,14 +109,10 @@ public class AuthentificationManager {
   }
 
   /**
-   * Clean data in local storage.
+   * Clean data in local storage while preserving local credentials and trusted device.
    */
   public void clearLocalStorage() {
-    LocalStorageHelper storage = LocalStorageHelper.getInstance();
-    storage.remove(XSTKN);
-    storage.remove(XSilverpeasSession);
-    storage.remove(USER_CONNECTED_KEY);
-    storage.remove(USER_PROFIL);
+    LocalStorageHelper.getInstance().clearExcept("localCredential", XTrustedDevice);
   }
 
   public FullUserDTO loadUser() {
