@@ -34,6 +34,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -56,6 +57,9 @@ public class TwoFactorPage extends PageContent {
 
   @UiField
   PasswordTextBox codeField;
+
+  @UiField
+  CheckBox trustDevice;
 
   @UiField
   FormPanel form;
@@ -115,6 +119,6 @@ public class TwoFactorPage extends PageContent {
 
     codeField.getElement().getStyle().clearBackgroundColor();
     AuthentificationManager.getInstance()
-        .authenticateTwoFactor(login, password, domainId, code.trim(), null);
+        .authenticateTwoFactor(login, password, domainId, code.trim(), trustDevice.getValue(), null);
   }
 }
