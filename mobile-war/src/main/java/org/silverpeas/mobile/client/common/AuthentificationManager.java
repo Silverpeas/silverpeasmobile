@@ -56,7 +56,6 @@ public class AuthentificationManager {
   private static AuthentificationManager instance = null;
   private static final String USER_CONNECTED_KEY = "userConnected";
   public static final String USER_PROFIL = "userProfil";
-  private static final String DES_KEY = "LagTegshyeecnoc^";
 
   public static final String XSTKN = "X-STKN";
   public static final String LOCAL_CREDENTIAL = "localCredential";
@@ -133,7 +132,7 @@ public class AuthentificationManager {
    */
   public String decryptPassword(String passwordEncrysted) {
     TripleDesCipher cipher = new TripleDesCipher();
-    cipher.setKey(DES_KEY.getBytes());
+    cipher.setKey(ResourcesManager.getParam("mobile.credentials.encryption.key").getBytes());
     String plainPassword = null;
     try {
       plainPassword = cipher.decrypt(passwordEncrysted);
@@ -145,7 +144,7 @@ public class AuthentificationManager {
 
   private String encryptPassword(String password) throws InvalidCipherTextException {
     TripleDesCipher cipher = new TripleDesCipher();
-    cipher.setKey(DES_KEY.getBytes());
+    cipher.setKey(ResourcesManager.getParam("mobile.credentials.encryption.key").getBytes());
     String encryptedPassword = cipher.encrypt(password);
     return encryptedPassword;
   }
