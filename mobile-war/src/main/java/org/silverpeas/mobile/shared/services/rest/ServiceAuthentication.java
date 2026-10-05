@@ -48,8 +48,8 @@ public class ServiceAuthentication extends AbstractService {
         callback);
   }
 
-  public void authenticateTwoFactor(String code, RestCallback<UserProfileDTO> callback) {
-    postBasic(PATH + "/two-factor?code=" + encode(code),
+  public void authenticateTwoFactor(String code, boolean trustDevice, RestCallback<UserProfileDTO> callback) {
+    postBasic(PATH + "/two-factor?code=" + encode(code) + "&trustDevice=" + trustDevice,
         null,
         result -> UserProfileDTO.fromJSON((JsPropertyMap<Object>) result),
         callback);
@@ -65,11 +65,5 @@ public class ServiceAuthentication extends AbstractService {
         trustedDeviceToken);
   }
 
-  public void createTrustedDevice(RestCallback<Void> callback) {
-    post(PATH + "/trusted-device/create",
-        null,
-        result -> null,
-        callback);
-  }
 
 }
