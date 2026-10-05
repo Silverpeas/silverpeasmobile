@@ -10,7 +10,7 @@
  * the GPL, you may redistribute this Program in connection with Free/Libre
  * Open Source Software ("FLOSS") applications as described in Silverpeas's
  * FLOSS exception.  You should have received a copy of the text describing
- * the FLOSS exception, and it is also available here:
+ * Silverpeas's FLOSS exception, and it is also available here:
  * "https://www.silverpeas.org/legal/floss_exception.html"
  *
  * This program is distributed in the hope that it will be useful,
@@ -35,7 +35,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
@@ -55,7 +55,7 @@ public class TwoFactorPage extends PageContent {
   Anchor go;
 
   @UiField
-  PasswordTextBox codeField;
+  TextBox codeField;
 
   @UiField
   FormPanel form;
@@ -75,14 +75,17 @@ public class TwoFactorPage extends PageContent {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
 
-    codeField.getElement().setId("Password");
+    codeField.getElement().setId("totp-code");
+    codeField.getElement().setAttribute("type", "text");
+    codeField.getElement().setAttribute("inputmode", "numeric");
+    codeField.getElement().setAttribute("pattern", "[0-9]*");
+    codeField.getElement().setAttribute("autocomplete", "one-time-code");
     codeField.getElement().setAttribute("autocapitalize", "none");
     codeField.getElement().setAttribute("autocorrect", "off");
     codeField.getElement().setAttribute("spellcheck", "off");
-    codeField.getElement().setAttribute("autocomplete", "off");
     codeField.getElement().setAttribute("placeholder", msg.codeLabel().asString());
     form.getElement().setId("formLogin");
-    form.getElement().setAttribute("autocomplete","off");
+    form.getElement().setAttribute("autocomplete", "off");
 
     version.setId("version");
     version.setInnerText(msg.version() + " " + ResourcesManager.getVersion());
