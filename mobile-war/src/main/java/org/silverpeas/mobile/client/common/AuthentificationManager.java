@@ -59,6 +59,7 @@ public class AuthentificationManager {
   private static final String DES_KEY = "LagTegshyeecnoc^";
 
   public static final String XSTKN = "X-STKN";
+  public static final String LOCAL_CREDENTIAL = "localCredential";
   public static final String XSilverpeasSession = "X-Silverpeas-Session";
   public static final String XTrustedDevice = "X-Silverpeas-Trusted-Device";
 
@@ -86,7 +87,7 @@ public class AuthentificationManager {
       EventBus.getInstance().fireEvent(new ErrorEvent(e));
     }
     SpMobil.setUser(user, false);
-
+LOCAL_CREDENTIAL
     FullUserDTO u = new FullUserDTO(login, encryptedPassword, domainId, user);
 
     String maintainSession = ResourcesManager.getParam("maintain.session");
@@ -112,7 +113,7 @@ public class AuthentificationManager {
    * Clean data in local storage while preserving local credentials and trusted device.
    */
   public void clearLocalStorage() {
-    LocalStorageHelper.getInstance().clearExcept("localCredential", XTrustedDevice);
+    LocalStorageHelper.getInstance().clearExcept(LOCAL_CREDENTIAL, XTrustedDevice);
   }
 
   public FullUserDTO loadUser() {
