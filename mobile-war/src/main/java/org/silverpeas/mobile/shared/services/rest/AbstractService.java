@@ -122,8 +122,16 @@ public class AbstractService {
 
     protected <T> void requestJson(String method, String url, Object body, Function<Object, T> mapper,
             RestCallback<T> callback, boolean useSession) {
+        requestJson(method, url, body, mapper, callback, useSession, null, null);
+    }
+
+    private <T> void requestJson(String method, String url, Object body, Function<Object, T> mapper,
+            RestCallback<T> callback, boolean useSession, String headerName, String headerValue) {
         DEBUG.log(this, "requestJson " + method + " " + url);
         RequestInit init = initRequest(method, "application/json", useSession);
+        if (headerName != null && headerValue != null) {
+            ((Headers) init.getHeaders()).append(headerName, headerValue);
+        }
 
         if (body != null) {
             init.setBody(body.toString());
@@ -280,6 +288,17 @@ public class AbstractService {
             RestCallback<T> callback) {
 
         requestBasic("POST", url, body, mapper, callback);
+    }
+
+    protected <T> void postBasic(
+            String url,
+            String body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback,
+            String headerName,
+            String headerValue) {
+
+        requestJson("POST", url, body, mapper, callback, false, headerName, headerValue);
     }
 
     protected <T> void put(
