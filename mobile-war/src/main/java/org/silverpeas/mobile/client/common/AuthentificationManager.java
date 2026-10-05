@@ -221,6 +221,8 @@ public class AuthentificationManager {
   private void createTrustedDevice(final String login, final String password,
       final String domainId, final RestMethod authenticationMethod,
       final UserProfileDTO userProfile, final Command attempt) {
+    addHeader(XSTKN, authenticationMethod.getHeaders().get(XSTKN));
+    addHeader(XSilverpeasSession, authenticationMethod.getHeaders().get(XSilverpeasSession));
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
         .createTrustedDevice(new RestCallback<Void>() {
           @Override
