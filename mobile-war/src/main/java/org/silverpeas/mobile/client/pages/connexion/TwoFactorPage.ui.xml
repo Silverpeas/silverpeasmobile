@@ -38,7 +38,7 @@
       <g:FormPanel ui:field="form">
         <g:HTMLPanel>
         <div id="code-formLogin">
-          <g:PasswordTextBox ui:field="codeField" name="code"/>
+          <g:TextBox ui:field="codeField" name="code"/>
         </div>
 
         <div class=" ui-controlgroup ui-controlgroup-horizontal">
