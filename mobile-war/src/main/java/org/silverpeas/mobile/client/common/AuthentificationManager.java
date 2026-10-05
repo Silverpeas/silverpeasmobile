@@ -187,16 +187,11 @@ public class AuthentificationManager {
   }
 
   public void authenticateTwoFactor(final String login, final String password,
-      final String domainId, final String code, final Command attempt) {
-    authenticateTwoFactor(login, password, domainId, code, false, attempt);
-  }
-
-  public void authenticateTwoFactor(final String login, final String password,
       final String domainId, final String code, final boolean trustDevice,
       final Command attempt) {
     Notification.activityStart();
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
-        .authenticateTwoFactor(code, new RestCallback<UserProfileDTO>() {
+        .authenticateTwoFactor(code, trustDevice, new RestCallback<UserProfileDTO>() {
           @Override
           public void onFailure(final RestMethod method, final Throwable throwable) {
             Notification.activityStop();
@@ -209,52 +204,9 @@ public class AuthentificationManager {
 
           @Override
           public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-            if (trustDevice) {
-              createTrustedDevice(login, password, domainId, method, userProfile, attempt);
-            } else {
-              completeAuthentication(login, password, domainId, method, userProfile, attempt);
-            }
-          }
-        });
-  }
-
-  private void createTrustedDevice(final String login, final String password,
-      final String domainId, final RestMethod authenticationMethod,
-      final UserProfileDTO userProfile, final Command attempt) {
-    addHeader(XSTKN, authenticationMethod.getHeaders().get(XSTKN));
-    addHeader(XSilverpeasSession, authenticationMethod.getHeaders().get(XSilverpeasSession));
-    ServicesLocator.getRestServiceAuthentication(login, password, domainId)
-        .createTrustedDevice(new RestCallback<Void>() {
-          @Override
-          public void onFailure(final RestMethod method, final Throwable throwable) {
-            completeAuthentication(login, password, domainId, authenticationMethod, userProfile, attempt);
-          }
-
-          @Override
-          public void onSuccess(final RestMethod method, final Void unused) {
             String trustedDeviceToken = method.getHeaders().get(XTrustedDevice);
             if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
               addHeader(XTrustedDevice, trustedDeviceToken);
-            }
-            completeAuthentication(login, password, domainId, authenticationMethod, userProfile, attempt);
-          }
-        });
-  }
-
-  private void authenticateTrustedDevice(final String login, final String password,
-      final String domainId, final String trustedDeviceToken, final Command attempt) {
-    ServicesLocator.getRestServiceAuthentication(login, password, domainId)
-        .authenticateTrustedDevice(trustedDeviceToken, new RestCallback<UserProfileDTO>() {
-          @Override
-          public void onFailure(final RestMethod method, final Throwable throwable) {
-            showTwoFactorPage(login, password, domainId);
-          }
-
-          @Override
-          public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-            String rotatedToken = method.getHeaders().get(XTrustedDevice);
-            if (rotatedToken != null && !rotatedToken.isEmpty()) {
-              addHeader(XTrustedDevice, rotatedToken);
             }
             completeAuthentication(login, password, domainId, method, userProfile, attempt);
           }
