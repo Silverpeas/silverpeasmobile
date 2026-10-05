@@ -87,7 +87,7 @@ public class AuthentificationManager {
       EventBus.getInstance().fireEvent(new ErrorEvent(e));
     }
     SpMobil.setUser(user, false);
-LOCAL_CREDENTIAL
+
     FullUserDTO u = new FullUserDTO(login, encryptedPassword, domainId, user);
 
     String maintainSession = ResourcesManager.getParam("maintain.session");
