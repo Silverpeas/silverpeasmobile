@@ -113,7 +113,12 @@ public class AuthentificationManager {
    * Clean data in local storage.
    */
   public void clearLocalStorage() {
-    LocalStorageHelper.getInstance().clear();
+    LocalStorageHelper storage = LocalStorageHelper.getInstance();
+    String trustedDeviceToken = storage.load(XTrustedDevice);
+    storage.clear();
+    if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
+      storage.store(XTrustedDevice, trustedDeviceToken);
+    }
   }
 
   public FullUserDTO loadUser() {
@@ -355,11 +360,7 @@ public class AuthentificationManager {
         @Override
         public void onResponseReceived(final Request request, final Response response) {
           Notification.activityStop();
-          String trustedDeviceToken = getHeader(XTrustedDevice);
           AuthentificationManager.getInstance().clearLocalStorage();
-          if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
-            addHeader(XTrustedDevice, trustedDeviceToken);
-          }
           PageHistory.getInstance().clear();
           Notification.activityStop();
           SpMobil.getInstance().displayFirstPage();
