@@ -355,7 +355,11 @@ public class AuthentificationManager {
         @Override
         public void onResponseReceived(final Request request, final Response response) {
           Notification.activityStop();
+          String trustedDeviceToken = getHeader(XTrustedDevice);
           AuthentificationManager.getInstance().clearLocalStorage();
+          if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
+            addHeader(XTrustedDevice, trustedDeviceToken);
+          }
           PageHistory.getInstance().clear();
           Notification.activityStop();
           SpMobil.getInstance().displayFirstPage();
