@@ -42,6 +42,9 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Code sécurité")
   SafeHtml codeLabel();
 
+  @DefaultMessage("Faire confiance à cet appareil pendant 30 jours")
+  String trustDevice();
+
   @DefaultMessage("Renvoyer un code")
   SafeHtml reSendSecurityCode();
 
