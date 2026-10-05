@@ -66,7 +66,7 @@ public class ServiceAuthentication extends AbstractService {
   }
 
   public void createTrustedDevice(RestCallback<Void> callback) {
-    postBasic(PATH + "/trusted-device/create",
+    post(PATH + "/trusted-device/create",
         null,
         result -> null,
         callback);
