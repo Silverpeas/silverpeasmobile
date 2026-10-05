@@ -32,6 +32,8 @@ public class BiometricAuthHelper {
 
     public static native void loginLocal(AuthCallback callback) /*-{
 
+        console.log("[Silverpeas Mobile][Biometrics] loginLocal() - requesting local biometric authentication");
+
         function base64ToBuffer(base64) {
             var str = atob(base64);
             var buf = new ArrayBuffer(str.length);
@@ -43,7 +45,9 @@ public class BiometricAuthHelper {
         }
 
         var stored = JSON.parse($wnd.localStorage.getItem("localCredential"));
+        console.log("[Silverpeas Mobile][Biometrics] loginLocal() - credential present: " + !!stored);
         if (!stored) {
+            console.log("[Silverpeas Mobile][Biometrics] loginLocal() - no local credential");
             callback.@org.silverpeas.mobile.client.common.auth.AuthCallback::onResult(Z)(false);
             return;
         }
@@ -62,9 +66,10 @@ public class BiometricAuthHelper {
 
         $wnd.navigator.credentials.get({ publicKey: publicKey })
             .then(function(assertion) {
+                console.log("[Silverpeas Mobile][Biometrics] loginLocal() - authentication succeeded");
                 callback.@org.silverpeas.mobile.client.common.auth.AuthCallback::onResult(Z)(true);
             }, function(err) {
-                console.error(err);
+                console.error("[Silverpeas Mobile][Biometrics] loginLocal() - authentication failed", err);
                 callback.@org.silverpeas.mobile.client.common.auth.AuthCallback::onResult(Z)(false);
             });
 
@@ -75,6 +80,8 @@ public class BiometricAuthHelper {
             String successMessage,
             String errorMessage
     ) /*-{
+
+        console.log("[Silverpeas Mobile][Biometrics] registerLocal() - requesting local biometric registration");
 
         function bufferToBase64(buf) {
             return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
@@ -99,6 +106,8 @@ public class BiometricAuthHelper {
         $wnd.navigator.credentials.create({ publicKey: publicKey })
             .then(function(credential) {
 
+                console.log("[Silverpeas Mobile][Biometrics] registerLocal() - registration succeeded");
+
                 var stored = {
                     id: credential.id,
                     rawId: bufferToBase64(credential.rawId),
@@ -111,7 +120,7 @@ public class BiometricAuthHelper {
                 $wnd.localStorage.setItem("localCredential", JSON.stringify(stored));
                 $wnd.alert(successMessage);
             }, function(err) {
-                console.error(err);
+                console.error("[Silverpeas Mobile][Biometrics] registerLocal() - registration failed", err);
                 $wnd.alert(errorMessage);
         });
 
@@ -127,6 +136,7 @@ public class BiometricAuthHelper {
 
     public static native boolean isRegistered() /*-{
         var stored = $wnd.localStorage.getItem("localCredential");
+        console.log("[Silverpeas Mobile][Biometrics] isRegistered() - credential present: " + (stored != null));
         return stored != null;
     }-*/;
 
