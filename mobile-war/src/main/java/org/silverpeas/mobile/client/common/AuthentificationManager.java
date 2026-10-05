@@ -380,4 +380,24 @@ public class AuthentificationManager {
     // Cache invalidation must also work before login, without clearing the session or credentials.
     CacheStorageHelper.clear();
   }
+
+    // clear app cache
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
+      @Override
+      public void attempt() {
+        ServicesLocator.getServiceNavigation().clearAppCache(this);
+      }
+
+      @Override
+      public void onFailure(final RestMethod method, final Throwable t) {
+
+      }
+
+      @Override
+      public void onSuccess(final RestMethod method, final Void unused) {
+      }
+    };
+    action.attempt();
+>>>>>>> 39145999 (Fix trusted device token preservation on logout)
+  }
 }
