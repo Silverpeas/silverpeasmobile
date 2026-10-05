@@ -376,6 +376,12 @@ public class AuthentificationManager {
   }
 
   public void clearCache() {
+    // A trusted-device token is stored in localStorage. The clearAppCache endpoint
+    // returns Clear-Site-Data: "storage", which would remove that token.
+    if (getHeader(XTrustedDevice) != null) {
+      return;
+    }
+
     // clear app cache
     RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
