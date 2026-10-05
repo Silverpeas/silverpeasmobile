@@ -10,7 +10,7 @@
  * the GPL, you may redistribute this Program in connection with Free/Libre
  * Open Source Software ("FLOSS") applications as described in Silverpeas's
  * FLOSS exception.  You should have received a copy of the text describing
- * Silverpeas's FLOSS exception, and it is also available here:
+ * the FLOSS exception, and it is also available here:
  * "https://www.silverpeas.org/legal/floss_exception.html"
  *
  * This program is distributed in the hope that it will be useful,
@@ -35,7 +35,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
@@ -55,7 +55,7 @@ public class TwoFactorPage extends PageContent {
   Anchor go;
 
   @UiField
-  TextBox codeField;
+  PasswordTextBox codeField;
 
   @UiField
   FormPanel form;
@@ -76,7 +76,6 @@ public class TwoFactorPage extends PageContent {
     initWidget(uiBinder.createAndBindUi(this));
 
     codeField.getElement().setId("totp-code");
-    codeField.getElement().setAttribute("type", "text");
     codeField.getElement().setAttribute("inputmode", "numeric");
     codeField.getElement().setAttribute("pattern", "[0-9]*");
     codeField.getElement().setAttribute("autocomplete", "one-time-code");
