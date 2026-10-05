@@ -1856,7 +1856,7 @@ textarea.ui-input-text {
   padding-top: 4em;
 }
 
-#page-login #Login, #page-login #Password {
+#page-login #Login, #page-login #Password, #page-login #totp-code {
   box-sizing: border-box;
   background: var(--white) url(bg-input-login.png) 0 0 no-repeat;
   padding-left: 2em;
@@ -1868,7 +1868,7 @@ textarea.ui-input-text {
   box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
 }
 
-#page-login #Password {
+#page-login #Password, #page-login #totp-code {
   background: var(--white) url(bg-input-password.png) 0 0 no-repeat;
 }
 
