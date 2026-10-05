@@ -78,6 +78,8 @@ public class TwoFactorPage extends PageContent {
   public TwoFactorPage() {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+    trustDevice.setVisible(Boolean.parseBoolean(
+        ResourcesManager.getParam("twoFactorTrustedDeviceEnabled")));
 
     codeField.getElement().setId("totp-code");
     codeField.getElement().setAttribute("inputmode", "numeric");
