@@ -114,11 +114,10 @@ public class AuthentificationManager {
    */
   public void clearLocalStorage() {
     LocalStorageHelper storage = LocalStorageHelper.getInstance();
-    String trustedDeviceToken = storage.load(XTrustedDevice);
-    storage.clear();
-    if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
-      storage.store(XTrustedDevice, trustedDeviceToken);
-    }
+    storage.remove(XSTKN);
+    storage.remove(XSilverpeasSession);
+    storage.remove(USER_CONNECTED_KEY);
+    storage.remove(USER_PROFIL);
   }
 
   public FullUserDTO loadUser() {
