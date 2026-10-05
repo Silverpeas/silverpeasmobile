@@ -61,6 +61,7 @@ public class AuthentificationManager {
 
   public static final String XSTKN = "X-STKN";
   public static final String XSilverpeasSession = "X-Silverpeas-Session";
+  public static final String XTrustedDevice = "X-Silverpeas-Trusted-Device";
 
   public static AuthentificationManager getInstance() {
     if (instance == null) {
@@ -160,13 +161,14 @@ public class AuthentificationManager {
               String twoFactorRequired = method.getHeaders() == null
                   ? null
                   : method.getHeaders().get("X-Silverpeas-2FA-Required");
-if (method.getStatusCode() == 401 &&
+              if (method.getStatusCode() == 401 &&
                   "true".equalsIgnoreCase(twoFactorRequired)) {
-                Notification.activityStop();
-                TwoFactorPage page = new TwoFactorPage();
-                page.setIds(login, password, domainId);
-                com.google.gwt.user.client.ui.RootPanel.get().clear();
-                com.google.gwt.user.client.ui.RootPanel.get().add(page);
+                String trustedDeviceToken = getHeader(XTrustedDevice);
+                if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
+                  authenticateTrustedDevice(login, password, domainId, trustedDeviceToken, attempt);
+                } else {
+                  showTwoFactorPage(login, password, domainId);
+                }
                 return;
               }
               handleAuthenticationFailure(login, domainId, method, throwable);
@@ -186,6 +188,12 @@ if (method.getStatusCode() == 401 &&
 
   public void authenticateTwoFactor(final String login, final String password,
       final String domainId, final String code, final Command attempt) {
+    authenticateTwoFactor(login, password, domainId, code, false, attempt);
+  }
+
+  public void authenticateTwoFactor(final String login, final String password,
+      final String domainId, final String code, final boolean trustDevice,
+      final Command attempt) {
     Notification.activityStart();
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
         .authenticateTwoFactor(code, new RestCallback<UserProfileDTO>() {
@@ -201,9 +209,63 @@ if (method.getStatusCode() == 401 &&
 
           @Override
           public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+            if (trustDevice) {
+              createTrustedDevice(login, password, domainId, method, userProfile, attempt);
+            } else {
+              completeAuthentication(login, password, domainId, method, userProfile, attempt);
+            }
+          }
+        });
+  }
+
+  private void createTrustedDevice(final String login, final String password,
+      final String domainId, final RestMethod authenticationMethod,
+      final UserProfileDTO userProfile, final Command attempt) {
+    ServicesLocator.getRestServiceAuthentication(login, password, domainId)
+        .createTrustedDevice(new RestCallback<Void>() {
+          @Override
+          public void onFailure(final RestMethod method, final Throwable throwable) {
+            completeAuthentication(login, password, domainId, authenticationMethod, userProfile, attempt);
+          }
+
+          @Override
+          public void onSuccess(final RestMethod method, final Void unused) {
+            String trustedDeviceToken = method.getHeaders().get(XTrustedDevice);
+            if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
+              addHeader(XTrustedDevice, trustedDeviceToken);
+            }
+            completeAuthentication(login, password, domainId, authenticationMethod, userProfile, attempt);
+          }
+        });
+  }
+
+  private void authenticateTrustedDevice(final String login, final String password,
+      final String domainId, final String trustedDeviceToken, final Command attempt) {
+    ServicesLocator.getRestServiceAuthentication(login, password, domainId)
+        .authenticateTrustedDevice(trustedDeviceToken, new RestCallback<UserProfileDTO>() {
+          @Override
+          public void onFailure(final RestMethod method, final Throwable throwable) {
+            showTwoFactorPage(login, password, domainId);
+          }
+
+          @Override
+          public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+            String rotatedToken = method.getHeaders().get(XTrustedDevice);
+            if (rotatedToken != null && !rotatedToken.isEmpty()) {
+              addHeader(XTrustedDevice, rotatedToken);
+            }
             completeAuthentication(login, password, domainId, method, userProfile, attempt);
           }
         });
+  }
+
+  private void showTwoFactorPage(final String login, final String password,
+      final String domainId) {
+    Notification.activityStop();
+    TwoFactorPage page = new TwoFactorPage();
+    page.setIds(login, password, domainId);
+    com.google.gwt.user.client.ui.RootPanel.get().clear();
+    com.google.gwt.user.client.ui.RootPanel.get().add(page);
   }
 
   private void completeAuthentication(final String login, final String password,
