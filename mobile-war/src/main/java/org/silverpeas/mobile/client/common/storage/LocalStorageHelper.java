@@ -105,6 +105,28 @@ public class LocalStorageHelper {
     }
   }
 
+  public void clearExcept(String... keysToKeep) {
+    Storage storage = Storage.getLocalStorageIfSupported();
+    if (storage == null) {
+      return;
+    }
+    for (int i = storage.getLength() - 1; i >= 0; i--) {
+      String key = storage.key(i);
+      boolean keep = false;
+      if (key != null) {
+        for (String keyToKeep : keysToKeep) {
+          if (key.equals(keyToKeep)) {
+            keep = true;
+            break;
+          }
+        }
+      }
+      if (!keep && key != null) {
+        storage.removeItem(key);
+      }
+    }
+  }
+
   public void storeBuildDate() {
     String  buildDate = ResourcesManager.getParam("build.date");
     store("build.date", buildDate);
