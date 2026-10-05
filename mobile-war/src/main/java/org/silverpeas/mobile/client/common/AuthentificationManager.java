@@ -213,6 +213,26 @@ public class AuthentificationManager {
         });
   }
 
+  private void authenticateTrustedDevice(final String login, final String password,
+      final String domainId, final String trustedDeviceToken, final Command attempt) {
+    ServicesLocator.getRestServiceAuthentication(login, password, domainId)
+        .authenticateTrustedDevice(trustedDeviceToken, new RestCallback<UserProfileDTO>() {
+          @Override
+          public void onFailure(final RestMethod method, final Throwable throwable) {
+            showTwoFactorPage(login, password, domainId);
+          }
+
+          @Override
+          public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+            String rotatedToken = method.getHeaders().get(XTrustedDevice);
+            if (rotatedToken != null && !rotatedToken.isEmpty()) {
+              addHeader(XTrustedDevice, rotatedToken);
+            }
+            completeAuthentication(login, password, domainId, method, userProfile, attempt);
+          }
+        });
+  }
+
   private void showTwoFactorPage(final String login, final String password,
       final String domainId) {
     Notification.activityStop();
