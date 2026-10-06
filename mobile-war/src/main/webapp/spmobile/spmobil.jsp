@@ -107,6 +107,13 @@
     LocalizationBundle resource =
         ResourceLocator.getLocalizationBundle("org.silverpeas.mobile.mobileSettings", l);
     Map<String, String> mapConfig = ResourceBundleHelper.convertResourceBundleToMap(resource);
+
+    // Trusted device is a global authentication setting, not a mobile-specific setting.
+    SettingBundle authenticationSettings =
+        ResourceLocator.getSettingBundle("org.silverpeas.authentication.settings.authenticationSettings");
+    mapConfig.put("twoFactorTrustedDeviceEnabled",
+        authenticationSettings.getString("twoFactorTrustedDeviceEnabled", "false"));
+
     String jsonParams = new ObjectMapper().writeValueAsString(mapConfig);
     
     String nocache = resource.getString("nocache");
