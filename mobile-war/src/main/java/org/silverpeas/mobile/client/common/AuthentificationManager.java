@@ -60,7 +60,6 @@ public class AuthentificationManager {
   public static final String XSTKN = "X-STKN";
   public static final String LOCAL_CREDENTIAL = "localCredential";
   public static final String XSilverpeasSession = "X-Silverpeas-Session";
-  public static final String XTrustedDevice = "X-Silverpeas-Trusted-Device";
 
   public static AuthentificationManager getInstance() {
     if (instance == null) {
@@ -109,10 +108,10 @@ public class AuthentificationManager {
   }
 
   /**
-   * Clean data in local storage while preserving local credentials and trusted device.
+   * Clean data in local storage while preserving local credentials.
    */
   public void clearLocalStorage() {
-    LocalStorageHelper.getInstance().clearExcept(LOCAL_CREDENTIAL, XTrustedDevice);
+    LocalStorageHelper.getInstance().clearExcept(LOCAL_CREDENTIAL);
   }
 
   public FullUserDTO loadUser() {
@@ -162,12 +161,7 @@ public class AuthentificationManager {
                   : method.getHeaders().get("X-Silverpeas-2FA-Required");
               if (method.getStatusCode() == 401 &&
                   "true".equalsIgnoreCase(twoFactorRequired)) {
-                String trustedDeviceToken = getHeader(XTrustedDevice);
-                if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
-                  authenticateTrustedDevice(login, password, domainId, trustedDeviceToken, attempt);
-                } else {
-                  showTwoFactorPage(login, password, domainId);
-                }
+                authenticateTrustedDevice(login, password, domainId, attempt);
                 return;
               }
               handleAuthenticationFailure(login, domainId, method, throwable);
@@ -203,19 +197,15 @@ public class AuthentificationManager {
 
           @Override
           public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-            String trustedDeviceToken = method.getHeaders().get(XTrustedDevice);
-            if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
-              addHeader(XTrustedDevice, trustedDeviceToken);
-            }
             completeAuthentication(login, password, domainId, method, userProfile, attempt);
           }
         });
   }
 
   private void authenticateTrustedDevice(final String login, final String password,
-      final String domainId, final String trustedDeviceToken, final Command attempt) {
+      final String domainId, final Command attempt) {
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
-        .authenticateTrustedDevice(trustedDeviceToken, new RestCallback<UserProfileDTO>() {
+        .authenticateTrustedDevice(new RestCallback<UserProfileDTO>() {
           @Override
           public void onFailure(final RestMethod method, final Throwable throwable) {
             showTwoFactorPage(login, password, domainId);
@@ -223,10 +213,6 @@ public class AuthentificationManager {
 
           @Override
           public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-            String rotatedToken = method.getHeaders().get(XTrustedDevice);
-            if (rotatedToken != null && !rotatedToken.isEmpty()) {
-              addHeader(XTrustedDevice, rotatedToken);
-            }
             completeAuthentication(login, password, domainId, method, userProfile, attempt);
           }
         });
@@ -371,12 +357,6 @@ public class AuthentificationManager {
   }
 
   public void clearCache() {
-    // A trusted-device token is stored in localStorage. The clearAppCache endpoint
-    // returns Clear-Site-Data: "storage", which would remove that token.
-    if (getHeader(XTrustedDevice) != null) {
-      return;
-    }
-
     // clear app cache
     RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
       @Override
