@@ -151,7 +151,7 @@ public class ServiceNavigation extends AbstractRestWebService {
     @Path("clearAppCache")
     public void clearAppCache() {
         // clear cache
-        getHttpServletResponse().setHeader("Clear-Site-Data", "\"cache\", \"cookies\", \"storage\"");
+        getHttpServletResponse().setHeader("Clear-Site-Data", "\"cache\", \"storage\"");
     }
 
     private static String getBaseUrl(HttpServletRequest request) {
