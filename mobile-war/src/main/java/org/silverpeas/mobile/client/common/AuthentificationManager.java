@@ -344,7 +344,7 @@ public class AuthentificationManager {
           AuthentificationManager.getInstance().clearLocalStorage();
           PageHistory.getInstance().clear();
           Notification.activityStop();
-          SpMobil.getInstance().displayFirstPage();
+          SpMobil.displayLoginPage(null);
           SpMobil.destroyMainPage();
         }
         @Override
