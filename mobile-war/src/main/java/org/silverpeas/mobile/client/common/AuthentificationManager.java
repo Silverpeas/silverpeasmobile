@@ -61,7 +61,6 @@ public class AuthentificationManager {
   public static final String XSTKN = "X-STKN";
   public static final String LOCAL_CREDENTIAL = "localCredential";
   public static final String XSilverpeasSession = "X-Silverpeas-Session";
-  public static final String XTrustedDevice = "X-Silverpeas-Trusted-Device";
 
   public static AuthentificationManager getInstance() {
     if (instance == null) {
@@ -79,7 +78,7 @@ public class AuthentificationManager {
   }
 
   public void storeUser(final DetailUserDTO user, final UserProfileDTO profil, String login,
-      String password, String domainId) {
+                        String password, String domainId) {
     String encryptedPassword = null;
     try {
       encryptedPassword = encryptPassword(password);
@@ -110,17 +109,17 @@ public class AuthentificationManager {
   }
 
   /**
-   * Clean data in local storage while preserving local credentials and trusted device.
+   * Clean data in local storage while preserving local credentials.
    */
   public void clearLocalStorage() {
-    LocalStorageHelper.getInstance().clearExcept(LOCAL_CREDENTIAL, XTrustedDevice);
+    LocalStorageHelper.getInstance().clearExcept(LOCAL_CREDENTIAL);
   }
 
   public FullUserDTO loadUser() {
     FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.getInstance().load(USER_CONNECTED_KEY, IFullUser.class));
     SpMobil.setUser(user, false);
     UserProfileDTO profil =
-        UserProfileDTO.getBean(LocalStorageHelper.getInstance().load(USER_PROFIL, IUserProfile.class));
+            UserProfileDTO.getBean(LocalStorageHelper.getInstance().load(USER_PROFIL, IUserProfile.class));
     SpMobil.setUserProfile(profil);
     return user;
   }
@@ -151,34 +150,29 @@ public class AuthentificationManager {
   }
 
   public void authenticateOnSilverpeas(String login, String password, String domainId,
-      Command attempt) {
+                                       Command attempt) {
     Notification.activityStart();
     if (NetworkHelper.isOnline()) {
       ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
-          new RestCallback<UserProfileDTO>() {
-            @Override
-            public void onFailure(final RestMethod method, final Throwable throwable) {
-              String twoFactorRequired = method.getHeaders() == null
-                  ? null
-                  : method.getHeaders().get("X-Silverpeas-2FA-Required");
-              if (method.getStatusCode() == 401 &&
-                  "true".equalsIgnoreCase(twoFactorRequired)) {
-                String trustedDeviceToken = getHeader(XTrustedDevice);
-                if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
-                  authenticateTrustedDevice(login, password, domainId, trustedDeviceToken, attempt);
-                } else {
-                  showTwoFactorPage(login, password, domainId);
+              new RestCallback<UserProfileDTO>() {
+                @Override
+                public void onFailure(final RestMethod method, final Throwable throwable) {
+                  String twoFactorRequired = method.getHeaders() == null
+                          ? null
+                          : method.getHeaders().get("X-Silverpeas-2FA-Required");
+                  if (method.getStatusCode() == 401 &&
+                          "true".equalsIgnoreCase(twoFactorRequired)) {
+                    authenticateTrustedDevice(login, password, domainId, attempt);
+                    return;
+                  }
+                  handleAuthenticationFailure(login, domainId, method, throwable);
                 }
-                return;
-              }
-              handleAuthenticationFailure(login, domainId, method, throwable);
-            }
 
-            @Override
-            public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-              completeAuthentication(login, password, domainId, method, userProfile, attempt);
-            }
-          });
+                @Override
+                public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+                  completeAuthentication(login, password, domainId, method, userProfile, attempt);
+                }
+              });
     } else {
       Notification.activityStop();
       loadUser();
@@ -187,54 +181,46 @@ public class AuthentificationManager {
   }
 
   public void authenticateTwoFactor(final String login, final String password,
-      final String domainId, final String code, final boolean trustDevice,
-      final Command attempt) {
+                                    final String domainId, final String code, final boolean trustDevice,
+                                    final Command attempt) {
     Notification.activityStart();
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
-        .authenticateTwoFactor(code, trustDevice, new RestCallback<UserProfileDTO>() {
-          @Override
-          public void onFailure(final RestMethod method, final Throwable throwable) {
-            Notification.activityStop();
-            if (method.getStatusCode() == 401) {
-              EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
-            } else {
-              EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-            }
-          }
+            .authenticateTwoFactor(code, trustDevice, new RestCallback<UserProfileDTO>() {
+              @Override
+              public void onFailure(final RestMethod method, final Throwable throwable) {
+                Notification.activityStop();
+                if (method.getStatusCode() == 401) {
+                  EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+                } else {
+                  EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                }
+              }
 
-          @Override
-          public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-            String trustedDeviceToken = method.getHeaders().get(XTrustedDevice);
-            if (trustedDeviceToken != null && !trustedDeviceToken.isEmpty()) {
-              addHeader(XTrustedDevice, trustedDeviceToken);
-            }
-            completeAuthentication(login, password, domainId, method, userProfile, attempt);
-          }
-        });
+              @Override
+              public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+                completeAuthentication(login, password, domainId, method, userProfile, attempt);
+              }
+            });
   }
 
   private void authenticateTrustedDevice(final String login, final String password,
-      final String domainId, final String trustedDeviceToken, final Command attempt) {
+                                         final String domainId, final Command attempt) {
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
-        .authenticateTrustedDevice(trustedDeviceToken, new RestCallback<UserProfileDTO>() {
-          @Override
-          public void onFailure(final RestMethod method, final Throwable throwable) {
-            showTwoFactorPage(login, password, domainId);
-          }
+            .authenticateTrustedDevice(null, new RestCallback<UserProfileDTO>() {
+              @Override
+              public void onFailure(final RestMethod method, final Throwable throwable) {
+                showTwoFactorPage(login, password, domainId);
+              }
 
-          @Override
-          public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-            String rotatedToken = method.getHeaders().get(XTrustedDevice);
-            if (rotatedToken != null && !rotatedToken.isEmpty()) {
-              addHeader(XTrustedDevice, rotatedToken);
-            }
-            completeAuthentication(login, password, domainId, method, userProfile, attempt);
-          }
-        });
+              @Override
+              public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+                completeAuthentication(login, password, domainId, method, userProfile, attempt);
+              }
+            });
   }
 
   private void showTwoFactorPage(final String login, final String password,
-      final String domainId) {
+                                 final String domainId) {
     Notification.activityStop();
     TwoFactorPage page = new TwoFactorPage();
     page.setIds(login, password, domainId);
@@ -243,8 +229,8 @@ public class AuthentificationManager {
   }
 
   private void completeAuthentication(final String login, final String password,
-      final String domainId, final RestMethod authenticationMethod,
-      final UserProfileDTO userProfile, final Command attempt) {
+                                      final String domainId, final RestMethod authenticationMethod,
+                                      final UserProfileDTO userProfile, final Command attempt) {
     addHeader(XSTKN, authenticationMethod.getHeaders().get(XSTKN));
     addHeader(XSilverpeasSession, authenticationMethod.getHeaders().get(XSilverpeasSession));
     SpMobil.setUserProfile(userProfile);
@@ -274,7 +260,7 @@ public class AuthentificationManager {
           public void onSuccess(final RestMethod method, final String showTermsOfServices) {
             Notification.activityStop();
             AuthentificationManager.getInstance().storeUser(user, userProfile, login,
-                password, domainId);
+                    password, domainId);
             if (Boolean.parseBoolean(showTermsOfServices)) {
               SpMobil.displayTermsOfServicePage();
             } else if (attempt == null) {
@@ -300,7 +286,7 @@ public class AuthentificationManager {
 
 
   private void handleAuthenticationFailure(final String login, final String domainId,
-      final RestMethod method, final Throwable throwable) {
+                                           final RestMethod method, final Throwable throwable) {
     int statusError = method.getStatusCode();
     if (statusError == 403) {
       Notification.activityStop();
@@ -323,8 +309,8 @@ public class AuthentificationManager {
         public void onSuccess(final RestMethod method, final Boolean exist) {
           super.onSuccess(method, exist);
           AuthenticationException ex = new AuthenticationException(
-              exist ? AuthenticationException.AuthenticationError.PwdNotAvailable :
-                  AuthenticationException.AuthenticationError.LoginNotAvailable);
+                  exist ? AuthenticationException.AuthenticationError.PwdNotAvailable :
+                          AuthenticationException.AuthenticationError.LoginNotAvailable);
           ex.setLogin(login);
           EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
         }
@@ -342,7 +328,7 @@ public class AuthentificationManager {
     }
     if (getHeader(AuthentificationManager.XSilverpeasSession) != null) {
       builder.setHeader(AuthentificationManager.XSilverpeasSession,
-          getHeader(AuthentificationManager.XSilverpeasSession));
+              getHeader(AuthentificationManager.XSilverpeasSession));
     }
   }
 
@@ -372,27 +358,7 @@ public class AuthentificationManager {
   }
 
   public void clearCache() {
-    // Cache invalidation must also work before login, without clearing the session or credentials.
+    // Clear offline cache without clearing the session or authentication cookies.
     CacheStorageHelper.clear();
-  }
-
-    // clear app cache
-    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceNavigation().clearAppCache(this);
-      }
-
-      @Override
-      public void onFailure(final RestMethod method, final Throwable t) {
-
-      }
-
-      @Override
-      public void onSuccess(final RestMethod method, final Void unused) {
-      }
-    };
-    action.attempt();
->>>>>>> 39145999 (Fix trusted device token preservation on logout)
   }
 }
