@@ -35,7 +35,6 @@ import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 public class ServiceAuthentication extends AbstractService {
 
   public final static String PATH = "/silverpeas/services/authentication";
-  public static final String TRUSTED_DEVICE_HEADER = "X-Silverpeas-Trusted-Device";
 
   /*@POST
   @Path("/")
@@ -55,14 +54,11 @@ public class ServiceAuthentication extends AbstractService {
         callback);
   }
 
-  public void authenticateTrustedDevice(String trustedDeviceToken,
-      RestCallback<UserProfileDTO> callback) {
+  public void authenticateTrustedDevice(RestCallback<UserProfileDTO> callback) {
     postBasic(PATH + "/trusted-device",
         null,
         result -> UserProfileDTO.fromJSON((JsPropertyMap<Object>) result),
-        callback,
-        TRUSTED_DEVICE_HEADER,
-        trustedDeviceToken);
+        callback);
   }
 
 
