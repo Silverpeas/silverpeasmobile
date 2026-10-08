@@ -45,7 +45,7 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Une fois le compte ajouté, saisissez le code à 6 chiffres affiché dans votre application.")
   SafeHtml enrollmentVerifyHelp();
 
-  @DefaultMessage("Activer la double authentification")
+  @DefaultMessage("Activer la 2FA")
   SafeHtml enrollmentActivate();
 
   @DefaultMessage("Conservez ces codes de récupération en lieu sûr. Ils ne seront plus affichés.")
