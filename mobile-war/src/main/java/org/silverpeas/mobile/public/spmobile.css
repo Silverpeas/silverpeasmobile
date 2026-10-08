@@ -3608,3 +3608,17 @@ li.orgachartuser:nth-child(even), li.orgachartuser:nth-child(even)>a {
   vertical-align:middle;
 }
 
+
+/* Mobile two-factor screens */
+#page-login.two-factor-screen {box-sizing:border-box;padding:1rem 1rem 6rem}
+#page-login.two-factor-screen .two-factor-content {max-width:440px;margin:auto}
+#page-login.two-factor-screen .two-factor-step {margin:1.2rem 0;line-height:1.5}
+#page-login.two-factor-screen .two-factor-secret {padding:1rem;background:#fff;border:1px solid #ddd;border-radius:8px;overflow-wrap:anywhere;font-family:monospace;text-align:center;user-select:text}
+#page-login.two-factor-screen .two-factor-actions {text-align:center;margin:1rem 0 1.5rem}
+#page-login.two-factor-screen .btn-validate,#page-login.two-factor-screen .btn-validate:visited {display:inline-block;box-sizing:border-box;width:100%;max-width:360px;margin:0;padding:.85rem 1rem;white-space:normal;line-height:1.35;text-align:center}
+#page-login.two-factor-screen .two-factor-code {text-align:center;margin:1rem 0}
+#page-login.two-factor-screen .two-factor-code input {box-sizing:border-box;width:100%;max-width:240px;padding:.75rem;font-size:1.25rem;letter-spacing:.2em;text-align:center}
+#page-login.two-factor-screen .two-factor-trust {margin:1rem 0;line-height:1.5}
+#page-login.two-factor-screen .two-factor-trust label {white-space:normal}
+#page-login.two-factor-screen .two-factor-recovery textarea {box-sizing:border-box;width:100%;max-width:100%;font-family:monospace}
+#page-login.two-factor-screen #copyright,#page-login.two-factor-screen #version {position:static;margin-top:1rem}
