@@ -13,12 +13,16 @@
     <div id="page-login" class="ui-content ui-body-a">
       <g:HTMLPanel>
         <div ui:field="setupSection">
-          <p>Scannez ce QR code avec votre application d'authentification.</p>
-          <div class="totp-enrollment-qr">
-            <g:Image ui:field="qrCode"/>
-          </div>
-          <p>Si vous ne pouvez pas scanner le QR code, saisissez cette clé dans votre application :</p>
+          <p>Copiez cette clé dans votre application d'authentification pour ajouter votre compte Silverpeas.</p>
           <div class="totp-enrollment-secret"><g:Label ui:field="secret"/></div>
+          <div class="ui-controlgroup ui-controlgroup-horizontal">
+            <div class="ui-controlgroup-controls">
+              <g:Anchor ui:field="copySecret" styleName="submit btn-validate ui-link">
+                <span class="ui-btn-text">Copier la clé</span>
+              </g:Anchor>
+            </div>
+          </div>
+          <p>Une fois le compte ajouté, saisissez le code à 6 chiffres affiché dans votre application.</p>
           <div id="code-formLogin">
             <g:PasswordTextBox ui:field="codeField" name="code"/>
           </div>
