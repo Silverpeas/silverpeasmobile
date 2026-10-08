@@ -31,28 +31,28 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("1. Configurer votre application")
-  String enrollmentStepSetup();
+  SafeHtml enrollmentStepSetup();
 
   @DefaultMessage("Copiez cette clé dans votre application d''authentification pour ajouter votre compte Silverpeas.")
-  String enrollmentSetupHelp();
+  SafeHtml enrollmentSetupHelp();
 
   @DefaultMessage("Copier la clé")
-  String enrollmentCopyKey();
+  SafeHtml enrollmentCopyKey();
 
   @DefaultMessage("2. Vérifier le code")
-  String enrollmentStepVerify();
+  SafeHtml enrollmentStepVerify();
 
   @DefaultMessage("Une fois le compte ajouté, saisissez le code à 6 chiffres affiché dans votre application.")
-  String enrollmentVerifyHelp();
+  SafeHtml enrollmentVerifyHelp();
 
   @DefaultMessage("Activer la double authentification")
-  String enrollmentActivate();
+  SafeHtml enrollmentActivate();
 
   @DefaultMessage("Conservez ces codes de récupération en lieu sûr. Ils ne seront plus affichés.")
-  String enrollmentRecoveryHelp();
+  SafeHtml enrollmentRecoveryHelp();
 
   @DefaultMessage("J''ai enregistré mes codes — Continuer")
-  String enrollmentContinue();
+  SafeHtml enrollmentContinue();
 
   @DefaultMessage("Chargement de la clé de configuration...")
   String enrollmentLoading();
