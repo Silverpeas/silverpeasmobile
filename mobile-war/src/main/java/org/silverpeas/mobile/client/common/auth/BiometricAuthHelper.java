@@ -44,6 +44,12 @@ public class BiometricAuthHelper {
             return buf;
         }
 
+        if (!$wnd.isSecureContext || !$wnd.navigator.credentials || !$wnd.PublicKeyCredential) {
+            console.warn("[Silverpeas Mobile][Biometrics] WebAuthn unavailable in this context");
+            callback.@org.silverpeas.mobile.client.common.auth.AuthCallback::onResult(Z)(false);
+            return;
+        }
+
         var stored = JSON.parse($wnd.localStorage.getItem("localCredential"));
         console.log("[Silverpeas Mobile][Biometrics] loginLocal() - credential present: " + !!stored);
         if (!stored) {
@@ -82,6 +88,11 @@ public class BiometricAuthHelper {
     ) /*-{
 
         console.log("[Silverpeas Mobile][Biometrics] registerLocal() - requesting local biometric registration");
+
+        if (!$wnd.isSecureContext || !$wnd.navigator.credentials || !$wnd.PublicKeyCredential) {
+            console.warn("[Silverpeas Mobile][Biometrics] WebAuthn unavailable in this context");
+            return;
+        }
 
         function bufferToBase64(buf) {
             return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
