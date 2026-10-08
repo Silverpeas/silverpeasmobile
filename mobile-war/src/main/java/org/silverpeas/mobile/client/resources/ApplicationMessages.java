@@ -30,6 +30,52 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 
 public interface ApplicationMessages extends Messages {
 
+  @DefaultMessage("1. Configurer votre application")
+  String enrollmentStepSetup();
+
+  @DefaultMessage("Copiez cette clé dans votre application d'authentification pour ajouter votre compte Silverpeas.")
+  String enrollmentSetupHelp();
+
+  @DefaultMessage("Copier la clé")
+  String enrollmentCopyKey();
+
+  @DefaultMessage("2. Vérifier le code")
+  String enrollmentStepVerify();
+
+  @DefaultMessage("Une fois le compte ajouté, saisissez le code à 6 chiffres affiché dans votre application.")
+  String enrollmentVerifyHelp();
+
+  @DefaultMessage("Activer la double authentification")
+  String enrollmentActivate();
+
+  @DefaultMessage("Conservez ces codes de récupération en lieu sûr. Ils ne seront plus affichés.")
+  String enrollmentRecoveryHelp();
+
+  @DefaultMessage("J'ai enregistré mes codes — Continuer")
+  String enrollmentContinue();
+
+  @DefaultMessage("Chargement de la clé de configuration...")
+  String enrollmentLoading();
+
+  @DefaultMessage("Impossible de démarrer l'enrôlement. Reconnectez-vous.")
+  String enrollmentStartError();
+
+  @DefaultMessage("Clé copiée dans le presse-papiers.")
+  String enrollmentCopied();
+
+  @DefaultMessage("Copie impossible. Sélectionnez et copiez la clé manuellement.")
+  String enrollmentCopyError();
+
+  @DefaultMessage("Saisissez le code à 6 chiffres.")
+  String enrollmentInvalidCode();
+
+  @DefaultMessage("Vérification du code...")
+  String enrollmentVerifying();
+
+  @DefaultMessage("Code incorrect ou session expirée. Réessayez ou reconnectez-vous.")
+  String enrollmentVerifyError();
+
+
   @DefaultMessage("Pour son fonctionnement, cette application utilise des Cookies. Les informations stockées sont uniquement techniques et ne contiennent pas de données personnelles, ou de suivi.")
   SafeHtml cookiesInformation();
 
