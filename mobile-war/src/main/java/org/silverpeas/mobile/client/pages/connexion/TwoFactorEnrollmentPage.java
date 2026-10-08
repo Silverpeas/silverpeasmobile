@@ -42,7 +42,6 @@ public class TwoFactorEnrollmentPage extends PageContent {
   @UiField
   DivElement version;
   @UiField
-  @UiField
   Label secret;
   @UiField
   PasswordTextBox codeField;
