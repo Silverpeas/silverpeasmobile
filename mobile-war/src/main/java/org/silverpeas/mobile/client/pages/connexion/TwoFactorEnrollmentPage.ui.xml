@@ -1,0 +1,53 @@
+<!--
+  Copyright (C) 2000 - 2026 Silverpeas
+  Licensed under the GNU Affero General Public License, version 3 or later.
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:with field="msg" type="org.silverpeas.mobile.client.resources.ApplicationMessages"/>
+  <g:HTMLPanel>
+    <div id="header">
+      <h1 id="page-login-title"><ui:safehtml from="{msg.twoFactorTitle}"/></h1>
+    </div>
+    <div id="page-login" class="ui-content ui-body-a">
+      <g:HTMLPanel>
+        <div ui:field="setupSection">
+          <p>Scannez ce QR code avec votre application d'authentification.</p>
+          <div class="totp-enrollment-qr">
+            <g:Image ui:field="qrCode"/>
+          </div>
+          <p>Si vous ne pouvez pas scanner le QR code, saisissez cette clé dans votre application :</p>
+          <div class="totp-enrollment-secret"><g:Label ui:field="secret"/></div>
+          <div id="code-formLogin">
+            <g:PasswordTextBox ui:field="codeField" name="code"/>
+          </div>
+          <div id="trusted-device">
+            <g:CheckBox ui:field="trustDevice" text="{msg.trustDevice}"/>
+          </div>
+          <div class="ui-controlgroup ui-controlgroup-horizontal">
+            <div class="ui-controlgroup-controls">
+              <g:Anchor ui:field="confirm" styleName="submit btn-validate ui-link">
+                <span class="ui-btn-text">Activer la double authentification</span>
+              </g:Anchor>
+            </div>
+          </div>
+        </div>
+        <div ui:field="recoverySection" style="display:none">
+          <p>Conservez ces codes de récupération en lieu sûr. Ils ne seront plus affichés.</p>
+          <g:TextArea ui:field="recoveryCodes" visibleLines="10" characterWidth="28" readOnly="true"/>
+          <div class="ui-controlgroup ui-controlgroup-horizontal">
+            <div class="ui-controlgroup-controls">
+              <g:Anchor ui:field="continueButton" styleName="submit btn-validate ui-link">
+                <span class="ui-btn-text">J'ai enregistré mes codes — Continuer</span>
+              </g:Anchor>
+            </div>
+          </div>
+        </div>
+        <g:Label ui:field="status" styleName="totp-enrollment-status"/>
+        <div id="copyright"><ui:safehtml from="{msg.copyright}"/></div>
+        <div ui:field="version"></div>
+      </g:HTMLPanel>
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder>
