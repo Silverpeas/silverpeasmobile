@@ -64,9 +64,12 @@ public class ServiceAuthentication extends AbstractService {
         callback);
   }
 
-  public void startEnrollment(RestCallback<String> callback) {
+  public void startEnrollment(RestCallback<EnrollmentSetup> callback) {
     postBasic(PATH + "/enrollment", null,
-        result -> (String) ((JsPropertyMap<Object>) result).get("secret"), callback);
+        result -> {
+          JsPropertyMap<Object> json = (JsPropertyMap<Object>) result;
+          return new EnrollmentSetup((String) json.get("secret"), (String) json.get("qrCode"));
+        }, callback);
   }
 
   public void confirmEnrollment(String code, boolean trustDevice,
@@ -83,6 +86,16 @@ public class ServiceAuthentication extends AbstractService {
           }
           return new EnrollmentResult(profile, codes);
         }, callback);
+  }
+
+  public static class EnrollmentSetup {
+    public final String secret;
+    public final String qrCode;
+
+    public EnrollmentSetup(String secret, String qrCode) {
+      this.secret = secret;
+      this.qrCode = qrCode;
+    }
   }
 
   public static class EnrollmentResult {
