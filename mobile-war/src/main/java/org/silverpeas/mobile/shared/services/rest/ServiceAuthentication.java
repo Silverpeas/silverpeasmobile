@@ -51,8 +51,8 @@ public class ServiceAuthentication extends AbstractService {
   }
 
   public void authenticateTwoFactor(String code, boolean trustDevice, RestCallback<UserProfileDTO> callback) {
-    postBasic(PATH + "/two-factor?code=" + encode(code) + "&trustDevice=" + trustDevice,
-        null,
+    postBasic(PATH + "/two-factor",
+        twoFactorRequestBody(code, trustDevice),
         result -> UserProfileDTO.fromJSON((JsPropertyMap<Object>) result),
         callback);
   }
@@ -74,8 +74,8 @@ public class ServiceAuthentication extends AbstractService {
 
   public void confirmEnrollment(String code, boolean trustDevice,
       RestCallback<EnrollmentResult> callback) {
-    postBasic(PATH + "/enrollment/confirm?code=" + encode(code) +
-        "&trustDevice=" + trustDevice, null, result -> {
+    postBasic(PATH + "/enrollment/confirm",
+        twoFactorRequestBody(code, trustDevice), result -> {
           JsPropertyMap<Object> json = (JsPropertyMap<Object>) result;
           UserProfileDTO profile = UserProfileDTO.fromJSON(
               (JsPropertyMap<Object>) json.get("profile"));
@@ -86,6 +86,10 @@ public class ServiceAuthentication extends AbstractService {
           }
           return new EnrollmentResult(profile, codes);
         }, callback);
+  }
+
+  private String twoFactorRequestBody(final String code, final boolean trustDevice) {
+    return "{\"code\":\"" + escapeJson(code) + "\",\"trustDevice\":" + trustDevice + "}";
   }
 
   public static class EnrollmentSetup {
