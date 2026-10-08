@@ -90,12 +90,12 @@ public class TwoFactorEnrollmentPage extends PageContent {
   }
 
   private void loadEnrollment() {
-    status.setText("Chargement de la clé de configuration...");
+    status.setText(msg.enrollmentLoading());
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
         .startEnrollment(new RestCallback<ServiceAuthentication.EnrollmentSetup>() {
           @Override
           public void onFailure(RestMethod method, Throwable error) {
-            status.setText("Impossible de démarrer l'enrôlement. Reconnectez-vous.");
+            status.setText(msg.enrollmentStartError());
           }
 
           @Override
@@ -115,8 +115,8 @@ public class TwoFactorEnrollmentPage extends PageContent {
   }
 
   private void clipboardResult(boolean copied) {
-    status.setText(copied ? "Clé copiée dans le presse-papiers." :
-        "Copie impossible. Sélectionnez et copiez la clé manuellement.");
+    status.setText(copied ? ""+msg.enrollmentCopied()+"" :
+        ""+msg.enrollmentCopyError());
   }
 
   /**
@@ -159,19 +159,19 @@ public class TwoFactorEnrollmentPage extends PageContent {
     String value = codeField.getText().trim();
     if (!value.matches("[0-9]{6}")) {
       codeField.getElement().getStyle().setBackgroundColor("#ec9c01");
-      status.setText("Saisissez le code à 6 chiffres.");
+      status.setText(msg.enrollmentInvalidCode());
       return;
     }
     codeField.getElement().getStyle().clearBackgroundColor();
     confirm.setVisible(false);
-    status.setText("Vérification du code...");
+    status.setText(msg.enrollmentVerifying());
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
         .confirmEnrollment(value, trustDevice.getValue(),
             new RestCallback<ServiceAuthentication.EnrollmentResult>() {
               @Override
               public void onFailure(RestMethod method, Throwable error) {
                 confirm.setVisible(true);
-                status.setText("Code incorrect ou session expirée. Réessayez ou reconnectez-vous.");
+                status.setText(msg.enrollmentVerifyError());
               }
 
               @Override
