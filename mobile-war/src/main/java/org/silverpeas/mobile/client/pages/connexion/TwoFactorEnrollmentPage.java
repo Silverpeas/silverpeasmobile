@@ -115,8 +115,7 @@ public class TwoFactorEnrollmentPage extends PageContent {
   }
 
   private void clipboardResult(boolean copied) {
-    status.setText(copied ? ""+msg.enrollmentCopied()+"" :
-        ""+msg.enrollmentCopyError());
+    status.setText(copied ? msg.enrollmentCopied() : msg.enrollmentCopyError());
   }
 
   /**
