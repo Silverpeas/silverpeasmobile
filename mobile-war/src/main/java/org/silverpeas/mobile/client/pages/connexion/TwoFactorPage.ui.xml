@@ -34,23 +34,25 @@
       <h1 id="page-login-title"><ui:safehtml from="{msg.twoFactorTitle}"/></h1>
     </div>
 
-    <div id="page-login" class="ui-content ui-body-a">
+    <div id="page-login" class="ui-content ui-body-a two-factor-screen">
       <g:FormPanel ui:field="form">
         <g:HTMLPanel>
-        <div id="code-formLogin">
+        <div class="two-factor-content">
+        <div id="code-formLogin" class="two-factor-code">
             <g:PasswordTextBox ui:field="codeField" name="code"/>
         </div>
 
-        <div id="trusted-device">
+        <div id="trusted-device" class="two-factor-trust">
           <g:CheckBox ui:field="trustDevice" text="{msg.trustDevice}"/>
         </div>
 
-        <div class=" ui-controlgroup ui-controlgroup-horizontal">
+        <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
           <div class="ui-controlgroup-controls ">
             <g:Anchor ui:field="go" styleName="submit btn-validate ui-link">
               <span class="ui-btn-text"><ui:safehtml from="{msg.loginLabel}"/></span>
             </g:Anchor>
           </div>
+        </div>
         </div>
         <div id="copyright">
           <ui:safehtml from="{msg.copyright}"/>
