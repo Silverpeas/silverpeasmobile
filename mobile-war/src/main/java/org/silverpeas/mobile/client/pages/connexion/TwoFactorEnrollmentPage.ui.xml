@@ -14,16 +14,16 @@
       <g:HTMLPanel>
         <div class="two-factor-content">
         <div ui:field="setupSection">
-          <p>Copiez cette clé dans votre application d'authentification pour ajouter votre compte Silverpeas.</p>
+          <p><ui:safehtml from="{msg.enrollmentStepSetup}"/></p><p><ui:safehtml from="{msg.enrollmentSetupHelp}"/></p>
           <div class="totp-enrollment-secret two-factor-secret"><g:Label ui:field="secret"/></div>
           <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
             <div class="ui-controlgroup-controls">
               <g:Anchor ui:field="copySecret" styleName="submit btn-validate ui-link">
-                <span class="ui-btn-text">Copier la clé</span>
+                <span class="ui-btn-text"><ui:safehtml from="{msg.enrollmentCopyKey}"/></span>
               </g:Anchor>
             </div>
           </div>
-          <p>Une fois le compte ajouté, saisissez le code à 6 chiffres affiché dans votre application.</p>
+          <p><ui:safehtml from="{msg.enrollmentStepVerify}"/></p><p><ui:safehtml from="{msg.enrollmentVerifyHelp}"/></p>
           <div id="code-formLogin" class="two-factor-code">
             <g:PasswordTextBox ui:field="codeField" name="code"/>
           </div>
@@ -33,23 +33,23 @@
           <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
             <div class="ui-controlgroup-controls">
               <g:Anchor ui:field="confirm" styleName="submit btn-validate ui-link">
-                <span class="ui-btn-text">Activer la double authentification</span>
+                <span class="ui-btn-text"><ui:safehtml from="{msg.enrollmentActivate}"/></span>
               </g:Anchor>
             </div>
           </div>
         </div>
         <div ui:field="recoverySection" class="two-factor-recovery" style="display:none">
-          <p>Conservez ces codes de récupération en lieu sûr. Ils ne seront plus affichés.</p>
+          <p><ui:safehtml from="{msg.enrollmentRecoveryHelp}"/></p>
           <g:TextArea ui:field="recoveryCodes" visibleLines="10" characterWidth="28" readOnly="true"/>
           <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
             <div class="ui-controlgroup-controls">
               <g:Anchor ui:field="continueButton" styleName="submit btn-validate ui-link">
-                <span class="ui-btn-text">J'ai enregistré mes codes — Continuer</span>
+                <span class="ui-btn-text"><ui:safehtml from="{msg.enrollmentContinue}"/></span>
               </g:Anchor>
             </div>
           </div>
         </div>
-        <g:Label ui:field="status" styleName="totp-enrollment-status"/>
+        <g:Label ui:field="status" styleName="totp-enrollment-status two-factor-status"/>
         </div>
         <div id="copyright"><ui:safehtml from="{msg.copyright}"/></div>
         <div ui:field="version"></div>
