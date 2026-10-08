@@ -34,6 +34,7 @@ import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.event.authentication.AuthenticationErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
 import org.silverpeas.mobile.client.pages.connexion.TwoFactorPage;
+import org.silverpeas.mobile.client.pages.connexion.TwoFactorEnrollmentPage;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
@@ -156,6 +157,13 @@ public class AuthentificationManager {
           new RestCallback<UserProfileDTO>() {
             @Override
             public void onFailure(final RestMethod method, final Throwable throwable) {
+              String enrollmentRequired = method.getHeaders() == null
+                  ? null : method.getHeaders().get("X-Silverpeas-2FA-Enrollment-Required");
+              if (method.getStatusCode() == 401 &&
+                  "true".equalsIgnoreCase(enrollmentRequired)) {
+                showEnrollmentPage(login, password, domainId);
+                return;
+              }
               String twoFactorRequired = method.getHeaders() == null
                   ? null
                   : method.getHeaders().get("X-Silverpeas-2FA-Required");
@@ -216,6 +224,19 @@ public class AuthentificationManager {
             completeAuthentication(login, password, domainId, method, userProfile, attempt);
           }
         });
+  }
+
+  private void showEnrollmentPage(final String login, final String password,
+      final String domainId) {
+    Notification.activityStop();
+    com.google.gwt.user.client.ui.RootPanel.get().clear();
+    com.google.gwt.user.client.ui.RootPanel.get().add(
+        new TwoFactorEnrollmentPage(login, password, domainId));
+  }
+
+  public void completeEnrollment(final String login, final String password,
+      final String domainId, final RestMethod method, final UserProfileDTO profile) {
+    completeAuthentication(login, password, domainId, method, profile, null);
   }
 
   private void showTwoFactorPage(final String login, final String password,
