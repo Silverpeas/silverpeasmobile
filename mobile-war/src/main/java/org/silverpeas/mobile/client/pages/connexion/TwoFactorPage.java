@@ -37,6 +37,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
@@ -60,6 +61,20 @@ public class TwoFactorPage extends PageContent {
 
   @UiField
   CheckBox trustDevice;
+
+  @UiField
+  TextBox recoveryCodeField;
+
+  @UiField
+  Anchor recoveryToggle;
+
+  @UiField
+  DivElement totpSection;
+
+  @UiField
+  DivElement recoverySection;
+
+  private boolean recoveryMode = false;
 
   @UiField
   FormPanel form;
@@ -89,6 +104,11 @@ public class TwoFactorPage extends PageContent {
     codeField.getElement().setAttribute("autocorrect", "off");
     codeField.getElement().setAttribute("spellcheck", "off");
     codeField.getElement().setAttribute("placeholder", msg.codeLabel().asString());
+    recoveryCodeField.getElement().setAttribute("autocomplete", "off");
+    recoveryCodeField.getElement().setAttribute("autocapitalize", "none");
+    recoveryCodeField.getElement().setAttribute("autocorrect", "off");
+    recoveryCodeField.getElement().setAttribute("spellcheck", "false");
+    recoveryCodeField.getElement().setAttribute("placeholder", msg.recoveryCodePlaceholder());
     form.getElement().setId("formLogin");
     form.getElement().setAttribute("autocomplete", "off");
 
@@ -108,18 +128,27 @@ public class TwoFactorPage extends PageContent {
     codeField.getElement().getStyle().clearBackgroundColor();
   }
 
+  @UiHandler("recoveryToggle")
+  void toggleRecoveryMode(ClickEvent event) {
+    event.preventDefault();
+    recoveryMode = !recoveryMode;
+    totpSection.getStyle().setProperty("display", recoveryMode ? "none" : "block");
+    recoverySection.getStyle().setProperty("display", recoveryMode ? "block" : "none");
+    recoveryToggle.setText(recoveryMode ? msg.useAuthenticatorCode() : msg.useRecoveryCode());
+  }
+
   /**
    * Gestion du clique sur le bouton go.
    */
   @UiHandler("go")
   void connexion(ClickEvent e) {
-    String code = codeField.getText();
+    String code = recoveryMode ? recoveryCodeField.getText() : codeField.getText();
     if (code == null || code.trim().isEmpty()) {
-      codeField.getElement().getStyle().setBackgroundColor("#ec9c01");
+      (recoveryMode ? recoveryCodeField : codeField).getElement().getStyle().setBackgroundColor("#ec9c01");
       return;
     }
 
-    codeField.getElement().getStyle().clearBackgroundColor();
+    (recoveryMode ? recoveryCodeField : codeField).getElement().getStyle().clearBackgroundColor();
     AuthentificationManager.getInstance()
         .authenticateTwoFactor(login, password, domainId, code.trim(), trustDevice.getValue(), null);
   }
