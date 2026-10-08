@@ -38,10 +38,16 @@
       <g:FormPanel ui:field="form">
         <g:HTMLPanel>
         <div class="two-factor-content">
+        <div ui:field="totpSection">
         <div id="code-formLogin" class="two-factor-code">
             <g:PasswordTextBox ui:field="codeField" name="code"/>
         </div>
 
+        </div>
+        <div ui:field="recoverySection" style="display:none">
+          <p><ui:safehtml from="{msg.recoveryCodeHelp}"/></p>
+          <div class="two-factor-code"><g:TextBox ui:field="recoveryCodeField" name="recoveryCode"/></div>
+        </div>
         <div id="trusted-device" class="two-factor-trust">
           <g:CheckBox ui:field="trustDevice" text="{msg.trustDevice}"/>
         </div>
@@ -53,6 +59,7 @@
             </g:Anchor>
           </div>
         </div>
+        <div class="two-factor-switch"><g:Anchor ui:field="recoveryToggle" text="{msg.useRecoveryCode}"/></div>
         </div>
         <div id="copyright">
           <ui:safehtml from="{msg.copyright}"/>
