@@ -33,7 +33,7 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("1. Configurer votre application")
   String enrollmentStepSetup();
 
-  @DefaultMessage("Copiez cette clé dans votre application d'authentification pour ajouter votre compte Silverpeas.")
+  @DefaultMessage("Copiez cette clé dans votre application d''authentification pour ajouter votre compte Silverpeas.")
   String enrollmentSetupHelp();
 
   @DefaultMessage("Copier la clé")
@@ -51,13 +51,13 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Conservez ces codes de récupération en lieu sûr. Ils ne seront plus affichés.")
   String enrollmentRecoveryHelp();
 
-  @DefaultMessage("J'ai enregistré mes codes — Continuer")
+  @DefaultMessage("J''ai enregistré mes codes — Continuer")
   String enrollmentContinue();
 
   @DefaultMessage("Chargement de la clé de configuration...")
   String enrollmentLoading();
 
-  @DefaultMessage("Impossible de démarrer l'enrôlement. Reconnectez-vous.")
+  @DefaultMessage("Impossible de démarrer l''enrôlement. Reconnectez-vous.")
   String enrollmentStartError();
 
   @DefaultMessage("Clé copiée dans le presse-papiers.")
