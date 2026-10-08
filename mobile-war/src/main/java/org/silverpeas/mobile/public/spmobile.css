@@ -3628,3 +3628,7 @@ li.orgachartuser:nth-child(even), li.orgachartuser:nth-child(even)>a {
 #page-login.two-factor-screen .two-factor-trust {padding:.7rem .8rem;background:rgba(255,255,255,.55);border-radius:6px}
 #page-login.two-factor-screen .two-factor-trust input {vertical-align:middle;margin-right:.4rem}
 #page-login.two-factor-screen .two-factor-status {display:block;margin:.75rem 0;color:#315b31;font-size:.9em;line-height:1.4}
+
+#page-login.two-factor-screen .two-factor-switch {text-align:center;margin:1rem 0 1.5rem}
+#page-login.two-factor-screen .two-factor-switch a {font-size:.95rem;text-decoration:underline;cursor:pointer}
+#page-login.two-factor-screen .two-factor-code input[name="recoveryCode"] {max-width:340px;letter-spacing:normal;font-family:monospace;font-size:1rem}
