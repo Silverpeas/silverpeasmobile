@@ -42,7 +42,6 @@ public class TwoFactorEnrollmentPage extends PageContent {
   @UiField
   DivElement version;
   @UiField
-  Image qrCode;
   @UiField
   Label secret;
   @UiField
@@ -55,6 +54,8 @@ public class TwoFactorEnrollmentPage extends PageContent {
   Label status;
   @UiField
   Anchor confirm;
+  @UiField
+  Anchor copySecret;
   @UiField
   Anchor continueButton;
 
@@ -90,7 +91,7 @@ public class TwoFactorEnrollmentPage extends PageContent {
   }
 
   private void loadEnrollment() {
-    status.setText("Chargement du QR code...");
+    status.setText("Chargement de la clé de configuration...");
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
         .startEnrollment(new RestCallback<ServiceAuthentication.EnrollmentSetup>() {
           @Override
@@ -100,13 +101,59 @@ public class TwoFactorEnrollmentPage extends PageContent {
 
           @Override
           public void onSuccess(RestMethod method, ServiceAuthentication.EnrollmentSetup setup) {
-            qrCode.setUrl("data:image/png;base64," + setup.qrCode);
-            qrCode.setPixelSize(256, 256);
             secret.setText(setup.secret);
             status.setText("");
           }
         });
   }
+
+  @UiHandler("copySecret")
+  void copyEnrollmentSecret(ClickEvent event) {
+    if (secret.getText().isEmpty()) {
+      return;
+    }
+    copyToClipboard(secret.getText());
+  }
+
+  private void clipboardResult(boolean copied) {
+    status.setText(copied ? "Clé copiée dans le presse-papiers." :
+        "Copie impossible. Sélectionnez et copiez la clé manuellement.");
+  }
+
+  /**
+   * Uses the asynchronous Clipboard API when available (secure contexts),
+   * with a selection-based fallback for older mobile WebViews.
+   */
+  private native void copyToClipboard(String value) /*-{
+    var page = this;
+    function result(ok) {
+      page.@org.silverpeas.mobile.client.pages.connexion.TwoFactorEnrollmentPage::clipboardResult(Z)(ok);
+    }
+    function fallback() {
+      var field = $doc.createElement("textarea");
+      field.value = value;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      $doc.body.appendChild(field);
+      field.focus();
+      field.select();
+      var ok = false;
+      try {
+        ok = $doc.execCommand("copy");
+      } catch (ignored) {
+      }
+      $doc.body.removeChild(field);
+      result(ok);
+    }
+    if ($wnd.navigator.clipboard && $wnd.navigator.clipboard.writeText) {
+      $wnd.navigator.clipboard.writeText(value).then(function() {
+        result(true);
+      }, fallback);
+    } else {
+      fallback();
+    }
+  }-*/;
 
   @UiHandler("confirm")
   void confirmEnrollment(ClickEvent event) {
