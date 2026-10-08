@@ -39,7 +39,7 @@ public class TwoFactorEnrollmentPage extends PageContent {
 
   private void loadEnrollment() {
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
-        .startEnrollment(new RestCallback<String>() {
+        .startEnrollment(new RestCallback<ServiceAuthentication.EnrollmentSetup>() {
           @Override
           public void onFailure(RestMethod method, Throwable error) {
             status.setText("Impossible de démarrer l'enrôlement. Reconnectez-vous.");
@@ -47,11 +47,11 @@ public class TwoFactorEnrollmentPage extends PageContent {
           }
 
           @Override
-          public void onSuccess(RestMethod method, String secret) {
-            Image qr = new Image(ServiceAuthentication.PATH + "/enrollment/qr");
+          public void onSuccess(RestMethod method, ServiceAuthentication.EnrollmentSetup setup) {
+            Image qr = new Image("data:image/png;base64," + setup.qrCode);
             qr.setPixelSize(256, 256);
             panel.add(qr);
-            panel.add(new Label("Clé de configuration manuelle : " + secret));
+            panel.add(new Label("Clé de configuration manuelle : " + setup.secret));
             code.getElement().setAttribute("inputmode", "numeric");
             code.getElement().setAttribute("autocomplete", "one-time-code");
             code.getElement().setAttribute("placeholder", "Code à 6 chiffres");
