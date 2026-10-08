@@ -19,6 +19,7 @@ import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
+import org.silverpeas.mobile.client.components.Snackbar;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
 import org.silverpeas.mobile.shared.services.rest.ServiceAuthentication;
 
@@ -115,7 +116,12 @@ public class TwoFactorEnrollmentPage extends PageContent {
   }
 
   private void clipboardResult(boolean copied) {
-    status.setText(copied ? msg.enrollmentCopied() : msg.enrollmentCopyError());
+    if (copied) {
+      status.setText("");
+      Snackbar.show(msg.enrollmentCopied(), 2500, Snackbar.INFO);
+    } else {
+      status.setText(msg.enrollmentCopyError());
+    }
   }
 
   /**
