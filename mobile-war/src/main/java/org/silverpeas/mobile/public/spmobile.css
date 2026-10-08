@@ -3617,8 +3617,14 @@ li.orgachartuser:nth-child(even), li.orgachartuser:nth-child(even)>a {
 #page-login.two-factor-screen .two-factor-actions {text-align:center;margin:1rem 0 1.5rem}
 #page-login.two-factor-screen .btn-validate,#page-login.two-factor-screen .btn-validate:visited {display:inline-block;box-sizing:border-box;width:100%;max-width:360px;margin:0;padding:.85rem 1rem;white-space:normal;line-height:1.35;text-align:center}
 #page-login.two-factor-screen .two-factor-code {text-align:center;margin:1rem 0}
-#page-login.two-factor-screen .two-factor-code input {box-sizing:border-box;width:100%;max-width:240px;padding:.75rem;font-size:1.25rem;letter-spacing:.2em;text-align:center}
+#page-login.two-factor-screen .two-factor-code input {box-sizing:border-box;width:100%;max-width:240px;padding:.75rem;font-size:1.25rem;letter-spacing:normal;text-align:center}
 #page-login.two-factor-screen .two-factor-trust {margin:1rem 0;line-height:1.5}
 #page-login.two-factor-screen .two-factor-trust label {white-space:normal}
 #page-login.two-factor-screen .two-factor-recovery textarea {box-sizing:border-box;width:100%;max-width:100%;font-family:monospace}
 #page-login.two-factor-screen #copyright,#page-login.two-factor-screen #version {position:static;margin-top:1rem}
+
+#page-login.two-factor-screen .two-factor-code input:not(:placeholder-shown) {letter-spacing:.12em}
+#page-login.two-factor-screen .two-factor-actions .btn-validate {max-width:320px;font-size:.95em}
+#page-login.two-factor-screen .two-factor-trust {padding:.7rem .8rem;background:rgba(255,255,255,.55);border-radius:6px}
+#page-login.two-factor-screen .two-factor-trust input {vertical-align:middle;margin-right:.4rem}
+#page-login.two-factor-screen .two-factor-status {display:block;margin:.75rem 0;color:#315b31;font-size:.9em;line-height:1.4}
