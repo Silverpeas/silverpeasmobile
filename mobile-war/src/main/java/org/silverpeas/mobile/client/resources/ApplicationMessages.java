@@ -30,6 +30,19 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 
 public interface ApplicationMessages extends Messages {
 
+  @DefaultMessage("Utiliser un code de récupération")
+  String useRecoveryCode();
+
+  @DefaultMessage("Utiliser un code d''authentification")
+  String useAuthenticatorCode();
+
+  @DefaultMessage("Saisissez l''un de vos codes de récupération à usage unique.")
+  SafeHtml recoveryCodeHelp();
+
+  @DefaultMessage("Code de récupération")
+  String recoveryCodePlaceholder();
+
+
   @DefaultMessage("1. Configurer votre application")
   SafeHtml enrollmentStepSetup();
 
