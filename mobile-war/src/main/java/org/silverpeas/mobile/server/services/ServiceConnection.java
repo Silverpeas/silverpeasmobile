@@ -42,7 +42,7 @@ import org.silverpeas.core.security.authentication.AuthenticationCredential;
 import org.silverpeas.core.security.authentication.AuthenticationResponse;
 import org.silverpeas.core.security.authentication.AuthenticationServiceProvider;
 import org.silverpeas.core.security.authentication.exception.AuthenticationException;
-import org.silverpeas.core.web.chat.listeners.ChatUserAuthenticationListener;
+import org.silverpeas.core.chat.ChatUsersRegistration;
 import org.silverpeas.core.web.rs.UserPrivilegeValidation;
 import org.silverpeas.kernel.SilverpeasException;
 import org.silverpeas.mobile.server.dao.SecurityCode;
@@ -73,7 +73,7 @@ public class ServiceConnection extends AbstractRestWebService {
   private static long CODE_MAX_DURATION = 30;
 
   @Inject
-  ChatUserAuthenticationListener chatUserAuthenticationListener;
+  private ChatUsersRegistration chatUsersRegistration;
 
   @Context
   HttpServletRequest request;
@@ -163,7 +163,9 @@ public class ServiceConnection extends AbstractRestWebService {
     }
 
     // chat init
-    if (chatUserAuthenticationListener != null) chatUserAuthenticationListener.firstHomepageAccessAfterAuthentication(request, user, "");
+    request.getSession().setAttribute("Silverpeas.Chat",
+        chatUsersRegistration.isChatServiceEnabled() && user != null && !user.isAnonymous() &&
+            !user.isAccessGuest());
 
     // Add connexion in stats
     statisticsDAO.saveLoginEvent(Long.parseLong(userId), getPlatform(),getSettings().getString("version"),
