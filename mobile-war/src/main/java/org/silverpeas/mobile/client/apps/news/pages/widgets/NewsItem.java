@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.news.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -55,6 +56,8 @@ public class NewsItem extends Composite implements ClickHandler {
   public NewsItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
+    picto.setHref("#");
+    addDomHandler(this, ClickEvent.getType());
   }
 
   public void setData(int index, int max, NewsDTO data) {
@@ -63,10 +66,7 @@ public class NewsItem extends Composite implements ClickHandler {
     this.data = data;
 
     updateTitle(data);
-    picto.addClickHandler(this);
-    content.setHTML(
-         "<p>" + data.getDescription() + "</p><br class='clear'/>");
-    content.addClickHandler(this);
+    content.setVisible(false);
   }
 
   public void updateTitle(NewsDTO data) {
@@ -80,8 +80,15 @@ public class NewsItem extends Composite implements ClickHandler {
       }
     }
     String vignette = data.getVignette();
-    if (vignette == null) vignette = "";
-    picto.setHTML("<h2><a href='javaScript:;'>" + data.getTitle() + status + "</a></h2><img src='" + vignette + "'/>");
+    String image = vignette == null || vignette.isEmpty() ? "" :
+        "<img src='" + SafeHtmlUtils.htmlEscape(vignette) +
+            "' alt='' loading='lazy' decoding='async'/>";
+    String title = SafeHtmlUtils.htmlEscape(data.getTitle() + status);
+    String date = data.getUpdateDate();
+    String dateHtml = date == null || date.isEmpty() ? "" :
+        "<span class='news-date'>" + SafeHtmlUtils.htmlEscape(date) + "</span>";
+    picto.setHTML(image + "<div class='news-row-summary'><h2 title='" + title + "'>" +
+        title + "</h2>" + dateHtml + "</div>");
   }
 
   public NewsDTO getData() {
@@ -90,6 +97,7 @@ public class NewsItem extends Composite implements ClickHandler {
 
   @Override
   public void onClick(final ClickEvent event) {
+    event.preventDefault();
     ContentDTO content = new ContentDTO();
     content.setId(data.getId());
     content.setContributionId(data.getIdNews());

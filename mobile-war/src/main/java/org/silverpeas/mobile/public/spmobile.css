@@ -666,6 +666,75 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   color: #1c94d4
 }
 
+
+/* Square editorial cards, limited to home page list mode. */
+.carroussel-news li.homepage-news-list-item {
+  height: auto;
+  margin: 0 12px 20px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-bottom: 3px solid var(--main-color);
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.carroussel-news li.homepage-news-list-item > a:first-child {
+  float: none;
+  display: block;
+  width: 100%;
+  max-width: none;
+}
+
+.carroussel-news li.homepage-news-list-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+}
+
+.carroussel-news li.homepage-news-list-item .caption-list {
+  height: auto;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.carroussel-news li.homepage-news-list-item h2 {
+  font-size: 1.1em;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.carroussel-news li.homepage-news-list-item p.news-date {
+  font-size: 0.72em;
+  color: #777;
+  margin: 0 0 8px;
+  text-align: left;
+}
+
+.carroussel-news li.homepage-news-list-item p.news-excerpt {
+  font-size: 0.85em;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.carroussel-news li.homepage-news-list-item .nbIndication {
+  display: none;
+}
+
 #shortCuts ul li {
   display: flex;
   align-items: center;
@@ -2111,6 +2180,13 @@ textarea.ui-input-text {
   float: left;
   margin: 1em;
   margin-left: 0;
+}
+
+/* The news application keeps compact thumbnails even when the URL serves the original image. */
+.liste-news li img {
+  width: 90px;
+  max-width: calc(100% - 1em);
+  height: auto;
 }
 
 .liste-news li h2, .liste-annonces li h2 {
@@ -3608,3 +3684,55 @@ li.orgachartuser:nth-child(even), li.orgachartuser:nth-child(even)>a {
   vertical-align:middle;
 }
 
+
+/* Compact rows in the news application. */
+.liste-news li {
+  padding: 12px;
+  border-bottom: 1px solid #e5e5e5;
+  cursor: pointer;
+}
+
+.liste-news li > a:first-child {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: var(--main-font-color);
+}
+
+.liste-news li img {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  max-width: 64px;
+  object-fit: cover;
+  float: none;
+  margin: 0;
+  border-radius: 0;
+}
+
+.liste-news .news-row-summary {
+  flex: 1;
+  min-width: 0;
+}
+
+.liste-news .news-row-summary h2 {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0;
+}
+
+.liste-news .news-date {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.72em;
+  line-height: 1.3;
+  color: #777;
+}

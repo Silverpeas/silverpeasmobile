@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.navigation.pages.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -57,25 +58,32 @@ public class NewsItem extends Composite implements ClickHandler {
   public NewsItem() {
     initWidget(uiBinder.createAndBindUi(this));
     msg = GWT.create(ApplicationMessages.class);
+    addDomHandler(this, ClickEvent.getType());
   }
 
   public void setData(int index, int max, NewsDTO data) {
     this.index = index;
     this.max = max;
     this.data = data;
-    picto.setHTML("<img src='" + data.getVignette() + "'/>");
-    picto.addClickHandler(this);
+    String thumbnailUrl = data.getVignette();
+    boolean hasThumbnail = thumbnailUrl != null && !thumbnailUrl.isEmpty();
+    picto.setVisible(hasThumbnail);
+    picto.setHTML(hasThumbnail ? "<img src='" + SafeHtmlUtils.htmlEscape(thumbnailUrl) +
+        "' alt='' loading='lazy' decoding='async'/>" : "");
+    String date = data.getUpdateDate();
+    String dateHtml = !displayPager && date != null && !date.isEmpty() ?
+        "<p class='news-date'>" + SafeHtmlUtils.htmlEscape(date) + "</p>" : "";
     content.setHTML(
-        "<h2><a href='#'>" + data.getTitle() + "</a></h2><p>" + data.getDescription() + "</p>");
-    content.addClickHandler(this);
+        "<h2><a href='#'>" + SafeHtmlUtils.htmlEscape(data.getTitle()) + "</a></h2>" +
+            dateHtml + "<p class='news-excerpt'>" + data.getDescription() + "</p>");
     if (displayPager) {
       indicator.setHTML("<span>" + index + "</span>/" + max);
-      indicator.addClickHandler(this);
     }
   }
 
   @Override
   public void onClick(final ClickEvent event) {
+    event.preventDefault();
     ContentDTO content = new ContentDTO();
     content.setId(data.getId());
     content.setContributionId(data.getIdNews());
@@ -88,8 +96,10 @@ public class NewsItem extends Composite implements ClickHandler {
   public void setDisplayPager(boolean displayPager) {
     this.displayPager = displayPager;
     if (displayPager) {
+      getElement().removeClassName("homepage-news-list-item");
       content.setStylePrimaryName("caption");
     } else {
+      getElement().addClassName("homepage-news-list-item");
       content.setStylePrimaryName("caption-list");
     }
   }

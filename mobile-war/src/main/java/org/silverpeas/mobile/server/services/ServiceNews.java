@@ -133,7 +133,8 @@ public class ServiceNews extends AbstractRestWebService {
   }
 
   private void setVignette(NewsDTO news, News n2) throws Exception {
-    if (news.getVignette() != null && !news.getVignette().isEmpty()) {
+    // An existing thumbnail URL is not a new upload; only decode image data URLs.
+    if (news.getVignette() != null && news.getVignette().startsWith("data:image/")) {
       File f = DataURLHelper.createPictureFromUrlData(news.getVignette(), n2.getComponentInstanceId() + "-" + n2.getId());
       LocalDiskFileItem item = new LocalDiskFileItem(f, FileUtil.getMimeType(f.getAbsolutePath()));
       List<FileItem> items = new ArrayList<>();

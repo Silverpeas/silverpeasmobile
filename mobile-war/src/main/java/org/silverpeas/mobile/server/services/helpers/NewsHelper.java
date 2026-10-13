@@ -24,12 +24,8 @@
 
 package org.silverpeas.mobile.server.services.helpers;
 
-import org.apache.commons.codec.binary.Base64;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
-import org.silverpeas.components.gallery.model.MediaPK;
-import org.silverpeas.components.gallery.model.Photo;
-import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.quickinfo.NewsByStatus;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
@@ -39,11 +35,8 @@ import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
-import org.silverpeas.core.io.file.ImageResizingProcessor;
-import org.silverpeas.core.io.file.SilverpeasFileProcessor;
+import org.silverpeas.core.contribution.model.Thumbnail;
 import org.silverpeas.core.util.CollectionUtil;
-import org.silverpeas.core.util.ServiceProvider;
-import org.silverpeas.core.util.file.FileRepositoryManager;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 import org.silverpeas.kernel.bundle.SettingBundle;
@@ -51,9 +44,6 @@ import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.shared.dto.news.NewsDTO;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -63,11 +53,8 @@ import java.util.*;
 public class NewsHelper {
 
   private static NewsHelper instance;
-  private static final ImageResizingProcessor processor = ServiceProvider.getService(ImageResizingProcessor.class);
   private final OrganizationController organizationController = OrganizationController.get();
   private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
-  private final SettingBundle publicationSettings = ResourceLocator.getSettingBundle("org.silverpeas.publication.publicationSettings");
-  private final SettingBundle configuration = ResourceLocator.getSettingBundle("org.silverpeas.mobile.mobileSettings");
 
   public static NewsHelper getInstance() {
     if (instance == null) {
@@ -223,7 +210,7 @@ public class NewsHelper {
     news.setEndDate(n.getVisibility().getPeriod().getEndDate().toString().replaceAll("Z", ""));
     news.setIdNews(n.getId());
     try {
-      news.setVignette(getBase64ImageData(n.getPublication().getInstanceId(), n.getPublication(), resizeImage));
+      news.setVignette(getThumbnailUrl(n.getPublication()));
     } catch(Exception e) {SilverLogger.getLogger(this).error(e);}
     news.setInstanceId(n.getPublication().getInstanceId());
     return news;
@@ -250,7 +237,7 @@ public class NewsHelper {
     news.setDraft(pub.isDraft());
     news.setVisible(pub.isVisible());
     try {
-      news.setVignette(getBase64ImageData(pub.getInstanceId(), pub, resizeImage));
+      news.setVignette(getThumbnailUrl(pub));
     } catch(Exception e) {SilverLogger.getLogger(this).error(e);}
     news.setInstanceId(pub.getInstanceId());
     return news;
@@ -269,71 +256,8 @@ public class NewsHelper {
   }
 
 
-  private String getBase64ImageData(String instanceId, PublicationDetail pub, boolean resize) throws Exception {
-    if (pub.getImage().contains("GalleryInWysiwyg")) {
-      return convertSpImageUrlToDataUrl(pub.getImage());
-    } else {
-      File f = getActuThumb(instanceId, pub, resize);
-      FileInputStream is = new FileInputStream(f);
-      byte[] binaryData = new byte[(int) f.length()];
-      is.read(binaryData);
-      is.close();
-      String type = pub.getImageMimeType();
-      String data = "data:" + type + ";base64," + new String(Base64.encodeBase64(binaryData));
-      return data;
-    }
-  }
-
-  private File getActuThumb(String componentId,	PublicationDetail pub, boolean resize) throws IOException {
-    String path = FileRepositoryManager.getAbsolutePath(componentId) + publicationSettings.getString("imagesSubDirectory", "fr") + File.separatorChar;
-    path += pub.getImage();
-    File originalFile = new File(path);
-    if (resize) {
-      return resizeImage(originalFile);
-    } else {
-      return originalFile;
-    }
-  }
-
-  private File resizeImage(final File originalFile) {
-    final String path;
-    String size = configuration.getString("news.thumbnail.size", "x90");
-    String askedPath = pathForOriginalImageSize(originalFile, originalFile.getName(), size);
-    path = processor.processBefore(askedPath, SilverpeasFileProcessor.ProcessingContext.GETTING);
-    return new File(path);
-  }
-
-  private String convertSpImageUrlToDataUrl(String url) {
-    String data = url;
-    if (url.contains("GalleryInWysiwyg")) {
-      try {
-        String instanceId = url.substring(url.indexOf("ComponentId") + "ComponentId".length() + 1);
-        instanceId = instanceId.substring(0, instanceId.indexOf("&"));
-        String imageId = url.substring(url.indexOf("ImageId") + "ImageId".length() + 1);
-        imageId = imageId.substring(0, imageId.indexOf("&"));
-        Photo photo = MediaServiceProvider.getMediaService().getPhoto(new MediaPK(imageId));
-        String[] rep = {"image" + imageId};
-
-        String path = FileRepositoryManager.getAbsolutePath(instanceId, rep);
-        File f = new File(path + photo.getFileName());
-
-        File fResized = resizeImage(f);
-        FileInputStream is = new FileInputStream(fResized);
-        byte[] binaryData = new byte[(int) f.length()];
-        is.read(binaryData);
-        is.close();
-        data = "data:" + photo.getFileMimeType().getMimeType().toLowerCase() + ";base64," +
-            new String(Base64.encodeBase64(binaryData));
-      } catch (Exception e) {
-        SilverLogger.getLogger(this)
-            .error("NewsHelper.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
-      }
-    }
-    return data;
-  }
-
-
-  private String pathForOriginalImageSize(File originalImage,String name, String size) {
-    return originalImage.getParent() + File.separator + size + File.separator + name;
+  private String getThumbnailUrl(PublicationDetail publication) {
+    Thumbnail thumbnail = publication.getThumbnail();
+    return thumbnail != null ? thumbnail.getURL() : null;
   }
 }
