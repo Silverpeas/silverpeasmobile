@@ -311,9 +311,9 @@ public class ServiceDocuments extends AbstractRestWebService {
       }
       NodePK nodePK = new NodePK(topicId, instanceId);
       PublicationPK pubPK = new PublicationPK("useless", instanceId);
-      List<KmeliaPublication> publications = KmeliaService.get().getAuthorizedPublicationsOfFolder(nodePK,
+      List<KmeliaPublication> publications = new ArrayList<>(KmeliaService.get().getAuthorizedPublicationsOfFolder(nodePK,
           getUserTopicProfile(nodePK.getId(), pubPK.getInstanceId()), getUser().getId(),
-          isTreeStructure(pubPK.getInstanceId()));
+          isTreeStructure(pubPK.getInstanceId())));
       final int sort;
       if (isManualSortingUsed(publications)) {
         // display publications according to manual order defined by admin
@@ -640,9 +640,9 @@ public class ServiceDocuments extends AbstractRestWebService {
 
 
       NodePK nodePK = new NodePK(folderId, instanceId);
-      List<KmeliaPublication> publications = KmeliaService.get().getAuthorizedPublicationsOfFolder(nodePK,
+      List<KmeliaPublication> publications = new ArrayList<>(KmeliaService.get().getAuthorizedPublicationsOfFolder(nodePK,
               getUserTopicProfile(nodePK.getId(), instanceId), getUser().getId(),
-              isTreeStructure(instanceId));
+              isTreeStructure(instanceId)));
 
 
       int sort;
