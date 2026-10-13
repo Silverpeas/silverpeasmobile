@@ -240,16 +240,36 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     boolean biometricsAuthEnable = Boolean.parseBoolean(ResourcesManager.getParam("authentification.biometrics", "false"));
     if (biometricsAuthEnable) {
       if (BiometricAuthHelper.isRegistered()) {
+        setBiometricLocked(true);
         BiometricAuthHelper.loginLocal(success -> {
           if (!success) {
             BiometricMessages biometricMessages = GWT.create(BiometricMessages.class);
             Window.alert(biometricMessages.authFailed());
             return;
           }
+          setBiometricLocked(false);
         });
       } else {
+        setBiometricLocked(false);
         BiometricAuthHelper.register();
       }
+    } else {
+      setBiometricLocked(false);
+    }
+  }
+
+  private static void setBiometricLocked(boolean locked) {
+    Element html = Document.get().getDocumentElement();
+    Element body = Document.get().getBody();
+    if (locked) {
+      html.setAttribute("data-biometric-locked", "");
+      // Prevent keyboard focus and hide the protected content from assistive technology.
+      body.setAttribute("inert", "");
+      body.setAttribute("aria-hidden", "true");
+    } else {
+      html.removeAttribute("data-biometric-locked");
+      body.removeAttribute("inert");
+      body.removeAttribute("aria-hidden");
     }
   }
 

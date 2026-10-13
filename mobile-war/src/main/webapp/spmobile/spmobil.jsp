@@ -43,6 +43,15 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
   <meta name="robots" content="noindex">
+  <style>
+    html[data-biometric-locked] body {
+      filter: blur(16px) !important;
+      -webkit-filter: blur(16px) !important;
+      pointer-events: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+    }
+  </style>
   <meta name="viewport"
         content="width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 
@@ -150,10 +159,21 @@
     }
   %>
 
-  <script type="text/javascript" src="<%=appUrl%>/spmobile/spmobile.nocache.js"></script>
   <script>
     var labels = <% out.println(jsonLabels); %>;
     var params = <% out.println(jsonParams); %>;
+
+    // Protect the first paint, before the GWT application renders any content.
+    if (String(params["authentification.biometrics"]).toLowerCase() === "true") {
+      try {
+        if (window.localStorage.getItem("localCredential") !== null) {
+          document.documentElement.setAttribute("data-biometric-locked", "");
+        }
+      } catch (e) {
+        // Keep the content protected if credential storage cannot be read.
+        document.documentElement.setAttribute("data-biometric-locked", "");
+      }
+    }
 
     function resize() {
       var windowHeight = window.innerHeight;
@@ -163,6 +183,7 @@
       window.navigateTo(url);
     }
   </script>
+  <script type="text/javascript" src="<%=appUrl%>/spmobile/spmobile.nocache.js"></script>
   <script type="text/javascript" src="<%=appUrl%>/spmobile/ckeditor/ckeditor.js"></script>
   <link  href="<%=appUrl%>/spmobile/cropjs/cropper.min.css" rel="stylesheet">
   <script type="text/javascript" src="<%=appUrl%>/spmobile/cropjs/cropper.min.js"></script>
