@@ -69,6 +69,7 @@ public class BlogItem extends Composite implements ClickHandler {
 
   @Override
   public void onClick(final ClickEvent event) {
+    event.preventDefault();
     ContentDTO content = new ContentDTO();
     content.setId(data.getId());
     content.setType(ContentsTypes.Publication.toString());
