@@ -72,7 +72,7 @@ public class ServiceConnection extends AbstractRestWebService {
   private static ConcurrentHashMap<String, SecurityCode> securityCodeRequests = new ConcurrentHashMap<>();
   private static long CODE_MAX_DURATION = 30;
 
-  /*@Inject*/ //TODO : Fix injection
+  @Inject
   ChatUserAuthenticationListener chatUserAuthenticationListener;
 
   @Context
