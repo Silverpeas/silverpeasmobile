@@ -88,7 +88,7 @@ public class BiometricAuthHelper {
                 name: "user_local",
                 displayName: "Utilisateur Local"
             },
-            pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+            pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
             authenticatorSelection: { userVerification: "required" },
             timeout: 60000
         };

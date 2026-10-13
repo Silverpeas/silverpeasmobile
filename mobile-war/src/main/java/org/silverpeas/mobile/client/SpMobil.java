@@ -263,13 +263,11 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     Element body = Document.get().getBody();
     if (locked) {
       html.setAttribute("data-biometric-locked", "");
-      // Prevent keyboard focus and hide the protected content from assistive technology.
+      // Inert blocks focus and excludes the protected content from assistive technology.
       body.setAttribute("inert", "");
-      body.setAttribute("aria-hidden", "true");
     } else {
       html.removeAttribute("data-biometric-locked");
       body.removeAttribute("inert");
-      body.removeAttribute("aria-hidden");
     }
   }
 
@@ -305,13 +303,18 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   }
 
   private static void checkVersion() {
-    String  buildDate = ResourcesManager.getParam("build.date");
-    String lastBuild = LocalStorageHelper.getInstance().load("build.date");
-    if (lastBuild != null && !buildDate.equals(lastBuild)) {
-      // clear cache
-      AuthentificationManager.getInstance().clearCache();
+    String buildDate = ResourcesManager.getParam("build.date");
+    if (buildDate == null || buildDate.isEmpty()) {
+      return;
     }
-    if (lastBuild == null || lastBuild.isEmpty()) LocalStorageHelper.getInstance().storeBuildDate();
+    String lastBuild = LocalStorageHelper.getInstance().load("build.date");
+    if (!buildDate.equals(lastBuild)) {
+      if (lastBuild != null && !lastBuild.isEmpty()) {
+        AuthentificationManager.getInstance().clearCache();
+      }
+      // Record the new version so subsequent page changes do not clear the cache again.
+      LocalStorageHelper.getInstance().storeBuildDate();
+    }
   }
 
   public void displayFirstPage() {

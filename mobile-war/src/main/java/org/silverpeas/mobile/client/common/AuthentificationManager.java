@@ -40,6 +40,7 @@ import org.silverpeas.mobile.client.common.network.rest.RestMethod;
 import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.common.storage.LocalStorageHelper;
+import org.silverpeas.mobile.client.common.storage.CacheStorageHelper;
 import org.silverpeas.mobile.shared.dto.DetailUserDTO;
 import org.silverpeas.mobile.shared.dto.FullUserDTO;
 import org.silverpeas.mobile.shared.dto.IFullUser;
@@ -313,22 +314,7 @@ public class AuthentificationManager {
   }
 
   public void clearCache() {
-    // clear app cache
-    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
-      @Override
-      public void attempt() {
-        ServicesLocator.getServiceNavigation().clearAppCache(this);
-      }
-
-      @Override
-      public void onFailure(final RestMethod method, final Throwable t) {
-
-      }
-
-      @Override
-      public void onSuccess(final RestMethod method, final Void unused) {
-      }
-    };
-    action.attempt();
+    // Cache invalidation must also work before login, without clearing the session or credentials.
+    CacheStorageHelper.clear();
   }
 }

@@ -33,13 +33,29 @@ public class CacheStorageHelper {
     addToCache(request);
   }
 
-  private static native void addToCache(String req) /*-{
-    try {
-      caches.open('spmobileOffline').then(function(cache) {
-        cache.add(req);
-      });
-    } catch(error) {
-      console.log(error);
+  public static native void clear() /*-{
+    if (!$wnd.caches) {
+      return;
     }
+    $wnd.caches.open('spmobileOffline').then(function(cache) {
+      return cache.keys().then(function(requests) {
+        return Promise.all(requests.map(function(request) {
+          return cache.delete(request);
+        }));
+      });
+    }).catch(function() {
+      // Offline caching is optional when browser storage is unavailable.
+    });
+  }-*/;
+
+  private static native void addToCache(String req) /*-{
+    if (!req || !$wnd.caches) {
+      return;
+    }
+    $wnd.caches.open('spmobileOffline').then(function(cache) {
+      return cache.add(req);
+    }).catch(function() {
+      // A failed prefetch must not interrupt navigation or reject an unhandled promise.
+    });
   }-*/;
 }

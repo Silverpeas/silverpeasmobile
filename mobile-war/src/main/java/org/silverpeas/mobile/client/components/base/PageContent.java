@@ -74,7 +74,7 @@ public abstract class PageContent extends Composite implements View, NativePrevi
     NodeList<Element> metas = Document.get().getHead().getElementsByTagName("meta");
     for (int i = 0; i < metas.getLength(); i++) {
       if (metas.getItem(i).getAttribute("name").equals("viewport")) {
-        metas.getItem(i).setAttribute("content","width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
+        metas.getItem(i).setAttribute("content","width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
       }
     }
   }

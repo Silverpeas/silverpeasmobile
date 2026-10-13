@@ -88,7 +88,7 @@ public class IframePage extends PageContent implements View, WindowEventHandler 
     NodeList<Element> metas = Document.get().getHead().getElementsByTagName("meta");
     for (int i = 0; i < metas.getLength(); i++) {
       if (metas.getItem(i).getAttribute("name").equals("viewport")) {
-        metas.getItem(i).setAttribute("content","width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=5.0, user-scalable=1");
+        metas.getItem(i).setAttribute("content","width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=1");
       }
     }
   }

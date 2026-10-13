@@ -57,67 +57,98 @@ if (firebaseConfig != null) {
 }
 
 const CACHE_NAME = 'spmobileOffline';
-var cache;
+let cacheWrites = Promise.resolve();
 
-self.addEventListener('install', (event) => {
-  console.log('Install service worker');
-  event.waitUntil((async () => {
-    cache = await caches.open(CACHE_NAME);
-    await cache.addAll(OFFLINE_URLS);
-    return self.skipWaiting();
+// Cache writes are optional: a storage failure must not discard a valid network response.
+async function cacheNetworkResponse(request, response) {
+  if (!response.ok || response.status === 206) {
+    return;
+  }
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      // Do not retain a Cache handle across browser cache invalidations.
+      const cache = await caches.open(CACHE_NAME);
+      await cache.put(request, response.clone());
+      if (request.url.includes('.cache.js')) {
+        const requests = await cache.keys();
+        await Promise.all(requests.filter(function(cachedRequest) {
+          return cachedRequest.url.includes('.cache.js') && cachedRequest.url !== request.url;
+        }).map(function(cachedRequest) {
+          return cache.delete(cachedRequest);
+        }));
+      }
+      return;
+    } catch (error) {
+      if (attempt === 0 && error.name === 'NotFoundError') {
+        // The cache may have been removed by Clear-Site-Data; reopen it and retry once.
+        continue;
+      }
+      if (attempt === 0 && error.name === 'QuotaExceededError') {
+        try {
+          const cache = await caches.open(CACHE_NAME);
+          const requests = await cache.keys();
+          await Promise.all(requests.filter(function(cachedRequest) {
+            return cachedRequest.url.includes('/services/');
+          }).map(function(cachedRequest) {
+            return cache.delete(cachedRequest);
+          }));
+          continue;
+        } catch (cleanupError) {
+          return;
+        }
+      }
+      return;
+    }
+  }
+}
+
+self.addEventListener('install', function(event) {
+  event.waitUntil((async function() {
+    // One unavailable optional resource must not prevent the worker from installing.
+    await Promise.all(OFFLINE_URLS.map(async function(url) {
+      try {
+        const request = new Request(new URL(url, self.location.href));
+        const response = await fetch(request);
+        await cacheNetworkResponse(request, response);
+      } catch (error) {
+        // This resource remains available through the normal network path.
+      }
+    }));
+    await self.skipWaiting();
   })());
 });
 
 self.addEventListener('activate', function(event) {
-  event.waitUntil((async () => {
-    cache = await caches.open(CACHE_NAME);
-    return self.clients.claim();
-  })());
+  event.waitUntil(self.clients.claim());
 });
 
-
 self.addEventListener('fetch', function(event) {
-    if (event.request.method == 'GET' && event.request.url.startsWith('http') && event.request.url.indexOf("9876") === -1) {
-      event.respondWith(
-        fetch(event.request).then(function(response){
-                      try {
-                        if (event.request.url.includes('.cache.js')) {
-
-                          console.log('clean old nocache.js');
-                          cache.keys().then(function(cachedRequests) {
-                            cachedRequests.forEach(function(cachedRequest) {
-                              if (cachedRequest.url.includes('.cache.js')) {
-                                console.log('old cache.js found !');
-                                cache.delete(cachedRequest);
-                              }
-                            });
-                          });
-
-                        }
-                        cache.put(event.request.clone(), response.clone());
-
-                      } catch(error) {
-                        if (error.name === 'QuotaExceededError') {
-                          console.log('cleaning cache');
-                          cache.keys().then(function(cachedRequests) {
-                            cachedRequests.forEach(function(cachedRequest) {
-                              if (cachedRequest.url.includes('/services/')) {
-                                cache.delete(cachedRequest);
-                              }
-                            });
-                          });
-                        }
-                      }
-
-
-		          //console.log('Réponse du réseau :', response);
-              return response;
-
-          }).catch(function() {
-		        return caches.match(event.request);
-          })
-        );
+  if (event.request.method === 'GET' && event.request.url.startsWith('http') &&
+      event.request.url.indexOf("9876") === -1) {
+    const networkResponse = fetch(event.request);
+    event.waitUntil(networkResponse.then(function(response) {
+      const responseForCache = response.clone();
+      // Serialize compiled-script cleanup and writes to avoid deleting a concurrent update.
+      cacheWrites = cacheWrites.then(function() {
+        return cacheNetworkResponse(event.request, responseForCache);
+      }).catch(function() {
+        // The network response is still usable if offline storage is unavailable.
+      });
+      return cacheWrites;
+    }, function() {
+      // Offline requests are handled by the cache fallback below.
+    }));
+    event.respondWith(networkResponse.catch(async function(networkError) {
+      try {
+        const cache = await caches.open(CACHE_NAME);
+        const cachedResponse = await cache.match(event.request);
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+      } catch (cacheError) {
+        // Preserve the original network failure when no offline response is available.
       }
-  });
-
-
+      throw networkError;
+    }));
+  }
+});

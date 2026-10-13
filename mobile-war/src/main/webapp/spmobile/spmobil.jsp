@@ -53,7 +53,7 @@
     }
   </style>
   <meta name="viewport"
-        content="width=device-width, target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="HandheldFriendly" content="true">
