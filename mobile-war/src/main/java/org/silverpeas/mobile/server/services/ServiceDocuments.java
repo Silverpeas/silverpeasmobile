@@ -373,7 +373,7 @@ public class ServiceDocuments extends AbstractRestWebService {
       }
     } catch (Exception e) {
       SilverLogger.getLogger(this)
-          .error("ServiceDocumentsImpl.getPublications", "root.EX_NO_MESSAGE", e);
+          .error("ServiceDocumentsImpl.getPublications", e);
       throw e;
     }
 
@@ -505,7 +505,7 @@ public class ServiceDocuments extends AbstractRestWebService {
       return dto;
     } catch (Throwable e) {
       SilverLogger.getLogger(this)
-          .error("ServiceDocumentsImpl.getPublication", "root.EX_NO_MESSAGE", e);
+          .error("ServiceDocumentsImpl.getPublication", e);
       throw e;
     }
   }
@@ -678,7 +678,7 @@ public class ServiceDocuments extends AbstractRestWebService {
 
     } catch(Throwable e) {
       SilverLogger.getLogger(this)
-              .error("ServiceDocumentsImpl.getNextPublication", "root.EX_NO_MESSAGE", e);
+              .error("ServiceDocumentsImpl.getNextPublication", e);
       throw e;
     }
 

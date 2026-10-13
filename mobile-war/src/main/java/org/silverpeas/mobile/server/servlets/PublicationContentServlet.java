@@ -146,8 +146,8 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
     }
 
 
-    response.getOutputStream().print("</body></html>");
-    ((OutputStream) response.getOutputStream()).flush();
+    response.getWriter().print("</body></html>");
+    response.getWriter().flush();
   }
 
   private void displayWysiwyg(String html, HttpServletRequest request, HttpServletResponse response,
@@ -303,7 +303,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
             new String(Base64.encodeBase64(binaryData));
       } catch (Exception e) {
         SilverLogger.getLogger(this)
-            .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+            .error("PublicationContentServlet.convertSpImageUrlToDataUrl", e);
       }
     } else if (url.contains("attachmentId")) {
       data = convertImageAttachmentUrl(url, data, width);
@@ -326,7 +326,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         data = "data:" + contentType + ";base64," + new String(Base64.encodeBase64(binaryData));
       } catch (Exception e) {
         SilverLogger.getLogger(this)
-            .error("PublicationContentServlet.convertImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+            .error("PublicationContentServlet.convertImageUrlToDataUrl", e);
         // If can't connect to url, return the url without change
       }
     }
@@ -365,7 +365,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
           new String(Base64.encodeBase64(binaryData));
     } catch (Exception e) {
       SilverLogger.getLogger(this)
-          .error("PublicationContentServlet.convertSpImageUrlToDataUrl", "root.EX_NO_MESSAGE", e);
+          .error("PublicationContentServlet.convertSpImageUrlToDataUrl", e);
     }
     return data;
   }
