@@ -67,7 +67,6 @@ public class ErrorManager implements ErrorEventHandler {
     StringBuilder msgEx = new StringBuilder();
     StackTracePrintStream ps = new StackTracePrintStream(msgEx);
     event.getException().printStackTrace(ps);
-    ps.flush();
 
     message = msgEx.toString();
     message = message.replaceAll("\n", "<br/>");

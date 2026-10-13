@@ -608,12 +608,16 @@ public class ServiceNavigation extends AbstractRestWebService {
         try {
             SpaceInst space = Administration.get().getPersonalSpace(userId);
             List<ApplicationInstanceDTO> apps = new ArrayList<>();
+            // A user may not have a personal space yet.
+            if (space == null) {
+                return apps;
+            }
             for (ComponentInst app : space.getAllComponentsInst()) {
                 ApplicationInstanceDTO dto = populate(app, true);
                 apps.add(dto);
             }
             return apps;
-        } catch (AdminException e) {
+        } catch (Exception e) {
             SilverLogger.getLogger(this).error(e);
             throw new WebApplicationException(e);
         }
