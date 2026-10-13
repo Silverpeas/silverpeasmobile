@@ -40,10 +40,10 @@ public class CacheStorageHelper {
     $wnd.caches.open('spmobileOffline').then(function(cache) {
       return cache.keys().then(function(requests) {
         return Promise.all(requests.map(function(request) {
-          return cache.delete(request);
+          return cache["delete"](request);
         }));
       });
-    }).catch(function() {
+    })["catch"](function() {
       // Offline caching is optional when browser storage is unavailable.
     });
   }-*/;
@@ -54,7 +54,7 @@ public class CacheStorageHelper {
     }
     $wnd.caches.open('spmobileOffline').then(function(cache) {
       return cache.add(req);
-    }).catch(function() {
+    })["catch"](function() {
       // A failed prefetch must not interrupt navigation or reject an unhandled promise.
     });
   }-*/;
