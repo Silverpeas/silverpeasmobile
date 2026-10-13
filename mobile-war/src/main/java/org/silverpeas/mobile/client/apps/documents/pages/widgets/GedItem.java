@@ -65,6 +65,8 @@ public class GedItem extends Composite {
 
   public void setData(Object data) {
     this.data = data;
+    icon.setVisible(true);
+    link.getElement().removeAttribute("style");
     if (data instanceof TopicDTO) {
       dataTopic = (TopicDTO) data;
       if (dataTopic.getId().equals("1")) {
@@ -82,8 +84,9 @@ public class GedItem extends Composite {
       link.setHTML(dataPublication.getName());
       setStyleName("publication");
       icon.setHTML(resources.publication().getText());
-      if (dataPublication.getVignette() != null) {
-        String style = "background:url("+dataPublication.getVignette();
+      String vignette = dataPublication.getVignette();
+      if (vignette != null && !vignette.trim().isEmpty()) {
+        String style = "background:url(" + vignette;
         style += ") no-repeat;background-position:0.5em;background-size:24px 24px;";
         link.getElement().setAttribute("style", style);
         icon.setVisible(false);

@@ -525,7 +525,7 @@ public class ServiceDocuments extends AbstractRestWebService {
     String w = String.valueOf(thumbnailSettings.getWidth());
     String h = String.valueOf(thumbnailSettings.getHeight());
 
-    if (pub.getImage() == null) {
+    if (!StringUtil.isDefined(pub.getImage())) {
       return null;
     }
 
