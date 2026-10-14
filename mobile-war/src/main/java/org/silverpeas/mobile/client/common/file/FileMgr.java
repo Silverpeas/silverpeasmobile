@@ -53,10 +53,10 @@ public class FileMgr {
 						type,
 						0,
 						function(success) {
-							callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileSystemCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$FileSystem;)(success);
+							callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileSystemCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileSystem;)(success);
 						},
 						function(error) {
-							callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileSystemCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+							callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileSystemCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 						});
 	}-*/;
 
@@ -69,10 +69,10 @@ public class FileMgr {
 				.testFileExists(
 						fileName,
 						function(success) {
-							callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onSuccess(Z)(success);
+							callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onSuccess(Z)(success);
 						},
 						function(error) {
-							callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+							callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 						});
 	}-*/;
 
@@ -81,10 +81,10 @@ public class FileMgr {
 				.testDirectoryExists(
 						dirName,
 						function(success) {
-							callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onSuccess(Z)(success);
+							callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onSuccess(Z)(success);
 						},
 						function(error) {
-							callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+							callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 						});
 	}-*/;
 
@@ -92,10 +92,10 @@ public class FileMgr {
 		$wnd.navigator.fileMgr
 				.getFreeDiskSpace(
 						function(freeDiskSpace) {
-							callback.@com.silverpeas.mobile.client.common.file.FileMgr.FreeDiskSpaceCallback::onSuccess(D)(freeDiskSpace);
+							callback.@org.silverpeas.mobile.client.common.file.FileMgr.FreeDiskSpaceCallback::onSuccess(D)(freeDiskSpace);
 						},
 						function(error) {
-							callback.@com.silverpeas.mobile.client.common.file.FileMgr.FreeDiskSpaceCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+							callback.@org.silverpeas.mobile.client.common.file.FileMgr.FreeDiskSpaceCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 						});
 	}-*/;
 
@@ -134,10 +134,10 @@ public class FileMgr {
 							path,
 							options,
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -151,10 +151,10 @@ public class FileMgr {
 							path,
 							options,
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -162,10 +162,10 @@ public class FileMgr {
 			this
 					.removeRecursively(
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onSuccess(Z)(true);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onSuccess(Z)(true);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -177,13 +177,13 @@ public class FileMgr {
 		JavaScriptObject options = JavaScriptObject.createObject();
 
 		public native FileOptions create(boolean create) /*-{
-			this.@com.silverpeas.mobile.client.common.file.FileMgr.FileOptions::options.create = create;
-			return this.@com.silverpeas.mobile.client.common.file.FileMgr.FileOptions::self;
+			this.@org.silverpeas.mobile.client.common.file.FileMgr.FileOptions::options.create = create;
+			return this.@org.silverpeas.mobile.client.common.file.FileMgr.FileOptions::self;
 		}-*/;
 
 		public native FileOptions exclusive(boolean exclusive) /*-{
-			this.@com.silverpeas.mobile.client.common.file.FileMgr.FileOptions::options.exclusive = exclusive;
-			return this.@com.silverpeas.mobile.client.common.file.FileMgr.FileOptions::self;
+			this.@org.silverpeas.mobile.client.common.file.FileMgr.FileOptions::options.exclusive = exclusive;
+			return this.@org.silverpeas.mobile.client.common.file.FileMgr.FileOptions::self;
 		}-*/;
 
 		private JavaScriptObject getOptions() {
@@ -201,10 +201,10 @@ public class FileMgr {
 			this
 					.readEntries(
 							function(success) {
-								$entry(@com.silverpeas.mobile.client.common.file.FileMgr.DirectoryReader::processCallback(L.org/google/gwt/core/client/JsArray;L.org/silverpeas/mobile/client/common/file/FileMgr$ReaderCallback;)(success, callback));
+								$entry(@org.silverpeas.mobile.client.common.file.FileMgr.DirectoryReader::processCallback(Lcom/google/gwt/core/client/JsArray;Lorg/silverpeas/mobile/client/common/file/FileMgr$ReaderCallback;)(success, callback));
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.ReaderCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.ReaderCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -227,10 +227,10 @@ public class FileMgr {
 			this
 					.createWriter(
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileWriterCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$FileWriter;)(success);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileWriterCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileWriter;)(success);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileWriterCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileWriterCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -238,10 +238,10 @@ public class FileMgr {
 			this
 					.file(
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$File;)(success);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$File;)(success);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -306,10 +306,10 @@ public class FileMgr {
 			this
 					.getMetadata(
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.MetadataCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$Metadata;)(success);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.MetadataCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$Metadata;)(success);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.MetadataCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.MetadataCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -319,10 +319,10 @@ public class FileMgr {
 							entry,
 							newName,
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -332,10 +332,10 @@ public class FileMgr {
 							entry,
 							newName,
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -347,10 +347,10 @@ public class FileMgr {
 			this
 					.remove(
 							function() {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onSuccess(Z)(true);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onSuccess(Z)(true);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileMgrCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -358,10 +358,10 @@ public class FileMgr {
 			this
 					.getParent(
 							function(success) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$Entry;)(success);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.EntryCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileError;)(error);
 							});
 		}-*/;
 
@@ -408,19 +408,19 @@ public class FileMgr {
 
 		public final native void onProgress(EventCallback callback) /*-{
 			this.onprogress = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
 		public final native void onAbort(EventCallback callback) /*-{
 			this.onabort = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
 		public final native void onError(EventCallback callback) /*-{
 			this.onerror = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
@@ -444,19 +444,19 @@ public class FileMgr {
 
 		public final native void onLoadStart(EventCallback callback) /*-{
 			this.onloadstart = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
 		public final native void onLoad(EventCallback callback) /*-{
 			this.onload = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
 		public final native void onLoadEnd(EventCallback callback) /*-{
 			this.onloadend = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
@@ -501,19 +501,19 @@ public class FileMgr {
 
 		public final native void onWriteStart(EventCallback callback) /*-{
 			this.onwritestart = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
 		public final native void onWrite(EventCallback callback) /*-{
 			this.onwrite = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
 		public final native void onWriteEnd(EventCallback callback) /*-{
 			this.onwriteend = function(event) {
-				callback.@com.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(L.org/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
+				callback.@org.silverpeas.mobile.client.common.file.FileMgr.EventCallback::onEvent(Lorg/silverpeas/mobile/client/common/file/FileMgr$Event;)(event);
 			};
 		}-*/;
 
@@ -636,10 +636,10 @@ public class FileMgr {
 							filePath,
 							serverUrl,
 							function(result) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileTransferCallback::onSuccess(L.org/silverpeas/mobile/client/common/file/FileMgr$FileTransferResult;)(result);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileTransferCallback::onSuccess(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileTransferResult;)(result);
 							},
 							function(error) {
-								callback.@com.silverpeas.mobile.client.common.file.FileMgr.FileTransferCallback::onError(L.org/silverpeas/mobile/client/common/file/FileMgr$FileTransferError;)(error);
+								callback.@org.silverpeas.mobile.client.common.file.FileMgr.FileTransferCallback::onError(Lorg/silverpeas/mobile/client/common/file/FileMgr$FileTransferError;)(error);
 							}, options);
 		}-*/;
 

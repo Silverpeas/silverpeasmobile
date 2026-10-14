@@ -60,7 +60,7 @@ import org.silverpeas.mobile.server.helpers.FormXMLHelper;
 
 import java.io.*;
 import java.net.FileNameMap;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Properties;
@@ -312,8 +312,7 @@ public class PublicationContentServlet extends AbstractSilverpeasMobileServlet {
         if (url.startsWith("/silverpeas")) {
           url = rootContext + url;
         }
-        URL urlObject = new URL(url);
-        URLConnection connection = urlObject.openConnection();
+        URLConnection connection = new URI(url).toURL().openConnection();
         connection.connect();
         String contentType = connection.getContentType();
         if (contentType == null) {

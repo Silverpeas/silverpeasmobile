@@ -42,6 +42,7 @@
   <properties>
     <gwtVersion>2.13.0</gwtVersion>
     <gwtMojoPluginVersion>2.10.0</gwtMojoPluginVersion>
+    <gwt.logLevel>INFO</gwt.logLevel>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
   </properties>
@@ -58,13 +59,6 @@
     <plugins>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <warName>spmobile</warName>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <version>${gwtMojoPluginVersion}</version>
@@ -78,7 +72,7 @@
               </modules>
               <extraJvmArgs>-Xms1024m -Xmx2048m</extraJvmArgs>
               <localWorkers>3</localWorkers>
-              <logLevel>INFO</logLevel>
+              <logLevel>${gwt.logLevel}</logLevel>
             </configuration>
             <goals>
               <goal>compile</goal>
