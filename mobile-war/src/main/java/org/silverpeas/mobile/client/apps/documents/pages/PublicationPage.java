@@ -25,6 +25,7 @@
 package org.silverpeas.mobile.client.apps.documents.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -58,6 +59,7 @@ import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeEvent;
 import org.silverpeas.mobile.client.common.reconizer.swipe.SwipeRecognizer;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.UnorderedList;
+import org.silverpeas.mobile.client.components.AuditTrail;
 import org.silverpeas.mobile.client.components.attachments.Attachment;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.components.base.widgets.SpeakButton;
@@ -84,7 +86,9 @@ public class PublicationPage extends PageContent
   @UiField
   UnorderedList attachments, linkedPublications;
   @UiField
-  ParagraphElement desc, lastUpdate, creator, nbViews;
+  ParagraphElement desc, nbViews;
+  @UiField
+  AuditTrail auditTrail;
   @UiField
   Image vignette;
   @UiField
@@ -320,11 +324,16 @@ public class PublicationPage extends PageContent
         nbViews.setInnerHTML(msg.views(publication.getViewsNumber()));
       }
 
-      creator.setInnerHTML(msg.creation(publication.getCreationDate(), publication.getCreator()));
-
-      if (publication.getUpdater() != null && publication.getUpdateDate() != null) {
-        lastUpdate
-            .setInnerHTML(msg.lastUpdate(publication.getUpdateDate(), publication.getUpdater()));
+      auditTrail.setCreation(SafeHtmlUtils.fromTrustedString(msg.creation(
+          SafeHtmlUtils.htmlEscape(publication.getCreationDate()),
+          SafeHtmlUtils.htmlEscape(publication.getCreator()))), publication.getCreatorAvatar());
+      if (publication.getUpdater() != null && !publication.getUpdater().trim().isEmpty()
+          && publication.getUpdateDate() != null && !publication.getUpdateDate().trim().isEmpty()) {
+        auditTrail.setLastUpdate(SafeHtmlUtils.fromTrustedString(msg.lastUpdate(
+            SafeHtmlUtils.htmlEscape(publication.getUpdateDate()),
+            SafeHtmlUtils.htmlEscape(publication.getUpdater()))), publication.getUpdaterAvatar());
+      } else {
+        auditTrail.setLastUpdate(null, null);
       }
 
       if (commentable) {

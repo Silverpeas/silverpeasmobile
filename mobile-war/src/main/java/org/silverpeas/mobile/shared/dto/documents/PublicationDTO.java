@@ -36,8 +36,10 @@ public class PublicationDTO extends DocumentDTO implements Comparable<Publicatio
     private String description;
     private String version;
     private String creator;
+    private String creatorAvatar;
     private String creationDate;
     private String updater;
+    private String updaterAvatar;
     private String updateDate;
     private int commentsNumber = 0;
     private String instanceId;
@@ -91,6 +93,22 @@ public class PublicationDTO extends DocumentDTO implements Comparable<Publicatio
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public String getCreatorAvatar() {
+        return creatorAvatar;
+    }
+
+    public void setCreatorAvatar(String creatorAvatar) {
+        this.creatorAvatar = creatorAvatar;
+    }
+
+    public String getUpdaterAvatar() {
+        return updaterAvatar;
+    }
+
+    public void setUpdaterAvatar(String updaterAvatar) {
+        this.updaterAvatar = updaterAvatar;
     }
 
     public String getUpdater() {
@@ -203,6 +221,8 @@ public class PublicationDTO extends DocumentDTO implements Comparable<Publicatio
         dto.setVersion(json.get("version") != null ? json.get("version").toString() : "");
         dto.setCreator(json.get("creator") != null ? json.get("creator").toString() : "");
         dto.setUpdater(json.get("updater") != null ? json.get("updater").toString() : "");
+        dto.setCreatorAvatar(json.get("creatorAvatar") != null ? json.get("creatorAvatar").toString() : "");
+        dto.setUpdaterAvatar(json.get("updaterAvatar") != null ? json.get("updaterAvatar").toString() : "");
         dto.setCreationDate(json.get("creationDate") != null ? json.get("creationDate").toString() : "");
         dto.setUpdateDate(json.get("updateDate") != null ? json.get("updateDate").toString() : "");
         dto.setInstanceId(json.get("instanceId") != null ? json.get("instanceId").toString() : "");

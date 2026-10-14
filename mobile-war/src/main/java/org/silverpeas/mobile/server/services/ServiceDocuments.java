@@ -432,9 +432,14 @@ public class ServiceDocuments extends AbstractRestWebService {
       PublicationDTO dto = new PublicationDTO();
       dto.setId(pub.getId());
       dto.setName(pub.getName());
-      dto.setCreator(pub.getCreator().getDisplayedName());
+      User creator = pub.getCreator();
+      dto.setCreator(creator != null ? creator.getDisplayedName() : "");
+      dto.setCreatorAvatar(creator != null ? creator.getSmallAvatar() : null);
       dto.setPublishable(isPublishable(pub));
-      dto.setUpdater(organizationController.getUserDetail(pub.getUpdaterId()).getDisplayedName());
+      User updater = StringUtil.isDefined(pub.getUpdaterId())
+          ? organizationController.getUserDetail(pub.getUpdaterId()) : null;
+      dto.setUpdater(updater != null ? updater.getDisplayedName() : "");
+      dto.setUpdaterAvatar(updater != null ? updater.getSmallAvatar() : null);
       dto.setVersion(pub.getVersion());
       dto.setDraft(pub.isDraft());
       if (pub.isDraft())  dto.setName(pub.getName() + " (" + resource.getString("publication.draft") + ")");
