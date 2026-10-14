@@ -80,6 +80,12 @@ public class HomePageContent extends Composite implements SwipeEndHandler {
   public HomePageContent() {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+    spaces.setId("homepage-spaces");
+    shortcuts.setId("homepage-shortcuts");
+    shortcutstools.setId("homepage-tools");
+    favoris.setId("homepage-favorites");
+    lastPublications.setId("homepage-publications");
+    lastEvents.setId("homepage-events");
     container.getElement().setAttribute("id", "homePageContent");
     actus.getElement().setAttribute("id", "actus");
     favorisSection.getElement().setAttribute("id", "favoris");
