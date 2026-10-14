@@ -67,6 +67,7 @@ public class NavigationItem extends Composite {
       if (((SpaceDTO)data).isPersonal()) {
         link.setText(msg.personalSpace());
       }
+      link.setHTML(NavigationLabel.format(link.getText()));
       link.setStyleName("ui-btn ui-btn-icon-right ui-icon-carat-r");
     } else {
       String type = ((ApplicationInstanceDTO) data).getType();

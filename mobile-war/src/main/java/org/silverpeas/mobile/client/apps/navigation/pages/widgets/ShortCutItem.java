@@ -58,7 +58,15 @@ public class ShortCutItem extends Composite {
   public void setData(ShortCutLinkDTO data) {
     this.data = data;
     link.setHTML(data.getText());
-    icon.setUrl(data.getIcon());
+    String iconUrl = data.getIcon();
+    boolean hasIcon = iconUrl != null && !iconUrl.trim().isEmpty();
+    icon.setVisible(hasIcon);
+    icon.setAltText("");
+    if (hasIcon) {
+      icon.setUrl(iconUrl);
+    } else {
+      icon.getElement().removeAttribute("src");
+    }
 
     if(data.getUrl().startsWith("/")) {
       // internal link

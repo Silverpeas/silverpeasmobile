@@ -1,0 +1,141 @@
+/* Optional homepage card overlay; load through mobileSettings.properties: styleSheet.
+ * Default selection: spaces and shortcuts. Other zones keep their existing list layout.
+ * To select different zones, replace the IDs in EVERY :is(...) selector below.
+ * Available IDs: homepage-spaces, homepage-shortcuts, homepage-tools,
+ * homepage-favorites, homepage-publications, homepage-events. News is excluded.
+ */
+
+.space-content :is(#homepage-spaces, #homepage-shortcuts) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  gap: var(--homepage-card-gap, 8px);
+  margin: 8px;
+  padding: 0;
+  list-style: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  overflow: visible;
+}
+
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  float: none;
+  width: auto;
+  border: 0;
+  border-radius: var(--homepage-card-radius, 8px);
+  background: var(--homepage-card-background, #fff);
+  box-shadow: none;
+  overflow: visible;
+}
+
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li > a.ui-btn {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--homepage-card-min-height, 96px);
+  height: 100%;
+  margin: 0;
+  padding: 52px 14px 14px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: none;
+  color: var(--homepage-card-color, #292929);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  text-shadow: none;
+  text-decoration: none;
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+
+/* Remove the navigation chevron. */
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li > a.ui-btn::after {
+  display: none;
+}
+
+/* Optional icon set per item in your own CSS overlay. */
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li > a.ui-btn::before {
+  content: var(--homepage-card-icon, "");
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: var(--homepage-card-icon-image, none) center / contain no-repeat;
+  font-size: 22px;
+  line-height: 24px;
+  pointer-events: none;
+}
+
+/* Configured shortcut images, application/favorite SVGs and emojis from space names. */
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li .icon-item,
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li .icon-app,
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li .homepage-label-icon {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: var(--homepage-card-native-icon-display, block);
+  width: 24px;
+  height: 24px;
+  max-width: 24px;
+  margin: 0;
+  padding: 0;
+  float: none;
+  object-fit: contain;
+  font-size: 22px;
+  line-height: 24px;
+  pointer-events: none;
+}
+
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li .icon-app:empty {
+  display: none;
+}
+
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li .icon-app svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li .date,
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li .favorite-desc {
+  position: static;
+  display: block;
+  margin-top: 6px;
+  color: #737373;
+  font-size: 0.8rem;
+  font-weight: 400;
+  white-space: normal;
+}
+
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li > a.ui-btn:hover {
+  background: var(--homepage-card-hover-background, #f0f3f5);
+}
+
+.space-content :is(#homepage-spaces, #homepage-shortcuts) > li > a.ui-btn:focus-visible {
+  outline: 2px solid var(--homepage-card-focus-color, #1769aa);
+  outline-offset: 2px;
+}
+
+/* Keep very narrow screens usable and let long labels expand the cards. */
+@media (max-width: 280px) {
+  .space-content :is(#homepage-spaces, #homepage-shortcuts) {
+    grid-template-columns: 1fr;
+  }
+}

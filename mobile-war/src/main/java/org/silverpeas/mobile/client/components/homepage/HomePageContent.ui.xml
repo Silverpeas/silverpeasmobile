@@ -39,31 +39,31 @@
       </g:FocusPanel>
 
       <div id="spaces">
-        <components:UnorderedList ui:field="spaces" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+        <components:UnorderedList ui:field="spaces" id="homepage-spaces" styleName="homepage-links homepage-spaces ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </div>
       <g:HTMLPanel stylePrimaryName="favoris-bloc bloc" ui:field="favorisSection" visible="false">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.favorites}"/></h3>
-        <components:UnorderedList ui:field="favoris" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+        <components:UnorderedList ui:field="favoris" id="homepage-favorites" styleName="homepage-links homepage-favorites ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
     <g:HTMLPanel stylePrimaryName="tools-bloc bloc" ui:field="shortCutsToolsSection" visible="false">
       <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.shortcutstools}"/></h3>
-      <components:UnorderedList ui:field="shortcutstools" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+      <components:UnorderedList ui:field="shortcutstools" id="homepage-tools" styleName="homepage-links homepage-tools ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
     </g:HTMLPanel>
 
       <g:HTMLPanel stylePrimaryName="racourcis-bloc bloc" ui:field="shortCutsSection" visible="false">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.shortcuts}"/></h3>
-        <components:UnorderedList ui:field="shortcuts" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+        <components:UnorderedList ui:field="shortcuts" id="homepage-shortcuts" styleName="homepage-links homepage-shortcuts ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
       <g:HTMLPanel stylePrimaryName="last-publication-bloc bloc" ui:field="lastPublicationsSection" visible="false">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.lastPublications}"/></h3>
-        <components:UnorderedList ui:field="lastPublications" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+        <components:UnorderedList ui:field="lastPublications" id="homepage-publications" styleName="homepage-links homepage-publications ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
       <g:HTMLPanel stylePrimaryName="last-event-bloc bloc" ui:field="lastEventsSection" visible="false">
         <h3 class="title-bloc-part ui-title"><ui:safehtml from="{msg.lastEvents}"/></h3>
-        <components:UnorderedList ui:field="lastEvents" styleName="ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
+        <components:UnorderedList ui:field="lastEvents" id="homepage-events" styleName="homepage-links homepage-events ui-listview ui-listview-inset ui-corner-all ui-shadow"/>
       </g:HTMLPanel>
 
       <g:HTMLPanel stylePrimaryName="free-zone-bloc bloc" ui:field="freeZoneSection">
