@@ -33,4 +33,6 @@ public interface BiometricMessages extends Messages {
     String errorMessage();
 
     String authFailed();
+
+    String unavailable();
 }

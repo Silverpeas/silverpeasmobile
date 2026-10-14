@@ -30,7 +30,23 @@ public class BiometricAuthHelper {
 
     private static final BiometricMessages MESSAGES = GWT.create(BiometricMessages.class);
 
+    /** WebAuthn must be available before requesting local biometric authentication. */
+    public static native boolean isSupported() /*-{
+        return $wnd.isSecureContext === true
+            && !!$wnd.PublicKeyCredential
+            && !!$wnd.navigator.credentials
+            && typeof $wnd.navigator.credentials.create === "function"
+            && typeof $wnd.navigator.credentials.get === "function"
+            && !!$wnd.crypto
+            && typeof $wnd.crypto.getRandomValues === "function";
+    }-*/;
+
     public static native void loginLocal(AuthCallback callback) /*-{
+        if (!@org.silverpeas.mobile.client.common.auth.BiometricAuthHelper::isSupported()()) {
+            callback.@org.silverpeas.mobile.client.common.auth.AuthCallback::onResult(Z)(false);
+            return;
+        }
+
 
         function base64ToBuffer(base64) {
             var str = atob(base64);
@@ -75,6 +91,10 @@ public class BiometricAuthHelper {
             String successMessage,
             String errorMessage
     ) /*-{
+        if (!@org.silverpeas.mobile.client.common.auth.BiometricAuthHelper::isSupported()()) {
+            $wnd.alert(errorMessage);
+            return;
+        }
 
         function bufferToBase64(buf) {
             return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
@@ -118,6 +138,10 @@ public class BiometricAuthHelper {
     }-*/;
 
     public static void register() {
+        if (!isSupported()) {
+            com.google.gwt.user.client.Window.alert(MESSAGES.unavailable());
+            return;
+        }
         registerLocal(
                 MESSAGES.appName(),
                 MESSAGES.successMessage(),

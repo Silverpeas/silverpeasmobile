@@ -239,6 +239,13 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
   private static void checkBiometrics() {
     boolean biometricsAuthEnable = Boolean.parseBoolean(ResourcesManager.getParam("authentification.biometrics", "false"));
     if (biometricsAuthEnable) {
+      if (!BiometricAuthHelper.isSupported()) {
+        // Keep an existing local biometric lock; do not bypass it on an unsupported browser.
+        setBiometricLocked(BiometricAuthHelper.isRegistered());
+        BiometricMessages biometricMessages = GWT.create(BiometricMessages.class);
+        Window.alert(biometricMessages.unavailable());
+        return;
+      }
       if (BiometricAuthHelper.isRegistered()) {
         setBiometricLocked(true);
         BiometricAuthHelper.loginLocal(success -> {
