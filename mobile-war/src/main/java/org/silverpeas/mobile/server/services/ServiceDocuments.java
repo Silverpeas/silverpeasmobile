@@ -440,6 +440,9 @@ public class ServiceDocuments extends AbstractRestWebService {
       if (pub.isDraft())  dto.setName(pub.getName() + " (" + resource.getString("publication.draft") + ")");
 
       dto.setDescription(pub.getDescription());
+      if (pub.getThumbnail() != null) {
+        dto.setVignette(pub.getThumbnail().getURL());
+      }
       dto.setUpdateDate(sdf.format(pub.getLastUpdateDate()));
       dto.setCreationDate(sdf.format(pub.getCreationDate()));
       dto.setNotAllowedDownloads(new ArrayList<>());

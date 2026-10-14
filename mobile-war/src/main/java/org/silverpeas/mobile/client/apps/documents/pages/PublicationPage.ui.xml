@@ -34,6 +34,7 @@
 
       <h2 ui:field="title" class="publiName"></h2>
       <p ui:field="desc" class="publiDesc"></p>
+      <g:Image ui:field="vignette" styleName="publicationVignette" visible="false" altText=""/>
 
       <g:HTMLPanel ui:field="filesButton">
         <g:Anchor styleName="ui-btn ui-btn-icon-right" href="#attachments" ui:field="files"/>

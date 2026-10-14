@@ -1186,6 +1186,17 @@ audio::-webkit-media-controls-enclosure {
   min-height: 1.5em;
 }
 
+#publication .publicationVignette {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 360px;
+  max-height: min(360px, 50vh);
+  object-fit: cover;
+  object-position: center;
+  margin: 0 0 1em;
+}
+
 .titleLinkedPublications {
   padding-top: 1em;
   padding-bottom: 0;

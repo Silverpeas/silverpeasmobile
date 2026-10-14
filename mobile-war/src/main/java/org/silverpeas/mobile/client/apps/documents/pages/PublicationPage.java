@@ -34,6 +34,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.apps.comments.pages.widgets.CommentsButton;
 import org.silverpeas.mobile.client.apps.documents.events.app.DocumentsLoadAttachmentsEvent;
@@ -84,6 +85,8 @@ public class PublicationPage extends PageContent
   UnorderedList attachments, linkedPublications;
   @UiField
   ParagraphElement desc, lastUpdate, creator, nbViews;
+  @UiField
+  Image vignette;
   @UiField
   CommentsButton comments;
   @UiField
@@ -137,6 +140,8 @@ public class PublicationPage extends PageContent
     container.getElement().setId("publication");
     attachments.getElement().setId("attachments");
     linkedPublications.getElement().setId("linkedPublications");
+    vignette.addLoadHandler(event -> vignette.setVisible(true));
+    vignette.addErrorHandler(event -> vignette.setVisible(false));
     content.setId("content");
     filesButton.getElement().setId("files");
     buttonImport.setId("import");
@@ -299,6 +304,13 @@ public class PublicationPage extends PageContent
       setPageTitle(publication.getName());
       title.setInnerHTML(publication.getName());
       desc.setInnerHTML(publication.getDescription());
+      vignette.setVisible(false);
+      String vignetteUrl = publication.getVignette();
+      if (vignetteUrl != null && !vignetteUrl.trim().isEmpty()) {
+        vignette.setUrl(vignetteUrl);
+      } else {
+        vignette.getElement().removeAttribute("src");
+      }
 
       if (publication.getViewsNumber() == 0) {
         nbViews.setInnerHTML(msg.noview());
