@@ -68,6 +68,7 @@ import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.mobile.server.helpers.DataURLHelper;
 import org.silverpeas.mobile.server.helpers.FormXMLHelper;
 import org.silverpeas.mobile.server.services.helpers.FavoritesHelper;
+import org.silverpeas.mobile.server.services.helpers.AllowedSpaces;
 import org.silverpeas.mobile.server.services.helpers.NewsHelper;
 import org.silverpeas.mobile.server.services.helpers.NotificationsPushHelper;
 import org.silverpeas.mobile.server.services.helpers.UserHelper;
@@ -647,12 +648,24 @@ public class ServiceNavigation extends AbstractRestWebService {
         ArrayList<SilverpeasObjectDTO> results = new ArrayList<>();
         if (rootSpaceId != null && rootSpaceId.equals("null")) rootSpaceId = null;
         try {
+            AllowedSpaces allowedSpaces = new AllowedSpaces(getSettings().getString("spaces.allowed", ""));
+            Map<String, SpaceInst> spaces = new HashMap<>();
+            AllowedSpaces.ParentResolver parents = id -> {
+                SpaceInst parent = getNavigationSpace(id, spaces);
+                return parent != null ? parent.getDomainFatherId() : null;
+            };
+            if (rootSpaceId != null && !allowedSpaces.allows(rootSpaceId, parents)) {
+                return results;
+            }
             if (rootSpaceId == null) {
-                String[] spaceIds = Administration.get().getAllRootSpaceIds(getUser().getId());
+                List<String> spaceIds = allowedSpaces.isUnrestricted()
+                    ? Arrays.asList(Administration.get().getAllRootSpaceIds(getUser().getId()))
+                    : allowedSpaces.navigationRoots(
+                        Arrays.asList(Administration.get().getAllSpaceIds(getUser().getId())), parents);
                 for (String spaceId : spaceIds) {
-                    SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-                    if (!space.isRemoved()) {
-                        if (space.getLevel() == 0) {
+                    SpaceInst space = getNavigationSpace(spaceId, spaces);
+                    if (space != null && !space.isRemoved()) {
+                        if (!allowedSpaces.isUnrestricted() || space.getLevel() == 0) {
                             if (containApp(space)) {
                                 results.add(populate(space));
                             }
@@ -664,8 +677,8 @@ public class ServiceNavigation extends AbstractRestWebService {
                 String[] spaceIds =
                         Administration.get().getAllowedSubSpaceIds(getUser().getId(), rootSpaceId);
                 for (String spaceId : spaceIds) {
-                    SpaceInst space = Administration.get().getSpaceInstById(spaceId);
-                    if (!space.isRemoved()) {
+                    SpaceInst space = getNavigationSpace(spaceId, spaces);
+                    if (space != null && !space.isRemoved() && allowedSpaces.allows(space.getId(), parents)) {
                         if (("WA" + space.getDomainFatherId()).equals(rootSpaceId) ||
                                 space.getDomainFatherId().equals(rootSpaceId)) {
                             if (containApp(space)) {
@@ -694,6 +707,16 @@ public class ServiceNavigation extends AbstractRestWebService {
             SilverLogger.getLogger(this).error(e);
         }
         return results;
+    }
+
+    private SpaceInst getNavigationSpace(String spaceId, Map<String, SpaceInst> spaces)
+        throws AdminException {
+        String id = AllowedSpaces.normalizeId(spaceId);
+        if (id.isEmpty() || "0".equals(id)) return null;
+        if (!spaces.containsKey(id)) {
+            spaces.put(id, Administration.get().getSpaceInstById("WA" + id));
+        }
+        return spaces.get(id);
     }
 
     @GET
