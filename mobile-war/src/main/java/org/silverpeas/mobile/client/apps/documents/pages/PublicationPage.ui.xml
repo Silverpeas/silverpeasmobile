@@ -44,8 +44,8 @@
         <g:Anchor ui:field="contentLink" styleName="ui-btn ui-btn-icon-right" text="{msg.content}"/>
       </div>
       <components:UnorderedList ui:field="attachments"/>
-      <h2 ui:field="titleLinkedPublications" class="titleLinkedPublications"></h2>
-      <components:UnorderedList ui:field="linkedPublications"/>
+      <h2 ui:field="titleLinkedPublications" class="titleLinkedPublications" style="display:none;"></h2>
+      <components:UnorderedList ui:field="linkedPublications" visible="false"/>
       <p ui:field="creator" class="lastUpdate"></p>
       <p ui:field="lastUpdate" class="lastUpdate"></p>
       <p ui:field="nbViews" class="nbViews"></p>

@@ -332,12 +332,21 @@ public class PublicationPage extends PageContent
         content.getStyle().setDisplay(Style.Display.NONE);
       }
       // links
-      titleLinkedPublications.setInnerText(msg.linkedPublicationsTitle());
-      for (PublicationDTO linkedPublication : publication.getLinkedPublications()) {
-        LinkedPublicationItem item = new LinkedPublicationItem();
-        item.setData(linkedPublication);
-        item.setApp(getApp());
-        linkedPublications.add(item);
+      linkedPublications.clear();
+      boolean hasLinkedPublications = !ContentsTypes.News.name().equals(type)
+          && publication.getLinkedPublications() != null
+          && !publication.getLinkedPublications().isEmpty();
+      titleLinkedPublications.getStyle().setDisplay(Style.Display.NONE);
+      linkedPublications.setVisible(hasLinkedPublications);
+      if (hasLinkedPublications) {
+        titleLinkedPublications.setInnerText(msg.linkedPublicationsTitle());
+        titleLinkedPublications.getStyle().clearDisplay();
+        for (PublicationDTO linkedPublication : publication.getLinkedPublications()) {
+          LinkedPublicationItem item = new LinkedPublicationItem();
+          item.setData(linkedPublication);
+          item.setApp(getApp());
+          linkedPublications.add(item);
+        }
       }
     }
     notification
