@@ -35,7 +35,8 @@ import java.util.Set;
 /** Configured mobile navigation roots, including all their descendants. */
 public final class AllowedSpaces {
   private final Set<String> allowedIds = new LinkedHashSet<>();
-  private final boolean unrestricted;
+  private final Set<String> excludedIds = new LinkedHashSet<>();
+  private final boolean allRootsAllowed;
 
   @FunctionalInterface
   public interface ParentResolver {
@@ -43,21 +44,35 @@ public final class AllowedSpaces {
   }
 
   public AllowedSpaces(String configuration) {
-    unrestricted = configuration == null || configuration.trim().isEmpty();
+    this(configuration, "");
+  }
+
+  public AllowedSpaces(String allowed, String excluded) {
+    allRootsAllowed = allowed == null || allowed.trim().isEmpty();
+    readIds(allowed, allowedIds);
+    readIds(excluded, excludedIds);
+  }
+
+  private static void readIds(String configuration, Set<String> ids) {
     if (configuration != null) {
       for (String id : configuration.split("[,\\s]+")) {
         String normalized = normalizeId(id);
-        if (!normalized.isEmpty()) allowedIds.add(normalized);
+        if (!normalized.isEmpty()) ids.add(normalized);
       }
     }
   }
 
+  public boolean hasAllowedRoots() {
+    return !allRootsAllowed;
+  }
+
   public boolean isUnrestricted() {
-    return unrestricted;
+    return allRootsAllowed && excludedIds.isEmpty();
   }
 
   public boolean allows(String spaceId, ParentResolver parents) throws Exception {
-    return isUnrestricted() || hasAllowedAncestor(spaceId, allowedIds, parents);
+    boolean included = allRootsAllowed || hasAllowedAncestor(spaceId, allowedIds, parents);
+    return included && (excludedIds.isEmpty() || !hasAllowedAncestor(spaceId, excludedIds, parents));
   }
 
   /** Select only roots accessible to the user, without duplicating selected descendant branches. */
@@ -72,6 +87,7 @@ public final class AllowedSpaces {
     for (String id : accessibleIds) {
       String normalized = normalizeId(id);
       if (accessibleSelections.contains(normalized) && added.add(normalized)
+          && allows(normalized, parents)
           && !hasAllowedAncestor(parents.getParentId(normalized), accessibleSelections, parents)) {
         roots.add(id);
       }

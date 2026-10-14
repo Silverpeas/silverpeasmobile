@@ -108,4 +108,55 @@ class AllowedSpacesTest {
     }));
     assertEquals(2, lookups.get());
   }
+  @Test
+  void exclusionOnlyHidesItsBranchAndKeepsOtherRoots() throws Exception {
+    AllowedSpaces spaces = new AllowedSpaces("", "WA1");
+    assertFalse(spaces.hasAllowedRoots());
+    assertFalse(spaces.isUnrestricted());
+    for (String id : List.of("WA1", "WA11", "WA12")) assertFalse(spaces.allows(id, parents), id);
+    for (String id : List.of("WA2", "WA21", "WA3")) assertTrue(spaces.allows(id, parents), id);
+  }
+
+  @Test
+  void excludedSubspaceDoesNotHideItsParent() throws Exception {
+    AllowedSpaces spaces = new AllowedSpaces("WA1,WA3", "WA11");
+    assertTrue(spaces.allows("WA1", parents));
+    assertTrue(spaces.allows("WA3", parents));
+    assertFalse(spaces.allows("WA11", parents));
+    assertFalse(spaces.allows("WA12", parents));
+    assertEquals(List.of("WA1", "WA3"), spaces.navigationRoots(List.of("WA1", "WA11", "WA3"), parents));
+  }
+
+  @Test
+  void exclusionsTakePrecedenceOverIdenticalAllowedRoots() throws Exception {
+    AllowedSpaces spaces = new AllowedSpaces("WA1,WA3", "WA1");
+    assertEquals(List.of("WA3"), spaces.navigationRoots(List.of("WA1", "WA11", "WA3"), parents));
+    assertFalse(spaces.allows("WA1", parents));
+    assertFalse(spaces.allows("WA12", parents));
+  }
+
+  @Test
+  void allowedDescendantCannotOverrideAnExcludedAncestor() throws Exception {
+    AllowedSpaces spaces = new AllowedSpaces("WA11", "WA1");
+    assertFalse(spaces.allows("WA11", parents));
+    assertFalse(spaces.allows("WA12", parents));
+    assertEquals(List.of(), spaces.navigationRoots(List.of("WA11", "WA12"), parents));
+  }
+
+  @Test
+  void exclusionsSupportWhitespaceCaseAndNumericAliases() throws Exception {
+    AllowedSpaces spaces = new AllowedSpaces(null, " wa1 , 1 \t WA3 ");
+    assertFalse(spaces.allows("WA12", parents));
+    assertFalse(spaces.allows("wa3", parents));
+    assertTrue(spaces.allows("WA21", parents));
+  }
+
+  @Test
+  void emptyOrUnknownExclusionsKeepExistingAccessibleBranches() throws Exception {
+    for (String excluded : new String[] {null, "", "  ", "WA999"}) {
+      AllowedSpaces spaces = new AllowedSpaces("", excluded);
+      assertTrue(spaces.allows("WA1", parents));
+      assertTrue(spaces.allows("WA12", parents));
+    }
+  }
 }

@@ -17,6 +17,26 @@ La configuration par défaut conserve le comportement actuel :
 spaces.allowed=
 ```
 
+## Exclure des espaces
+
+```properties
+spaces.excluded=WA2,WA4
+```
+
+Les espaces exclus et leurs sous-espaces sont masqués dans la navigation mobile.
+La valeur vide n’exclut aucun espace. Ce paramètre peut être utilisé seul, en
+laissant `spaces.allowed` vide, ou en complément de la liste autorisée.
+
+```properties
+spaces.allowed=WA1,WA3
+spaces.excluded=WA11
+```
+
+Cet exemple conserve WA1 et WA3 et leurs descendants, sauf la branche WA11.
+Une exclusion est toujours prioritaire : un espace autorisé explicitement reste
+masqué si lui-même ou un de ses ancêtres est exclu. Exclure un sous-espace ne
+masque pas son parent ni les autres branches.
+
 Les identifiants sont séparés par des virgules. Les espaces autour des valeurs,
 les doublons, la casse du préfixe WA et les identifiants numériques équivalents
 sont acceptés. Les sous-espaces n’ont pas besoin d’être énumérés.
@@ -36,7 +56,7 @@ et aux espaces. Il ne remplace pas les autorisations Silverpeas et n’est pas
 une nouvelle restriction de sécurité sur les contenus, les URL directes,
 la recherche, les favoris ou les raccourcis.
 
-Dix tests automatisés couvrent la configuration vide, l’héritage, les espaces
+Seize tests automatisés couvrent la configuration vide, l’héritage, les espaces
 sélectionnés, les sous-espaces sélectionnés comme racines, les doublons,
 l’intersection avec les espaces accessibles, les identifiants invalides et
-les hiérarchies cycliques. La compilation complète est vérifiée avec GWT en mode strict.
+les hiérarchies cycliques, les exclusions et leur priorité. La compilation complète est vérifiée avec GWT en mode strict.

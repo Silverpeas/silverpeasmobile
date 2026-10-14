@@ -648,7 +648,9 @@ public class ServiceNavigation extends AbstractRestWebService {
         ArrayList<SilverpeasObjectDTO> results = new ArrayList<>();
         if (rootSpaceId != null && rootSpaceId.equals("null")) rootSpaceId = null;
         try {
-            AllowedSpaces allowedSpaces = new AllowedSpaces(getSettings().getString("spaces.allowed", ""));
+            AllowedSpaces allowedSpaces = new AllowedSpaces(
+                getSettings().getString("spaces.allowed", ""),
+                getSettings().getString("spaces.excluded", ""));
             Map<String, SpaceInst> spaces = new HashMap<>();
             AllowedSpaces.ParentResolver parents = id -> {
                 SpaceInst parent = getNavigationSpace(id, spaces);
@@ -658,14 +660,14 @@ public class ServiceNavigation extends AbstractRestWebService {
                 return results;
             }
             if (rootSpaceId == null) {
-                List<String> spaceIds = allowedSpaces.isUnrestricted()
+                List<String> spaceIds = !allowedSpaces.hasAllowedRoots()
                     ? Arrays.asList(Administration.get().getAllRootSpaceIds(getUser().getId()))
                     : allowedSpaces.navigationRoots(
                         Arrays.asList(Administration.get().getAllSpaceIds(getUser().getId())), parents);
                 for (String spaceId : spaceIds) {
                     SpaceInst space = getNavigationSpace(spaceId, spaces);
-                    if (space != null && !space.isRemoved()) {
-                        if (!allowedSpaces.isUnrestricted() || space.getLevel() == 0) {
+                    if (space != null && !space.isRemoved() && allowedSpaces.allows(space.getId(), parents)) {
+                        if (allowedSpaces.hasAllowedRoots() || space.getLevel() == 0) {
                             if (containApp(space)) {
                                 results.add(populate(space));
                             }
