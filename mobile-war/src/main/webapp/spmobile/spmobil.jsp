@@ -59,6 +59,7 @@
   <meta name="HandheldFriendly" content="true">
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <script src="pwa-install.js"></script>
   <link rel="manifest" href="manifest.json">
   <link rel="web-app-origin-association" href="web-app-origin-association">
 

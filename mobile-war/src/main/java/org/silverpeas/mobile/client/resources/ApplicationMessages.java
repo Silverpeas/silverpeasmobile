@@ -224,4 +224,15 @@ public interface ApplicationMessages extends Messages {
 
   @DefaultMessage("Installer l''application")
   String installation();
+  @DefaultMessage("Pour installer cette application, ouvrez son adresse en HTTPS avec un certificat reconnu par votre appareil.")
+  String installationRequiresHttps();
+
+  @DefaultMessage("Dans Safari, ouvrez Partager, puis Sur l’écran d’accueil et confirmez Ajouter. Si cette option est absente, ouvrez le site dans Safari plutôt que dans une autre application.")
+  String installationIos();
+
+  @DefaultMessage("Ouvrez cette adresse dans Safari, puis Partager → Sur l’écran d’accueil → Ajouter.")
+  String installationOpenSafari();
+
+  @DefaultMessage("Dans le menu du navigateur, cherchez Installer l’application ou Ajouter à l’écran d’accueil. Si ces options sont absentes, essayez Chrome ou Edge. Le navigateur peut proposer un raccourci plutôt qu’une installation complète.")
+  String installationBrowserMenu();
 }

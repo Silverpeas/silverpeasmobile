@@ -278,35 +278,22 @@ public class SpMobil implements EntryPoint, AuthenticationEventHandler {
     }
   }
 
+  private static boolean installationOffered = false;
+
   private static void checkInstallation() {
-    PWAHelper.detectAppInstallation();
-
-    Command execNo = new Command() {
-      @Override
-      public void execute() {
-        long duration = Long.parseLong(ResourcesManager.getParam("displayInstallQuestionFrequency", "30"));
-        final long DURATION = 1000 * 60 * 60 * 24 * duration;
-        Date expires = new Date(System.currentTimeMillis() + DURATION);
-        Cookies.setCookie("ask_install", "no", expires);
+    PWAHelper.addStateListener(() -> Scheduler.get().scheduleDeferred(() -> {
+      String cookie = Cookies.getCookie("ask_install");
+      if (!installationOffered && PWAHelper.canInstall() && !PWAHelper.isInstalledApp()
+          && (cookie == null || cookie.isEmpty())) {
+        installationOffered = true;
+        Command decline = () -> {
+          long days = Long.parseLong(ResourcesManager.getParam("displayInstallQuestionFrequency", "30"));
+          Date expires = new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * days);
+          Cookies.setCookie("ask_install", "no", expires);
+        };
+        Snackbar.showConfirmation(msg.installation(), () -> PWAHelper.installApp(msg), decline, false);
       }
-    };
-    Command execYes = new Command() {
-      @Override
-      public void execute() {
-        PWAHelper.installApp();
-      }
-    };
-
-    Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-      @Override
-      public boolean execute() {
-        String cookie = Cookies.getCookie("ask_install");
-        if (!PWAHelper.isInstalledApp() && (cookie == null || cookie.isEmpty())) {
-          Snackbar.showConfirmation(msg.installation(), execYes, execNo, false);
-        }
-        return false;
-      }
-    }, 1000);
+    }));
   }
 
   private static void checkVersion() {

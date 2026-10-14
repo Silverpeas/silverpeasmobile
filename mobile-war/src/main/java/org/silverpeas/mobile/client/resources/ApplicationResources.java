@@ -171,6 +171,10 @@ public interface ApplicationResources extends ClientBundle {
   @DataResource.MimeType("image/svg+xml")
   TextResource settings();
 
+  @Source("icons/menu/install.svg")
+  @DataResource.MimeType("image/svg+xml")
+  TextResource install();
+
   @Source("icons/menu/home.svg")
   @DataResource.MimeType("image/svg+xml")
   TextResource home();

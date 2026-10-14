@@ -12,6 +12,11 @@
   "theme_color": "#7eb73b",
   "icons": [
     {
+      "src": "icon192.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192"
+    },
+    {
       "src" : "icon.png",
       "type" : "image/png",
       "sizes" : "144x144"

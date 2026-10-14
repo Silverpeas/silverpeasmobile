@@ -67,6 +67,10 @@
           <span ui:field="iconSettings"></span>
           <g:Anchor ui:field="config" styleName="ui-link" text="{msg.config}"/>
         </li>
+        <li ui:field="installItem" class="menu-install">
+          <span ui:field="iconInstall"></span>
+          <g:Anchor ui:field="install" styleName="ui-link" text="{msg.installation}" href="#"/>
+        </li>
         <li id="menu-help">
           <span ui:field="iconHelp"></span>
           <g:Anchor ui:field="help" styleName="ui-link" text="{msg.help}"/>

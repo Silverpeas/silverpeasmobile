@@ -25,6 +25,9 @@
 package org.silverpeas.mobile.client.components.base;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.LIElement;
+import org.silverpeas.mobile.client.common.PWAHelper;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
@@ -68,7 +71,10 @@ public class NavigationMenu extends Composite implements PageEventHandler {
   private static NavigationMenuUiBinder uiBinder = GWT.create(NavigationMenuUiBinder.class);
 
   @UiField HTMLPanel container, user;
-  @UiField Anchor home, disconnect, updateStatus, help, config, calendar, notifications, shares;
+  @UiField Anchor home, disconnect, updateStatus, help, config, calendar, notifications, shares, install;
+  @UiField LIElement installItem;
+  @UiField SpanElement iconInstall;
+  private JavaScriptObject installationSubscription;
   @UiField SpanElement status, iconHelp, iconSettings, iconHome, iconLogout, iconUserCalendar, iconInbox, iconShareBox;
   @UiField TextBox search;
   @UiField AvatarUpload avatar;
@@ -108,6 +114,8 @@ public class NavigationMenu extends Composite implements PageEventHandler {
     iconHelp.setInnerHTML(resources.help().getText());
     iconLogout.setInnerHTML(resources.logout().getText());
     iconHome.setInnerHTML(resources.home().getText());
+    iconInstall.setInnerHTML(resources.install().getText());
+    updateInstallationVisibility();
     iconUserCalendar.setInnerHTML(resources.usercalendar().getText());
     iconInbox.setInnerHTML(resources.inbox().getText());
     iconShareBox.setInnerHTML(resources.sharebox().getText());
@@ -116,6 +124,34 @@ public class NavigationMenu extends Composite implements PageEventHandler {
 
     home.getElement().setAttribute("aria-label",msg.home());
 
+  }
+
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+    installationSubscription = PWAHelper.addStateListener(this::updateInstallationVisibility);
+  }
+
+  @Override
+  protected void onUnload() {
+    PWAHelper.removeStateListener(installationSubscription);
+    installationSubscription = null;
+    super.onUnload();
+  }
+
+  private void updateInstallationVisibility() {
+    if (PWAHelper.isInstalledApp()) {
+      installItem.getStyle().setDisplay(Style.Display.NONE);
+    } else {
+      installItem.getStyle().clearDisplay();
+    }
+  }
+
+  @UiHandler("install")
+  protected void installApplication(ClickEvent event) {
+    event.preventDefault();
+    SpMobil.getMainPage().closeMenu();
+    PWAHelper.installApp(msg);
   }
 
   public void setPersonalApps(List<ApplicationInstanceDTO> applicationInstanceDTOS) {
