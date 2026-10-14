@@ -48,17 +48,14 @@ public class PWAHelper {
   }
 
   private static native boolean isSecureContext() /*-{
-    return $wnd.isSecureContext === true;
+    return $wnd.spMobilePwa ? $wnd.spMobilePwa.isSecureContext() : $wnd.isSecureContext === true;
   }-*/;
 
   private static native boolean isIos() /*-{
-    var navigator = $wnd.navigator;
-    return /iPad|iPhone|iPod/.test(navigator.userAgent)
-      || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    return !!($wnd.spMobilePwa && $wnd.spMobilePwa.isIos());
   }-*/;
 
   private static native boolean isSafari() /*-{
-    var ua = $wnd.navigator.userAgent;
-    return /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+    return !!($wnd.spMobilePwa && $wnd.spMobilePwa.isSafari());
   }-*/;
 }

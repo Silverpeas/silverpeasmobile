@@ -35,6 +35,16 @@
   }
   root.spMobilePwa = {
     isInstalled: isInstalled,
+    isSecureContext: function () { return root.isSecureContext === true; },
+    isIos: function () {
+      var navigator = root.navigator;
+      return /iPad|iPhone|iPod/.test(navigator.userAgent)
+        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    },
+    isSafari: function () {
+      var ua = root.navigator.userAgent;
+      return /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+    },
     canInstall: function () { return !!pendingPrompt && !prompting && !isInstalled(); },
     subscribe: function (listener) {
       listeners.push(listener);

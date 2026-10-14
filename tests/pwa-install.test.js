@@ -1,6 +1,36 @@
 /* Run via a local HTTP server at /tests/pwa-install.html. No test dependencies required. */
 (async function () {
-  const source = await fetch('../mobile-war/src/main/webapp/spmobile/pwa-install.js').then(r => r.text());
+  let source, assetBase;
+  async function loadSource() {
+    const errors = [];
+    // Support both /silverpeas/tests/ in a deployment and /tests/ at the repository root.
+    for (const base of ['../spmobile/', '../mobile-war/src/main/webapp/spmobile/']) {
+      const url = new URL(base + 'pwa-install.js', location.href);
+      try {
+        const response = await fetch(url);
+        const text = await response.text();
+        if (!response.ok || /^\s*</.test(text) || !text.includes('root.spMobilePwa')) {
+          throw new Error('HTTP ' + response.status + ': expected PWA JavaScript, received '
+            + (response.headers.get('content-type') || 'an unexpected document'));
+        }
+        source = text; assetBase = new URL(base, location.href); return;
+      } catch (error) { errors.push(url.href + ': ' + error.message); }
+    }
+    throw new Error('Cannot load pwa-install.js. Check the deployment path and login session.\n' + errors.join('\n'));
+  }
+  async function loadManifest() {
+    const candidates = [new URL('manifest.json', assetBase),
+      new URL('../mobile-war/src/main/webapp/WEB-INF/manifest.json.template', location.href)];
+    const errors = [];
+    for (const url of candidates) {
+      try {
+        const response = await fetch(url); const text = await response.text();
+        if (!response.ok || /^\s*</.test(text)) throw new Error('HTTP ' + response.status + ': expected a JSON manifest');
+        return { manifest: JSON.parse(text), url: url };
+      } catch (error) { errors.push(url.href + ': ' + error.message); }
+    }
+    throw new Error('Cannot load the manifest. Check the login session and manifest endpoint.\n' + errors.join('\n'));
+  }
   const results = [];
   function assert(value, message) { if (!value) throw new Error(message); }
   function setup(options = {}) {
@@ -29,6 +59,7 @@
   async function settle() { for (let i = 0; i < 5; ++i) await Promise.resolve(); }
   async function test(name, run) { await run(); results.push('PASS: ' + name); }
   try {
+    await loadSource();
     await test('No event does not mean already installed', () => {
       const { api } = setup(); assert(!api.isInstalled(), 'Wrong installed status');
       assert(!api.canInstall(), 'No prompt should be available');
@@ -88,32 +119,31 @@
       new Function('window', source)(root); fire('beforeinstallprompt', event());
       assert(called === 1 && root.spMobilePwa === api, 'Listener leak');
     });
-    await test('iPhone, iPadOS, Android and desktop instruction routing predicates', async () => {
-      const java = await fetch('../mobile-war/src/main/java/org/silverpeas/mobile/client/common/PWAHelper.java').then(r => r.text());
-      function native(name) {
-        const pattern = new RegExp('private static native boolean ' + name + '\\(\\) /\\*-\\{([\\s\\S]*?)\\}-\\*/;');
-        const match = java.match(pattern); assert(match, 'Native method missing: ' + name);
-        return new Function('$wnd', match[1]);
+    await test('iPhone, iPadOS, Android and desktop instruction routing predicates', () => {
+      function platform(userAgent, platform, maxTouchPoints = 0) {
+        const { api, root } = setup();
+        root.navigator.userAgent = userAgent; root.navigator.platform = platform;
+        root.navigator.maxTouchPoints = maxTouchPoints; return { api, root };
       }
-      const ios = native('isIos'), safari = native('isSafari'), secure = native('isSecureContext');
-      const iphone = { navigator: { userAgent: 'iPhone Version/18.0 Mobile Safari/605.1', platform: 'iPhone' } };
-      assert(ios(iphone) && safari(iphone), 'iPhone Safari route');
-      const chromeIos = { navigator: { userAgent: 'iPhone CriOS/130.0 Mobile Safari/605.1', platform: 'iPhone' } };
-      assert(ios(chromeIos) && !safari(chromeIos), 'iPhone Chrome route');
-      assert(ios({navigator:{userAgent:'Macintosh Safari',platform:'MacIntel',maxTouchPoints:5}}), 'iPadOS route');
-      assert(!ios({navigator:{userAgent:'Android Chrome',platform:'Linux armv8l'}}), 'Android route');
-      assert(!ios({navigator:{userAgent:'Macintosh Safari',platform:'MacIntel',maxTouchPoints:0}}), 'Desktop route');
-      assert(!secure({isSecureContext:false}) && secure({isSecureContext:true}), 'HTTPS requirement');
+      const iphone = platform('iPhone Version/18.0 Mobile Safari/605.1', 'iPhone');
+      assert(iphone.api.isIos() && iphone.api.isSafari(), 'iPhone Safari route');
+      const chromeIos = platform('iPhone CriOS/130.0 Mobile Safari/605.1', 'iPhone');
+      assert(chromeIos.api.isIos() && !chromeIos.api.isSafari(), 'iPhone Chrome route');
+      assert(platform('Macintosh Safari', 'MacIntel', 5).api.isIos(), 'iPadOS route');
+      assert(!platform('Android Chrome', 'Linux armv8l').api.isIos(), 'Android route');
+      assert(!platform('Macintosh Safari', 'MacIntel').api.isIos(), 'Desktop route');
+      iphone.root.isSecureContext = false; assert(!iphone.api.isSecureContext(), 'HTTP requirement');
+      iphone.root.isSecureContext = true; assert(iphone.api.isSecureContext(), 'HTTPS requirement');
     });
     await test('Manifest icons include usable 192 and 512 pixel assets', async () => {
-      const manifest = await fetch('../mobile-war/src/main/webapp/WEB-INF/manifest.json.template').then(r => r.json());
+      const { manifest } = await loadManifest();
       for (const size of [192, 512]) {
         const icon = manifest.icons.find(icon => icon.sizes === size + 'x' + size);
         assert(icon, 'Missing ' + size + ' icon');
         const image = new Image();
         await new Promise((resolve, reject) => {
           image.onload = resolve; image.onerror = () => reject(new Error('Icon did not load'));
-          image.src = '../mobile-war/src/main/webapp/spmobile/' + icon.src;
+          image.src = new URL(icon.src, new URL("manifest.json", assetBase)).href;
         });
         assert(image.naturalWidth === size && image.naturalHeight === size, 'Wrong icon dimensions');
       }

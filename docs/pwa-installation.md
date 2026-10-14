@@ -37,7 +37,12 @@ restent à vérifier séparément.
 ## Vérifications
 
 Depuis la racine du dépôt, lancer un serveur HTTP local puis ouvrir
-`/tests/pwa-install.html`. Les treize contrôles portent sur les événements
+`/tests/pwa-install.html`. Pour tester une application déployée, copier les deux
+fichiers `tests/pwa-install.html` et `tests/pwa-install.test.js` dans un dossier
+`tests` à côté de `spmobile`, puis ouvrir `/silverpeas/tests/pwa-install.html`
+après connexion. Le test détecte automatiquement les deux organisations et
+charge les ressources déployées ; il ne nécessite pas les sources Java sur le serveur.
+Une réponse HTML (erreur ou page de connexion) est signalée explicitement. Les treize contrôles portent sur les événements
 précoces/tardifs, la consommation unique de la proposition native, les erreurs,
 les instructions de secours, les modes installés, les abonnements du menu,
 les navigateurs iPhone/iPad/Android et le chargement des icônes du manifest.
