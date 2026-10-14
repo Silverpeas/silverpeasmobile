@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Image;
 
 /** Displays creation and last modification metadata independently of the contribution type. */
 public class AuditTrail extends Composite {
+  private static final String DEFAULT_AVATAR_URL = "/silverpeas/directory/jsp/icons/avatar.png";
   private final Entry creation = new Entry();
   private final Entry lastUpdate = new Entry();
 
@@ -54,15 +55,37 @@ public class AuditTrail extends Composite {
     lastUpdate.setData(description, avatarUrl);
   }
 
+  private static String normalizeAvatarUrl(String avatarUrl) {
+    if (avatarUrl == null || avatarUrl.trim().isEmpty()) {
+      return DEFAULT_AVATAR_URL;
+    }
+    String url = avatarUrl.trim();
+    if (url.startsWith("/silverpeas/") || url.startsWith("http://")
+        || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("//")) {
+      return url;
+    }
+    return "/silverpeas" + (url.startsWith("/") ? url : "/" + url);
+  }
+
   private static class Entry extends FlowPanel {
     private final Image avatar = new Image();
     private final HTML description = new HTML();
+    private boolean usingDefaultAvatar;
 
     private Entry() {
       setStyleName("auditTrailEntry");
       avatar.setStyleName("auditTrailAvatar");
       avatar.setAltText("");
-      avatar.addErrorHandler(event -> avatar.setVisible(false));
+      avatar.addLoadHandler(event -> avatar.setVisible(true));
+      avatar.addErrorHandler(event -> {
+        if (!usingDefaultAvatar) {
+          usingDefaultAvatar = true;
+          avatar.setUrl(DEFAULT_AVATAR_URL);
+        } else {
+          // Keep the avatar space without retrying a missing default image indefinitely.
+          avatar.getElement().removeAttribute("src");
+        }
+      });
       description.setStyleName("auditTrailText");
       add(avatar);
       add(description);
@@ -72,10 +95,11 @@ public class AuditTrail extends Composite {
     private void setData(SafeHtml text, String avatarUrl) {
       description.setHTML(text != null ? text : SafeHtmlUtils.fromString(""));
       avatar.getElement().removeAttribute("src");
-      boolean hasAvatar = text != null && avatarUrl != null && !avatarUrl.trim().isEmpty();
-      avatar.setVisible(hasAvatar);
-      if (hasAvatar) {
-        avatar.setUrl(avatarUrl);
+      avatar.setVisible(text != null);
+      if (text != null) {
+        String url = normalizeAvatarUrl(avatarUrl);
+        usingDefaultAvatar = DEFAULT_AVATAR_URL.equals(url);
+        avatar.setUrl(url);
       }
       setVisible(text != null);
     }
