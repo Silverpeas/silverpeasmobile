@@ -33,7 +33,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.inject.Singleton;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILMessage;
 import org.silverpeas.core.notification.user.server.channel.silvermail.SILVERMAILPersistence;
 import org.silverpeas.core.util.ServiceProvider;
@@ -56,7 +56,7 @@ import static org.silverpeas.kernel.util.StringUtil.EMPTY;
 /**
  * @author svu
  */
-@Singleton
+@ApplicationScoped
 @Named("notificationsPushHelper")
 public class NotificationsPushHelper {
 
