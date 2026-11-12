@@ -100,7 +100,7 @@ public class ServiceFaq extends AbstractRestWebService {
         dto.setDescription(q.getContent());
         for (Reply r : q.readReplies()) {
           ReplyDTO dt = new ReplyDTO();
-          dt.setId(r.getPK().getId());
+          dt.setId(r.getId());
           dt.setTitle(r.getTitle());
           dt.setContent(r.loadWysiwygContent());
           dtoReplies.add(dt);

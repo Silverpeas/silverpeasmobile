@@ -71,7 +71,7 @@ public class ServiceNews extends AbstractRestWebService {
   public void updateNews(NewsDTO news) {
 
     try {
-      News n = QuickInfoService.get().getNews(news.getIdNews());
+      News n = QuickInfoService.get().getNews(new ResourceReference(news.getIdNews(), componentId));
       n.setTitle(news.getTitle());
       n.setImportant(news.getImportant());
       n.setDescription(news.getDescription());
