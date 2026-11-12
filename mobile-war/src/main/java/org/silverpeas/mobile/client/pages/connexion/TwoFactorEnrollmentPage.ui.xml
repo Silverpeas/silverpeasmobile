@@ -1,0 +1,65 @@
+<!--
+  Copyright (C) 2000 - 2026 Silverpeas
+  Licensed under the GNU Affero General Public License, version 3 or later.
+-->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:with field="msg" type="org.silverpeas.mobile.client.resources.ApplicationMessages"/>
+  <g:HTMLPanel>
+    <div id="header">
+      <h1 id="page-login-title"><ui:safehtml from="{msg.twoFactorTitle}"/></h1>
+    </div>
+    <div id="page-login" class="ui-content ui-body-a two-factor-screen">
+      <g:HTMLPanel>
+        <div class="two-factor-content">
+        <div ui:field="setupSection">
+          <p><ui:safehtml from="{msg.enrollmentStepSetup}"/></p><p><ui:safehtml from="{msg.enrollmentSetupHelp}"/></p>
+          <div class="totp-enrollment-secret two-factor-secret"><g:Label ui:field="secret"/></div>
+          <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
+            <div class="ui-controlgroup-controls">
+              <g:Anchor ui:field="copySecret" styleName="submit btn-validate ui-link">
+                <span class="ui-btn-text"><ui:safehtml from="{msg.enrollmentCopyKey}"/></span>
+              </g:Anchor>
+            </div>
+          </div>
+          <p><ui:safehtml from="{msg.enrollmentStepVerify}"/></p><p><ui:safehtml from="{msg.enrollmentVerifyHelp}"/></p>
+          <div id="code-formLogin" class="two-factor-code">
+            <g:PasswordTextBox ui:field="codeField" name="code"/>
+          </div>
+          <div id="trusted-device" class="two-factor-trust">
+            <g:CheckBox ui:field="trustDevice" text="{msg.trustDevice}"/>
+          </div>
+          <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
+            <div class="ui-controlgroup-controls">
+              <g:Anchor ui:field="confirm" styleName="submit btn-validate ui-link">
+                <span class="ui-btn-text"><ui:safehtml from="{msg.enrollmentActivate}"/></span>
+              </g:Anchor>
+            </div>
+          </div>
+        </div>
+        <div ui:field="recoverySection" class="two-factor-recovery" style="display:none">
+          <p><ui:safehtml from="{msg.enrollmentRecoveryHelp}"/></p>
+          <g:TextArea ui:field="recoveryCodes" visibleLines="10" characterWidth="28" readOnly="true"/>
+          <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
+            <div class="ui-controlgroup-controls">
+              <g:Button ui:field="copyRecoveryCodes" styleName="submit btn-validate ui-link"
+                        text="{msg.copyRecoveryCodes}"/>
+            </div>
+          </div>
+          <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
+            <div class="ui-controlgroup-controls">
+              <g:Anchor ui:field="continueButton" styleName="submit btn-validate ui-link">
+                <span class="ui-btn-text"><ui:safehtml from="{msg.enrollmentContinue}"/></span>
+              </g:Anchor>
+            </div>
+          </div>
+        </div>
+        <g:Label ui:field="status" styleName="totp-enrollment-status two-factor-status"/>
+        </div>
+        <div id="copyright"><ui:safehtml from="{msg.copyright}"/></div>
+        <div ui:field="version"></div>
+      </g:HTMLPanel>
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder>

@@ -134,17 +134,7 @@ public class ConnexionPage extends PageContent {
     String login = loginField.getText();
     String password = passwordField.getText();
 
-    if (Boolean.parseBoolean(ResourcesManager.getParam("authentification.twoFactors"))) {
-      checkCredentials(login, password);
-      if (!login.isEmpty() && !password.isEmpty()) {
-        TwoFactorPage page = new TwoFactorPage();
-        page.setIds(login, password, domains.getSelectedValue());
-        RootPanel.get().clear();
-        RootPanel.get().add(page);
-      }
-    } else {
-      login(login, password, domains.getSelectedValue());
-    }
+    login(login, password, domains.getSelectedValue());
   }
 
   @UiHandler("tooglePasswordView")

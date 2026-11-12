@@ -25,6 +25,9 @@
 package org.silverpeas.mobile.shared.services.rest;
 
 import jsinterop.base.JsPropertyMap;
+import elemental2.core.JsArray;
+import java.util.ArrayList;
+import java.util.List;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 
@@ -41,13 +44,71 @@ public class ServiceAuthentication extends AbstractService {
   public void authentication(MethodCallback<UserProfileDTO> callback);*/
 
   public void authentication(RestCallback<UserProfileDTO> callback) {
-    post(PATH,
-            null,
-            result -> UserProfileDTO.fromJSON(
-                    (JsPropertyMap<Object>) result
-            ),
-            callback
-    );
+    postBasic(PATH,
+        null,
+        result -> UserProfileDTO.fromJSON((JsPropertyMap<Object>) result),
+        callback);
   }
 
+  public void authenticateTwoFactor(String code, boolean trustDevice, RestCallback<UserProfileDTO> callback) {
+    postBasic(PATH + "/two-factor",
+        twoFactorRequestBody(code, trustDevice),
+        result -> UserProfileDTO.fromJSON((JsPropertyMap<Object>) result),
+        callback);
+  }
+
+  public void authenticateTrustedDevice(RestCallback<UserProfileDTO> callback) {
+    postBasic(PATH + "/trusted-device",
+        null,
+        result -> UserProfileDTO.fromJSON((JsPropertyMap<Object>) result),
+        callback);
+  }
+
+  public void startEnrollment(RestCallback<EnrollmentSetup> callback) {
+    postBasic(PATH + "/enrollment", null,
+        result -> {
+          JsPropertyMap<Object> json = (JsPropertyMap<Object>) result;
+          return new EnrollmentSetup((String) json.get("secret"), (String) json.get("qrCode"));
+        }, callback);
+  }
+
+  public void confirmEnrollment(String code, boolean trustDevice,
+      RestCallback<EnrollmentResult> callback) {
+    postBasic(PATH + "/enrollment/confirm",
+        twoFactorRequestBody(code, trustDevice), result -> {
+          JsPropertyMap<Object> json = (JsPropertyMap<Object>) result;
+          UserProfileDTO profile = UserProfileDTO.fromJSON(
+              (JsPropertyMap<Object>) json.get("profile"));
+          JsArray<Object> rawCodes = (JsArray<Object>) json.get("recoveryCodes");
+          List<String> codes = new ArrayList<>();
+          for (int i = 0; i < rawCodes.length; i++) {
+            codes.add((String) rawCodes.getAt(i));
+          }
+          return new EnrollmentResult(profile, codes);
+        }, callback);
+  }
+
+  private String twoFactorRequestBody(final String code, final boolean trustDevice) {
+    return "{\"code\":\"" + escapeJson(code) + "\",\"trustDevice\":" + trustDevice + "}";
+  }
+
+  public static class EnrollmentSetup {
+    public final String secret;
+    public final String qrCode;
+
+    public EnrollmentSetup(String secret, String qrCode) {
+      this.secret = secret;
+      this.qrCode = qrCode;
+    }
+  }
+
+  public static class EnrollmentResult {
+    public final UserProfileDTO profile;
+    public final List<String> recoveryCodes;
+
+    public EnrollmentResult(UserProfileDTO profile, List<String> recoveryCodes) {
+      this.profile = profile;
+      this.recoveryCodes = recoveryCodes;
+    }
+  }
 }

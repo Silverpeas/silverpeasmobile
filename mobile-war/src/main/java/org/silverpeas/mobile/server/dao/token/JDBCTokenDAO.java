@@ -24,6 +24,7 @@
 
 package org.silverpeas.mobile.server.dao.token;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.silverpeas.kernel.SilverpeasRuntimeException;
@@ -36,6 +37,7 @@ import static org.silverpeas.core.persistence.jdbc.DBUtil.openConnection;
 /**
  * @author svu
  */
+@ApplicationScoped
 @Named("tokenDAO")
 public class JDBCTokenDAO implements TokenDAO {
 

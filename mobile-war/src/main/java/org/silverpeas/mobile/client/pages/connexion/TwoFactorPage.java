@@ -27,20 +27,21 @@ package org.silverpeas.mobile.client.pages.connexion;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TextBoxBase;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import org.silverpeas.mobile.client.common.AuthentificationManager;
-import org.silverpeas.mobile.client.common.ServicesLocator;
-import org.silverpeas.mobile.client.common.network.rest.RestMethod;
-import org.silverpeas.mobile.client.common.network.rest.RestMethodCallbackOnlineOnly;
 import org.silverpeas.mobile.client.common.resources.ResourcesManager;
 import org.silverpeas.mobile.client.components.base.PageContent;
 import org.silverpeas.mobile.client.resources.ApplicationMessages;
@@ -55,10 +56,30 @@ public class TwoFactorPage extends PageContent {
   @UiField(provided = true)
   protected ApplicationMessages msg = null;
   @UiField
-  Anchor sendCode, go;
+  Anchor go;
 
   @UiField
   PasswordTextBox codeField;
+
+  @UiField
+  CheckBox trustDevice;
+
+  @UiField
+  TextBox recoveryCodeField;
+
+  @UiField
+  Anchor recoveryToggle;
+
+  @UiField
+  DivElement totpSection;
+
+  @UiField
+  DivElement recoverySection;
+
+  @UiField
+  Label codeError;
+
+  private boolean recoveryMode = false;
 
   @UiField
   FormPanel form;
@@ -70,7 +91,6 @@ public class TwoFactorPage extends PageContent {
     this.login = login;
     this.password = password;
     this.domainId = domainId;
-    requestCode(null);
   }
 
   interface TwoFactorPageUiBinder extends UiBinder<Widget, TwoFactorPage> {}
@@ -78,15 +98,28 @@ public class TwoFactorPage extends PageContent {
   public TwoFactorPage() {
     msg = GWT.create(ApplicationMessages.class);
     initWidget(uiBinder.createAndBindUi(this));
+    trustDevice.setVisible(Boolean.parseBoolean(
+        ResourcesManager.getParam("twoFactorTrustedDeviceEnabled")));
 
-    codeField.getElement().setId("Password");
+    codeField.getElement().setId("totp-code");
+    codeField.getElement().setAttribute("inputmode", "numeric");
+    codeField.getElement().setAttribute("pattern", "[0-9]*");
+    codeField.getElement().setAttribute("autocomplete", "one-time-code");
     codeField.getElement().setAttribute("autocapitalize", "none");
     codeField.getElement().setAttribute("autocorrect", "off");
     codeField.getElement().setAttribute("spellcheck", "off");
-    codeField.getElement().setAttribute("autocomplete", "off");
     codeField.getElement().setAttribute("placeholder", msg.codeLabel().asString());
+    recoveryCodeField.getElement().setAttribute("autocomplete", "off");
+    recoveryCodeField.getElement().setAttribute("autocapitalize", "none");
+    recoveryCodeField.getElement().setAttribute("autocorrect", "off");
+    recoveryCodeField.getElement().setAttribute("spellcheck", "false");
+    recoveryCodeField.getElement().setAttribute("placeholder", msg.recoveryCodePlaceholder());
+    codeError.getElement().setId("two-factor-error");
+    codeError.getElement().setAttribute("role", "alert");
+    codeField.getElement().setAttribute("aria-describedby", "two-factor-error");
+    recoveryCodeField.getElement().setAttribute("aria-describedby", "two-factor-error");
     form.getElement().setId("formLogin");
-    form.getElement().setAttribute("autocomplete","off");
+    form.getElement().setAttribute("autocomplete", "off");
 
     version.setId("version");
     version.setInnerText(msg.version() + " " + ResourcesManager.getVersion());
@@ -99,23 +132,27 @@ public class TwoFactorPage extends PageContent {
       }
     });
   }
-  @UiHandler("codeField")
-  void codeChange(ChangeEvent event) {
-    codeField.getElement().getStyle().clearBackgroundColor();
+  @UiHandler({"codeField", "recoveryCodeField"})
+  void codeChange(KeyUpEvent event) {
+    clearCodeError();
   }
 
-  @UiHandler("sendCode")
-  void requestCode(ClickEvent event) {
-    codeField.setText("");
+  private void clearCodeError() {
+    codeError.setText("");
     codeField.getElement().getStyle().clearBackgroundColor();
-    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Void>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceConnection().generateSecurityCode(login, domainId, this);
-      }
-    };
-    action.attempt();
+    recoveryCodeField.getElement().getStyle().clearBackgroundColor();
+    codeField.getElement().removeAttribute("aria-invalid");
+    recoveryCodeField.getElement().removeAttribute("aria-invalid");
+  }
+
+  @UiHandler("recoveryToggle")
+  void toggleRecoveryMode(ClickEvent event) {
+    event.preventDefault();
+    clearCodeError();
+    recoveryMode = !recoveryMode;
+    totpSection.getStyle().setProperty("display", recoveryMode ? "none" : "block");
+    recoverySection.getStyle().setProperty("display", recoveryMode ? "block" : "none");
+    recoveryToggle.setText(recoveryMode ? msg.useAuthenticatorCode() : msg.useRecoveryCode());
   }
 
   /**
@@ -123,24 +160,22 @@ public class TwoFactorPage extends PageContent {
    */
   @UiHandler("go")
   void connexion(ClickEvent e) {
-    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
-      @Override
-      public void attempt() {
-        super.attempt();
-        ServicesLocator.getServiceConnection().checkSecurityCode(login, domainId, codeField.getText(), this);
-      }
+    String code = recoveryMode ? recoveryCodeField.getText() : codeField.getText();
+    if (code == null || code.trim().isEmpty()) {
+      (recoveryMode ? recoveryCodeField : codeField).getElement().getStyle().setBackgroundColor("#ec9c01");
+      return;
+    }
 
-      @Override
-      public void onSuccess(final RestMethod method, Boolean valid) {
-        super.onSuccess(method,valid);
-        if (valid) {
-          AuthentificationManager.getInstance()
-                  .authenticateOnSilverpeas(login, password, domainId, null);
-        } else {
-          codeField.getElement().getStyle().setBackgroundColor("#ec9c01");
-        }
-      }
-    };
-    action.attempt();
+    clearCodeError();
+    final boolean submittedRecoveryCode = recoveryMode;
+    final TextBoxBase submittedField = recoveryMode ? recoveryCodeField : codeField;
+    AuthentificationManager.getInstance()
+        .authenticateTwoFactor(login, password, domainId, code.trim(), trustDevice.getValue(), null,
+            () -> {
+              submittedField.getElement().getStyle().setBackgroundColor("#ec9c01");
+              submittedField.getElement().setAttribute("aria-invalid", "true");
+              codeError.setText(submittedRecoveryCode
+                  ? msg.recoveryCodeRejected() : msg.twoFactorCodeRejected());
+            });
   }
 }

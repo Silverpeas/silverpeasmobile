@@ -34,20 +34,33 @@
       <h1 id="page-login-title"><ui:safehtml from="{msg.twoFactorTitle}"/></h1>
     </div>
 
-    <div id="page-login" class="ui-content ui-body-a">
+    <div id="page-login" class="ui-content ui-body-a two-factor-screen">
       <g:FormPanel ui:field="form">
         <g:HTMLPanel>
-        <div id="code-formLogin">
-          <g:PasswordTextBox ui:field="codeField" name="code"/>
+        <div class="two-factor-content">
+        <div ui:field="totpSection">
+        <div id="code-formLogin" class="two-factor-code">
+            <g:PasswordTextBox ui:field="codeField" name="code"/>
         </div>
-          <g:Anchor ui:field="sendCode"><ui:safehtml from="{msg.reSendSecurityCode}"/></g:Anchor>
 
-        <div class=" ui-controlgroup ui-controlgroup-horizontal">
+        </div>
+        <div ui:field="recoverySection" style="display:none">
+          <p><ui:safehtml from="{msg.recoveryCodeHelp}"/></p>
+          <div class="two-factor-code"><g:TextBox ui:field="recoveryCodeField" name="recoveryCode"/></div>
+        </div>
+        <g:Label ui:field="codeError" styleName="two-factor-error"/>
+        <div id="trusted-device" class="two-factor-trust">
+          <g:CheckBox ui:field="trustDevice" text="{msg.trustDevice}"/>
+        </div>
+
+        <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
           <div class="ui-controlgroup-controls ">
             <g:Anchor ui:field="go" styleName="submit btn-validate ui-link">
               <span class="ui-btn-text"><ui:safehtml from="{msg.loginLabel}"/></span>
             </g:Anchor>
           </div>
+        </div>
+        <div class="two-factor-switch"><g:Anchor ui:field="recoveryToggle" text="{msg.useRecoveryCode}"/></div>
         </div>
         <div id="copyright">
           <ui:safehtml from="{msg.copyright}"/>

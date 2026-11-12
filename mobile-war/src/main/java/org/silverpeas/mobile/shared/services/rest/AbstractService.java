@@ -10,7 +10,7 @@
  * the GPL, you may redistribute this Program in connection with Free/Libre
  * Open Source Software ("FLOSS") applications as described in Silverpeas's
  * FLOSS exception.  You should have received a copy of the text describing
- * the FLOSS exception, and it is also available here:
+ * Silverpeas's FLOSS exception, and it is also available here:
  * "https://www.silverpeas.org/legal/floss_exception.html"
  *
  * This program is distributed in the hope that it will be useful,
@@ -54,14 +54,25 @@ public class AbstractService {
         return param;
     }
 
-    private RequestInit initRequest(String method, String contentType) {
+    private RequestInit initRequest(String method, String contentType, boolean useSession) {
         AbortController controller = new AbortController();
         RequestInit init = RequestInit.create();
         init.setMethod(method);
+        init.setCredentials("same-origin");
 
         Headers headers = new Headers();
         headers.append("Content-Type", contentType);
-        headers.append("Authorization", "Basic " + token);
+        if (useSession) {
+            String session = org.silverpeas.mobile.client.common.AuthentificationManager.getInstance()
+                    .getHeader(org.silverpeas.mobile.client.common.AuthentificationManager.XSilverpeasSession);
+            if (session != null && !session.isEmpty()) {
+                headers.append("X-Silverpeas-Session", session);
+            } else {
+                headers.append("Authorization", "Basic " + token);
+            }
+        } else {
+            headers.append("Authorization", "Basic " + token);
+        }
         init.setHeaders(headers);
 
         init.setSignal(controller.signal);
@@ -73,6 +84,13 @@ public class AbstractService {
         return init;
     }
 
+    private RequestInit initRequest(String method, String contentType) {
+        return initRequest(method, contentType, true);
+    }
+
+    protected RequestInit initBasicRequest(String method, String contentType) {
+        return initRequest(method, contentType, false);
+    }
     public String escapeJson(String s) {
         if (s == null) return "";
 
@@ -99,8 +117,21 @@ public class AbstractService {
 
     protected <T> void requestJson(String method, String url, Object body, Function<Object, T> mapper,
             RestCallback<T> callback) {
+        requestJson(method, url, body, mapper, callback, true);
+    }
+
+    protected <T> void requestJson(String method, String url, Object body, Function<Object, T> mapper,
+            RestCallback<T> callback, boolean useSession) {
+        requestJson(method, url, body, mapper, callback, useSession, null, null);
+    }
+
+    private <T> void requestJson(String method, String url, Object body, Function<Object, T> mapper,
+            RestCallback<T> callback, boolean useSession, String headerName, String headerValue) {
         DEBUG.log(this, "requestJson " + method + " " + url);
-        RequestInit init = initRequest(method, "application/json");
+        RequestInit init = initRequest(method, "application/json", useSession);
+        if (headerName != null && headerValue != null) {
+            ((Headers) init.getHeaders()).append(headerName, headerValue);
+        }
 
         if (body != null) {
             init.setBody(body.toString());
@@ -147,8 +178,13 @@ public class AbstractService {
     }
 
     protected void requestText(String method, String url, Object body, RestCallback<String> callback) {
+        requestText(method, url, body, callback, true);
+    }
+
+    protected void requestText(String method, String url, Object body, RestCallback<String> callback,
+            boolean useSession) {
         DEBUG.log(this, "requestText " + method + " " + url);
-        RequestInit init = initRequest(method, "text/plain");
+        RequestInit init = initRequest(method, "text/plain", useSession);
 
         if (body != null) {
             init.setBody(body.toString());
@@ -199,6 +235,29 @@ public class AbstractService {
 
     }
 
+    protected <T> void requestBasic(
+            String method,
+            String url,
+            Object body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback) {
+
+        requestBasicInternal(method, url, body, mapper, callback, "application/json");
+    }
+
+    private <T> void requestBasicInternal(
+            String method,
+            String url,
+            Object body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback, String contentType) {
+        if (isJsonResponse(contentType)) {
+            requestJson(method, url, body, mapper, callback, false);
+        } else {
+            requestText(method, url, body, (RestCallback<String>) callback, false);
+        }
+    }
+
     protected <T> void get(
             String url,
             Function<Object, T> mapper,
@@ -222,12 +281,31 @@ public class AbstractService {
         request("POST", url, body, mapper, callback);
     }
 
-    protected <T> void put(
+    protected <T> void postBasic(
             String url,
             String body,
             Function<Object, T> mapper,
             RestCallback<T> callback) {
 
+        requestBasic("POST", url, body, mapper, callback);
+    }
+
+    protected <T> void postBasic(
+            String url,
+            String body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback,
+            String headerName,
+            String headerValue) {
+
+        requestJson("POST", url, body, mapper, callback, false, headerName, headerValue);
+    }
+
+    protected <T> void put(
+            String url,
+            String body,
+            Function<Object, T> mapper,
+            RestCallback<T> callback) {
         request("PUT", url, body, mapper, callback);
     }
 
@@ -236,12 +314,10 @@ public class AbstractService {
             Object body,
             Function<Object, T> mapper,
             RestCallback<T> callback) {
-
         request("DELETE", url, body, mapper, callback);
     }
 
     protected String toJsonArray(List<String> values) {
-
         return values.stream()
                 .map(v -> "\"" + escapeJson(v) + "\"")
                 .collect(java.util.stream.Collectors.joining(",", "[", "]"));
@@ -250,19 +326,11 @@ public class AbstractService {
     protected <T> List<T> mapArray(
             Object result,
             Function<JsPropertyMap<Object>, T> mapper) {
-
         JsArray<Object> array = (JsArray<Object>) result;
-
         List<T> values = new ArrayList<>();
-
         for (int i = 0; i < array.length; i++) {
-            values.add(
-                    mapper.apply(
-                            (JsPropertyMap<Object>) array.getAt(i)
-                    )
-            );
+            values.add(mapper.apply((JsPropertyMap<Object>) array.getAt(i)));
         }
-
         return values;
     }
 

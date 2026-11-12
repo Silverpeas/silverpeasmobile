@@ -757,11 +757,18 @@ html .ui-controlgroup-controls .ui-btn-up-c {
   position: fixed;
   font-size: 0.8em;
   height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   user-select: none;
 }
 
 #silverpeas-navmenu-panel .ui-panel-inner {
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 #silverpeas-navmenu-panel #user {
@@ -867,11 +874,14 @@ html .ui-controlgroup-controls .ui-btn-up-c {
 
 #actions-menu {
   border-top: 1px solid #d3d3d3 !important;
-  position: absolute;
-  bottom: 48px;
+  position: static;
+  margin-top: auto;
+  margin-bottom: 0;
   width: 100%;
   border: 0;
   padding-left: 0.5em;
+  padding-bottom: 48px;
+  box-sizing: border-box;
   user-select: none;
 }
 
@@ -1936,7 +1946,7 @@ textarea.ui-input-text {
   padding-top: 4em;
 }
 
-#page-login #Login, #page-login #Password {
+#page-login #Login, #page-login #Password, #page-login #totp-code {
   box-sizing: border-box;
   background: var(--white) url(bg-input-login.png) 0 0 no-repeat;
   padding-left: 2em;
@@ -1948,7 +1958,7 @@ textarea.ui-input-text {
   box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
 }
 
-#page-login #Password {
+#page-login #Password, #page-login #totp-code {
   background: var(--white) url(bg-input-password.png) 0 0 no-repeat;
 }
 
@@ -3777,3 +3787,29 @@ li.orgachartuser:nth-child(even), li.orgachartuser:nth-child(even)>a {
   overflow-wrap: anywhere;
   line-height: 1.4;
 }
+/* Mobile two-factor screens */
+#page-login.two-factor-screen {box-sizing:border-box;padding:1rem 1rem 6rem}
+#page-login.two-factor-screen .two-factor-content {max-width:440px;margin:auto}
+#page-login.two-factor-screen .two-factor-step {margin:1.2rem 0;line-height:1.5}
+#page-login.two-factor-screen .two-factor-secret {padding:1rem;background:#fff;border:1px solid #ddd;border-radius:8px;overflow-wrap:anywhere;font-family:monospace;text-align:center;user-select:text}
+#page-login.two-factor-screen .two-factor-actions {text-align:center;margin:1rem 0 1.5rem}
+#page-login.two-factor-screen .btn-validate,#page-login.two-factor-screen .btn-validate:visited {display:inline-block;box-sizing:border-box;width:100%;max-width:360px;margin:0;padding:.85rem 1rem;white-space:normal;line-height:1.35;text-align:center}
+#page-login.two-factor-screen .two-factor-code {text-align:center;margin:1rem 0}
+#page-login.two-factor-screen .two-factor-code input {box-sizing:border-box;width:100%;max-width:240px;padding:.75rem;font-size:1.25rem;letter-spacing:normal;text-align:center}
+#page-login.two-factor-screen .two-factor-trust {margin:1rem 0;line-height:1.5}
+#page-login.two-factor-screen .two-factor-trust label {white-space:normal}
+#page-login.two-factor-screen .two-factor-recovery textarea {box-sizing:border-box;width:100%;max-width:100%;font-family:monospace}
+#page-login.two-factor-screen #copyright,#page-login.two-factor-screen #version {position:static;margin-top:1rem}
+
+#page-login.two-factor-screen .two-factor-code input:not(:placeholder-shown) {letter-spacing:.12em}
+#page-login.two-factor-screen .two-factor-actions .btn-validate {max-width:320px;font-size:.95em}
+#page-login.two-factor-screen .two-factor-trust {padding:.7rem .8rem;background:rgba(255,255,255,.55);border-radius:6px}
+#page-login.two-factor-screen .two-factor-trust input {vertical-align:middle;margin-right:.4rem}
+#page-login.two-factor-screen .two-factor-status {display:block;margin:.75rem 0;color:#315b31;font-size:.9em;line-height:1.4}
+
+#page-login.two-factor-screen .two-factor-switch {text-align:center;margin:1rem 0 1.5rem}
+#page-login.two-factor-screen .two-factor-switch a {font-size:.95rem;text-decoration:underline;cursor:pointer}
+#page-login.two-factor-screen .two-factor-code input[name="recoveryCode"] {max-width:340px;letter-spacing:normal;font-family:monospace;font-size:1rem}
+
+#page-login.two-factor-screen .two-factor-error {color:#a31515;margin:.75rem 0;line-height:1.4;font-weight:600}
+#page-login.two-factor-screen .two-factor-error:empty {display:none}

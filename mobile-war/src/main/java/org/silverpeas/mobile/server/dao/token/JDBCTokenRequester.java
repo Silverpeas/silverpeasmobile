@@ -25,7 +25,7 @@
 package org.silverpeas.mobile.server.dao.token;
 
 
-import jakarta.inject.Singleton;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.silverpeas.core.persistence.jdbc.DBUtil;
 
 import java.sql.Connection;
@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * @author svu
  */
-@Singleton
+@ApplicationScoped
 public class JDBCTokenRequester {
 
   protected JDBCTokenRequester() {

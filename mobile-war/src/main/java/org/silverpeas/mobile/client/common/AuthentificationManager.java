@@ -10,8 +10,7 @@
  * the GPL, you may redistribute this Program in connection with Free/Libre
  * Open Source Software ("FLOSS") applications as described in Silverpeas's
  * FLOSS exception.  You should have received a copy of the text describing
- * the FLOSS exception, and it is also available here:
- * "https://www.silverpeas.org/legal/floss_exception.html"
+ * the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,6 +33,8 @@ import org.silverpeas.mobile.client.SpMobil;
 import org.silverpeas.mobile.client.common.event.ErrorEvent;
 import org.silverpeas.mobile.client.common.event.authentication.AuthenticationErrorEvent;
 import org.silverpeas.mobile.client.common.navigation.PageHistory;
+import org.silverpeas.mobile.client.pages.connexion.TwoFactorPage;
+import org.silverpeas.mobile.client.pages.connexion.TwoFactorEnrollmentPage;
 import org.silverpeas.mobile.client.common.network.NetworkHelper;
 import org.silverpeas.mobile.client.common.network.rest.RestCallback;
 import org.silverpeas.mobile.client.common.network.rest.RestMethod;
@@ -48,8 +49,6 @@ import org.silverpeas.mobile.shared.dto.authentication.IUserProfile;
 import org.silverpeas.mobile.shared.dto.authentication.UserProfileDTO;
 import org.silverpeas.mobile.shared.exceptions.AuthenticationException;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author: svu
@@ -59,9 +58,9 @@ public class AuthentificationManager {
   private static AuthentificationManager instance = null;
   private static final String USER_CONNECTED_KEY = "userConnected";
   public static final String USER_PROFIL = "userProfil";
-  private static final String DES_KEY = "LagTegshyeecnoc^";
 
   public static final String XSTKN = "X-STKN";
+  public static final String LOCAL_CREDENTIAL = "localCredential";
   public static final String XSilverpeasSession = "X-Silverpeas-Session";
 
   public static AuthentificationManager getInstance() {
@@ -80,7 +79,7 @@ public class AuthentificationManager {
   }
 
   public void storeUser(final DetailUserDTO user, final UserProfileDTO profil, String login,
-      String password, String domainId) {
+                        String password, String domainId) {
     String encryptedPassword = null;
     try {
       encryptedPassword = encryptPassword(password);
@@ -111,17 +110,17 @@ public class AuthentificationManager {
   }
 
   /**
-   * Clean data in local storage.
+   * Clean data in local storage while preserving local credentials.
    */
   public void clearLocalStorage() {
-    LocalStorageHelper.getInstance().clear();
+    LocalStorageHelper.getInstance().clearExcept(LOCAL_CREDENTIAL);
   }
 
   public FullUserDTO loadUser() {
     FullUserDTO user = FullUserDTO.getBean(LocalStorageHelper.getInstance().load(USER_CONNECTED_KEY, IFullUser.class));
     SpMobil.setUser(user, false);
     UserProfileDTO profil =
-        UserProfileDTO.getBean(LocalStorageHelper.getInstance().load(USER_PROFIL, IUserProfile.class));
+            UserProfileDTO.getBean(LocalStorageHelper.getInstance().load(USER_PROFIL, IUserProfile.class));
     SpMobil.setUserProfile(profil);
     return user;
   }
@@ -134,7 +133,7 @@ public class AuthentificationManager {
    */
   public String decryptPassword(String passwordEncrysted) {
     TripleDesCipher cipher = new TripleDesCipher();
-    cipher.setKey(DES_KEY.getBytes());
+    cipher.setKey(ResourcesManager.getParam("mobile.credentials.encryption.key").getBytes());
     String plainPassword = null;
     try {
       plainPassword = cipher.decrypt(passwordEncrysted);
@@ -146,137 +145,213 @@ public class AuthentificationManager {
 
   private String encryptPassword(String password) throws InvalidCipherTextException {
     TripleDesCipher cipher = new TripleDesCipher();
-    cipher.setKey(DES_KEY.getBytes());
+    cipher.setKey(ResourcesManager.getParam("mobile.credentials.encryption.key").getBytes());
     String encryptedPassword = cipher.encrypt(password);
     return encryptedPassword;
   }
 
   public void authenticateOnSilverpeas(String login, String password, String domainId,
-      Command attempt) {
+                                       Command attempt) {
     Notification.activityStart();
     if (NetworkHelper.isOnline()) {
       ServicesLocator.getRestServiceAuthentication(login, password, domainId).authentication(
-
           new RestCallback<UserProfileDTO>() {
             @Override
             public void onFailure(final RestMethod method, final Throwable throwable) {
-              int statusError = method.getStatusCode();
-              if (statusError == 403) {
-                Notification.activityStop();
-                SpMobil.displayMainPage();
-              } else if (statusError == 401 || statusError == 500) {
-
-                RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
-                  @Override
-                  public void attempt() {
-                    super.attempt();
-                    ServicesLocator.getServiceConnection().userExist(login, domainId, this);
-                  }
-
-                  @Override
-                  public void onFailure(final RestMethod method, final Throwable t) {
-                    super.onFailure(method, t);
-                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
-                  }
-
-                  @Override
-                  public void onSuccess(final RestMethod method, final Boolean exist) {
-                    super.onSuccess(method, exist);
-                    if (exist) {
-                      AuthenticationException ex = new AuthenticationException(
-                          AuthenticationException.AuthenticationError.PwdNotAvailable);
-                      ex.setLogin(login);
-                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
-                    } else {
-                      AuthenticationException ex = new AuthenticationException(
-                          AuthenticationException.AuthenticationError.LoginNotAvailable);
-                      ex.setLogin(login);
-                      EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
-                    }
-                  }
-                };
-                action.attempt();
-              } else {
-                EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+              String enrollmentRequired = method.getHeaders() == null
+                  ? null : method.getHeaders().get("X-Silverpeas-2FA-Enrollment-Required");
+              if (method.getStatusCode() == 401 &&
+                  "true".equalsIgnoreCase(enrollmentRequired)) {
+                showEnrollmentPage(login, password, domainId);
+                return;
               }
+              String twoFactorRequired = method.getHeaders() == null
+                  ? null
+                  : method.getHeaders().get("X-Silverpeas-2FA-Required");
+              if (method.getStatusCode() == 401 &&
+                  "true".equalsIgnoreCase(twoFactorRequired)) {
+                authenticateTrustedDevice(login, password, domainId, attempt);
+                return;
+              }
+              handleAuthenticationFailure(login, domainId, method, throwable);
             }
 
             @Override
             public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-
-              AuthentificationManager.getInstance().addHeader("X-STKN", method.getHeaders().get("X-STKN"));
-              AuthentificationManager.getInstance().addHeader("X-Silverpeas-Session",
-                  method.getHeaders().get("X-Silverpeas-Session"));
-
-              SpMobil.setUserProfile(userProfile);
-
-
-              RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<DetailUserDTO>() {
-                @Override
-                public void attempt() {
-                  super.attempt();
-                  List<String> ids = new ArrayList<>();
-                  ids.add(login);
-                  ids.add(password);
-                  ids.add(domainId);
-
-                  ServicesLocator.getServiceConnection().login(ids, this);
-                }
-
-                @Override
-                public void onSuccess(final RestMethod method, final DetailUserDTO user) {
-                  super.onSuccess(method, user);
-                  SpMobil.setUser(user, true);
-
-                  ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<String>() {
-                    @Override
-                    public void onFailure(final RestMethod method, final Throwable throwable) {
-                      if (throwable instanceof AuthenticationException) {
-                        EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
-                      } else {
-                        EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
-                      }
-                    }
-
-                    @Override
-                    public void onSuccess(final RestMethod method, final String showTermsOfServices) {
-                      Notification.activityStop();
-                      AuthentificationManager.getInstance().storeUser(user, userProfile, login,
-                          password, domainId);
-                      if (Boolean.parseBoolean(showTermsOfServices)) {
-                        SpMobil.displayTermsOfServicePage();
-                      } else {
-                        if (attempt == null) {
-                          SpMobil.displayMainPage();
-                        } else {
-                          attempt.execute();
-                        }
-                      }
-                    }
-                  });
-                }
-
-                @Override
-                public void onFailure(final RestMethod method, final Throwable t) {
-                  //super.onFailure(method, t);
-                  GWT.log("Normaly never happen !!! " + t.getClass().getName() + " " + t.getMessage());
-                  if (t instanceof AuthenticationException) {
-                    EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
-                  } else {
-                    EventBus.getInstance().fireEvent(new ErrorEvent(t));
-                  }
-                }
-              };
-              action.attempt();
+              completeAuthentication(login, password, domainId, method, userProfile, attempt);
             }
           });
     } else {
-      //TODO : terms of service in offline mode ?
       Notification.activityStop();
       loadUser();
       SpMobil.displayMainPage();
     }
   }
+
+  public void authenticateTwoFactor(final String login, final String password,
+                                    final String domainId, final String code, final boolean trustDevice,
+                                    final Command attempt) {
+    authenticateTwoFactor(login, password, domainId, code, trustDevice, attempt, null);
+  }
+
+  public void authenticateTwoFactor(final String login, final String password,
+      final String domainId, final String code, final boolean trustDevice,
+      final Command attempt, final Command onInvalidCode) {
+    Notification.activityStart();
+    ServicesLocator.getRestServiceAuthentication(login, password, domainId)
+            .authenticateTwoFactor(code, trustDevice, new RestCallback<UserProfileDTO>() {
+              @Override
+              public void onFailure(final RestMethod method, final Throwable throwable) {
+                Notification.activityStop();
+                if (method.getStatusCode() == 401) {
+                  if (onInvalidCode != null) {
+                    onInvalidCode.execute();
+                    return;
+                  }
+                  EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+                } else {
+                  EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+                }
+              }
+
+              @Override
+              public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+                completeAuthentication(login, password, domainId, method, userProfile, attempt);
+              }
+            });
+  }
+
+  private void authenticateTrustedDevice(final String login, final String password,
+                                         final String domainId, final Command attempt) {
+    ServicesLocator.getRestServiceAuthentication(login, password, domainId)
+            .authenticateTrustedDevice(new RestCallback<UserProfileDTO>() {
+              @Override
+              public void onFailure(final RestMethod method, final Throwable throwable) {
+                showTwoFactorPage(login, password, domainId);
+              }
+
+              @Override
+              public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+                completeAuthentication(login, password, domainId, method, userProfile, attempt);
+              }
+            });
+  }
+
+  private void showEnrollmentPage(final String login, final String password,
+      final String domainId) {
+    Notification.activityStop();
+    com.google.gwt.user.client.ui.RootPanel.get().clear();
+    com.google.gwt.user.client.ui.RootPanel.get().add(
+        new TwoFactorEnrollmentPage(login, password, domainId));
+  }
+
+  public void completeEnrollment(final String login, final String password,
+      final String domainId, final RestMethod method, final UserProfileDTO profile) {
+    completeAuthentication(login, password, domainId, method, profile, null);
+  }
+
+  private void showTwoFactorPage(final String login, final String password,
+                                 final String domainId) {
+    Notification.activityStop();
+    TwoFactorPage page = new TwoFactorPage();
+    page.setIds(login, password, domainId);
+    com.google.gwt.user.client.ui.RootPanel.get().clear();
+    com.google.gwt.user.client.ui.RootPanel.get().add(page);
+  }
+
+  private void completeAuthentication(final String login, final String password,
+                                      final String domainId, final RestMethod authenticationMethod,
+                                      final UserProfileDTO userProfile, final Command attempt) {
+    addHeader(XSTKN, authenticationMethod.getHeaders().get(XSTKN));
+    addHeader(XSilverpeasSession, authenticationMethod.getHeaders().get(XSilverpeasSession));
+    SpMobil.setUserProfile(userProfile);
+
+    RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<DetailUserDTO>() {
+      @Override
+      public void attempt() {
+        super.attempt();
+        ServicesLocator.getServiceConnection().login(this);
+      }
+
+      @Override
+      public void onSuccess(final RestMethod method, final DetailUserDTO user) {
+        super.onSuccess(method, user);
+        SpMobil.setUser(user, true);
+        ServicesLocator.getServiceTermsOfService().show(new RestMethodCallbackOnlineOnly<String>() {
+          @Override
+          public void onFailure(final RestMethod method, final Throwable throwable) {
+            if (throwable instanceof AuthenticationException) {
+              EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
+            } else {
+              EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+            }
+          }
+
+          @Override
+          public void onSuccess(final RestMethod method, final String showTermsOfServices) {
+            Notification.activityStop();
+            AuthentificationManager.getInstance().storeUser(user, userProfile, login,
+                    password, domainId);
+            if (Boolean.parseBoolean(showTermsOfServices)) {
+              SpMobil.displayTermsOfServicePage();
+            } else if (attempt == null) {
+              SpMobil.displayMainPage();
+            } else {
+              attempt.execute();
+            }
+          }
+        });
+      }
+
+      @Override
+      public void onFailure(final RestMethod method, final Throwable t) {
+        if (t instanceof AuthenticationException) {
+          EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
+        } else {
+          EventBus.getInstance().fireEvent(new ErrorEvent(t));
+        }
+      }
+    };
+    action.attempt();
+  }
+
+
+  private void handleAuthenticationFailure(final String login, final String domainId,
+                                           final RestMethod method, final Throwable throwable) {
+    int statusError = method.getStatusCode();
+    if (statusError == 403) {
+      Notification.activityStop();
+      SpMobil.displayMainPage();
+    } else if (statusError == 401 || statusError == 500) {
+      RestMethodCallbackOnlineOnly action = new RestMethodCallbackOnlineOnly<Boolean>() {
+        @Override
+        public void attempt() {
+          super.attempt();
+          ServicesLocator.getServiceConnection().userExist(login, domainId, this);
+        }
+
+        @Override
+        public void onFailure(final RestMethod method, final Throwable t) {
+          super.onFailure(method, t);
+          EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(t));
+        }
+
+        @Override
+        public void onSuccess(final RestMethod method, final Boolean exist) {
+          super.onSuccess(method, exist);
+          AuthenticationException ex = new AuthenticationException(
+                  exist ? AuthenticationException.AuthenticationError.PwdNotAvailable :
+                          AuthenticationException.AuthenticationError.LoginNotAvailable);
+          ex.setLogin(login);
+          EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(ex));
+        }
+      };
+      action.attempt();
+    } else {
+      EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
+    }
+  }
+
 
   public void injectAuthenticationHttpHeaders(RequestBuilder builder) {
     if (getHeader(AuthentificationManager.XSTKN) != null) {
@@ -284,7 +359,7 @@ public class AuthentificationManager {
     }
     if (getHeader(AuthentificationManager.XSilverpeasSession) != null) {
       builder.setHeader(AuthentificationManager.XSilverpeasSession,
-          getHeader(AuthentificationManager.XSilverpeasSession));
+              getHeader(AuthentificationManager.XSilverpeasSession));
     }
   }
 
@@ -300,7 +375,7 @@ public class AuthentificationManager {
           AuthentificationManager.getInstance().clearLocalStorage();
           PageHistory.getInstance().clear();
           Notification.activityStop();
-          SpMobil.getInstance().displayFirstPage();
+          SpMobil.displayLoginPage(null);
           SpMobil.destroyMainPage();
         }
         @Override
@@ -314,7 +389,7 @@ public class AuthentificationManager {
   }
 
   public void clearCache() {
-    // Cache invalidation must also work before login, without clearing the session or credentials.
+    // Clear offline cache without clearing the session or authentication cookies.
     CacheStorageHelper.clear();
   }
 }
