@@ -472,7 +472,7 @@ public class ServiceDocuments extends AbstractRestWebService {
         dto.setNotAllowedDownloads(notAllowedDownloads);
 
       } else if (type.equals(ContentsTypes.News.toString())) {
-        dto.setViewsNumber(QuickInfoService.get().getNews(contributionId).getNbAccess());
+        dto.setViewsNumber(QuickInfoService.get().getNews(new ResourceReference(contributionId, componentId)).getNbAccess());
       } else {
         dto.setViewsNumber(0);
       }
@@ -704,8 +704,8 @@ public class ServiceDocuments extends AbstractRestWebService {
     PublicationDTO dto = new PublicationDTO();
     if (appId.startsWith("quickinfo")) {
       News n = QuickInfoService.get().getNewsByForeignId(pubId);
-      QuickInfoService.get().publish(n.getId(), getUser().getId());
-      dto.setName(QuickInfoService.get().getNews(n.getId()).getName());
+      QuickInfoService.get().publish(n.toResourceReference(), getUser().getId());
+      dto.setName(QuickInfoService.get().getNews(n.toResourceReference()).getName());
     } else {
       CompletePublication pub = PublicationService.get().getCompletePublication(new PublicationPK(pubId));
       NodePK nodePK = KmeliaService.get().getPublicationFatherPK(new PublicationPK(pubId, pub.getPublicationDetail().getInstanceId()));
