@@ -34,6 +34,7 @@ import org.silverpeas.components.gallery.service.MediaServiceProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.model.QuickInfoServiceProvider;
+import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.publication.model.PublicationPK;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
@@ -145,7 +146,7 @@ public class MobilFilter implements Filter {
             String appId = subUrl.replace("/Rquickinfo/", "");
             appId = appId.substring(0, appId.indexOf("/"));
             String contributionId = subUrl.substring(subUrl.indexOf("Id=") + 3);
-            News n = service.getNews(contributionId);
+            News n = service.getNews(new ResourceReference(contributionId, appId));
             String id = n.getPublicationId();
             params =
                 "?shortcutContentType=News&shortcutContentId=" + id + "&shortcutAppId=" + appId +
