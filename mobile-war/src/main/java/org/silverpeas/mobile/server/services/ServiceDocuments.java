@@ -704,8 +704,8 @@ public class ServiceDocuments extends AbstractRestWebService {
     PublicationDTO dto = new PublicationDTO();
     if (appId.startsWith("quickinfo")) {
       News n = QuickInfoService.get().getNewsByForeignId(pubId);
-      QuickInfoService.get().publish(n.toResourceReference(), getUser().getId());
-      dto.setName(QuickInfoService.get().getNews(n.toResourceReference()).getName());
+      QuickInfoService.get().publish(new ResourceReference(n.getPK()), getUser().getId());
+      dto.setName(QuickInfoService.get().getNews(new ResourceReference(n.getPK())).getName());
     } else {
       CompletePublication pub = PublicationService.get().getCompletePublication(new PublicationPK(pubId));
       NodePK nodePK = KmeliaService.get().getPublicationFatherPK(new PublicationPK(pubId, pub.getPublicationDetail().getInstanceId()));
