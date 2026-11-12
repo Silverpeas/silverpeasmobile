@@ -48,6 +48,7 @@
           <p><ui:safehtml from="{msg.recoveryCodeHelp}"/></p>
           <div class="two-factor-code"><g:TextBox ui:field="recoveryCodeField" name="recoveryCode"/></div>
         </div>
+        <g:Label ui:field="codeError" styleName="two-factor-error"/>
         <div id="trusted-device" class="two-factor-trust">
           <g:CheckBox ui:field="trustDevice" text="{msg.trustDevice}"/>
         </div>

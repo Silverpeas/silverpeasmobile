@@ -42,6 +42,21 @@ public interface ApplicationMessages extends Messages {
   @DefaultMessage("Code de récupération")
   String recoveryCodePlaceholder();
 
+  @DefaultMessage("Copier les codes de récupération")
+  String copyRecoveryCodes();
+
+  @DefaultMessage("Codes de récupération copiés dans le presse-papiers.")
+  String recoveryCodesCopied();
+
+  @DefaultMessage("Copie impossible. Sélectionnez et copiez les codes de récupération manuellement.")
+  String recoveryCodesCopyError();
+
+  @DefaultMessage("Code de récupération invalide ou déjà utilisé, ou session expirée. Utilisez un autre code ou reconnectez-vous.")
+  String recoveryCodeRejected();
+
+  @DefaultMessage("Code incorrect ou expiré, ou session expirée. Réessayez ou reconnectez-vous.")
+  String twoFactorCodeRejected();
+
 
   @DefaultMessage("1. Configurer votre application")
   SafeHtml enrollmentStepSetup();

@@ -43,6 +43,12 @@
           <g:TextArea ui:field="recoveryCodes" visibleLines="10" characterWidth="28" readOnly="true"/>
           <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
             <div class="ui-controlgroup-controls">
+              <g:Button ui:field="copyRecoveryCodes" styleName="submit btn-validate ui-link"
+                        text="{msg.copyRecoveryCodes}"/>
+            </div>
+          </div>
+          <div class="ui-controlgroup ui-controlgroup-horizontal two-factor-actions">
+            <div class="ui-controlgroup-controls">
               <g:Anchor ui:field="continueButton" styleName="submit btn-validate ui-link">
                 <span class="ui-btn-text"><ui:safehtml from="{msg.enrollmentContinue}"/></span>
               </g:Anchor>

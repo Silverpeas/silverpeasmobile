@@ -57,6 +57,8 @@ public class TwoFactorEnrollmentPage extends PageContent {
   @UiField
   Anchor copySecret;
   @UiField
+  Button copyRecoveryCodes;
+  @UiField
   Anchor continueButton;
 
   private final String login;
@@ -112,15 +114,24 @@ public class TwoFactorEnrollmentPage extends PageContent {
     if (secret.getText().isEmpty()) {
       return;
     }
-    copyToClipboard(secret.getText());
+    copyToClipboard(secret.getText(), false);
   }
 
-  private void clipboardResult(boolean copied) {
+  @UiHandler("copyRecoveryCodes")
+  void copyRecoveryCodes(ClickEvent event) {
+    event.preventDefault();
+    if (!recoveryCodes.getText().isEmpty()) {
+      copyToClipboard(recoveryCodes.getText(), true);
+    }
+  }
+
+  private void clipboardResult(boolean copied, boolean recovery) {
     if (copied) {
       status.setText("");
-      Snackbar.show(msg.enrollmentCopied(), 2500, Snackbar.INFO);
+      Snackbar.show(recovery ? msg.recoveryCodesCopied() : msg.enrollmentCopied(),
+          2500, Snackbar.INFO);
     } else {
-      status.setText(msg.enrollmentCopyError());
+      status.setText(recovery ? msg.recoveryCodesCopyError() : msg.enrollmentCopyError());
     }
   }
 
@@ -128,10 +139,10 @@ public class TwoFactorEnrollmentPage extends PageContent {
    * Uses the asynchronous Clipboard API when available (secure contexts),
    * with a selection-based fallback for older mobile WebViews.
    */
-  private native void copyToClipboard(String value) /*-{
+  private native void copyToClipboard(String value, boolean recovery) /*-{
     var page = this;
     function result(ok) {
-      page.@org.silverpeas.mobile.client.pages.connexion.TwoFactorEnrollmentPage::clipboardResult(Z)(ok);
+      page.@org.silverpeas.mobile.client.pages.connexion.TwoFactorEnrollmentPage::clipboardResult(ZZ)(ok, recovery);
     }
     function fallback() {
       var field = $doc.createElement("textarea");

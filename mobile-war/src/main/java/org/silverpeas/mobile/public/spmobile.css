@@ -3811,3 +3811,5 @@ li.orgachartuser:nth-child(even), li.orgachartuser:nth-child(even)>a {
 #page-login.two-factor-screen .two-factor-switch a {font-size:.95rem;text-decoration:underline;cursor:pointer}
 #page-login.two-factor-screen .two-factor-code input[name="recoveryCode"] {max-width:340px;letter-spacing:normal;font-family:monospace;font-size:1rem}
 
+#page-login.two-factor-screen .two-factor-error {color:#a31515;margin:.75rem 0;line-height:1.4;font-weight:600}
+#page-login.two-factor-screen .two-factor-error:empty {display:none}

@@ -176,11 +176,11 @@ public class AuthentificationManager {
               handleAuthenticationFailure(login, domainId, method, throwable);
             }
 
-                @Override
-                public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
-                  completeAuthentication(login, password, domainId, method, userProfile, attempt);
-                }
-              });
+            @Override
+            public void onSuccess(final RestMethod method, final UserProfileDTO userProfile) {
+              completeAuthentication(login, password, domainId, method, userProfile, attempt);
+            }
+          });
     } else {
       Notification.activityStop();
       loadUser();
@@ -191,6 +191,12 @@ public class AuthentificationManager {
   public void authenticateTwoFactor(final String login, final String password,
                                     final String domainId, final String code, final boolean trustDevice,
                                     final Command attempt) {
+    authenticateTwoFactor(login, password, domainId, code, trustDevice, attempt, null);
+  }
+
+  public void authenticateTwoFactor(final String login, final String password,
+      final String domainId, final String code, final boolean trustDevice,
+      final Command attempt, final Command onInvalidCode) {
     Notification.activityStart();
     ServicesLocator.getRestServiceAuthentication(login, password, domainId)
             .authenticateTwoFactor(code, trustDevice, new RestCallback<UserProfileDTO>() {
@@ -198,6 +204,10 @@ public class AuthentificationManager {
               public void onFailure(final RestMethod method, final Throwable throwable) {
                 Notification.activityStop();
                 if (method.getStatusCode() == 401) {
+                  if (onInvalidCode != null) {
+                    onInvalidCode.execute();
+                    return;
+                  }
                   EventBus.getInstance().fireEvent(new AuthenticationErrorEvent(throwable));
                 } else {
                   EventBus.getInstance().fireEvent(new ErrorEvent(throwable));
